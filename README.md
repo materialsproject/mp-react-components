@@ -1,7 +1,3 @@
-# empty-project
-
-Empty project.
-
 ## Building and running on localhost
 
 First install dependencies:
@@ -30,3 +26,8 @@ Open the file `dist/index.html` in your browser
 
 Made with [createapp.dev](https://createapp.dev/)
 
+## Deploy storybook to github pages
+
+```sh
+npm deploy-storybook
+```

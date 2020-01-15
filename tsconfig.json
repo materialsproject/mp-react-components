@@ -10,6 +10,7 @@
         "target": "es5",
         "allowJs": true,
         "jsx": "react",
+        "lib": ["es5", "es6", "dom"],
         "strictNullChecks": true
     },
     "include": [

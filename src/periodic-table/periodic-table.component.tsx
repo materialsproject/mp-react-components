@@ -6,6 +6,7 @@ import { PeriodicElement } from "./periodic-element/periodic-element.component";
 export interface TableProps {
   disabledElement: {[symbol:string]: boolean};
   enabledElement: {[symbol:string]: boolean};
+  onElementClicked: (mat: MatElement) => void;
 }
 
 // Ultimately, we'll allow people to pass a specific component by using render props
@@ -21,12 +22,13 @@ export function TableSpacer() {
   </React.Fragment>);
 }
 
-export function Table({disabledElement, enabledElement}: TableProps) {
+//TODO(chab) use RXJS for handling state
+export function Table({disabledElement, enabledElement, onElementClicked}: TableProps) {
   return (
     <div className="table-container">
       <TableSpacer/>
       {TABLE.map((element: MatElement) =>
-          <PeriodicElement
+          <PeriodicElement onElementClicked={(element) => onElementClicked(element) }
             key={`${element.symbol}--${element.elementNumber}`}
             disabled={disabledElement[element.symbol]} enabled={enabledElement[element.symbol]} element={element}/>
       )}

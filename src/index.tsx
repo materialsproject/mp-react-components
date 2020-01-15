@@ -13,4 +13,9 @@ import "./styles.less";
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
-ReactDOM.render(<Table enabledElement={[]} disabledElement={[]}/>, mountNode);
+
+const enabledElement: any = {Be:true, Na:true, Cl:true};
+const disabledElement: any = {Li:true, He:true};
+
+ReactDOM.render(<Table onElementClicked={(e) => console.log(e)} enabledElement={enabledElement}
+                       disabledElement={disabledElement}/>, mountNode);
