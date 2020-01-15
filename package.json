@@ -15,6 +15,8 @@
     "deploy-storybook": "storybook-to-ghpages"
   },
   "dependencies": {
+    "@storybook/addon-docs": "^5.3.3",
+    "@storybook/addon-storysource": "^5.3.3",
     "css-loader": "^3.4.2",
     "less-loader": "^5.0.0",
     "react": "^16.12.0",

@@ -2,7 +2,10 @@
 
 module.exports = {
   stories: ["../src/stories/**/*.stories.(ts|tsx|js|jsx)"],
-  addons: ['@storybook/addon-actions', '@storybook/addon-links'],
+  addons: ['@storybook/addon-actions',
+    '@storybook/addon-links',
+    '@storybook/addon-docs',
+    '@storybook/addon-storysource'],
   webpackFinal: async config => {
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
@@ -10,7 +13,6 @@ module.exports = {
         {
           loader: require.resolve('awesome-typescript-loader'),
         },
-        // Optional
         {
           loader: require.resolve('react-docgen-typescript-loader'),
         },

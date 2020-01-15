@@ -13,6 +13,9 @@
         "lib": ["es5", "es6", "dom"],
         "strictNullChecks": true
     },
+    "awesomeTypescriptLoaderOptions": { // see https://github.com/storybookjs/storybook/issues/7829
+        "ignoreDiagnostics": [7005, 2300]
+    },
     "include": [
         "./src/**/*"
     ]
