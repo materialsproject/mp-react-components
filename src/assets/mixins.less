@@ -1,0 +1,165 @@
+/*
+ * Copyright 2019 StreamSets Inc.
+ */
+
+// This file contains general purposes mixins
+
+.flex(@direction: row) {
+  display: flex;
+  flex-direction: @direction;
+}
+
+.flex-grow-shrink-basis(@grow, @shrink, @basis) {
+  flex-grow: @grow;
+  flex-shrink: @shrink;
+  flex-basis: @basis;
+}
+
+.flex-fixed-size(@size) {
+  .flex-grow-shrink-basis(0, 0, @size);
+}
+
+.flex-fixed-size(@size, @enforce) when (@enforce = false) {
+  .flex-fixed-size(@size);
+}
+
+.flex-fixed-size(@size, @enforce) when (@enforce = true) {
+  .flex-fixed-size(@size);
+  .equal_width_height(@size);
+}
+
+.flex-content-sized() {
+  .flex-grow-shrink-basis(0, 0, auto);
+}
+
+.flex-container-sized() {
+  .flex-grow-shrink-basis(1, 1, 0);
+}
+
+.centered-container() {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-centered-container(@direction: row) {
+  .flex(@direction);
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-pushdown() {
+  margin-top: auto;
+}
+.flex-pushup() {
+  margin-bottom: auto;
+}
+.flex-pushright() {
+  margin-left: auto;
+}
+.flex-pushleft() {
+  margin-right: auto;
+}
+
+.non-flex-container-sized() {
+  width: 100%;
+  height: 100%;
+}
+
+// elevation mixin
+
+.elevation-0() {
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.15);
+}
+
+.elevation-1() {
+  box-shadow: 0 1px 1px 0 rgba(16, 22, 26, 0.2), 0 0 0 1px rgba(16, 22, 26, 0.1);
+}
+
+.elevation-2() {
+  box-shadow: 0 2px 6px 0 rgba(16, 22, 26, 0.2), 0 1px 1px 0 rgba(16, 22, 26, 0.2),
+  0 0 0 1px rgba(16, 22, 26, 0.1);
+}
+
+.elevation-3() {
+  box-shadow: 0 3px 6px 0 rgba(67, 90, 111, 0.3), 0 0 1px 0 rgba(67, 90, 111, 0.47);
+}
+
+.elevation-4() {
+  box-shadow: 0 8px 24px 0 rgba(16, 22, 26, 0.2), 0 2px 4px 0 rgba(16, 22, 26, 0.2),
+  0 0 0 1px rgba(16, 22, 26, 0.1);
+}
+
+.elevation-5() {
+  box-shadow: 0 18px 46px 6px rgba(16, 22, 26, 0.2), 0 4px 8px 0 rgba(16, 22, 26, 0.2),
+  0 0 0 1px rgba(16, 22, 26, 0.1);
+}
+
+.equal_width_height(@size) {
+  width: @size;
+  height: @size;
+}
+
+.overflow-truncate() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// triangle mixin, those mixins draw a triangle in the selected corner
+// you'll need a positioned element, and you'll need to use it this way
+// <selector>:before, <selector>:after { @includes <direction>-triangle-ab };
+// <selector>:before, <selector>:after { @includes <direction>-triangle-b };
+
+.downright-triangle-ab() {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.downright-triangle-b (@color: black, @width: 3px, @radius: 0.5px) {
+  border-width: @width;
+  border-right-color: @color;
+  border-bottom-color: @color;
+  border-radius: @radius;
+}
+
+.horizontal-padding(@padding: 5px) {
+  padding: 0 @padding 0 @padding;
+}
+
+.vertical-padding(@padding: 5px) {
+  padding: @padding 0 @padding 0;
+}
+
+.no_left_border(@width) {
+  border-width: @width 0 @width @width;
+}
+
+.no_right_border(@width) {
+  border-width: @width @width @width 0;
+}
+
+.no_side_border(@width) {
+  border-width: @width 0 @width 0;
+}
+
+// element will still take place in layout
+.hidden() {
+  visibility: hidden;
+}
+
+// element is not drawn
+.not_drawn() {
+  display: none;
+}
+
+.no-user-select() {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}

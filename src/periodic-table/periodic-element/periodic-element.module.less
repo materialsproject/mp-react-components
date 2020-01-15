@@ -1,0 +1,75 @@
+@import '../../assets/mixins.less';
+@import '../table-variable.less';
+
+.mat-element {
+  font-family: 'Roboto Slab',serif;
+  transition: all 200ms ease-in-out;
+  box-shadow: inset -1px 1px 1px rgba(255,255,255,.8);
+  background: lighten(@table-background, 5%);
+  border: 1px solid transparent;
+  cursor: pointer;
+  .flex(column);
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+
+  &:hover{ background: lighten(@table-background, 10%); }
+  &.active{	background: #CBF3F0; }
+
+  .symbol {
+    .flex-container-sized();
+    .flex-centered-container(row);
+    font-size: 1em;
+    font-weight: bold;
+  }
+  .element {
+    .flex-container-sized();
+  }
+  .number {
+    font-style: italic;
+    font-size: 0.7em;
+    margin: 5px;
+  }
+}
+
+/* -------------------
+	Elements
+-------------------- */
+.element-metal {
+  color: darken(@metal, 40%);
+}
+.element-alkali-metal{
+  color: darken(@alkali-metal,26%);
+}
+.element-alkali-earth-metal{
+  color: darken(@alkali-earth-metal,36%);
+}
+.element-transition-metal{
+  color: darken(@transition-metal,50%);
+}
+.element-lanthoid{
+  color: darken(@lanthoid,28%);
+}
+.element-actinoid{
+  color: darken(@actinoid,40%);
+}
+.element-metalloid{
+  color: darken(@metalloid,40%);
+}
+.element-non-metal{
+   color: darken(@non-metal,40%);
+}
+.element-halogen{
+  color: darken(@halogen,40%);
+}
+.element-noble-gas{
+  color: darken(@noble-gas,40%);
+}
+.element-lanthanoid-transitional-metal, .element-actinoid-transitional-metal {
+  color: darken(@noble-gas,40%);
+  .symbol {
+    font-size: 0.8em;
+  }
+}

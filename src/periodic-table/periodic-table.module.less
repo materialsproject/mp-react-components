@@ -1,0 +1,36 @@
+@import './table-variable.less';
+
+.table-container {
+  display: grid;
+  background: @table-background;
+  grid-template-columns: repeat(18, @element-width);
+  grid-template-rows: repeat(7, @element-height) 10px repeat(2, @element-height);
+  .first-span {
+    grid-column: 2 / span 16;
+    grid-row:  1 / span 1;
+  }
+  .second-span {
+    grid-column: 3 / span 10;
+    grid-row:  2 / span 2;
+  }
+  .third-span {
+    grid-column: 3 / span 15;
+    grid-row:  1 / span 2;
+  }
+  .separator-span {
+    grid-column: 1 / span 18;
+    grid-row: 8 / span 1;
+  }
+  .first-lower-span {
+    grid-column: 1 / span 2;
+    grid-row: 9 / span 2;
+  }
+
+  .second-lower-span {
+    grid-column: 18 / span 1;
+    grid-row: 9 / span 2;
+  }
+  .item {
+    border: 1px solid transparent;
+  }
+}
