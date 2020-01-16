@@ -15,8 +15,17 @@
     opacity: 0.4;
   }
 
-  &:hover{ background: lighten(@table-background, 10%); }
-  &.active{	background: #CBF3F0; }
+  &.enabled {
+    background: #4BB0FD;
+  }
+
+  &:hover:not(.enabled){
+    background: lighten(@table-background, 10%);
+  }
+
+  &.active{
+    background: #CBF3F0;
+  }
 
   .symbol {
     .flex-container-sized();
