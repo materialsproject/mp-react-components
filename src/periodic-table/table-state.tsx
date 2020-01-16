@@ -1,24 +1,14 @@
 import * as React from "react";
-import { observable, tableStateStore } from "./table-store";
-import { tap } from "rxjs/operators";
+import { tableStateStore, useElements } from "./table-store";
 import { Table } from "./periodic-table-component/periodic-table.component";
 
-export function WithSelection({enabled, disabled}: any) {
-    const [disabledElements, setDisabled] = React.useState({});
-    const [enabledElements, setEnabled] = React.useState({});
+//FIXME handle all the cases where we know state has not changed
+export function WithSelection({enabledElements, disabledElements}: { enabledElements: {}, disabledElements:{}}) {
 
-    React.useEffect(() => {
-        tableStateStore.init();
-        const subscribtion = observable.pipe(tap(a => console.log(a))).subscribe(({enabledElements, disabledElements}) => {
-            setDisabled(disabledElements);
-            setEnabled(enabledElements);
-        });
-        // clean up subscription;
-        return () => subscribtion.unsubscribe();
-    });
+    const {enabledElements: enabledEls, disabledElements: disabledEls} = useElements(disabledElements, enabledElements);
 
     return (<Table
       onElementClicked={(element) => tableStateStore.toggleEnabledElement(element.symbol)}
-      disabledElement={disabledElements}
-      enabledElement={enabledElements} />);
+      disabledElement={disabledEls}
+      enabledElement={enabledEls} />);
 }
