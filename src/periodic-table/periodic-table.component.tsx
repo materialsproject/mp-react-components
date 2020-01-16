@@ -4,8 +4,11 @@ import { MatElement, TABLE } from "./table";
 import { PeriodicElement } from "./periodic-element/periodic-element.component";
 
 export interface TableProps {
+  /** dictionnary of disabled elements */
   disabledElement: {[symbol:string]: boolean};
+  /** dictionnary of enabled elements  */
   enabledElement: {[symbol:string]: boolean};
+  /** Callback who gets called once the user clicked an element; the clicked element is passed **/
   onElementClicked: (mat: MatElement) => void;
 }
 

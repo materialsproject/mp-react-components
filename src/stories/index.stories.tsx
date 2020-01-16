@@ -7,4 +7,6 @@ export default {
   title: 'Periodic Table'
 };
 
-export const table = () => <Table disabledElement={{}} enabledElement={{}} onElementClicked={ action('element-click')}/>;
+const disabledElement = {Be:true, Na:true, Cl:true};
+
+export const table = () => <Table disabledElement={disabledElement} enabledElement={{}} onElementClicked={ action('element-click')}/>;
