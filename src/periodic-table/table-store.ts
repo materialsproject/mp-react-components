@@ -39,7 +39,13 @@ export const tableStateStore = {
   removeDisabledElement: (disabledElement: string) => (state.disabledElements = {...state.disabledElements, [disabledElement]:false}) && state$.next(state),
   toggleEnabledElement: (enabledElement: string) => (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state)}
 
-export function useElements(initialDisabledElements: any, initialEnabledElements: any) {
+/**
+ *
+ * Call this function inside a component. It will make the components aware of which elements are selected/disabled
+ * Be careful, as this will trigger a rendering every time a component is selected/unselected
+ *
+**/
+export function useElements(initialDisabledElements?: any, initialEnabledElements?: any, onStateChange?: any) {
   const [disabledElements, setDisabled] = React.useState({});
   const [enabledElements, setEnabled] = React.useState({});
 
@@ -47,8 +53,16 @@ export function useElements(initialDisabledElements: any, initialEnabledElements
     const subscription = observable.subscribe(({enabledElements, disabledElements}) => {
       setDisabled(disabledElements);
       setEnabled(enabledElements);
+      if (onStateChange) {
+        onStateChange(enabledElements);
+      }
     });
-    tableStateStore.init({enabledElements:initialEnabledElements, disabledElements:initialDisabledElements});
+    if (initialDisabledElements && initialEnabledElements) {
+      tableStateStore.init({enabledElements:initialEnabledElements, disabledElements:initialDisabledElements});
+    } else {
+      // actually make that the only way, and force the init somewhere else
+    }
+
     // clean up subscription;
     return () => subscription.unsubscribe();
   }, []); // by passing an empty array, we tell React to only run this effect ONCE
