@@ -1,7 +1,7 @@
 import * as React from "react";
 import './periodic-table.module.less';
-import { MatElement, TABLE } from "./table";
-import { PeriodicElement } from "./periodic-element/periodic-element.component";
+import { MatElement, TABLE } from "../table";
+import { PeriodicElement } from "../periodic-element/periodic-element.component";
 
 export interface TableProps {
   /** dictionnary of disabled elements */
