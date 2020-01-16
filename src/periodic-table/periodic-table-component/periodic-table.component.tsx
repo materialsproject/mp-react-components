@@ -14,9 +14,14 @@ export interface TableProps {
 
 // Ultimately, we'll allow people to pass a specific component by using render props
 // the goal is to allow people to insert whatever you want there
-export function TableSpacer() {
+export function TableSpacer({onTableSwitcherClicked}: any) {
   return (<React.Fragment>
-    <div className="first-span"></div>
+    <div className="first-span">
+      <div className="table-switcher" onClick={onTableSwitcherClicked}></div>
+      <div className="input-container">
+        Some dynamic input there based on the app
+      </div>
+    </div>
     <div className="second-span"></div>
     <div className="third-span"></div>
     <div className="separator-span"></div>
@@ -26,9 +31,12 @@ export function TableSpacer() {
 }
 
 export function Table({disabledElement, enabledElement, onElementClicked}: TableProps) {
+  const [isShown,setIsShown] = React.useState(true);
+
+
   return (
-    <div className="table-container">
-      <TableSpacer/>
+    <div className={`table-container ${isShown ? '' : 'elements-hidden'}`}>
+      <TableSpacer onTableSwitcherClicked={ () => setIsShown(!isShown)}/>
       {TABLE.map((element: MatElement) =>
           <PeriodicElement onElementClicked={(element) => onElementClicked(element) }
             key={`${element.symbol}--${element.elementNumber}`}
