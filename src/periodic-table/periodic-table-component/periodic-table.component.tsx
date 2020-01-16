@@ -25,7 +25,6 @@ export function TableSpacer() {
   </React.Fragment>);
 }
 
-//TODO(chab) use RXJS for handling state
 export function Table({disabledElement, enabledElement, onElementClicked}: TableProps) {
   return (
     <div className="table-container">
