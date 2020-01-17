@@ -5,57 +5,69 @@ import { take } from "rxjs/operators";
 
 const enabledElements = { 'E': true}, disabledElements = {'Cl': true};
 
-describe("Store", () => {
+describe("Table store", () => {
   it("should be correctly cleared", done => {
-    observable.pipe(take(1)).subscribe((n) => {
-      expect(n).toHaveProperty('disabledElements', {});
-      expect(n).toHaveProperty('enabledElements', {});
-      done();
-    });
+    checkObservableNotification({}, {}, done);
     tableStateStore.clear();
   });
 
   it("should be correctly initialized", done => {
     defaultReset();
-    observable.pipe(take(1)).subscribe((n) => {
-      expect(n).toHaveProperty('disabledElements', disabledElements);
-      expect(n).toHaveProperty('enabledElements', enabledElements);
-      done();
-    });
+    checkObservableNotification(enabledElements, disabledElements, done);
   });
 
   it('should toggle enabled elements correctly', done => {
     defaultReset();
     tableStateStore.toggleEnabledElement('E');
     tableStateStore.toggleEnabledElement('H');
-    observable.pipe(take(1)).subscribe((n) => {
-      console.log('t', n, disabledElements, enabledElements);
-      expect(n).toHaveProperty('disabledElements', {...disabledElements});
-      expect(n).toHaveProperty('enabledElements', {...enabledElements, E:false, H:true});
-      done();
-    });
+    checkObservableNotification({...enabledElements,  E:false, H:true}, {...disabledElements}, done);
   });
 
   it('should add an enabled elements correctly', done => {
     defaultReset();
     tableStateStore.addEnabledElement('Na');
-    observable.pipe(take(1)).subscribe((n) => {
-      expect(n).toHaveProperty('disabledElements', {...disabledElements});
-      expect(n).toHaveProperty('enabledElements', {...enabledElements, Na:true});
-      done();
-    });
+    checkObservableNotification({...enabledElements, Na:true}, {...disabledElements}, done);
   });
 
   it('should add a disabled elements correctly', done => {
     defaultReset();
     tableStateStore.addDisabledElement('Na');
-    observable.pipe(take(1)).subscribe((n) => {
-      expect(n).toHaveProperty('disabledElements', {...disabledElements, Na:true});
-      expect(n).toHaveProperty('enabledElements', {...enabledElements});
-      done();
-    });
+    checkObservableNotification({...enabledElements}, {...disabledElements, Na: true}, done);
   });
+
+  it('should remove an enabled elements correctly', done => {
+    defaultReset();
+    tableStateStore.removeEnabledElement('Na');
+    checkObservableNotification({...enabledElements, Na:false}, {...disabledElements}, done);
+  });
+
+  it('should remove a disabled elements correctly', done => {
+    defaultReset();
+    tableStateStore.removeDisabledElement('Na');
+    checkObservableNotification({...enabledElements}, {...disabledElements, Na: false}, done);
+  });
+
+  it('should set enabled elements correctly', done => {
+    defaultReset();
+    tableStateStore.setDisabledElements({Pl: false, O: true});
+    checkObservableNotification({...enabledElements}, {Pl: false, O: true}, done);
+  });
+
+  it('should set disabled elements correctly', done => {
+    defaultReset();
+    tableStateStore.setEnabledElements({Pl: false, O: true});
+    checkObservableNotification({Pl: false, O: true}, {...disabledElements}, done);
+  });
+
 });
+
+function checkObservableNotification(enabled: any, disabled: any, done: jest.DoneCallback) {
+  observable.pipe(take(1)).subscribe((n) => {
+    expect(n).toHaveProperty('disabledElements', disabled);
+    expect(n).toHaveProperty('enabledElements', enabled);
+    done();
+  });
+}
 
 function defaultReset() {
   resetState(disabledElements, enabledElements);
