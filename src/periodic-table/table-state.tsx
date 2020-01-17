@@ -1,5 +1,5 @@
 import * as React from "react";
-import { tableStateStore, useElements } from "./table-store";
+import { tableStateStore, useElements } from "./periodic-table-state/table-store";
 import { Table } from "./periodic-table-component/periodic-table.component";
 
 //FIXME handle all the cases where we know state has not changed

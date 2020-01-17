@@ -2,8 +2,12 @@ import { Subject } from "rxjs";
 import { shareReplay, tap } from "rxjs/operators";
 import * as React from "react";
 
+// makes an abstraction on top of process
+declare const process: any; // via dotenv
+
 //FIXME
 //This is equivalent to a singleton, i.e, this store is going to be shared amongst ALL the table that use it
+
 
 interface ElementState {
   [symbol: string]: boolean
@@ -18,12 +22,11 @@ const defaultState: State = { disabledElements: {}, enabledElements: {}};
 Object.seal(defaultState);
 let state: State = defaultState;
 
-
 const state$: Subject<State> = new Subject();
 
-export const observable = !process.env.DEBUG
+export const observable = !process.env.DEBUG && !(process.env.NODE_ENV === 'test')
   ? state$.pipe((shareReplay(1)))
-  : state$.pipe(tap(s => console.log(s)),shareReplay(1));
+  : state$.pipe(tap(s => console.log('ELEMENTS STATE', s)), shareReplay(1));
 
 state$.next(state);
 //FIXME(chab) use scan / map construct instead

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Table } from "../periodic-table/periodic-table-component/periodic-table.component";
 import { action } from "@storybook/addon-actions";
 import { SelectableTable} from "../periodic-table/table-state";
-import { useElements } from "../periodic-table/table-store";
+import { useElements } from "../periodic-table/periodic-table-state/table-store";
 
 export default {
   component: Table,

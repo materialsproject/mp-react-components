@@ -7,16 +7,18 @@
         "noImplicitAny": true,
         "module": "es6",
         "moduleResolution": "node",
-        "target": "es5",
+        "target": "es6",
         "allowJs": true,
         "jsx": "react",
         "lib": ["es5", "es6", "dom"],
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "types": ["jest"]
     },
     "awesomeTypescriptLoaderOptions": { // see https://github.com/storybookjs/storybook/issues/7829
         "ignoreDiagnostics": [7005, 2300]
     },
     "include": [
         "./src/**/*"
-    ]
+    ],
+    //"exclude": ["node_modules", "**/*.spec.ts"]
 }
