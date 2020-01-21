@@ -22,7 +22,9 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
         Some dynamic input there based on the app
       </div>
     </div>
-    <div className="second-span"></div>
+    <div className="second-span">
+      <div className="element-description"></div>
+    </div>
     <div className="third-span"></div>
     <div className="separator-span"></div>
     <div className="first-lower-span"></div>
