@@ -2,11 +2,11 @@
 @import '../table-variable.less';
 
 .mat-element {
-  font-family: 'Roboto Slab',serif;
-  transition: all 250ms ease-in-out;
-  box-shadow: inset -1px 1px 1px rgba(255,255,255,.8);
-  background: lighten(@table-background, 5%);
-  border: 1px solid transparent;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  transition: all 100ms ease-in-out;
+  margin: 3px;
+  border-radius: 2px;
+  border: 3px solid transparent;
   cursor: pointer;
   .flex(column);
 
@@ -16,11 +16,15 @@
   }
 
   &.enabled {
-    background: #4BB0FD;
+    filter: brightness(90%);
+    border: 3px solid rgba(0,0,0, 0.10);
   }
 
-  &:hover:not(.enabled){
-    background: lighten(@table-background, 10%);
+  &:hover {
+    transform: scale(1.05);
+    &:not(.enabled) {
+      filter: brightness(91%);
+    }
   }
 
   &.active{
@@ -30,14 +34,13 @@
   .symbol {
     .flex-container-sized();
     .flex-centered-container(row);
-    font-size: 1em;
-    font-weight: bold;
+    font-size: 1.5em;
+    font-weight: 400;
   }
   .element {
     .flex-container-sized();
   }
   .number {
-    font-style: italic;
     font-size: 0.7em;
     margin: 5px;
   }
@@ -47,37 +50,37 @@
 	Elements
 -------------------- */
 .element-metal {
-  color: darken(@metal, 40%);
+  background-color: darken(@metal, 8%);
 }
 .element-alkali-metal{
-  color: darken(@alkali-metal,26%);
+  background-color: darken(@alkali-metal, 8%);
 }
 .element-alkali-earth-metal{
-  color: darken(@alkali-earth-metal,36%);
+  background-color: darken(@alkali-earth-metal,8%);
 }
 .element-transition-metal{
-  color: darken(@transition-metal,50%);
+  background-color: darken(@transition-metal,8%);
 }
 .element-lanthoid{
-  color: darken(@lanthoid,28%);
+  background-color: darken(@lanthoid,8%);
 }
 .element-actinoid{
-  color: darken(@actinoid,40%);
+  background-color: darken(@actinoid, 8%);
 }
 .element-metalloid{
-  color: darken(@metalloid,40%);
+  background-color: darken(@metalloid,8%);
 }
 .element-non-metal{
-   color: darken(@non-metal,40%);
+  background-color: darken(@non-metal,8%);
 }
 .element-halogen{
-  color: darken(@halogen,40%);
+  background-color: darken(@halogen, 8%);
 }
 .element-noble-gas{
-  color: darken(@noble-gas,40%);
+  background-color: darken(@noble-gas,8%);
 }
 .element-lanthanoid-transitional-metal, .element-actinoid-transitional-metal {
-  color: darken(@noble-gas,40%);
+  background-color: darken(@noble-gas, 8%);
   .symbol {
     font-size: 0.8em;
   }

@@ -11,9 +11,7 @@ export interface PeriodicElementProps {
 
 export function PeriodicElement({element, enabled = false, disabled = false, onElementClicked}: PeriodicElementProps) {
 
-    const handleClick = (element:MatElement) => {
-        onElementClicked(element);
-    };
+    const handleClick = (element:MatElement) => onElementClicked(element);
 
     return (<div
       onClick={() => handleClick(element)}
