@@ -1,0 +1,151 @@
+/*
+ * Copyright 2019 StreamSets Inc.
+ */
+.table-container {
+  display: grid;
+  background: #E4E6E8;
+  grid-template-columns: repeat(18, 45px);
+  grid-template-rows: repeat(7, 70px) 10px repeat(2, 70px);
+}
+.table-container.elements-hidden .mat-element {
+  opacity: 0;
+}
+.table-container .first-span {
+  grid-column: 2 / span 16;
+  grid-row: 1 / span 1;
+  display: flex;
+  flex-direction: row;
+}
+.table-container .first-span .table-switcher {
+  width: 50px;
+  height: 30px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 50;
+  opacity: 0.5;
+  margin: 20px 10px;
+  cursor: pointer;
+  background: url('dist/img/1a282498.png') no-repeat;
+  background-size: contain;
+}
+.table-container .first-span .input-container {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  background: red;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  align-items: center;
+  justify-content: center;
+}
+.table-container .second-span {
+  grid-column: 3 / span 10;
+  grid-row: 2 / span 2;
+}
+.table-container .third-span {
+  grid-column: 3 / span 15;
+  grid-row: 1 / span 2;
+}
+.table-container .separator-span {
+  grid-column: 1 / span 18;
+  grid-row: 8 / span 1;
+}
+.table-container .first-lower-span {
+  grid-column: 1 / span 2;
+  grid-row: 9 / span 2;
+}
+.table-container .second-lower-span {
+  grid-column: 18 / span 1;
+  grid-row: 9 / span 2;
+}
+.table-container .item {
+  border: 1px solid transparent;
+}
+.mat-element {
+  font-family: 'Roboto Slab', serif;
+  transition: all 250ms ease-in-out;
+  box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.8);
+  background: #f2f3f4;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.mat-element.disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.mat-element.enabled {
+  background: #4BB0FD;
+}
+.mat-element:hover:not(.enabled) {
+  background: #ffffff;
+}
+.mat-element.active {
+  background: #CBF3F0;
+}
+.mat-element .symbol {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  font-weight: bold;
+}
+.mat-element .element {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+}
+.mat-element .number {
+  font-style: italic;
+  font-size: 0.7em;
+  margin: 5px;
+}
+/* -------------------
+	Elements
+-------------------- */
+.element-metal {
+  color: #606060;
+}
+.element-alkali-metal {
+  color: #839526;
+}
+.element-alkali-earth-metal {
+  color: #2e7d57;
+}
+.element-transition-metal {
+  color: #0263ad;
+}
+.element-lanthoid {
+  color: #aa9c00;
+}
+.element-actinoid {
+  color: #7a5600;
+}
+.element-metalloid {
+  color: #861d1d;
+}
+.element-non-metal {
+  color: #404c51;
+}
+.element-halogen {
+  color: #564620;
+}
+.element-noble-gas {
+  color: #3a3a81;
+}
+.element-lanthanoid-transitional-metal,
+.element-actinoid-transitional-metal {
+  color: #3a3a81;
+}
+.element-lanthanoid-transitional-metal .symbol,
+.element-actinoid-transitional-metal .symbol {
+  font-size: 0.8em;
+}
+
+/*# sourceMappingURL=index.css.map */
