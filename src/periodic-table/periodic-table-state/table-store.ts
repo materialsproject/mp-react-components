@@ -16,9 +16,10 @@ interface ElementState {
 interface State {
   disabledElements: ElementState;
   enabledElements: ElementState;
+  detailedElement: string | null;
 }
 
-const defaultState: State = { disabledElements: {}, enabledElements: {}};
+const defaultState: State = { disabledElements: {}, enabledElements: {}, detailedElement: null};
 Object.seal(defaultState);
 let state: State = defaultState;
 
@@ -35,6 +36,7 @@ export const tableStateStore = {
   setEnabledElements: (enabledElements: any) => (state = {...state, enabledElements}) && state$.next(state),
   setDisabledElements: (disabledElements: any) => (state = {...state, disabledElements}) && state$.next(state),
   clear: () => state$.next(defaultState),
+  setDetailedElement: (el: string) => (state = {...state, detailedElement:el}) && state$.next(state),
   //TODO(chab) add check to prever unnecessary state mutation
   addEnabledElement: (enabledElement: string) => (state.enabledElements = {...state.enabledElements, [enabledElement]:true}) && state$.next(state),
   addDisabledElement: (disabledElement: string) => (state.disabledElements = {...state.disabledElements, [disabledElement]:true}) && state$.next(state),
@@ -61,7 +63,7 @@ export function useElements(initialDisabledElements?: any, initialEnabledElement
       }
     });
     if (initialDisabledElements && initialEnabledElements) {
-      tableStateStore.init({enabledElements:initialEnabledElements, disabledElements:initialDisabledElements});
+      tableStateStore.init({enabledElements:initialEnabledElements, disabledElements:initialDisabledElements, detailedElement: null});
     } else {
       // actually make that the only way, and force the init somewhere else
     }
@@ -71,4 +73,22 @@ export function useElements(initialDisabledElements?: any, initialEnabledElement
   }, []); // by passing an empty array, we tell React to only run this effect ONCE
 
   return {disabledElements, enabledElements};
+}
+
+export function useDetailedElement() {
+  const [detailedElement, setDetailedElement] = React.useState('');
+  React.useEffect(() => {
+    const subscription = observable.subscribe(({detailedElement}) => {
+
+      if (detailedElement)
+      {
+        setDetailedElement(detailedElement!);
+      }
+    });
+
+    // clean up subscription;
+    return () => subscription.unsubscribe();
+  }, []); // by passing an empty array, we tell React to only run this effect ONCE
+
+  return detailedElement;
 }

@@ -43,5 +43,10 @@ function renderElement(disabled = false,
                        onClick = () => {},
                        element = {class:'a', symbol:'H', elementNumber:'12'},
                       ) {
-  return shallow(<PeriodicElement disabled={disabled} enabled={enabled} element={element} onElementClicked={onClick}/>)
+  return shallow(<PeriodicElement
+    disabled={disabled}
+    enabled={enabled}
+    element={element}
+    onElementHovered={onClick}
+    onElementClicked={onClick}/>)
 }
