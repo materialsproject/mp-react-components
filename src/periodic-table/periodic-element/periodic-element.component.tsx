@@ -18,7 +18,6 @@ export interface PeriodicElementProps {
     onElementHovered: (e:MatElement) => void;
 }
 
-
 //TODO(chab) use render props to customize layout
 
 export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,

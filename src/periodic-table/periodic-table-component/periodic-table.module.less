@@ -4,8 +4,22 @@
 // 18 / 7 Periods
 .table-container {
   display: grid;
-  grid-template-columns: repeat(18, @element-width);
-  grid-template-rows: repeat(7, @element-height) 10px repeat(2, @element-height);
+  &.spaced {
+    grid-template-columns: repeat(18, @element-width-spaced);
+    grid-template-rows: repeat(7, @element-height-spaced) @spacer-spaced repeat(2, @element-height-spaced);
+    grid-gap: @grid-gap-spaced;
+  }
+  &.compact {
+    grid-template-columns: repeat(18, @element-width-compact);
+    grid-template-rows: repeat(7, @element-height-compact) @spacer-compact repeat(2, @element-height-compact);
+    grid-gap: @grid-gap-compact;
+  }
+  &.small {
+    grid-template-columns: repeat(18, @element-width-small);
+    grid-template-rows: repeat(7, @element-height-small) @spacer-small repeat(2, @element-height-small);
+    grid-gap: @grid-gap-small;
+  }
+
   &.elements-hidden {
     .mat-element {
       opacity:0;
@@ -19,12 +33,9 @@
     //TODO(chab) extract as its own component
     .table-switcher {
       width: 50px;
-      height: 30px;
-      .flex-fixed-size(50);
       opacity: 0.5;
-      margin: 20px 10px;
       cursor:pointer;
-      background: url('../../assets/images/periodictable.png') no-repeat;
+      background: url('../../assets/images/periodictable.png') center no-repeat;
       background-size: contain;
     }
     .input-container {
@@ -60,9 +71,10 @@
     grid-column-end:5;
     grid-row-end:2;
     grid-row-start:4;
-    padding-bottom: 12px;
+    .flex(row);
     .mat-element {
-      height: 100%;
+      .flex-container-sized();
+      overflow: hidden;
     }
   }
 }

@@ -4,7 +4,7 @@
 .mat-element {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   transition: all 100ms ease-in-out;
-  margin: 3px;
+  margin: 0;
   border-radius: 2px;
   border: 3px solid transparent;
   cursor: pointer;
@@ -88,4 +88,41 @@
 }
 .element-actinoid-transitional-metal {
   background-color: darken(@actinoid, 15%);
+}
+
+
+.compact.table-container {
+  .number {
+    display: none;
+  }
+
+  .main-panel {
+    .number {
+      font-size: 1em;
+      display: initial;
+    }
+    .symbol {
+      font-size: 1.5rem;
+    }
+  }
+  .symbol {
+    font-size: 1rem;
+  }
+  .name, .weight {
+    font-size: 0.7rem;
+    font-weight: normal;
+  }
+  .side-panel {
+    font-size: 0.4rem;
+  }
+}
+
+.small.table-container {
+  .number, .detailed, .name {
+    display: none;
+  }
+  .symbol {
+    font-size: 0.4rem;
+  }
+
 }

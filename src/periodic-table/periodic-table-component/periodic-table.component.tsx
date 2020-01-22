@@ -14,6 +14,12 @@ export interface TableProps {
   onElementHovered: (mat: MatElement) => void;
 }
 
+export enum TableLayout {
+  SPACED = 'spaced',
+  COMPACT = 'compact',
+  MINI = 'mini'
+}
+
 // Ultimately, we'll allow people to pass a specific component by using render props
 // the goal is to allow people to insert whatever you want there
 export function TableSpacer({onTableSwitcherClicked}: any) {
@@ -46,7 +52,7 @@ export function Table({disabledElement, enabledElement, onElementClicked, onElem
   const [isShown,setIsShown] = React.useState(true);
 
   return (
-    <div className={`table-container ${isShown ? '' : 'elements-hidden'}`}>
+    <div className={`table-container compact ${isShown ? '' : 'elements-hidden'}`}>
       <TableSpacer onTableSwitcherClicked={ () => setIsShown(!isShown)}/>
       {TABLE_V2.map((element: MatElement) =>
           <PeriodicElement
