@@ -9,7 +9,6 @@
   border: 3px solid transparent;
   cursor: pointer;
   .flex(column);
-
   &.disabled {
     cursor: default;
     opacity: 0.4;
@@ -80,8 +79,13 @@
   background-color: darken(@noble-gas,8%);
 }
 .element-lanthanoid-transitional-metal, .element-actinoid-transitional-metal {
-  background-color: darken(@noble-gas, 8%);
   .symbol {
     font-size: 0.8em;
   }
+}
+.element-lanthanoid-transitional-metal {
+  background-color: darken(@lanthoid, 15%);
+}
+.element-actinoid-transitional-metal {
+  background-color: darken(@actinoid, 15%);
 }

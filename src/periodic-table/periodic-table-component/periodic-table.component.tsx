@@ -1,8 +1,8 @@
 import * as React from "react";
-import './periodic-table.module.less';
-import { MatElement, TABLE, TABLE_DICO } from "../table";
-import { PeriodicElement } from "../periodic-element/periodic-element.component";
+import "./periodic-table.module.less";
+import { DISPLAY_MODE, PeriodicElement } from "../periodic-element/periodic-element.component";
 import { useDetailedElement } from "../periodic-table-state/table-store";
+import { MatElement, TABLE_DICO_V2, TABLE_V2 } from "../table-v2";
 
 export interface TableProps {
   /** dictionnary of disabled elements */
@@ -24,7 +24,6 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
     <div className="first-span">
       <div className="table-switcher" onClick={onTableSwitcherClicked}></div>
       <div className="input-container">
-        Some dynamic input there based on the app
       </div>
     </div>
     <div className="second-span">
@@ -32,10 +31,11 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
     <div className="element-description">
       {
         detailedElement &&
-        <PeriodicElement disabled={false} enabled={false} element={TABLE_DICO[detailedElement]} onElementClicked={()=>{}} onElementHovered={()=>{}}/>
+        <PeriodicElement
+          displayMode={DISPLAY_MODE.DETAILED}
+          disabled={false} enabled={false} element={TABLE_DICO_V2[detailedElement]} onElementClicked={()=>{}} onElementHovered={()=>{}}/>
       }
     </div>
-    <div className="third-span"></div>
     <div className="separator-span"></div>
     <div className="first-lower-span"></div>
     <div className="second-lower-span"></div>
@@ -48,11 +48,11 @@ export function Table({disabledElement, enabledElement, onElementClicked, onElem
   return (
     <div className={`table-container ${isShown ? '' : 'elements-hidden'}`}>
       <TableSpacer onTableSwitcherClicked={ () => setIsShown(!isShown)}/>
-      {TABLE.map((element: MatElement) =>
+      {TABLE_V2.map((element: MatElement) =>
           <PeriodicElement
             onElementHovered={(element) => onElementHovered(element)}
             onElementClicked={(element) => onElementClicked(element) }
-            key={`${element.symbol}--${element.elementNumber}`}
+            key={`${element.symbol}--${element.number}`}
             disabled={disabledElement[element.symbol]} enabled={enabledElement[element.symbol]} element={element}/>
       )}
     </div>)

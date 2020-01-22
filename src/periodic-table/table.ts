@@ -579,10 +579,10 @@ export const TABLE: Readonly<MatElement[]> = [
 
 Object.seal(TABLE);
 
-export const TABLE_DICO: Readonly<{[element:string]: MatElement}> =
+export const TABLE_DICO_CLASS: Readonly<{[element:string]:string}> =
   TABLE.reduce((acc: any, el) => {
-    acc[el.symbol] = el;
+    acc[el.symbol] = el.class;
     return acc;
   }, {});
 
-Object.seal(TABLE_DICO);
+Object.seal(TABLE_DICO_CLASS);

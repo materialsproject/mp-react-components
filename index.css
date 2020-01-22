@@ -43,10 +43,6 @@
   grid-column: 3 / span 10;
   grid-row: 2 / span 2;
 }
-.table-container .third-span {
-  grid-column: 3 / span 15;
-  grid-row: 1 / span 2;
-}
 .table-container .separator-span {
   grid-column: 1 / span 18;
   grid-row: 8 / span 1;
