@@ -29,9 +29,11 @@ jobs:
           npm -v
           node -v
           npm i
+      - name: Check files
+        run: |
+          npm run lint:yaml
       - name: Run tests
         run: |
           pwd
-          npm run build --if-present
           npm run test
 

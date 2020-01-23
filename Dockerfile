@@ -7,5 +7,4 @@ COPY package.json package-lock.json ./
 RUN npm i
 # Copy the whitelisted files
 COPY . .
-# Run the tests
 

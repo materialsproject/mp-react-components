@@ -1,33 +1,33 @@
-## Building and running on localhost
+![](https://github.com/chabb/material-react/workflows/jest_tests/badge.svg)
 
-First install dependencies:
 
-```sh
-npm install
-```
+This repo contains a set of components.
 
-To run in hot module reloading mode:
+## Exported components
 
-```sh
-npm start
-```
+The exported components are located here:`src/periodic-table/index.ts`
 
-To create a production build:
+## Deploy to npm
 
-```sh
-npm run build-prod
-```
+### Manually
 
-## Running
+Use npm `build-publish` to build the project.
+Use `npm publish` to push to npm
 
-Open the file `dist/index.html` in your browser
 
-## Credits
+### Automatically(TODO)
 
-Made with [createapp.dev](https://createapp.dev/)
+We plan to publish from github-actions, when a tag is pushed
+You add a tag with `npm version minor -m "Upgrade to %s"`. This push automatically
+to github. An action will push the build to npm
 
 ## Deploy storybook to github pages
 
-```sh
+This will **build** and **deploy** the storybook.
+Stories are defined in `./src/stories`
+
+```
 npm deploy-storybook
 ```
+
+## Clean 

@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import { PeriodicElement } from "./periodic-element.component";
-import * as React from 'react';
+import * as React from 'react'; // for some reasons, uppercase does not work on Docker
 import { TABLE_DICO_V2 } from "../table-v2";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.

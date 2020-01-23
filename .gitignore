@@ -20,3 +20,7 @@ Thumbs.db
 # Storybook files
 out*
 storybook-static
+
+# Rollup artifacts
+rollup.build.*
+index.*

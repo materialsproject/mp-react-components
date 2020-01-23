@@ -8,7 +8,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "clean:bundle": "rm -rf dist && rm rollup.build.css",
+    "clean:bundle": "rm -rf dist && rm rollup.build.css && rm index.*",
     "clean:storybook": "rm -rf out* && rm -rf storybook-static",
     "clean:": "clean:bundle && clean:storybook",
     "start": "parcel src/index.html",
@@ -17,7 +17,8 @@
     "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "deploy-storybook": "storybook-to-ghpages"
+    "deploy-storybook": "storybook-to-ghpages",
+    "lint:yaml": "yamllint ./.github/workflows/*.yml"
   },
   "dependencies": {
     "@storybook/addon-docs": "^5.3.3",
@@ -65,6 +66,7 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-typescript2": "^0.25.3",
     "ts-jest": "^24.3.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "yaml-lint": "^1.2.4"
   }
 }
