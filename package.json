@@ -20,6 +20,7 @@
   "dependencies": {
     "@storybook/addon-docs": "^5.3.3",
     "@storybook/addon-storysource": "^5.3.3",
+    "@types/react-responsive": "^8.0.2",
     "css-loader": "^3.4.2",
     "less-loader": "^5.0.0",
     "postcss-smart-asset": "^1.0.2",

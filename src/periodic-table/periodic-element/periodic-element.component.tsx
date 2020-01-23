@@ -12,6 +12,7 @@ export enum  DISPLAY_MODE {
 export interface PeriodicElementProps {
     disabled: boolean;
     enabled: boolean;
+    hidden: boolean;
     element: MatElement;
     displayMode?: DISPLAY_MODE;
     onElementClicked: (e:MatElement) => void;
@@ -20,8 +21,10 @@ export interface PeriodicElementProps {
 
 //TODO(chab) use render props to customize layout
 
-export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
 
+
+export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
+                                    hidden = false,
                                     enabled = false,
                                     disabled = false,
                                     onElementClicked,
@@ -29,11 +32,17 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
 
     const handleClick = (element:MatElement) => onElementClicked(element);
     const handleHover = (element:MatElement) => onElementHovered(element);
+    const cl = {
+      enabled: !hidden && enabled && !disabled,
+      disabled: !hidden && disabled,
+      hidden: hidden
+    };
 
     return (<div
       onClick={() => handleClick(element)}
       onMouseOver={() => handleHover(element)}
-      className={`mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${(enabled  && !disabled) ? 'enabled' : ''} ${disabled ? 'disabled' : ''} `}>
+      className={
+        `mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${cl.hidden ? 'hidden' : ''} ${cl.enabled ? 'enabled' : ''} ${cl.disabled ? 'disabled' : ''}`}>
 
         {displayMode === DISPLAY_MODE.SIMPLE ?
           <React.Fragment>
@@ -53,6 +62,5 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
 
           </React.Fragment>
         }
-
     </div>)
 }

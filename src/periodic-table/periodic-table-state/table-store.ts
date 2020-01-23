@@ -16,10 +16,11 @@ interface ElementState {
 interface State {
   disabledElements: ElementState;
   enabledElements: ElementState;
+  hiddenElements: ElementState;
   detailedElement: string | null;
 }
 
-const defaultState: State = { disabledElements: {}, enabledElements: {}, detailedElement: null};
+const defaultState: State = { disabledElements: {}, enabledElements: {}, detailedElement: null, hiddenElements: {}};
 Object.seal(defaultState);
 let state: State = defaultState;
 
@@ -37,6 +38,7 @@ export const tableStateStore = {
   setDisabledElements: (disabledElements: any) => (state = {...state, disabledElements}) && state$.next(state),
   clear: () => state$.next(defaultState),
   setDetailedElement: (el: string) => (state = {...state, detailedElement:el}) && state$.next(state),
+  setHiddenElements: (hiddenElements: any) => (state = {...state, hiddenElements}) && state$.next(state),
   //TODO(chab) add check to prever unnecessary state mutation
   addEnabledElement: (enabledElement: string) => (state.enabledElements = {...state.enabledElements, [enabledElement]:true}) && state$.next(state),
   addDisabledElement: (disabledElement: string) => (state.disabledElements = {...state.disabledElements, [disabledElement]:true}) && state$.next(state),
@@ -50,20 +52,26 @@ export const tableStateStore = {
  * Be careful, as this will trigger a rendering every time a component is selected/unselected
  *
 **/
-export function useElements(initialDisabledElements?: any, initialEnabledElements?: any, onStateChange?: any) {
+export function useElements(initialDisabledElements?: any, initialEnabledElements?: any, initialHiddenElements?: any, onStateChange?: any) {
   const [disabledElements, setDisabled] = React.useState({});
   const [enabledElements, setEnabled] = React.useState({});
+  const [hiddenElements, setHiddenElements] = React.useState({});
 
   React.useEffect(() => {
-    const subscription = observable.subscribe(({enabledElements, disabledElements}) => {
+    const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}) => {
       setDisabled(disabledElements);
       setEnabled(enabledElements);
+      setHiddenElements(hiddenElements);
       if (onStateChange) {
         onStateChange(enabledElements);
       }
     });
-    if (initialDisabledElements && initialEnabledElements) {
-      tableStateStore.init({enabledElements:initialEnabledElements, disabledElements:initialDisabledElements, detailedElement: null});
+    if (initialDisabledElements && initialEnabledElements && initialHiddenElements) {
+      tableStateStore.init({
+        enabledElements:initialEnabledElements,
+        hiddenElements: initialHiddenElements,
+        disabledElements:initialDisabledElements,
+        detailedElement: null});
     } else {
       // actually make that the only way, and force the init somewhere else
     }
@@ -72,7 +80,7 @@ export function useElements(initialDisabledElements?: any, initialEnabledElement
     return () => subscription.unsubscribe();
   }, []); // by passing an empty array, we tell React to only run this effect ONCE
 
-  return {disabledElements, enabledElements};
+  return {disabledElements, enabledElements, hiddenElements};
 }
 
 export function useDetailedElement() {

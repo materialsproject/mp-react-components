@@ -1,5 +1,3 @@
-import { TABLE } from "./table";
-
 export interface MatElement {
   name:string,
   shells: number[],
@@ -2516,7 +2514,7 @@ export const TABLE_V2: MatElement [] = [
       965.2,
       3600
     ]
-  },
+  },  // lanthandide group
   {
     "symbol": "La-Lu",
     "number": "57-71",
@@ -3168,6 +3166,7 @@ export const TABLE_V2: MatElement [] = [
     "category": "actinide",
     number: "89-103",
     symbol: "Ac-Lr",
+    hasDetail: false
   },
   {
     "name": "Rutherfordium",
