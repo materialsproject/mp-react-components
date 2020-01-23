@@ -1,0 +1,37 @@
+name: jest_tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+         node-version: 12.x
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - uses: actions/cache@v1
+        with:
+         path: ~/.npm
+         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+           ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: |
+          npm -v
+          node -v
+          npm i
+      - name: Run tests
+        run: |
+          pwd
+          npm run build --if-present
+          npm run test
+

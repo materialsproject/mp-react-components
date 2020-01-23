@@ -1,6 +1,6 @@
-import * as React from 'React';
 import { shallow } from 'enzyme';
 import { PeriodicElement } from "./periodic-element.component";
+import * as React from 'react';
 import { TABLE_DICO_V2 } from "../table-v2";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
@@ -8,7 +8,7 @@ import { TABLE_DICO_V2 } from "../table-v2";
 jest.mock('./periodic-element.module.less', () => {});
 jest.mock('./periodic-element.detailed.less', () => {});
 
-fdescribe('<PeriodicElement/>', () => {
+describe('<PeriodicElement/>', () => {
 
   it('should be rendered', () => {
     const wrapper = renderElement();
