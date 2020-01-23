@@ -1,10 +1,12 @@
 import * as React from 'React';
 import { shallow } from 'enzyme';
 import { PeriodicElement } from "./periodic-element.component";
+import { TABLE_DICO_V2 } from "../table-v2";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
 // If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
 jest.mock('./periodic-element.module.less', () => {});
+jest.mock('./periodic-element.detailed.less', () => {});
 
 fdescribe('<PeriodicElement/>', () => {
 
@@ -37,15 +39,17 @@ fdescribe('<PeriodicElement/>', () => {
   })
 });
 
+const TEST_ELEMENT = TABLE_DICO_V2['H'];
 
 function renderElement(disabled = false,
                        enabled = false,
                        onClick = () => {},
-                       element = {class:'a', symbol:'H', elementNumber:'12'},
+                       element = TEST_ELEMENT
                       ) {
   return shallow(<PeriodicElement
     disabled={disabled}
     enabled={enabled}
+    hidden={false}
     element={element}
     onElementHovered={onClick}
     onElementClicked={onClick}/>)

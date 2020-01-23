@@ -1,12 +1,14 @@
-import { TABLE, TABLE_DICO } from "./table";
+import { TABLE, TABLE_DICO_CLASS} from "./table";
+import { TABLE_V2 } from "./table-v2";
 
 describe("Period table definition", () => {
   it('should have n elements', () => {
     expect(TABLE.length).toBe(114);
-    expect(Object.keys(TABLE_DICO).length).toBe(114);
+    expect(TABLE_V2.length).toBe(117);
+    expect(Object.keys(TABLE_DICO_CLASS).length).toBe(114);
   });
 
   it('should return the correct element', () => {
-    expect(TABLE_DICO).toHaveProperty('H', {symbol:'H', "elementNumber": "1", class: 'element-non-metal'});
+    expect(TABLE_DICO_CLASS).toHaveProperty('H', {symbol:'H', "elementNumber": "1", class: 'element-non-metal'});
   });
 });
