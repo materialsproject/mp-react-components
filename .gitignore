@@ -17,5 +17,6 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 
-# Storybook deployer
+# Storybook files
 out*
+storybook-static

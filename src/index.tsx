@@ -14,7 +14,10 @@ const mountNode = document.getElementById(mountNodeSelector);
 
 ReactDOM.render(
   <div>
-    <SelectableTable enabledElements={{'H': true, 'C': true}} disabledElements={{'Na':true, 'Ca':true}} />
+    <SelectableTable
+      hiddenElements={{}}
+      enabledElements={{'H': true, 'C': true}}
+      disabledElements={{'Na':true, 'Ca':true}} />
     <TableFilter/>
   </div>
 

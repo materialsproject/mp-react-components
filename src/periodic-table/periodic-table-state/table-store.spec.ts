@@ -73,6 +73,6 @@ function defaultReset() {
   resetState(disabledElements, enabledElements);
 }
 
-function resetState(disabledElements = {}, enabledElements = {}) {
-  tableStateStore.init({disabledElements, enabledElements});
+function resetState(disabledElements = {}, enabledElements = {}, hiddenElements = {}, detailedElement = null) {
+  tableStateStore.init({disabledElements, enabledElements, hiddenElements, detailedElement});
 }

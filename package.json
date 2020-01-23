@@ -8,7 +8,9 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "clean": "rm dist/bundle.js",
+    "clean:bundle": "rm -rf dist",
+    "clean:storybook": "rm -rf out* && rm -rf storybook-static",
+    "clean:": "clean:bundle && clean:storybook",
     "start": "parcel src/index.html",
     "build-prod": "parcel build src/index.html",
     "build-publish": "rollup -c",
