@@ -3,6 +3,7 @@ import { Table } from "../periodic-table/periodic-table-component/periodic-table
 import { action } from "@storybook/addon-actions";
 import { SelectableTable} from "../periodic-table/table-state";
 import { useElements } from "../periodic-table/periodic-table-state/table-store";
+import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 
 export default {
   component: Table,
@@ -20,6 +21,12 @@ function SelectedComponent() {
     {getElementsList().map(el => <li key={el}>{el}</li>)}
   </ul>)
 }
+export const filteredTable = () => <>
+  <div> A filtered table</div>
+  <SelectedComponent/>
+  <SelectableTable onStateChange={(a:any) => console.log(a)}  enabledElements={{}} disabledElements={{}} hiddenElements={{}}/>
+  <TableFilter/>
+</>;
 
 export const managedTable = () => <>
   <div> This is a managed table that retains selection from user. The state of the selection is managed outside
@@ -31,13 +38,14 @@ export const managedTable = () => <>
   </div>
 
   <SelectedComponent/>
-  <SelectableTable onStateChange={(a:any) => console.log(a)}  enabledElements={{}} disabledElements={{}}/>
+  <SelectableTable onStateChange={(a:any) => console.log(a)}  enabledElements={{}} disabledElements={{}} hiddenElements={{}}/>
 </>;
 export const table = () => <>
   <div>This a periodic table with no state management. It exposes a click handler
     You need to explicitly wire which elements are selected/disabled
 
   </div>
-  <Table disabledElement={disabledElement} enabledElement={selectedElement} onElementClicked={ action('element-click')}/>;
+  <Table  onElementHovered={action('element-hovered')} disabledElement={disabledElement} hiddenElement={{}} enabledElement={selectedElement} onElementClicked={ action('element-click')}/>;
 </>;
+
 

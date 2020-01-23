@@ -28,7 +28,8 @@ export interface MatElement {
 }
 
 
-export const TABLE_V2: MatElement [] = [
+//TODO(chab) have an abstraction to support grouping of elements ( = lantanid/actinoid)
+export const TABLE_V2: MatElement[] = [
   {
     "name": "Hydrogen",
     "appearance": "colorless gas",
@@ -2514,13 +2515,34 @@ export const TABLE_V2: MatElement [] = [
       965.2,
       3600
     ]
-  },  // lanthandide group
+  }, //lanthandide group
   {
     "symbol": "La-Lu",
     "number": "57-71",
     "category": "lanthanide",
+    "appearance": "",
+    "color": null,
+    "discovered_by": null,
+    "melt": 0,
     "name": "lanthanide",
-    "hasDetail": false
+    "hasDetail": false,
+    "atomic_mass": 0,
+    "boil": 0,
+    density: 0,
+    "molar_heat": 0,
+    "named_by": null,
+    "period": 0,
+    "phase": "Solid",
+    "source": "",
+    "spectral_img": "",
+    "summary": "",
+    "xpos": 0,
+    "ypos": 6,
+    "shells": [],
+    "electron_configuration": "",
+    "electron_affinity": 0,
+    "electronegativity_pauling": 0,
+    "ionization_energies": [],
   },
   {
     "name": "Hafnium",
@@ -3163,10 +3185,32 @@ export const TABLE_V2: MatElement [] = [
     ]
   },
   {
-    "category": "actinide",
+    category: "actinide",
     number: "89-103",
     symbol: "Ac-Lr",
-    hasDetail: false
+    hasDetail: false,
+    density: 0,
+    name: '',
+    "atomic_mass": 0,
+    "boil": 0,
+    "molar_heat": 0,
+    "appearance": "",
+    "color": null,
+    "discovered_by": null,
+    "melt": 0,
+    "named_by": null,
+    "period": 0,
+    "phase": "Solid",
+    "source": "",
+    "spectral_img": "",
+    "summary": "",
+    "xpos": 0,
+    "ypos": 6,
+    "shells": [],
+    "electron_configuration": "",
+    "electron_affinity": 0,
+    "electronegativity_pauling": 0,
+    "ionization_energies": [],
   },
   {
     "name": "Rutherfordium",
