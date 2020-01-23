@@ -58,7 +58,10 @@ export function TableFilter() {
             <div key={idx} className="filter-group">
               {(filterGroup as any[]).map(f =>
                 <div key={f.name}
-                     onClick={() => setFilter({lowerFilter: f.name === 'All' ? 'All' : filter.lowerFilter, topFilter:f})}
+                     onClick={() => {
+                       setFilter({lowerFilter: f.name === 'All' ? 'All' : filter.lowerFilter, topFilter:f});
+                       f.name === 'All' && tableStateStore.setHiddenElements({});
+                     }}
                      className={`current-filter-selector ${f.name === filter.topFilter.name ? 'selected' : ''}`}>
                   {f.name}
                 </div>)}

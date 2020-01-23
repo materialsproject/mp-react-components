@@ -25,6 +25,7 @@ export const filteredTable = () => <>
   <div> A filtered table</div>
   <SelectedComponent/>
   <SelectableTable onStateChange={(a:any) => console.log(a)}  enabledElements={{}} disabledElements={{}} hiddenElements={{}}/>
+  <div style={{margin: 10}}/>
   <TableFilter/>
 </>;
 
@@ -33,6 +34,7 @@ export const managedTable = () => <>
     of the components and can be reused by other components, look at the <code> SelectedComponent </code>
     It's a simple component that display the list of selected components
   </div>
+  <div style={{margin: 10}}/>
   <div> For working with dash, a master component should expose changes in the state as a callback prop. This
     table is doing it as.
   </div>
