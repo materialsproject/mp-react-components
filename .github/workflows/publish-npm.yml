@@ -16,16 +16,21 @@ jobs:
         with:
           python-version: 3.7
       - uses: actions/setup-node@v1
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         with:
           node-version: '12.x'
+          registry-url: https://registry.npmjs.org/
+          scope: '@fjchabbey'
       - name: Install dependencies
         run: |
           npm i
       - name: Build project
         run: |
-          npm run build publish
+          npm run build-publish
       - name: Publish to NPM
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
+          echo Publishing to test repo $NODE_AUTH_TOKEN
           npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
