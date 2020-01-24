@@ -16,7 +16,7 @@ export const FILTER_VALUE_MAPPER: any = {
   'Post-Transition Metals': 'element-metal', //TODO(chab) confirm with Matthew
   'Lanthanides': 'element-lanthoid',
   'Noble Gases': 'element-noble-gas',
-  'Halognes': 'element-halogen',
+  'Halogens': 'element-halogen',
   'Nonmetals': 'element-non-metal'
 };
 
@@ -42,7 +42,7 @@ export const FILTERS = {
         name: "Nonmetals", key: "category",
         subGroups: [
           { name: "Nonmetals" },
-          { name: "Halognes" },
+          { name: "Halogens" },
           { name: "Noble Gases" }
         ]
       }
