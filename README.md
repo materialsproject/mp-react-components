@@ -11,8 +11,17 @@ The exported components are located here:`src/periodic-table/index.ts`
 
 ### Manually
 
-Use npm `build-publish` to build the project.
+Use `npm build-publish` to build the project.
 Use `npm publish` to push to npm
+
+#### Pre-releases
+
+Tag your package. We use the `next` tag
+`npm publish --tag next`  
+This will prevent npm for considering it as the latest release
+
+People who want to install a pre-release will need to specify the tag
+`npm install d3@next`
 
 
 ### Automatically(TODO)
