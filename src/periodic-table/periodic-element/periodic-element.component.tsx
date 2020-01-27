@@ -1,5 +1,5 @@
 import * as React from "react";
-import {MatElement} from "../table-v2";
+import { MatElement, TABLE_DICO_V2 } from "../table-v2";
 import './periodic-element.module.less';
 import './periodic-element.detailed.less';
 import { TABLE_DICO_CLASS } from "../table";
@@ -13,7 +13,7 @@ export interface PeriodicElementProps {
     disabled: boolean;
     enabled: boolean;
     hidden: boolean;
-    element: MatElement;
+    element: MatElement | string;
     displayMode?: DISPLAY_MODE;
     onElementClicked: (e:MatElement) => void;
     onElementHovered: (e:MatElement) => void;
@@ -38,9 +38,17 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
       hidden: hidden
     };
 
+    if (typeof(element) === "string") {
+      if (!TABLE_DICO_V2[element]) {
+        console.error('Element', element, ' not found');
+        return;
+      }
+      element = TABLE_DICO_V2[element];
+    }
+
     return (<div
-      onClick={() => handleClick(element)}
-      onMouseOver={() => handleHover(element)}
+      onClick={() => handleClick(element as MatElement)}
+      onMouseOver={() => handleHover(element as MatElement)}
       className={
         `mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${cl.hidden ? 'hidden' : ''} ${cl.enabled ? 'enabled' : ''} ${cl.disabled ? 'disabled' : ''}`}>
 
