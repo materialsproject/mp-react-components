@@ -1,5 +1,5 @@
 import { Subject } from "rxjs";
-import { shareReplay, tap } from "rxjs/operators";
+import { distinctUntilChanged, map, shareReplay, tap } from "rxjs/operators";
 import * as React from "react";
 
 // makes an abstraction on top of process
@@ -58,14 +58,19 @@ export function useElements(initialDisabledElements?: any, initialEnabledElement
   const [hiddenElements, setHiddenElements] = React.useState({});
 
   React.useEffect(() => {
+    // Update the view of the components that use it
     const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}) => {
       setDisabled(disabledElements);
       setEnabled(enabledElements);
       setHiddenElements(hiddenElements);
-      if (onStateChange) {
-        onStateChange(enabledElements);
-      }
     });
+
+    // Triggers external callback that dash user will provide
+    const enabledElementsSubscription = observable.pipe(map(({enabledElements}) => enabledElements), distinctUntilChanged()).subscribe(
+      (enabledElements) => onStateChange && onStateChange(enabledElements)
+    );
+
+
     if (initialDisabledElements && initialEnabledElements && initialHiddenElements) {
       tableStateStore.init({
         enabledElements:initialEnabledElements,
@@ -77,7 +82,10 @@ export function useElements(initialDisabledElements?: any, initialEnabledElement
     }
 
     // clean up subscription;
-    return () => subscription.unsubscribe();
+    return () =>  {
+      subscription.unsubscribe();
+      enabledElementsSubscription.unsubscribe();
+    }
   }, []); // by passing an empty array, we tell React to only run this effect ONCE
 
   return {disabledElements, enabledElements, hiddenElements};
@@ -87,7 +95,6 @@ export function useDetailedElement() {
   const [detailedElement, setDetailedElement] = React.useState('');
   React.useEffect(() => {
     const subscription = observable.subscribe(({detailedElement}) => {
-
       if (detailedElement)
       {
         setDetailedElement(detailedElement!);
