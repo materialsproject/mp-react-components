@@ -41,7 +41,7 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
     if (typeof(element) === "string") {
       if (!TABLE_DICO_V2[element]) {
         console.error('Element', element, ' not found');
-        return;
+        return <div></div>;
       }
       element = TABLE_DICO_V2[element];
     }
@@ -72,3 +72,4 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
         }
     </div>)
 }
+

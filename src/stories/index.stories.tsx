@@ -4,6 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { SelectableTable} from "../periodic-table/table-state";
 import { useElements } from "../periodic-table/periodic-table-state/table-store";
 import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
+import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 
 export default {
   component: Table,
@@ -50,4 +51,15 @@ export const table = () => <>
   <Table  onElementHovered={action('element-hovered')} disabledElement={disabledElement} hiddenElement={{}} enabledElement={selectedElement} onElementClicked={ action('element-click')}/>;
 </>;
 
+
+export const component = () => <>
+  <div> There are some cases when you might want to display just one component. </div>
+
+    <StandalonePeriodicComponent size={50} disabled={false}
+                                 enabled={false}
+                                 hidden={false}
+                                 element={'H'}
+                                 onElementClicked={() => {}}
+                                 onElementHovered={() => {}}/>
+  </>;
 
