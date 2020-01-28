@@ -16,12 +16,14 @@ export interface TableProps {
   /** Callback who gets called once the user clicked an element; the clicked element is passed **/
   onElementClicked: (mat: MatElement) => void;
   onElementHovered: (mat: MatElement) => void;
+  forceTableLayout?: TableLayout
 }
 
 export enum TableLayout {
   SPACED = 'spaced',
   COMPACT = 'compact',
-  MINI = 'small'
+  MINI = 'small',
+  MAP = 'map',
 }
 
 // Ultimately, we'll allow people to pass a specific component by using render props
@@ -57,7 +59,7 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
   </React.Fragment>);
 }
 
-export function Table({disabledElement, enabledElement, hiddenElement, onElementClicked, onElementHovered}: TableProps) {
+export function Table({disabledElement, enabledElement, hiddenElement, onElementClicked, onElementHovered, forceTableLayout}: TableProps) {
   const [isShown,setIsShown] = React.useState(true);
   const isDesktop = useMediaQuery({ minWidth: 992 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
@@ -65,7 +67,7 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
   console.log('hidden', hiddenElement);
 
   return (
-    <div className={`table-container ${getLayout(isDesktop, isTablet, isMobile)} ${isShown ? '' : 'elements-hidden'}`}>
+    <div className={`table-container ${getLayout(isDesktop, isTablet, isMobile, forceTableLayout)} ${isShown ? '' : 'elements-hidden'}`}>
       <TableSpacer onTableSwitcherClicked={ () => setIsShown(!isShown)}/>
       {TABLE_V2.map((element: MatElement) =>
           <PeriodicElement
@@ -80,7 +82,8 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
     </div>)
 }
 
-function getLayout(isDesktop: boolean, isTablet: boolean, isMobile: boolean) {
+function getLayout(isDesktop: boolean, isTablet: boolean, isMobile: boolean, tableLayout?: TableLayout ) {
+  if (tableLayout) return tableLayout;
   if (isDesktop) { return TableLayout.SPACED}
   if (isTablet) { return TableLayout.COMPACT}
   if (isMobile) { return TableLayout.MINI}

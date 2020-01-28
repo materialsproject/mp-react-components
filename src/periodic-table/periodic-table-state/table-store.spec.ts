@@ -1,9 +1,12 @@
-import { tableStateStore, observable } from "./table-store";
+import { getPeriodicSelectionStore } from "./table-store";
 import { take } from "rxjs/operators";
 
 //NOTE(chab) as the component is not mounted, you need to subscribe before having a value emitted
 
 const enabledElements = { 'E': true}, disabledElements = {'Cl': true};
+
+
+const { actions: tableStateStore, observable} = getPeriodicSelectionStore();
 
 describe("Table store", () => {
   it("should be correctly cleared", done => {
@@ -58,8 +61,9 @@ describe("Table store", () => {
     tableStateStore.setEnabledElements({Pl: false, O: true});
     checkObservableNotification({Pl: false, O: true}, {...disabledElements}, done);
   });
-
 });
+
+//TODO(chab) write unit tests to prove that 2 stores are wholly separated
 
 function checkObservableNotification(enabled: any, disabled: any, done: jest.DoneCallback) {
   observable.pipe(take(1)).subscribe((n) => {

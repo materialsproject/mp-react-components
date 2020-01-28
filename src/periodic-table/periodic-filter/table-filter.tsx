@@ -4,7 +4,8 @@ import './table-filter.less';
 import { useState } from "react";
 import { TABLE_V2 } from "../table-v2";
 import { TABLE_DICO_CLASS } from "../table";
-import { tableStateStore} from "../periodic-table-state/table-store";
+import { PeriodicSelectionContext } from "../periodic-table-state/table-store";
+import { useContext } from "react";
 
 
 //TODO(chab) cache computations
@@ -31,6 +32,7 @@ function performFilter(array: any[], key: string, value: string): any[] {
 export function TableFilter() {
   // TODO support multi filtering
   const [filter, setFilter] = useState({topFilter: {name: 'All'} as any, lowerFilter: {name: 'All'} as any});
+  const { actions} = useContext(PeriodicSelectionContext);
 
 
   function dispatchFilter(f: any) {
@@ -44,7 +46,7 @@ export function TableFilter() {
     console.log('should filter on', filter.topFilter.key, f.name, filterValue);
     const filteredElements = performFilter(TABLE_V2, filter.topFilter.key, filterValue);
     console.log('filtered ====>', filteredElements);
-    tableStateStore.setHiddenElements(filteredElements);
+    actions.setHiddenElements(filteredElements);
   }
 
   return (
@@ -60,7 +62,7 @@ export function TableFilter() {
                 <div key={f.name}
                      onClick={() => {
                        setFilter({lowerFilter: f.name === 'All' ? 'All' : filter.lowerFilter, topFilter:f});
-                       f.name === 'All' && tableStateStore.setHiddenElements({});
+                       f.name === 'All' && actions.setHiddenElements({});
                      }}
                      className={`current-filter-selector ${f.name === filter.topFilter.name ? 'selected' : ''}`}>
                   {f.name}
