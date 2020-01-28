@@ -32,9 +32,16 @@ export function getPeriodicSelectionStore() {
   state$.next(state);
   const observable: Observable<State> = !process.env.DEBUG && !(process.env.NODE_ENV === 'test')
     ? state$.pipe((shareReplay(1)))
-    : state$.pipe(tap(s => console.log('ELEMENTS STATE', s)), shareReplay(1));
+    : state$.pipe(tap(s => {}), shareReplay(1));
   const actions = {
-    init: (initialState: State = defaultState) => (state = initialState) && state$.next(state),
+    init: (initialState: State = defaultState) => {
+      if (initialState.disabledElements) state.disabledElements = initialState.disabledElements;
+      if (initialState.enabledElements) state.enabledElements = initialState.enabledElements;
+      if (initialState.hiddenElements) state.hiddenElements = initialState.hiddenElements;
+      if (initialState.detailedElement) state.detailedElement = initialState.detailedElement;
+      console.log('START', state);
+      state$.next(state)
+    },
     setEnabledElements: (enabledElements: any) => (state = {...state, enabledElements}) && state$.next(state),
     setDisabledElements: (disabledElements: any) => (state = {...state, disabledElements}) && state$.next(state),
     clear: () => state$.next(defaultState),
@@ -79,7 +86,9 @@ export function useElements(initialDisabledElements?: any,
   const [hiddenElements, setHiddenElements] = React.useState({});
   const {observable, actions} = useContext(PeriodicSelectionContext);
 
+
   React.useEffect(() => {
+
     // Update the view of the components that use it
     const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}: any) => {
       setDisabled(disabledElements);

@@ -43,9 +43,7 @@ export function TableFilter() {
       console.warn('no mapping value found, falling back to default value');
       filterValue = f.name;
     }
-    console.log('should filter on', filter.topFilter.key, f.name, filterValue);
     const filteredElements = performFilter(TABLE_V2, filter.topFilter.key, filterValue);
-    console.log('filtered ====>', filteredElements);
     actions.setHiddenElements(filteredElements);
   }
 

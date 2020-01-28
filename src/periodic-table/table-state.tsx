@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useElements } from "./periodic-table-state/table-store";
 import { Table, TableLayout } from "./periodic-table-component/periodic-table.component";
+import { useEffect } from "react";
 
 
 interface SelectableTableProps {
@@ -11,10 +12,23 @@ interface SelectableTableProps {
     forceTableLayout?: TableLayout
 }
 
+
 //FIXME handle all the cases where we know state has not changed
-export function SelectableTable({enabledElements, disabledElements, hiddenElements, onStateChange, ...props}: SelectableTableProps) {
+export function SelectableTable(props: SelectableTableProps) {
+    // TOOD(chab) explore the other way, have three different subscriptions with distinctUntilChanged
+    // The current approach will not work if we do not keep a stable reference
+    useEffect(() => { console.log("[Scomponent updated, e");
+        tableStateStore.setEnabledElements(props.enabledElements);
+    }, [props.enabledElements]);
+    useEffect(() => { console.log("[Scomponent updated, d");
+        tableStateStore.setDisabledElements(props.disabledElements);
+    }, [props.disabledElements]);
+    useEffect(() => { console.log("[Scomponent updated, h");
+        tableStateStore.setHiddenElements(props.hiddenElements);
+    }, [props.hiddenElements]);
+
     const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
-        = useElements(disabledElements, enabledElements, hiddenElements, onStateChange);
+     = useElements(props.disabledElements, props.enabledElements, props.hiddenElements, props.onStateChange);
 
     return (<Table
       onElementClicked={(element) => tableStateStore.toggleEnabledElement(element.symbol)}

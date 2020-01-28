@@ -12,6 +12,7 @@ import { StandalonePeriodicComponent } from "./periodic-table/periodic-element/s
 import { useElements } from "./periodic-table/periodic-table-state/table-store";
 import { PeriodicContext } from "./periodic-table/periodic-table-state/periodic-selection-context";
 import { TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
+import { useState } from "react";
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -43,44 +44,64 @@ function SelectedComponentSimple() {
   </ul>)
 }
 
-ReactDOM.render(
-  <>
-    <PeriodicContext>
-      <div>
-        <SelectableTable
-          hiddenElements={{}}
-          onStateChange={(a: any) => {
-            console.log('new elements', a);
-          }}
-          enabledElements={{'H': true, 'C': true}}
-          disabledElements={{'Na':true, 'Ca':true}} />
-        <TableFilter/>
-        <SelectedComponent/>
-        <div>{elements}</div>
-      </div>
-    </PeriodicContext>
+function TestComponent(props: any) {
 
-    <PeriodicContext>
-      <div>
+  const [d, sd] = useState(props.d as any);
+  const [z, sz] = useState(props.e as any);
+
+  return (
+    <div>
+      <div onClick={() => { console.log('CLICKED');
+        sz({});
+        sd({'K':true, Rb: true} );}}>CLICK ME</div>
+
+      <PeriodicContext>
         <div>
           <SelectableTable
-            forceTableLayout={TableLayout.COMPACT}
-            hiddenElements={{}}
-            onStateChange={(enabledElements: any) => {
-              elements = Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+            hiddenElements={props.e}
+            onStateChange={(a: any) => {
+              //console.log('new elements', a);
             }}
-            enabledElements={{'H': true, 'C': true}}
-            disabledElements={{'Na':true, 'Ca':true}} />
+            enabledElements={z}
+            disabledElements={d} />
           <TableFilter/>
-          <SelectableTable
-            forceTableLayout={TableLayout.MAP}
-            enabledElements={{'H': true, 'C': true}}
-            disabledElements={{'Na':true, 'Ca':true}}
-            hiddenElements={{}}/>
+          <SelectedComponent/>
+          <div>{props.toString()}</div>
         </div>
-        <SelectedComponentSimple/>
-      </div>
-    </PeriodicContext>
+      </PeriodicContext>)
+    </div>)
+
+}
+
+
+
+ReactDOM.render(
+  <>
+    <div>
+      <TestComponent d={{'B': true}} b={{}} e={{}}/>
+      {/*<PeriodicContext>
+        <div>
+          <div>
+            <SelectableTable
+              forceTableLayout={TableLayout.COMPACT}
+              hiddenElements={{}}
+              onStateChange={(enabledElements: any) => {
+                elements = Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+              }}
+              enabledElements={{'H': true, 'C': true}}
+              disabledElements={{'Na':true, 'Ca':true}} />
+            <TableFilter/>
+            <SelectableTable
+              forceTableLayout={TableLayout.MAP}
+              enabledElements={{'H': true, 'C': true}}
+              disabledElements={{'Na':true, 'Ca':true}}
+              hiddenElements={{}}/>
+          </div>
+          <SelectedComponentSimple/>
+        </div>
+      </PeriodicContext>*/}
+
+    </div>
   </>
 
 , mountNode);
