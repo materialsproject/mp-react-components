@@ -8,6 +8,7 @@ interface SelectableTableProps {
     enabledElements: {},
     disabledElements: {},
     hiddenElements: {},
+    maxElementSelectable: number,
     onStateChange?: any
     forceTableLayout?: TableLayout
 }
@@ -26,9 +27,17 @@ export function SelectableTable(props: SelectableTableProps) {
     useEffect(() => { console.log("[Scomponent updated, h");
         tableStateStore.setHiddenElements(props.hiddenElements);
     }, [props.hiddenElements]);
+    useEffect(() => { console.log("MAX UPDATE");
+        //TODO(chab) let's suppose this change on the fly, we might need to deselect all the extraneous element
+        tableStateStore.setMaxSelectionLimit(props.maxElementSelectable);
+    }, [props.maxElementSelectable]);
 
     const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
-     = useElements(props.disabledElements, props.enabledElements, props.hiddenElements, props.onStateChange);
+     = useElements(props.disabledElements,
+      props.enabledElements,
+      props.hiddenElements,
+      props.maxElementSelectable,
+      props.onStateChange);
 
     return (<Table
       onElementClicked={(element) => tableStateStore.toggleEnabledElement(element.symbol)}

@@ -48,16 +48,19 @@ function TestComponent(props: any) {
 
   const [d, sd] = useState(props.d as any);
   const [z, sz] = useState(props.e as any);
+  const [sel ,ss] = useState(2);
 
   return (
     <div>
       <div onClick={() => { console.log('CLICKED');
+        ss(1);
         sz({});
         sd({'K':true, Rb: true} );}}>CLICK ME</div>
 
       <PeriodicContext>
         <div>
           <SelectableTable
+            maxElementSelectable={sel}
             hiddenElements={props.e}
             onStateChange={(a: any) => {
               //console.log('new elements', a);

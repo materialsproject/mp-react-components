@@ -61,9 +61,28 @@ describe("Table store", () => {
     tableStateStore.setEnabledElements({Pl: false, O: true});
     checkObservableNotification({Pl: false, O: true}, {...disabledElements}, done);
   });
+  it('if max elements is set to one, it should only allows one selected element', done => {
+    resetState({}, {});
+    tableStateStore.setMaxSelectionLimit(1);
+    tableStateStore.toggleEnabledElement('H');
+    tableStateStore.toggleEnabledElement('Fe');
+    checkObservableNotification({H: false, Fe: true}, { }, done);
+
+  });
+  it('if max elements is set to two, it should only allows two selecteds element', done => {
+    resetState({}, {});
+    tableStateStore.setMaxSelectionLimit(2);
+    tableStateStore.toggleEnabledElement('H');
+    tableStateStore.toggleEnabledElement('Fe');
+    tableStateStore.toggleEnabledElement('O');
+    checkObservableNotification({H: true, Fe: false, O: true}, { }, done);
+  });
+
+  //TODO(chab) check case when we switch the maximum afterwards once it's implemented
+  //TODO(chab) write unit tests to prove that 2 stores are wholly separated
 });
 
-//TODO(chab) write unit tests to prove that 2 stores are wholly separated
+
 
 function checkObservableNotification(enabled: any, disabled: any, done: jest.DoneCallback) {
   observable.pipe(take(1)).subscribe((n) => {

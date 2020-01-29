@@ -30,9 +30,11 @@ export function getPeriodicSelectionStore() {
   let state: State = defaultState;
   const state$: Subject<State> = new Subject();
   state$.next(state);
+  let maxItemAllowed = 5; // Number.MAX_SAFE_INTEGER;
   const observable: Observable<State> = !process.env.DEBUG && !(process.env.NODE_ENV === 'test')
     ? state$.pipe((shareReplay(1)))
     : state$.pipe(tap(s => {}), shareReplay(1));
+  let lastElementsToggled: string = '';
   const actions = {
     init: (initialState: State = defaultState) => {
       if (initialState.disabledElements) state.disabledElements = initialState.disabledElements;
@@ -55,9 +57,26 @@ export function getPeriodicSelectionStore() {
     toggleEnabledElement: (enabledElement: string) =>
       {
         if (!state.disabledElements[enabledElement]) {
-          (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
+          if(!state.enabledElements[enabledElement]) {
+            if ( Object.keys(state.enabledElements).filter((el) => (state.enabledElements as any)[el]).length  === maxItemAllowed) {
+              state.enabledElements[lastElementsToggled] = false;
+              state.enabledElements[enabledElement] = true;
+              lastElementsToggled = enabledElement;
+              state.enabledElements = {...state.enabledElements};
+              state$.next(state)
+            } else {
+              console.log(enabledElement);
+              lastElementsToggled = enabledElement;
+              (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
+            }
+          } else {
+            (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
+          }
         }
-      }
+      },
+    setMaxSelectionLimit: (maxItem: number) =>  {
+      maxItemAllowed = maxItem;
+    }
   };
 
   return {
@@ -80,6 +99,7 @@ export const PeriodicSelectionContext = React.createContext({ observable: {} as 
 export function useElements(initialDisabledElements?: any,
                             initialEnabledElements?: any,
                             initialHiddenElements?: any,
+                            maxElementSelection: number = 10,
                             onStateChange?: any) {
   const [disabledElements, setDisabled] = React.useState({});
   const [enabledElements, setEnabled] = React.useState({});
@@ -88,7 +108,7 @@ export function useElements(initialDisabledElements?: any,
 
 
   React.useEffect(() => {
-
+    actions.setMaxSelectionLimit(maxElementSelection);
     // Update the view of the components that use it
     const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}: any) => {
       setDisabled(disabledElements);
