@@ -30,7 +30,7 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
                                     onElementClicked,
                                     onElementHovered}: PeriodicElementProps) {
 
-    const handleClick = (element:MatElement) => onElementClicked(element);
+    const handleClick = (element:MatElement) => !element.hasGroup && onElementClicked(element);
     const handleHover = (element:MatElement) => onElementHovered(element);
     const cl = {
       enabled: !hidden && enabled && !disabled,
@@ -50,7 +50,8 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
       onClick={() => handleClick(element as MatElement)}
       onMouseOver={() => handleHover(element as MatElement)}
       className={
-        `mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${cl.hidden ? 'hidden' : ''} ${cl.enabled ? 'enabled' : ''} ${cl.disabled ? 'disabled' : ''}`}>
+        `mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${cl.hidden ? 'hidden' : ''} ${cl.enabled ? 'enabled' : ''}
+          ${element.hasGroup ? 'mat-group' : ''}  ${cl.disabled ? 'disabled' : ''}`}>
 
         {displayMode === DISPLAY_MODE.SIMPLE ?
           <React.Fragment>
@@ -62,9 +63,9 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
                   <div className="mat-number">{element.number}</div>
                   <div className="mat-symbol"> {element.symbol}</div>
                   <div className="mat-name">{element.name}</div>
-                  <div className="mat-weight">{element.atomic_mass}</div>
+                {!element.hasGroup && <div className="mat-weight">{element.atomic_mass}</div>}
               </div>
-            {element.shells && <div className='mat-side-panel'>
+            { (element.shells && element.hasGroup) && <div className='mat-side-panel'>
                   {element.shells.map((shell, idx) => <div key={idx}>{shell}</div>)}
               </div>}
 
