@@ -30,16 +30,16 @@
     background: #CBF3F0;
   }
 
-  .symbol {
+  .mat-symbol {
     .flex-container-sized();
     .flex-centered-container(row);
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: 400;
   }
   .element {
     .flex-container-sized();
   }
-  .number {
+  .mat-number {
     font-size: 0.7em;
     margin: 5px;
   }
@@ -92,23 +92,23 @@
 
 
 .compact.table-container {
-  .number {
+  .mat-number {
     display: none;
   }
 
   .main-panel {
-    .number {
+    .mat-number {
       font-size: 1em;
       display: initial;
     }
-    .symbol {
+    .mat-symbol {
       font-size: 1.5rem;
     }
   }
   .symbol {
     font-size: 1rem;
   }
-  .name, .weight {
+  .mat-name, .mat-weight {
     font-size: 0.7rem;
     font-weight: normal;
   }
@@ -118,10 +118,10 @@
 }
 
 .small.table-container {
-  .number, .detailed, .name {
+  .mat-number, .detailed, .mat-name {
     display: none;
   }
-  .symbol {
+  .mat-symbol {
     font-size: 0.4rem;
   }
 }
@@ -130,7 +130,7 @@
   .mat-element {
 
   }
-  .number, .detailed, .name, .symbol {
+  .mat-number, .detailed, .mat-name, .mat-symbol {
     display: none;
   }
 }

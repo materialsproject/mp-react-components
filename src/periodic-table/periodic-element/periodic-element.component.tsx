@@ -54,17 +54,17 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
 
         {displayMode === DISPLAY_MODE.SIMPLE ?
           <React.Fragment>
-              <div className="number">{element.number}</div>
-              <div className="symbol"> {element.symbol}</div>
+              <div className="mat-number">{element.number}</div>
+              <div className="mat-symbol"> {element.symbol}</div>
           </React.Fragment>
           : <React.Fragment>
               <div className='main-panel'>
-                  <div className="number">{element.number}</div>
-                  <div className="symbol"> {element.symbol}</div>
-                  <div className="name">{element.name}</div>
-                  <div className="weight">{element.atomic_mass}</div>
+                  <div className="mat-number">{element.number}</div>
+                  <div className="mat-symbol"> {element.symbol}</div>
+                  <div className="mat-name">{element.name}</div>
+                  <div className="mat-weight">{element.atomic_mass}</div>
               </div>
-            {element.shells && <div className='side-panel'>
+            {element.shells && <div className='mat-side-panel'>
                   {element.shells.map((shell, idx) => <div key={idx}>{shell}</div>)}
               </div>}
 
