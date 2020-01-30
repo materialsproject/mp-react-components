@@ -23,7 +23,8 @@ describe("Table store", () => {
     defaultReset();
     tableStateStore.toggleEnabledElement('E');
     tableStateStore.toggleEnabledElement('H');
-    checkObservableNotification({...enabledElements,  E:false, H:true}, {...disabledElements}, done);
+
+    checkObservableNotification({ H:true }, {...disabledElements}, done);
   });
 
   it('should add an enabled elements correctly', done => {
@@ -41,32 +42,32 @@ describe("Table store", () => {
   it('should remove an enabled elements correctly', done => {
     defaultReset();
     tableStateStore.removeEnabledElement('Na');
-    checkObservableNotification({...enabledElements, Na:false}, {...disabledElements}, done);
+    checkObservableNotification({...enabledElements}, {...disabledElements}, done);
   });
 
   it('should remove a disabled elements correctly', done => {
     defaultReset();
     tableStateStore.removeDisabledElement('Na');
-    checkObservableNotification({...enabledElements}, {...disabledElements, Na: false}, done);
+    checkObservableNotification({...enabledElements}, {...disabledElements }, done);
   });
 
   it('should set enabled elements correctly', done => {
     defaultReset();
-    tableStateStore.setDisabledElements({Pl: false, O: true});
-    checkObservableNotification({...enabledElements}, {Pl: false, O: true}, done);
+    tableStateStore.setDisabledElements({O: true});
+    checkObservableNotification({...enabledElements}, {O: true}, done);
   });
 
   it('should set disabled elements correctly', done => {
     defaultReset();
-    tableStateStore.setEnabledElements({Pl: false, O: true});
-    checkObservableNotification({Pl: false, O: true}, {...disabledElements}, done);
+    tableStateStore.setEnabledElements({ O: true});
+    checkObservableNotification({O: true}, {...disabledElements}, done);
   });
   it('if max elements is set to one, it should only allows one selected element', done => {
     resetState({}, {});
     tableStateStore.setMaxSelectionLimit(1);
     tableStateStore.toggleEnabledElement('H');
     tableStateStore.toggleEnabledElement('Fe');
-    checkObservableNotification({H: false, Fe: true}, { }, done);
+    checkObservableNotification({Fe: true}, { }, done);
 
   });
   it('if max elements is set to two, it should only allows two selecteds element', done => {
@@ -75,7 +76,7 @@ describe("Table store", () => {
     tableStateStore.toggleEnabledElement('H');
     tableStateStore.toggleEnabledElement('Fe');
     tableStateStore.toggleEnabledElement('O');
-    checkObservableNotification({H: true, Fe: false, O: true}, { }, done);
+    checkObservableNotification({H: true, O: true}, { }, done);
   });
 
   //TODO(chab) check case when we switch the maximum afterwards once it's implemented

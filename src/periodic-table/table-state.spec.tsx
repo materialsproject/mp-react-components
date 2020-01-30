@@ -47,7 +47,7 @@ describe('<SelectableTable/>', () => {
     expect(mockCallback).toBeCalledWith({He:true});
     wrapper.find('.mat-element').at(2).simulate('click'); // click on li
     expect(mockCallback).toHaveBeenCalledTimes(3);
-    expect(mockCallback).toBeCalledWith({He:false, Li: true});
+    expect(mockCallback).toBeCalledWith({Li: true});
   });
 
   //TODO(chab) changing the props should RENDER the table

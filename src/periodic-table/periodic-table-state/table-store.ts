@@ -52,25 +52,35 @@ export function getPeriodicSelectionStore() {
     //TODO(chab) add check to prever unnecessary state mutation
     addEnabledElement: (enabledElement: string) => (state.enabledElements = {...state.enabledElements, [enabledElement]:true}) && state$.next(state),
     addDisabledElement: (disabledElement: string) => (state.disabledElements = {...state.disabledElements, [disabledElement]:true}) && state$.next(state),
-    removeEnabledElement: (enabledElement: string) => (state.enabledElements = {...state.enabledElements, [enabledElement]:false}) && state$.next(state),
-    removeDisabledElement: (disabledElement: string) => (state.disabledElements = {...state.disabledElements, [disabledElement]:false}) && state$.next(state),
+    removeEnabledElement: (enabledElement: string) => {
+      const _s = {...state.enabledElements};
+      delete _s[enabledElement];
+      (state.enabledElements = _s) && state$.next(state);
+    },
+    removeDisabledElement: (disabledElement: string) => {
+      const _s = {...state.disabledElements};
+      delete _s[disabledElement];
+      (state.disabledElements = _s) && state$.next(state);
+    },
     toggleEnabledElement: (enabledElement: string) =>
       {
         if (!state.disabledElements[enabledElement]) {
           if(!state.enabledElements[enabledElement]) {
+            const _s = {...state.enabledElements};
             if ( Object.keys(state.enabledElements).length  === maxItemAllowed) {
-              delete state.enabledElements[lastElementsToggled];
-              state.enabledElements[enabledElement] = true;
+              delete _s[lastElementsToggled];
+              _s[enabledElement] = true;
               lastElementsToggled = enabledElement;
-              state.enabledElements = {...state.enabledElements};
+              state.enabledElements = _s;
               state$.next(state)
             } else {
               lastElementsToggled = enabledElement;
-              (state.enabledElements = {...state.enabledElements, [enabledElement]:true}) && state$.next(state);
+              _s[enabledElement] = true;
+              (state.enabledElements = _s) && state$.next(state);
             }
           } else {
             delete state.enabledElements[enabledElement];
-            (state.enabledElements = {...state.enabledElements, [enabledElement]:false}) && state$.next(state);
+            (state.enabledElements = {...state.enabledElements}) && state$.next(state);
           }
         }
       },
