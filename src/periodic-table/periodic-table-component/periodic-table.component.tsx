@@ -2,7 +2,7 @@ import * as React from "react";
 import "./periodic-table.module.less";
 import { DISPLAY_MODE, PeriodicElement } from "../periodic-element/periodic-element.component";
 import { useDetailedElement } from "../periodic-table-state/table-store";
-import { MatElement, TABLE_DICO_V2, TABLE_V2 } from "../table-v2";
+import { MatElement, TABLE_DICO_V2, TABLE_V2 } from "../periodic-table-data/table-v2";
 import { useMediaQuery } from 'react-responsive';
 
 

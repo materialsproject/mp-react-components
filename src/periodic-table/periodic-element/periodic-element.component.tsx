@@ -1,8 +1,8 @@
 import * as React from "react";
-import { MatElement, TABLE_DICO_V2 } from "../table-v2";
+import { MatElement, TABLE_DICO_V2 } from "../periodic-table-data/table-v2";
 import './periodic-element.module.less';
 import './periodic-element.detailed.less';
-import { TABLE_DICO_CLASS } from "../table";
+import { TABLE_DICO_CLASS } from "../periodic-table-data/table";
 
 export enum  DISPLAY_MODE {
     SIMPLE = 'simple',
