@@ -18,16 +18,13 @@ interface SelectableTableProps {
 //FIXME handle all the cases where we know state has not changed
 export function SelectableTable(props: SelectableTableProps) {
     // TOOD(chab) explore the other way, have three different subscriptions with distinctUntilChanged
-
-
     // memoize those 3 values
-
-
     const {tableStateStore, disabledEls, hiddenEls, enabledEls} = useElementsWithState(props);
 
     return (<Table
       onElementClicked={(element) => tableStateStore.toggleEnabledElement(element.symbol)}
       onElementHovered={(element) => tableStateStore.setDetailedElement(element.symbol)}
+      forceTableLayout={props.forceTableLayout}
       disabledElement={disabledEls}
       hiddenElement={hiddenEls}
       enabledElement={enabledEls}
