@@ -1,5 +1,5 @@
-import { TABLE, TABLE_DICO_CLASS} from "./periodic-table-data/table";
-import { TABLE_V2 } from "./periodic-table-data/table-v2";
+import { TABLE, TABLE_DICO_CLASS} from "./table";
+import { TABLE_V2 } from "./table-v2";
 
 describe("Period table definition", () => {
   it('should have n elements', () => {

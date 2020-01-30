@@ -27,7 +27,7 @@ export function SelectableTable(props: SelectableTableProps) {
     useEffect(() => { console.log("[Scomponent updated, h");
         tableStateStore.setHiddenElements(props.hiddenElements);
     }, [props.hiddenElements]);
-    useEffect(() => { console.log("MAX UPDATE");
+    useEffect(() => {
         //TODO(chab) let's suppose this change on the fly, we might need to deselect all the extraneous element
         tableStateStore.setMaxSelectionLimit(props.maxElementSelectable);
     }, [props.maxElementSelectable]);

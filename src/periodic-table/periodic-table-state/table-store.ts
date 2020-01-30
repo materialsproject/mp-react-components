@@ -65,7 +65,6 @@ export function getPeriodicSelectionStore() {
               state.enabledElements = {...state.enabledElements};
               state$.next(state)
             } else {
-              console.log(enabledElement);
               lastElementsToggled = enabledElement;
               (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
             }
