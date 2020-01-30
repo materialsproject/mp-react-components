@@ -2,11 +2,10 @@ import { FILTER_BY_CATEGORY, FILTER_VALUE_MAPPER, FILTERS } from "./filter-defin
 import * as React from "react";
 import './table-filter.less';
 import { useState } from "react";
-import { TABLE_V2 } from "../table-v2";
-import { TABLE_DICO_CLASS } from "../table";
+import { TABLE_V2 } from "../periodic-table-data/table-v2";
+import { TABLE_DICO_CLASS } from "../periodic-table-data/table";
 import { PeriodicSelectionContext } from "../periodic-table-state/table-store";
 import { useContext } from "react";
-
 
 //TODO(chab) cache computations
 function performFilter(array: any[], key: string, value: string): any[] {
@@ -33,7 +32,6 @@ export function TableFilter() {
   // TODO support multi filtering
   const [filter, setFilter] = useState({topFilter: {name: 'All'} as any, lowerFilter: {name: 'All'} as any});
   const { actions} = useContext(PeriodicSelectionContext);
-
 
   function dispatchFilter(f: any) {
     setFilter({...filter, lowerFilter:f});

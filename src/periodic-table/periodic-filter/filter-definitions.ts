@@ -103,5 +103,4 @@ export const FILTER_BY_CATEGORY = FILTERS.categories.reduce((acc : {[id: string]
   }, acc)
 }, {});
 
-console.log(FILTER_BY_CATEGORY);
 

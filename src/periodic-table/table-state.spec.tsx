@@ -48,8 +48,24 @@ describe('<SelectableTable/>', () => {
     wrapper.find('.mat-element').at(2).simulate('click'); // click on li
     expect(mockCallback).toHaveBeenCalledTimes(3);
     expect(mockCallback).toBeCalledWith({He:false, Li: true});
+  });
+
+  //TODO(chab) changing the props should RENDER the table
+  xit('it should rerender correctly when the hidden/enabled/selected props are updated', () => {
 
   });
+  //TODO(chab) check what happens if the number of enabled elements > maximum allowed
+  xit('', () => {
+
+  });
+
+  xit('it should integrates with filter correctly', () => {
+
+  });
+
+  xit('it should display hovered element', () => {
+
+  })
 });
 
 function renderElement(disabled = {},
