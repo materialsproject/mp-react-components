@@ -17,19 +17,15 @@ Use `npm publish` to push to npm
 
 #### Pre-releases
 
-Tag your package. We use the `next` tag
-`npm publish --tag next`  
-This will prevent npm for considering it as the latest release
-
-People who want to install a pre-release will need to specify the tag
-`npm install d3@next`
-
+Every push triggers a build. If the build is succesfull, a snapshot is pushed
+to npm, as a tagged package. To use the latest snapshot, type the following command
+    
+`npm install mat-periodic-table@next`
 
 ### Automatically(TODO)
 
-We plan to publish from github-actions, when a tag is pushed
-You add a tag with `npm version minor -m "Upgrade to %s"`. This push automatically
-to github. An action will push the build to npm
+Run `npm version minor -m "Upgrade to %s"` to add a tag. Once the tag is pushed, an action will 
+build the components and push the package to build to npm
 
 ## Deploy storybook to github pages
 
