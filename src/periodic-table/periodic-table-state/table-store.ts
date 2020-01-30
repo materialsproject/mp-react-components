@@ -146,6 +146,12 @@ export function useDetailedElement() {
   const [detailedElement, setDetailedElement] = React.useState('');
   const {observable} = useContext(PeriodicSelectionContext);
 
+  //FIXME(chab) this is a hack for the tests, this situation would not happen in real life
+  if (!observable.subscribe) {
+    console.warn('No context defined, you need to manage detailed element by yourself');
+    return detailedElement;
+  }
+
   React.useEffect(() => {
     const subscription = observable.subscribe(({detailedElement}) => {
       if (detailedElement)

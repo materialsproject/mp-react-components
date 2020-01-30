@@ -64,7 +64,6 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
   const isDesktop = useMediaQuery({ minWidth: 992 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
   const isMobile = useMediaQuery({ maxWidth: 767 });
-  //console.log('>>>>>>>>>> hidden', hiddenElement);
 
   return (
     <div className={`table-container ${getLayout(isDesktop, isTablet, isMobile, forceTableLayout)} ${isShown ? '' : 'elements-hidden'}`}>

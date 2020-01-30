@@ -1,6 +1,6 @@
 {
   "name": "mat-periodic-table",
-  "version": "0.0.15",
+  "version": "0.0.15-snap1",
   "description": "",
   "main": "index.js",
   "module": "dist/index.es.js",
@@ -14,7 +14,7 @@
     "start": "parcel src/index.html",
     "build-prod": "parcel build src/index.html",
     "build-publish": "rollup -c",
-    "test": "jest",
+    "test": "jest --env=jsdom",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@storybook/addon-docs": "^5.3.3",
     "@storybook/addon-storysource": "^5.3.3",
+    "@types/jsdom": "^12.2.4",
     "@types/react-responsive": "^8.0.2",
     "css-loader": "^3.4.2",
     "less-loader": "^5.0.0",
@@ -53,6 +54,7 @@
     "babel-loader": "^8.0.6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
+    "jsdom": "^16.0.1",
     "less": "^3.10.3",
     "parcel-bundler": "^1.12.4",
     "postcss": "^7.0.26",
