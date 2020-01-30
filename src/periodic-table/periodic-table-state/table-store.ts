@@ -2,6 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { distinctUntilChanged, map, shareReplay, tap } from "rxjs/operators";
 import * as React from "react";
 import { useContext } from "react";
+import { arrayToDictionnary } from "../../utils/utils";
 
 
 // makes an abstraction on top of process
@@ -107,7 +108,7 @@ export const PeriodicSelectionContext = React.createContext({ observable: {} as 
  *
 **/
 export function useElements(initialDisabledElements?: any,
-                            initialEnabledElements?: any,
+                            initialEnabledElements?: any ,
                             initialHiddenElements?: any,
                             maxElementSelection: number = 10,
                             onStateChange?: any) {
@@ -121,6 +122,7 @@ export function useElements(initialDisabledElements?: any,
     actions.setMaxSelectionLimit(maxElementSelection);
     // Update the view of the components that use it
     const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}: any) => {
+      console.log('change');
       setDisabled(disabledElements);
       setEnabled(enabledElements);
       setHiddenElements(hiddenElements);
@@ -128,15 +130,19 @@ export function useElements(initialDisabledElements?: any,
 
     // Triggers external callback that dash user will provide
     const enabledElementsSubscription = observable.pipe(map(({enabledElements}: any) => enabledElements), distinctUntilChanged()).subscribe(
-      (enabledElements) => onStateChange && onStateChange(enabledElements)
+
+      (enabledElements) => {
+        onStateChange && onStateChange(Object.keys(enabledElements))
+      }
+
     );
 
 
     if (initialDisabledElements && initialEnabledElements && initialHiddenElements) {
       actions.init({
-        enabledElements:initialEnabledElements,
+        enabledElements: initialEnabledElements,
         hiddenElements: initialHiddenElements,
-        disabledElements:initialDisabledElements,
+        disabledElements: initialDisabledElements,
         detailedElement: null});
     } else {
       // actually make that the only way, and force the init somewhere else

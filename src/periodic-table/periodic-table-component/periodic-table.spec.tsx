@@ -9,15 +9,12 @@ jest.mock('../periodic-element/periodic-element.module.less', () => {});
 jest.mock('../periodic-element/periodic-element.detailed.less', () => {});
 
 
-declare var document: Document;
 const enabled = {H: true, Li: true};
 
 describe('<Table/>', () => {
 
   it('should be rendered', () => {
-    console.log(document);
     const wrapper = renderElement(enabled, {...enabled});
-    console.log(wrapper);
     expect(wrapper.find('.table-container').length).toBe(1);
     expect(wrapper.find('.mat-element').length).toBe(120);
   });

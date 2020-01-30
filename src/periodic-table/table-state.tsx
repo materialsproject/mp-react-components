@@ -2,14 +2,15 @@ import * as React from "react";
 import { useElements } from "./periodic-table-state/table-store";
 import { Table, TableLayout } from "./periodic-table-component/periodic-table.component";
 import { useEffect } from "react";
+import { arrayToDictionnary } from "../utils/utils";
 
 
 interface SelectableTableProps {
-    enabledElements: {},
-    disabledElements: {},
-    hiddenElements: {},
+    enabledElements: string[],
+    disabledElements: string[],
+    hiddenElements: string[],
     maxElementSelectable: number,
-    onStateChange?: any
+    onStateChange?: (selected: string[]) => void
     forceTableLayout?: TableLayout
 }
 
@@ -17,27 +18,12 @@ interface SelectableTableProps {
 //FIXME handle all the cases where we know state has not changed
 export function SelectableTable(props: SelectableTableProps) {
     // TOOD(chab) explore the other way, have three different subscriptions with distinctUntilChanged
-    // The current approach will not work if we do not keep a stable reference
-    useEffect(() => { console.log("[Scomponent updated, e");
-        tableStateStore.setEnabledElements(props.enabledElements);
-    }, [props.enabledElements]);
-    useEffect(() => { console.log("[Scomponent updated, d");
-        tableStateStore.setDisabledElements(props.disabledElements);
-    }, [props.disabledElements]);
-    useEffect(() => { console.log("[Scomponent updated, h");
-        tableStateStore.setHiddenElements(props.hiddenElements);
-    }, [props.hiddenElements]);
-    useEffect(() => {
-        //TODO(chab) let's suppose this change on the fly, we might need to deselect all the extraneous element
-        tableStateStore.setMaxSelectionLimit(props.maxElementSelectable);
-    }, [props.maxElementSelectable]);
 
-    const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
-     = useElements(props.disabledElements,
-      props.enabledElements,
-      props.hiddenElements,
-      props.maxElementSelectable,
-      props.onStateChange);
+
+    // memoize those 3 values
+
+
+    const {tableStateStore, disabledEls, hiddenEls, enabledEls} = useElementsWithState(props);
 
     return (<Table
       onElementClicked={(element) => tableStateStore.toggleEnabledElement(element.symbol)}
@@ -48,3 +34,40 @@ export function SelectableTable(props: SelectableTableProps) {
       {...props} />);
 }
 
+const useElementsWithState = (props: SelectableTableProps): any => {
+    // could be memoized
+    const els = arrayToDictionnary(props.enabledElements);
+    const dls = arrayToDictionnary(props.disabledElements);
+    const hiddenElements = arrayToDictionnary(props.hiddenElements);
+
+    const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
+      = useElements(dls,
+      els,
+      hiddenElements,
+      props.maxElementSelectable,
+      props.onStateChange);
+
+    useEffect(() => {
+        console.log("[Scomponent updated, e");
+        tableStateStore.setEnabledElements(els);
+    }, [props.enabledElements]);
+    useEffect(() => {
+        console.log("[Scomponent updated, d");
+        tableStateStore.setDisabledElements(dls);
+    }, [props.disabledElements]);
+    useEffect(() => {
+        console.log("[Scomponent updated, h");
+        tableStateStore.setHiddenElements(hiddenElements);
+    }, [props.hiddenElements]);
+    useEffect(() => {
+        //TODO(chab) let's suppose this change on the fly, we might need to deselect all the extraneous element
+        tableStateStore.setMaxSelectionLimit(props.maxElementSelectable);
+    }, [props.maxElementSelectable]);
+
+    return {
+        tableStateStore,
+        enabledEls,
+        disabledEls,
+        hiddenEls
+    }
+};

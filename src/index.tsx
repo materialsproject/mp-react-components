@@ -54,8 +54,8 @@ function TestComponent(props: any) {
     <div>
       <div onClick={() => { console.log('CLICKED');
         ss(1);
-        sz({});
-        sd({'K':true, Rb: true} );}}>CLICK ME</div>
+        sz([]);
+        sd(['K', 'Be']);}}>CLICK ME</div>
 
       <PeriodicContext>
         <div>
@@ -73,7 +73,6 @@ function TestComponent(props: any) {
         </div>
       </PeriodicContext>)
     </div>)
-
 }
 
 
@@ -81,7 +80,7 @@ function TestComponent(props: any) {
 ReactDOM.render(
   <>
     <div>
-      <TestComponent d={{'B': true}} b={{}} e={{}}/>
+      <TestComponent d={['B']} b={[]} e={[]}/>
       {/*<PeriodicContext>
         <div>
           <div>
