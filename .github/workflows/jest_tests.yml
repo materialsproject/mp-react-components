@@ -9,11 +9,23 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate build number
+        id: build_id
+         # add a step output `steps.build_id.outputs.id` as the unique id
+        run: echo "::set-output name=id::$(date +%s)"
+      - name: Print new build number
+        run: echo "Build number is $BUILD_ID"
+        env:
+          BUILD_ID: ${{ steps.build_id.outputs.id }}
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
          node-version: 12.x
+         registry-url: https://registry.npmjs.org/
+         scope: '@fjchabbey'
+        env:
+         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
@@ -29,6 +41,7 @@ jobs:
           npm -v
           node -v
           npm i
+          npm install -g npm-snapshot
       - name: Check files
         run: |
           npm run lint:yaml
@@ -36,4 +49,15 @@ jobs:
         run: |
           pwd
           npm run test
+      - name: Publish snapshot
+        env:
+          BUILD_ID: ${{ steps.build_id.outputs.id }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "Build number is $BUILD_ID"
+          npm-snapshot $BUILD_ID
+          npm run build-publish
+          npm publish --tag next
+
+
 
