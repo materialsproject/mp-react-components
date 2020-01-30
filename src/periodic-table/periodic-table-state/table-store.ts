@@ -58,18 +58,19 @@ export function getPeriodicSelectionStore() {
       {
         if (!state.disabledElements[enabledElement]) {
           if(!state.enabledElements[enabledElement]) {
-            if ( Object.keys(state.enabledElements).filter((el) => (state.enabledElements as any)[el]).length  === maxItemAllowed) {
-              state.enabledElements[lastElementsToggled] = false;
+            if ( Object.keys(state.enabledElements).length  === maxItemAllowed) {
+              delete state.enabledElements[lastElementsToggled];
               state.enabledElements[enabledElement] = true;
               lastElementsToggled = enabledElement;
               state.enabledElements = {...state.enabledElements};
               state$.next(state)
             } else {
               lastElementsToggled = enabledElement;
-              (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
+              (state.enabledElements = {...state.enabledElements, [enabledElement]:true}) && state$.next(state);
             }
           } else {
-            (state.enabledElements = {...state.enabledElements, [enabledElement]:!state.enabledElements[enabledElement]}) && state$.next(state);
+            delete state.enabledElements[enabledElement];
+            (state.enabledElements = {...state.enabledElements, [enabledElement]:false}) && state$.next(state);
           }
         }
       },
