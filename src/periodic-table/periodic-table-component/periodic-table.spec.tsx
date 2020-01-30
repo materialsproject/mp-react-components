@@ -8,7 +8,6 @@ jest.mock('./periodic-table.module.less', () => {});
 jest.mock('../periodic-element/periodic-element.module.less', () => {});
 jest.mock('../periodic-element/periodic-element.detailed.less', () => {});
 
-
 const enabled = {H: true, Li: true};
 
 describe('<Table/>', () => {
