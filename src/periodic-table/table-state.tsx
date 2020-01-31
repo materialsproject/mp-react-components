@@ -37,6 +37,7 @@ const useElementsWithState = (props: SelectableTableProps): any => {
     const dls = arrayToDictionnary(props.disabledElements);
     const hiddenElements = arrayToDictionnary(props.hiddenElements);
 
+
     const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
       = useElements(dls,
       els,

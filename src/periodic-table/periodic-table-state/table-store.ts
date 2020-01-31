@@ -20,12 +20,11 @@ interface State {
   disabledElements: ElementState;
   enabledElements: ElementState;
   hiddenElements: ElementState;
-  detailedElement: string | null;
+  detailedElement: string | null
 }
 
-const defaultState: State = { disabledElements: {}, enabledElements: {}, detailedElement: null, hiddenElements: {}};
+const defaultState: Readonly<State> = { disabledElements: {}, enabledElements: {}, detailedElement: null, hiddenElements: {}};
 Object.seal(defaultState);
-
 
 export function getPeriodicSelectionStore() {
   let state: State = defaultState;

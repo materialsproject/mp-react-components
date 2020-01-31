@@ -48,7 +48,12 @@ export const table = () => <>
     You need to explicitly wire which elements are selected/disabled
 
   </div>
-  <Table  onElementHovered={action('element-hovered')} disabledElement={disabledElement} hiddenElement={{}} enabledElement={selectedElement} onElementClicked={ action('element-click')}/>;
+  <Table
+    onElementHovered={action('element-hovered')}
+    disabledElement={disabledElement}
+    hiddenElement={{}}
+    enabledElement={selectedElement}
+    onElementClicked={ action('element-click')}/>;
 </>;
 
 

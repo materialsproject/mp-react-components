@@ -4,6 +4,7 @@
  *
  */
 import * as React from "react";
+import { useState } from "react";
 import * as ReactDOM from "react-dom";
 import "./styles.less";
 import { SelectableTable } from "./periodic-table/table-state";
@@ -11,8 +12,9 @@ import { TableFilter } from "./periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "./periodic-table/periodic-element/standalone-periodic-component";
 import { useElements } from "./periodic-table/periodic-table-state/table-store";
 import { PeriodicContext } from "./periodic-table/periodic-table-state/periodic-selection-context";
-import { TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
-import { useState } from "react";
+import { Table, TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
+import { Formulas, FormulaWithTable } from "./experiment/formulas";
+
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -80,7 +82,55 @@ function TestComponent(props: any) {
 ReactDOM.render(
   <>
     <div>
-      <TestComponent d={['B']} b={[]} e={[]}/>
+      <FormulaWithTable/>
+      <Table
+        onElementHovered={() => {}}
+        onElementClicked={() => {}}
+        disabledElement={{}}
+        hiddenElement={{}}
+        enabledElement={{}}
+        forceTableLayout={TableLayout.MAP}
+        heatmapMax={'#FFFFFF'}
+        heatmapMin={'#EEAAAA'}
+        heatmap={
+          {
+            'K': 12,
+            'O': 15,
+            'Pb': 200,
+            'He': 45,
+            'Ti': 59,
+            'V': 200,
+            'Fe': 180,
+            'Co': 170,
+            'Ni': 160,
+            'Y': 150,
+            'Re': 140,
+            'Os': 130,
+            'Ir': 120,
+            'Pt': 110,
+            'Au': 100,
+            'Rf': 90,
+            'Db': 80,
+            'Sg': 70,
+            'Bh': 40,
+            'Hs': 15,
+            'Mt': 1,
+            'Gd': 33,
+            'Pa': 15,
+            'Ac': 12,
+            'Fr': 100,
+            'Cs': 120,
+            'Rb': 130,
+            'Na': 140,
+            'I': 150,
+            'S': 160,
+            'Hg': 170,
+            'Ds': 10,
+            'Rg': 5,
+            'Cn': 1
+          }
+        }/>
+      {/*<TestComponent d={['B']} b={[]} e={[]}/> */}
       {/*<PeriodicContext>
         <div>
           <div>

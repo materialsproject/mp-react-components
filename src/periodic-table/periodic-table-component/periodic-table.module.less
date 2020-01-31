@@ -2,6 +2,28 @@
 @import '../../assets/mixins.less';
 
 // 18 / 7 Periods
+.table-legend-container {
+  .flex(row);
+  .table-legend-container {
+    margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    .table-legend {
+      position: relative; // so children with position absolute are positioned in respect with this element
+      .flex(column);
+      flex-basis: 90%;
+      flex-grow:0;
+      flex-shrink:0;
+      border: 1px solid black;
+      .table-legend-pointer {
+        transition: all 100ms;
+      }
+    }
+  }
+
+}
+
 .table-container {
   display: grid;
   &.spaced {
