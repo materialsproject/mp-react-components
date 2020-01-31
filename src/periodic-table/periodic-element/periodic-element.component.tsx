@@ -13,6 +13,7 @@ export interface PeriodicElementProps {
     disabled: boolean;
     enabled: boolean;
     hidden: boolean;
+    color?: string;
     element: MatElement | string;
     displayMode?: DISPLAY_MODE;
     onElementClicked: (e:MatElement) => void;
@@ -21,12 +22,11 @@ export interface PeriodicElementProps {
 
 //TODO(chab) use render props to customize layout
 
-
-
 export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
                                     hidden = false,
                                     enabled = false,
                                     disabled = false,
+                                    color,
                                     onElementClicked,
                                     onElementHovered}: PeriodicElementProps) {
 
@@ -49,6 +49,7 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
     return (<div
       onClick={() => handleClick(element as MatElement)}
       onMouseOver={() => handleHover(element as MatElement)}
+      style={color ? {background: color} : {}}
       className={
         `mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${cl.hidden ? 'hidden' : ''} ${cl.enabled ? 'enabled' : ''}
           ${element.hasGroup ? 'mat-group' : ''}  ${cl.disabled ? 'disabled' : ''}`}>
