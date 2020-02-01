@@ -2,7 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { distinctUntilChanged, distinctUntilKeyChanged, map, shareReplay, tap } from "rxjs/operators";
 import * as React from "react";
 import { useContext } from "react";
-import { arrayToDictionnary } from "../../utils/utils";
+
 
 
 // makes an abstraction on top of process
@@ -67,6 +67,7 @@ export function getPeriodicSelectionStore() {
     },
     toggleEnabledElement: (enabledElement: string) =>
       {
+        // we always forward toggling
         if (!state.disabledElements[enabledElement]) {
           if(!state.enabledElements[enabledElement]) {
             const _s = {...state.enabledElements};
@@ -75,15 +76,15 @@ export function getPeriodicSelectionStore() {
               _s[enabledElement] = true;
               lastElementsToggled = enabledElement;
               state.enabledElements = _s;
-              state$.next(state)
+              state$.next({...state, forwardOuterChange: true})
             } else {
               lastElementsToggled = enabledElement;
               _s[enabledElement] = true;
-              (state.enabledElements = _s) && state$.next(state);
+              (state.enabledElements = _s) && state$.next({...state, forwardOuterChange: true});
             }
           } else {
             delete state.enabledElements[enabledElement];
-            (state.enabledElements = {...state.enabledElements}) && state$.next(state);
+            (state.enabledElements = {...state.enabledElements}) && state$.next({...state, forwardOuterChange: true});
           }
         }
       },
