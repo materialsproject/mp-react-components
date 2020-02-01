@@ -12,7 +12,7 @@ interface SelectableTableProps {
     maxElementSelectable: number,
     onStateChange?: (selected: string[]) => void
     forceTableLayout?: TableLayout,
-    forwardOuterChange?: boolean
+        forwardOuterChange?: boolean
 }
 
 
@@ -52,7 +52,7 @@ const useElementsWithState = (props: SelectableTableProps): any => {
     useEffect(() => {
         console.log("[Scomponent updated, e");
         tableStateStore.setEnabledElements(els);
-    }, [props.forwardOuterChange]);
+    }, [props.enabledElements]); // TODO i set that to forwardOuterChange, it was noy caught by test
     useEffect(() => {
         console.log("[Scomponent updated, d");
         tableStateStore.setDisabledElements(dls);
