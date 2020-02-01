@@ -137,7 +137,6 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
             background:'black'}}>
           </div>
         </div>
-
       </div>}
     </div>)
 }

@@ -1,5 +1,5 @@
 import { Observable, Subject } from "rxjs";
-import { distinctUntilChanged, map, shareReplay, tap } from "rxjs/operators";
+import { distinctUntilChanged, distinctUntilKeyChanged, map, shareReplay, tap } from "rxjs/operators";
 import * as React from "react";
 import { useContext } from "react";
 import { arrayToDictionnary } from "../../utils/utils";
@@ -20,10 +20,11 @@ interface State {
   disabledElements: ElementState;
   enabledElements: ElementState;
   hiddenElements: ElementState;
-  detailedElement: string | null
+  detailedElement: string | null;
+  forwardOuterChange: boolean;
 }
 
-const defaultState: Readonly<State> = { disabledElements: {}, enabledElements: {}, detailedElement: null, hiddenElements: {}};
+const defaultState: Readonly<State> = { disabledElements: {}, enabledElements: {}, detailedElement: null, hiddenElements: {}, forwardOuterChange: true};
 Object.seal(defaultState);
 
 export function getPeriodicSelectionStore() {
@@ -37,13 +38,15 @@ export function getPeriodicSelectionStore() {
   let lastElementsToggled: string = '';
   const actions = {
     init: (initialState: State = defaultState) => {
+      // use object assign instead
       if (initialState.disabledElements) state.disabledElements = initialState.disabledElements;
       if (initialState.enabledElements) state.enabledElements = initialState.enabledElements;
       if (initialState.hiddenElements) state.hiddenElements = initialState.hiddenElements;
       if (initialState.detailedElement) state.detailedElement = initialState.detailedElement;
-      console.log('START', state);
+      if (initialState.forwardOuterChange) state.forwardOuterChange = initialState.forwardOuterChange;
       state$.next(state)
     },
+    setForwardChange:(fwdChange) => state.forwardOuterChange = fwdChange,
     setEnabledElements: (enabledElements: any) => (state = {...state, enabledElements}) && state$.next(state),
     setDisabledElements: (disabledElements: any) => (state = {...state, disabledElements}) && state$.next(state),
     clear: () => state$.next(defaultState),
@@ -116,32 +119,30 @@ export function useElements(initialDisabledElements?: any,
   const [hiddenElements, setHiddenElements] = React.useState({});
   const {observable, actions} = useContext(PeriodicSelectionContext);
 
-
   React.useEffect(() => {
     actions.setMaxSelectionLimit(maxElementSelection);
     // Update the view of the components that use it
     const subscription = observable.subscribe(({enabledElements, disabledElements, hiddenElements}: any) => {
-      console.log('change');
       setDisabled(disabledElements);
       setEnabled(enabledElements);
       setHiddenElements(hiddenElements);
     });
 
     // Triggers external callback that dash user will provide
-    const enabledElementsSubscription = observable.pipe(map(({enabledElements}: any) => enabledElements), distinctUntilChanged()).subscribe(
-
-      (enabledElements) => {
-        onStateChange && onStateChange(Object.keys(enabledElements))
+    const enabledElementsSubscription = observable.pipe(
+      map(({enabledElements, forwardOuterChange}: any) => ({enabledElements, forwardOuterChange})),
+      distinctUntilKeyChanged('enabledElements')).subscribe(
+      ({enabledElements, forwardOuterChange}) => {
+        forwardOuterChange && onStateChange && onStateChange(Object.keys(enabledElements))
       }
-
     );
-
 
     if (initialDisabledElements && initialEnabledElements && initialHiddenElements) {
       actions.init({
         enabledElements: initialEnabledElements,
         hiddenElements: initialHiddenElements,
         disabledElements: initialDisabledElements,
+        forwardOuterChange: true,
         detailedElement: null});
     } else {
       // actually make that the only way, and force the init somewhere else

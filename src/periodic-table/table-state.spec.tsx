@@ -78,6 +78,7 @@ function renderElement(disabled = [] as string[],
   return mount(<PeriodicContext>
     <SelectableTable enabledElements={enabled}
                      disabledElements={disabled}
+                     forwardOuterChange={true}
                      onStateChange={onStateChange}
                      hiddenElements={hidden}
                      maxElementSelectable={maxNumber}/>

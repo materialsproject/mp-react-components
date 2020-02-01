@@ -11,7 +11,8 @@ interface SelectableTableProps {
     hiddenElements: string[],
     maxElementSelectable: number,
     onStateChange?: (selected: string[]) => void
-    forceTableLayout?: TableLayout
+    forceTableLayout?: TableLayout,
+    forwardOuterChange?: boolean
 }
 
 
@@ -37,7 +38,6 @@ const useElementsWithState = (props: SelectableTableProps): any => {
     const dls = arrayToDictionnary(props.disabledElements);
     const hiddenElements = arrayToDictionnary(props.hiddenElements);
 
-
     const {enabledElements: enabledEls, disabledElements: disabledEls, hiddenElements: hiddenEls, actions: tableStateStore}
       = useElements(dls,
       els,
@@ -45,10 +45,14 @@ const useElementsWithState = (props: SelectableTableProps): any => {
       props.maxElementSelectable,
       props.onStateChange);
 
+    useEffect(()=> {
+        tableStateStore.setForwardChange(props.forwardOuterChange);
+    }, [props.forwardOuterChange]);
+
     useEffect(() => {
         console.log("[Scomponent updated, e");
         tableStateStore.setEnabledElements(els);
-    }, [props.enabledElements]);
+    }, [props.forwardOuterChange]);
     useEffect(() => {
         console.log("[Scomponent updated, d");
         tableStateStore.setDisabledElements(dls);

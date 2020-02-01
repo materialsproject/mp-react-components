@@ -81,6 +81,7 @@ describe("Table store", () => {
 
   //TODO(chab) check case when we switch the maximum afterwards once it's implemented
   //TODO(chab) write unit tests to prove that 2 stores are wholly separated
+  //TODO(chab) test the forwardOuterChange flag
 });
 
 
@@ -97,6 +98,6 @@ function defaultReset() {
   resetState(disabledElements, enabledElements);
 }
 
-function resetState(disabledElements = {}, enabledElements = {}, hiddenElements = {}, detailedElement = null) {
-  tableStateStore.init({disabledElements, enabledElements, hiddenElements, detailedElement});
+function resetState(disabledElements = {}, enabledElements = {}, hiddenElements = {}, detailedElement = null, forwardOuterChange = true) {
+  tableStateStore.init({disabledElements, enabledElements, hiddenElements, detailedElement, forwardOuterChange});
 }
