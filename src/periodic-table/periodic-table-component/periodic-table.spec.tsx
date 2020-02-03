@@ -41,18 +41,23 @@ describe('<Table/>', () => {
   xit('check the class of the layout', () => {})
 });
 
-function renderElement(disabled = {},
+export function renderElement(disabled = {},
                        enabled = {},
                        hidden = {},
                        onClick = () => {},
-                       onHover = () => {}
-) {
+                       onHover = () => {},
+                       heatmap = {},
+                       min?: string,
+                       max?: string) {
   // we use mount to test the rendering of the underlying elements
   return mount(<Table enabledElement={enabled}
                         disabledElement={disabled}
                         onElementHovered={onHover}
                         forceTableLayout={TableLayout.SPACED}
                         hiddenElement={hidden}
+                        heatmap={heatmap}
+                        heatmapMin={min}
+                        heatmapMax={max}
                         onElementClicked={onClick} />);
 
 }

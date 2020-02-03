@@ -93,13 +93,15 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
   // we consider that either those properties are all defined, or not
   const {linearScale: heatmapscale, legendScale, legendPosition: legendPositionScale}= useMemo(() => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!),
     [heatmapMax, heatmapMin, heatmap]);
+
+  // TODO(chab) allow people to pass the number of subdivisions OR to have a continuous legend
   const legendItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
   const onHover = (element: MatElement) => {
-    if (!heatmap) {
+    if (!hasHeatmap(heatmap)) {
       return;
     }
-    const value = heatmap[element.symbol];
+    const value = heatmap![element.symbol];
     if (!value) {
       setLegendPosition(-1);
     } else {
@@ -125,10 +127,12 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
             element={element}/>
         )}
       </div>
-      {heatmap && <div className={'table-legend-container'}>
+      {hasHeatmap(heatmap) && <div className={'legend-container'}>
         <div className={'table-legend'}>
           {legendItems.map(n =>
-            <div key={`legend${n}`} style={{'background': legendScale(n), width: '10px', height: `${100/ legendItems.length}%`}}> </div>
+            <div key={`legend${n}`}
+                 className={'legend-division'}
+                 style={{'background': legendScale(n), width: '10px', height: `${100/ legendItems.length}%`}}> </div>
           )}
           <div className={'table-legend-pointer'}
             style={{position:'absolute', width:'12px', height:'2px',
@@ -149,4 +153,7 @@ function getLayout(isDesktop: boolean, isTablet: boolean, isMobile: boolean, tab
   return TableLayout.SPACED;
 }
 
+function hasHeatmap(heatmap): boolean {
+  return !!heatmap && Object.keys(heatmap).length > 0;
+}
 
