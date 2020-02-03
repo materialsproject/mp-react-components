@@ -73,7 +73,7 @@ describe('<Table/>', () => {
 
   it('items that are not in the heatmap should have an arbitrary color', () => {
     const fNode = (wrapper.find('.mat-element').get(12));
-    checkNodeColor(fNode, DEFAULT_HEATMAP_COLOR);
+    expect(fNode.props.style).toHaveProperty('background', DEFAULT_HEATMAP_COLOR);
   });
 
   it('should position the legend marker when hovering, min/max/median', () => {

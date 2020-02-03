@@ -58,6 +58,13 @@ jobs:
           npm-snapshot $BUILD_ID
           npm run build-publish
           npm publish --tag next
+      - name: Trigger integration test
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: materialsproject/dash-mp-components
+          event-type: new-snapshot-version
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
 
 
 
