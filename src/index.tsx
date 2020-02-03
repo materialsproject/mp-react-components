@@ -84,27 +84,29 @@ ReactDOM.render(
   <>
     <div>
       {<TestComponent d={['B']} b={[]} e={[]}/>}
-      {/*<PeriodicContext>
+      {<PeriodicContext>
         <div>
           <div>
             <SelectableTable
+              maxElementSelectable={2}
               forceTableLayout={TableLayout.COMPACT}
-              hiddenElements={{}}
+              hiddenElements={[]}
               onStateChange={(enabledElements: any) => {
                 elements = Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
               }}
-              enabledElements={{'H': true, 'C': true}}
-              disabledElements={{'Na':true, 'Ca':true}} />
+              enabledElements={[]}
+              disabledElements={['H', 'C']} />
             <TableFilter/>
             <SelectableTable
+              maxElementSelectable={1}
               forceTableLayout={TableLayout.MAP}
-              enabledElements={{'H': true, 'C': true}}
-              disabledElements={{'Na':true, 'Ca':true}}
-              hiddenElements={{}}/>
+              enabledElements={['H', 'C']}
+              disabledElements={[]}
+              hiddenElements={[]}/>
           </div>
           <SelectedComponentSimple/>
         </div>
-      </PeriodicContext>*/}
+      </PeriodicContext>}
 
     </div>
   </>
