@@ -1,5 +1,6 @@
 import { color } from 'd3-color'
 import { renderElement } from "./periodic-table.spec";
+import { DEFAULT_HEATMAP_COLOR } from "./periodic-table.component";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
 // If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
@@ -70,9 +71,9 @@ describe('<Table/>', () => {
     checkNodeColor(fNode, '#808080');
   });
 
-  it('items that are not in the heatmap should have their default color', () => {
+  it('items that are not in the heatmap should have an arbitrary color', () => {
     const fNode = (wrapper.find('.mat-element').get(12));
-    expect(fNode.props.style).toEqual({})
+    checkNodeColor(fNode, DEFAULT_HEATMAP_COLOR);
   });
 
   it('should position the legend marker when hovering, min/max/median', () => {

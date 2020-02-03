@@ -4,11 +4,12 @@ import { DISPLAY_MODE, PeriodicElement } from "../periodic-element/periodic-elem
 import { useDetailedElement } from "../periodic-table-state/table-store";
 import { MatElement, TABLE_DICO_V2, TABLE_V2 } from "../periodic-table-data/table-v2";
 import { useMediaQuery } from 'react-responsive';
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { extent, range, max, min } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
 
+export const DEFAULT_HEATMAP_COLOR = '#EDEEED';
 
 export interface TableProps {
   /** dictionnary of disabled elements */
@@ -119,7 +120,9 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
           <PeriodicElement
             onElementHovered={(element) => onHover(element)}
             onElementClicked={(element) => onElementClicked(element)}
-            color={heatmapscale ? heatmapscale(heatmap![element.symbol]) : null}
+            color={ hasHeatmap(heatmap)
+              ? ( heatmap![element.symbol] ? heatmapscale(heatmap![element.symbol]) : DEFAULT_HEATMAP_COLOR) // TODO(maybe arbitrary color ?)
+              : null}
             key={`${element.symbol}--${element.number}`}
             hidden = {hiddenElement[element.symbol]}
             disabled={disabledElement[element.symbol]}
