@@ -49,6 +49,11 @@ jobs:
         run: |
           pwd
           npm run test
+      - name: Publish code coverage
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/coverage-final.json
       - name: Publish snapshot
         env:
           BUILD_ID: ${{ steps.build_id.outputs.id }}

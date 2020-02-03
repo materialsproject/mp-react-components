@@ -13,6 +13,8 @@ const urlOptions =  {   url: 'copy',
   assetsPath: './dist/img',
   // using hash names for assets (generates from asset content)
   useHash: true };
+import replace from 'rollup-plugin-replace';
+import {terser} from 'rollup-plugin-terser';
 
 
 const processor = (code, id) => {
@@ -56,5 +58,9 @@ export default {
       typescript: require('typescript'),
       objectHashIgnoreUnknownHack: true,
     }),
-  ],
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    terser() // TODO(chab) we might want to not mimify it
+  ]
 }
