@@ -37,7 +37,16 @@ describe('<Table/>', () => {
   });
 
   //TODO(layout/callback/detailed)
-  xit('click callback should be called', ()=> {});
+  it('click callback should be called', ()=> {
+    const click = jest.fn();
+    const wrapper = renderElement({}, {}, {...enabled}, click);
+    expect(wrapper.find('.mat-element').at(0).simulate('click'));
+    expect(click).toHaveBeenCalled();
+  });
+  xit('table spacer click should be called', () => {
+
+  });
+
   xit('check the class of the layout', () => {})
 });
 

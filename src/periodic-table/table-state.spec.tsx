@@ -11,9 +11,9 @@ jest.mock('./periodic-element/periodic-element.detailed.less', () => {});
 
 const enabled = ['H', 'Li'];
 
-describe.only('<SelectableTable/>', () => {
+describe('<SelectableTable/>', () => {
 
-  it.only('should be rendered', () => {
+  it('should be rendered', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [...enabled],  [], mockCallback);
     expect(wrapper.find('.table-container').length).toBe(1);
@@ -25,7 +25,7 @@ describe.only('<SelectableTable/>', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [], [], mockCallback);
     expect(mockCallback).toHaveBeenCalledTimes(1);
-    expect(mockCallback).toBeCalledWith({});
+    expect(mockCallback).toBeCalledWith([]);
   });
 
   it('clicking on an element should call the callback', () => {
@@ -33,7 +33,7 @@ describe.only('<SelectableTable/>', () => {
     const wrapper = renderElement([], [...enabled], [], mockCallback);
     wrapper.find('.mat-element').at(1).simulate('click'); // click on he
     expect(mockCallback).toHaveBeenCalledTimes(2);
-    expect(mockCallback).toBeCalledWith({...enabled, He: true});
+    expect(mockCallback).toBeCalledWith(['H', 'Li', 'He']);
   });
 
   //TODO(layout/callback/detailed)
@@ -41,13 +41,13 @@ describe.only('<SelectableTable/>', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [], [], mockCallback, 1);
     expect(mockCallback).toHaveBeenCalledTimes(1);
-    expect(mockCallback).toBeCalledWith({});
+    expect(mockCallback).toBeCalledWith([]);
     wrapper.find('.mat-element').at(1).simulate('click'); // click on he
     expect(mockCallback).toHaveBeenCalledTimes(2);
-    expect(mockCallback).toBeCalledWith({He:true});
+    expect(mockCallback).toBeCalledWith(['He']);
     wrapper.find('.mat-element').at(2).simulate('click'); // click on li
     expect(mockCallback).toHaveBeenCalledTimes(3);
-    expect(mockCallback).toBeCalledWith({Li: true});
+    expect(mockCallback).toBeCalledWith(['Li']);
   });
 
   //TODO(chab) changing the props should RENDER the table
@@ -63,7 +63,7 @@ describe.only('<SelectableTable/>', () => {
 
   });
 
-  it.only('it should display hovered element', () => {
+  it('it should display hovered element', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [], [], mockCallback, 1);
     wrapper.find('.mat-element').at(1).simulate('mouseover');
