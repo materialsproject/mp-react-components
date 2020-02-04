@@ -23,9 +23,14 @@ export interface TableProps {
   onElementHovered: (mat: MatElement) => void;
   /** Force the layout of the table **/
   forceTableLayout?: TableLayout
-  /** Colorize the table by using an heatmap **/
+  /** Colorize the table by using an heatmap
+   *  id: symbol of the element
+   *  value: value used for the heatmap
+   **/
   heatmap?: {[id: string]: number},
+  /** Color used for the highest value */
   heatmapMax?: string,
+  /** Color used for the lowest value*/
   heatmapMin?: string
 }
 

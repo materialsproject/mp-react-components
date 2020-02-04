@@ -4,19 +4,30 @@ import './periodic-element.module.less';
 import './periodic-element.detailed.less';
 import { TABLE_DICO_CLASS } from "../periodic-table-data/table";
 
+
+
 export enum  DISPLAY_MODE {
+    /** only display number-symbol-name */
     SIMPLE = 'simple',
+    /** displays other properties of the element */
     DETAILED = 'detailed'
 }
 
 export interface PeriodicElementProps {
+    /** whether the element is disabled. A disabled element is still visible */
     disabled: boolean;
+    /** whether the element is selected. An enabled element is still visible */
     enabled: boolean;
+    /** whether the element is hidden. An hidden element is still visible */
     hidden: boolean;
     color?: string;
-    element: MatElement | string;
+    /** A periodic element. Can be either the symbol string, or an object implementing MatElement **/
+    element: MatElement | string
+    /** what to display  */;
     displayMode?: DISPLAY_MODE;
+    /** callback called when an element clicked */
     onElementClicked: (e:MatElement) => void;
+    /** callback called when an element is hovered */
     onElementHovered: (e:MatElement) => void;
 }
 

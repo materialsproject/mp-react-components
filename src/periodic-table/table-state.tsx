@@ -6,17 +6,23 @@ import { arrayToDictionnary } from "../utils/utils";
 
 
 interface SelectableTableProps {
+    /** array of enabled elements, e.g : ['H', 'O'] */
     enabledElements: string[],
+    /** array of disabled elements, e.g : ['H', 'O'] */
     disabledElements: string[],
+    /** array of hidden elements, e.g : ['H', 'O'] */
     hiddenElements: string[],
+    /** prevent user to select more than N elements */
     maxElementSelectable: number,
+    /** callback called with an array of selected elements */
     onStateChange?: (selected: string[]) => void
+    /** whether to force a particular layout */
     forceTableLayout?: TableLayout,
-        forwardOuterChange?: boolean
+    /** wheter to forward non-managed changes */
+    forwardOuterChange?: boolean
 }
 
 
-//FIXME handle all the cases where we know state has not changed
 export function SelectableTable(props: SelectableTableProps) {
     // TOOD(chab) explore the other way, have three different subscriptions with distinctUntilChanged
     // memoize those 3 values

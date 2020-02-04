@@ -4,10 +4,11 @@ import './standalone-periodic-element.less';
 
 
 interface StandalonePeriodicComponentProps extends  PeriodicElementProps {
+  /**
+   * width and height of the component
+   */
   size: number
 }
-
-
 
 // allow to pass the layout
 export function StandalonePeriodicComponent({size, ...remainingProps}: StandalonePeriodicComponentProps) {
