@@ -8,11 +8,6 @@ import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 import { PeriodicContext } from "../periodic-table";
 
-export default {
-  component: Table,
-  title: 'Periodic Table'
-};
-
 const disabledElement = {Be:true, Na:true, Cl:true};
 const selectedElement = {O:true, H:true, Be:true};
 
@@ -196,7 +191,13 @@ export const heatmapTable = (props) => {
                onElementClicked={() => {}}
                onElementHovered={() => {}}
                hiddenElement={{}}/>
-      </div>)
+      </div>
     </>);
 };
 
+export default {
+  component: SelectableTable,
+  title: 'Periodic Table',
+  stories: [],
+  subcomponents: { TableFilter, Table, StandalonePeriodicComponent}
+};

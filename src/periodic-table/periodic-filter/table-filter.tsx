@@ -25,9 +25,14 @@ function performFilter(array: any[], key: string, value: string): any[] {
   }
 }
 
-
+/**
+ *
+ * Filter is entirely managed by the period context
+ *
+ * @constructor
+ */
 export function TableFilter() {
-  // TODO support multi filtering
+  // TODO support multi filtering, detach filters from the the store
   const [filter, setFilter] = React.useState({topFilter: {name: 'All'} as any, lowerFilter: {name: 'All'} as any});
   const { actions } = React.useContext(PeriodicSelectionContext);
 
