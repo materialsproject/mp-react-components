@@ -100,6 +100,7 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
 
   const onHover = (element: MatElement) => {
     if (!hasHeatmap(heatmap)) {
+      onElementHovered(element);
       return;
     }
     const value = heatmap![element.symbol];

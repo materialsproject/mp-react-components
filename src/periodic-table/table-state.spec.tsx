@@ -63,7 +63,14 @@ describe.only('<SelectableTable/>', () => {
 
   });
 
-  xit('it should display hovered element', () => {
+  it.only('it should display hovered element', () => {
+    const mockCallback = jest.fn();
+    const wrapper = renderElement([], [], [], mockCallback, 1);
+    wrapper.find('.mat-element').at(1).simulate('mouseover');
+    expect(wrapper.find('.element-description').length).toBe(1);
+    expect(wrapper.find('.element-description .mat-name').text()).toEqual('Helium');
+    expect(wrapper.find('.element-description .mat-symbol').text().trim()).toEqual('He'); // why the spaces ?
+    expect(wrapper.find('.element-description .mat-number').text()).toEqual('2');
 
   })
 });
