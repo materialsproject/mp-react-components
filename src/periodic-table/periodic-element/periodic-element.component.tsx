@@ -66,7 +66,7 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
                   <div className="mat-name">{element.name}</div>
                 {!element.hasGroup && <div className="mat-weight">{element.atomic_mass}</div>}
               </div>
-            { (element.shells && element.hasGroup) && <div className='mat-side-panel'>
+            { (element.shells && !element.hasGroup) && <div className='mat-side-panel'>
                   {element.shells.map((shell, idx) => <div key={idx}>{shell}</div>)}
               </div>}
 

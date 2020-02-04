@@ -131,6 +131,7 @@ export function useElements(initialDisabledElements?: any,
 
     // Triggers external callback that dash user will provide
     const enabledElementsSubscription = observable.pipe(
+      tap(a => console.log(a)),
       map(({enabledElements, forwardOuterChange}: any) => ({enabledElements, forwardOuterChange})),
       distinctUntilKeyChanged('enabledElements')).subscribe(
       ({enabledElements, forwardOuterChange}) => {

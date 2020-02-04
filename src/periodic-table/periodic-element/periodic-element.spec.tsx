@@ -41,8 +41,10 @@ describe('<PeriodicElement/>', () => {
     const wrapper = renderElement(true, false, () => {}, TEST_ELEMENT, DISPLAY_MODE.DETAILED);
     expect(wrapper.find('.main-panel').length).toBe(1);
   });
-  xit('should render shells', () => {
+  it('should render shells', () => {
     //TODO(chab) actually tested in an integration test, see table-state.spec.tsx, but should be unit tested here
+    const wrapper = renderElement(true, false, () => {}, TEST_ELEMENT, DISPLAY_MODE.DETAILED);
+    expect(wrapper.find('.mat-side-panel').length).toBe(1);
   });
   it('should accept strings', () => {
     const wrapper = renderElement(false, false, () => {}, 'O');
