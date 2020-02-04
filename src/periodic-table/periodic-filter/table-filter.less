@@ -57,3 +57,11 @@
   }
 }
 
+// we need those wrappers to force CSS selectors to apply
+.mp-element-wrapper, .table-container  {
+  .mat-element.hidden {
+    * {
+      display: none;
+    }
+  }
+}
