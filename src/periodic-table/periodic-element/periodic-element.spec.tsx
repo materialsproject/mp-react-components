@@ -1,6 +1,6 @@
-import { shallow } from 'enzyme';
-import { PeriodicElement } from "./periodic-element.component";
-import * as React from 'react'; // for some reasons, uppercase does not work on Docker
+import { shallow } from "enzyme";
+import { DISPLAY_MODE, PeriodicElement } from "./periodic-element.component";
+import * as React from "react"; // for some reasons, uppercase does not work on Docker
 import { TABLE_DICO_V2 } from "../periodic-table-data/table-v2";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
@@ -36,7 +36,12 @@ describe('<PeriodicElement/>', () => {
     const wrapper = renderElement(true, false, mockCallBack);
     wrapper.find('.mat-element').simulate('click');
     expect(mockCallBack).toHaveBeenCalledTimes(1);
-  })
+  });
+  it('should render advanced display mode', () => {
+    const wrapper = renderElement(true, false, () => {}, TEST_ELEMENT, DISPLAY_MODE.DETAILED);
+    expect(wrapper.find('.main-panel').length).toBe(1);
+  });
+  xit('should render shells', () => {});
 });
 
 const TEST_ELEMENT = TABLE_DICO_V2['H'];
@@ -44,7 +49,8 @@ const TEST_ELEMENT = TABLE_DICO_V2['H'];
 function renderElement(disabled = false,
                        enabled = false,
                        onClick = () => {},
-                       element = TEST_ELEMENT
+                       element = TEST_ELEMENT,
+                       display = DISPLAY_MODE.SIMPLE
                       ) {
   return shallow(<PeriodicElement
     disabled={disabled}
@@ -52,5 +58,6 @@ function renderElement(disabled = false,
     hidden={false}
     element={element}
     onElementHovered={onClick}
+    displayMode={display}
     onElementClicked={onClick}/>)
 }
