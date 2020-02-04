@@ -12,8 +12,8 @@ import { TableFilter } from "./periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "./periodic-table/periodic-element/standalone-periodic-component";
 import { useElements } from "./periodic-table/periodic-table-state/table-store";
 import { PeriodicContext } from "./periodic-table/periodic-table-state/periodic-selection-context";
-import { Table, TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
-import { Formulas, FormulaWithTable } from "./experiment/formulas";
+import { TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
+
 
 
 const mountNodeSelector = 'app';

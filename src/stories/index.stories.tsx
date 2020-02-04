@@ -7,7 +7,10 @@ import { useElements } from "../periodic-table/periodic-table-state/table-store"
 import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 import { PeriodicContext } from "../periodic-table";
-import './style.css';
+import { boolean, color, number, select, withKnobs } from "@storybook/addon-knobs";
+
+import "./style.css";
+import { DISPLAY_MODE } from "../periodic-table/periodic-element/periodic-element.component";
 
 const disabledElement = {Be:true, Na:true, Cl:true};
 const selectedElement = {O:true, H:true, Be:true};
@@ -69,7 +72,11 @@ export const managedTable = () => <>
       <SelectableTable onStateChange={(a:any) => console.log(a)}
                        enabledElements={[]}
                        disabledElements={[]}
-                       maxElementSelectable={1}
+                       forceTableLayout={
+                         select('forceTableLayout',
+                           [TableLayout.SPACED, TableLayout.COMPACT, TableLayout.MINI, TableLayout.MAP],
+                           TableLayout.SPACED)}
+                       maxElementSelectable={number('maxElementsSelectable', 1)}
                        hiddenElements={[]}/>
     </>
 
@@ -112,14 +119,28 @@ export const filteredTable = () => <>
 </>;
 
 
+const label = 'Elements';
+const options = ['H', 'He', 'O', 'Pb', 'Xe', 'Fe', 'K', 'Na', 'Cl', 'La'];
+const defaultValue = 'H';
+
+
 export const component = () => <>
-  <div> There are some cases when you might want to display just one standalone component.
+  <div>
+    <p> There are some cases when you might want to display just one standalone component. </p>
+    <p> If you pass no <code>color</code>, the default element color will be used </p>
+    <b> Some setting might not produce correct results. If you use detailed mode, you'll need to give a sufficient
+    size to the component
+    </b>
   </div>
 
-    <StandalonePeriodicComponent size={50} disabled={false}
-                                 enabled={false}
-                                 hidden={false}
-                                 element={'H'}
+    <StandalonePeriodicComponent size={number("Size", 50)} disabled={boolean("Disabled", false)}
+                                 enabled={boolean("Enabled", false)}
+                                 hidden={boolean("Hidden", false)}
+                                 color={color('', '#AAAAAA')}
+                                 displayMode={select('Display Mode',
+                                   [DISPLAY_MODE.DETAILED, DISPLAY_MODE.SIMPLE],
+                                     DISPLAY_MODE.SIMPLE) }
+                                 element={select(label, options, defaultValue)}
                                  onElementClicked={() => {}}
                                  onElementHovered={() => {}}/>
   </>;
@@ -165,21 +186,7 @@ export const heatmapTable = (props) => {
 
   const MIN = '#FF4422';
   const MAX = '#FFFF99';
-  const MIN2 = '#4600FF';
-  const MAX2 = '#FF00FF';
   const [heatmap, setHeatmap] = useState({});
-  const [min, setMinColor] = useState(MIN);
-  const [max, setMaxColor] = useState(MAX);
-
-  function switchColors() {
-    if (min === MIN) {
-      setMinColor(MIN2);
-      setMaxColor((MAX2))
-    } else {
-      setMinColor(MIN);
-      setMaxColor(MAX);
-    }
-  }
 
   return (
     <>
@@ -193,13 +200,13 @@ export const heatmapTable = (props) => {
       </div>
       <div>
         <FormulaSelector onFormulaClicked={(hm) => setHeatmap(hm)} />
-        <div style={{border: '1px solid black', width: '150px', padding: '5px'}} onClick={() => switchColors()}>
-          Click to change colors
-        </div>
         <Table enabledElement={{}}
                disabledElement={{}}
-               heatmapMax={max}
-               heatmapMin={min}
+               forceTableLayout={select('forceTableLayout',
+                 [TableLayout.SPACED, TableLayout.COMPACT, TableLayout.MINI, TableLayout.MAP],
+                 TableLayout.SPACED)}
+               heatmapMax={color('max', MAX)}
+               heatmapMin={color('min', MIN)}
                heatmap={heatmap}
                onElementClicked={() => {}}
                onElementHovered={() => {}}
@@ -211,6 +218,7 @@ export const heatmapTable = (props) => {
 export default {
   component: SelectableTable,
   title: 'Periodic Table',
+  decorators: [withKnobs],
   stories: [],
   subcomponents: { TableFilter, Table, StandalonePeriodicComponent}
 };
