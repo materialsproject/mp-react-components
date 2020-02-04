@@ -2,6 +2,8 @@
 ![publish-npm](https://github.com/materialsproject/mp-react-components/workflows/publish-npm/badge.svg)
 [![codecov](https://codecov.io/gh/materialsproject/mp-react-components/branch/master/graph/badge.svg)](https://codecov.io/gh/materialsproject/mp-react-components)
 ![](https://img.shields.io/npm/v/mat-periodic-table?style=plastic)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://materialsproject.github.io/mp-react-components/)
+
 
 This repo contains a set of components.
 
