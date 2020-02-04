@@ -24,6 +24,16 @@ describe('<TableFilter/>', () => {
   });
 
   xit('check callbacks', () => { });
+
+  //TODO(chab) this is too close to the implementation, but it's mainly to close the coverage gap
+  //TODO(chab) this would be better to be tested without context
+  it.only('fitering on periods/groups does not use a mapping function', () => {
+    const wrapper = renderElement();
+    wrapper.find('.current-filter-selector').at(5).simulate('click');
+    wrapper.find('.sub-filter-selector .current-filter-selector').at(1).simulate('click');
+
+    // should expect a console.log statement
+  });
 });
 
 function renderElement() {
