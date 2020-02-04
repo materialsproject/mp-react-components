@@ -7,6 +7,7 @@ import { useElements } from "../periodic-table/periodic-table-state/table-store"
 import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 import { PeriodicContext } from "../periodic-table";
+import './style.css';
 
 const disabledElement = {Be:true, Na:true, Cl:true};
 const selectedElement = {O:true, H:true, Be:true};
@@ -37,12 +38,24 @@ export const table = () => <>
 </>;
 
 export const managedTable = () => <>
-  <div> This is a managed table that retains selection from user. The state of the selection is managed outside
+  <div>
+
+    <p>This is a managed table that retains selection from user. The state of the selection is managed outside
     of the components and can be reused by other components, look at the <code> SelectedComponent </code>, which
     is a simple component that display the list of selected components.
+    </p>
+    <p>
     This table exposes just one callback that is called when the selection changes.
     In addition, you can pass the maximum number of elements that are selectable.
+    </p>
 
+    <p>
+    The <code> &lt;PeriodicContext&gt;</code> component exposes a React Context object. You can use object to
+      be notified of the current state of the table, and to change the state of the table. This
+      allow you to build a component and then wire it to a periodic table.
+      A typical use case is to display which components are selected, or compute a chart based on the
+      selected component. See the Wired Table stories for an example
+    </p>
 
   </div>
   <div style={{margin: 10}}/>
@@ -65,7 +78,7 @@ export const managedTable = () => <>
 
 
 export const wiredTables = () => <>
-  <div> The context can be used to wire two tables together </div>
+  <div> The <code> &lt;PeriodicContext&gt;</code> component can be used to wire two tables together </div>
 
   <PeriodicContext>
     <>
@@ -82,7 +95,7 @@ export const wiredTables = () => <>
 </>;
 
 export const filteredTable = () => <>
-  <div> A filtered table</div>
+  <div> A filtered table. The  <code> &lt;TableFilter&gt;</code> component leverages the provided context to update the table</div>
   <PeriodicContext>
     <>
       <SelectedComponent/>
