@@ -1,7 +1,7 @@
 import { shallow } from "enzyme";
 import { DISPLAY_MODE, PeriodicElement } from "./periodic-element.component";
 import * as React from "react"; // for some reasons, uppercase does not work on Docker
-import { TABLE_DICO_V2 } from "../periodic-table-data/table-v2";
+import { MatElement, TABLE_DICO_V2 } from "../periodic-table-data/table-v2";
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
 // If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
@@ -42,6 +42,17 @@ describe('<PeriodicElement/>', () => {
     expect(wrapper.find('.main-panel').length).toBe(1);
   });
   xit('should render shells', () => {});
+  it('should accept strings', () => {
+    const wrapper = renderElement(false, false, () => {}, 'O');
+    expect(wrapper.find('.mat-element').length).toBe(1);
+    expect(wrapper.find('.mat-element').hasClass('disabled')).toBe(false);
+    expect(wrapper.find('.mat-element').hasClass('enabled')).toBe(false);
+  });
+
+  it('return an empty div, if an incorrect el is passed', () => {
+    const wrapper = renderElement(false, false, () => {}, 'dsfdff');
+    expect(wrapper.find('.mat-element').length).toBe(0);
+  });
 });
 
 const TEST_ELEMENT = TABLE_DICO_V2['H'];
@@ -49,7 +60,7 @@ const TEST_ELEMENT = TABLE_DICO_V2['H'];
 function renderElement(disabled = false,
                        enabled = false,
                        onClick = () => {},
-                       element = TEST_ELEMENT,
+                       element: MatElement | string = TEST_ELEMENT,
                        display = DISPLAY_MODE.SIMPLE
                       ) {
   return shallow(<PeriodicElement
