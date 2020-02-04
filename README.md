@@ -1,5 +1,6 @@
 ![](https://github.com/chabb/material-react/workflows/jest_tests/badge.svg)
 ![publish-npm](https://github.com/materialsproject/mp-react-components/workflows/publish-npm/badge.svg)
+[![codecov](https://codecov.io/gh/materialsproject/mp-react-components/branch/master/graph/badge.svg)](https://codecov.io/gh/materialsproject/mp-react-components)
 
 
 This repo contains a set of components.
