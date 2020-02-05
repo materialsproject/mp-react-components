@@ -7,13 +7,25 @@ import { useElements } from "../periodic-table/periodic-table-state/table-store"
 import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 import { PeriodicContext } from "../periodic-table";
-import { boolean, color, number, select, withKnobs } from "@storybook/addon-knobs";
+import { boolean, color, number, radios, select, withKnobs } from "@storybook/addon-knobs";
 
 import "./style.css";
 import { DISPLAY_MODE } from "../periodic-table/periodic-element/periodic-element.component";
 
 const disabledElement = {Be:true, Na:true, Cl:true};
 const selectedElement = {O:true, H:true, Be:true};
+
+
+const elementOptions = {
+  H: ['H'],
+  OH: ['O', 'H'],
+  OHK: ['K', 'O', 'H'],
+  NaCl: ['Na', 'Cl'],
+  PBCl: ['Pb', 'Cl'],
+  Lots: ['K', 'O', 'H', 'Na', 'Cl','Pb', 'He', 'Ur', 'Be', 'Po', 'Fl'],
+  Empty: []
+};
+
 
 function SelectedComponent() {
   const {enabledElements} = useElements();
@@ -70,14 +82,14 @@ export const managedTable = () => <>
     <>
       <SelectedComponent/>
       <SelectableTable onStateChange={(a:any) => console.log(a)}
-                       enabledElements={[]}
-                       disabledElements={[]}
+                       enabledElements={select('Enabled elements', elementOptions, [])}
+                       disabledElements={select('Disabled elements', elementOptions, [])}
                        forceTableLayout={
                          select('forceTableLayout',
                            [TableLayout.SPACED, TableLayout.COMPACT, TableLayout.MINI, TableLayout.MAP],
                            TableLayout.SPACED)}
                        maxElementSelectable={number('maxElementsSelectable', 1)}
-                       hiddenElements={[]}/>
+                       hiddenElements={select('Hidden elements', elementOptions, [])}/>
     </>
 
   </PeriodicContext>
