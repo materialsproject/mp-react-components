@@ -6,10 +6,26 @@ import { MatElement, TABLE_DICO_V2, TABLE_V2 } from "../periodic-table-data/tabl
 import { useMediaQuery } from 'react-responsive';
 import { useMemo } from "react";
 import { extent, range, max, min } from 'd3-array';
-import { scaleLinear } from 'd3-scale';
+import { scaleLinear, scaleSequential } from 'd3-scale';
+import * as d3Scale from 'd3-scale-chromatic';
 
 
 export const DEFAULT_HEATMAP_COLOR = '#EDEEED';
+
+export const COLORSCHEME = {
+  'Viridis' : d3Scale.interpolateViridis,
+  'Turbo': d3Scale.interpolateTurbo,
+  'CubeHelix': d3Scale.interpolateCubehelixDefault,
+  'Cividis': d3Scale.interpolateCividis,
+  'Inferno': d3Scale.interpolateInferno,
+  'Blues': d3Scale.interpolateBlues,
+  'Oranges': d3Scale.interpolateOranges,
+  'Greens': d3Scale.interpolateGreens,
+  'Reds': d3Scale.interpolateReds,
+  'Purples': d3Scale.interpolatePurples
+};
+Object.freeze(COLORSCHEME);
+
 
 export interface TableProps {
   /** dictionnary of disabled elements */
@@ -28,10 +44,16 @@ export interface TableProps {
    *  value: value used for the heatmap
    **/
   heatmap?: {[id: string]: number},
+  /** Color scheme to use. Look at the COLORSCHEME definition for available color scheme
+   *  If you pass an unknown color scheme or no scheme, the component will use a linear scale whose range
+   *  is defined by the heatmapMax and heatmapMin value
+   **/
+  colorScheme?: keyof typeof COLORSCHEME;
   /** Color used for the highest value */
   heatmapMax?: string,
   /** Color used for the lowest value*/
   heatmapMin?: string
+
 }
 
 export enum TableLayout {
@@ -43,15 +65,25 @@ export enum TableLayout {
 
 const N_LEGEND_ITEMS = 10;
 
-function computeHeatmap(h: any, max: string, min: string) {
+function computeHeatmap(h: any, max: string, min: string, scheme: keyof typeof COLORSCHEME) {
   if (!h) return {linearScale: null, legendScale: null};
 
   const heatmapExtent = extent(Object.values(h));
+  const legendPosition = scaleLinear().domain(heatmapExtent).range([0, 100]);
+
+  if (COLORSCHEME[scheme]) {
+    return {
+      linearScale: scaleSequential(COLORSCHEME[scheme]).domain(heatmapExtent),
+      legendScale: scaleSequential(COLORSCHEME[scheme]).domain([0, N_LEGEND_ITEMS]),
+      legendPosition
+    }
+  }
+
   const linearScale = scaleLinear().range([min,max]);
   linearScale.domain(heatmapExtent);
 
   const legendScale = scaleLinear().range([min, max]).domain([0, N_LEGEND_ITEMS]);
-  const legendPosition = scaleLinear().domain(heatmapExtent).range([0, 100]);
+
   return {linearScale, legendScale, legendPosition};
 }
 
@@ -87,7 +119,16 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
   </React.Fragment>);
 }
 
-export function Table({disabledElement, enabledElement, hiddenElement, onElementClicked, onElementHovered, forceTableLayout, heatmap, heatmapMax, heatmapMin}: TableProps) {
+export function Table({disabledElement,
+                        enabledElement,
+                        hiddenElement,
+                        onElementClicked,
+                        onElementHovered,
+                        forceTableLayout,
+                        heatmap,
+                        heatmapMax,
+                        heatmapMin,
+                        colorScheme}: TableProps) {
   const [isShown,setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
   const isDesktop = useMediaQuery({ minWidth: 992 });
@@ -95,8 +136,9 @@ export function Table({disabledElement, enabledElement, hiddenElement, onElement
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   // we consider that either those properties are all defined, or not
-  const {linearScale: heatmapscale, legendScale, legendPosition: legendPositionScale}= useMemo(() => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!),
-    [heatmapMax, heatmapMin, heatmap]);
+  const {linearScale: heatmapscale, legendScale, legendPosition: legendPositionScale} =
+    useMemo(() => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!, colorScheme!),
+    [heatmapMax, heatmapMin, heatmap, colorScheme]);
 
   // TODO(chab) allow people to pass the number of subdivisions OR to have a continuous legend
   const legendItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];

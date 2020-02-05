@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Table, TableLayout } from "../periodic-table/periodic-table-component/periodic-table.component";
+import { COLORSCHEME, Table, TableLayout } from "../periodic-table/periodic-table-component/periodic-table.component";
 import { action } from "@storybook/addon-actions";
 import { SelectableTable } from "../periodic-table/table-state";
 import { useElements } from "../periodic-table/periodic-table-state/table-store";
@@ -220,12 +220,14 @@ export const heatmapTable = (props) => {
                heatmapMax={color('max', MAX)}
                heatmapMin={color('min', MIN)}
                heatmap={heatmap}
+               colorScheme={select('color-scheme', [...Object.keys(COLORSCHEME), 'none'], Object.keys(COLORSCHEME)[2]) as keyof typeof COLORSCHEME}
                onElementClicked={() => {}}
                onElementHovered={() => {}}
                hiddenElement={{}}/>
       </div>
     </>);
 };
+
 
 export default {
   component: SelectableTable,
