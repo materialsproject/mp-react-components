@@ -26,9 +26,9 @@ export interface PeriodicElementProps {
     /** what to display  */;
     displayMode?: DISPLAY_MODE;
     /** callback called when an element clicked */
-    onElementClicked: (e:MatElement) => void;
+    onElementClicked?: (e:MatElement) => void;
     /** callback called when an element is hovered */
-    onElementHovered: (e:MatElement) => void;
+    onElementHovered?: (e:MatElement) => void;
 }
 
 //TODO(chab) use render props to customize layout
@@ -38,8 +38,8 @@ export function PeriodicElement({element, displayMode = DISPLAY_MODE. SIMPLE,
                                     enabled = false,
                                     disabled = false,
                                     color,
-                                    onElementClicked,
-                                    onElementHovered}: PeriodicElementProps) {
+                                    onElementClicked = () => {},
+                                    onElementHovered = () => {}}: PeriodicElementProps) {
 
     const handleClick = (element:MatElement) => !element.hasGroup && onElementClicked(element);
     const handleHover = (element:MatElement) => onElementHovered(element);

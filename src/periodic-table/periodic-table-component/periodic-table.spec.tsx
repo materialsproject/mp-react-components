@@ -36,18 +36,31 @@ describe('<Table/>', () => {
     expect(wrapper.find('.mat-element').at(2).hasClass('hidden')).toBe(true);
   });
 
-  //TODO(layout/callback/detailed)
   it('click callback should be called', ()=> {
     const click = jest.fn();
-    const wrapper = renderElement({}, {}, {...enabled}, click);
+    const hover = jest.fn();
+    const wrapper = renderElement({}, {}, {...enabled}, click, hover);
     expect(wrapper.find('.mat-element').at(0).simulate('click'));
     expect(click).toHaveBeenCalled();
-  });
-  xit('table spacer click should be called', () => {
-
+    expect(hover).toHaveBeenCalledTimes(0);
   });
 
-  xit('check the class of the layout', () => {})
+  it('hover callback should be called', ()=> {
+    const click = jest.fn();
+    const hover = jest.fn();
+    const wrapper = renderElement({}, {}, {...enabled}, click, hover);
+    expect(wrapper.find('.mat-element').at(0).simulate('mouseover'));
+    expect(hover).toHaveBeenCalled();
+    expect(click).toHaveBeenCalledTimes(0);
+  });
+
+  it('table spacer click should be called', () => {
+    const click = jest.fn();
+    const hover = jest.fn();
+    const wrapper = renderElement({}, {}, {...enabled}, click, hover);
+    expect(wrapper.find('.table-switcher').simulate('mouseover'));
+    //TODO(chab) add some real assertions
+  });
 });
 
 export function renderElement(disabled = {},

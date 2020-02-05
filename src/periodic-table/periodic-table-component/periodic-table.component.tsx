@@ -78,9 +78,7 @@ export function TableSpacer({onTableSwitcherClicked}: any) {
           enabled={false}
           hidden={false}
           color={undefined}
-          element={TABLE_DICO_V2[detailedElement]}
-          onElementClicked={()=>{}}
-          onElementHovered={()=>{}}/>
+          element={TABLE_DICO_V2[detailedElement]}/>
       }
     </div>
     <div className="separator-span"></div>
