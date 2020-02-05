@@ -65,7 +65,7 @@ export enum TableLayout {
 
 const N_LEGEND_ITEMS = 10;
 
-function computeHeatmap(h: any, max: string, min: string, scheme: keyof typeof COLORSCHEME) {
+function computeHeatmap(h: {[symbol: string]: number}, max: string, min: string, scheme: keyof typeof COLORSCHEME) {
   if (!h) return {linearScale: null, legendScale: null};
 
   const heatmapExtent = extent(Object.values(h));

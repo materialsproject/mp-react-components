@@ -24,7 +24,7 @@ let elements: any[] = [];
 function SelectedComponent() {
   const {enabledElements} = useElements();
   // try to delete the key in the store instead
-  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements)[el]);
 
   return (<div className='cmp-list' style={{margin: '10px', 'display': 'flex'}}>
     {getElementsList().map((elt: any) =>
@@ -40,7 +40,7 @@ function SelectedComponent() {
 function SelectedComponentSimple() {
   const {enabledElements} = useElements();
   // try to delete the key in the store instead
-  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements)[el]);
   return (<ul>
     {getElementsList().map(el => <li key={el}>{el}</li>)}
   </ul>)
@@ -65,7 +65,7 @@ function TestComponent(props: any) {
             forwardOuterChange={true}
             maxElementSelectable={sel}
             hiddenElements={props.e}
-            onStateChange={(a: any) => {
+            onStateChange={(a) => {
               console.log('new elements', a);
             }}
             enabledElements={z}
@@ -91,8 +91,8 @@ ReactDOM.render(
               maxElementSelectable={2}
               forceTableLayout={TableLayout.COMPACT}
               hiddenElements={[]}
-              onStateChange={(enabledElements: any) => {
-                elements = Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+              onStateChange={(enabledElements) => {
+                elements = Object.keys(enabledElements).filter((el) => (enabledElements)[el]);
               }}
               enabledElements={[]}
               disabledElements={['H', 'C']} />

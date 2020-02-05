@@ -1,6 +1,6 @@
 import * as React from "react";
 import { getPeriodicSelectionStore, PeriodicSelectionContext } from "./table-store";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 
 export function PeriodicContext(props: any) {
   // We consider that the store will never change once the element is mounted

@@ -1,7 +1,7 @@
 import { FILTER_BY_CATEGORY, FILTER_VALUE_MAPPER, FILTERS } from "./filter-definitions";
 import * as React from "react";
 import './table-filter.less';
-import { TABLE_V2 } from "../periodic-table-data/table-v2";
+import { MatElement, TABLE_V2 } from "../periodic-table-data/table-v2";
 import { TABLE_DICO_CLASS } from "../periodic-table-data/table";
 import { PeriodicSelectionContext } from "../periodic-table-state/table-store";
 
@@ -15,7 +15,7 @@ function performFilter(array: any[], key: string, value: string): any[] {
     return acc;
   }, {});
 
-  function isFiltered(element: any) {
+  function isFiltered(element: MatElement): boolean {
     if (key === 'category') {
       //console.log(value, TABLE_DICO_CLASS[a.symbol]);
       return TABLE_DICO_CLASS[element.symbol] == value;

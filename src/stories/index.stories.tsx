@@ -30,7 +30,7 @@ const elementOptions = {
 function SelectedComponent() {
   const {enabledElements} = useElements();
   // try to delete the key in the store instead
-  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements as any)[el]);
+  const getElementsList = () => Object.keys(enabledElements).filter((el) => (enabledElements)[el]);
   return (<ul>
     {getElementsList().map(el => <li key={el}>{el}</li>)}
   </ul>)
@@ -81,7 +81,7 @@ export const managedTable = () => <>
   <PeriodicContext>
     <>
       <SelectedComponent/>
-      <SelectableTable onStateChange={(a:any) => console.log(a)}
+      <SelectableTable onStateChange={(a) => console.log(a)}
                        enabledElements={select('Enabled elements', elementOptions, [])}
                        disabledElements={select('Disabled elements', elementOptions, [])}
                        forceTableLayout={
@@ -101,7 +101,7 @@ export const wiredTables = () => <>
 
   <PeriodicContext>
     <>
-      <SelectableTable onStateChange={(a:any) => console.log(a)}
+      <SelectableTable onStateChange={(a) => console.log(a)}
                        enabledElements={[]}
                        forceTableLayout={TableLayout.MINI}
                        disabledElements={[]}
@@ -118,7 +118,7 @@ export const filteredTable = () => <>
   <PeriodicContext>
     <>
       <SelectedComponent/>
-      <SelectableTable onStateChange={(a:any) => console.log(a)}
+      <SelectableTable onStateChange={(a) => console.log(a)}
                        enabledElements={[]}
                        maxElementSelectable={1}
                        disabledElements={[]}

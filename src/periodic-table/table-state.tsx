@@ -38,7 +38,7 @@ export function SelectableTable(props: SelectableTableProps) {
       {...props} />);
 }
 
-const useElementsWithState = (props: SelectableTableProps): any => {
+const useElementsWithState = (props: SelectableTableProps) => {
     // could be memoized
     const els = arrayToDictionnary(props.enabledElements);
     const dls = arrayToDictionnary(props.disabledElements);
