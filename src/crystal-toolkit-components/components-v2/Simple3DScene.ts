@@ -239,9 +239,7 @@ export default class Simple3DScene {
     };
 
     traverse_scene(sceneJson, rootObject);
-
     console.log("rootObject", rootObject);
-
     this.scene.add(rootObject);
 
     // auto-zoom to fit object
@@ -370,10 +368,10 @@ export default class Simple3DScene {
           1.0,
           this.settings.cylinderSegments
         );
-        const mat = this.makeMaterial(object_json.color)
+        const mat = this.makeMaterial(object_json.color);
         const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
         const quaternion = new THREE.Quaternion();
-        object_json.positionPairs.forEach(function (positionPair) {
+        object_json.positionPairs.forEach((positionPair) => {
           // the following is technically correct but could be optimized?
           const mesh = new THREE.Mesh(geom, mat);
           const vec_a = new THREE.Vector3(...positionPair[0]);
@@ -603,19 +601,16 @@ export default class Simple3DScene {
   }
 
   renderScene () {
-    if (this.controls) {
-      this.controls.update();
-    }
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
   }
 
   toggleVisibility (namesToVisibility) {
-    if (typeof namesToVisibility !== 'undefined') {
+    if (!!namesToVisibility) {
       for (const objName in namesToVisibility) {
-        if (namesToVisibility.hasOwnProperty(objName)) {
+        if (!!namesToVisibility[objName]) {
           const obj = this.scene.getObjectByName(objName);
-          if (typeof obj !== 'undefined') {
+          if (obj) {
             obj.visible = Boolean(namesToVisibility[objName]);
           }
         }
