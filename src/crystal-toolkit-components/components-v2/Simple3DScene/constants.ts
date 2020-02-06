@@ -29,7 +29,7 @@ export const defaults = {
   background: '#ffffff',
   sphereSegments: 32,
   cylinderSegments: 16,
-  staticScene: false,
+  staticScene: true,
   sphereScale: 1.0,
   cylinderScale: 1.0,
   defaultSurfaceOpacity: 0.5,

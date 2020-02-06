@@ -1,19 +1,10 @@
 import React, {
   Component, RefObject
 } from "react";
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from "prop-types";
 import Simple3DScene from "./Simple3DScene";
 import { Subscription } from "rxjs";
 import { subscribe } from "./Simple3DSceneDownloadEvent";
-
-interface SceneProps {
-  id?: string;
-  data: any; //TODO(type)
-  toggleVisibility?: {[objectId:string]: boolean},
-  settings?: any; //TODO(type)
-  selectedObjectReference?: string; //
-  selectedObjectCount?: number; //
-}
 
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
@@ -25,11 +16,75 @@ interface SceneProps {
 export default class Simple3DSceneComponent extends Component {
   //TODO(chab) try to use a functional component
 
+  static propTypes = {
+    /**
+     * The ID used to identify this component in Dash callbacks
+     */
+    id: PropTypes.string,
+
+    /**
+     * Simple3DScene JSON, the easiest way to generate this is to use the Scene class
+     * in crystal_toolkit.core.scene and its to_json method.
+     */
+    data: PropTypes.object,
+
+    /**
+     * Options used for generating scene.
+     * Supported options and their defaults are given as follows:
+     * {
+     *    antialias: true, // set to false to improve performance
+     *    renderer: 'webgl', // 'svg' also an option, used for unit testing
+     *    transparentBackground: false, // transparent background
+     *    background: '#ffffff', // background color if not transparent,
+     *    sphereSegments: 32, // decrease to improve performance
+     *    cylinderSegments: 16, // decrease to improve performance
+     *    staticScene: true, // disable if animation required
+     *    defaultZoom: 0.8, // 1 will completely fill viewport with scene
+     * }
+     * There are several additional options used for debugging and testing,
+     * please consult the source code directly for these.
+     */
+    settings: PropTypes.object,
+
+    /**
+     * Hide/show nodes in scene by its name (key), value is 1 to show the node
+     * and 0 to hide it.
+     */
+    toggleVisibility: PropTypes.object,
+
+    /**
+     * Set to trigger a screenshot or scene download. Should be an object with
+     * the structure:
+     * {
+     *    "n_requests": n_requests, // increment to trigger a new download request
+     *    "filename": request_filename, // the download filename
+     *    "filetype": "png", // the download format
+     * }
+     */
+    downloadRequest: PropTypes.object,
+
+    /**
+     * Dash-assigned callback that should be called whenever any of the
+     * properties change
+     */
+    setProps: PropTypes.func,
+    /**
+     * Reference to selected objects when clicked
+     */
+    selectedObjectReference: PropTypes.string,
+
+    /**
+     * Click count for selected object
+     */
+    selectedObjectCount: PropTypes.number
+  };
+
+
   private scene!: Simple3DScene;
   private mountNodeRef: RefObject<HTMLDivElement>;
   private downloadSubscription: Subscription;
 
-  constructor (public props: SceneProps) {
+  constructor (public props: InferProps<typeof Simple3DSceneComponent.propTypes>) {
     super(props);
     this.mountNodeRef = React.createRef();
     this.downloadSubscription = subscribe(({filename, filetype}) => {
@@ -80,13 +135,8 @@ export default class Simple3DSceneComponent extends Component {
   }
 
   render () {
-    return (<div id={this.props.id}
-      style={
-        {
-          width: '100%',
-          height: '100%'
-        }
-      }
+    return (<div id={this.props.id!}
+      className={'3d-container'}
       ref={ this.mountNodeRef }
       onClick={ e => this.handleClick(e)}
     />
@@ -95,65 +145,4 @@ export default class Simple3DSceneComponent extends Component {
 }
 
 
-(Simple3DSceneComponent as any).propTypes = {
-  /**
-   * The ID used to identify this component in Dash callbacks
-   */
-  id: PropTypes.string,
 
-  /**
-   * Simple3DScene JSON, the easiest way to generate this is to use the Scene class
-   * in crystal_toolkit.core.scene and its to_json method.
-   */
-  data: PropTypes.object,
-
-  /**
-   * Options used for generating scene.
-   * Supported options and their defaults are given as follows:
-   * {
-   *    antialias: true, // set to false to improve performance
-   *    renderer: 'webgl', // 'svg' also an option, used for unit testing
-   *    transparentBackground: false, // transparent background
-   *    background: '#ffffff', // background color if not transparent,
-   *    sphereSegments: 32, // decrease to improve performance
-   *    cylinderSegments: 16, // decrease to improve performance
-   *    staticScene: true, // disable if animation required
-   *    defaultZoom: 0.8, // 1 will completely fill viewport with scene
-   * }
-   * There are several additional options used for debugging and testing,
-   * please consult the source code directly for these.
-   */
-  settings: PropTypes.object,
-
-  /**
-   * Hide/show nodes in scene by its name (key), value is 1 to show the node
-   * and 0 to hide it.
-   */
-  toggleVisibility: PropTypes.object,
-
-  /**
-   * Set to trigger a screenshot or scene download. Should be an object with
-   * the structure:
-   * {
-   *    "n_requests": n_requests, // increment to trigger a new download request
-   *    "filename": request_filename, // the download filename
-   *    "filetype": "png", // the download format
-   * }
-   */
-
-  /**
-   * Dash-assigned callback that should be called whenever any of the
-   * properties change
-   */
-  setProps: PropTypes.func,
-  /**
-   * Reference to selected objects when clicked
-   */
-  selectedObjectReference: PropTypes.string,
-
-  /**
-   * Click count for selected object
-   */
-  selectedObjectCount: PropTypes.number
-
-}
