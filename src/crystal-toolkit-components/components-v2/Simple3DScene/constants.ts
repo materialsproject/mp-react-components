@@ -59,3 +59,15 @@ export const defaults = {
   enableZoom: true,
   defaultZoom: 0.8
 };
+
+export enum JSON3DObject {
+  ELLIPSOIDS = 'ellipsoids',
+  CYLINDERS = 'cylinders',
+  SPHERES = 'spheres',
+  ARROWS = 'arrows',
+  CUBES = 'cubes',
+  LINES = 'lines',
+  SURFACES = 'surface',
+  CONVEX = 'convex',
+  LABEL = 'labels'
+}

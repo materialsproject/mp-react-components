@@ -1,11 +1,11 @@
-import * as THREE from 'three'
+import * as THREE from "three";
+import { Object3D, OrthographicCamera, Scene, WebGLRenderer } from "three";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { SVGRenderer } from "three/examples/jsm/renderers/SVGRenderer";
 import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { Object3D, OrthographicCamera, Scene, WebGLRenderer } from "three";
 import { ColladaExporter } from "three/examples/jsm/exporters/ColladaExporter";
-import { Renderer, Light, DEFAULT_LIGHT_COLOR, Material, ExportType, defaults } from "./constants";
+import { DEFAULT_LIGHT_COLOR, defaults, ExportType, JSON3DObject, Light, Material, Renderer } from "./constants";
 
 
 export default class Simple3DScene {
@@ -326,8 +326,8 @@ export default class Simple3DScene {
       return {geom, mat: this.makeMaterial(object_json.color)};
     };
 
-    switch (object_json.type) {
-      case 'spheres': {
+    switch (object_json.type as JSON3DObject) {
+      case JSON3DObject.SPHERES: {
         const {geom, mat} = getSphereBuffer(object_json.radius * this.settings.sphereScale);
         object_json.positions.forEach((position) => {
           const mesh = new THREE.Mesh(geom, mat);
@@ -335,13 +335,9 @@ export default class Simple3DScene {
           obj.add(mesh);
           return mesh;
         });
-        /* ^^ PULLED IN THE UPPER LOOP
-        meshes.forEach(function (mesh) {
-          obj.add(mesh)
-        })*/
         return obj
       }
-      case 'ellipsoids': {
+      case JSON3DObject.ELLIPSOIDS: {
         const {geom, mat} = getSphereBuffer(this.settings.sphereScale);
         const meshes = object_json.positions.map((position) => {
           const mesh = new THREE.Mesh(geom, mat);
@@ -360,7 +356,7 @@ export default class Simple3DScene {
         meshes.forEach(mesh => obj.add(mesh));
         return obj
       }
-      case 'cylinders': {
+      case JSON3DObject.CYLINDERS: {
         const radius = object_json.radius || 1;
         const geom = new THREE.CylinderBufferGeometry(
           radius * this.settings.cylinderScale,
@@ -389,7 +385,7 @@ export default class Simple3DScene {
         });
         return obj
       }
-      case 'cubes': {
+      case JSON3DObject.CUBES: {
         const size = object_json.width * this.settings.sphereScale;
         const geom = new THREE.BoxBufferGeometry(size, size, size);
         const mat = this.makeMaterial(object_json.color);
@@ -401,7 +397,7 @@ export default class Simple3DScene {
 
         return obj
       }
-      case 'lines': {
+      case JSON3DObject.LINES: {
         const verts = new THREE.Float32BufferAttribute(
           [].concat.apply([], object_json.positions),
           3
@@ -432,7 +428,7 @@ export default class Simple3DScene {
         obj.add(mesh);
         return obj;
       }
-      case 'surface': {
+      case JSON3DObject.SURFACES: {
         const verts = new THREE.Float32BufferAttribute(
           [].concat.apply([], object_json.positions),
           3
@@ -468,7 +464,7 @@ export default class Simple3DScene {
         // TODO: smooth the surfaces?
         return obj;
       }
-      case 'convex': {
+      case JSON3DObject.CONVEX: {
         const points = object_json.positions.map(p => new THREE.Vector3(...p));
         const geom = new ConvexBufferGeometry(points);
         const opacity =
@@ -486,7 +482,7 @@ export default class Simple3DScene {
         obj.add(line);
         return obj
       }
-      case 'arrows': {
+      case JSON3DObject.ARROWS: {
         // take inspiration from ArrowHelper, user cones and cylinders
         const radius = object_json.radius || 1;
         const headLength = object_json.headLength || 2;
@@ -543,7 +539,7 @@ export default class Simple3DScene {
         });
         return obj
       }
-      case 'labels': {
+      case JSON3DObject.LABEL: {
         const label = document.createElement('div');
         label.className = 'tooltip';
         label.textContent = object_json.label;
@@ -639,12 +635,10 @@ export default class Simple3DScene {
 
   // call this when the parent component is destroyed
   public onDestroy() {
-    //FIXME
     (this.renderer as WebGLRenderer).forceContextLoss();
     (this.renderer as WebGLRenderer).dispose();
     this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
     (this.renderer as any).domElement = undefined;
-    // domElement can be removed from parent there
     (this as any).renderer = null;
     this.controls.dispose();
     this.stop();
