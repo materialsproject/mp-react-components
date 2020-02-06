@@ -13,8 +13,8 @@ import { StandalonePeriodicComponent } from "./periodic-table/periodic-element/s
 import { useElements } from "./periodic-table/periodic-table-state/table-store";
 import { PeriodicContext } from "./periodic-table/periodic-table-state/periodic-selection-context";
 import { TableLayout } from "./periodic-table/periodic-table-component/periodic-table.component";
-
-
+import Simple3DSceneComponent from "./crystal-toolkit-components/components-v2/Simple3DSceneComponent.react";
+import { scene } from "./crystal-toolkit-components/components-v2/scene/simple-scene";
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -82,6 +82,10 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
+    <div style={{width: '500px', height: '500px'}}>
+      <Simple3DSceneComponent data={scene} toggleVisibility={{}}/>
+    </div>
+
     <div>
       {<TestComponent d={['B']} b={[]} e={[]}/>}
       {<PeriodicContext>

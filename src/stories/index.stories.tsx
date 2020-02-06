@@ -7,10 +7,10 @@ import { useElements } from "../periodic-table/periodic-table-state/table-store"
 import { TableFilter } from "../periodic-table/periodic-filter/table-filter";
 import { StandalonePeriodicComponent } from "../periodic-table/periodic-element/standalone-periodic-component";
 import { PeriodicContext } from "../periodic-table";
-import { boolean, color, number, radios, select, withKnobs } from "@storybook/addon-knobs";
 
 import "./style.css";
 import { DISPLAY_MODE } from "../periodic-table/periodic-element/periodic-element.component";
+import { withKnobs, color, select, boolean, number } from "@storybook/addon-knobs";
 
 const disabledElement = {Be:true, Na:true, Cl:true};
 const selectedElement = {O:true, H:true, Be:true};
@@ -228,11 +228,9 @@ export const heatmapTable = (props) => {
     </>);
 };
 
-
 export default {
   component: SelectableTable,
   title: 'Periodic Table',
   decorators: [withKnobs],
-  stories: [],
   subcomponents: { TableFilter, Table, StandalonePeriodicComponent}
 };
