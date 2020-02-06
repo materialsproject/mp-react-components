@@ -607,16 +607,16 @@ export default class Simple3DScene {
 
   toggleVisibility (namesToVisibility) {
     if (!!namesToVisibility) {
-      for (const objName in namesToVisibility) {
-        if (!!namesToVisibility[objName]) {
-          const obj = this.scene.getObjectByName(objName);
-          if (obj) {
-            obj.visible = Boolean(namesToVisibility[objName]);
+      Object.keys(namesToVisibility).forEach((objName) => {
+          if (!!namesToVisibility[objName]) {
+            const obj = this.scene.getObjectByName(objName);
+            if (obj) {
+              obj.visible = Boolean(namesToVisibility[objName]);
+            }
           }
-        }
-      }
+      });
+      this.renderScene();
     }
-    this.renderScene();
   }
 
   // i know this is done by implementing a color buffer, with each color matching one
