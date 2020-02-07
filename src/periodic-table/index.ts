@@ -8,7 +8,6 @@ import Simple3DSceneComponent
 import { JSONViewComponent } from "../crystal-toolkit-components/components-v2/JSONViewComponent.react";
 import GraphComponent from "../crystal-toolkit-components/components-v2/graph.component";
 
-
 export {
   SelectableTable,
   TableFilter,

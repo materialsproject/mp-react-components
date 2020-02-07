@@ -1,7 +1,7 @@
 import { mount } from "enzyme";
 import * as React from 'react';
 import { TableFilter } from "./table-filter";
-import { PeriodicContext } from "..";
+import { PeriodicContext } from "../periodic-table-state/periodic-selection-context";
 
 jest.mock('./table-filter.less', () => {});
 jest.mock('../periodic-table-component/periodic-table.module.less', () => {});
