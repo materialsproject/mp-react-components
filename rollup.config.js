@@ -62,6 +62,6 @@ export default {
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    terser() // TODO(chab) we might want to not mimify it
+    //terser() // TODO(chab) we might want to not mimify it
   ]
 }
