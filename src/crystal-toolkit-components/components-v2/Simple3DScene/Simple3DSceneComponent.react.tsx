@@ -1,7 +1,7 @@
 import React, {
   Component, RefObject
 } from "react";
-import PropTypes, { InferProps } from "prop-types";
+import PropTypes from "prop-types";
 import Simple3DScene from "./Simple3DScene";
 import { Subscription } from "rxjs";
 import { subscribe } from "./Simple3DSceneDownloadEvent";
