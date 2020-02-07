@@ -1,5 +1,4 @@
-import * as THREE from "three";
-import { Object3D, OrthographicCamera, Scene, WebGLRenderer } from "three";
+import * as THREE from "three/build/three.module";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { SVGRenderer } from "three/examples/jsm/renderers/SVGRenderer";
 import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
@@ -11,13 +10,13 @@ import { DEFAULT_LIGHT_COLOR, defaults, ExportType, JSON3DObject, Light, Materia
 export default class Simple3DScene {
 
   private settings;
-  private renderer!: WebGLRenderer | SVGRenderer;
+  private renderer!: THREE.WebGLRenderer | THREE.SVGRenderer;
   private labelRenderer!: CSS2DRenderer;
-  private scene!: Scene;
+  private scene!: THREE.Scene;
   private cachedMountNodeSize!: {width: number, height: number};
-  private camera!: OrthographicCamera;
+  private camera!: THREE.rthographicCamera;
   private frameId?: number;
-  private clickableObjects: Object3D[] = [];
+  private clickableObjects: THREE.Object3D[] = [];
   private objectDictionnary: {[id:string]: any} = {};
   private controls;
 
@@ -115,7 +114,7 @@ export default class Simple3DScene {
   }
 
   private getSceneWithBackground() {
-    const scene = new Scene();
+    const scene = new THREE.Scene();
     //background
     if (!this.settings.transparentBackground) {
       scene.background = new THREE.Color(this.settings.background);
@@ -635,8 +634,8 @@ export default class Simple3DScene {
 
   // call this when the parent component is destroyed
   public onDestroy() {
-    (this.renderer as WebGLRenderer).forceContextLoss();
-    (this.renderer as WebGLRenderer).dispose();
+    (this.renderer as THREE.WebGLRenderer).forceContextLoss();
+    (this.renderer as THREE.WebGLRenderer).dispose();
     this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
     (this.renderer as any).domElement = undefined;
     (this as any).renderer = null;
