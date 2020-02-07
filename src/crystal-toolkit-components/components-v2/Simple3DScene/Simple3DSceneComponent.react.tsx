@@ -136,6 +136,7 @@ export default class Simple3DSceneComponent extends Component {
 
   render () {
     return (<div id={this.props.id!}
+      style={{width: '100%', height: '100%'}}
       className={'three-container'}
       ref={ this.mountNodeRef }
       onClick={ e => this.handleClick(e)}
