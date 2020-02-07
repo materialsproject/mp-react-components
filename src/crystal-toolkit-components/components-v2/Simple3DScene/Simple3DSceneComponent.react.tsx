@@ -84,7 +84,7 @@ export default class Simple3DSceneComponent extends Component {
   private mountNodeRef: RefObject<HTMLDivElement>;
   private downloadSubscription: Subscription;
 
-  constructor (public props: InferProps<typeof Simple3DSceneComponent.propTypes>) {
+  constructor (public props: PropTypes.InferProps<typeof Simple3DSceneComponent.propTypes>) {
     super(props);
     this.mountNodeRef = React.createRef();
     this.downloadSubscription = subscribe(({filename, filetype}) => {
