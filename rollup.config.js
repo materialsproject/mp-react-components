@@ -47,11 +47,17 @@ export default {
       format: 'es',
     },
   ],
-  external: [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-    'prop-types'
-  ],plugins: [
+  external: p => {
+      if ([
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.peerDependencies || {}),
+        'prop-types'
+      ].indexOf(p) > -1) {
+        return true;
+      }
+      return /^three/.test(p) ;
+    }
+   ,plugins: [
     lessModules({output:true, processor}),
     localResolve(),
     resolve(),

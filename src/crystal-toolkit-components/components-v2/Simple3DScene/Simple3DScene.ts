@@ -1,4 +1,4 @@
-import * as THREE from "three/build/three.module";
+import * as THREE from "three";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { SVGRenderer } from "three/examples/jsm/renderers/SVGRenderer";
 import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
@@ -10,11 +10,11 @@ import { DEFAULT_LIGHT_COLOR, defaults, ExportType, JSON3DObject, Light, Materia
 export default class Simple3DScene {
 
   private settings;
-  private renderer!: THREE.WebGLRenderer | THREE.SVGRenderer;
+  private renderer!: THREE.WebGLRenderer | SVGRenderer;
   private labelRenderer!: CSS2DRenderer;
   private scene!: THREE.Scene;
   private cachedMountNodeSize!: {width: number, height: number};
-  private camera!: THREE.rthographicCamera;
+  private camera!: THREE.OrthographicCamera;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
   private objectDictionnary: {[id:string]: any} = {};
