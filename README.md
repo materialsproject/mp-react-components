@@ -41,3 +41,14 @@ npm deploy-storybook
 ```
 
 ## Clean 
+
+
+## Local development
+
+If you have a local version of `dash-mp-components` and `react-mp-components`, you'll probably
+want to use the local version of `react-mp-components` for a better development workflow.
+Running those commands will tell `NPM` to use your local version of `react-mp-components`
+```
+ cd <DASH_MP_HOME> 
+ npm link <REACT_MP_HOME>
+```
