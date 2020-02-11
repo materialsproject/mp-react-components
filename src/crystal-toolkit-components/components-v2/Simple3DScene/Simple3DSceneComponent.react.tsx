@@ -1,10 +1,8 @@
-import React, {
-  Component, RefObject
-} from "react";
-import PropTypes from "prop-types";
-import Simple3DScene from "./Simple3DScene";
-import { Subscription } from "rxjs";
-import { subscribe } from "./Simple3DSceneDownloadEvent";
+import React, { Component, RefObject } from 'react';
+import PropTypes from 'prop-types';
+import Simple3DScene from './Simple3DScene';
+import { Subscription } from 'rxjs';
+import { subscribe } from './Simple3DSceneDownloadEvent';
 
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
@@ -13,7 +11,10 @@ import { subscribe } from "./Simple3DSceneDownloadEvent";
  * intended to be a replacement for a full scene graph library, but for rapid
  * prototyping by non-experts.
  */
-export default class Simple3DSceneComponent extends Component {
+export default class Simple3DSceneComponent extends Component<
+  PropTypes.InferProps<typeof Simple3DSceneComponent.propTypes>,
+  any
+> {
   //TODO(chab) try to use a functional component
 
   static propTypes = {
@@ -79,71 +80,72 @@ export default class Simple3DSceneComponent extends Component {
     selectedObjectCount: PropTypes.number
   };
 
-
   private scene!: Simple3DScene;
   private mountNodeRef: RefObject<HTMLDivElement>;
   private downloadSubscription: Subscription;
 
-  constructor (public props: PropTypes.InferProps<typeof Simple3DSceneComponent.propTypes>) {
+  constructor(public props) {
     super(props);
     this.mountNodeRef = React.createRef();
-    this.downloadSubscription = subscribe(({filename, filetype}) => {
-      this.scene.download(filename, filetype)
-    })
+    this.downloadSubscription = subscribe(({ filename, filetype }) => {
+      this.scene.download(filename, filetype);
+    });
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // NOTE(chab) this.mount === this.scene.renderer.domElement.parentElement
-    this.scene = new Simple3DScene(this.props.data, this.mountNodeRef.current!, this.props.settings);
+    this.scene = new Simple3DScene(
+      this.props.data,
+      this.mountNodeRef.current!,
+      this.props.settings
+    );
     this.scene.toggleVisibility(this.props.toggleVisibility);
   }
 
-  UNSAFE_componentWillUpdate (nextProps, nextState) {
-
+  UNSAFE_componentWillUpdate(nextProps: any, nextState) {
     if (nextProps.data !== this.props.data) {
       this.scene.addToScene(nextProps.data);
-      this.scene.toggleVisibility(this.props.toggleVisibility)
+      this.scene.toggleVisibility(this.props.toggleVisibility);
     }
 
     if (nextProps.toggleVisibility !== this.props.toggleVisibility) {
-      this.scene.toggleVisibility(nextProps.toggleVisibility)
+      this.scene.toggleVisibility(nextProps.toggleVisibility);
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // perform that in the onDestroy
     //this.mount.removeChild(this.scene.renderer.domElement);
     this.scene.onDestroy();
     this.downloadSubscription.unsubscribe();
   }
 
-  handleClick (event) {
+  handleClick(event) {
     event.preventDefault();
 
     const clickedReference = this.scene.getClickedReference(event.clientX, event.clientY);
     // Not sure what is the goal there ?
     if (this.props.selectedObjectReference === clickedReference) {
       this.setState((state: any) => {
-        return { selectedObjectCount: state.selectedObjectCount + 1 }
-      })
+        return { selectedObjectCount: state.selectedObjectCount + 1 };
+      });
     } else {
       this.setState({
         selectedObjectReference: clickedReference,
         selectedObjectCount: 1
-      })
+      });
     }
   }
 
-  render () {
-    return (<div id={this.props.id!}
-      style={{width: '100%', height: '100%'}}
-      className={'three-container'}
-      ref={ this.mountNodeRef }
-      onClick={ e => this.handleClick(e)}
-    />
-    )
+  render() {
+    return (
+      <div
+        id={this.props.id!}
+        style={{ width: '100%', height: '100%' }}
+        className={'three-container'}
+        ref={this.mountNodeRef}
+        onClick={e => this.handleClick(e)}
+      />
+    );
   }
 }
-
-
-
