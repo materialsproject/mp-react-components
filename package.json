@@ -40,17 +40,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",
-    "@storybook/addon-docs": "5.3.10",
-    "@storybook/addon-knobs": "5.3.12",
-    "@storybook/addon-storysource": "5.3.10",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-url": "^4.0.1",
     "@storybook/addon-actions": "5.3.10",
+    "@storybook/addon-docs": "5.3.10",
+    "@storybook/addon-knobs": "5.3.12",
     "@storybook/addon-links": "^5.3.10",
+    "@storybook/addon-storysource": "5.3.10",
     "@storybook/addons": "5.3.10",
-    "@storybook/react": "5.3.10",
     "@storybook/core": "5.3.10",
+    "@storybook/react": "5.3.10",
     "@storybook/storybook-deployer": "^2.8.1",
     "@types/enzyme": "^3.10.4",
     "@types/enzyme-adapter-react-16": "^1.0.5",
@@ -61,12 +61,14 @@
     "babel-loader": "^8.0.6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
+    "husky": "^4.2.1",
     "jest": "25.1.0",
     "jsdom": "^16.0.1",
     "less": "^3.10.3",
     "parcel-bundler": "^1.12.4",
     "postcss": "^7.0.26",
     "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
     "react-docgen-typescript-loader": "^3.6.0",
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -81,5 +83,10 @@
     "ts-jest": "^25.2.0",
     "typescript": "^3.7.4",
     "yaml-lint": "^1.2.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
