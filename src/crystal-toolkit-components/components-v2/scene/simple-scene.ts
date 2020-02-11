@@ -3,6 +3,7 @@ export const scene = {
   contents: [
     {
       name: 'atoms',
+      color: '#0000FF',
       contents: [
         {
           positions: [
@@ -18,6 +19,7 @@ export const scene = {
           color: '#f9dc3c',
           radius: [0.5],
           type: 'spheres',
+          tooltip: 'THOSE ARE SOME SPHERES',
           clickable: true
         },
         {
@@ -28,6 +30,7 @@ export const scene = {
           color: '#fe0300',
           radius: [0.5],
           type: 'spheres',
+          tooltip: 'THOSE ARE SOME OTHER SPHERES',
           clickable: true
         },
         {
@@ -35,6 +38,7 @@ export const scene = {
           color: '#e51900',
           radius: [0.5],
           type: 'spheres',
+          tooltip: 'THOSE ARE SOME MORE SPHERES',
           clickable: true
         }
       ],

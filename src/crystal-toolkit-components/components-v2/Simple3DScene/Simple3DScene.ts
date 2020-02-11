@@ -13,6 +13,9 @@ import {
   Material,
   Renderer
 } from './constants';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { MeshStandardMaterial, Object3D } from 'three';
+import { TooltipHelper } from '../scene/tooltip-helper';
 
 export default class Simple3DScene {
   private settings;
@@ -23,8 +26,10 @@ export default class Simple3DScene {
   private camera!: THREE.OrthographicCamera;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
+  private tooltipObjects: THREE.Object3D[] = [];
   private objectDictionnary: { [id: string]: any } = {};
   private controls;
+  private tooltipHelper = new TooltipHelper();
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -73,6 +78,12 @@ export default class Simple3DScene {
     mountNode.appendChild(labelRenderer.domElement);
   }
 
+  private removeTooltip() {
+    this.tooltip.translateX(Number.MAX_SAFE_INTEGER);
+    this.tooltip.translateY(Number.MAX_SAFE_INTEGER);
+    this.tooltip.translateZ(Number.MAX_SAFE_INTEGER);
+  }
+
   private configureScene(sceneJson) {
     this.scene = this.getSceneWithBackground();
     this.camera = this.getCamera();
@@ -80,14 +91,24 @@ export default class Simple3DScene {
     this.addToScene(sceneJson);
     const lights = this.makeLights(this.settings.lights);
     this.scene.add(lights);
-
-    console.log(this.renderer.domElement);
-    const controls = new TrackballControls(this.camera, this.renderer.domElement as HTMLElement);
+    this.scene.add(this.tooltipHelper.tooltip);
+    const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
     controls.rotateSpeed = 2.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
-    controls.keys = [];
     controls.enabled = true;
+
+    this.renderer.domElement.addEventListener('mousemove', (e: any) => {
+      const p = this.getClickedReference(e.offsetX, e.offsetY);
+
+      if (p) {
+        const { object, point } = p;
+        this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
+        this.renderScene();
+      } else {
+        this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+      }
+    });
     //(controls as any).enableKeys = false; // uh ?
 
     // for OrbitControls
@@ -314,6 +335,11 @@ export default class Simple3DScene {
 
     if (object_json.clickable) {
       this.clickableObjects.push(obj);
+      this.objectDictionnary[obj.id] = object_json;
+    }
+
+    if (object_json.tooltip) {
+      this.tooltipObjects.push(obj);
       this.objectDictionnary[obj.id] = object_json;
     }
 
@@ -576,7 +602,9 @@ export default class Simple3DScene {
 
     switch (this.settings.material.type) {
       case Material.standard: {
-        return new THREE.MeshStandardMaterial(parameters);
+        const mat = new THREE.MeshStandardMaterial(parameters);
+        mat.side = THREE.DoubleSide;
+        return mat;
       }
       default:
         throw new Error('Unknown material.');
@@ -628,13 +656,23 @@ export default class Simple3DScene {
     mouse.x = (clientX / this.renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -(clientY / this.renderer.domElement.clientHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, this.camera);
-    // Three.js objects with click handlers we are interested in
-    const intersects = raycaster.intersectObjects(Object.values(this.clickableObjects));
+    const intersects = raycaster.intersectObjects(this.tooltipObjects, true);
+    // they are a few cases where this does not work :( try to understand why
     if (intersects.length > 0) {
-      console.log('intersects', intersects[0].object);
-      return this.objectDictionnary[intersects[0].object.id];
+      return { point: intersects[0].point, object: this.getParentObject(intersects[0].object) };
     }
     return null;
+  }
+
+  getParentObject(object: Object3D): { sceneObject: Object3D; jsonObject: any } | null {
+    if (!object.parent) {
+      return null;
+    }
+    if (!this.objectDictionnary[object.id]) {
+      return this.getParentObject(object.parent);
+    } else {
+      return { sceneObject: object, jsonObject: this.objectDictionnary[object.id] };
+    }
   }
 
   // call this when the parent component is destroyed
