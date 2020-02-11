@@ -1,31 +1,30 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-import ReactJson from "react-json-view";
+import React, { Component } from 'react';
+import PropTypes, { InferProps } from 'prop-types';
+import ReactJson from 'react-json-view';
 
 /**
  * JSONViewComponent renders JSON using
  * react-json-view from @mac-s-g
  */
-export class JSONViewComponent extends Component {
+export class JSONViewComponent extends Component<
+  InferProps<typeof JSONViewComponent.propTypes>,
+  any
+> {
   static propTypes = {
     /**
      * The ID used to identify this component in Dash callbacks
      */
     id: PropTypes.string,
-    type : PropTypes.oneOf(['array', 'object']),
+    type: PropTypes.oneOf(['array', 'object']),
     // see documentation at https://github.com/mac-s-g/react-json-view
     src: PropTypes.object,
     name: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     theme: PropTypes.string,
     style: PropTypes.object,
-    iconStyle:  PropTypes.oneOf(['circle', 'triangle', 'square']),
+    iconStyle: PropTypes.oneOf(['circle', 'triangle', 'square']),
     identWidth: PropTypes.number,
     collapsed: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-    collapseStringsAfterLength: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.number
-    ]),
+    collapseStringsAfterLength: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     groupArraysAfterLength: PropTypes.number,
     enableClipboard: PropTypes.bool,
     displayObjectSize: PropTypes.bool,
@@ -45,9 +44,9 @@ export class JSONViewComponent extends Component {
   static defaultProps = {
     src: null,
     name: false,
-    theme: "rjv-default",
+    theme: 'rjv-default',
     style: {},
-    iconStyle: "circle",
+    iconStyle: 'circle',
     identWidth: 8,
     collapsed: false,
     collapseStringsAfterLength: false,
@@ -57,7 +56,7 @@ export class JSONViewComponent extends Component {
     displayDataTypes: false,
     defaultValue: null,
     sortKeys: false,
-    validationMessage: "Validation Error"
+    validationMessage: 'Validation Error'
   };
 
   constructor(public props: any) {
@@ -100,14 +99,10 @@ export class JSONViewComponent extends Component {
         defaultValue={defaultValue}
         sortKeys={sortKeys}
         validationMessage={validationMessage}
-        onEdit={(e) => {
-        }}
-        onAdd={(a) => {
-        }}
-        onDelete={(d) => {
-        }}
+        onEdit={e => {}}
+        onAdd={a => {}}
+        onDelete={d => {}}
       />
     );
   }
 }
-

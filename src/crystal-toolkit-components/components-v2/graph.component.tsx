@@ -1,17 +1,19 @@
-import React, {Component} from 'react';
-import PropTypes, { InferProps } from "prop-types";
+import React, { Component } from 'react';
+import PropTypes, { InferProps } from 'prop-types';
 import Graph from 'react-graph-vis';
 
 interface State {
-  network?: any
+  network?: any;
 }
 
 /**
  * GraphComponent renders a force-directed graph using
  * react-graph-vis by @crubier and vis.js
  */
-export default class GraphComponent extends Component<InferProps<typeof GraphComponent.propTypes>, State> {
-
+export default class GraphComponent extends Component<
+  InferProps<typeof GraphComponent.propTypes>,
+  State
+> {
   static propTypes = {
     /**
      * The ID used to identify this component in Dash callbacks
@@ -37,22 +39,26 @@ export default class GraphComponent extends Component<InferProps<typeof GraphCom
 
   constructor(public props, context) {
     super(props, context);
-    this.state = { network: {} }
+    this.state = { network: {} };
   }
 
   render() {
-    const {graph, options, setProps} = this.props;
+    const { graph, options, setProps } = this.props;
 
     return (
-      <Graph graph={graph} options={options} getNetwork={network => this.setState({network: network})} />
+      <Graph
+        graph={graph}
+        options={options}
+        getNetwork={network => this.setState({ network: network })}
+      />
     );
   }
 
   componentWillUpdate(nextProps, nextState) {
-    // this seems un-ideal
-    if (nextProps.graph !== this.props.graph) {
-      this.state.network.nodes = nextProps.graph.nodes;
-      this.state.network.edges = nextProps.graph.edges;
+    // FIXME
+    if (nextProps!.graph !== this.props.graph) {
+      this.state.network.nodes = nextProps!.graph.nodes;
+      this.state.network.edges = nextProps!.graph.edges;
       this.forceUpdate();
       this.state.network.fit();
     }
