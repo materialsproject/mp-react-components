@@ -22,7 +22,7 @@ export class JSONViewComponent extends Component<
     theme: PropTypes.string,
     style: PropTypes.object,
     iconStyle: PropTypes.oneOf(['circle', 'triangle', 'square']),
-    identWidth: PropTypes.number,
+    indentWidth: PropTypes.number,
     collapsed: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     collapseStringsAfterLength: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     groupArraysAfterLength: PropTypes.number,
@@ -47,7 +47,7 @@ export class JSONViewComponent extends Component<
     theme: 'rjv-default',
     style: {},
     iconStyle: 'circle',
-    identWidth: 8,
+    indentWidth: 8,
     collapsed: false,
     collapseStringsAfterLength: false,
     groupArraysAfterLength: 100,
@@ -70,7 +70,7 @@ export class JSONViewComponent extends Component<
       theme,
       style,
       iconStyle,
-      identWidth,
+      indentWidth,
       collapsed,
       collapseStringsAfterLength,
       groupArraysAfterLength,
@@ -89,7 +89,7 @@ export class JSONViewComponent extends Component<
         theme={theme}
         style={style}
         iconStyle={iconStyle}
-        indentWidth={identWidth}
+        indentWidth={indentWidth}
         collapsed={collapsed}
         collapseStringsAfterLength={collapseStringsAfterLength}
         groupArraysAfterLength={groupArraysAfterLength}

@@ -5,7 +5,7 @@ import { PeriodicContext } from './periodic-table-state/periodic-selection-conte
 //TODO(chab) reorganize export, use a barrel for each folder ( ? ), and have a general index at root-level
 import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
-import GraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
+import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
 
 export {
   SelectableTable,
@@ -14,5 +14,5 @@ export {
   PeriodicContext,
   Simple3DSceneComponent,
   JSONViewComponent,
-  GraphComponent
+  ReactGraphComponent
 };

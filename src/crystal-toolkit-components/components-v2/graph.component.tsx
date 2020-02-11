@@ -10,8 +10,8 @@ interface State {
  * GraphComponent renders a force-directed graph using
  * react-graph-vis by @crubier and vis.js
  */
-export default class GraphComponent extends Component<
-  InferProps<typeof GraphComponent.propTypes>,
+export default class ReactGraphComponent extends Component<
+  InferProps<typeof ReactGraphComponent.propTypes>,
   State
 > {
   static propTypes = {
