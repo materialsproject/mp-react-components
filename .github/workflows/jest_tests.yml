@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generate build number
-        id: build_id
-         # add a step output `steps.build_id.outputs.id` as the unique id
+        id:
+          build_id
+          # add a step output `steps.build_id.outputs.id` as the unique id
         run: echo "::set-output name=id::$(date +%s)"
       - name: Print new build number
         run: echo "Build number is $BUILD_ID"
@@ -21,21 +22,21 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-         node-version: 12.x
-         registry-url: https://registry.npmjs.org/
-         scope: '@fjchabbey'
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org/
+          scope: '@fjchabbey'
         env:
-         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
       - uses: actions/cache@v1
         with:
-         path: ~/.npm
-         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-         restore-keys: |
-           ${{ runner.os }}-node-
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: |
           npm -v
@@ -68,8 +69,8 @@ jobs:
           git config --global user.name 'Francois Chabbey'
           git config --global user.email 'chabb@users.noreply.github.com'
           git add ./dist --force
-          git diff-index --quiet HEAD || git commit -m "Push artifacts to build branch"
-          git push origin master:build
+          git diff-index --quiet HEAD || git commit -n -m "Push artifacts to build branch"
+          git push origin master:build --force
       - name: Trigger integration test
         uses: peter-evans/repository-dispatch@v1
         with:
@@ -77,6 +78,3 @@ jobs:
           repository: materialsproject/dash-mp-components
           event-type: new-snapshot-version
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-
-
-

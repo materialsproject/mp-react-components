@@ -3,10 +3,10 @@
 .mat-table-filter {
   .flex(row);
   font-family: Helvetica Neue, sans-serif;
-  background-color: #F5F6F8;
+  background-color: #f5f6f8;
   margin-bottom: 10px;
   padding: 13px 30px;
-  border: 1px solid #BEBBBB;
+  border: 1px solid #bebbbb;
   .left-side {
     .flex(row);
     .centered-container();
@@ -21,9 +21,9 @@
         .flex(row);
       }
       .filter-group:not(:last-child):after {
-        content: "";
+        content: '';
         display: inline-block;
-        border-left: 1px solid #BEBBBB;
+        border-left: 1px solid #bebbbb;
         margin: 8px 0;
       }
     }
@@ -51,14 +51,15 @@
 }
 
 .mat-element.hidden {
-  background: rgba(200,200,200);
+  background: rgba(200, 200, 200);
   * {
     display: none;
   }
 }
 
 // we need those wrappers to force CSS selectors to apply
-.mp-element-wrapper, .table-container  {
+.mp-element-wrapper,
+.table-container {
   .mat-element.hidden {
     * {
       display: none;
