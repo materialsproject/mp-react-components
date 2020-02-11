@@ -3,8 +3,8 @@ import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { lightenDarkenColor } from '../../../utils/utils';
 
 export class TooltipHelper {
-  private tooltipedJsonObject: any | null;
-  private tooltipedThreeObject: THREE.Object3D | null;
+  private tooltipedJsonObject: any | null = null;
+  private tooltipedThreeObject: THREE.Object3D | null = null;
   public readonly tooltip;
 
   constructor() {
