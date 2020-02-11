@@ -14,7 +14,7 @@ import {
   Renderer
 } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { MeshStandardMaterial, Object3D } from 'three';
+import { Object3D } from 'three';
 import { TooltipHelper } from '../scene/tooltip-helper';
 
 export default class Simple3DScene {
@@ -76,12 +76,6 @@ export default class Simple3DScene {
     labelRenderer.domElement.style.top = `-${height}px`;
     labelRenderer.domElement.style.pointerEvents = 'none';
     mountNode.appendChild(labelRenderer.domElement);
-  }
-
-  private removeTooltip() {
-    this.tooltip.translateX(Number.MAX_SAFE_INTEGER);
-    this.tooltip.translateY(Number.MAX_SAFE_INTEGER);
-    this.tooltip.translateZ(Number.MAX_SAFE_INTEGER);
   }
 
   private configureScene(sceneJson) {

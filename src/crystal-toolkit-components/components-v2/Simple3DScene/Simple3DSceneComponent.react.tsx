@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Simple3DScene from './Simple3DScene';
 import { Subscription } from 'rxjs';
 import { subscribe } from './Simple3DSceneDownloadEvent';
+import './Simple3DScene.less';
 
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular

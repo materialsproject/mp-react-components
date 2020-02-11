@@ -76,6 +76,7 @@ export const scene = {
           ],
           color: '#f9dc3c',
           type: 'cylinders',
+          tooltip: 'A CYLINDER',
           clickable: true
         },
         {

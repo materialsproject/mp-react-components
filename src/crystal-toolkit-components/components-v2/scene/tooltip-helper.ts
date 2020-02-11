@@ -9,8 +9,7 @@ export class TooltipHelper {
 
   constructor() {
     const label = document.createElement('div');
-    label.className = 'tooltip';
-    label.textContent = 'l';
+    label.className = 'tooltiptext';
     const hoverLabel = document.createElement('span');
     hoverLabel.className = '';
     label.appendChild(hoverLabel);
@@ -34,6 +33,7 @@ export class TooltipHelper {
     this.tooltip.position.x = point.x;
     this.tooltip.position.y = point.y;
     this.tooltip.position.z = point.z;
+    // TODO(chab) support markdown ?
     this.tooltip.element.textContent = jsonObject.tooltip;
   }
 
