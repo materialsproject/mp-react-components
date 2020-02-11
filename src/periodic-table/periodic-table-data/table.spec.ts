@@ -1,7 +1,7 @@
-import { TABLE, TABLE_DICO_CLASS} from "./table";
-import { TABLE_V2 } from "./table-v2";
+import { TABLE, TABLE_DICO_CLASS } from './table';
+import { TABLE_V2 } from './table-v2';
 
-describe("Period table definition", () => {
+describe('Period table definition', () => {
   it('should have n elements', () => {
     expect(TABLE.length).toBe(114);
     expect(TABLE_V2.length).toBe(120);

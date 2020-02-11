@@ -1,23 +1,29 @@
-import * as THREE from "three";
-import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { SVGRenderer } from "three/examples/jsm/renderers/SVGRenderer";
-import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { ColladaExporter } from "three/examples/jsm/exporters/ColladaExporter";
-import { DEFAULT_LIGHT_COLOR, defaults, ExportType, JSON3DObject, Light, Material, Renderer } from "./constants";
-
+import * as THREE from 'three';
+import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
+import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
+import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
+import {
+  DEFAULT_LIGHT_COLOR,
+  defaults,
+  ExportType,
+  JSON3DObject,
+  Light,
+  Material,
+  Renderer
+} from './constants';
 
 export default class Simple3DScene {
-
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
   private labelRenderer!: CSS2DRenderer;
   private scene!: THREE.Scene;
-  private cachedMountNodeSize!: {width: number, height: number};
+  private cachedMountNodeSize!: { width: number; height: number };
   private camera!: THREE.OrthographicCamera;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
-  private objectDictionnary: {[id:string]: any} = {};
+  private objectDictionnary: { [id: string]: any } = {};
   private controls;
 
   private cacheMountBBox(mountNode: Element) {
@@ -25,17 +31,17 @@ export default class Simple3DScene {
   }
 
   private determineSceneRenderer() {
-    switch(this.settings.renderer) {
+    switch (this.settings.renderer) {
       case Renderer.WEBGL: {
         const renderer = new THREE.WebGLRenderer({
           antialias: this.settings.antialias,
-          alpha: this.settings.transparentBackground,
+          alpha: this.settings.transparentBackground
         });
         renderer.gammaFactor = 2.2;
         return renderer;
       }
       case Renderer.SVG: {
-        return new SVGRenderer()
+        return new SVGRenderer();
       }
       default: {
         console.error('Invalid renderer passed', this.settings.renderer);
@@ -46,7 +52,9 @@ export default class Simple3DScene {
 
   private configureSceneRenderer(mountNode: Element) {
     const renderer = this.determineSceneRenderer();
-    if (!renderer) { throw new Error('No renderer')}
+    if (!renderer) {
+      throw new Error('No renderer');
+    }
     this.renderer = renderer;
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     //TODO(chab) determine what's going on
@@ -62,7 +70,7 @@ export default class Simple3DScene {
     labelRenderer.domElement.style.position = 'relative';
     labelRenderer.domElement.style.top = `-${height}px`;
     labelRenderer.domElement.style.pointerEvents = 'none';
-    mountNode.appendChild(labelRenderer.domElement)
+    mountNode.appendChild(labelRenderer.domElement);
   }
 
   private configureScene(sceneJson) {
@@ -74,14 +82,11 @@ export default class Simple3DScene {
     this.scene.add(lights);
 
     console.log(this.renderer.domElement);
-    const controls = new TrackballControls(
-      this.camera,
-      this.renderer.domElement as HTMLElement
-    );
+    const controls = new TrackballControls(this.camera, this.renderer.domElement as HTMLElement);
     controls.rotateSpeed = 2.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
-    controls.keys = [ ];
+    controls.keys = [];
     controls.enabled = true;
     //(controls as any).enableKeys = false; // uh ?
 
@@ -99,17 +104,17 @@ export default class Simple3DScene {
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
       controls.addEventListener('change', () => {
-        this.renderScene()
+        this.renderScene();
       });
       controls.addEventListener('start', () => {
         controls.update();
       });
       controls.addEventListener('end', () => {
         controls.update();
-      })
+      });
     } else {
       // constantly re-render (for animation)
-      this.start()
+      this.start();
     }
   }
 
@@ -123,7 +128,7 @@ export default class Simple3DScene {
   }
 
   private getCamera() {
-    const {width, height} = this.cachedMountNodeSize;
+    const { width, height } = this.cachedMountNodeSize;
     // TODO: change so camera dimensions match scene, not dom_elt?
     const camera = new THREE.OrthographicCamera(
       width / -2,
@@ -138,7 +143,7 @@ export default class Simple3DScene {
     return camera;
   }
 
-  constructor (sceneJson, domElement: Element, settings) {
+  constructor(sceneJson, domElement: Element, settings) {
     this.settings = Object.assign(defaults, settings);
     this.cacheMountBBox(domElement);
     this.configureSceneRenderer(domElement);
@@ -147,21 +152,20 @@ export default class Simple3DScene {
     window.addEventListener('resize', this.resizeRendererToDisplaySize, false);
   }
 
-
-  resizeRendererToDisplaySize () {
+  resizeRendererToDisplaySize() {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
     this.cacheMountBBox(canvas.parentElement as Element);
-    const {width, height} = this.cachedMountNodeSize;
+    const { width, height } = this.cachedMountNodeSize;
     if (canvas.width !== width || canvas.height !== height) {
       this.renderer.setSize(width, height, true);
       this.labelRenderer.setSize(width, height);
     }
 
     this.renderer.render(this.scene, this.camera);
-    this.labelRenderer.render(this.scene, this.camera)
+    this.labelRenderer.render(this.scene, this.camera);
   }
 
-  download (filename: string, filetype: ExportType ) {
+  download(filename: string, filetype: ExportType) {
     switch (filetype) {
       case ExportType.png:
         this.downloadScreenshot(filename);
@@ -170,7 +174,7 @@ export default class Simple3DScene {
         this.downloadCollada(filename);
         break;
       default:
-        throw new Error('Unknown filetype.')
+        throw new Error('Unknown filetype.');
     }
   }
 
@@ -186,17 +190,21 @@ export default class Simple3DScene {
     // force a render (in case buffer has been cleared)
     this.renderScene();
     // and set link href to renderer contents
-    link.href = (<HTMLCanvasElement> this.renderer.domElement).toDataURL('image/png');
+    link.href = (<HTMLCanvasElement>this.renderer.domElement).toDataURL('image/png');
     // click link to download
     link.download = filename || 'screenshot.png';
     link.click();
   }
 
-  downloadCollada (filename) {
+  downloadCollada(filename) {
     // Note(chab) i think it's better to use callback, so we can manage failure
-    const files = new ColladaExporter().parse(this.scene, (r) => {
-      console.log('result', r);
-    }, {})!;
+    const files = new ColladaExporter().parse(
+      this.scene,
+      r => {
+        console.log('result', r);
+      },
+      {}
+    )!;
     const link = document.createElement('a');
     link.style.display = 'none';
     document.body.appendChild(link);
@@ -205,9 +213,7 @@ export default class Simple3DScene {
     link.click();
   }
 
-
-  addToScene (sceneJson) {
-
+  addToScene(sceneJson) {
     this.removeObjectByName(sceneJson.name);
     this.clickableObjects = [];
     this.objectDictionnary = {};
@@ -218,9 +224,9 @@ export default class Simple3DScene {
 
     // recursively visit the scene, starting with the root object
     const traverse_scene = (o, parent) => {
-      o.contents.forEach((childObject) => {
+      o.contents.forEach(childObject => {
         if (childObject.type) {
-          parent.add(this.makeObject(childObject))
+          parent.add(this.makeObject(childObject));
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name;
@@ -229,23 +235,23 @@ export default class Simple3DScene {
             const translation = new THREE.Matrix4();
             // note(chab) have a typedefinition for the JSON
             translation.makeTranslation(...(childObject.origin as [number, number, number]));
-            threeObject.applyMatrix4(translation)
+            threeObject.applyMatrix4(translation);
           }
           parent.add(threeObject);
-          traverse_scene(childObject, threeObject)
+          traverse_scene(childObject, threeObject);
         }
-      })
+      });
     };
 
     traverse_scene(sceneJson, rootObject);
-    console.log("rootObject", rootObject);
+    console.log('rootObject', rootObject);
     this.scene.add(rootObject);
 
     // auto-zoom to fit object
     // TODO: maybe better to move this elsewhere (what if using perspective?)
     const box = new THREE.Box3();
     box.setFromObject(rootObject);
-    const {width, height} = this.cachedMountNodeSize;
+    const { width, height } = this.cachedMountNodeSize;
     // TODO: improve auto-zoom
     this.camera.zoom =
       Math.min(
@@ -265,26 +271,24 @@ export default class Simple3DScene {
       this.renderer.domElement.parentElement!.style.backgroundPosition = 'center';
       if (this.renderer.domElement instanceof HTMLCanvasElement) {
         // TS magic, domElements is automatically coerced to HTMLCanvasElement
-        this.renderer.domElement.parentElement!.style.backgroundImage = `url('${this.renderer.domElement.toDataURL('image/png')}')`
+        this.renderer.domElement.parentElement!.style.backgroundImage = `url('${this.renderer.domElement.toDataURL(
+          'image/png'
+        )}')`;
       }
     }
   }
 
-  makeLights (light_json) {
+  makeLights(light_json) {
     const lights = new THREE.Object3D();
     lights.name = 'lights';
-    light_json.forEach((light) => {
+    light_json.forEach(light => {
       let lightObj;
       switch (light.type) {
-        case  Light.DirectionalLight:
+        case Light.DirectionalLight:
           lightObj = new THREE.DirectionalLight(...light.args);
           if (light.helper) {
-            const lightHelper = new THREE.DirectionalLightHelper(
-              lightObj,
-              5,
-              DEFAULT_LIGHT_COLOR
-            );
-            lightObj.add(lightHelper)
+            const lightHelper = new THREE.DirectionalLightHelper(lightObj, 5, DEFAULT_LIGHT_COLOR);
+            lightObj.add(lightHelper);
           }
           break;
         case Light.AmbientLight:
@@ -294,7 +298,7 @@ export default class Simple3DScene {
           lightObj = new THREE.HemisphereLight(...light.args);
           break;
         default:
-          throw new Error('Unknown light.')
+          throw new Error('Unknown light.');
       }
       if (light.position) {
         lightObj.position.set(...light.position);
@@ -305,7 +309,7 @@ export default class Simple3DScene {
     return lights;
   }
 
-  makeObject (object_json) {
+  makeObject(object_json) {
     const obj = new THREE.Object3D();
 
     if (object_json.clickable) {
@@ -314,7 +318,7 @@ export default class Simple3DScene {
     }
 
     // rely on the closure
-    const getSphereBuffer = (scale) => {
+    const getSphereBuffer = scale => {
       const geom = new THREE.SphereBufferGeometry(
         scale,
         this.settings.sphereSegments,
@@ -322,38 +326,38 @@ export default class Simple3DScene {
         object_json.phiStart || 0,
         object_json.phiEnd || Math.PI * 2
       );
-      return {geom, mat: this.makeMaterial(object_json.color)};
+      return { geom, mat: this.makeMaterial(object_json.color) };
     };
 
     switch (object_json.type as JSON3DObject) {
       case JSON3DObject.SPHERES: {
-        const {geom, mat} = getSphereBuffer(object_json.radius * this.settings.sphereScale);
-        object_json.positions.forEach((position) => {
+        const { geom, mat } = getSphereBuffer(object_json.radius * this.settings.sphereScale);
+        object_json.positions.forEach(position => {
           const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...position as [number, number, number]); //FIXME
+          mesh.position.set(...(position as [number, number, number])); //FIXME
           obj.add(mesh);
           return mesh;
         });
-        return obj
+        return obj;
       }
       case JSON3DObject.ELLIPSOIDS: {
-        const {geom, mat} = getSphereBuffer(this.settings.sphereScale);
-        const meshes = object_json.positions.map((position) => {
+        const { geom, mat } = getSphereBuffer(this.settings.sphereScale);
+        const meshes = object_json.positions.map(position => {
           const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...position as [number, number, number]);
-          mesh.scale.set(...object_json.scale as [number, number, number]); // TODO: Is this valid JS?
-          meshes.push(mesh)
+          mesh.position.set(...(position as [number, number, number]));
+          mesh.scale.set(...(object_json.scale as [number, number, number])); // TODO: Is this valid JS?
+          meshes.push(mesh);
         });
         // TODO: test axes are correct!
         const vec_z = new THREE.Vector3(0, 0, 1);
         const quaternion = new THREE.Quaternion();
-        object_json.rotate_to.forEach( (rotation, index) => {
+        object_json.rotate_to.forEach((rotation, index) => {
           const rotation_vec = new THREE.Vector3(...rotation);
           quaternion.setFromUnitVectors(vec_z, rotation_vec.normalize());
           meshes[index].setRotationFromQuaternion(quaternion);
         });
         meshes.forEach(mesh => obj.add(mesh));
-        return obj
+        return obj;
       }
       case JSON3DObject.CYLINDERS: {
         const radius = object_json.radius || 1;
@@ -366,7 +370,7 @@ export default class Simple3DScene {
         const mat = this.makeMaterial(object_json.color);
         const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
         const quaternion = new THREE.Quaternion();
-        object_json.positionPairs.forEach((positionPair) => {
+        object_json.positionPairs.forEach(positionPair => {
           // the following is technically correct but could be optimized?
           const mesh = new THREE.Mesh(geom, mat);
           const vec_a = new THREE.Vector3(...positionPair[0]);
@@ -380,21 +384,21 @@ export default class Simple3DScene {
           // rotate cylinder into correct orientation
           quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
           mesh.setRotationFromQuaternion(quaternion);
-          obj.add(mesh)
+          obj.add(mesh);
         });
-        return obj
+        return obj;
       }
       case JSON3DObject.CUBES: {
         const size = object_json.width * this.settings.sphereScale;
         const geom = new THREE.BoxBufferGeometry(size, size, size);
         const mat = this.makeMaterial(object_json.color);
-        object_json.positions.forEach((position) => {
+        object_json.positions.forEach(position => {
           const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...position as [number, number, number]);
+          mesh.position.set(...(position as [number, number, number]));
           obj.add(mesh);
         });
 
-        return obj
+        return obj;
       }
       case JSON3DObject.LINES: {
         const verts = new THREE.Float32BufferAttribute(
@@ -422,7 +426,7 @@ export default class Simple3DScene {
 
         const mesh = new THREE.LineSegments(geom, mat);
         if (object_json.dashSize || object_json.scale || object_json.gapSize) {
-          mesh.computeLineDistances()
+          mesh.computeLineDistances();
         }
         obj.add(mesh);
         return obj;
@@ -435,8 +439,7 @@ export default class Simple3DScene {
         const geom = new THREE.BufferGeometry();
         geom.setAttribute('position', verts);
 
-        const opacity =
-          object_json.opacity || this.settings.defaultSurfaceOpacity;
+        const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
         const mat = this.makeMaterial(object_json.color, opacity);
 
         if (object_json.normals) {
@@ -466,8 +469,7 @@ export default class Simple3DScene {
       case JSON3DObject.CONVEX: {
         const points = object_json.positions.map(p => new THREE.Vector3(...p));
         const geom = new ConvexBufferGeometry(points);
-        const opacity =
-          object_json.opacity || this.settings.defaultSurfaceOpacity;
+        const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
         const mat = this.makeMaterial(object_json.color, opacity);
         if (opacity) {
           mat.transparent = true;
@@ -477,9 +479,12 @@ export default class Simple3DScene {
         const mesh = new THREE.Mesh(geom, mat);
         obj.add(mesh);
         const edges = new THREE.EdgesGeometry(geom);
-        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: object_json.color }));
+        const line = new THREE.LineSegments(
+          edges,
+          new THREE.LineBasicMaterial({ color: object_json.color })
+        );
         obj.add(line);
-        return obj
+        return obj;
       }
       case JSON3DObject.ARROWS: {
         // take inspiration from ArrowHelper, user cones and cylinders
@@ -498,7 +503,8 @@ export default class Simple3DScene {
         const geom_head = new THREE.ConeBufferGeometry(
           headWidth * this.settings.cylinderScale,
           headLength * this.settings.cylinderScale,
-          this.settings.cylinderSegments);
+          this.settings.cylinderSegments
+        );
 
         const mat = this.makeMaterial(object_json.color);
 
@@ -506,10 +512,10 @@ export default class Simple3DScene {
         const quaternion = new THREE.Quaternion();
         const quaternion_head = new THREE.Quaternion();
 
-        object_json.positionPairs.forEach((positionPair) => {
+        object_json.positionPairs.forEach(positionPair => {
           // the following is technically correct but could be optimized?
 
-          const mesh = new THREE.Mesh(geom_cyl, mat)
+          const mesh = new THREE.Mesh(geom_cyl, mat);
           const vec_a = new THREE.Vector3(...positionPair[0]);
           const vec_b = new THREE.Vector3(...positionPair[1]);
           const vec_head = new THREE.Vector3(...positionPair[1]);
@@ -536,7 +542,7 @@ export default class Simple3DScene {
           mesh_head.setRotationFromQuaternion(quaternion_head);
           obj.add(mesh_head);
         });
-        return obj
+        return obj;
       }
       case JSON3DObject.LABEL: {
         const label = document.createElement('div');
@@ -550,15 +556,15 @@ export default class Simple3DScene {
         }
         const labelObject = new CSS2DObject(label);
         obj.add(labelObject);
-        return obj
+        return obj;
       }
       default: {
-        return obj
+        return obj;
       }
     }
   }
 
-  makeMaterial (color = '#52afb0', opacity = 1.0) {
+  makeMaterial(color = '#52afb0', opacity = 1.0) {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
       opacity: opacity
@@ -577,7 +583,7 @@ export default class Simple3DScene {
     }
   }
 
-  start () {
+  start() {
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(() => this.animate());
     } else {
@@ -585,30 +591,30 @@ export default class Simple3DScene {
     }
   }
 
-  stop () {
+  stop() {
     cancelAnimationFrame(this.frameId!);
     this.frameId = undefined;
   }
 
-  animate () {
+  animate() {
     this.renderScene();
     this.frameId = window.requestAnimationFrame(() => this.animate());
   }
 
-  renderScene () {
+  renderScene() {
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
   }
 
-  toggleVisibility (namesToVisibility) {
+  toggleVisibility(namesToVisibility) {
     if (!!namesToVisibility) {
-      Object.keys(namesToVisibility).forEach((objName) => {
-          if (!!namesToVisibility[objName]) {
-            const obj = this.scene.getObjectByName(objName);
-            if (obj) {
-              obj.visible = Boolean(namesToVisibility[objName]);
-            }
+      Object.keys(namesToVisibility).forEach(objName => {
+        if (!!namesToVisibility[objName]) {
+          const obj = this.scene.getObjectByName(objName);
+          if (obj) {
+            obj.visible = Boolean(namesToVisibility[objName]);
           }
+        }
       });
       this.renderScene();
     }
@@ -616,7 +622,7 @@ export default class Simple3DScene {
 
   // i know this is done by implementing a color buffer, with each color matching one
   // object
-  getClickedReference (clientX, clientY) {
+  getClickedReference(clientX, clientY) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     mouse.x = (clientX / this.renderer.domElement.clientWidth) * 2 - 1;
@@ -631,7 +637,6 @@ export default class Simple3DScene {
     return null;
   }
 
-
   // call this when the parent component is destroyed
   public onDestroy() {
     (this.renderer as THREE.WebGLRenderer).forceContextLoss();
@@ -643,7 +648,7 @@ export default class Simple3DScene {
     this.stop();
   }
 
-  removeObjectByName (name) {
+  removeObjectByName(name) {
     // name is not necessarily unique, make this recursive ?
     const object = this.scene.getObjectByName(name);
     typeof object !== 'undefined' && this.scene.remove(object);

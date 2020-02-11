@@ -1,6 +1,6 @@
-import { color } from 'd3-color'
-import { renderElement } from "./periodic-table.spec";
-import { DEFAULT_HEATMAP_COLOR } from "./periodic-table.component";
+import { color } from 'd3-color';
+import { renderElement } from './periodic-table.spec';
+import { DEFAULT_HEATMAP_COLOR } from './periodic-table.component';
 
 // JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
 // If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
@@ -8,18 +8,24 @@ jest.mock('./periodic-table.module.less', () => {});
 jest.mock('../periodic-element/periodic-element.module.less', () => {});
 jest.mock('../periodic-element/periodic-element.detailed.less', () => {});
 
-const heatmap = { 'H': 3, 'O':1, 'F': 5}; // 1 // 7 // 8ß
+const heatmap = { H: 3, O: 1, F: 5 }; // 1 // 7 // 8ß
 const min = '#000000';
 const max = '#FFFFFF';
 
-type Parameters<T> = T extends (... args: infer T) => any ? T : never;
+type Parameters<T> = T extends (...args: infer T) => any ? T : never;
 const defaultOpts: Parameters<typeof renderElement> = [
-  {}, {}, {}, () => {}, () => {}, heatmap, min, max
+  {},
+  {},
+  {},
+  () => {},
+  () => {},
+  heatmap,
+  min,
+  max
 ];
 let wrapper;
 
 describe('<Table/>', () => {
-
   beforeAll(() => {
     wrapper = renderElement(...defaultOpts);
   });
@@ -44,15 +50,13 @@ describe('<Table/>', () => {
     expect(wrapper.find('.legend-container').length).toBe(1);
     expect(wrapper.find('.table-legend').length).toBe(1);
     expect(wrapper.find('.table-legend-pointer').length).toBe(1);
-
   });
 
   it('legend should have correct min/max, and 14 items', () => {
     expect(wrapper.find('.legend-division').length).toBe(15);
-    checkLegendColor(0 ,min);
+    checkLegendColor(0, min);
     checkLegendColor(14, max);
     checkLegendColor(7, '#B3B3B3');
-
   });
 
   it('min elements should have the correct color', () => {
@@ -67,12 +71,12 @@ describe('<Table/>', () => {
   });
 
   it('median element should have the correct color', () => {
-    const fNode = (wrapper.find('.mat-element').get(0));
+    const fNode = wrapper.find('.mat-element').get(0);
     checkNodeColor(fNode, '#808080');
   });
 
   it('items that are not in the heatmap should have an arbitrary color', () => {
-    const fNode = (wrapper.find('.mat-element').get(12));
+    const fNode = wrapper.find('.mat-element').get(12);
     expect(fNode.props.style).toHaveProperty('background', DEFAULT_HEATMAP_COLOR);
   });
 
@@ -87,18 +91,20 @@ describe('<Table/>', () => {
     legendPointer = wrapper.find('.table-legend-pointer');
     expect(legendPointer.props().style.top).toBe('100%');
   });
-
 });
 
 function hoverAtElementIndex(elementIndex) {
-  wrapper.find('.mat-element').at(elementIndex).simulate('mouseover');
+  wrapper
+    .find('.mat-element')
+    .at(elementIndex)
+    .simulate('mouseover');
 }
 
 function checkLegendColor(legendItem, hexColorString) {
   checkNodeColor(wrapper.find('.legend-division').get(legendItem), hexColorString);
 }
 
-function checkNodeColor({props:{style}}, hexColorString) {
+function checkNodeColor({ props: { style } }, hexColorString) {
   expect(style).toHaveProperty('background', color(hexColorString).toString());
 }
 

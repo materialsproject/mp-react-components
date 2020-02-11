@@ -1,4 +1,3 @@
-
 export enum Renderer {
   SVG = 'svg',
   WEBGL = 'webgl'
