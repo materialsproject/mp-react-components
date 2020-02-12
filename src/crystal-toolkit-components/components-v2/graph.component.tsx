@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import Graph from 'react-graph-vis';
+import './vis.css';
 
 interface State {
   network?: any;
