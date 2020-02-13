@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 export class InsetHelper {
   private insetCamera: THREE.Camera;
+  private frontRotation;
 
   constructor(
     private axis: THREE.Object3D,
@@ -14,10 +15,15 @@ export class InsetHelper {
   ) {
     //TODO(chab) extract the cube from the axis
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -20, 20);
+    this.frontRotation = this.cameraToFollow.rotation.clone();
+    this.setup();
+  }
+  private setup() {
     this.insetCamera.position.z = -2;
     const [x, y, z] = this.origin;
     this.insetCamera.position.set(x, y, z);
-    this.insetCamera.rotation.copy(this.cameraToFollow.rotation);
+    this.insetCamera.rotation.copy(this.frontRotation);
+    this.insetCamera.updateMatrix();
     const box = new THREE.Box3().setFromObject(this.axis);
     let center = new THREE.Vector3(
       (box.min.x + box.max.x) / 2,
@@ -47,10 +53,17 @@ export class InsetHelper {
       .project(this.insetCamera);
 
     let widthOnScreenBuffer = Math.max(a.distanceTo(b));
-    const width = (widthOnScreenBuffer / 2) * insetWidth;
-    const scale = insetWidth / 2 / width;
+    const width = (widthOnScreenBuffer / 2) * this.insetWidth;
+    const scale = this.insetWidth / 2 / width;
     this.axis.scale.set(scale, scale, scale);
     this.insetCamera.position.set(x * scale, y * scale, z * scale);
+  }
+
+  public updateAxis(axis) {
+    this.insetScene.remove(this.axis);
+    this.axis = axis;
+    this.insetScene.add(this.axis);
+    this.setup();
   }
 
   public render(renderer) {

@@ -100,7 +100,6 @@ export default class Simple3DScene {
     const scene2 = this.getSceneWithBackground();
     const lights2 = this.makeLights(this.settings.lights);
     scene2.add(lights2);
-    this.axis = this.axis.clone();
     scene2.add(this.axis);
     scene2.background = new THREE.Color('#EEEEEE');
     this.inset = new InsetHelper(this.axis, scene2, sceneJson.origin, this.camera);
@@ -169,7 +168,7 @@ export default class Simple3DScene {
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
-    window.addEventListener('resize', this.resizeRendererToDisplaySize, false);
+    window.addEventListener('resize', () => this.resizeRendererToDisplaySize(), false);
   }
 
   resizeRendererToDisplaySize() {
@@ -179,10 +178,10 @@ export default class Simple3DScene {
     if (canvas.width !== width || canvas.height !== height) {
       this.renderer.setSize(width, height, true);
       this.labelRenderer.setSize(width, height);
-    }
 
-    this.renderer.render(this.scene, this.camera);
-    this.labelRenderer.render(this.scene, this.camera);
+      this.renderer.render(this.scene, this.camera);
+      this.labelRenderer.render(this.scene, this.camera);
+    }
   }
 
   download(filename: string, filetype: ExportType) {
@@ -260,7 +259,7 @@ export default class Simple3DScene {
           parent.add(threeObject);
           traverse_scene(childObject, threeObject);
           if (threeObject.name === 'axes') {
-            this.axis = threeObject;
+            this.axis = threeObject.clone();
           }
         }
       });
@@ -298,6 +297,11 @@ export default class Simple3DScene {
           'image/png'
         )}')`;
       }
+    }
+
+    if (this.inset) {
+      console.log('--------->');
+      this.inset.updateAxis(this.axis);
     }
   }
 
