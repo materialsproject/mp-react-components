@@ -300,7 +300,6 @@ export default class Simple3DScene {
     }
 
     if (this.inset) {
-      console.log('--------->');
       this.inset.updateAxis(this.axis);
     }
   }

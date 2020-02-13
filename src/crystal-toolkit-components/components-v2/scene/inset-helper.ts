@@ -3,6 +3,7 @@ import * as THREE from 'three';
 export class InsetHelper {
   private insetCamera: THREE.Camera;
   private frontRotation;
+  private axisPadding = 5; // the space between the edge of the inset and the axis bounding box
 
   constructor(
     private axis: THREE.Object3D,
@@ -43,18 +44,10 @@ export class InsetHelper {
       .clone()
       .add(new THREE.Vector3(extents.x, -extents.y, extents.z))
       .project(this.insetCamera);
-    let c = center
-      .clone()
-      .add(new THREE.Vector3(extents.x, extents.y, extents.z))
-      .project(this.insetCamera);
-    let d = center
-      .clone()
-      .add(new THREE.Vector3(-extents.x, extents.y, -extents.z))
-      .project(this.insetCamera);
 
     let widthOnScreenBuffer = Math.max(a.distanceTo(b));
     const width = (widthOnScreenBuffer / 2) * this.insetWidth;
-    const scale = this.insetWidth / 2 / width;
+    const scale = (this.insetWidth / 2 - this.axisPadding) / width;
     this.axis.scale.set(scale, scale, scale);
     this.insetCamera.position.set(x * scale, y * scale, z * scale);
   }
