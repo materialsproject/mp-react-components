@@ -14,8 +14,9 @@ import {
   Renderer
 } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Object3D } from 'three';
+import { Object3D, Vector3, WebGLRenderer } from 'three';
 import { TooltipHelper } from '../scene/tooltip-helper';
+import { InsetHelper } from '../scene/inset-helper';
 
 export default class Simple3DScene {
   private settings;
@@ -24,12 +25,15 @@ export default class Simple3DScene {
   private scene!: THREE.Scene;
   private cachedMountNodeSize!: { width: number; height: number };
   private camera!: THREE.OrthographicCamera;
+  private insetCamera!: THREE.OrthographicCamera;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
   private tooltipObjects: THREE.Object3D[] = [];
   private objectDictionnary: { [id: string]: any } = {};
   private controls;
   private tooltipHelper = new TooltipHelper();
+  private axis!: Object3D;
+  private inset!: InsetHelper;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -92,6 +96,15 @@ export default class Simple3DScene {
     controls.panSpeed = 0.8;
     controls.enabled = true;
 
+    //TODO(chab) see if we can move that outside
+    const scene2 = this.getSceneWithBackground();
+    const lights2 = this.makeLights(this.settings.lights);
+    scene2.add(lights2);
+    this.axis = this.axis.clone();
+    scene2.add(this.axis);
+    scene2.background = new THREE.Color('#EEEEEE');
+    this.inset = new InsetHelper(this.axis, scene2, sceneJson.origin, this.camera);
+
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY);
 
@@ -103,16 +116,6 @@ export default class Simple3DScene {
         this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
       }
     });
-    //(controls as any).enableKeys = false; // uh ?
-
-    // for OrbitControls
-    // controls.minDistance = 20
-    // controls.maxDistance = 50
-    // controls.noPan = true
-    // controls.noZoom = !this.settings.enableZoom
-    // controls.rotateSpeed = 4.0
-    // controls.zoomSpeed = 2.0
-    // controls.staticMoving = true
 
     this.controls = controls;
 
@@ -155,6 +158,8 @@ export default class Simple3DScene {
     );
     // need to offset for OrbitControls
     camera.position.z = 2;
+    // axis would be at the medium
+
     return camera;
   }
 
@@ -254,6 +259,9 @@ export default class Simple3DScene {
           }
           parent.add(threeObject);
           traverse_scene(childObject, threeObject);
+          if (threeObject.name === 'axes') {
+            this.axis = threeObject;
+          }
         }
       });
     };
@@ -624,8 +632,15 @@ export default class Simple3DScene {
   }
 
   renderScene() {
+    if (this.renderer instanceof WebGLRenderer) {
+      this.renderer.setClearColor(0x000000, 0.0);
+      this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
+    }
+
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
+
+    this.inset && this.inset.render(this.renderer);
   }
 
   toggleVisibility(namesToVisibility) {
