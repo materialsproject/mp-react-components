@@ -5,7 +5,8 @@ export enum ScenePosition {
   NW = 'NW',
   NE = 'NE',
   SE = 'SE',
-  SW = 'SW'
+  SW = 'SW',
+  HIDDEN = 'HIDDEN'
 }
 
 export class InsetHelper {

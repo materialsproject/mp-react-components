@@ -17,6 +17,7 @@ export const s2 = {
           ],
           color: '#f9dc3c',
           radius: 0.5,
+          tooltip: 'label',
           type: 'spheres',
           clickable: true
         },

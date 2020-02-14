@@ -33,7 +33,7 @@ export default class Simple3DScene {
   private tooltipHelper = new TooltipHelper();
   private axis!: Object3D;
   private inset!: InsetHelper;
-  private inletPosition;
+  private inletPosition!: ScenePosition;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -642,7 +642,9 @@ export default class Simple3DScene {
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
 
-    this.inset && this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
+    this.inset &&
+      this.inletPosition !== ScenePosition.HIDDEN &&
+      this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
   }
 
   toggleVisibility(namesToVisibility) {
@@ -659,13 +661,15 @@ export default class Simple3DScene {
     }
   }
 
-  // i know this is done by implementing a color buffer, with each color matching one
+  // i know this is can be done by implementing a color buffer, with each color matching one
   // object
   getClickedReference(clientX, clientY) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
-    mouse.x = (clientX / this.renderer.domElement.clientWidth) * 2 - 1;
-    mouse.y = -(clientY / this.renderer.domElement.clientHeight) * 2 + 1;
+    const size = new THREE.Vector2();
+    (this.renderer as WebGLRenderer).getSize(size);
+    mouse.x = (clientX / size.width) * 2 - 1;
+    mouse.y = -(clientY / size.height) * 2 + 1;
     raycaster.setFromCamera(mouse, this.camera);
     const intersects = raycaster.intersectObjects(this.tooltipObjects, true);
     // they are a few cases where this does not work :( try to understand why
