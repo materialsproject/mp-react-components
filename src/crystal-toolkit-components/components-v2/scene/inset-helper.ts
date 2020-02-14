@@ -1,6 +1,13 @@
 import * as THREE from 'three';
 import { getSceneWithBackground } from '../Simple3DScene/Simple3DScene';
 
+export enum ScenePosition {
+  NW = 'NW',
+  NE = 'NE',
+  SE = 'SE',
+  SW = 'SW'
+}
+
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
@@ -86,16 +93,24 @@ export class InsetHelper {
     this.setup();
   }
 
-  public render(renderer) {
+  public render(renderer, [x, y]: any) {
     if (renderer instanceof THREE.WebGLRenderer) {
       renderer.setScissorTest(true);
       // everything outside should be discarded
-      renderer.setScissor(this.insetPadding, this.insetPadding, this.insetWidth, this.insetHeight);
-      renderer.setViewport(this.insetPadding, this.insetPadding, this.insetWidth, this.insetHeight);
+      renderer.setScissor(x, y, this.insetWidth, this.insetHeight);
+      renderer.setViewport(x, y, this.insetWidth, this.insetHeight);
       this.insetCamera.rotation.copy(this.cameraToFollow.rotation);
       renderer.clearDepth(); // important!
       renderer.render(this.scene, this.insetCamera);
       renderer.setScissorTest(false);
     }
+  }
+
+  public getPadding() {
+    return this.insetPadding;
+  }
+
+  public getSize() {
+    return this.insetWidth;
   }
 }

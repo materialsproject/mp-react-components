@@ -125,7 +125,11 @@ export default class Simple3DSceneComponent extends Component<
       this.scene.toggleVisibility(this.props.toggleVisibility);
     }
 
-    this.scene.updateInsetSettings(nextProps.inletSize ?? 100, nextProps.inletPadding ?? 10);
+    this.scene.updateInsetSettings(
+      nextProps.inletSize ?? 100,
+      nextProps.inletPadding ?? 10,
+      nextProps.axisView
+    );
 
     if (nextProps.toggleVisibility !== this.props.toggleVisibility) {
       this.scene.toggleVisibility(nextProps.toggleVisibility);

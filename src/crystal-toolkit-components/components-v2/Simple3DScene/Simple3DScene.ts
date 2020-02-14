@@ -1,8 +1,8 @@
 import * as THREE from 'three';
+import { Object3D, WebGLRenderer } from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import {
   DEFAULT_LIGHT_COLOR,
@@ -14,9 +14,8 @@ import {
   Renderer
 } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Object3D, Vector3, WebGLRenderer } from 'three';
 import { TooltipHelper } from '../scene/tooltip-helper';
-import { InsetHelper } from '../scene/inset-helper';
+import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 
 export default class Simple3DScene {
   private settings;
@@ -34,6 +33,7 @@ export default class Simple3DScene {
   private tooltipHelper = new TooltipHelper();
   private axis!: Object3D;
   private inset!: InsetHelper;
+  private inletPosition;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -163,8 +163,10 @@ export default class Simple3DScene {
     );
   }
 
-  updateInsetSettings(inletSize: number, inletPadding: number) {
+  updateInsetSettings(inletSize: number, inletPadding: number, axisView) {
+    this.inletPosition = axisView as ScenePosition;
     this.inset.updateViewportsize(inletSize, inletPadding);
+    this.renderScene();
   }
 
   resizeRendererToDisplaySize() {
@@ -640,7 +642,7 @@ export default class Simple3DScene {
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
 
-    this.inset && this.inset.render(this.renderer);
+    this.inset && this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
   }
 
   toggleVisibility(namesToVisibility) {
@@ -699,6 +701,34 @@ export default class Simple3DScene {
     // name is not necessarily unique, make this recursive ?
     const object = this.scene.getObjectByName(name);
     typeof object !== 'undefined' && this.scene.remove(object);
+  }
+
+  private getInletOrigin(pos: ScenePosition) {
+    switch (pos) {
+      case ScenePosition.SW: {
+        return [this.inset.getPadding(), this.inset.getPadding()];
+      }
+      case ScenePosition.SE: {
+        return [
+          this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
+          this.inset.getPadding()
+        ];
+      }
+      case ScenePosition.NW: {
+        return [
+          0 + this.inset.getPadding(),
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
+        ];
+      }
+      case ScenePosition.NE: {
+        return [
+          this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
+        ];
+      }
+      default:
+        return [this.inset.getPadding(), this.inset.getPadding()];
+    }
   }
 }
 
