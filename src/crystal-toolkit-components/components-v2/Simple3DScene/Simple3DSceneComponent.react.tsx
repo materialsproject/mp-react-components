@@ -78,7 +78,21 @@ export default class Simple3DSceneComponent extends Component<
     /**
      * Click count for selected object
      */
-    selectedObjectCount: PropTypes.number
+    selectedObjectCount: PropTypes.number,
+
+    /**
+     * Size of axis inlet
+     */
+    inletSize: PropTypes.number,
+
+    /**
+     * Padding of axis inlet
+     */
+    inletPadding: PropTypes.number,
+    /**
+     *
+     */
+    axisView: PropTypes.string
   };
 
   private scene!: Simple3DScene;
@@ -98,7 +112,9 @@ export default class Simple3DSceneComponent extends Component<
     this.scene = new Simple3DScene(
       this.props.data,
       this.mountNodeRef.current!,
-      this.props.settings
+      this.props.settings,
+      this.props.inletSize,
+      this.props.inletPadding
     );
     this.scene.toggleVisibility(this.props.toggleVisibility);
   }
@@ -107,8 +123,9 @@ export default class Simple3DSceneComponent extends Component<
     if (nextProps.data !== this.props.data) {
       this.scene.addToScene(nextProps.data);
       this.scene.toggleVisibility(this.props.toggleVisibility);
-      // TODO(chab) update axis
     }
+
+    this.scene.updateInsetSettings(nextProps.inletSize ?? 100, nextProps.inletPadding ?? 10);
 
     if (nextProps.toggleVisibility !== this.props.toggleVisibility) {
       this.scene.toggleVisibility(nextProps.toggleVisibility);

@@ -1,4 +1,4 @@
-import { object, withKnobs } from '@storybook/addon-knobs';
+import { number, object, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
 import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
@@ -10,7 +10,12 @@ export const scene3d = () => (
     This component renders a 3D scene by using the provided JSON. You are responsible for providing
     a container that has a defined size.
     <div style={{ width: '500px', height: '500px' }}>
-      <Simple3DSceneComponent data={object('scene', sceneJson)} toggleVisibility={{}} />
+      <Simple3DSceneComponent
+        inletPadding={number('padding', 10)}
+        inletSize={number('size', 200)}
+        data={object('scene', sceneJson)}
+        toggleVisibility={{}}
+      />
     </div>
   </>
 );

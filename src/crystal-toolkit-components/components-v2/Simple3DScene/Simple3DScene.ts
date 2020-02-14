@@ -83,7 +83,7 @@ export default class Simple3DScene {
   }
 
   private configureScene(sceneJson) {
-    this.scene = this.getSceneWithBackground();
+    this.scene = getSceneWithBackground(this.settings);
     this.camera = this.getCamera();
     ///this.scene.add(this.camera);
     this.addToScene(sceneJson);
@@ -95,14 +95,6 @@ export default class Simple3DScene {
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.enabled = true;
-
-    //TODO(chab) see if we can move that outside
-    const scene2 = this.getSceneWithBackground();
-    const lights2 = this.makeLights(this.settings.lights);
-    scene2.add(lights2);
-    scene2.add(this.axis);
-    scene2.background = new THREE.Color('#EEEEEE');
-    this.inset = new InsetHelper(this.axis, scene2, sceneJson.origin, this.camera);
 
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY);
@@ -135,15 +127,6 @@ export default class Simple3DScene {
     }
   }
 
-  private getSceneWithBackground() {
-    const scene = new THREE.Scene();
-    //background
-    if (!this.settings.transparentBackground) {
-      scene.background = new THREE.Color(this.settings.background);
-    }
-    return scene;
-  }
-
   private getCamera() {
     const { width, height } = this.cachedMountNodeSize;
     // TODO: change so camera dimensions match scene, not dom_elt?
@@ -162,13 +145,26 @@ export default class Simple3DScene {
     return camera;
   }
 
-  constructor(sceneJson, domElement: Element, settings) {
+  constructor(sceneJson, domElement: Element, settings, size, padding) {
     this.settings = Object.assign(defaults, settings);
     this.cacheMountBBox(domElement);
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
     window.addEventListener('resize', () => this.resizeRendererToDisplaySize(), false);
+    this.inset = new InsetHelper(
+      this.axis,
+      this.scene,
+      sceneJson.origin,
+      this.camera,
+      size,
+      size,
+      padding
+    );
+  }
+
+  updateInsetSettings(inletSize: number, inletPadding: number) {
+    this.inset.updateViewportsize(inletSize, inletPadding);
   }
 
   resizeRendererToDisplaySize() {
@@ -281,6 +277,7 @@ export default class Simple3DScene {
         Math.max(width, height) / (box.max.y - box.min.y),
         Math.max(width, height) / (box.max.z - box.min.z)
       ) * this.settings.defaultZoom;
+
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
     this.renderScene();
@@ -703,4 +700,13 @@ export default class Simple3DScene {
     const object = this.scene.getObjectByName(name);
     typeof object !== 'undefined' && this.scene.remove(object);
   }
+}
+
+export function getSceneWithBackground(settings) {
+  const scene = new THREE.Scene();
+  //background
+  if (!settings.transparentBackground) {
+    scene.background = new THREE.Color(settings.background);
+  }
+  return scene;
 }
