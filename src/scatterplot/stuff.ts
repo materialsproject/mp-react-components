@@ -30,22 +30,29 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
     .domain(data.map(d => d[cardinalColumn]))
     .range(d3.schemeCategory10);
 
-  // y axis
+  // y block with inner x axes
   function yAxis() {
     console.log('right y');
     const axis = d3
       .axisLeft()
       .ticks(6)
       .tickSize(-size * columns.length);
+
+    //https://observablehq.com/@d3/selection-join
+
     return g =>
       g
-        .selectAll('g')
+        .selectAll('g.yblock')
         .data(y)
-        .join('g')
+        .join('g') // similar to d3 data join
         .attr('transform', (d, i) => `translate(0,${i * size})`)
-        // @ts-ignore
+        .attr('class', 'yblock')
+        // @ts-ignore // generate x axis for each y block
         .each(function(d) {
-          return d3.select(this).call(axis.scale(d));
+          // @ts-ignore
+          const node = this;
+          // the scale is the data
+          return d3.select(node).call(axis.scale(d));
         })
         .call(g => g.select('.domain').remove())
         .call(g => g.selectAll('.tick line').attr('stroke', '#ddd'));
@@ -66,7 +73,9 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
         .attr('transform', (d, i) => `translate(${i * size},0)`)
         // @ts-ignore
         .each(function(d) {
-          return d3.select(this).call(axis.scale(d));
+          // @ts-ignore
+          const node = this;
+          return d3.select(node).call(axis.scale(d));
         })
         .call(g => g.select('.domain').remove())
         .call(g => g.selectAll('.tick line').attr('stroke', '#ddd'));
@@ -81,24 +90,30 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
 
   svg.append('g').call(yAxis());
 
+  // we do a cross product of the columns, each cell will match one element of the resulting array
+  // this array gives which x and y columsn in the column array we are going to use for that
+  // particulat cell
+
   const cell = svg
     .append('g')
     .selectAll('g')
-    .data(d3.cross(d3.range(columns.length), d3.range(columns.length)))
+    .data(d3.cross(d3.range(columns.length), d3.range(columns.length))) // d3.cross([0,2], [0,2]) => [0, 0] [1,0] [0,1] [1,1])
     .join('g')
-    .attr('transform', ([i, j]) => `translate(${i * size},${j * size})`);
+    .attr('transform', ([i, j]) => `translate(${i * size},${j * size})`); // size includes padding
 
   cell
     .append('rect')
     .attr('fill', 'none')
     .attr('stroke', '#aaa')
-    .attr('x', padding / 2 + 0.5)
+    .attr('x', padding / 2 + 0.5) // each cell take size - half of the padding
     .attr('y', padding / 2 + 0.5)
-    .attr('width', size - padding)
+    .attr('width', size - padding) // we need to remove the padding, as it's included in the transform of the cell
     .attr('height', size - padding);
 
+  // now for each cell, we look at the index of the corresponding columns
+  // we need to grab the corresponding scale for x and y, and apply the good value to them
   cell.each(function([i, j]) {
-    // @ts-ignore
+    // @ts-ignore// i and j are the  coordinates of the cell
     d3.select(this)
       .selectAll('circle')
       .data(data)
@@ -107,6 +122,7 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
       .attr('cy', d => y[j](d[columns[j]]));
   });
 
+  // we do a final pass to upadte the circle
   const circle = cell
     .selectAll('circle')
     .attr('r', 3.5)
@@ -115,6 +131,7 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
 
   cell.call(brush, circle);
 
+  // append the diagonal text
   svg
     .append('g')
     .style('font', 'bold 10px sans-serif')

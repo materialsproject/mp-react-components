@@ -18,6 +18,7 @@ import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/S
 import { MultipleScatterPlots } from './scatterplot/scatterplot.component';
 import { iris } from './scatterplot/iris';
 import { medical } from './scatterplot/medical';
+import { db } from './scatterplot/diabets';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -101,7 +102,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <MultipleScatterPlots width={1000} cardinalColumn={'z'} data={medical as any} padding={30} />
+    <MultipleScatterPlots width={1000} cardinalColumn={'species'} data={iris} padding={30} />
 
     <div style={{ width: '500px', height: '500px' }}>
       <Simple3DSceneComponent data={scene} toggleVisibility={{}} />
