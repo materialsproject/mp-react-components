@@ -26,6 +26,7 @@
     "add": "^2.0.6",
     "css-loader": "^3.4.2",
     "d3": "^5.15.0",
+    "d3-color-legend": "^1.2.4",
     "less-loader": "^5.0.0",
     "postcss-smart-asset": "^1.0.2",
     "postcss-url": "^8.0.0",

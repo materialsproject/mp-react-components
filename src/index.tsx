@@ -15,6 +15,9 @@ import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-
 import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
 import { s2 as scene } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
+import { MultipleScatterPlots } from './scatterplot/scatterplot.component';
+import { iris } from './scatterplot/iris';
+import { medical } from './scatterplot/medical';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -98,6 +101,8 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
+    <MultipleScatterPlots width={1000} cardinalColumn={'z'} data={medical as any} padding={30} />
+
     <div style={{ width: '500px', height: '500px' }}>
       <Simple3DSceneComponent data={scene} toggleVisibility={{}} />
     </div>
