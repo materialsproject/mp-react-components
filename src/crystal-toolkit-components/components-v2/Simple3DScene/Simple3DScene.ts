@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import { Object3D, WebGLRenderer } from 'three';
-import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import {
   DEFAULT_LIGHT_COLOR,
@@ -16,6 +15,7 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
+import { ThreeBuilder } from './three_builder';
 
 export default class Simple3DScene {
   private settings;
@@ -34,6 +34,7 @@ export default class Simple3DScene {
   private axis!: Object3D;
   private inset!: InsetHelper;
   private inletPosition!: ScenePosition;
+  private objectBuilder: ThreeBuilder;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -147,6 +148,7 @@ export default class Simple3DScene {
 
   constructor(sceneJson, domElement: Element, settings, size, padding) {
     this.settings = Object.assign(defaults, settings);
+    this.objectBuilder = new ThreeBuilder(this.settings);
     this.cacheMountBBox(domElement);
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
@@ -347,246 +349,34 @@ export default class Simple3DScene {
       this.objectDictionnary[obj.id] = object_json;
     }
 
-    // rely on the closure
-    const getSphereBuffer = scale => {
-      const geom = new THREE.SphereBufferGeometry(
-        scale,
-        this.settings.sphereSegments,
-        this.settings.sphereSegments,
-        object_json.phiStart || 0,
-        object_json.phiEnd || Math.PI * 2
-      );
-      return { geom, mat: this.makeMaterial(object_json.color) };
-    };
-
     switch (object_json.type as JSON3DObject) {
       case JSON3DObject.SPHERES: {
-        const { geom, mat } = getSphereBuffer(object_json.radius * this.settings.sphereScale);
-        object_json.positions.forEach(position => {
-          const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...(position as [number, number, number])); //FIXME
-          obj.add(mesh);
-          return mesh;
-        });
-        return obj;
+        return this.objectBuilder.makeSphere(object_json, obj);
       }
       case JSON3DObject.ELLIPSOIDS: {
-        const { geom, mat } = getSphereBuffer(this.settings.sphereScale);
-        const meshes = object_json.positions.map(position => {
-          const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...(position as [number, number, number]));
-          mesh.scale.set(...(object_json.scale as [number, number, number])); // TODO: Is this valid JS?
-          meshes.push(mesh);
-        });
-        // TODO: test axes are correct!
-        const vec_z = new THREE.Vector3(0, 0, 1);
-        const quaternion = new THREE.Quaternion();
-        object_json.rotate_to.forEach((rotation, index) => {
-          const rotation_vec = new THREE.Vector3(...rotation);
-          quaternion.setFromUnitVectors(vec_z, rotation_vec.normalize());
-          meshes[index].setRotationFromQuaternion(quaternion);
-        });
-        meshes.forEach(mesh => obj.add(mesh));
-        return obj;
+        return this.objectBuilder.makeEllipsoids(object_json, obj);
       }
       case JSON3DObject.CYLINDERS: {
-        const radius = object_json.radius || 1;
-        const geom = new THREE.CylinderBufferGeometry(
-          radius * this.settings.cylinderScale,
-          radius * this.settings.cylinderScale,
-          1.0,
-          this.settings.cylinderSegments
-        );
-        const mat = this.makeMaterial(object_json.color);
-        const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
-        const quaternion = new THREE.Quaternion();
-        object_json.positionPairs.forEach(positionPair => {
-          // the following is technically correct but could be optimized?
-          const mesh = new THREE.Mesh(geom, mat);
-          const vec_a = new THREE.Vector3(...positionPair[0]);
-          const vec_b = new THREE.Vector3(...positionPair[1]);
-          const vec_rel = vec_b.sub(vec_a);
-          // scale cylinder to correct length
-          mesh.scale.y = vec_rel.length();
-          // set origin at midpoint of cylinder
-          const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
-          mesh.position.set(vec_midpoint.x, vec_midpoint.y, vec_midpoint.z);
-          // rotate cylinder into correct orientation
-          quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
-          mesh.setRotationFromQuaternion(quaternion);
-          obj.add(mesh);
-        });
-        return obj;
+        return this.objectBuilder.makeCylinders(object_json, obj);
       }
       case JSON3DObject.CUBES: {
-        const size = object_json.width * this.settings.sphereScale;
-        const geom = new THREE.BoxBufferGeometry(size, size, size);
-        const mat = this.makeMaterial(object_json.color);
-        object_json.positions.forEach(position => {
-          const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(...(position as [number, number, number]));
-          obj.add(mesh);
-        });
-
-        return obj;
+        return this.objectBuilder.makeCube(object_json, obj);
       }
       case JSON3DObject.LINES: {
-        const verts = new THREE.Float32BufferAttribute(
-          [].concat.apply([], object_json.positions),
-          3
-        );
-        const geom = new THREE.BufferGeometry();
-        geom.setAttribute('position', verts);
-
-        let mat;
-        if (object_json.dashSize || object_json.scale || object_json.gapSize) {
-          mat = new THREE.LineDashedMaterial({
-            color: object_json.color || '#000000',
-            linewidth: object_json.line_width || 1,
-            scale: object_json.scale || 1,
-            dashSize: object_json.dashSize || 3,
-            gapSize: object_json.gapSize || 1
-          });
-        } else {
-          mat = new THREE.LineBasicMaterial({
-            color: object_json.color || '#2c3c54',
-            linewidth: object_json.line_width || 1
-          });
-        }
-
-        const mesh = new THREE.LineSegments(geom, mat);
-        if (object_json.dashSize || object_json.scale || object_json.gapSize) {
-          mesh.computeLineDistances();
-        }
-        obj.add(mesh);
-        return obj;
+        return this.objectBuilder.makeLine(object_json, obj);
       }
       case JSON3DObject.SURFACES: {
-        const verts = new THREE.Float32BufferAttribute(
-          [].concat.apply([], object_json.positions),
-          3
-        );
-        const geom = new THREE.BufferGeometry();
-        geom.setAttribute('position', verts);
-
-        const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
-        const mat = this.makeMaterial(object_json.color, opacity);
-
-        if (object_json.normals) {
-          const normals = new THREE.Float32BufferAttribute(
-            [].concat.apply([], object_json.normals),
-            3
-          );
-
-          geom.setAttribute('normal', normals);
-        } else {
-          // see if there is alternative.. i think openGL dont provide it anymore
-          //FIXME(chab) is it even called ?
-          geom.computeVertexNormals(); // instead of computefacenormals ?
-          mat.side = THREE.DoubleSide; // not sure if this is necessary if we compute normals correctly
-        }
-
-        if (opacity) {
-          mat.transparent = true;
-          mat.depthWrite = false;
-        }
-
-        const mesh = new THREE.Mesh(geom, mat);
-        obj.add(mesh);
-        // TODO: smooth the surfaces?
-        return obj;
+        return this.objectBuilder.makeSurfaces(object_json, obj);
       }
       case JSON3DObject.CONVEX: {
-        const points = object_json.positions.map(p => new THREE.Vector3(...p));
-        const geom = new ConvexBufferGeometry(points);
-        const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
-        const mat = this.makeMaterial(object_json.color, opacity);
-        if (opacity) {
-          mat.transparent = true;
-          mat.depthWrite = false;
-        }
-
-        const mesh = new THREE.Mesh(geom, mat);
-        obj.add(mesh);
-        const edges = new THREE.EdgesGeometry(geom);
-        const line = new THREE.LineSegments(
-          edges,
-          new THREE.LineBasicMaterial({ color: object_json.color })
-        );
-        obj.add(line);
-        return obj;
+        return this.objectBuilder.makeConvex(object_json, obj);
       }
       case JSON3DObject.ARROWS: {
         // take inspiration from ArrowHelper, user cones and cylinders
-        const radius = object_json.radius || 1;
-        const headLength = object_json.headLength || 2;
-        const headWidth = object_json.headWidth || 2;
-
-        // body
-        const geom_cyl = new THREE.CylinderBufferGeometry(
-          radius * this.settings.cylinderScale,
-          radius * this.settings.cylinderScale,
-          1.0,
-          this.settings.cylinderSegments
-        );
-        // head
-        const geom_head = new THREE.ConeBufferGeometry(
-          headWidth * this.settings.cylinderScale,
-          headLength * this.settings.cylinderScale,
-          this.settings.cylinderSegments
-        );
-
-        const mat = this.makeMaterial(object_json.color);
-
-        const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
-        const quaternion = new THREE.Quaternion();
-        const quaternion_head = new THREE.Quaternion();
-
-        object_json.positionPairs.forEach(positionPair => {
-          // the following is technically correct but could be optimized?
-
-          const mesh = new THREE.Mesh(geom_cyl, mat);
-          const vec_a = new THREE.Vector3(...positionPair[0]);
-          const vec_b = new THREE.Vector3(...positionPair[1]);
-          const vec_head = new THREE.Vector3(...positionPair[1]);
-          const vec_rel = vec_b.sub(vec_a);
-
-          // scale cylinder to correct length
-          mesh.scale.y = vec_rel.length();
-
-          // set origin at midpoint of cylinder
-          const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
-          mesh.position.set(vec_midpoint.x, vec_midpoint.y, vec_midpoint.z);
-
-          // rotate cylinder into correct orientation
-          quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
-          mesh.setRotationFromQuaternion(quaternion);
-
-          obj.add(mesh);
-
-          // add arrowhead
-          const mesh_head = new THREE.Mesh(geom_head, mat);
-          mesh_head.position.set(vec_head.x, vec_head.y, vec_head.z);
-          // rotate cylinder into correct orientation
-          quaternion_head.setFromUnitVectors(vec_y, vec_rel.normalize());
-          mesh_head.setRotationFromQuaternion(quaternion_head);
-          obj.add(mesh_head);
-        });
-        return obj;
+        return this.objectBuilder.makeArrow(object_json, obj);
       }
       case JSON3DObject.LABEL: {
-        const label = document.createElement('div');
-        label.className = 'tooltip';
-        label.textContent = object_json.label;
-        if (object_json.hoverLabel) {
-          const hoverLabel = document.createElement('span');
-          hoverLabel.textContent = object_json.hoverLabel;
-          hoverLabel.className = 'tooltiptext';
-          label.appendChild(hoverLabel);
-        }
-        const labelObject = new CSS2DObject(label);
-        obj.add(labelObject);
-        return obj;
+        return this.objectBuilder.makeLabel(object_json, obj);
       }
       default: {
         return obj;
