@@ -32,6 +32,7 @@ export default class Simple3DScene {
   private controls;
   private tooltipHelper = new TooltipHelper();
   private axis!: Object3D;
+  private axisJson: any;
   private inset!: InsetHelper;
   private inletPosition!: ScenePosition;
   private objectBuilder: ThreeBuilder;
@@ -156,9 +157,11 @@ export default class Simple3DScene {
     window.addEventListener('resize', () => this.resizeRendererToDisplaySize(), false);
     this.inset = new InsetHelper(
       this.axis,
+      this.axisJson,
       this.scene,
       sceneJson.origin,
       this.camera,
+      this.objectBuilder,
       size,
       size,
       padding
@@ -260,6 +263,8 @@ export default class Simple3DScene {
           traverse_scene(childObject, threeObject);
           if (threeObject.name === 'axes') {
             this.axis = threeObject.clone();
+            this.axisJson = { ...childObject };
+            console.log('....', this.axisJson);
           }
         }
       });
@@ -301,7 +306,7 @@ export default class Simple3DScene {
     }
 
     if (this.inset) {
-      this.inset.updateAxis(this.axis);
+      this.inset.updateAxis(this.axis, this.axisJson);
     }
   }
 
@@ -349,60 +354,7 @@ export default class Simple3DScene {
       this.objectDictionnary[obj.id] = object_json;
     }
 
-    switch (object_json.type as JSON3DObject) {
-      case JSON3DObject.SPHERES: {
-        return this.objectBuilder.makeSphere(object_json, obj);
-      }
-      case JSON3DObject.ELLIPSOIDS: {
-        return this.objectBuilder.makeEllipsoids(object_json, obj);
-      }
-      case JSON3DObject.CYLINDERS: {
-        return this.objectBuilder.makeCylinders(object_json, obj);
-      }
-      case JSON3DObject.CUBES: {
-        return this.objectBuilder.makeCube(object_json, obj);
-      }
-      case JSON3DObject.LINES: {
-        return this.objectBuilder.makeLine(object_json, obj);
-      }
-      case JSON3DObject.SURFACES: {
-        return this.objectBuilder.makeSurfaces(object_json, obj);
-      }
-      case JSON3DObject.CONVEX: {
-        return this.objectBuilder.makeConvex(object_json, obj);
-      }
-      case JSON3DObject.ARROWS: {
-        // take inspiration from ArrowHelper, user cones and cylinders
-        return this.objectBuilder.makeArrow(object_json, obj);
-      }
-      case JSON3DObject.LABEL: {
-        return this.objectBuilder.makeLabel(object_json, obj);
-      }
-      default: {
-        return obj;
-      }
-    }
-  }
-
-  makeMaterial(color = '#52afb0', opacity = 1.0) {
-    const parameters = Object.assign(this.settings.material.parameters, {
-      color: color,
-      opacity: opacity
-    });
-
-    if (this.settings.renderer === Renderer.SVG) {
-      return new THREE.MeshBasicMaterial(parameters);
-    }
-
-    switch (this.settings.material.type) {
-      case Material.standard: {
-        const mat = new THREE.MeshStandardMaterial(parameters);
-        mat.side = THREE.DoubleSide;
-        return mat;
-      }
-      default:
-        throw new Error('Unknown material.');
-    }
+    return this.objectBuilder.makeObject(object_json, obj);
   }
 
   start() {

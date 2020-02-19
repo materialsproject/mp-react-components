@@ -1,8 +1,15 @@
 import * as THREE from 'three';
-import { Material, Renderer } from './constants';
+import { JSON3DObject, Material, Renderer } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
+/**
+ *
+ *  This class builds Three.js object.
+ *
+ *  TODO: implements lights/camera
+ *
+ */
 export class ThreeBuilder {
   constructor(private settings) {}
 
@@ -264,6 +271,42 @@ export class ThreeBuilder {
     });
     meshes.forEach(mesh => obj.add(mesh));
     return obj;
+  }
+
+  public makeObject(object_json, obj) {
+    switch (object_json.type as JSON3DObject) {
+      case JSON3DObject.SPHERES: {
+        return this.makeSphere(object_json, obj);
+      }
+      case JSON3DObject.ELLIPSOIDS: {
+        return this.makeEllipsoids(object_json, obj);
+      }
+      case JSON3DObject.CYLINDERS: {
+        return this.makeCylinders(object_json, obj);
+      }
+      case JSON3DObject.CUBES: {
+        return this.makeCube(object_json, obj);
+      }
+      case JSON3DObject.LINES: {
+        return this.makeLine(object_json, obj);
+      }
+      case JSON3DObject.SURFACES: {
+        return this.makeSurfaces(object_json, obj);
+      }
+      case JSON3DObject.CONVEX: {
+        return this.makeConvex(object_json, obj);
+      }
+      case JSON3DObject.ARROWS: {
+        // take inspiration from ArrowHelper, user cones and cylinders
+        return this.makeArrow(object_json, obj);
+      }
+      case JSON3DObject.LABEL: {
+        return this.makeLabel(object_json, obj);
+      }
+      default: {
+        return obj;
+      }
+    }
   }
 
   private getSphereBuffer(scale: number, color: string, phiStart: number, phiEnd: number) {
