@@ -35,11 +35,23 @@ export class InsetHelper {
     this.frontRotation = this.cameraToFollow.rotation.clone();
     this.scene = getSceneWithBackground({ transparentBackground: true });
     this.scene.background = new THREE.Color('#ffffff');
-    this.scene.add(baseScene.getObjectByName('lights')?.clone()!);
-    this.scene.add(this.axis);
-    this.setup();
+    const baseLights = baseScene.getObjectByName('lights');
+    if (!baseLights) {
+      console.warn('no lights in base scene');
+    } else {
+      this.scene.add(baseLights.clone(true));
+    }
+    if (this.axis) {
+      this.scene.add(this.axis);
+      this.setup();
+    }
   }
   private setup() {
+    if (!this.axis) {
+      console.warn('setup should not be called if no axis is there');
+      return;
+    }
+
     // put back the axis in its normal scale for the calculation
     const [x, y, z] = this.origin;
     this.insetCamera.position.set(x, y, z);
