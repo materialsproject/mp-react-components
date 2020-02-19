@@ -352,3 +352,12 @@ export class ThreeBuilder {
     return lights;
   }
 }
+
+export function getSceneWithBackground(settings) {
+  const scene = new THREE.Scene();
+  //background
+  if (!settings.transparentBackground) {
+    scene.background = new THREE.Color(settings.background);
+  }
+  return scene;
+}

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { getSceneWithBackground } from '../Simple3DScene/Simple3DScene';
-import { ThreeBuilder } from '../Simple3DScene/three_builder';
+import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
 
 export enum ScenePosition {
   NW = 'NW',
@@ -17,7 +16,7 @@ const HEAD_WIDTH = 0.14;
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
-  private axisPadding = 10; // the space between the edge of the inset and the axis bounding box
+  private axisPadding = 1; // the space between the edge of the inset and the axis bounding box
   private scene: THREE.Scene;
 
   constructor(
@@ -27,15 +26,15 @@ export class InsetHelper {
     private origin: [number, number, number],
     private cameraToFollow: THREE.Camera,
     private threebuilder: ThreeBuilder,
-    private insetWidth = 200,
-    private insetHeight = 200,
-    private insetPadding = 10
+    private insetWidth = 100,
+    private insetHeight = 100,
+    private insetPadding = 5
   ) {
     //TODO(chab) extract the cube from the axis
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -20, 20);
     this.frontRotation = this.cameraToFollow.rotation.clone();
     this.scene = getSceneWithBackground({ transparentBackground: true });
-    this.scene.background = new THREE.Color('#eeeeee');
+    this.scene.background = new THREE.Color('#ffffff');
     this.scene.add(baseScene.getObjectByName('lights')?.clone()!);
     this.scene.add(this.axis);
     this.setup();
@@ -65,6 +64,7 @@ export class InsetHelper {
       (box.max.y - box.min.y) / 2,
       (box.max.z - box.min.z) / 2
     );
+
     let a = center
       .clone()
       .add(new THREE.Vector3(-extents.x, -extents.y, -extents.z))
@@ -75,19 +75,23 @@ export class InsetHelper {
       .project(this.insetCamera);
 
     // we should perform the calculation for both width and height, and take the smallest one
-    let widthOnScreenBuffer = Math.min(a.distanceTo(b));
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    size.project(this.insetCamera);
+    let widthOnScreenBuffer = Math.max(size.x, size.y, size.z);
     const width = (widthOnScreenBuffer / 2) * this.insetWidth;
-    const scale = (this.insetWidth / 2 - this.axisPadding) / width;
+    // the axis is always centered, so the max extent of its box should match half of the screen
+    // ( e.g consider a edge case of all axis point in the same direction, if the BB
+    // take all the size, it will overflow)
+    const scale = (this.insetWidth / 2 - this.axisPadding * 2) / width;
+    // maybe we should do is to consider the origin in the axis, in the bounding box
+    // and find the largest vector from center - bbextent, this will tell us how much
+    // the axis need from the center to one point
 
-    this.axis.scale.set(scale, scale, scale);
-    // the axis are set to fill up the second view, now we want to compensate the scaling we did
-    // we are going to add a bigger radius
-
-    // to be pixel perfect, we should calculate the length of the end of the arrow and remove it
-
-    const targetRadius = AXIS_RADIUS / (scale / 1.7);
-    const targetHeadLength = HEAD_AXIS_LENGTH / (scale / 1.7);
-    const targetWidth = HEAD_WIDTH / (scale / 1.7);
+    // manually rescale axis properties, so it looks not too thin
+    const targetRadius = AXIS_RADIUS * (scale / 1.5);
+    const targetHeadLength = HEAD_AXIS_LENGTH * (scale / 1.5);
+    const targetWidth = HEAD_WIDTH * (scale / 1.5);
     // we assume an axis is made of three arrows and one sphere
     this.axisJson.contents = this.axisJson.contents.map(a => {
       return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
@@ -99,6 +103,7 @@ export class InsetHelper {
       this.makeObject(this.axisJson.contents[2])
     );
 
+    this.axis.scale.set(scale, scale, scale);
     this.insetCamera.position.set(x * scale, y * scale, z * scale);
     this.insetCamera.updateProjectionMatrix();
   }
@@ -153,5 +158,12 @@ export class InsetHelper {
 
   public getSize() {
     return this.insetWidth;
+  }
+
+  public onDestroy() {
+    this.scene.dispose();
+    this.cameraToFollow = null as THREE.Camera;
+    this.insetCamera = null as THREE.OrthographicCamera;
+    this.axis = null as THREE.Object3D;
   }
 }

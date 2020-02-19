@@ -31,6 +31,7 @@ export const defaults = {
   staticScene: true,
   sphereScale: 1.0,
   cylinderScale: 1.0,
+  extractAxis: true,
   defaultSurfaceOpacity: 0.5,
   lights: [
     {

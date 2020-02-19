@@ -42,6 +42,7 @@ export default class Simple3DSceneComponent extends Component<
      *    cylinderSegments: 16, // decrease to improve performance
      *    staticScene: true, // disable if animation required
      *    defaultZoom: 0.8, // 1 will completely fill viewport with scene
+     *    extractAxis: true // will remove the axis from the main scene
      * }
      * There are several additional options used for debugging and testing,
      * please consult the source code directly for these.

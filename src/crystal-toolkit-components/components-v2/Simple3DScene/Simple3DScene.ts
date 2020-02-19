@@ -2,12 +2,11 @@ import * as THREE from 'three';
 import { Object3D, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import { defaults, Renderer } from './constants';
+import { defaults, ExportType, Renderer } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
-import { ThreeBuilder } from './three_builder';
+import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 
 export default class Simple3DScene {
   private settings;
@@ -178,54 +177,6 @@ export default class Simple3DScene {
     }
   }
 
-  download(filename: string, filetype: ExportType) {
-    switch (filetype) {
-      case ExportType.png:
-        this.downloadScreenshot(filename);
-        break;
-      case ExportType.dae:
-        this.downloadCollada(filename);
-        break;
-      default:
-        throw new Error('Unknown filetype.');
-    }
-  }
-
-  downloadScreenshot(filename: string) {
-    //TODO(chab) extract as a general utility method
-    // throw if svg render is used
-
-    // using method from Three.js editor
-    // create a link and hide it from end-user
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    // force a render (in case buffer has been cleared)
-    this.renderScene();
-    // and set link href to renderer contents
-    link.href = (<HTMLCanvasElement>this.renderer.domElement).toDataURL('image/png');
-    // click link to download
-    link.download = filename || 'screenshot.png';
-    link.click();
-  }
-
-  downloadCollada(filename) {
-    // Note(chab) i think it's better to use callback, so we can manage failure
-    const files = new ColladaExporter().parse(
-      this.scene,
-      r => {
-        console.log('result', r);
-      },
-      {}
-    )!;
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.href = 'data:text/plain;base64,' + btoa(files.data);
-    link.download = filename || 'scene.dae';
-    link.click();
-  }
-
   addToScene(sceneJson) {
     this.removeObjectByName(sceneJson.name);
     this.clickableObjects = [];
@@ -250,7 +201,9 @@ export default class Simple3DScene {
             translation.makeTranslation(...(childObject.origin as [number, number, number]));
             threeObject.applyMatrix4(translation);
           }
-          parent.add(threeObject);
+          if (!this.settings.extractAxis || threeObject.name !== 'axes') {
+            parent.add(threeObject);
+          }
           traverse_scene(childObject, threeObject);
           if (threeObject.name === 'axes') {
             this.axis = threeObject.clone();
@@ -264,7 +217,6 @@ export default class Simple3DScene {
     traverse_scene(sceneJson, rootObject);
     console.log('rootObject', rootObject);
     this.scene.add(rootObject);
-
     // auto-zoom to fit object
     // TODO: maybe better to move this elsewhere (what if using perspective?)
     const box = new THREE.Box3();
@@ -440,13 +392,4 @@ export default class Simple3DScene {
         return [this.inset.getPadding(), this.inset.getPadding()];
     }
   }
-}
-
-export function getSceneWithBackground(settings) {
-  const scene = new THREE.Scene();
-  //background
-  if (!settings.transparentBackground) {
-    scene.background = new THREE.Color(settings.background);
-  }
-  return scene;
 }
