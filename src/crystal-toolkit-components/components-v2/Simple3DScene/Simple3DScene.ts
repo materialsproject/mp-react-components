@@ -3,15 +3,7 @@ import { Object3D, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import {
-  DEFAULT_LIGHT_COLOR,
-  defaults,
-  ExportType,
-  JSON3DObject,
-  Light,
-  Material,
-  Renderer
-} from './constants';
+import { defaults, Renderer } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
@@ -89,7 +81,7 @@ export default class Simple3DScene {
     this.camera = this.getCamera();
     ///this.scene.add(this.camera);
     this.addToScene(sceneJson);
-    const lights = this.makeLights(this.settings.lights);
+    const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
     this.scene.add(this.tooltipHelper.tooltip);
     const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
@@ -143,7 +135,6 @@ export default class Simple3DScene {
     // need to offset for OrbitControls
     camera.position.z = 2;
     // axis would be at the medium
-
     return camera;
   }
 
@@ -310,37 +301,6 @@ export default class Simple3DScene {
     }
   }
 
-  makeLights(light_json) {
-    const lights = new THREE.Object3D();
-    lights.name = 'lights';
-    light_json.forEach(light => {
-      let lightObj;
-      switch (light.type) {
-        case Light.DirectionalLight:
-          lightObj = new THREE.DirectionalLight(...light.args);
-          if (light.helper) {
-            const lightHelper = new THREE.DirectionalLightHelper(lightObj, 5, DEFAULT_LIGHT_COLOR);
-            lightObj.add(lightHelper);
-          }
-          break;
-        case Light.AmbientLight:
-          lightObj = new THREE.AmbientLight(...light.args);
-          break;
-        case Light.HemisphereLight:
-          lightObj = new THREE.HemisphereLight(...light.args);
-          break;
-        default:
-          throw new Error('Unknown light.');
-      }
-      if (light.position) {
-        lightObj.position.set(...light.position);
-      }
-      lights.add(lightObj);
-    });
-
-    return lights;
-  }
-
   makeObject(object_json) {
     const obj = new THREE.Object3D();
 
@@ -434,12 +394,16 @@ export default class Simple3DScene {
 
   // call this when the parent component is destroyed
   public onDestroy() {
-    (this.renderer as THREE.WebGLRenderer).forceContextLoss();
-    (this.renderer as THREE.WebGLRenderer).dispose();
-    this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
-    (this.renderer as any).domElement = undefined;
-    (this as any).renderer = null;
+    this.scene.dispose();
     this.controls.dispose();
+    this.inset.onDestroy();
+    if (this.renderer instanceof THREE.WebGLRenderer) {
+      this.renderer.forceContextLoss();
+      this.renderer.dispose();
+    }
+    this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
+    this.renderer.domElement = undefined as any;
+    this.renderer = null as any;
     this.stop();
   }
 

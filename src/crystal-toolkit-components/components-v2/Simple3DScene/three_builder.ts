@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { JSON3DObject, Material, Renderer } from './constants';
+import { DEFAULT_LIGHT_COLOR, JSON3DObject, Light, Material, Renderer } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
+import { Object3D } from 'three';
 
 /**
  *
@@ -318,5 +319,36 @@ export class ThreeBuilder {
       phiEnd || Math.PI * 2
     );
     return { geom, mat: this.makeMaterial(color) };
+  }
+
+  public makeLights(light_json): Object3D {
+    const lights = new THREE.Object3D();
+    lights.name = 'lights';
+    light_json.forEach(light => {
+      let lightObj;
+      switch (light.type) {
+        case Light.DirectionalLight:
+          lightObj = new THREE.DirectionalLight(...light.args);
+          if (light.helper) {
+            const lightHelper = new THREE.DirectionalLightHelper(lightObj, 5, DEFAULT_LIGHT_COLOR);
+            lightObj.add(lightHelper);
+          }
+          break;
+        case Light.AmbientLight:
+          lightObj = new THREE.AmbientLight(...light.args);
+          break;
+        case Light.HemisphereLight:
+          lightObj = new THREE.HemisphereLight(...light.args);
+          break;
+        default:
+          throw new Error('Unknown light.');
+      }
+      if (light.position) {
+        lightObj.position.set(...light.position);
+      }
+      lights.add(lightObj);
+    });
+
+    return lights;
   }
 }
