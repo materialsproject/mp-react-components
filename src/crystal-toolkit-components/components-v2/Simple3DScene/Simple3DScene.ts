@@ -246,20 +246,18 @@ export default class Simple3DScene {
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera
     const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
-
+    // we add a lot of padding to make sure the camera is always beyond/behind the object
+    const Z_PADDING = 100;
     this.camera = new THREE.OrthographicCamera(
       center.x - maxExtent,
       center.x + maxExtent,
       center.y + maxExtent,
       center.y - maxExtent,
-      center.z - maxExtent - 5,
-      center.z + maxExtent + 5
+      center.z - maxExtent - Z_PADDING,
+      center.z + maxExtent + Z_PADDING
     );
-    // z does not matter in orthographic projection,
-    // you just want to avoid being in the middle of the object
-    // and to avoid going too far from the object, otherwise you'll be out of the3
-    // camera box, so we'll just go near the object
-    this.camera.position.z = center.z + maxExtent + 1;
+    // position camera behind the object
+    this.camera.position.z = center.z + maxExtent + Z_PADDING / 2;
     this.camera.zoom = 1;
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
