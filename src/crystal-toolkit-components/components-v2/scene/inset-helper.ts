@@ -152,7 +152,7 @@ export class InsetHelper {
   }
 
   public render(renderer, [x, y]: any) {
-    if (renderer instanceof THREE.WebGLRenderer) {
+    if (renderer instanceof THREE.WebGLRenderer && this.axis) {
       renderer.setScissorTest(true);
       // everything outside should be discarded
       renderer.setScissor(x, y, this.insetWidth, this.insetHeight);
