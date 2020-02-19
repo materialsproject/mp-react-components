@@ -77,8 +77,6 @@ export default class Simple3DScene {
 
   private configureScene(sceneJson) {
     this.scene = getSceneWithBackground(this.settings);
-    this.camera = this.getCamera();
-    ///this.scene.add(this.camera);
     this.addToScene(sceneJson);
     const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
@@ -118,23 +116,6 @@ export default class Simple3DScene {
       // constantly re-render (for animation)
       this.start();
     }
-  }
-
-  private getCamera() {
-    const { width, height } = this.cachedMountNodeSize;
-    // TODO: change so camera dimensions match scene, not dom_elt?
-    const camera = new THREE.OrthographicCamera(
-      width / -2,
-      width / 2,
-      height / 2,
-      height / -2,
-      -2000,
-      2000
-    );
-    // need to offset for OrbitControls
-    camera.position.z = 2;
-    // axis would be at the medium
-    return camera;
   }
 
   constructor(sceneJson, domElement: Element, settings, size, padding) {
@@ -215,23 +196,9 @@ export default class Simple3DScene {
     };
 
     traverse_scene(sceneJson, rootObject);
-    console.log('rootObject', rootObject);
+    console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
-    // auto-zoom to fit object
-    // TODO: maybe better to move this elsewhere (what if using perspective?)
-    const box = new THREE.Box3();
-    box.setFromObject(rootObject);
-    const { width, height } = this.cachedMountNodeSize;
-    // TODO: improve auto-zoom
-    this.camera.zoom =
-      Math.min(
-        Math.max(width, height) / (box.max.x - box.min.x),
-        Math.max(width, height) / (box.max.y - box.min.y),
-        Math.max(width, height) / (box.max.z - box.min.z)
-      ) * this.settings.defaultZoom;
-
-    this.camera.updateProjectionMatrix();
-    this.camera.updateMatrix();
+    this.setupCamera(rootObject);
     this.renderScene();
 
     // we can automatically output a screenshot to be the background of the parent div
@@ -251,6 +218,43 @@ export default class Simple3DScene {
     if (this.inset) {
       this.inset.updateAxis(this.axis, this.axisJson);
     }
+  }
+
+  private setupCamera(rootObject) {
+    const bbox = new THREE.Box3();
+    bbox.setFromObject(rootObject);
+    // auto-zoom to fit object
+    // TODO: maybe better to move this elsewhere (what if using perspective?)
+    const box = new THREE.Box3();
+    box.setFromObject(rootObject);
+    const center = new THREE.Vector3();
+    bbox.getCenter(center);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+
+    let maxDim = Math.max(size.x, size.y, size.z);
+    const CAMERA_BOX_PADDING = maxDim / 1.65;
+    // we add a bit of padding, let's suppose we rotate, we want to avoid the
+    // object to go out of the camera
+    const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
+
+    this.camera = new THREE.OrthographicCamera(
+      center.x - maxExtent,
+      center.x + maxExtent,
+      center.y + maxExtent,
+      center.y - maxExtent,
+      center.z - maxExtent - 5,
+      center.z + maxExtent + 5
+    );
+    // z does not matter in orthographic projection,
+    // you just want to avoid being in the middle of the object
+    // and to avoid going too far from the object, otherwise you'll be out of the3
+    // camera box, so we'll just go near the object
+    this.camera.position.z = center.z + maxExtent + 1;
+    this.camera.zoom = 1;
+    this.camera.updateProjectionMatrix();
+    this.camera.updateMatrix();
+    this.scene.add(this.camera);
   }
 
   makeObject(object_json) {
