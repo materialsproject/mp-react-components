@@ -9,6 +9,10 @@ export enum ScenePosition {
   HIDDEN = 'HIDDEN'
 }
 
+const AXIS_RADIUS = 0.07;
+const HEAD_AXIS_LENGTH = 0.24;
+const HEAD_WIDTH = 0.14;
+
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
@@ -45,6 +49,8 @@ export class InsetHelper {
     );
     this.axis.scale.set(1, 1, 1);
     this.insetCamera.updateProjectionMatrix();
+
+    // calculate scale
     const box = new THREE.Box3().setFromObject(this.axis);
     let center = new THREE.Vector3(
       (box.min.x + box.max.x) / 2,
@@ -65,12 +71,22 @@ export class InsetHelper {
       .add(new THREE.Vector3(extents.x, -extents.y, extents.z))
       .project(this.insetCamera);
 
-    // we should perform the calculation for both width and height, and t
-    // take the smallest scaling
-    let widthOnScreenBuffer = Math.max(a.distanceTo(b));
+    // we should perform the calculation for both width and height, and take the smallest one
+    let widthOnScreenBuffer = Math.min(a.distanceTo(b));
     const width = (widthOnScreenBuffer / 2) * this.insetWidth;
-    const scale = (this.insetWidth / 2 - this.axisPadding - this.insetPadding) / width;
+    const scale = (this.insetWidth / 2 - this.axisPadding) / width;
+
+    console.log(this.axis.children[0]);
+
     this.axis.scale.set(scale, scale, scale);
+    // the axis are set to fill up the second view, now we want to compensate the scaling we did
+    // we are going to add a bigger radius
+
+    const targetRadius = AXIS_RADIUS / (scale * 2);
+    const targetHeadLength = HEAD_AXIS_LENGTH / scale;
+    const targetWidth = AXIS_RADIUS / scale;
+    // we assume an axis is made of three arrows and one sphere
+
     this.insetCamera.position.set(x * scale, y * scale, z * scale);
     this.insetCamera.updateProjectionMatrix();
   }

@@ -196,7 +196,7 @@ export const s2 = {
             ]
           ],
           color: 'red',
-          radius: 0.07,
+          radius: (0.07 / 0.37302772291498865) * 2,
           headLength: 0.24,
           headWidth: 0.14,
           type: 'arrows',
@@ -210,9 +210,9 @@ export const s2 = {
             ]
           ],
           color: 'green',
-          radius: 0.07,
-          headLength: 0.24,
-          headWidth: 0.14,
+          radius: (0.07 / 0.37302772291498865) * 2,
+          headLength: 0.24 / 0.37302772291498865,
+          headWidth: 0.14 / 0.37302772291498865,
           type: 'arrows',
           clickable: false
         },
@@ -224,15 +224,15 @@ export const s2 = {
             ]
           ],
           color: 'blue',
-          radius: 0.07,
-          headLength: 0.24,
-          headWidth: 0.14,
+          radius: (0.07 / 0.37302772291498865) * 2,
+          headLength: (0.24 / 0.37302772291498865) * 2,
+          headWidth: (0.14 / 0.37302772291498865) * 2,
           type: 'arrows',
           clickable: false
         },
         {
           positions: [[-2.1, -2.1, -2.1]],
-          color: 'white',
+          color: 'black',
           radius: 0.0175,
           type: 'spheres',
           clickable: false
