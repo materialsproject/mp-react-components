@@ -102,7 +102,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <MultipleScatterPlots width={1000} cardinalColumn={'species'} data={iris} padding={30} />
+    <MultipleScatterPlots width={1800} cardinalColumn={'Pregnancies'} data={db} padding={30} />
 
     <div style={{ width: '500px', height: '500px' }}>
       <Simple3DSceneComponent data={scene} toggleVisibility={{}} />

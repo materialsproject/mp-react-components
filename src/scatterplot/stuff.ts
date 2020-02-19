@@ -10,8 +10,10 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
   data.columns = Object.keys(data[0]);
   //
 
+  // number of rows and columns
   const columns = data.columns.filter(d => d !== cardinalColumn);
 
+  // size of one scatterplots
   const size = (width - (columns.length + 1) * padding) / columns.length + padding;
 
   // x is an array of scale for each attributes oft the domain
@@ -36,7 +38,7 @@ export function getSVGNode(data: any, cardinalColumn, width, padding) {
     const axis = d3
       .axisLeft()
       .ticks(6)
-      .tickSize(-size * columns.length);
+      .tickSize(-size * columns.length); // the x tick will take the whole width
 
     //https://observablehq.com/@d3/selection-join
 

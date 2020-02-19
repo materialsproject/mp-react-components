@@ -8447,4 +8447,4 @@ export const db = [
     Age: 23,
     Outcome: 0
   }
-];
+].slice(0, 30);
