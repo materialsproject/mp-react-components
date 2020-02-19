@@ -4,6 +4,7 @@ import Simple3DScene from './Simple3DScene';
 import { Subscription } from 'rxjs';
 import { subscribe } from './Simple3DSceneDownloadEvent';
 import './Simple3DScene.less';
+import { download } from './utils';
 
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
@@ -41,8 +42,8 @@ export default class Simple3DSceneComponent extends Component<
      *    sphereSegments: 32, // decrease to improve performance
      *    cylinderSegments: 16, // decrease to improve performance
      *    staticScene: true, // disable if animation required
-     *    defaultZoom: 0.8, // 1 will completely fill viewport with scene
-     *    extractAxis: true // will remove the axis from the main scene
+     *    defaultZoom: 1, // 1 will fill the screen with sufficient room to rotate
+     *    extractAxis: false // will remove the axis from the main scene
      * }
      * There are several additional options used for debugging and testing,
      * please consult the source code directly for these.
@@ -65,22 +66,7 @@ export default class Simple3DSceneComponent extends Component<
      * }
      */
     downloadRequest: PropTypes.object,
-
-    /**
-     * Dash-assigned callback that should be called whenever any of the
-     * properties change
-     */
-    setProps: PropTypes.func,
-    /**
-     * Reference to selected objects when clicked
-     */
-    selectedObjectReference: PropTypes.string,
-
-    /**
-     * Click count for selected object
-     */
-    selectedObjectCount: PropTypes.number,
-
+    onObjectClicked: PropTypes.func,
     /**
      * Size of axis inlet
      */
@@ -104,7 +90,7 @@ export default class Simple3DSceneComponent extends Component<
     super(props);
     this.mountNodeRef = React.createRef();
     this.downloadSubscription = subscribe(({ filename, filetype }) => {
-      this.scene.download(filename, filetype);
+      download(filename, filetype);
     });
   }
 
@@ -115,7 +101,8 @@ export default class Simple3DSceneComponent extends Component<
       this.mountNodeRef.current!,
       this.props.settings,
       this.props.inletSize,
-      this.props.inletPadding
+      this.props.inletPadding,
+      objects => this.handleClick(objects)
     );
     this.scene.toggleVisibility(this.props.toggleVisibility);
   }
@@ -127,7 +114,6 @@ export default class Simple3DSceneComponent extends Component<
     }
 
     this.scene.updateInsetSettings(nextProps.inletSize, nextProps.inletPadding, nextProps.axisView);
-
     if (nextProps.toggleVisibility !== this.props.toggleVisibility) {
       this.scene.toggleVisibility(nextProps.toggleVisibility);
     }
@@ -140,20 +126,12 @@ export default class Simple3DSceneComponent extends Component<
     this.downloadSubscription.unsubscribe();
   }
 
-  handleClick(event) {
-    event.preventDefault();
-
-    const clickedReference = this.scene.getClickedReference(event.clientX, event.clientY);
-    // Not sure what is the goal there ?
-    if (this.props.selectedObjectReference === clickedReference) {
-      this.setState((state: any) => {
-        return { selectedObjectCount: state.selectedObjectCount + 1 };
-      });
-    } else {
-      this.setState({
-        selectedObjectReference: clickedReference,
-        selectedObjectCount: 1
-      });
+  // I've opted for a simple implementation, the click is handled directly in the scene, and
+  // we update a prop there to let people know something has changed
+  handleClick(object) {
+    if (this.props.onObjectClicked) {
+      console.log('clicked', object);
+      (this.props.onObjectClicked as any)(object); // why TS complains ?
     }
   }
 
@@ -164,7 +142,6 @@ export default class Simple3DSceneComponent extends Component<
         style={{ width: '100%', height: '100%' }}
         className={'three-container'}
         ref={this.mountNodeRef}
-        onClick={e => this.handleClick(e)}
       />
     );
   }

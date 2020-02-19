@@ -27,6 +27,7 @@ export default class Simple3DScene {
   private inset!: InsetHelper;
   private inletPosition!: ScenePosition;
   private objectBuilder: ThreeBuilder;
+  private clickCallback: (objects: any[]) => void;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -88,7 +89,7 @@ export default class Simple3DScene {
     controls.enabled = true;
 
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
-      const p = this.getClickedReference(e.offsetX, e.offsetY);
+      const p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
 
       if (p) {
         const { object, point } = p;
@@ -96,6 +97,15 @@ export default class Simple3DScene {
         this.renderScene();
       } else {
         this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+      }
+    });
+
+    this.renderer.domElement.addEventListener('click', (e: any) => {
+      const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+
+      if (p) {
+        const { object, point } = p;
+        this.clickCallback(object?.jsonObject);
       }
     });
 
@@ -118,13 +128,14 @@ export default class Simple3DScene {
     }
   }
 
-  constructor(sceneJson, domElement: Element, settings, size, padding) {
+  constructor(sceneJson, domElement: Element, settings, size, padding, clickCallback) {
     this.settings = Object.assign(defaults, settings);
     this.objectBuilder = new ThreeBuilder(this.settings);
     this.cacheMountBBox(domElement);
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
+    this.clickCallback = clickCallback;
     window.addEventListener('resize', () => this.resizeRendererToDisplaySize(), false);
     this.inset = new InsetHelper(
       this.axis,
@@ -189,7 +200,6 @@ export default class Simple3DScene {
           if (threeObject.name === 'axes') {
             this.axis = threeObject.clone();
             this.axisJson = { ...childObject };
-            console.log('....', this.axisJson);
           }
         }
       });
@@ -321,7 +331,10 @@ export default class Simple3DScene {
 
   // i know this is can be done by implementing a color buffer, with each color matching one
   // object
-  getClickedReference(clientX, clientY) {
+  getClickedReference(clientX, clientY, objectsToCheck: Object3D[]) {
+    if (!objectsToCheck || objectsToCheck.length === 0) {
+      return;
+    }
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     const size = new THREE.Vector2();
@@ -329,7 +342,7 @@ export default class Simple3DScene {
     mouse.x = (clientX / size.width) * 2 - 1;
     mouse.y = -(clientY / size.height) * 2 + 1;
     raycaster.setFromCamera(mouse, this.camera);
-    const intersects = raycaster.intersectObjects(this.tooltipObjects, true);
+    const intersects = raycaster.intersectObjects(objectsToCheck, true);
     // they are a few cases where this does not work :( try to understand why
     if (intersects.length > 0) {
       return { point: intersects[0].point, object: this.getParentObject(intersects[0].object) };

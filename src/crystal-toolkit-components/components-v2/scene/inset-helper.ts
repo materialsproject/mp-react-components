@@ -26,9 +26,9 @@ export class InsetHelper {
     private origin: [number, number, number],
     private cameraToFollow: THREE.Camera,
     private threebuilder: ThreeBuilder,
-    private insetWidth = 100,
-    private insetHeight = 100,
-    private insetPadding = 5
+    private insetWidth = 130,
+    private insetHeight = 130,
+    private insetPadding = 0
   ) {
     //TODO(chab) extract the cube from the axis
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -20, 20);
