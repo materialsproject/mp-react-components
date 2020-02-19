@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { getSceneWithBackground } from '../Simple3DScene/Simple3DScene';
+import { ThreeBuilder } from '../Simple3DScene/three_builder';
 
 export enum ScenePosition {
   NW = 'NW',
@@ -16,16 +17,18 @@ const HEAD_WIDTH = 0.14;
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
-  private axisPadding = 5; // the space between the edge of the inset and the axis bounding box
+  private axisPadding = 10; // the space between the edge of the inset and the axis bounding box
   private scene: THREE.Scene;
 
   constructor(
     private axis: THREE.Object3D,
+    private axisJson: any,
     baseScene: THREE.Scene,
     private origin: [number, number, number],
     private cameraToFollow: THREE.Camera,
-    private insetWidth = 100,
-    private insetHeight = 100,
+    private threebuilder: ThreeBuilder,
+    private insetWidth = 200,
+    private insetHeight = 200,
     private insetPadding = 10
   ) {
     //TODO(chab) extract the cube from the axis
@@ -76,22 +79,42 @@ export class InsetHelper {
     const width = (widthOnScreenBuffer / 2) * this.insetWidth;
     const scale = (this.insetWidth / 2 - this.axisPadding) / width;
 
-    console.log(this.axis.children[0]);
-
     this.axis.scale.set(scale, scale, scale);
     // the axis are set to fill up the second view, now we want to compensate the scaling we did
     // we are going to add a bigger radius
 
-    const targetRadius = AXIS_RADIUS / (scale * 2);
-    const targetHeadLength = HEAD_AXIS_LENGTH / scale;
-    const targetWidth = AXIS_RADIUS / scale;
+    // to be pixel perfect, we should calculate the length of the end of the arrow and remove it
+
+    const targetRadius = AXIS_RADIUS / (scale / 1.7);
+    const targetHeadLength = HEAD_AXIS_LENGTH / (scale / 1.7);
+    const targetWidth = HEAD_WIDTH / (scale / 1.7);
     // we assume an axis is made of three arrows and one sphere
+    this.axisJson.contents = this.axisJson.contents.map(a => {
+      return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
+    });
+    this.axis.remove(this.axis.children[0], this.axis.children[1], this.axis.children[2]);
+    this.axis.add(
+      this.makeObject(this.axisJson.contents[0]),
+      this.makeObject(this.axisJson.contents[1]),
+      this.makeObject(this.axisJson.contents[2])
+    );
 
     this.insetCamera.position.set(x * scale, y * scale, z * scale);
     this.insetCamera.updateProjectionMatrix();
   }
 
+  makeObject(object_json) {
+    const obj = new THREE.Object3D();
+
+    return this.threebuilder.makeObject(object_json, obj);
+  }
+
   public updateViewportsize(size, padding) {
+    if (!size || !padding) {
+      console.warn('fallback to default settings when resizing');
+      return;
+    }
+
     this.insetPadding = padding;
 
     if (size < 50) {
@@ -103,9 +126,10 @@ export class InsetHelper {
     }
   }
 
-  public updateAxis(axis) {
+  public updateAxis(axis, axisJson) {
     this.scene.remove(this.axis);
     this.axis = axis;
+    this.axisJson = axisJson;
     this.scene.add(this.axis);
     this.setup();
   }
