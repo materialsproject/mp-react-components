@@ -162,8 +162,9 @@ export class InsetHelper {
 
   public onDestroy() {
     this.scene.dispose();
-    this.cameraToFollow = null as THREE.Camera;
-    this.insetCamera = null as THREE.OrthographicCamera;
-    this.axis = null as THREE.Object3D;
+    // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
+    this.cameraToFollow = (null as unknown) as THREE.Camera;
+    this.insetCamera = (null as unknown) as THREE.OrthographicCamera;
+    this.axis = (null as unknown) as THREE.Object3D;
   }
 }

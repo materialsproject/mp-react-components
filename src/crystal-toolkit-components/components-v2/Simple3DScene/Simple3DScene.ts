@@ -12,10 +12,9 @@ export default class Simple3DScene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
   private labelRenderer!: CSS2DRenderer;
-  private scene!: THREE.Scene;
+  public scene!: THREE.Scene; // expose getter instead
   private cachedMountNodeSize!: { width: number; height: number };
   private camera!: THREE.OrthographicCamera;
-  private insetCamera!: THREE.OrthographicCamera;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
   private tooltipObjects: THREE.Object3D[] = [];

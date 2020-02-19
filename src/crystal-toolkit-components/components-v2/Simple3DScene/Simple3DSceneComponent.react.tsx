@@ -90,7 +90,7 @@ export default class Simple3DSceneComponent extends Component<
     super(props);
     this.mountNodeRef = React.createRef();
     this.downloadSubscription = subscribe(({ filename, filetype }) => {
-      download(filename, filetype);
+      download(filename, filetype, this.scene);
     });
   }
 

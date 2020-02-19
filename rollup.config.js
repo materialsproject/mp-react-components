@@ -64,8 +64,11 @@ export default {
     localResolve(),
     resolve(),
     typescript({
-      typescript: require('typescript'),
-      objectHashIgnoreUnknownHack: true
+      tsconfigDefaults: {},
+      tsconfig: 'tsconfig.json',
+      tsconfigOverride: {},
+      objectHashIgnoreUnknownHack: true,
+      verbosity: 1 // overrides for debugging
     }),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')

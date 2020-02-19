@@ -1,7 +1,9 @@
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { ExportType } from './constants';
+import Simple3DSceneComponent from './Simple3DSceneComponent.react';
+import Simple3DScene from './Simple3DScene';
 
-export function downloadScreenshot(filename: string) {
+export function downloadScreenshot(filename: string, sceneComponent) {
   //TODO(chab) extract as a general utility method
   // throw if svg render is used
 
@@ -10,19 +12,18 @@ export function downloadScreenshot(filename: string) {
   const link = document.createElement('a');
   link.style.display = 'none';
   document.body.appendChild(link);
-  // force a render (in case buffer has been cleared)
-  this.renderScene();
+  sceneComponent.renderScene();
   // and set link href to renderer contents
-  link.href = (<HTMLCanvasElement>this.renderer.domElement).toDataURL('image/png');
+  link.href = (<HTMLCanvasElement>sceneComponent.renderer.domElement).toDataURL('image/png');
   // click link to download
   link.download = filename || 'screenshot.png';
   link.click();
 }
 
-export function downloadCollada(filename: string) {
+export function downloadCollada(filename: string, sceneComponent: Simple3DScene) {
   // Note(chab) i think it's better to use callback, so we can manage failure
   const files = new ColladaExporter().parse(
-    this.scene,
+    sceneComponent.scene,
     r => {
       console.log('result', r);
     },
@@ -36,13 +37,14 @@ export function downloadCollada(filename: string) {
   link.click();
 }
 
-export function download(filename: string, filetype: ExportType) {
+export function download(filename: string, filetype: ExportType, sceneComponent: Simple3DScene) {
+  // force a render (in case buffer has been cleared)
   switch (filetype) {
     case ExportType.png:
-      this.downloadScreenshot(filename);
+      downloadScreenshot(filename, sceneComponent);
       break;
     case ExportType.dae:
-      this.downloadCollada(filename);
+      downloadCollada(filename, sceneComponent);
       break;
     default:
       throw new Error('Unknown filetype.');
