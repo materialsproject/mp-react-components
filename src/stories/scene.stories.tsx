@@ -1,4 +1,4 @@
-import { number, object, select, withKnobs } from '@storybook/addon-knobs';
+import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
 import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
@@ -15,6 +15,7 @@ export const scene3d = () => (
         inletPadding={number('padding', 10)}
         inletSize={number('size', 100)}
         data={object('scene', sceneJson)}
+        debug={boolean('DEBUG', false)}
         toggleVisibility={{}}
       />
     </div>

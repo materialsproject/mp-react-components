@@ -2,11 +2,12 @@ import * as THREE from 'three';
 import { Object3D, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, ExportType, Renderer } from './constants';
+import { defaults, Renderer } from './constants';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
+import { DebugHelper } from '../scene/debug-helper';
 
 export default class Simple3DScene {
   private settings;
@@ -27,6 +28,7 @@ export default class Simple3DScene {
   private inletPosition!: ScenePosition;
   private objectBuilder: ThreeBuilder;
   private clickCallback: (objects: any[]) => void;
+  private debugHelper!: DebugHelper;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -59,7 +61,7 @@ export default class Simple3DScene {
     }
     this.renderer = renderer;
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
-    //TODO(chab) determine what's going on
+    //TODO(chab) This should be simpler
     mountNode.appendChild(this.renderer.domElement);
   }
 
@@ -86,10 +88,8 @@ export default class Simple3DScene {
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.enabled = true;
-
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
-
       if (p) {
         const { object, point } = p;
         this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
@@ -127,7 +127,17 @@ export default class Simple3DScene {
     }
   }
 
-  constructor(sceneJson, domElement: Element, settings, size, padding, clickCallback) {
+  private readonly windowListener = () => this.resizeRendererToDisplaySize();
+
+  constructor(
+    sceneJson,
+    domElement: Element,
+    settings,
+    size,
+    padding,
+    clickCallback,
+    private debugDOMElement?
+  ) {
     this.settings = Object.assign(defaults, settings);
     this.objectBuilder = new ThreeBuilder(this.settings);
     this.cacheMountBBox(domElement);
@@ -135,7 +145,7 @@ export default class Simple3DScene {
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
     this.clickCallback = clickCallback;
-    window.addEventListener('resize', () => this.resizeRendererToDisplaySize(), false);
+    window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
       this.axis,
       this.axisJson,
@@ -147,6 +157,14 @@ export default class Simple3DScene {
       size,
       padding
     );
+    if (this.debugDOMElement) {
+      this.debugHelper = new DebugHelper(
+        this.debugDOMElement,
+        this.scene,
+        this.camera,
+        this.settings
+      );
+    }
   }
 
   updateInsetSettings(inletSize: number, inletPadding: number, axisView) {
@@ -247,7 +265,7 @@ export default class Simple3DScene {
     // object to go out of the camera
     const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
     // we add a lot of padding to make sure the camera is always beyond/behind the object
-    const Z_PADDING = 100;
+    const Z_PADDING = 50;
     this.camera = new THREE.OrthographicCamera(
       center.x - maxExtent,
       center.x + maxExtent,
@@ -304,6 +322,11 @@ export default class Simple3DScene {
       this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     }
 
+    // debug view
+    if (this.debugHelper) {
+      this.debugHelper.render();
+    }
+
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
 
@@ -358,11 +381,36 @@ export default class Simple3DScene {
     }
   }
 
+  public enableDebug(debugEnabled: boolean, node) {
+    if (!debugEnabled) {
+      if (!this.debugHelper) {
+        console.warn('Turning off debug, while its not on');
+      } else {
+        this.debugHelper.onDestroy();
+        this.debugHelper = (null as unknown) as DebugHelper;
+      }
+    } else {
+      if (this.debugHelper) {
+        console.warn('Turning on debug, while its not off');
+      } else {
+        this.debugDOMElement = node;
+        this.debugHelper = new DebugHelper(
+          this.debugDOMElement,
+          this.scene,
+          this.camera,
+          this.settings
+        );
+      }
+    }
+  }
+
   // call this when the parent component is destroyed
   public onDestroy() {
+    window.removeEventListener('resize', this.windowListener, false);
+    this.debugHelper && this.debugHelper.onDestroy();
+    this.inset.onDestroy();
     this.scene.dispose();
     this.controls.dispose();
-    this.inset.onDestroy();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();

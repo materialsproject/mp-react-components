@@ -26,6 +26,11 @@ export default class Simple3DSceneComponent extends Component<
     id: PropTypes.string,
 
     /**
+     * Add a debugging view
+     */
+    debug: PropTypes.bool,
+
+    /**
      * Simple3DScene JSON, the easiest way to generate this is to use the Scene class
      * in crystal_toolkit.core.scene and its to_json method.
      */
@@ -84,11 +89,13 @@ export default class Simple3DSceneComponent extends Component<
 
   private scene!: Simple3DScene;
   private mountNodeRef: RefObject<HTMLDivElement>;
+  private mountNodeDebugRef: RefObject<HTMLDivElement>;
   private downloadSubscription: Subscription;
 
   constructor(public props) {
     super(props);
     this.mountNodeRef = React.createRef();
+    this.mountNodeDebugRef = React.createRef();
     this.downloadSubscription = subscribe(({ filename, filetype }) => {
       download(filename, filetype, this.scene);
     });
@@ -102,7 +109,8 @@ export default class Simple3DSceneComponent extends Component<
       this.props.settings,
       this.props.inletSize,
       this.props.inletPadding,
-      objects => this.handleClick(objects)
+      objects => this.handleClick(objects),
+      this.mountNodeDebugRef.current
     );
     this.scene.toggleVisibility(this.props.toggleVisibility);
   }
@@ -114,8 +122,20 @@ export default class Simple3DSceneComponent extends Component<
     }
 
     this.scene.updateInsetSettings(nextProps.inletSize, nextProps.inletPadding, nextProps.axisView);
+
     if (nextProps.toggleVisibility !== this.props.toggleVisibility) {
       this.scene.toggleVisibility(nextProps.toggleVisibility);
+    }
+  }
+
+  //TODO(chab) move everything here
+  componentDidUpdate(
+    prevProps: Readonly<PropTypes.InferProps<typeof Simple3DSceneComponent.propTypes>>,
+    prevState: Readonly<any>,
+    snapshot?: any
+  ): void {
+    if (prevProps.debug !== this.props.debug) {
+      this.scene.enableDebug(this.props.debug, this.mountNodeDebugRef.current);
     }
   }
 
@@ -137,12 +157,27 @@ export default class Simple3DSceneComponent extends Component<
 
   render() {
     return (
-      <div
-        id={this.props.id!}
-        style={{ width: '100%', height: '100%' }}
-        className={'three-container'}
-        ref={this.mountNodeRef}
-      />
+      <>
+        <div
+          id={this.props.id!}
+          style={{ width: '100%', height: '100%' }}
+          className={'three-container'}
+          ref={this.mountNodeRef}
+        />
+        {this.props.debug && (
+          <div
+            style={{
+              width: '500px',
+              height: '500px',
+              position: 'absolute',
+              top: '0',
+              left: '500px'
+            }}
+            className={'three-debug-container'}
+            ref={this.mountNodeDebugRef}
+          />
+        )}
+      </>
     );
   }
 }

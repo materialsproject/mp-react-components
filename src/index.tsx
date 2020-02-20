@@ -99,7 +99,7 @@ function TestComponent(props: any) {
 ReactDOM.render(
   <>
     <div style={{ width: '500px', height: '500px' }}>
-      <Simple3DSceneComponent data={scene} toggleVisibility={{}} />
+      <Simple3DSceneComponent data={scene} debug={true} toggleVisibility={{}} />
     </div>
 
     <div>
