@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { DEFAULT_LIGHT_COLOR, JSON3DObject, Light, Material, Renderer } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import { Object3D } from 'three';
+import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
 
 /**
  *
@@ -322,17 +322,13 @@ export class ThreeBuilder {
   }
 
   public makeLights(light_json): Object3D {
-    const lights = new THREE.Object3D();
-    lights.name = 'lights';
+    const lightGroup = new THREE.Object3D();
+    lightGroup.name = 'lights';
     light_json.forEach(light => {
       let lightObj;
       switch (light.type) {
         case Light.DirectionalLight:
           lightObj = new THREE.DirectionalLight(...light.args);
-          if (light.helper) {
-            const lightHelper = new THREE.DirectionalLightHelper(lightObj, 5, DEFAULT_LIGHT_COLOR);
-            lightObj.add(lightHelper);
-          }
           break;
         case Light.AmbientLight:
           lightObj = new THREE.AmbientLight(...light.args);
@@ -346,10 +342,30 @@ export class ThreeBuilder {
       if (light.position) {
         lightObj.position.set(...light.position);
       }
-      lights.add(lightObj);
+      lightGroup.add(lightObj);
     });
+    return lightGroup;
+  }
 
-    return lights;
+  public makeLightsHelper(lights: THREE.Light[]): Object3D {
+    const lightHelperGroup = new THREE.Object3D();
+    return lights.reduce((acc, light) => {
+      console.log(typeof light, light.constructor, light);
+      switch (light.constructor) {
+        case DirectionalLight:
+          acc.add(new THREE.DirectionalLightHelper(light as DirectionalLight, 1));
+          break;
+        case AmbientLight:
+          break;
+        case HemisphereLight:
+          acc.add(new THREE.HemisphereLightHelper(light as HemisphereLight, 1));
+          break;
+        default:
+          console.error('Unknown light type.');
+          break;
+      }
+      return acc;
+    }, lightHelperGroup);
   }
 }
 

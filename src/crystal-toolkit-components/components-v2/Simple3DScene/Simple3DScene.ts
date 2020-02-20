@@ -162,7 +162,8 @@ export default class Simple3DScene {
         this.debugDOMElement,
         this.scene,
         this.camera,
-        this.settings
+        this.settings,
+        this.objectBuilder
       );
     }
   }
@@ -398,7 +399,8 @@ export default class Simple3DScene {
           this.debugDOMElement,
           this.scene,
           this.camera,
-          this.settings
+          this.settings,
+          this.objectBuilder
         );
         this.debugHelper.render();
       }

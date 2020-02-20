@@ -24,8 +24,15 @@ export class DebugHelper {
   private showGrid = true;
   private axis: THREE.AxesHelper;
   private grid: THREE.GridHelper;
+  private lights!: THREE.Object3D;
 
-  constructor(private mountNode, private scene, private cameraToTrack, private settings) {
+  constructor(
+    private mountNode,
+    private scene,
+    private cameraToTrack,
+    private settings,
+    private builder
+  ) {
     if (!mountNode) {
       console.error('No mount node passed for the debug view');
     }
@@ -42,9 +49,17 @@ export class DebugHelper {
     this.scene.add(this.cameraHelper);
 
     this.axis = new THREE.AxesHelper(100);
-    (this.axis.material as LineMaterial).linewidth = 5; // this does not work due to limitation
+    (this.axis.material as LineMaterial).linewidth = 2.5; // this does not work due to limitation
     this.scene.add(this.axis);
-    this.grid = new THREE.GridHelper(50, 50); // size 10, division 10
+    this.grid = new THREE.GridHelper(20, 20); // size 10, division 10
+
+    const lights = this.scene.getObjectByName('lights');
+    if (!lights || lights.children.length === 0) {
+      console.warn('No lights defined in the scene');
+    } else {
+      this.lights = this.builder.makeLightsHelper(lights.children);
+      this.scene.add(this.lights);
+    }
 
     this.scene.add(this.grid); // TODO( three grids on each word axis )
     this.scene.add(this.axis);
@@ -80,14 +95,15 @@ export class DebugHelper {
     this.cameraHelper.update();
     const oldBackgroundColor = this.scene.background;
     this.scene.background = new THREE.Color('#000000');
-    this.cameraHelper.visible = true;
-    this.axis.visible = true;
-    this.grid.visible = true;
+    this.setHelperObjectVisibility(true);
     this.debugRenderer.render(this.scene, this.debugCamera);
-    this.cameraHelper.visible = false;
-    this.axis.visible = false;
-    this.grid.visible = false;
+    this.setHelperObjectVisibility(false);
+
     this.scene.background = oldBackgroundColor;
+  }
+
+  private setHelperObjectVisibility(isVisible) {
+    this.cameraHelper.visible = this.axis.visible = this.grid.visible = this.lights.visible = isVisible;
   }
 
   public onDestroy() {
