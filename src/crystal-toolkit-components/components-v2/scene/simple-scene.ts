@@ -11,8 +11,9 @@ export const s4 = {
             [-1.9414784057759444e-8, 1.8569259826179634, -0.004611219364424821]
           ],
           color: '#9ee373',
-          radius: 0.5,
-          type: 'spheres',
+          radius: 0.8,
+          type: 'ellipsoids',
+          scale: [0.4, 1.2, 1.9],
           clickable: true
         },
         {

@@ -256,20 +256,22 @@ export class ThreeBuilder {
       object_json.phiStart,
       object_json.phiEnd
     );
-    const meshes = object_json.positions.map(position => {
+    const meshes = object_json.positions.map((position: any) => {
       const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(...(position as [number, number, number]));
-      mesh.scale.set(...(object_json.scale as [number, number, number])); // TODO: Is this valid JS?
-      meshes.push(mesh);
+      mesh.position.set(...position);
+      mesh.scale.set(...(object_json.scale as [number, number, number]));
+      return mesh;
     });
     // TODO: test axes are correct!
     const vec_z = new THREE.Vector3(0, 0, 1);
     const quaternion = new THREE.Quaternion();
-    object_json.rotate_to.forEach((rotation, index) => {
-      const rotation_vec = new THREE.Vector3(...rotation);
-      quaternion.setFromUnitVectors(vec_z, rotation_vec.normalize());
-      meshes[index].setRotationFromQuaternion(quaternion);
-    });
+    if (object_json.rotate_to) {
+      object_json.rotate_to.forEach((rotation: any, index) => {
+        const rotation_vec = new THREE.Vector3(...rotation);
+        quaternion.setFromUnitVectors(vec_z, rotation_vec.normalize());
+        meshes[index].setRotationFromQuaternion(quaternion);
+      });
+    }
     meshes.forEach(mesh => obj.add(mesh));
     return obj;
   }
@@ -310,9 +312,9 @@ export class ThreeBuilder {
     }
   }
 
-  private getSphereBuffer(scale: number, color: string, phiStart: number, phiEnd: number) {
+  private getSphereBuffer(radius: number, color: string, phiStart: number, phiEnd: number) {
     const geom = new THREE.SphereBufferGeometry(
-      scale,
+      radius,
       this.settings.sphereSegments,
       this.settings.sphereSegments,
       phiStart || 0,
