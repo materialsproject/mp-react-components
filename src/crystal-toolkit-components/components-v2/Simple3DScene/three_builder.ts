@@ -256,9 +256,9 @@ export class ThreeBuilder {
       object_json.phiStart,
       object_json.phiEnd
     );
-    const meshes = object_json.positions.map((position: any) => {
+    const meshes = object_json.positions.map(position => {
       const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(...position);
+      mesh.position.set(...(position as [number, number, number]));
       mesh.scale.set(...(object_json.scale as [number, number, number]));
       return mesh;
     });
@@ -352,7 +352,6 @@ export class ThreeBuilder {
   public makeLightsHelper(lights: THREE.Light[]): Object3D {
     const lightHelperGroup = new THREE.Object3D();
     return lights.reduce((acc, light) => {
-      console.log(typeof light, light.constructor, light);
       switch (light.constructor) {
         case DirectionalLight:
           acc.add(new THREE.DirectionalLightHelper(light as DirectionalLight, 1));

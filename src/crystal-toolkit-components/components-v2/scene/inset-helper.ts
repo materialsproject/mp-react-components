@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
 import { Vector3 } from 'three';
+import { disposeSceneHierarchy } from '../Simple3DScene/utils';
 
 export enum ScenePosition {
   NW = 'NW',
@@ -52,7 +53,7 @@ export class InsetHelper {
       this.helper = new THREE.CameraHelper(this.insetCamera);
     }
   }
-  private setup(baseScene) {
+  private setup(baseScene?) {
     if (!this.axis) {
       console.warn('setup should not be called if no axis is there');
       return;
@@ -78,7 +79,8 @@ export class InsetHelper {
     this.insetCamera.zoom = 1;
     this.insetCamera.updateProjectionMatrix();
 
-    //baseScene.add(this.axis.clone());
+    //TODO(chab) reorganize code so we do not need to pass it
+    baseScene && baseScene.add(this.axis.clone());
   }
 
   makeObject(object_json) {
@@ -135,6 +137,7 @@ export class InsetHelper {
   }
 
   public onDestroy() {
+    disposeSceneHierarchy(this.scene);
     this.scene.dispose();
     // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
     this.cameraToFollow = (null as unknown) as THREE.Camera;

@@ -8,6 +8,7 @@ import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
+import { disposeSceneHierarchy } from './utils';
 
 export default class Simple3DScene {
   private settings;
@@ -218,7 +219,8 @@ export default class Simple3DScene {
     };
 
     traverse_scene(sceneJson, rootObject);
-    console.log('rootObject', rootObject, rootObject);
+    // can cause memory leak
+    //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
     this.setupCamera(rootObject);
     this.renderScene();
@@ -400,8 +402,9 @@ export default class Simple3DScene {
     window.removeEventListener('resize', this.windowListener, false);
     this.debugHelper && this.debugHelper.onDestroy();
     this.inset.onDestroy();
-    this.scene.dispose();
     this.controls.dispose();
+    disposeSceneHierarchy(this.scene);
+    this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
@@ -419,7 +422,7 @@ export default class Simple3DScene {
   }
 
   private getHelper() {
-     return new DebugHelper(
+    return new DebugHelper(
       this.debugDOMElement,
       this.scene,
       this.camera,

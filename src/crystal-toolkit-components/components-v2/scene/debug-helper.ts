@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { CameraHelper } from 'three';
+import { disposeSceneHierarchy } from '../Simple3DScene/utils';
 
 const DEBUG_SIZE = 500;
 
@@ -114,6 +115,7 @@ export class DebugHelper {
   }
 
   public onDestroy() {
+    disposeSceneHierarchy(this.scene);
     this.scene.remove(this.cameraHelper);
     this.axis && this.scene.remove(this.axis);
     this.grid && this.scene.remove(this.grid);

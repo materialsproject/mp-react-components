@@ -1,7 +1,7 @@
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { ExportType } from './constants';
-import Simple3DSceneComponent from './Simple3DSceneComponent.react';
 import Simple3DScene from './Simple3DScene';
+import * as THREE from 'three';
 
 export function downloadScreenshot(filename: string, sceneComponent) {
   //TODO(chab) extract as a general utility method
@@ -49,4 +49,38 @@ export function download(filename: string, filetype: ExportType, sceneComponent:
     default:
       throw new Error('Unknown filetype.');
   }
+}
+
+function disposeNode(node) {
+  if (node instanceof THREE.Mesh) {
+    if (node.geometry) {
+      node.geometry.dispose();
+    }
+    if (node.material) {
+      const materials = !Array.isArray(node.material) ? [node.material] : node.material;
+      materials.forEach((mtrl: any) => {
+        mtrl.map && mtrl.map.dispose();
+        mtrl.lightMap && mtrl.lightMap.dispose();
+        mtrl.bumpMap && mtrl.bumpMap.dispose();
+        mtrl.normalMap && mtrl.normalMap.dispose();
+        mtrl.specularMap && mtrl.specularMap.dispose();
+        mtrl.envMap && mtrl.envMap.dispose();
+        mtrl.alphaMap && mtrl.alphaMap.dispose();
+        mtrl.aoMap && mtrl.aoMap.dispose();
+        mtrl.displacementMap && mtrl.displacementMap.dispose();
+        mtrl.emissiveMap && mtrl.emissiveMap.dispose();
+        mtrl.gradientMap && mtrl.gradientMap.dispose();
+        mtrl.metalnessMap && mtrl.metalnessMap.dispose();
+        mtrl.roughnessMap && mtrl.roughnessMap.dispose();
+        mtrl.dispose(); // disposes any programs associated with the material
+      });
+    }
+  }
+} // disposeNode
+
+export function disposeSceneHierarchy(scene) {
+  scene.children.forEach(childNode => {
+    disposeSceneHierarchy(childNode);
+    disposeNode(childNode);
+  });
 }
