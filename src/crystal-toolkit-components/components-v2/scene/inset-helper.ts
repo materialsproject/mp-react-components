@@ -17,7 +17,7 @@ const HEAD_WIDTH = 0.14;
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
-  private axisPadding = 1; // the space between the edge of the inset and the axis bounding box
+  private axisPadding = 0; // the space between the edge of the inset and the axis bounding box
   private scene: THREE.Scene;
   public helper;
 
@@ -33,7 +33,10 @@ export class InsetHelper {
     private insetPadding = 0
   ) {
     //TODO(chab) extract the cube from the axis
+
+    // how we should do
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
+
     this.frontRotation = this.cameraToFollow.rotation.clone();
     this.scene = getSceneWithBackground({ transparentBackground: true });
     this.scene.background = new THREE.Color('#ffffff');
@@ -45,82 +48,37 @@ export class InsetHelper {
     }
     if (this.axis) {
       this.scene.add(this.axis);
-      this.setup();
+      this.setup(baseScene);
       this.helper = new THREE.CameraHelper(this.insetCamera);
     }
   }
-  private setup() {
+  private setup(baseScene) {
     if (!this.axis) {
       console.warn('setup should not be called if no axis is there');
       return;
     }
     // put back the axis in its normal scale for the calculation
+
+    const box = new THREE.Box3().setFromObject(this.axis);
+    const maxDimension = Math.max(
+      box.max.x - box.min.x,
+      box.max.y - box.min.y,
+      box.max.z - box.min.z
+    );
     const [x, y, z] = this.origin;
     this.insetCamera.position.set(x, y, z);
+    this.insetCamera.left = this.insetCamera.bottom = this.insetCamera.near = -maxDimension;
+    this.insetCamera.right = this.insetCamera.top = this.insetCamera.far = maxDimension;
     this.insetCamera.rotation.set(
       this.frontRotation.x,
       this.frontRotation.y,
       this.frontRotation.z,
       this.frontRotation.order
     );
-    this.axis.scale.set(1, 1, 1);
-    //this.insetCamera.lookAt(new Vector3(this.origin);
+    this.insetCamera.zoom = 1;
     this.insetCamera.updateProjectionMatrix();
 
-    // calculate scale
-    const box = new THREE.Box3().setFromObject(this.axis);
-    let center = new THREE.Vector3(
-      (box.min.x + box.max.x) / 2,
-      (box.min.y + box.max.y) / 2,
-      (box.min.z + box.max.z) / 2
-    );
-    let extents = new THREE.Vector3(
-      (box.max.x - box.min.x) / 2,
-      (box.max.y - box.min.y) / 2,
-      (box.max.z - box.min.z) / 2
-    );
-
-    let a = center
-      .clone()
-      .add(new THREE.Vector3(-extents.x, -extents.y, -extents.z))
-      .project(this.insetCamera);
-    let b = center
-      .clone()
-      .add(new THREE.Vector3(extents.x, -extents.y, extents.z))
-      .project(this.insetCamera);
-
-    // we should perform the calculation for both width and height, and take the smallest one
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    size.project(this.insetCamera);
-    let widthOnScreenBuffer = Math.max(size.x, size.y, size.z);
-    const width = (widthOnScreenBuffer / 2) * this.insetWidth;
-    // the axis is always centered, so the max extent of its box should match half of the screen
-    // ( e.g consider a edge case of all axis point in the same direction, if the BB
-    // take all the size, it will overflow)
-    const scale = (this.insetWidth / 2 - this.axisPadding * 2) / width;
-    // maybe we should do is to consider the origin in the axis, in the bounding box
-    // and find the largest vector from center - bbextent, this will tell us how much
-    // the axis need from the center to one point
-
-    // manually rescale axis properties, so it looks not too thin
-    const targetRadius = AXIS_RADIUS * (scale / 1.5);
-    const targetHeadLength = HEAD_AXIS_LENGTH * (scale / 1.5);
-    const targetWidth = HEAD_WIDTH * (scale / 1.5);
-    // we assume an axis is made of three arrows and one sphere
-    this.axisJson.contents = this.axisJson.contents.map(a => {
-      return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
-    });
-    this.axis.remove(this.axis.children[0], this.axis.children[1], this.axis.children[2]);
-    this.axis.add(
-      this.makeObject(this.axisJson.contents[0]),
-      this.makeObject(this.axisJson.contents[1]),
-      this.makeObject(this.axisJson.contents[2])
-    );
-
-    this.axis.scale.set(scale, scale, scale);
-    this.insetCamera.position.set(x * scale, y * scale, z * scale);
-    this.insetCamera.updateProjectionMatrix();
+    //baseScene.add(this.axis.clone());
   }
 
   makeObject(object_json) {
@@ -182,5 +140,59 @@ export class InsetHelper {
     this.cameraToFollow = (null as unknown) as THREE.Camera;
     this.insetCamera = (null as unknown) as THREE.OrthographicCamera;
     this.axis = (null as unknown) as THREE.Object3D;
+  }
+
+  // TODO(chab) let's do something simple like having a width of 5 px
+  private rescaleAxis() {
+    // calculate scale
+    const box = new THREE.Box3().setFromObject(this.axis);
+    let center = new THREE.Vector3(
+      (box.min.x + box.max.x) / 2,
+      (box.min.y + box.max.y) / 2,
+      (box.min.z + box.max.z) / 2
+    );
+    let extents = new THREE.Vector3(
+      (box.max.x - box.min.x) / 2,
+      (box.max.y - box.min.y) / 2,
+      (box.max.z - box.min.z) / 2
+    );
+
+    let a = center
+      .clone()
+      .add(new THREE.Vector3(-extents.x, -extents.y, -extents.z))
+      .project(this.insetCamera);
+    let b = center
+      .clone()
+      .add(new THREE.Vector3(extents.x, -extents.y, extents.z))
+      .project(this.insetCamera);
+
+    // we should perform the calculation for both width and height, and take the smallest one
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    size.project(this.insetCamera);
+    let widthOnScreenBuffer = Math.max(size.x, size.y, size.z);
+    const width = (widthOnScreenBuffer / 2) * this.insetWidth;
+    // the axis is always centered, so the max extent of its box should match half of the screen
+    // ( e.g consider a edge case of all axis point in the same direction, if the BB
+    // take all the size, it will overflow)
+    const scale = (this.insetWidth / 2 - this.axisPadding * 2) / width;
+    // maybe we should do is to consider the origin in the axis, in the bounding box
+    // and find the largest vector from center - bbextent, this will tell us how much
+    // the axis need from the center to one point
+
+    // manually rescale axis properties, so it looks not too thin
+    const targetRadius = AXIS_RADIUS * (scale / 1.5);
+    const targetHeadLength = HEAD_AXIS_LENGTH * (scale / 1.5);
+    const targetWidth = HEAD_WIDTH * (scale / 1.5);
+    // we assume an axis is made of three arrows and one sphere
+    this.axisJson.contents = this.axisJson.contents.map(a => {
+      return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
+    });
+    this.axis.remove(this.axis.children[0], this.axis.children[1], this.axis.children[2]);
+    this.axis.add(
+      this.makeObject(this.axisJson.contents[0]),
+      this.makeObject(this.axisJson.contents[1]),
+      this.makeObject(this.axisJson.contents[2])
+    );
   }
 }
