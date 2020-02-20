@@ -11,11 +11,11 @@ export const scene3d = () => (
     a container that has a defined size.
     <div style={{ width: '500px', height: '500px' }}>
       <Simple3DSceneComponent
+        debug={boolean('DEBUG', false)}
         axisView={select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW')}
         inletPadding={number('padding', 10)}
         inletSize={number('size', 100)}
         data={object('scene', sceneJson)}
-        debug={boolean('DEBUG', false)}
         toggleVisibility={{}}
       />
     </div>

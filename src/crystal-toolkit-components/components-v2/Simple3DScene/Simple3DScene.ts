@@ -400,6 +400,7 @@ export default class Simple3DScene {
           this.camera,
           this.settings
         );
+        this.debugHelper.render();
       }
     }
   }
