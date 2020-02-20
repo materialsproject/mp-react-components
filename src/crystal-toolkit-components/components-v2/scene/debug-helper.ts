@@ -1,7 +1,18 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 
 const DEBUG_SIZE = 500;
+
+/**
+ *
+ * In the current implementation, this is destroyed/re-created on the fly.
+ * We could wait for the first instantiation, and then just remove the node
+ * and stop rendering.
+ *
+ * This will allow us to have a simpler managment of the object in the scenes
+ *
+ */
 
 export class DebugHelper {
   private cameraHelper: THREE.CameraHelper;
@@ -9,9 +20,12 @@ export class DebugHelper {
   private debugRenderer: THREE.WebGLRenderer; // no SVG
   private controls: OrbitControls;
 
-  constructor(private mountNode, private scene, private cameraToTrack, private setting) {
-    // debug settings
+  private showAxis = true;
+  private showGrid = true;
+  private axis: THREE.AxesHelper;
+  private grid: THREE.GridHelper;
 
+  constructor(private mountNode, private scene, private cameraToTrack, private settings) {
     if (!mountNode) {
       console.error('No mount node passed for the debug view');
     }
@@ -26,6 +40,15 @@ export class DebugHelper {
     this.mountNode.appendChild(this.debugRenderer.domElement);
     this.cameraHelper = new THREE.CameraHelper(cameraToTrack);
     this.scene.add(this.cameraHelper);
+
+    this.axis = new THREE.AxesHelper(100);
+    (this.axis.material as LineMaterial).linewidth = 5; // this does not work due to limitation
+    this.scene.add(this.axis);
+    this.grid = new THREE.GridHelper(50, 50); // size 10, division 10
+
+    this.scene.add(this.grid); // TODO( three grids on each word axis )
+    this.scene.add(this.axis);
+
     this.debugCamera = new THREE.PerspectiveCamera(
       60, // fov
       1, // aspect
@@ -58,12 +81,19 @@ export class DebugHelper {
     const oldBackgroundColor = this.scene.background;
     this.scene.background = new THREE.Color('#000000');
     this.cameraHelper.visible = true;
+    this.axis.visible = true;
+    this.grid.visible = true;
     this.debugRenderer.render(this.scene, this.debugCamera);
     this.cameraHelper.visible = false;
+    this.axis.visible = false;
+    this.grid.visible = false;
     this.scene.background = oldBackgroundColor;
   }
 
   public onDestroy() {
+    this.scene.remove(this.cameraHelper);
+    this.axis && this.scene.remove(this.axis);
+    this.grid && this.scene.remove(this.grid);
     this.scene.dispose();
     this.controls.dispose();
     this.debugRenderer.forceContextLoss();
