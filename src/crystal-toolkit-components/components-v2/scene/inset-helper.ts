@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
+import { Vector3 } from 'three';
 
 export enum ScenePosition {
   NW = 'NW',
@@ -18,6 +19,7 @@ export class InsetHelper {
   private frontRotation;
   private axisPadding = 1; // the space between the edge of the inset and the axis bounding box
   private scene: THREE.Scene;
+  public helper;
 
   constructor(
     private axis: THREE.Object3D,
@@ -31,7 +33,7 @@ export class InsetHelper {
     private insetPadding = 0
   ) {
     //TODO(chab) extract the cube from the axis
-    this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -20, 20);
+    this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
     this.frontRotation = this.cameraToFollow.rotation.clone();
     this.scene = getSceneWithBackground({ transparentBackground: true });
     this.scene.background = new THREE.Color('#ffffff');
@@ -44,6 +46,7 @@ export class InsetHelper {
     if (this.axis) {
       this.scene.add(this.axis);
       this.setup();
+      this.helper = new THREE.CameraHelper(this.insetCamera);
     }
   }
   private setup() {
@@ -51,7 +54,6 @@ export class InsetHelper {
       console.warn('setup should not be called if no axis is there');
       return;
     }
-
     // put back the axis in its normal scale for the calculation
     const [x, y, z] = this.origin;
     this.insetCamera.position.set(x, y, z);
@@ -62,6 +64,7 @@ export class InsetHelper {
       this.frontRotation.order
     );
     this.axis.scale.set(1, 1, 1);
+    //this.insetCamera.lookAt(new Vector3(this.origin);
     this.insetCamera.updateProjectionMatrix();
 
     // calculate scale
@@ -158,6 +161,7 @@ export class InsetHelper {
       renderer.setScissor(x, y, this.insetWidth, this.insetHeight);
       renderer.setViewport(x, y, this.insetWidth, this.insetHeight);
       this.insetCamera.rotation.copy(this.cameraToFollow.rotation);
+      this.insetCamera.updateProjectionMatrix();
       renderer.clearDepth(); // important!
       renderer.render(this.scene, this.insetCamera);
       renderer.setScissorTest(false);

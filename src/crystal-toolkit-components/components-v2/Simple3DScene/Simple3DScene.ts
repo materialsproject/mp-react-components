@@ -158,13 +158,7 @@ export default class Simple3DScene {
       padding
     );
     if (this.debugDOMElement) {
-      this.debugHelper = new DebugHelper(
-        this.debugDOMElement,
-        this.scene,
-        this.camera,
-        this.settings,
-        this.objectBuilder
-      );
+      this.debugHelper = this.getHelper();
     }
   }
 
@@ -395,13 +389,7 @@ export default class Simple3DScene {
         console.warn('Turning on debug, while its not off');
       } else {
         this.debugDOMElement = node;
-        this.debugHelper = new DebugHelper(
-          this.debugDOMElement,
-          this.scene,
-          this.camera,
-          this.settings,
-          this.objectBuilder
-        );
+        this.debugHelper = this.getHelper();
         this.debugHelper.render();
       }
     }
@@ -428,6 +416,17 @@ export default class Simple3DScene {
     // name is not necessarily unique, make this recursive ?
     const object = this.scene.getObjectByName(name);
     typeof object !== 'undefined' && this.scene.remove(object);
+  }
+
+  private getHelper() {
+     return new DebugHelper(
+      this.debugDOMElement,
+      this.scene,
+      this.camera,
+      this.settings,
+      this.objectBuilder,
+      this.inset.helper
+    );
   }
 
   private getInletOrigin(pos: ScenePosition) {

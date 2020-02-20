@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { CameraHelper } from 'three';
 
 const DEBUG_SIZE = 500;
 
@@ -10,7 +11,7 @@ const DEBUG_SIZE = 500;
  * We could wait for the first instantiation, and then just remove the node
  * and stop rendering.
  *
- * This will allow us to have a simpler managment of the object in the scenes
+ * This will allow us to have a simpler management of the object in the scenes
  *
  */
 
@@ -22,16 +23,20 @@ export class DebugHelper {
 
   private showAxis = true;
   private showGrid = true;
+  private showLights = false;
+
   private axis: THREE.AxesHelper;
   private grid: THREE.GridHelper;
   private lights!: THREE.Object3D;
+  private insetHelper: THREE.Object3D;
 
   constructor(
     private mountNode,
     private scene,
     private cameraToTrack,
     private settings,
-    private builder
+    private builder,
+    insetCameraHelper
   ) {
     if (!mountNode) {
       console.error('No mount node passed for the debug view');
@@ -46,11 +51,10 @@ export class DebugHelper {
     // FIXME
     this.mountNode.appendChild(this.debugRenderer.domElement);
     this.cameraHelper = new THREE.CameraHelper(cameraToTrack);
-    this.scene.add(this.cameraHelper);
+    //this.scene.add(this.cameraHelper);
 
     this.axis = new THREE.AxesHelper(100);
     (this.axis.material as LineMaterial).linewidth = 2.5; // this does not work due to limitation
-    this.scene.add(this.axis);
     this.grid = new THREE.GridHelper(20, 20); // size 10, division 10
 
     const lights = this.scene.getObjectByName('lights');
@@ -58,11 +62,11 @@ export class DebugHelper {
       console.warn('No lights defined in the scene');
     } else {
       this.lights = this.builder.makeLightsHelper(lights.children);
-      this.scene.add(this.lights);
     }
 
-    this.scene.add(this.grid); // TODO( three grids on each word axis )
-    this.scene.add(this.axis);
+    this.showAxis && this.scene.add(this.axis);
+    this.showGrid && this.scene.add(this.grid); // TODO( three grids on each word axis )
+    this.showLights && this.scene.add(this.lights);
 
     this.debugCamera = new THREE.PerspectiveCamera(
       60, // fov
@@ -89,21 +93,24 @@ export class DebugHelper {
       controls2.update();
     });
     this.controls = controls2;
+    this.insetHelper = new THREE.Object3D();
+    insetCameraHelper && this.insetHelper.add(insetCameraHelper);
+    this.scene.add(this.insetHelper);
   }
 
   public render() {
     this.cameraHelper.update();
+    this.insetHelper.children[0] && (this.insetHelper.children[0] as CameraHelper).update();
     const oldBackgroundColor = this.scene.background;
     this.scene.background = new THREE.Color('#000000');
     this.setHelperObjectVisibility(true);
     this.debugRenderer.render(this.scene, this.debugCamera);
     this.setHelperObjectVisibility(false);
-
     this.scene.background = oldBackgroundColor;
   }
 
   private setHelperObjectVisibility(isVisible) {
-    this.cameraHelper.visible = this.axis.visible = this.grid.visible = this.lights.visible = isVisible;
+    this.cameraHelper.visible = this.axis.visible = this.grid.visible = this.lights.visible = this.insetHelper.visible = isVisible;
   }
 
   public onDestroy() {
