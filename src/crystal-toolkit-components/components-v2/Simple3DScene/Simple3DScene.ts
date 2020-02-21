@@ -317,6 +317,9 @@ export default class Simple3DScene {
     if (this.renderer instanceof WebGLRenderer) {
       this.renderer.setClearColor(0x000000, 0.0);
       this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
+      //TODO(chab) not sure to understand why we have to turn on/off scissor tests between renderings
+      this.renderer.setScissorTest(true);
+      this.renderer.setScissor(0, 0, this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     }
 
     // debug view
@@ -326,6 +329,10 @@ export default class Simple3DScene {
 
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
+
+    if (this.renderer instanceof WebGLRenderer) {
+      this.renderer.setScissorTest(false);
+    }
 
     this.inset &&
       this.inletPosition !== ScenePosition.HIDDEN &&
