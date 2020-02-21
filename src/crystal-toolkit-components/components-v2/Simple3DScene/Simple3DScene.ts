@@ -31,6 +31,17 @@ export default class Simple3DScene {
   private clickCallback: (objects: any[]) => void;
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
+  private selectionMeshes;
+
+  private outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.BackSide });
+
+  private outlineObject(outlineObjectGeometry, position) {
+    // keep at least one
+    const outlineMesh1 = new THREE.Mesh(outlineObjectGeometry, this.outlineMaterial);
+    outlineMesh1.position.set(position.x, position.y, position.z);
+    outlineMesh1.scale.multiplyScalar(1.05);
+    return outlineMesh1;
+  }
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -103,11 +114,34 @@ export default class Simple3DScene {
 
     this.renderer.domElement.addEventListener('click', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+      let needRedraw = false;
+      if (this.selectionMeshes && this.selectionMeshes.length > 0) {
+        this.selectionMeshes.forEach(m => {
+          this.scene.remove(m);
+          m.dispose && m.dispose();
+        });
+        this.selectionMeshes = [];
+        needRedraw = true;
+      }
 
       if (p) {
         const { object, point } = p;
         this.clickCallback(object?.jsonObject);
+        const sceneObject = object?.sceneObject;
+        if (sceneObject) {
+          console.log(sceneObject!.children[0]);
+          this.selectionMeshes = sceneObject.children.map(c => {
+            const pos = new THREE.Vector3();
+            c.getWorldPosition(pos);
+            const mesh = this.outlineObject((c as THREE.Mesh).geometry, pos);
+
+            return mesh;
+          });
+          this.scene.add(...this.selectionMeshes);
+          needRedraw = true;
+        }
       }
+      needRedraw && this.renderScene();
     });
 
     this.controls = controls;
@@ -411,6 +445,7 @@ export default class Simple3DScene {
   public onDestroy() {
     window.removeEventListener('resize', this.windowListener, false);
     this.debugHelper && this.debugHelper.onDestroy();
+    this.outlineMaterial.dispose();
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);

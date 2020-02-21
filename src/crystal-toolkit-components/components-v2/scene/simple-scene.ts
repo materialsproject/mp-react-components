@@ -221,7 +221,7 @@ export const s2 = {
         },
         {
           positions: [[2.1, 2.1, 2.1]],
-          color: '#a121f6',
+          color: '#4444ff',
           radius: 0.5,
           type: 'spheres',
           clickable: true
@@ -311,7 +311,7 @@ export const s2 = {
           color: '#a121f6',
           radius: 0.1,
           type: 'cylinders',
-          clickable: false
+          clickable: true
         }
       ],
       origin: [-2.1, -2.1, -2.1],
@@ -333,8 +333,7 @@ export const s2 = {
             [0, 4.2, 4.2]
           ],
           color: '#a121f6',
-          type: 'convex',
-          clickable: false
+          type: 'convex'
         }
       ],
       origin: [-2.1, -2.1, -2.1],
