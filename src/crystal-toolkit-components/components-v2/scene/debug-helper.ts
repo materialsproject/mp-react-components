@@ -16,6 +16,8 @@ const DEBUG_SIZE = 500;
  *
  */
 
+const background = new THREE.Color('#000000');
+
 export class DebugHelper {
   private cameraHelper: THREE.CameraHelper;
   private debugCamera: THREE.Camera;
@@ -103,7 +105,7 @@ export class DebugHelper {
     this.cameraHelper.update();
     this.insetHelper.children[0] && (this.insetHelper.children[0] as CameraHelper).update();
     const oldBackgroundColor = this.scene.background;
-    this.scene.background = new THREE.Color('#000000');
+    this.scene.background = background;
     this.setHelperObjectVisibility(true);
     this.debugRenderer.render(this.scene, this.debugCamera);
     this.setHelperObjectVisibility(false);

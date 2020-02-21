@@ -8,7 +8,7 @@ import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
-import { disposeSceneHierarchy } from './utils';
+import { disposeSceneHierarchy, getThreeScreenCoordinate } from './utils';
 
 export default class Simple3DScene {
   private settings;
@@ -30,6 +30,7 @@ export default class Simple3DScene {
   private objectBuilder: ThreeBuilder;
   private clickCallback: (objects: any[]) => void;
   private debugHelper!: DebugHelper;
+  private readonly raycaster = new THREE.Raycaster();
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -319,7 +320,12 @@ export default class Simple3DScene {
       this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
       //TODO(chab) not sure to understand why we have to turn on/off scissor tests between renderings
       this.renderer.setScissorTest(true);
-      this.renderer.setScissor(0, 0, this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
+      this.renderer.setScissor(
+        0,
+        0,
+        this.cachedMountNodeSize.width,
+        this.cachedMountNodeSize.height
+      );
     }
 
     // debug view
@@ -359,14 +365,11 @@ export default class Simple3DScene {
     if (!objectsToCheck || objectsToCheck.length === 0) {
       return;
     }
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
+
     const size = new THREE.Vector2();
     (this.renderer as WebGLRenderer).getSize(size);
-    mouse.x = (clientX / size.width) * 2 - 1;
-    mouse.y = -(clientY / size.height) * 2 + 1;
-    raycaster.setFromCamera(mouse, this.camera);
-    const intersects = raycaster.intersectObjects(objectsToCheck, true);
+    this.raycaster.setFromCamera(getThreeScreenCoordinate(size, clientX, clientY), this.camera);
+    const intersects = this.raycaster.intersectObjects(objectsToCheck, true);
     // they are a few cases where this does not work :( try to understand why
     if (intersects.length > 0) {
       return { point: intersects[0].point, object: this.getParentObject(intersects[0].object) };

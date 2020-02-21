@@ -84,3 +84,7 @@ export function disposeSceneHierarchy(scene) {
     disposeNode(childNode);
   });
 }
+
+export function getThreeScreenCoordinate(size, clientX, clientY) {
+  return new THREE.Vector2((clientX / size.width) * 2 - 1, -(clientY / size.height) * 2 + 1);
+}

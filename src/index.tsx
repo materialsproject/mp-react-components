@@ -13,7 +13,7 @@ import { StandalonePeriodicComponent } from './periodic-table/periodic-element/s
 import { useElements } from './periodic-table/periodic-table-state/table-store';
 import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-selection-context';
 import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
-import { s4 as scene } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import { s2 as scene } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 
 const mountNodeSelector = 'app';
