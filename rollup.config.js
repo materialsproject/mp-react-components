@@ -4,8 +4,9 @@ import pkg from './package.json';
 import lessModules from 'rollup-plugin-less-modules';
 import postcss from 'postcss';
 import url from 'postcss-url';
-import urlPlugin from '@rollup/plugin-url';
+//import urlPlugin from '@rollup/plugin-url'; we use image instead
 import resolve from 'rollup-plugin-node-resolve';
+import image from '@rollup/plugin-image';
 import localResolve from 'rollup-plugin-local-resolve';
 const urlOptions = {
   url: 'copy',
@@ -62,9 +63,7 @@ export default {
   },
   plugins: [
     lessModules({ output: true, processor }),
-    urlPlugin({
-      fileName: '_mp_[hash][extname]'
-    }),
+    image(),
     localResolve(),
     resolve(),
     typescript({
