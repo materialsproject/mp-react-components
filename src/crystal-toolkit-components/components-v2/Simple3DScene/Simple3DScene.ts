@@ -119,6 +119,7 @@ export default class Simple3DScene {
     this.renderer.domElement.addEventListener('click', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       let needRedraw = false;
+      //TODO(chab) make it more readale
       if (p) {
         const { object, point } = p;
         if (object?.sceneObject) {
@@ -163,9 +164,12 @@ export default class Simple3DScene {
           }
           needRedraw = true;
         }
-        // TODO(chab) implements the multi selection for that part
         this.clickCallback(this.selectedJsonObjects);
       } else {
+        if (this.selectedJsonObjects.length > 0) {
+          this.clickCallback([]);
+        }
+
         this.selectedJsonObjects = [];
         if (this.outlinePass.selectedObjects.length > 0) {
           this.outlinePass.selectedObjects = [];
