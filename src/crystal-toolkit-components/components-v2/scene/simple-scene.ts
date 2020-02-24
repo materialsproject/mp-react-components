@@ -372,8 +372,7 @@ export const s2 = {
                 [0, 4.2, 4.2],
                 [4.2, 4.2, 4.2]
               ],
-              type: 'lines',
-              clickable: false
+              type: 'lines'
             }
           ],
           visible: true

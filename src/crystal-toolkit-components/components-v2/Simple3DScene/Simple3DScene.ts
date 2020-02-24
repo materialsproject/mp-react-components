@@ -15,6 +15,9 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
+// @ts-ignore
+import img from './glass.png';
+
 export default class Simple3DScene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
@@ -165,7 +168,7 @@ export default class Simple3DScene {
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
-    this.configureOutline();
+    this.configurePostProcessing();
     this.clickCallback = clickCallback;
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
@@ -495,8 +498,11 @@ export default class Simple3DScene {
     }
   }
 
-  private configureOutline() {
-    // postprocessing
+  private configurePostProcessing() {
+    // We use the Three EffectComposer to implements the selection outline
+    // the composer starts with a rendering pass, which is the standard rendering
+    // then
+
     const composer = new EffectComposer(this.renderer as WebGLRenderer);
     const renderPass = new RenderPass(this.scene, this.camera);
     composer.addPass(renderPass);
@@ -506,7 +512,7 @@ export default class Simple3DScene {
       this.scene,
       this.camera
     );
-    this.outlinePass.usePatternTexture = false;
+    this.outlinePass.usePatternTexture = true;
     this.outlinePass.visibleEdgeColor = new THREE.Color('#FFFFFF');
     this.outlinePass.hiddenEdgeColor = new THREE.Color('#FFFFFF');
     this.outlinePass.edgeGlow = 0;
@@ -514,19 +520,15 @@ export default class Simple3DScene {
     this.outlinePass.edgeThickness = 0.01;
     this.outlinePass.pulsePeriod = 0;
     this.outlinePass.overlayMaterial.blending = THREE.SubtractiveBlending;
-    // can be used to apply a small texture on the selected object
-    /*
-     *
-    var onLoad = function ( texture ) {
 
-      outlinePass.patternTexture = texture;
+    const onLoad = texture => {
+      (this.outlinePass as any).patternTexture = texture;
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
     };
-    var loader = new THREE.TextureLoader();
-    loader.load( 'textures/tri_pattern.jpg', onLoad );
-     */
-    composer.addPass(this.outlinePass);
+    const loader = new THREE.TextureLoader();
+    loader.load(img, onLoad);
+
     let effectFXAA = new ShaderPass(FXAAShader);
     effectFXAA.uniforms['resolution'].value.set(
       1 / this.cachedMountNodeSize.width,
@@ -534,6 +536,7 @@ export default class Simple3DScene {
     );
     effectFXAA.renderToScreen = true;
     composer.addPass(effectFXAA);
+    composer.addPass(this.outlinePass);
     this.composer = composer;
   }
 }
