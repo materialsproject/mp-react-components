@@ -232,7 +232,9 @@ export default class Simple3DScene {
 
   updateInsetSettings(inletSize: number, inletPadding: number, axisView) {
     this.inletPosition = axisView as ScenePosition;
-    this.inset.updateViewportsize(inletSize, inletPadding);
+    if (this.axis) {
+      this.inset.updateViewportsize(inletSize, inletPadding);
+    }
     this.renderScene();
   }
 
