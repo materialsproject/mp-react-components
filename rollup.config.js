@@ -4,6 +4,7 @@ import pkg from './package.json';
 import lessModules from 'rollup-plugin-less-modules';
 import postcss from 'postcss';
 import url from 'postcss-url';
+import urlPlugin from '@rollup/plugin-url';
 import resolve from 'rollup-plugin-node-resolve';
 import localResolve from 'rollup-plugin-local-resolve';
 const urlOptions = {
@@ -61,6 +62,9 @@ export default {
   },
   plugins: [
     lessModules({ output: true, processor }),
+    urlPlugin({
+      fileName: '_mp_[hash][extname]'
+    }),
     localResolve(),
     resolve(),
     typescript({

@@ -42,7 +42,7 @@
     "@babel/core": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@rollup/plugin-node-resolve": "^7.0.0",
-    "@rollup/plugin-url": "^4.0.1",
+    "@rollup/plugin-url": "^4.0.2",
     "@storybook/addon-actions": "5.3.10",
     "@storybook/addon-docs": "5.3.10",
     "@storybook/addon-knobs": "5.3.12",
