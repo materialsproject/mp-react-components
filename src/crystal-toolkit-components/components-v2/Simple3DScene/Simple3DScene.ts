@@ -43,6 +43,8 @@ export default class Simple3DScene {
   private outlinePass!: OutlinePass;
   private composer!: EffectComposer;
 
+  private isMultiEnabled = true;
+
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
   }
@@ -117,12 +119,24 @@ export default class Simple3DScene {
       let needRedraw = false;
       if (p) {
         const { object, point } = p;
-        this.clickCallback(object?.jsonObject);
-        const sceneObject = object?.sceneObject;
-        if (sceneObject) {
-          this.outlinePass.selectedObjects = [sceneObject];
+
+        if (object?.sceneObject) {
+          const sceneObject: Object3D = object?.sceneObject;
+          const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
+          if (objectIndex > -1) {
+            this.outlinePass.selectedObjects.splice(objectIndex, 1);
+          } else {
+            if (e.shiftKey) {
+              this.outlinePass.selectedObjects.push(sceneObject);
+            } else {
+              this.outlinePass.selectedObjects = [sceneObject];
+            }
+          }
           needRedraw = true;
         }
+
+        // TODO(chab) implements the multi selection for that part
+        this.clickCallback(object?.jsonObject);
       } else {
         if (this.outlinePass.selectedObjects.length > 0) {
           this.outlinePass.selectedObjects = [];
