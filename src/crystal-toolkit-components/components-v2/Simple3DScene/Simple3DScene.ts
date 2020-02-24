@@ -126,7 +126,27 @@ export default class Simple3DScene {
           const jsonObject: Object3D = object?.jsonObject;
           if (this.isMultiSelectionEnabled) {
             const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
-            const jsonObjectIndex = this.selectedJsonObjects.indexOf(sceneObject);
+            const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
+            if (
+              (objectIndex === -1 && jsonObjectIndex > -1) ||
+              (jsonObjectIndex === -1 && objectIndex > -1)
+            ) {
+              console.warn(
+                'During selection found a THREE object without a corresponding json object ( or vice-versa'
+              );
+              console.warn('THREE OBJECT', object, 'JSON', jsonObject);
+            }
+
+            if (jsonObjectIndex > -1) {
+              this.selectedJsonObjects.splice(jsonObjectIndex, 1);
+            } else {
+              if (e.shiftKey) {
+                this.selectedJsonObjects.push(jsonObject);
+              } else {
+                this.selectedJsonObjects = [jsonObject];
+              }
+            }
+
             //TODO(chab) log warning if we have a json object without a three object, and vice-versa
             if (objectIndex > -1) {
               this.outlinePass.selectedObjects.splice(objectIndex, 1);
@@ -139,12 +159,14 @@ export default class Simple3DScene {
             }
           } else {
             this.outlinePass.selectedObjects = [sceneObject];
+            this.selectedJsonObjects = [jsonObject];
           }
           needRedraw = true;
         }
         // TODO(chab) implements the multi selection for that part
-        this.clickCallback(object?.jsonObject);
+        this.clickCallback(this.selectedJsonObjects);
       } else {
+        this.selectedJsonObjects = [];
         if (this.outlinePass.selectedObjects.length > 0) {
           this.outlinePass.selectedObjects = [];
           needRedraw = true;
