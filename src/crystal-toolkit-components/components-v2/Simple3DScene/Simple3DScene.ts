@@ -39,11 +39,13 @@ export default class Simple3DScene {
   private clickCallback: (objects: any[]) => void;
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
-  private selectionMeshes;
+
   private outlinePass!: OutlinePass;
   private composer!: EffectComposer;
+  private selectedJsonObjects: any[] = [];
 
-  private isMultiEnabled = true;
+  // handle multiSelection via shift key
+  private isMultiSelectionEnabled = true;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -119,22 +121,27 @@ export default class Simple3DScene {
       let needRedraw = false;
       if (p) {
         const { object, point } = p;
-
         if (object?.sceneObject) {
           const sceneObject: Object3D = object?.sceneObject;
-          const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
-          if (objectIndex > -1) {
-            this.outlinePass.selectedObjects.splice(objectIndex, 1);
-          } else {
-            if (e.shiftKey) {
-              this.outlinePass.selectedObjects.push(sceneObject);
+          const jsonObject: Object3D = object?.jsonObject;
+          if (this.isMultiSelectionEnabled) {
+            const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
+            const jsonObjectIndex = this.selectedJsonObjects.indexOf(sceneObject);
+            //TODO(chab) log warning if we have a json object without a three object, and vice-versa
+            if (objectIndex > -1) {
+              this.outlinePass.selectedObjects.splice(objectIndex, 1);
             } else {
-              this.outlinePass.selectedObjects = [sceneObject];
+              if (e.shiftKey) {
+                this.outlinePass.selectedObjects.push(sceneObject);
+              } else {
+                this.outlinePass.selectedObjects = [sceneObject];
+              }
             }
+          } else {
+            this.outlinePass.selectedObjects = [sceneObject];
           }
           needRedraw = true;
         }
-
         // TODO(chab) implements the multi selection for that part
         this.clickCallback(object?.jsonObject);
       } else {
@@ -543,6 +550,7 @@ export default class Simple3DScene {
     const loader = new THREE.TextureLoader();
     loader.load(img, onLoad);
 
+    // fast anti-aliasing shader
     let effectFXAA = new ShaderPass(FXAAShader);
     effectFXAA.uniforms['resolution'].value.set(
       1 / this.cachedMountNodeSize.width,
