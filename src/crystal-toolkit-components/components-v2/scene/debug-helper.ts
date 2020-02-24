@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { CameraHelper } from 'three';
 import { disposeSceneHierarchy } from '../Simple3DScene/utils';
+import { OrbitControls } from '../Simple3DScene/orbitControls';
 
 const DEBUG_SIZE = 500;
 
@@ -22,7 +22,7 @@ export class DebugHelper {
   private cameraHelper: THREE.CameraHelper;
   private debugCamera: THREE.Camera;
   private debugRenderer: THREE.WebGLRenderer; // no SVG
-  private controls: OrbitControls;
+  private controls: any;
 
   private showAxis = true;
   private showGrid = true;

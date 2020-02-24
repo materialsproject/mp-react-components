@@ -271,7 +271,7 @@ export const s2 = {
           color: '#f9dc3c',
           radius: 0.1,
           type: 'cylinders',
-          clickable: false
+          clickable: true
         },
         {
           positionPairs: [

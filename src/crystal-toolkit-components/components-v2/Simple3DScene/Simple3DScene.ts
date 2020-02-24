@@ -3,12 +3,17 @@ import { Object3D, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
 import { disposeSceneHierarchy, getThreeScreenCoordinate } from './utils';
+import { OrbitControls } from './orbitControls';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 export default class Simple3DScene {
   private settings;
@@ -32,16 +37,8 @@ export default class Simple3DScene {
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
   private selectionMeshes;
-
-  private outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.BackSide });
-
-  private outlineObject(outlineObjectGeometry, position) {
-    // keep at least one
-    const outlineMesh1 = new THREE.Mesh(outlineObjectGeometry, this.outlineMaterial);
-    outlineMesh1.position.set(position.x, position.y, position.z);
-    outlineMesh1.scale.multiplyScalar(1.05);
-    return outlineMesh1;
-  }
+  private outlinePass!: OutlinePass;
+  private composer!: EffectComposer;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -115,29 +112,17 @@ export default class Simple3DScene {
     this.renderer.domElement.addEventListener('click', (e: any) => {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       let needRedraw = false;
-      if (this.selectionMeshes && this.selectionMeshes.length > 0) {
-        this.selectionMeshes.forEach(m => {
-          this.scene.remove(m);
-          m.dispose && m.dispose();
-        });
-        this.selectionMeshes = [];
-        needRedraw = true;
-      }
-
       if (p) {
         const { object, point } = p;
         this.clickCallback(object?.jsonObject);
         const sceneObject = object?.sceneObject;
         if (sceneObject) {
-          console.log(sceneObject!.children[0]);
-          this.selectionMeshes = sceneObject.children.map(c => {
-            const pos = new THREE.Vector3();
-            c.getWorldPosition(pos);
-            const mesh = this.outlineObject((c as THREE.Mesh).geometry, pos);
-
-            return mesh;
-          });
-          this.scene.add(...this.selectionMeshes);
+          this.outlinePass.selectedObjects = [sceneObject];
+          needRedraw = true;
+        }
+      } else {
+        if (this.outlinePass.selectedObjects.length > 0) {
+          this.outlinePass.selectedObjects = [];
           needRedraw = true;
         }
       }
@@ -180,6 +165,7 @@ export default class Simple3DScene {
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
     this.configureScene(sceneJson);
+    this.configureOutline();
     this.clickCallback = clickCallback;
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
@@ -374,6 +360,9 @@ export default class Simple3DScene {
       this.renderer.setScissorTest(false);
     }
 
+    //TODO(chab) just use the composer
+    this.composer && this.composer.render();
+
     this.inset &&
       this.inletPosition !== ScenePosition.HIDDEN &&
       this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
@@ -445,7 +434,8 @@ export default class Simple3DScene {
   public onDestroy() {
     window.removeEventListener('resize', this.windowListener, false);
     this.debugHelper && this.debugHelper.onDestroy();
-    this.outlineMaterial.dispose();
+    this.outlinePass.dispose();
+
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
@@ -503,5 +493,47 @@ export default class Simple3DScene {
       default:
         return [this.inset.getPadding(), this.inset.getPadding()];
     }
+  }
+
+  private configureOutline() {
+    // postprocessing
+    const composer = new EffectComposer(this.renderer as WebGLRenderer);
+    const renderPass = new RenderPass(this.scene, this.camera);
+    composer.addPass(renderPass);
+    composer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
+    this.outlinePass = new OutlinePass(
+      new THREE.Vector2(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height),
+      this.scene,
+      this.camera
+    );
+    this.outlinePass.usePatternTexture = false;
+    this.outlinePass.visibleEdgeColor = new THREE.Color('#FFFFFF');
+    this.outlinePass.hiddenEdgeColor = new THREE.Color('#FFFFFF');
+    this.outlinePass.edgeGlow = 0;
+    this.outlinePass.edgeStrength = 5;
+    this.outlinePass.edgeThickness = 0.01;
+    this.outlinePass.pulsePeriod = 0;
+    this.outlinePass.overlayMaterial.blending = THREE.SubtractiveBlending;
+    // can be used to apply a small texture on the selected object
+    /*
+     *
+    var onLoad = function ( texture ) {
+
+      outlinePass.patternTexture = texture;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+    };
+    var loader = new THREE.TextureLoader();
+    loader.load( 'textures/tri_pattern.jpg', onLoad );
+     */
+    composer.addPass(this.outlinePass);
+    let effectFXAA = new ShaderPass(FXAAShader);
+    effectFXAA.uniforms['resolution'].value.set(
+      1 / this.cachedMountNodeSize.width,
+      1 / this.cachedMountNodeSize.height
+    );
+    effectFXAA.renderToScreen = true;
+    composer.addPass(effectFXAA);
+    this.composer = composer;
   }
 }
