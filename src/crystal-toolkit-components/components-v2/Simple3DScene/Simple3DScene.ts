@@ -14,7 +14,6 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-
 // @ts-ignore
 import img from './glass.png';
 
@@ -106,77 +105,27 @@ export default class Simple3DScene {
     controls.panSpeed = 0.8;
     controls.enabled = true;
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
-      const p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
-      if (p) {
-        const { object, point } = p;
-        this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
-        this.renderScene();
+      if (this.renderer instanceof WebGLRenderer) {
+        const p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
+        if (p) {
+          const { object, point } = p;
+          this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
+          this.renderScene();
+        } else {
+          this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+        }
       } else {
-        this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+        console.warn('No mousemove implementation for SVG');
       }
     });
 
     this.renderer.domElement.addEventListener('click', (e: any) => {
-      const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
-      let needRedraw = false;
-      //TODO(chab) make it more readale
-      if (p) {
-        const { object, point } = p;
-        if (object?.sceneObject) {
-          const sceneObject: Object3D = object?.sceneObject;
-          const jsonObject: Object3D = object?.jsonObject;
-          if (this.isMultiSelectionEnabled) {
-            const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
-            const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
-            if (
-              (objectIndex === -1 && jsonObjectIndex > -1) ||
-              (jsonObjectIndex === -1 && objectIndex > -1)
-            ) {
-              console.warn(
-                'During selection found a THREE object without a corresponding json object ( or vice-versa'
-              );
-              console.warn('THREE OBJECT', object, 'JSON', jsonObject);
-            }
-
-            if (jsonObjectIndex > -1) {
-              this.selectedJsonObjects.splice(jsonObjectIndex, 1);
-            } else {
-              if (e.shiftKey) {
-                this.selectedJsonObjects.push(jsonObject);
-              } else {
-                this.selectedJsonObjects = [jsonObject];
-              }
-            }
-
-            //TODO(chab) log warning if we have a json object without a three object, and vice-versa
-            if (objectIndex > -1) {
-              this.outlinePass.selectedObjects.splice(objectIndex, 1);
-            } else {
-              if (e.shiftKey) {
-                this.outlinePass.selectedObjects.push(sceneObject);
-              } else {
-                this.outlinePass.selectedObjects = [sceneObject];
-              }
-            }
-          } else {
-            this.outlinePass.selectedObjects = [sceneObject];
-            this.selectedJsonObjects = [jsonObject];
-          }
-          needRedraw = true;
-        }
-        this.clickCallback(this.selectedJsonObjects);
+      if (this.renderer instanceof WebGLRenderer) {
+        const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+        this.onClickImplementation(p, e);
       } else {
-        if (this.selectedJsonObjects.length > 0) {
-          this.clickCallback([]);
-        }
-
-        this.selectedJsonObjects = [];
-        if (this.outlinePass.selectedObjects.length > 0) {
-          this.outlinePass.selectedObjects = [];
-          needRedraw = true;
-        }
+        console.warn('No implementation of click for SVG');
       }
-      needRedraw && this.renderScene();
     });
 
     this.controls = controls;
@@ -196,6 +145,68 @@ export default class Simple3DScene {
       // constantly re-render (for animation)
       this.start();
     }
+  }
+
+  private onClickImplementation(p, e) {
+    let needRedraw = false;
+    //TODO(chab) make it more readale
+    if (p) {
+      const { object, point } = p;
+      if (object?.sceneObject) {
+        const sceneObject: Object3D = object?.sceneObject;
+        const jsonObject: Object3D = object?.jsonObject;
+        if (this.isMultiSelectionEnabled) {
+          const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
+          const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
+          if (
+            (objectIndex === -1 && jsonObjectIndex > -1) ||
+            (jsonObjectIndex === -1 && objectIndex > -1)
+          ) {
+            console.warn(
+              'During selection found a THREE object without a corresponding json object ( or vice-versa'
+            );
+            console.warn('THREE OBJECT', object, 'JSON', jsonObject);
+          }
+
+          if (jsonObjectIndex > -1) {
+            this.selectedJsonObjects.splice(jsonObjectIndex, 1);
+          } else {
+            if (e.shiftKey) {
+              this.selectedJsonObjects.push(jsonObject);
+            } else {
+              this.selectedJsonObjects = [jsonObject];
+            }
+          }
+
+          //TODO(chab) log warning if we have a json object without a three object, and vice-versa
+          if (objectIndex > -1) {
+            this.outlinePass.selectedObjects.splice(objectIndex, 1);
+          } else {
+            if (e.shiftKey) {
+              this.outlinePass.selectedObjects.push(sceneObject);
+            } else {
+              this.outlinePass.selectedObjects = [sceneObject];
+            }
+          }
+        } else {
+          this.outlinePass.selectedObjects = [sceneObject];
+          this.selectedJsonObjects = [jsonObject];
+        }
+        needRedraw = true;
+      }
+      this.clickCallback(this.selectedJsonObjects);
+    } else {
+      if (this.selectedJsonObjects.length > 0) {
+        this.clickCallback([]);
+      }
+
+      this.selectedJsonObjects = [];
+      if (this.outlinePass.selectedObjects.length > 0) {
+        this.outlinePass.selectedObjects = [];
+        needRedraw = true;
+      }
+    }
+    needRedraw && this.renderScene();
   }
 
   private readonly windowListener = () => this.resizeRendererToDisplaySize();
@@ -412,7 +423,7 @@ export default class Simple3DScene {
       this.renderer.setScissorTest(false);
     }
 
-    //TODO(chab) just use the composer
+    //TODO(chab) make a decidated rendering for SVG
     this.composer && this.composer.render();
 
     this.inset &&
@@ -486,13 +497,12 @@ export default class Simple3DScene {
   public onDestroy() {
     window.removeEventListener('resize', this.windowListener, false);
     this.debugHelper && this.debugHelper.onDestroy();
-    this.outlinePass.dispose();
-
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
     this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
+      this.outlinePass.dispose();
       this.renderer.forceContextLoss();
       this.renderer.dispose();
     }
@@ -551,6 +561,10 @@ export default class Simple3DScene {
     // We use the Three EffectComposer to implements the selection outline
     // the composer starts with a rendering pass, which is the standard rendering
     // then
+
+    if (this.settings.renderer === Renderer.SVG) {
+      return;
+    }
 
     const composer = new EffectComposer(this.renderer as WebGLRenderer);
     const renderPass = new RenderPass(this.scene, this.camera);
