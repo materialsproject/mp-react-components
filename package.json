@@ -21,7 +21,7 @@
     "lint:yaml": "yamllint ./.github/workflows/*.yml"
   },
   "dependencies": {
-    "@types/jsdom": "^12.2.4",
+    "@types/jsdom": "^16.1.0",
     "@types/react-responsive": "^8.0.2",
     "add": "^2.0.6",
     "css-loader": "^3.4.2",
