@@ -1,6 +1,6 @@
 {
   "name": "mat-periodic-table",
-  "version": "0.0.18",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "module": "dist/index.es.js",
