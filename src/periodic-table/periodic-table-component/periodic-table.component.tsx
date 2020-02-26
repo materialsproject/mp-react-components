@@ -51,6 +51,7 @@ export interface TableProps {
   heatmapMax?: string;
   /** Color used for the lowest value*/
   heatmapMin?: string;
+  showSwitcher?: boolean;
 }
 
 export enum TableLayout {
@@ -134,7 +135,8 @@ export function Table({
   heatmap,
   heatmapMax,
   heatmapMin,
-  colorScheme
+  colorScheme,
+  showSwitcher
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
@@ -179,7 +181,10 @@ export function Table({
           isShown ? '' : 'elements-hidden'
         }`}
       >
-        <TableSpacer showSwitcher={false} onTableSwitcherClicked={() => setIsShown(!isShown)} />
+        <TableSpacer
+          showSwitcher={showSwitcher}
+          onTableSwitcherClicked={() => setIsShown(!isShown)}
+        />
         {TABLE_V2.map((element: MatElement) => (
           <PeriodicElement
             onElementHovered={element => onHover(element)}
