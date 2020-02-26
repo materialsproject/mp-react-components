@@ -15,7 +15,10 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 // @ts-ignore
-import img from './glass.png';
+import img from './glass.png'; // texture for selected elements
+
+// note that it uses substractive blending, so colors are actually inverted
+const OUTLINE_COLOR = new THREE.Color('#FFFFFF');
 
 export default class Simple3DScene {
   private settings;
@@ -456,8 +459,8 @@ export default class Simple3DScene {
     (this.renderer as WebGLRenderer).getSize(size);
     this.raycaster.setFromCamera(getThreeScreenCoordinate(size, clientX, clientY), this.camera);
     const intersects = this.raycaster.intersectObjects(objectsToCheck, true);
-    // they are a few cases where this does not work :( try to understand why
     if (intersects.length > 0) {
+      // we catch the first object that the ray touches
       return { point: intersects[0].point, object: this.getParentObject(intersects[0].object) };
     }
     return null;
@@ -563,6 +566,7 @@ export default class Simple3DScene {
     // then
 
     if (this.settings.renderer === Renderer.SVG) {
+      console.warn('No post processing pass for SVG');
       return;
     }
 
@@ -576,8 +580,8 @@ export default class Simple3DScene {
       this.camera
     );
     this.outlinePass.usePatternTexture = true;
-    this.outlinePass.visibleEdgeColor = new THREE.Color('#FFFFFF');
-    this.outlinePass.hiddenEdgeColor = new THREE.Color('#FFFFFF');
+    this.outlinePass.visibleEdgeColor = OUTLINE_COLOR;
+    this.outlinePass.hiddenEdgeColor = OUTLINE_COLOR;
     this.outlinePass.edgeGlow = 0;
     this.outlinePass.edgeStrength = 5;
     this.outlinePass.edgeThickness = 0.01;
