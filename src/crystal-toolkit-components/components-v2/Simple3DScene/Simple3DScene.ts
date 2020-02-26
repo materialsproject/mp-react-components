@@ -434,13 +434,13 @@ export default class Simple3DScene {
       this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
   }
 
-  toggleVisibility(namesToVisibility) {
+  toggleVisibility(namesToVisibility: { [objectName: string]: boolean }) {
     if (!!namesToVisibility) {
       Object.keys(namesToVisibility).forEach(objName => {
         if (!!namesToVisibility[objName]) {
           const obj = this.scene.getObjectByName(objName);
           if (obj) {
-            obj.visible = Boolean(namesToVisibility[objName]);
+            obj.visible = !!namesToVisibility[objName];
           }
         }
       });

@@ -71,3 +71,14 @@ export enum JSON3DObject {
   CONVEX = 'convex',
   LABEL = 'labels'
 }
+
+export const DEBUG_STYLE = {
+  width: '500px',
+  height: '500px',
+  top: 0,
+  left: '500px',
+  position: 'absolute' as 'absolute'
+};
+export const MOUNT_NODE_STYLE = { width: '100%', height: '100%' };
+export const MOUNT_NODE_CLASS = 'three-container';
+export const MOUNT_DEBUG_NODE_CLASS = 'three-debug-container';
