@@ -5,6 +5,7 @@ import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/J
 import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
 
+const emptyObject = {};
 export const scene3d = () => (
   <>
     This component renders a 3D scene by using the provided JSON. You are responsible for providing
@@ -16,7 +17,7 @@ export const scene3d = () => (
         inletPadding={number('padding', 10)}
         inletSize={number('size', 100)}
         data={object('scene', sceneJson)}
-        toggleVisibility={{}}
+        toggleVisibility={emptyObject}
       />
     </div>
   </>

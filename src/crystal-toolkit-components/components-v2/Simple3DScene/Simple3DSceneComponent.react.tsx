@@ -29,11 +29,16 @@ export default function Simple3DSceneComponent({
   toggleVisibility,
   axisView
 }: InferProps<typeof Simple3DSceneComponent.propTypes>) {
+
+  // mount nodes, those are passed in the template and are populated when
+  // the component is mounted
   const mountNodeRef = useRef(null);
   const mountNodeDebugRef = useRef(null);
+
+  // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
-  // called when the component is passed
+  // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
     const _s = (scene.current = new Simple3DScene(
       data,
@@ -57,9 +62,11 @@ export default function Simple3DSceneComponent({
     };
   }, []);
 
-  // TODO(chab) in simple3DScene, bail out if reference has not changed
   // Note(chab) those hooks will be executed sequentially at mount time, and on change of the deps array elements
   useEffect(() => scene.current!.enableDebug(debug!, mountNodeDebugRef.current), [debug]);
+  // An interesting classical react issue that we fixed : look at the stories, we do not pass anymore an empty object,
+  // but a reference to an empty object, otherwise, it will be a different reference, and treated as a different object, thus
+  // triggering the effect
   useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
   // FIXME(chab) addToScene is breaking event handlers if we call it multiple time
   //useEffect(() => {scene.current!.addToScene(data); scene.current!.toggleVisibility(toggleVisibility)},[data]);
