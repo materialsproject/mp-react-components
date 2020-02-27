@@ -1,67 +1,54 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import Graph from 'react-graph-vis';
 import './vis.less';
 
-interface State {
-  network?: any;
-}
+export default function ReactGraphComponent(
+  props: InferProps<typeof ReactGraphComponent.propTypes>
+) {
+  const network = useRef({ edges: null, nodes: null, fit: () => {} });
 
-/**
- * GraphComponent renders a force-directed graph using
- * react-graph-vis by @crubier and vis.js
- */
-export default class ReactGraphComponent extends Component<
-  InferProps<typeof ReactGraphComponent.propTypes>,
-  State
-> {
-  static propTypes = {
-    /**
-     * The ID used to identify this component in Dash callbacks
-     */
-    id: PropTypes.string,
-
-    /**
-     * A graph that will be displayed when this component is rendered
-     */
-    graph: PropTypes.object,
-
-    /**
-     * Display options for the graph
-     */
-    options: PropTypes.object,
-
-    /**
-     * Dash-assigned callback that should be called whenever any of the
-     * properties change
-     */
-    setProps: PropTypes.func
-  };
-
-  constructor(public props, context) {
-    super(props, context);
-    this.state = { network: {} };
-  }
-
-  render() {
-    const { graph, options, setProps } = this.props;
-
-    return (
-      <Graph
-        graph={graph}
-        options={options}
-        getNetwork={network => this.setState({ network: network })}
-      />
-    );
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    // FIXME
-    if (nextProps!.graph !== this.props.graph) {
-      this.state.network.nodes = nextProps!.graph.nodes;
-      this.state.network.edges = nextProps!.graph.edges;
-      this.forceUpdate();
-      this.state.network.fit();
+  //NOTE(chab) not 100% sure of the original intent :)
+  // but this will fit the network AFTER the rendering
+  useEffect(() => {
+    if (props.graph && (props.graph as any).nodes && (props.graph as any).edges) {
+      network.current.edges = (props.graph as any).edges;
+      network.current.nodes = (props.graph as any).nodes;
+      network.current.fit();
     }
-  }
+  }, [(props.graph! as any).nodes, (props.graph! as any).sedges]);
+
+  // the API here is weird.. either we just pass the graph, and the downstream component takes care of it
+  // either we update imperatively the graph
+
+  return (
+    <Graph
+      graph={props.graph}
+      options={props.options}
+      getNetwork={network => (network.current = network)}
+    />
+  );
 }
+
+ReactGraphComponent.propTypes = {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
+  id: PropTypes.string,
+
+  /**
+   * A graph that will be displayed when this component is rendered
+   */
+  graph: PropTypes.object,
+
+  /**
+   * Display options for the graph
+   */
+  options: PropTypes.object,
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps: PropTypes.func
+};

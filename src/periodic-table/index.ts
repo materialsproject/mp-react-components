@@ -4,7 +4,7 @@ import { StandalonePeriodicComponent } from './periodic-element/standalone-perio
 import { PeriodicContext } from './periodic-table-state/periodic-selection-context';
 //TODO(chab) reorganize export, use a barrel for each folder ( ? ), and have a general index at root-level
 import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
-import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
+import JSONViewComponent from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
 
 export {

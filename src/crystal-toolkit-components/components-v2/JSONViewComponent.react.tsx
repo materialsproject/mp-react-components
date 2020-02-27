@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import ReactJson from 'react-json-view';
 
-function JSONViewComponent(props: InferProps<typeof JSONViewComponent.propTypes>) {
+export default function JSONViewComponent(props: InferProps<typeof JSONViewComponent.propTypes>) {
   const {
     src,
     name,

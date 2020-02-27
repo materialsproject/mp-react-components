@@ -1,7 +1,7 @@
 import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
-import { JSONViewComponent } from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
+import JSONViewComponent from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
 import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
 
