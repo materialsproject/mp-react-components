@@ -19,6 +19,7 @@ import img from './glass.png'; // texture for selected elements
 
 // note that it uses substractive blending, so colors are actually inverted
 const OUTLINE_COLOR = new THREE.Color('#FFFFFF');
+const POINTER_CLASS = 'show-pointer';
 
 export default class Simple3DScene {
   private settings;
@@ -109,13 +110,21 @@ export default class Simple3DScene {
     controls.enabled = true;
     this.renderer.domElement.addEventListener('mousemove', (e: any) => {
       if (this.renderer instanceof WebGLRenderer) {
-        const p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
+        // tooltips
+        let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
         if (p) {
           const { object, point } = p;
           this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
           this.renderScene();
         } else {
           this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+        }
+        // change mouse pointer for clickable objects
+        p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+        if (p) {
+          document.querySelector('body')!.classList.add(POINTER_CLASS);
+        } else {
+          document.querySelector('body')!.classList.remove(POINTER_CLASS);
         }
       } else {
         console.warn('No mousemove implementation for SVG');
