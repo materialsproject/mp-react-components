@@ -85,6 +85,15 @@ export function disposeSceneHierarchy(scene) {
   });
 }
 
+// this will give the x/y coordinate in the normalized device coordinates, whose center is (0,0) and w-h is 2
+// NW -> -1 / 1
+// NE -> 1 / 1
+// SW -> - 1 / -1
+// SE -> 1 / -1
+// let' suppose i have a (500, 500) viewport, i click on the center
+// CENTER = > ( 250 / 500 * 2 - 1 = 0, - (250/500) * 2 + 1 = 0)
+// SE (500/500 * 2 -1 ) = 1, ( - (500/500) * 2 + 1 = -1)
+// SW (0 - 1) = -1, -(500 / 500 ) * 2 + 1 = -1)
 export function getThreeScreenCoordinate(size, clientX, clientY) {
   return new THREE.Vector2((clientX / size.width) * 2 - 1, -(clientY / size.height) * 2 + 1);
 }
