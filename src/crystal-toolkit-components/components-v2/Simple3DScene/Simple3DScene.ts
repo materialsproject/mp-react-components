@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Object3D, WebGLRenderer } from 'three';
+import { Matrix4, Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
@@ -145,6 +145,7 @@ export default class Simple3DScene {
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
       controls.addEventListener('change', () => {
+        this.dispatch(this.camera.position, this.camera.quaternion);
         this.renderScene();
       });
       controls.addEventListener('start', () => {
@@ -157,6 +158,12 @@ export default class Simple3DScene {
       // constantly re-render (for animation)
       this.start();
     }
+  }
+
+  public updateCamera(position: Vector3, rotation: Quaternion) {
+    this.camera.position.copy(position);
+    this.camera.quaternion.copy(rotation);
+    this.renderScene();
   }
 
   private onClickImplementation(p, e) {
@@ -230,6 +237,7 @@ export default class Simple3DScene {
     size,
     padding,
     clickCallback,
+    private dispatch: (p: Vector3, r: Quaternion) => void,
     private debugDOMElement?
   ) {
     this.settings = Object.assign(defaults, settings);

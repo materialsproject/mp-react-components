@@ -13,8 +13,13 @@ import { StandalonePeriodicComponent } from './periodic-table/periodic-element/s
 import { useElements } from './periodic-table/periodic-table-state/table-store';
 import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-selection-context';
 import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
-import { s2 as scene } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import {
+  s2 as scene,
+  shperes as scene2,
+  s4 as scene3
+} from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
+import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -101,6 +106,20 @@ ReactDOM.render(
     <div style={{ width: '500px', height: '500px' }}>
       <Simple3DSceneComponent data={scene} debug={true} toggleVisibility={{}} />
     </div>
+
+    <CameraContextWrapper>
+      <>
+        <div style={{ width: '400px', height: '400px' }}>
+          <Simple3DSceneComponent data={scene} debug={false} toggleVisibility={{}} />
+        </div>
+        <div style={{ width: '200px', height: '200px' }}>
+          <Simple3DSceneComponent data={scene2} debug={false} toggleVisibility={{}} />
+        </div>
+        <div style={{ width: '500px', height: '500px' }}>
+          <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
+        </div>
+      </>
+    </CameraContextWrapper>
 
     <div>
       {<TestComponent d={['B']} b={[]} e={[]} />}

@@ -1,5 +1,5 @@
 import PropTypes, { InferProps } from 'prop-types';
-import React, { MutableRefObject, useEffect, useRef } from 'react';
+import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
 import Simple3DScene from './Simple3DScene';
 import { subscribe } from './Simple3DSceneDownloadEvent';
 import './Simple3DScene.less';
@@ -10,7 +10,10 @@ import {
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE
 } from './constants';
+import { CameraContext } from './camera-context';
+import { CameraReducerAction } from './camera-reducer';
 
+let ID_GENERATOR = 0;
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
  * Three.js scene graph library. In particular, the JSON representing the 3D scene
@@ -29,14 +32,20 @@ export default function Simple3DSceneComponent({
   toggleVisibility,
   axisView
 }: InferProps<typeof Simple3DSceneComponent.propTypes>) {
-
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
   const mountNodeRef = useRef(null);
   const mountNodeDebugRef = useRef(null);
+  const _id = useRef(++ID_GENERATOR + '');
 
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
+
+  // use to dispatch camera changes, and react to them
+  // not this is not the MOST EFFICIENT implementation, as react will re-render
+  // when dispatch is called ( ideally, we could just use RxJS to react to the changes,
+  // in that case we will just update the camera position... instead of re-rendering the component )
+  // but the perf impact is like 0.20
 
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
@@ -51,6 +60,17 @@ export default function Simple3DSceneComponent({
           console.log('clicked', objects);
           onObjectClicked(objects);
         }
+      },
+      (position, quaternion) => {
+        cameraContext.dispatch &&
+          cameraContext.dispatch({
+            type: CameraReducerAction.NEW_POSITION,
+            payload: {
+              componentId: _id.current,
+              position,
+              quaternion
+            }
+          });
       },
       mountNodeDebugRef.current!
     ));
@@ -75,6 +95,17 @@ export default function Simple3DSceneComponent({
     inletPadding,
     axisView
   ]);
+
+  const cameraContext = useContext(CameraContext);
+  if (cameraContext.state) {
+    const state = cameraContext.state;
+    useEffect(() => {
+      if (_id.current == state.fromComponent || !state.position || !state.quaternion) {
+      } else {
+        scene.current!.updateCamera(state.position, state.quaternion);
+      }
+    }, [state.position, state.quaternion]);
+  }
 
   return (
     <>
