@@ -23,6 +23,7 @@ export enum CameraReducerAction {
 export interface CameraActionPayload {
   quaternion?: Quaternion;
   position?: Vector3;
+  zoom?: number;
   componentId?: string; // id of component whose component moved
   following?: boolean; // whether to follow the camera
 }
@@ -38,6 +39,7 @@ export function cameraReducer(
       return {
         quaternion: payload.quaternion!.clone(),
         position: payload.position!.clone(),
+        zoom: payload.zoom,
         fromComponent: payload.componentId,
         following: state.following
       };

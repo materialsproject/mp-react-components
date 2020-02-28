@@ -61,14 +61,15 @@ export default function Simple3DSceneComponent({
           onObjectClicked(objects);
         }
       },
-      (position, quaternion) => {
+      (position, quaternion, zoom) => {
         cameraContext.dispatch &&
           cameraContext.dispatch({
             type: CameraReducerAction.NEW_POSITION,
             payload: {
               componentId: _id.current,
               position,
-              quaternion
+              quaternion,
+              zoom
             }
           });
       },
@@ -100,9 +101,14 @@ export default function Simple3DSceneComponent({
   if (cameraContext.state) {
     const state = cameraContext.state;
     useEffect(() => {
-      if (_id.current == state.fromComponent || !state.position || !state.quaternion) {
+      if (
+        _id.current == state.fromComponent ||
+        !state.position ||
+        !state.quaternion ||
+        !state.zoom
+      ) {
       } else {
-        scene.current!.updateCamera(state.position, state.quaternion);
+        scene.current!.updateCamera(state.position, state.quaternion, state.zoom);
       }
     }, [state.position, state.quaternion]);
   }

@@ -145,7 +145,7 @@ export default class Simple3DScene {
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
       controls.addEventListener('change', () => {
-        this.dispatch(this.camera.position, this.camera.quaternion);
+        this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
         this.renderScene();
       });
       controls.addEventListener('start', () => {
@@ -160,9 +160,12 @@ export default class Simple3DScene {
     }
   }
 
-  public updateCamera(position: Vector3, rotation: Quaternion) {
+  public updateCamera(position: Vector3, rotation: Quaternion, zoom: number) {
+    // zoom seems to be updated, be not rendered
+    this.camera.zoom = zoom;
     this.camera.position.copy(position);
     this.camera.quaternion.copy(rotation);
+    this.camera.updateProjectionMatrix(); // needed for the zoom
     this.renderScene();
   }
 
@@ -237,7 +240,7 @@ export default class Simple3DScene {
     size,
     padding,
     clickCallback,
-    private dispatch: (p: Vector3, r: Quaternion) => void,
+    private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
     private debugDOMElement?
   ) {
     this.settings = Object.assign(defaults, settings);
