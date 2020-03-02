@@ -114,15 +114,9 @@ ReactDOM.render(
 
     <CameraContextWrapper>
       <>
-        <div style={{ width: '400px', height: '400px' }}>
-          <Simple3DSceneComponent data={scene} debug={false} toggleVisibility={{}} />
-        </div>
-        <div style={{ width: '200px', height: '200px' }}>
-          <Simple3DSceneComponent data={scene2} debug={false} toggleVisibility={{}} />
-        </div>
-        <div style={{ width: '500px', height: '500px' }}>
-          <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
-        </div>
+        <Simple3DSceneComponent data={scene} debug={false} toggleVisibility={{}} />
+        <Simple3DSceneComponent data={scene2} debug={false} toggleVisibility={{}} />
+        <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
     </CameraContextWrapper>
 

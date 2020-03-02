@@ -1,9 +1,14 @@
 import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
-import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
+import {
+  s2 as sceneJson,
+  shperes as sceneJson2
+} from '../crystal-toolkit-components/components-v2/scene/simple-scene';
 import JSONViewComponent from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
 import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
+import { CameraContextWrapper } from '../crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
+import { ScenePosition } from '../crystal-toolkit-components/components-v2/scene/inset-helper';
 
 const emptyObject = {};
 export const scene3d = () => (
@@ -21,6 +26,21 @@ export const scene3d = () => (
         toggleVisibility={emptyObject}
       />
     </div>
+    You can link the camera of multiple scene together
+    <CameraContextWrapper>
+      <>
+        <Simple3DSceneComponent
+          axisView={ScenePosition.HIDDEN}
+          sceneSize={150}
+          data={sceneJson2}
+        ></Simple3DSceneComponent>
+        <Simple3DSceneComponent
+          axisView={ScenePosition.HIDDEN}
+          sceneSize={150}
+          data={sceneJson}
+        ></Simple3DSceneComponent>
+      </>
+    </CameraContextWrapper>
   </>
 );
 
