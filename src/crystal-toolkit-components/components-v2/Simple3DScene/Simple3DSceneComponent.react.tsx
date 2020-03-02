@@ -50,12 +50,6 @@ export default function Simple3DSceneComponent({
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
-  // use to dispatch camera changes, and react to them
-  // not this is not the MOST EFFICIENT implementation, as react will re-render
-  // when dispatch is called ( ideally, we could just use RxJS to react to the changes,
-  // in that case we will just update the camera position... instead of re-rendering the component )
-  // but the perf impact is like 0.20
-
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
     const _s = (scene.current = new Simple3DScene(
@@ -110,6 +104,12 @@ export default function Simple3DSceneComponent({
     const size = getSceneSize(sceneSize);
     scene.current!.resizeRendererToDisplaySize();
   }, [sceneSize]);
+
+  // use to dispatch camera changes, and react to them
+  // not this is not the  implementation, as react will re-render
+  // when dispatch is called ( ideally, we could just use RxJS to react to the changes,
+  // in that case we will just update the camera position... instead of re-rendering the component )
+  // but the perf impact is like 0.20
 
   const cameraContext = useContext(CameraContext);
   if (cameraContext.state) {

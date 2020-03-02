@@ -20,6 +20,7 @@ import {
 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
+import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -103,7 +104,13 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <Simple3DSceneComponent sceneSize={200} data={scene} debug={true} toggleVisibility={{}} />
+    <Simple3DSceneComponent
+      sceneSize={200}
+      settings={{ renderer: Renderer.WEBGL }}
+      data={scene}
+      debug={true}
+      toggleVisibility={{}}
+    />
 
     <CameraContextWrapper>
       <>
