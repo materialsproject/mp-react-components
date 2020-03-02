@@ -79,6 +79,8 @@ export const DEBUG_STYLE = {
   left: '500px',
   position: 'absolute' as 'absolute'
 };
-export const MOUNT_NODE_STYLE = { width: '100%', height: '100%' };
+export const MOUNT_NODE_STYLE = { position: 'absolute' as 'absolute' };
 export const MOUNT_NODE_CLASS = 'three-container';
 export const MOUNT_DEBUG_NODE_CLASS = 'three-debug-container';
+
+export const DEFAULT_SCENE_SIZE = 500;

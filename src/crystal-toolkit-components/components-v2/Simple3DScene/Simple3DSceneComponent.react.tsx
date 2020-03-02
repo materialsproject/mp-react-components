@@ -6,12 +6,20 @@ import './Simple3DScene.less';
 import { download } from './utils';
 import {
   DEBUG_STYLE,
+  DEFAULT_SCENE_SIZE,
   MOUNT_DEBUG_NODE_CLASS,
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE
 } from './constants';
 import { CameraContext } from './camera-context';
 import { CameraReducerAction } from './camera-reducer';
+
+const getSceneSize = sceneSize =>
+  sceneSize
+    ? sceneSize < 60
+      ? !!(console.warn('Scene size is too small') as any) || DEFAULT_SCENE_SIZE
+      : sceneSize
+    : DEFAULT_SCENE_SIZE;
 
 let ID_GENERATOR = 0;
 /**
@@ -30,7 +38,8 @@ export default function Simple3DSceneComponent({
   settings,
   onObjectClicked,
   toggleVisibility,
-  axisView
+  axisView,
+  sceneSize
 }: InferProps<typeof Simple3DSceneComponent.propTypes>) {
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
@@ -97,6 +106,11 @@ export default function Simple3DSceneComponent({
     axisView
   ]);
 
+  useEffect(() => {
+    const size = getSceneSize(sceneSize);
+    scene.current!.resizeRendererToDisplaySize();
+  }, [sceneSize]);
+
   const cameraContext = useContext(CameraContext);
   if (cameraContext.state) {
     const state = cameraContext.state;
@@ -113,9 +127,19 @@ export default function Simple3DSceneComponent({
     }, [state.position, state.quaternion]);
   }
 
+  const size = getSceneSize(sceneSize);
+
+  // NOTE(chab) we could let the user opt for a flex layout, instead of using relative/absolute
   return (
     <>
-      <div id={id!} style={MOUNT_NODE_STYLE} className={MOUNT_NODE_CLASS} ref={mountNodeRef} />
+      <div className="three-wrapper" style={{ position: 'relative', width: size, height: size }}>
+        <div
+          id={id!}
+          style={{ ...MOUNT_NODE_STYLE, width: size, height: size }}
+          className={MOUNT_NODE_CLASS}
+          ref={mountNodeRef}
+        />
+      </div>
       {debug && (
         <div style={DEBUG_STYLE} className={MOUNT_DEBUG_NODE_CLASS} ref={mountNodeDebugRef} />
       )}
@@ -183,6 +207,10 @@ Simple3DSceneComponent.propTypes = {
    * Size of axis inlet
    */
   inletSize: PropTypes.number,
+  /**
+   * Size of scene
+   */
+  sceneSize: PropTypes.number,
 
   /**
    * Padding of axis inlet

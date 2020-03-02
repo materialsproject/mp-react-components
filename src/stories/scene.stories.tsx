@@ -17,6 +17,7 @@ export const scene3d = () => (
         inletPadding={number('padding', 10)}
         inletSize={number('size', 100)}
         data={object('scene', sceneJson)}
+        sceneSize={object('Size', 500)}
         toggleVisibility={emptyObject}
       />
     </div>

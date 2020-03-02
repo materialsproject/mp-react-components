@@ -103,9 +103,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <div style={{ width: '500px', height: '500px' }}>
-      <Simple3DSceneComponent data={scene} debug={true} toggleVisibility={{}} />
-    </div>
+    <Simple3DSceneComponent sceneSize={200} data={scene} debug={true} toggleVisibility={{}} />
 
     <CameraContextWrapper>
       <>
