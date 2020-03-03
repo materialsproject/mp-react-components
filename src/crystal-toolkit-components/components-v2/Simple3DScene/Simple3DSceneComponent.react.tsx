@@ -102,7 +102,7 @@ export default function Simple3DSceneComponent({
 
   useEffect(() => {
     const size = getSceneSize(sceneSize);
-    scene.current!.resizeRendererToDisplaySize();
+    scene.current!.resizeRendererToDisplaySize(size);
   }, [sceneSize]);
 
   // use to dispatch camera changes, and react to them

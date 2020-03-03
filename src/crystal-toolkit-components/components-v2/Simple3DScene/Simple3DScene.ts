@@ -278,9 +278,14 @@ export default class Simple3DScene {
     this.renderScene();
   }
 
-  resizeRendererToDisplaySize() {
+  resizeRendererToDisplaySize(size?: number) {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
-    this.cacheMountBBox(canvas.parentElement as Element);
+    if (!size) {
+      this.cacheMountBBox(canvas.parentElement as Element);
+    } else {
+      this.cachedMountNodeSize.width = this.cachedMountNodeSize.height = size;
+    }
+
     const { width, height } = this.cachedMountNodeSize;
     if (canvas.width !== width || canvas.height !== height) {
       this.renderer.setSize(width, height, true);
