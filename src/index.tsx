@@ -106,16 +106,26 @@ ReactDOM.render(
   <>
     <Simple3DSceneComponent
       sceneSize={200}
-      settings={{ renderer: Renderer.WEBGL }}
-      data={scene}
+      settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+      data={scene3}
       debug={true}
       toggleVisibility={{}}
     />
 
     <CameraContextWrapper>
       <>
-        <Simple3DSceneComponent data={scene} debug={false} toggleVisibility={{}} />
-        <Simple3DSceneComponent data={scene2} debug={false} toggleVisibility={{}} />
+        <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          data={scene}
+          debug={false}
+          toggleVisibility={{}}
+        />
+        <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          data={scene2}
+          debug={false}
+          toggleVisibility={{}}
+        />
         <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
     </CameraContextWrapper>

@@ -61,7 +61,9 @@ export default class Simple3DScene {
           antialias: this.settings.antialias,
           alpha: this.settings.transparentBackground
         });
+        renderer.autoClear = false;
         renderer.gammaFactor = 2.2;
+        renderer.setClearColor(0xfffff, 0.0);
         return renderer;
       }
       case Renderer.SVG: {
@@ -422,11 +424,17 @@ export default class Simple3DScene {
 
   renderScene() {
     if (this.renderer instanceof WebGLRenderer) {
-      this.renderer.setClearColor(0x000000, 0.0);
+      this.renderer.clear();
       this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
       //TODO(chab) not sure to understand why we have to turn on/off scissor tests between renderings
       this.renderer.setScissorTest(true);
       this.renderer.setScissor(
+        0,
+        0,
+        this.cachedMountNodeSize.width,
+        this.cachedMountNodeSize.height
+      );
+      this.renderer.setViewport(
         0,
         0,
         this.cachedMountNodeSize.width,
@@ -439,15 +447,16 @@ export default class Simple3DScene {
       this.debugHelper.render();
     }
 
+    //this.composer && this.composer.render();
+
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
 
     if (this.renderer instanceof WebGLRenderer) {
-      this.renderer.setScissorTest(false);
+      (this.renderer as any).clearDepth();
     }
 
-    //TODO(chab) make a decidated rendering for SVG
-    this.composer && this.composer.render();
+    //TODO(chab) make a dedicated rendering for SVG
 
     this.inset &&
       this.inletPosition !== ScenePosition.HIDDEN &&
@@ -599,14 +608,16 @@ export default class Simple3DScene {
       this.scene,
       this.camera
     );
+    renderPass.renderToScreen = false;
     this.outlinePass.usePatternTexture = true;
     this.outlinePass.visibleEdgeColor = OUTLINE_COLOR;
     this.outlinePass.hiddenEdgeColor = OUTLINE_COLOR;
     this.outlinePass.edgeGlow = 0;
     this.outlinePass.edgeStrength = 5;
-    this.outlinePass.edgeThickness = 0.01;
+    this.outlinePass.edgeThickness = 0.05;
     this.outlinePass.pulsePeriod = 0;
-    this.outlinePass.overlayMaterial.blending = THREE.SubtractiveBlending;
+    this.outlinePass.overlayMaterial.blending = THREE.AdditiveBlending;
+    this.outlinePass.renderToScreen = true;
 
     const onLoad = texture => {
       (this.outlinePass as any).patternTexture = texture;
@@ -622,7 +633,7 @@ export default class Simple3DScene {
       1 / this.cachedMountNodeSize.width,
       1 / this.cachedMountNodeSize.height
     );
-    effectFXAA.renderToScreen = true;
+    effectFXAA.renderToScreen = false;
     composer.addPass(effectFXAA);
     composer.addPass(this.outlinePass);
     this.composer = composer;

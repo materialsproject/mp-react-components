@@ -5,7 +5,7 @@ export enum Renderer {
 
 export enum ExportType {
   png = 'png',
-  dae = 'pae'
+  dae = 'dae'
 }
 
 export enum Material {
@@ -22,7 +22,7 @@ export const DEFAULT_LIGHT_COLOR = '#444444';
 
 export const defaults = {
   antialias: true,
-  transparentBackground: false,
+  transparentBackground: true,
   renderer: Renderer.WEBGL,
   renderDivBackground: false,
   background: '#ffffff',

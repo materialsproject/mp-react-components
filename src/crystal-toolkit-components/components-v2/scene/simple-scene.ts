@@ -510,6 +510,61 @@ export const shperes = {
       name: 'atoms',
       contents: [
         {
+          name: 'axes',
+          contents: [
+            {
+              positionPairs: [
+                [
+                  [-2.1, -2.1, -2.1],
+                  [-1.4, -1.4, -3.1]
+                ]
+              ],
+              color: 'red',
+              radius: 0.07, // / 0.37302772291498865) * 2,
+              headLength: 0.24,
+              headWidth: 0.14,
+              type: 'arrows',
+              clickable: false
+            },
+            {
+              positionPairs: [
+                [
+                  [-2.1, -2.1, -2.1],
+                  [-0.1, -2.5, -1.1]
+                ]
+              ],
+              color: 'green',
+              radius: 0.07, // / 0.37302772291498865) * 2,
+              headLength: 0.24, // / 0.37302772291498865,
+              headWidth: 0.14, // 0.37302772291498865,
+              type: 'arrows',
+              clickable: false
+            },
+            {
+              positionPairs: [
+                [
+                  [-2.1, -2.1, -2.1],
+                  [-1.1, -1.1, -1.1]
+                ]
+              ],
+              color: 'blue',
+              radius: 0.07, // 0.37302772291498865) * 2,
+              headLength: 0.24, // / 0.37302772291498865) * 2,
+              headWidth: 0.14, // / 0.37302772291498865) * 2,
+              type: 'arrows',
+              clickable: false
+            },
+            {
+              positions: [[-2.1, -2.1, -2.1]],
+              color: 'black',
+              radius: 0.0175,
+              type: 'spheres',
+              clickable: false
+            }
+          ],
+          visible: false
+        },
+        {
           positions: [
             [-2.13336842, -1.2940969500000001, -7.74158491],
             [0.8064071299999997, -1.3064432600000002, -2.8524384100000004],
@@ -544,5 +599,5 @@ export const shperes = {
       origin: [0, 0, 0]
     }
   ],
-  origin: [2.13336842, 1.2940969500000001, 7.74158491]
+  origin: [-2.1, -2.1, -2.1]
 };

@@ -39,8 +39,8 @@ export class InsetHelper {
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
 
     this.frontRotation = this.cameraToFollow.rotation.clone();
-    this.scene = getSceneWithBackground({ transparentBackground: true });
-    this.scene.background = new THREE.Color('#ffffff');
+    this.scene = getSceneWithBackground({ transparentBackground: true, background: '#ffffff' });
+
     const baseLights = baseScene.getObjectByName('lights');
     if (!baseLights) {
       console.warn('no lights in base scene');
@@ -78,9 +78,6 @@ export class InsetHelper {
     );
     this.insetCamera.zoom = 1;
     this.insetCamera.updateProjectionMatrix();
-
-    //TODO(chab) reorganize code so we do not need to pass it
-    baseScene && baseScene.add(this.axis.clone());
   }
 
   makeObject(object_json) {
@@ -122,8 +119,8 @@ export class InsetHelper {
       renderer.setViewport(x, y, this.insetWidth, this.insetHeight);
       this.insetCamera.rotation.copy(this.cameraToFollow.rotation);
       this.insetCamera.updateProjectionMatrix();
-      renderer.clearDepth(); // important!
       renderer.render(this.scene, this.insetCamera);
+      renderer.clearDepth(); // important! clear the depth buffer
       renderer.setScissorTest(false);
     }
   }
