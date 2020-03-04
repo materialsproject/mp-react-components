@@ -7,18 +7,18 @@ import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
-import { disposeSceneHierarchy, getThreeScreenCoordinate } from './utils';
+import {
+  addToObjectRegisty,
+  disposeSceneHierarchy,
+  getObjectFromRegistry,
+  getThreeScreenCoordinate,
+  registryHasObject
+} from './utils';
 import { OrbitControls } from './orbitControls';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 // @ts-ignore
-import img from './glass.png'; // texture for selected elements
+import img from './glass.png';
+import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect'; // texture for selected elements
 
-// note that it uses substractive blending, so colors are actually inverted
-const OUTLINE_COLOR = new THREE.Color('#FFFFFF');
 const POINTER_CLASS = 'show-pointer';
 
 export default class Simple3DScene {
@@ -43,9 +43,10 @@ export default class Simple3DScene {
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
 
-  private outlinePass!: OutlinePass;
-  private composer!: EffectComposer;
+  private outline!: OutlineEffect;
   private selectedJsonObjects: any[] = [];
+  private outlineScene = new THREE.Scene();
+  private selection: THREE.Object3D[] = [];
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = true;
@@ -62,6 +63,7 @@ export default class Simple3DScene {
           alpha: this.settings.transparentBackground
         });
         renderer.autoClear = false;
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.gammaFactor = 2.2;
         renderer.setClearColor(0xfffff, 0.0);
         return renderer;
@@ -179,8 +181,10 @@ export default class Simple3DScene {
       if (object?.sceneObject) {
         const sceneObject: Object3D = object?.sceneObject;
         const jsonObject: Object3D = object?.jsonObject;
-        if (this.isMultiSelectionEnabled) {
-          const objectIndex = this.outlinePass.selectedObjects.indexOf(sceneObject);
+        if (this.isMultiSelectionEnabled || false) {
+          // if the object is not in the registry, it just means it's the first time
+          // we select it
+          const objectIndex = this.selection.indexOf(getObjectFromRegistry(sceneObject.uuid));
           const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
           if (
             (objectIndex === -1 && jsonObjectIndex > -1) ||
@@ -204,16 +208,38 @@ export default class Simple3DScene {
 
           //TODO(chab) log warning if we have a json object without a three object, and vice-versa
           if (objectIndex > -1) {
-            this.outlinePass.selectedObjects.splice(objectIndex, 1);
+            const object = this.selection.splice(objectIndex, 1);
+            const sceneObject = getObjectFromRegistry(object[0].uuid);
+            this.outlineScene.remove(sceneObject);
           } else {
+            if (!registryHasObject(sceneObject)) {
+              const clone = sceneObject.clone();
+              clone.uuid = sceneObject.uuid;
+              addToObjectRegisty(clone);
+            }
+            const threeObjectForOutlineScene = getObjectFromRegistry(sceneObject.uuid);
             if (e.shiftKey) {
-              this.outlinePass.selectedObjects.push(sceneObject);
+              this.outlineScene.add(threeObjectForOutlineScene);
+              this.selection.push(threeObjectForOutlineScene);
             } else {
-              this.outlinePass.selectedObjects = [sceneObject];
+              if (this.outlineScene.children.length > 0) {
+                this.outlineScene.remove(...this.outlineScene.children);
+              }
+              this.outlineScene.add(threeObjectForOutlineScene);
+              this.selection = [threeObjectForOutlineScene];
             }
           }
         } else {
-          this.outlinePass.selectedObjects = [sceneObject];
+          disposeSceneHierarchy(this.outlineScene);
+          if (!registryHasObject(sceneObject)) {
+            addToObjectRegisty(sceneObject.clone());
+          }
+          const threeObjectForOutlineScene = getObjectFromRegistry(sceneObject.uuid);
+          if (this.outlineScene.children.length > 0) {
+            this.outlineScene.remove(...this.outlineScene.children);
+          }
+          this.outlineScene.add(threeObjectForOutlineScene);
+          this.selection = [threeObjectForOutlineScene];
           this.selectedJsonObjects = [jsonObject];
         }
         needRedraw = true;
@@ -225,8 +251,8 @@ export default class Simple3DScene {
       }
 
       this.selectedJsonObjects = [];
-      if (this.outlinePass.selectedObjects.length > 0) {
-        this.outlinePass.selectedObjects = [];
+      if (this.selection.length > 0) {
+        this.selection = [];
         needRedraw = true;
       }
     }
@@ -452,9 +478,11 @@ export default class Simple3DScene {
       this.debugHelper.render();
     }
 
-    //this.composer && this.composer.render();
-
     this.renderer.render(this.scene, this.camera);
+
+    if (this.selection.length > 0) {
+      this.outline.renderOutline(this.outlineScene, this.camera);
+    }
     this.labelRenderer.render(this.scene, this.camera);
 
     if (this.renderer instanceof WebGLRenderer) {
@@ -539,7 +567,6 @@ export default class Simple3DScene {
     disposeSceneHierarchy(this.scene);
     this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
-      this.outlinePass.dispose();
       this.renderer.forceContextLoss();
       this.renderer.dispose();
     }
@@ -595,52 +622,17 @@ export default class Simple3DScene {
   }
 
   private configurePostProcessing() {
-    // We use the Three EffectComposer to implements the selection outline
-    // the composer starts with a rendering pass, which is the standard rendering
-    // then
-
     if (this.settings.renderer === Renderer.SVG) {
       console.warn('No post processing pass for SVG');
       return;
     }
-
-    const composer = new EffectComposer(this.renderer as WebGLRenderer);
-    const renderPass = new RenderPass(this.scene, this.camera);
-    composer.addPass(renderPass);
-    composer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
-    this.outlinePass = new OutlinePass(
-      new THREE.Vector2(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height),
-      this.scene,
-      this.camera
-    );
-    renderPass.renderToScreen = false;
-    this.outlinePass.usePatternTexture = true;
-    this.outlinePass.visibleEdgeColor = OUTLINE_COLOR;
-    this.outlinePass.hiddenEdgeColor = OUTLINE_COLOR;
-    this.outlinePass.edgeGlow = 0;
-    this.outlinePass.edgeStrength = 5;
-    this.outlinePass.edgeThickness = 0.05;
-    this.outlinePass.pulsePeriod = 0;
-    this.outlinePass.overlayMaterial.blending = THREE.AdditiveBlending;
-    this.outlinePass.renderToScreen = true;
-
-    const onLoad = texture => {
-      (this.outlinePass as any).patternTexture = texture;
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-    };
-    const loader = new THREE.TextureLoader();
-    loader.load(img, onLoad);
-
-    // fast anti-aliasing shader
-    let effectFXAA = new ShaderPass(FXAAShader);
-    effectFXAA.uniforms['resolution'].value.set(
-      1 / this.cachedMountNodeSize.width,
-      1 / this.cachedMountNodeSize.height
-    );
-    effectFXAA.renderToScreen = false;
-    composer.addPass(effectFXAA);
-    composer.addPass(this.outlinePass);
-    this.composer = composer;
+    //TODO(chab) look at three.js to implement the texture
+    const outline = new OutlineEffect(this.renderer as WebGLRenderer, {
+      defaultThickness: 0.01,
+      defaultColor: [0, 0, 0],
+      defaultAlpha: 1.0,
+      defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
+    });
+    this.outline = outline;
   }
 }

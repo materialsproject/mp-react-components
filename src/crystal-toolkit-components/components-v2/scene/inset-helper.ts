@@ -39,7 +39,7 @@ export class InsetHelper {
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
 
     this.frontRotation = this.cameraToFollow.rotation.clone();
-    this.scene = getSceneWithBackground({ transparentBackground: true, background: '#ffffff' });
+    this.scene = getSceneWithBackground({ transparentBackground: true });
 
     const baseLights = baseScene.getObjectByName('lights');
     if (!baseLights) {
