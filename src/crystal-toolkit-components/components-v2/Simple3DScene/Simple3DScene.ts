@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Matrix4, Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
+import { Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
@@ -7,17 +7,11 @@ import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
-import {
-  addToObjectRegisty,
-  disposeSceneHierarchy,
-  getObjectFromRegistry,
-  getThreeScreenCoordinate,
-  registryHasObject
-} from './utils';
+import { ObjectRegistry, getThreeScreenCoordinate, disposeSceneHierarchy } from './utils';
 import { OrbitControls } from './orbitControls';
 // @ts-ignore
-import img from './glass.png';
-import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect'; // texture for selected elements
+//import img from './glass.png';
+import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -50,6 +44,7 @@ export default class Simple3DScene {
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = true;
+  private registry = new ObjectRegistry();
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -184,7 +179,9 @@ export default class Simple3DScene {
         if (this.isMultiSelectionEnabled || false) {
           // if the object is not in the registry, it just means it's the first time
           // we select it
-          const objectIndex = this.selection.indexOf(getObjectFromRegistry(sceneObject.uuid));
+          const objectIndex = this.selection.indexOf(
+            this.registry.getObjectFromRegistry(sceneObject.uuid)
+          );
           const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
           if (
             (objectIndex === -1 && jsonObjectIndex > -1) ||
@@ -209,15 +206,17 @@ export default class Simple3DScene {
           //TODO(chab) log warning if we have a json object without a three object, and vice-versa
           if (objectIndex > -1) {
             const object = this.selection.splice(objectIndex, 1);
-            const sceneObject = getObjectFromRegistry(object[0].uuid);
+            const sceneObject = this.registry.getObjectFromRegistry(object[0].uuid);
             this.outlineScene.remove(sceneObject);
           } else {
-            if (!registryHasObject(sceneObject)) {
+            if (!this.registry.registryHasObject(sceneObject)) {
               const clone = sceneObject.clone();
               clone.uuid = sceneObject.uuid;
-              addToObjectRegisty(clone);
+              this.registry.addToObjectRegisty(clone);
             }
-            const threeObjectForOutlineScene = getObjectFromRegistry(sceneObject.uuid);
+            const threeObjectForOutlineScene = this.registry.getObjectFromRegistry(
+              sceneObject.uuid
+            );
             if (e.shiftKey) {
               this.outlineScene.add(threeObjectForOutlineScene);
               this.selection.push(threeObjectForOutlineScene);
@@ -231,10 +230,10 @@ export default class Simple3DScene {
           }
         } else {
           disposeSceneHierarchy(this.outlineScene);
-          if (!registryHasObject(sceneObject)) {
-            addToObjectRegisty(sceneObject.clone());
+          if (!this.registry.registryHasObject(sceneObject)) {
+            this.registry.addToObjectRegisty(sceneObject.clone());
           }
-          const threeObjectForOutlineScene = getObjectFromRegistry(sceneObject.uuid);
+          const threeObjectForOutlineScene = this.registry.getObjectFromRegistry(sceneObject.uuid);
           if (this.outlineScene.children.length > 0) {
             this.outlineScene.remove(...this.outlineScene.children);
           }
@@ -255,6 +254,10 @@ export default class Simple3DScene {
         this.selection = [];
         needRedraw = true;
       }
+    }
+
+    if (this.settings.secondaryObjectView) {
+      this.selection.length > 0 ? this.inset.showObject(this.selection) : this.inset.showAxis();
     }
     needRedraw && this.renderScene();
   }
@@ -380,7 +383,7 @@ export default class Simple3DScene {
     }
 
     if (this.inset) {
-      this.inset.updateAxis(this.axis, this.axisJson);
+      this.inset.updateSelectedObject(this.axis, this.axisJson);
     }
   }
 

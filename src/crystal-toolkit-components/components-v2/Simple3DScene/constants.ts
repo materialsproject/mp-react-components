@@ -57,6 +57,7 @@ export const defaults = {
     }
   },
   enableZoom: true,
+  secondaryObjectView: false,
   defaultZoom: 0.8
 };
 

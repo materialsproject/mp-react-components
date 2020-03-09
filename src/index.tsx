@@ -105,19 +105,19 @@ function TestComponent(props: any) {
 ReactDOM.render(
   <>
     <Simple3DSceneComponent
-      sceneSize={200}
-      settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+      sceneSize={500}
+      settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
       data={scene3}
-      debug={true}
+      debug={false}
       toggleVisibility={{}}
     />
 
     <CameraContextWrapper>
       <>
         <Simple3DSceneComponent
-          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
           data={scene}
-          debug={false}
+          debug={true}
           toggleVisibility={{}}
         />
         <Simple3DSceneComponent

@@ -104,22 +104,25 @@ export interface Action<T, P> {
 }
 
 //TODO(chab) move to dedicated class
-const objectRegistry = {};
-export function addToObjectRegisty(o: THREE.Object3D): void {
-  objectRegistry[o.uuid] = o;
-}
-export function registryHasObject(o: THREE.Object3D): boolean {
-  return !!objectRegistry[o.uuid];
-}
-export function deleteObject(o: THREE.Object3D) {
-  if (!registryHasObject(o)) {
-    console.warn('Object does not exits');
+
+export class ObjectRegistry {
+  private objectRegistry = {};
+  addToObjectRegisty(o: THREE.Object3D): void {
+    this.objectRegistry[o.uuid] = o;
   }
-  delete objectRegistry[o.uuid];
-}
-export function getObjectFromRegistry(uuid: string): THREE.Object3D {
-  if (!objectRegistry[uuid]) {
-    console.warn('Non existent object', uuid);
+  deleteObject(o: THREE.Object3D) {
+    if (!this.registryHasObject(o)) {
+      console.warn('Object does not exits');
+    }
+    delete this.objectRegistry[o.uuid];
   }
-  return objectRegistry[uuid];
+  registryHasObject(o: THREE.Object3D): boolean {
+    return !!this.objectRegistry[o.uuid];
+  }
+  getObjectFromRegistry(uuid: string): THREE.Object3D {
+    if (!this.objectRegistry[uuid]) {
+      console.warn('Non existent object', uuid);
+    }
+    return this.objectRegistry[uuid];
+  }
 }

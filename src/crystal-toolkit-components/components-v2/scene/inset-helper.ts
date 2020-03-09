@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
-import { Vector3 } from 'three';
 import { disposeSceneHierarchy } from '../Simple3DScene/utils';
 
 export enum ScenePosition {
@@ -14,6 +13,8 @@ export enum ScenePosition {
 const AXIS_RADIUS = 0.07;
 const HEAD_AXIS_LENGTH = 0.24;
 const HEAD_WIDTH = 0.14;
+const MIN_SIZE = 50;
+const DEFAULT_SIZE = 130;
 
 export class InsetHelper {
   private insetCamera: THREE.OrthographicCamera;
@@ -21,25 +22,23 @@ export class InsetHelper {
   private axisPadding = 0; // the space between the edge of the inset and the axis bounding box
   private scene: THREE.Scene;
   public helper;
+  private axis;
 
   constructor(
-    private axis: THREE.Object3D,
+    private detailedObject: THREE.Object3D,
     private axisJson: any,
     baseScene: THREE.Scene,
     private origin: [number, number, number],
     private cameraToFollow: THREE.Camera,
     private threebuilder: ThreeBuilder,
-    private insetWidth = 130,
-    private insetHeight = 130,
+    private insetWidth = DEFAULT_SIZE,
+    private insetHeight = DEFAULT_SIZE,
     private insetPadding = 0
   ) {
-    //TODO(chab) extract the cube from the axis
-
-    // how we should do
+    this.axis = this.detailedObject;
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
-
     this.frontRotation = this.cameraToFollow.rotation.clone();
-    this.scene = getSceneWithBackground({ transparentBackground: true });
+    this.scene = getSceneWithBackground({ transparentBackground: true, background: '#ffffff' });
 
     const baseLights = baseScene.getObjectByName('lights');
     if (!baseLights) {
@@ -47,20 +46,21 @@ export class InsetHelper {
     } else {
       this.scene.add(baseLights.clone(true));
     }
-    if (this.axis) {
-      this.scene.add(this.axis);
-      this.setup(baseScene);
+    if (this.detailedObject) {
+      this.scene.add(this.detailedObject);
+      this.setup();
       this.helper = new THREE.CameraHelper(this.insetCamera);
+      this.helper.update();
     }
   }
-  private setup(baseScene?) {
-    if (!this.axis) {
-      console.warn('setup should not be called if no axis is there');
+  private setup() {
+    if (!this.detailedObject) {
+      console.warn('setup should not be called if no detailedObject is there');
       return;
     }
-    // put back the axis in its normal scale for the calculation
+    // put back the detailedObject in its normal scale for the calculation
 
-    const box = new THREE.Box3().setFromObject(this.axis);
+    const box = new THREE.Box3().setFromObject(this.detailedObject);
     const maxDimension = Math.max(
       box.max.x - box.min.x,
       box.max.y - box.min.y,
@@ -86,7 +86,7 @@ export class InsetHelper {
     return this.threebuilder.makeObject(object_json, obj);
   }
 
-  public updateViewportsize(size, padding) {
+  public updateViewportsize(size: number, padding: number) {
     if (!size || !padding) {
       console.warn('fallback to default settings when resizing');
       return;
@@ -94,8 +94,8 @@ export class InsetHelper {
 
     this.insetPadding = padding;
 
-    if (size < 50) {
-      size = 50;
+    if (size < MIN_SIZE) {
+      size = MIN_SIZE;
     }
     if (size != this.insetHeight) {
       this.insetWidth = this.insetHeight = size;
@@ -103,16 +103,49 @@ export class InsetHelper {
     }
   }
 
-  public updateAxis(axis, axisJson) {
-    this.scene.remove(this.axis);
-    this.axis = axis;
-    this.axisJson = axisJson;
-    this.scene.add(this.axis);
+  public showObject(selection: THREE.Object3D[]) {
+    const object = new THREE.Object3D();
+    object.add(
+      ...selection.map(a => {
+        const b = a.clone();
+        b.matrixAutoUpdate = false;
+        return b;
+      })
+    );
+    this.updateSelectedObject(object, {});
+  }
+
+  public showAxis() {
+    if (this.detailedObject === this.axis) {
+      return;
+    }
+    this.updateSelectedObject(this.axis, this.axisJson);
+  }
+
+  public updateSelectedObject(object: THREE.Object3D, objectJson: any) {
+    this.scene.remove(this.detailedObject);
+    this.detailedObject = object;
+    this.scene.add(this.detailedObject);
+    if (objectJson.origin) {
+      this.origin = objectJson.origin;
+    } else {
+      const box = new THREE.Box3().setFromObject(this.detailedObject);
+      let center = new THREE.Vector3();
+      box.getCenter(center);
+      center = object.localToWorld(center);
+      this.origin = [center.x, center.y, center.z];
+    }
+
+    // things work a bit by luck.. when we copy the object, we loose the parent frame
+    // that's why the camera seems misplaced in the inset helper.. it's in fact because
+    // the object itself is not in the same position in the inset view..
+    // things looks correct in the debug view when there is no parent transformation
+    // we'll need to bring back the parent transformation when cloning the object
     this.setup();
   }
 
   public render(renderer, [x, y]: any) {
-    if (renderer instanceof THREE.WebGLRenderer && this.axis) {
+    if (renderer instanceof THREE.WebGLRenderer && this.detailedObject) {
       renderer.setScissorTest(true);
       // everything outside should be discarded
       renderer.setScissor(x, y, this.insetWidth, this.insetHeight);
@@ -139,13 +172,13 @@ export class InsetHelper {
     // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
     this.cameraToFollow = (null as unknown) as THREE.Camera;
     this.insetCamera = (null as unknown) as THREE.OrthographicCamera;
-    this.axis = (null as unknown) as THREE.Object3D;
+    this.detailedObject = (null as unknown) as THREE.Object3D;
   }
 
   // TODO(chab) let's do something simple like having a width of 5 px
   private rescaleAxis() {
     // calculate scale
-    const box = new THREE.Box3().setFromObject(this.axis);
+    const box = new THREE.Box3().setFromObject(this.detailedObject);
     let center = new THREE.Vector3(
       (box.min.x + box.max.x) / 2,
       (box.min.y + box.max.y) / 2,
@@ -188,8 +221,12 @@ export class InsetHelper {
     this.axisJson.contents = this.axisJson.contents.map(a => {
       return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
     });
-    this.axis.remove(this.axis.children[0], this.axis.children[1], this.axis.children[2]);
-    this.axis.add(
+    this.detailedObject.remove(
+      this.detailedObject.children[0],
+      this.detailedObject.children[1],
+      this.detailedObject.children[2]
+    );
+    this.detailedObject.add(
       this.makeObject(this.axisJson.contents[0]),
       this.makeObject(this.axisJson.contents[1]),
       this.makeObject(this.axisJson.contents[2])
