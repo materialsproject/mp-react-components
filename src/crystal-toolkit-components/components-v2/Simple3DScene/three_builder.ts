@@ -1,8 +1,12 @@
 import * as THREE from 'three';
-import { DEFAULT_LIGHT_COLOR, JSON3DObject, Light, Material, Renderer } from './constants';
+import { JSON3DObject, Light, Material, Renderer } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
+
+const DEFAULT_DASHED_LINE_COLOR = '#000000';
+const DEFAULT_LINE_COLOR = '#2c3c54';
+const DEFAULT_MATERIAL_COLOR = '#52afb0';
 
 /**
  *
@@ -52,7 +56,7 @@ export class ThreeBuilder {
     let mat;
     if (object_json.dashSize || object_json.scale || object_json.gapSize) {
       mat = new THREE.LineDashedMaterial({
-        color: object_json.color || '#000000',
+        color: object_json.color || DEFAULT_DASHED_LINE_COLOR,
         linewidth: object_json.line_width || 1,
         scale: object_json.scale || 1,
         dashSize: object_json.dashSize || 3,
@@ -60,7 +64,7 @@ export class ThreeBuilder {
       });
     } else {
       mat = new THREE.LineBasicMaterial({
-        color: object_json.color || '#2c3c54',
+        color: object_json.color || DEFAULT_LINE_COLOR,
         linewidth: object_json.line_width || 1
       });
     }
@@ -162,7 +166,6 @@ export class ThreeBuilder {
 
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
-    const quaternion_head = new THREE.Quaternion();
 
     object_json.positionPairs.forEach(positionPair => {
       // the following is technically correct but could be optimized?
@@ -189,15 +192,13 @@ export class ThreeBuilder {
       // add arrowhead
       const mesh_head = new THREE.Mesh(geom_head, mat);
       mesh_head.position.set(vec_head.x, vec_head.y, vec_head.z);
-      // rotate cylinder into correct orientation
-      quaternion_head.setFromUnitVectors(vec_y, vec_rel.normalize());
-      mesh_head.setRotationFromQuaternion(quaternion_head);
+      mesh_head.setRotationFromQuaternion(quaternion.clone());
       obj.add(mesh_head);
     });
     return obj;
   }
 
-  public makeMaterial(color = '#52afb0', opacity = 1.0) {
+  public makeMaterial(color = DEFAULT_MATERIAL_COLOR, opacity = 1.0) {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
       opacity: opacity
