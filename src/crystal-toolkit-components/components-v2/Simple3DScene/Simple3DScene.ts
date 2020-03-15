@@ -96,8 +96,41 @@ export default class Simple3DScene {
     mountNode.appendChild(labelRenderer.domElement);
   }
 
+  mouseMoveListener = (e: any) => {
+    if (this.renderer instanceof WebGLRenderer) {
+      // tooltips
+      let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
+      if (p) {
+        const { object, point } = p;
+        this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
+        this.renderScene();
+      } else {
+        this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
+      }
+      // change mouse pointer for clickable objects
+      p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+      if (p) {
+        document.querySelector('body')!.classList.add(POINTER_CLASS);
+      } else {
+        document.querySelector('body')!.classList.remove(POINTER_CLASS);
+      }
+    } else {
+      console.warn('No mousemove implementation for SVG');
+    }
+  };
+  clickListener = (e: any) => {
+    if (this.renderer instanceof WebGLRenderer) {
+      const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
+      this.onClickImplementation(p, e);
+    } else {
+      console.warn('No implementation of click for SVG');
+    }
+  };
+
   private configureScene(sceneJson) {
     this.scene = getSceneWithBackground(this.settings);
+    this.clickableObjects = [];
+    this.objectDictionnary = {};
     this.addToScene(sceneJson);
     const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
@@ -107,37 +140,8 @@ export default class Simple3DScene {
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.enabled = true;
-    this.renderer.domElement.addEventListener('mousemove', (e: any) => {
-      if (this.renderer instanceof WebGLRenderer) {
-        // tooltips
-        let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
-        if (p) {
-          const { object, point } = p;
-          this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
-          this.renderScene();
-        } else {
-          this.tooltipHelper.hideTooltipIfNeeded() && this.renderScene();
-        }
-        // change mouse pointer for clickable objects
-        p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
-        if (p) {
-          document.querySelector('body')!.classList.add(POINTER_CLASS);
-        } else {
-          document.querySelector('body')!.classList.remove(POINTER_CLASS);
-        }
-      } else {
-        console.warn('No mousemove implementation for SVG');
-      }
-    });
-
-    this.renderer.domElement.addEventListener('click', (e: any) => {
-      if (this.renderer instanceof WebGLRenderer) {
-        const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
-        this.onClickImplementation(p, e);
-      } else {
-        console.warn('No implementation of click for SVG');
-      }
-    });
+    this.renderer.domElement.addEventListener('mousemove', this.mouseMoveListener);
+    this.renderer.domElement.addEventListener('click', this.clickListener);
 
     this.controls = controls;
 
@@ -325,11 +329,12 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson) {
+  addToScene(sceneJson, initial = true) {
+    // TODO(chab)
+    // the intent is to avoid duplicate BUT we should then clean
+    // the object registry/ and the clickable object that belongs to this
+    // scene
     this.removeObjectByName(sceneJson.name);
-    this.clickableObjects = [];
-    this.objectDictionnary = {};
-
     const rootObject = new THREE.Object3D();
     rootObject.name = sceneJson.name;
     sceneJson.visible && (rootObject.visible = sceneJson.visible);
@@ -365,7 +370,10 @@ export default class Simple3DScene {
     // can cause memory leak
     //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
-    this.setupCamera(rootObject);
+    if (initial) {
+      this.setupCamera(rootObject);
+    }
+
     this.renderScene();
 
     // we can automatically output a screenshot to be the background of the parent div
@@ -561,9 +569,15 @@ export default class Simple3DScene {
     }
   }
 
+  public removeListener() {
+    window.removeEventListener('resize', this.windowListener, false);
+    this.renderer.domElement.removeEventListener('mousemove', this.mouseMoveListener);
+    this.renderer.domElement.removeEventListener('click', this.clickListener);
+  }
+
   // call this when the parent component is destroyed
   public onDestroy() {
-    window.removeEventListener('resize', this.windowListener, false);
+    this.removeListener();
     this.debugHelper && this.debugHelper.onDestroy();
     this.inset.onDestroy();
     this.controls.dispose();
