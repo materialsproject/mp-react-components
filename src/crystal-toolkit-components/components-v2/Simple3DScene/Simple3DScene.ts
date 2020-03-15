@@ -127,35 +127,43 @@ export default class Simple3DScene {
     }
   };
 
-  private configureScene(sceneJson) {
+  private configureScene() {
     this.scene = getSceneWithBackground(this.settings);
     this.clickableObjects = [];
     this.objectDictionnary = {};
-    this.addToScene(sceneJson);
+    // default camera
+    this.camera = new THREE.OrthographicCamera(100, 100, 100, 100, 100);
     const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
     this.scene.add(this.tooltipHelper.tooltip);
+    this.renderer.domElement.addEventListener('mousemove', this.mouseMoveListener);
+    this.renderer.domElement.addEventListener('click', this.clickListener);
+    // when the component is mounted, the camera can be updated in the same event loop
+    // if the scene is configured
+    // we defer the initialization of the control to the next event loop to avoid
+    // some control events that would trigger unnecessary rendering
+    setTimeout(() => this.configureControls(), 0);
+  }
+
+  private configureControls() {
+    //TODO(chab) investigate why orbit controls triggers a style recalculation
     const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
     controls.rotateSpeed = 2.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.enabled = true;
-    this.renderer.domElement.addEventListener('mousemove', this.mouseMoveListener);
-    this.renderer.domElement.addEventListener('click', this.clickListener);
-
     this.controls = controls;
-
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
-      controls.addEventListener('change', () => {
+      this.controls.addEventListener('change', () => {
         this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
         this.renderScene();
       });
-      controls.addEventListener('start', () => {
-        controls.update();
+      this.controls.addEventListener('start', () => {
+        this.controls.update();
       });
-      controls.addEventListener('end', () => {
-        controls.update();
+      this.controls.addEventListener('end', () => {
+        this.controls.update();
       });
     } else {
       // constantly re-render (for animation)
@@ -283,7 +291,7 @@ export default class Simple3DScene {
     this.cacheMountBBox(domElement);
     this.configureSceneRenderer(domElement);
     this.configureLabelRenderer(domElement);
-    this.configureScene(sceneJson);
+    this.configureScene();
     this.configurePostProcessing();
     this.clickCallback = clickCallback;
     window.addEventListener('resize', this.windowListener, false);
@@ -329,7 +337,7 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson, initial = true) {
+  addToScene(sceneJson) {
     // TODO(chab)
     // the intent is to avoid duplicate BUT we should then clean
     // the object registry/ and the clickable object that belongs to this
@@ -370,9 +378,7 @@ export default class Simple3DScene {
     // can cause memory leak
     //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
-    if (initial) {
-      this.setupCamera(rootObject);
-    }
+    this.setupCamera(rootObject);
 
     this.renderScene();
 
@@ -414,20 +420,32 @@ export default class Simple3DScene {
     const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
     // we add a lot of padding to make sure the camera is always beyond/behind the object
     const Z_PADDING = 50;
-    this.camera = new THREE.OrthographicCamera(
-      center.x - maxExtent,
-      center.x + maxExtent,
-      center.y + maxExtent,
-      center.y - maxExtent,
-      center.z - maxExtent - Z_PADDING,
-      center.z + maxExtent + Z_PADDING
-    );
+    if (this.camera) {
+      this.camera.left = center.x - maxExtent;
+      this.camera.right = center.x + maxExtent;
+      this.camera.top = center.y + maxExtent;
+      this.camera.bottom = center.y - maxExtent;
+      this.camera.near = center.z - maxExtent - Z_PADDING;
+      this.camera.far = center.z + maxExtent + Z_PADDING;
+    } else {
+      this.camera = new THREE.OrthographicCamera(
+        center.x - maxExtent,
+        center.x + maxExtent,
+        center.y + maxExtent,
+        center.y - maxExtent,
+        center.z - maxExtent - Z_PADDING,
+        center.z + maxExtent + Z_PADDING
+      );
+    }
     // position camera behind the object
     this.camera.position.z = center.z + maxExtent + Z_PADDING / 2;
     this.camera.zoom = 1;
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
     this.scene.add(this.camera);
+    if (this.controls) {
+      this.controls.update();
+    }
   }
 
   makeObject(object_json) {
@@ -508,7 +526,7 @@ export default class Simple3DScene {
   }
 
   toggleVisibility(namesToVisibility: { [objectName: string]: boolean }) {
-    if (!!namesToVisibility) {
+    if (!!namesToVisibility && Object.keys(namesToVisibility).length > 0) {
       Object.keys(namesToVisibility).forEach(objName => {
         if (!!namesToVisibility[objName]) {
           const obj = this.scene.getObjectByName(objName);

@@ -93,7 +93,10 @@ export default function Simple3DSceneComponent({
   // triggering the effect
   useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
   // FIXME(chab) addToScene is breaking event handlers if we call it multiple time
-  //useEffect(() => {scene.current!.addToScene(data); scene.current!.toggleVisibility(toggleVisibility)},[data]);
+  useEffect(() => {
+    !!data && scene.current!.addToScene(data);
+    scene.current!.toggleVisibility(toggleVisibility as any);
+  }, [data]);
   useEffect(() => scene.current!.updateInsetSettings(inletSize!, inletPadding!, axisView), [
     inletSize,
     inletPadding,

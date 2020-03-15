@@ -8,7 +8,7 @@ import Simple3DScene from './Simple3DScene';
 jest.mock('./glass.png', () => {});
 jest.mock('./Simple3DScene.less', () => {});
 const spy = jest.spyOn(Simple3DScene.prototype, 'renderScene');
-const RENDERSCENE_CALLS_BY_REACT_RENDERING = 3;
+const RENDERSCENE_CALLS_BY_REACT_RENDERING = 2; // goal is to reach 1
 
 // When we run test, three.js is bundled differently, and we encounter again the bug
 // where we have 2 different instances of three
