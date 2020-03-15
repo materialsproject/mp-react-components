@@ -398,7 +398,7 @@ export default class Simple3DScene {
       }
     }
 
-    if (this.inset) {
+    if (this.inset && !!this.axis && !!this.axisJson) {
       this.inset.updateSelectedObject(this.axis, this.axisJson);
     }
   }
