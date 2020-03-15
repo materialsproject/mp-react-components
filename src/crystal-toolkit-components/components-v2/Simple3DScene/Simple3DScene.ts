@@ -43,7 +43,7 @@ export default class Simple3DScene {
   private selection: THREE.Object3D[] = [];
 
   // handle multiSelection via shift key
-  private isMultiSelectionEnabled = true;
+  private isMultiSelectionEnabled = false;
   private registry = new ObjectRegistry();
 
   private cacheMountBBox(mountNode: Element) {
@@ -188,7 +188,7 @@ export default class Simple3DScene {
       if (object?.sceneObject) {
         const sceneObject: Object3D = object?.sceneObject;
         const jsonObject: Object3D = object?.jsonObject;
-        if (this.isMultiSelectionEnabled || false) {
+        if (this.isMultiSelectionEnabled) {
           // if the object is not in the registry, it just means it's the first time
           // we select it
           const objectIndex = this.selection.indexOf(
@@ -243,7 +243,9 @@ export default class Simple3DScene {
         } else {
           disposeSceneHierarchy(this.outlineScene);
           if (!this.registry.registryHasObject(sceneObject)) {
-            this.registry.addToObjectRegisty(sceneObject.clone());
+            const clone = sceneObject.clone();
+            clone.uuid = sceneObject.uuid;
+            this.registry.addToObjectRegisty(clone);
           }
           const threeObjectForOutlineScene = this.registry.getObjectFromRegistry(sceneObject.uuid);
           if (this.outlineScene.children.length > 0) {
