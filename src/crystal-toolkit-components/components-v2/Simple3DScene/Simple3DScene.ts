@@ -318,7 +318,7 @@ export default class Simple3DScene {
     if (this.axis) {
       this.inset.updateViewportsize(inletSize, inletPadding);
     }
-    this.renderScene();
+    this.renderInlet();
   }
 
   resizeRendererToDisplaySize(size?: number) {
@@ -521,7 +521,10 @@ export default class Simple3DScene {
     }
 
     //TODO(chab) make a dedicated rendering for SVG
+    this.renderInlet();
+  }
 
+  private renderInlet() {
     this.inset &&
       this.inletPosition !== ScenePosition.HIDDEN &&
       this.inset.render(this.renderer, this.getInletOrigin(this.inletPosition));
