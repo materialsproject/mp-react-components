@@ -136,6 +136,7 @@ export default class Simple3DScene {
     const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
     this.scene.add(this.tooltipHelper.tooltip);
+    this.scene.add(this.camera);
     this.renderer.domElement.addEventListener('mousemove', this.mouseMoveListener);
     this.renderer.domElement.addEventListener('click', this.clickListener);
     // when the component is mounted, the camera can be updated in the same event loop
@@ -340,11 +341,21 @@ export default class Simple3DScene {
   }
 
   addToScene(sceneJson) {
-    // TODO(chab)
-    // the intent is to avoid duplicate BUT we should then clean
-    // the object registry/ and the clickable object that belongs to this
-    // scene
-    this.removeObjectByName(sceneJson.name);
+    // we need to clarify the  current semantics
+    // currently, it will remove the old scene if the name is the same,
+    // otherwise it will keep it
+    // it will then zoom on the content of the added scene
+
+    // if we found an object, we should remove all tootips and clicks related to it
+    if (this.scene.getObjectByName(sceneJson.name)) {
+      this.clickableObjects = [];
+      this.tooltipObjects = [];
+      this.removeObjectByName(sceneJson.name);
+      if (this.outlineScene.children.length > 0) {
+        this.outlineScene.remove(...this.outlineScene.children);
+      }
+    }
+
     const rootObject = new THREE.Object3D();
     rootObject.name = sceneJson.name;
     sceneJson.visible && (rootObject.visible = sceneJson.visible);
@@ -444,7 +455,6 @@ export default class Simple3DScene {
     this.camera.zoom = 1;
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
-    this.scene.add(this.camera);
     if (this.controls) {
       this.controls.update();
     }

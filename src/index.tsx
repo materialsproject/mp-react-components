@@ -50,6 +50,25 @@ function SelectedComponent() {
   );
 }
 
+function SceneSwitcher() {
+  const [_scene, setScene] = useState(scene) as any;
+
+  return (
+    <div>
+      <div onClick={() => setScene(scene)}> SCENE A </div>
+      <div onClick={() => setScene(scene2)}> SCENE B </div>
+      <div onClick={() => setScene(scene3)}> SCENE B </div>
+      <Simple3DSceneComponent
+        sceneSize={500}
+        settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
+        data={_scene}
+        debug={false}
+        toggleVisibility={{}}
+      />
+    </div>
+  );
+}
+
 function SelectedComponentSimple() {
   const { enabledElements } = useElements();
   // try to delete the key in the store instead
@@ -104,13 +123,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <Simple3DSceneComponent
-      sceneSize={500}
-      settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
-      data={scene3}
-      debug={false}
-      toggleVisibility={{}}
-    />
+    <SceneSwitcher />
 
     <CameraContextWrapper>
       <>
