@@ -354,6 +354,8 @@ export default class Simple3DScene {
       if (this.outlineScene.children.length > 0) {
         this.outlineScene.remove(...this.outlineScene.children);
       }
+    } else {
+      console.log('The scene is a new scene', sceneJson.name);
     }
 
     const rootObject = new THREE.Object3D();
