@@ -92,8 +92,12 @@ export default function Simple3DSceneComponent({
   // but a reference to an empty object, otherwise, it will be a different reference, and treated as a different object, thus
   // triggering the effect
   useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
-  // FIXME(chab) addToScene is breaking event handlers if we call it multiple time
   useEffect(() => {
+    if (!data || !(data as any).name || !(data as any).contents) {
+      console.warn('no data passed ( or missing name /content ), scene will not be updated', data);
+      return;
+    }
+
     !!data && scene.current!.addToScene(data);
     scene.current!.toggleVisibility(toggleVisibility as any);
   }, [data]);
