@@ -62,7 +62,7 @@ function SceneSwitcher() {
       <div onClick={() => setScene(buggyScene)}> SCENE D </div>
       <Simple3DSceneComponent
         sceneSize={500}
-        settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
+        settings={{ renderer: Renderer.WEBGL, extractAxis: false, isMultiSelectionEnabled: true }}
         data={_scene}
         debug={false}
         toggleVisibility={{}}

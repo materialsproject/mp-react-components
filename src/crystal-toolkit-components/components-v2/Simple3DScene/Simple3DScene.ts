@@ -312,6 +312,7 @@ export default class Simple3DScene {
     if (this.debugDOMElement) {
       this.debugHelper = this.getHelper();
     }
+    this.isMultiSelectionEnabled = this.settings.isMultiSelectionEnabled;
   }
 
   updateInsetSettings(inletSize: number, inletPadding: number, axisView) {
