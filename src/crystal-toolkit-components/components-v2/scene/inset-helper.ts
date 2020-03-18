@@ -52,6 +52,7 @@ export class InsetHelper {
       this.helper = new THREE.CameraHelper(this.insetCamera);
       this.helper.update();
     }
+    console.log('YO', this.axis, this.axisJson);
   }
   private setup() {
     if (!this.detailedObject) {
@@ -78,6 +79,11 @@ export class InsetHelper {
     );
     this.insetCamera.zoom = 1;
     this.insetCamera.updateProjectionMatrix();
+  }
+
+  setAxis(axis, axisJson) {
+    this.axis = axis;
+    this.axisJson = axisJson;
   }
 
   makeObject(object_json) {

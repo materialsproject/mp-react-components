@@ -412,7 +412,9 @@ export default class Simple3DScene {
       }
     }
 
+    //FIXME(chab) try to move that before
     if (this.inset && !!this.axis && !!this.axisJson) {
+      this.inset.setAxis(this.axis, this.axisJson);
       this.inset.updateSelectedObject(this.axis, this.axisJson);
     }
   }
