@@ -132,7 +132,7 @@ ReactDOM.render(
   <>
     <SceneSwitcher />
 
-    <CameraContextWrapper>
+    {/*<CameraContextWrapper>
       <>
         <Simple3DSceneComponent
           settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
@@ -148,7 +148,7 @@ ReactDOM.render(
         />
         <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
-    </CameraContextWrapper>
+    </CameraContextWrapper>*/}
 
     <div>
       {<TestComponent d={['B']} b={[]} e={[]} />}

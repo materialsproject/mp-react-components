@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
+import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
@@ -41,6 +41,8 @@ export default class Simple3DScene {
   private selectedJsonObjects: any[] = [];
   private outlineScene = new THREE.Scene();
   private selection: THREE.Object3D[] = [];
+
+  private threeUUIDTojsonObject: {[uuid:string]: any} = {};
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
@@ -367,7 +369,9 @@ export default class Simple3DScene {
     const traverse_scene = (o, parent) => {
       o.contents.forEach(childObject => {
         if (childObject.type) {
-          parent.add(this.makeObject(childObject));
+          const object = this.makeObject(childObject);
+          parent.add(object);
+          this.threeUUIDTojsonObject[object.uuid] = childObject;
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name;
@@ -465,7 +469,7 @@ export default class Simple3DScene {
     }
   }
 
-  makeObject(object_json) {
+  makeObject(object_json): THREE.Object3D {
     const obj = new THREE.Object3D();
 
     if (object_json.clickable) {
@@ -690,4 +694,64 @@ export default class Simple3DScene {
     });
     this.outline = outline;
   }
+
+  public findObjectByUUID(uuid: string) {
+    const threeObject = this.scene.getObjectByProperty('uuid', uuid);
+    const jsonObject = this.threeUUIDTojsonObject[uuid];
+    return {
+      threeObject, jsonObject
+    }
+  }
+
+  // TODO(chab) expose class/module tied to a particular object type
+  public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
+    // get uuid from json object
+    const material: any = {};
+    material.color = new THREE.Color(newColor);
+  }
+
+  public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
+    const mesh: THREE.Mesh = {} as THREE.Mesh; // grab mesh from sphere
+    const geometry = mesh.geometry as SphereBufferGeometry;
+    const phiStart = geometry.parameters.phiStart;
+    const phiEnd = geometry.parameters.phiLength;
+    geometry.dispose();
+    // THREE examples dispose and recreate geometry
+    mesh.geometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
+  }
+
+  // arrow
+  public updateHeadWidth(obj: THREE.Object3D, baseJsonObject, headWidth) {
+    const geom_head = this.objectBuilder.getHeadGeometry(headWidth, baseJsonObject.headWidth);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2 + 1;
+      //const mesh_head = new THREE.Mesh(geom_head, mat);
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry = geom_head;
+      // rotate cylinder into correct orientation
+    });
+  }
+
+  public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
+    const geom_head = this.objectBuilder.getHeadGeometry(baseJsonObject.headWidth, headLength);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2 + 1;
+      //const mesh_head = new THREE.Mesh(geom_head, mat);
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry = geom_head;
+      // rotate cylinder into correct orientation
+    });
+  }
+
+  public updateArrowpositionPair(baseJsonObject, newScale) {
+    //TODO(chab) if positions are different, update the whole mesh
+    //but reuse material if possible
+    baseJsonObject.positionPairs.forEach(a => {});
+  }
+
+  // generic
+  public updateScale(baseJsonObject, newScale) {}
+
+  // cylinder
+  public updateCylinderPositionPair(baseJsonObject, newScale) {}
 }

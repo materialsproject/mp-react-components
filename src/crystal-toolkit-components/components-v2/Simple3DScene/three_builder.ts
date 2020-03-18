@@ -141,7 +141,25 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeArrow(object_json, obj) {
+  public getHeadGeometry(headWidth, headLength): THREE.ConeBufferGeometry {
+    return new THREE.ConeBufferGeometry(
+      headWidth * this.settings.cylinderScale,
+      headLength * this.settings.cylinderScale,
+      this.settings.cylinderSegments
+    );
+  }
+
+  private getCylinderGeometry(radius): THREE.CylinderBufferGeometry {
+    // body
+    return new THREE.CylinderBufferGeometry(
+      radius * this.settings.cylinderScale,
+      radius * this.settings.cylinderScale,
+      1.0,
+      this.settings.cylinderSegments
+    );
+  }
+
+  public makeArrow(object_json, obj: THREE.Object3D) {
     // TODO obj is the parent object, rename to a better name
 
     const radius = object_json.radius || 1;
@@ -149,49 +167,37 @@ export class ThreeBuilder {
     const headWidth = object_json.headWidth || 2;
 
     // body
-    const geom_cyl = new THREE.CylinderBufferGeometry(
-      radius * this.settings.cylinderScale,
-      radius * this.settings.cylinderScale,
-      1.0,
-      this.settings.cylinderSegments
-    );
+    const geom_cyl = this.getCylinderGeometry(radius);
     // head
-    const geom_head = new THREE.ConeBufferGeometry(
-      headWidth * this.settings.cylinderScale,
-      headLength * this.settings.cylinderScale,
-      this.settings.cylinderSegments
-    );
-
+    const geom_head = this.getHeadGeometry(headWidth, headLength);
     const mat = this.makeMaterial(object_json.color);
 
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
 
+    // for each pairs, we have one cylinder and one head, so obj will have meshes as children
+    // for 2 position pairs, 1cylinder, 1head, 2cylinder, 2head
+
     object_json.positionPairs.forEach(positionPair => {
       // the following is technically correct but could be optimized?
-
       const mesh = new THREE.Mesh(geom_cyl, mat);
       const vec_a = new THREE.Vector3(...positionPair[0]);
       const vec_b = new THREE.Vector3(...positionPair[1]);
       const vec_head = new THREE.Vector3(...positionPair[1]);
       const vec_rel = vec_b.sub(vec_a);
-
       // scale cylinder to correct length
       mesh.scale.y = vec_rel.length();
-
       // set origin at midpoint of cylinder
       const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
       mesh.position.set(vec_midpoint.x, vec_midpoint.y, vec_midpoint.z);
-
       // rotate cylinder into correct orientation
       quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
       mesh.setRotationFromQuaternion(quaternion);
-
       obj.add(mesh);
-
       // add arrowhead
       const mesh_head = new THREE.Mesh(geom_head, mat);
       mesh_head.position.set(vec_head.x, vec_head.y, vec_head.z);
+      // rotate cylinder into correct orientation
       mesh_head.setRotationFromQuaternion(quaternion.clone());
       obj.add(mesh_head);
     });
@@ -277,7 +283,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeObject(object_json, obj) {
+  public makeObject(object_json, obj): THREE.Object3D {
     switch (object_json.type as JSON3DObject) {
       case JSON3DObject.SPHERES: {
         return this.makeSphere(object_json, obj);
@@ -313,7 +319,7 @@ export class ThreeBuilder {
     }
   }
 
-  private getSphereBuffer(radius: number, color: string, phiStart: number, phiEnd: number) {
+  public getSphereGeometry(radius: number, phiStart: number, phiEnd: number) {
     const geom = new THREE.SphereBufferGeometry(
       radius,
       this.settings.sphereSegments,
@@ -321,7 +327,13 @@ export class ThreeBuilder {
       phiStart || 0,
       phiEnd || Math.PI * 2
     );
-    return { geom, mat: this.makeMaterial(color) };
+    return geom;
+  }
+
+  private getSphereBuffer(radius: number, color: string, phiStart: number, phiEnd: number) {
+    const geom = this.getSphereGeometry(radius, phiStart, phiEnd);
+    const mat = this.makeMaterial(color);
+    return { geom, mat };
   }
 
   public makeLights(light_json): Object3D {
