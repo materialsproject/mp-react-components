@@ -51,8 +51,11 @@ function SelectedComponent() {
   );
 }
 
+const vis = { atoms: true};
+
 function SceneSwitcher() {
   const [_scene, setScene] = useState(scene) as any;
+  const [_vis, setVisibility] = useState(vis) as any;
 
   return (
     <div>
@@ -60,6 +63,10 @@ function SceneSwitcher() {
       <div onClick={() => setScene(scene2)}> SCENE B </div>
       <div onClick={() => setScene(scene3)}> SCENE C </div>
       <div onClick={() => setScene(buggyScene)}> SCENE D </div>
+      <div onClick={() => {
+        vis.atoms = !vis.atoms;
+        setVisibility({...vis});
+      }}> TOGGLE VIS </div>
       <Simple3DSceneComponent
         sceneSize={500}
         settings={{
@@ -70,7 +77,7 @@ function SceneSwitcher() {
         }}
         data={_scene}
         debug={false}
-        toggleVisibility={{}}
+        toggleVisibility={_vis}
       />
     </div>
   );

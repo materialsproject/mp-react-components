@@ -560,11 +560,9 @@ export default class Simple3DScene {
   toggleVisibility(namesToVisibility: { [objectName: string]: boolean }) {
     if (!!namesToVisibility && Object.keys(namesToVisibility).length > 0) {
       Object.keys(namesToVisibility).forEach(objName => {
-        if (!!namesToVisibility[objName]) {
-          const obj = this.scene.getObjectByName(objName);
-          if (obj) {
-            obj.visible = !!namesToVisibility[objName];
-          }
+        const obj = this.scene.getObjectByName(objName);
+        if (obj) {
+          obj.visible = !!namesToVisibility[objName];
         }
       });
       this.renderScene();
@@ -770,8 +768,10 @@ export default class Simple3DScene {
     });
   }
 
+
+  //TODO(chab) check if positions are different, update the whole mesh
+  // OR let pass the index so we know what to update
   public updateArrowpositionPair(baseJsonObject, newScale) {
-    //TODO(chab) if positions are different, update the whole mesh
     //but reuse material if possible
     baseJsonObject.positionPairs.forEach(a => {});
   }
@@ -814,7 +814,7 @@ export default class Simple3DScene {
   // generic
   public updateScale(baseJsonObject, newScale) {}
 
-  // cylinder
+  // cylinder, see arrows
   public updateCylinderPositionPair(baseJsonObject, newScale) {}
 
   //TODO(chab) can be refactored with the sphere
