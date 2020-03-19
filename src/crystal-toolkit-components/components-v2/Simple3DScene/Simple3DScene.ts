@@ -1,5 +1,12 @@
 import * as THREE from 'three';
-import { CylinderBufferGeometry, Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from "three";
+import {
+  CylinderBufferGeometry,
+  Object3D,
+  Quaternion,
+  SphereBufferGeometry,
+  Vector3,
+  WebGLRenderer
+} from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
@@ -42,7 +49,7 @@ export default class Simple3DScene {
   private outlineScene = new THREE.Scene();
   private selection: THREE.Object3D[] = [];
 
-  private threeUUIDTojsonObject: {[uuid:string]: any} = {};
+  private threeUUIDTojsonObject: { [uuid: string]: any } = {};
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
@@ -699,17 +706,18 @@ export default class Simple3DScene {
     const threeObject = this.scene.getObjectByProperty('uuid', uuid);
     const jsonObject = this.threeUUIDTojsonObject[uuid];
     return {
-      threeObject, jsonObject
-    }
+      threeObject,
+      jsonObject
+    };
   }
 
   // TODO(chab) expose class/module tied to a particular object type
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
     // get uuid from json object
-    obj.children.forEach((o => {
-      const material = (((o as THREE.Mesh).material) as THREE.MeshStandardMaterial);
+    obj.children.forEach(o => {
+      const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
       material.color = new THREE.Color(newColor);
-    }));
+    });
   }
 
   public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
@@ -717,33 +725,31 @@ export default class Simple3DScene {
     const phiStart = geometry.parameters.phiStart;
     const phiEnd = geometry.parameters.phiLength;
     const newGeometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
-    obj.children.forEach((o => {
+    obj.children.forEach(o => {
       (o as THREE.Mesh).geometry.dispose();
       (o as THREE.Mesh).geometry = newGeometry;
-    }));
+    });
   }
 
+  // TODO(chab) merge the two below methods
   // arrow width
   public updateHeadWidth(obj: THREE.Object3D, baseJsonObject, headWidth) {
     const geom_head = this.objectBuilder.getHeadGeometry(headWidth, baseJsonObject.headWidth);
     baseJsonObject.positionPairs.forEach((a, idx) => {
       const headIndex = idx * 2 + 1;
-      //const mesh_head = new THREE.Mesh(geom_head, mat);
       const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
       (mesh_head as THREE.Mesh).geometry = geom_head;
-      // rotate cylinder into correct orientation
     });
   }
-
   // arrow length
   public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
     const geom_head = this.objectBuilder.getHeadGeometry(baseJsonObject.headWidth, headLength);
     baseJsonObject.positionPairs.forEach((a, idx) => {
       const headIndex = idx * 2 + 1;
-      //const mesh_head = new THREE.Mesh(geom_head, mat);
       const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
       (mesh_head as THREE.Mesh).geometry = geom_head;
-      // rotate cylinder into correct orientation
     });
   }
 
@@ -757,9 +763,7 @@ export default class Simple3DScene {
   public updateScale(baseJsonObject, newScale) {}
 
   // cylinder
-  public updateCylinderPositionPair(baseJsonObject, newScale) {
-
-  }
+  public updateCylinderPositionPair(baseJsonObject, newScale) {}
 
   //TODO(chab) can be refactored with the sphere
   public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
@@ -770,16 +774,16 @@ export default class Simple3DScene {
       1.0,
       this.settings.cylinderSegments
     );
-    obj.children.forEach((o => {
+    obj.children.forEach(o => {
       (o as THREE.Mesh).geometry.dispose();
       (o as THREE.Mesh).geometry = newGeometry;
-    }));
+    });
   }
 
   public updateCylinderColor(obj: THREE.Object3D, baseJsonObject, newColor) {
-    obj.children.forEach((o => {
-      const material = (((o as THREE.Mesh).material) as THREE.MeshStandardMaterial);
+    obj.children.forEach(o => {
+      const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
       material.color = new THREE.Color(newColor);
-    }));
+    });
   }
 }

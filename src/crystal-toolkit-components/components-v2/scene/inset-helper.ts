@@ -52,7 +52,6 @@ export class InsetHelper {
       this.helper = new THREE.CameraHelper(this.insetCamera);
       this.helper.update();
     }
-    console.log('YO', this.axis, this.axisJson);
   }
   private setup() {
     if (!this.detailedObject) {
