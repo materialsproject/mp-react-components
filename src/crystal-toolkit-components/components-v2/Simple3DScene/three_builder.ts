@@ -4,9 +4,9 @@ import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeomet
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
 
-const DEFAULT_DASHED_LINE_COLOR = '#000000';
-const DEFAULT_LINE_COLOR = '#2c3c54';
-const DEFAULT_MATERIAL_COLOR = '#52afb0';
+export const DEFAULT_DASHED_LINE_COLOR = '#000000';
+export const DEFAULT_LINE_COLOR = '#2c3c54';
+export const DEFAULT_MATERIAL_COLOR = '#52afb0';
 
 /**
  *
@@ -20,12 +20,7 @@ export class ThreeBuilder {
 
   public makeCylinders(object_json, obj) {
     const radius = object_json.radius || 1;
-    const geom = new THREE.CylinderBufferGeometry(
-      radius * this.settings.cylinderScale,
-      radius * this.settings.cylinderScale,
-      1.0,
-      this.settings.cylinderSegments
-    );
+    const geom = this.getCylinderGeometry(radius);
     const mat = this.makeMaterial(object_json.color);
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
@@ -149,7 +144,7 @@ export class ThreeBuilder {
     );
   }
 
-  private getCylinderGeometry(radius): THREE.CylinderBufferGeometry {
+  public getCylinderGeometry(radius): THREE.CylinderBufferGeometry {
     // body
     return new THREE.CylinderBufferGeometry(
       radius * this.settings.cylinderScale,

@@ -12,13 +12,14 @@ import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
-import { getSceneWithBackground, ThreeBuilder } from './three_builder';
+import { DEFAULT_DASHED_LINE_COLOR, DEFAULT_LINE_COLOR, getSceneWithBackground, ThreeBuilder } from "./three_builder";
 import { DebugHelper } from '../scene/debug-helper';
 import { ObjectRegistry, getThreeScreenCoordinate, disposeSceneHierarchy } from './utils';
 import { OrbitControls } from './orbitControls';
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
+import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -775,6 +776,41 @@ export default class Simple3DScene {
     baseJsonObject.positionPairs.forEach(a => {});
   }
 
+  public updateLineSegments(obj: THREE.Object3D, object_json, positions) {
+    const verts = new THREE.Float32BufferAttribute(positions, 3)
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', verts);
+    const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
+    mesh.geometry = geom;
+  }
+
+  public updateLineStyle(obj: THREE.Object3D, object_json, color, lineWidth, scale, dashSize, gapSize) {
+    const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
+    let mat;
+
+    //FIXME(update material instead)
+    if (object_json.dashSize || object_json.scale || object_json.gapSize || dashSize || scale || gapSize)  {
+      mat = new THREE.LineDashedMaterial({
+        color: color || object_json.color || DEFAULT_DASHED_LINE_COLOR,
+        linewidth: lineWidth || object_json.line_width || 1,
+        scale: scale || object_json.scale || 1,
+        dashSize: dashSize || object_json.dashSize || 3,
+        gapSize: gapSize || object_json.gapSize || 1
+      });
+    } else {
+      mat = new THREE.LineBasicMaterial({
+        color: color || object_json.color || DEFAULT_LINE_COLOR,
+        linewidth: lineWidth || object_json.line_width || 1
+      });
+    }
+    mesh.material = mat;
+    if (object_json.dashSize || object_json.scale || object_json.gapSize || dashSize || scale || gapSize) {
+      mesh.computeLineDistances();
+    }
+  }
+
+
+
   // generic
   public updateScale(baseJsonObject, newScale) {}
 
@@ -784,12 +820,7 @@ export default class Simple3DScene {
   //TODO(chab) can be refactored with the sphere
   public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
     //CylinderBufferGeometry
-    const newGeometry = new THREE.CylinderBufferGeometry(
-      newRadius * this.settings.cylinderScale,
-      newRadius * this.settings.cylinderScale,
-      1.0,
-      this.settings.cylinderSegments
-    );
+    const newGeometry = this.objectBuilder.getCylinderGeometry(newRadius);
     obj.children.forEach(o => {
       (o as THREE.Mesh).geometry.dispose();
       (o as THREE.Mesh).geometry = newGeometry;
