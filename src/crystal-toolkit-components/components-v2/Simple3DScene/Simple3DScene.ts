@@ -720,6 +720,22 @@ export default class Simple3DScene {
     });
   }
 
+  public updateConvexColor(obj, objjson, color) {
+    obj.children.forEach(o => {
+      o.material.color = new THREE.Color(color);
+    })
+  }
+
+  public updateConvexEdges(obj, objjson, positions) {
+    const points = positions.map(p => new THREE.Vector3(...p));
+    const geom = new ConvexBufferGeometry(points);
+    const edges = new THREE.EdgesGeometry(geom);
+    obj.children[0].geometry.dispose();
+    obj.children[1].geometry.dispose();
+    obj.children[0].geometry = geom;
+    obj.children[1].geometry = edges;
+  }
+
   public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
     const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
     const phiStart = geometry.parameters.phiStart;
