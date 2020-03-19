@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
+import { CylinderBufferGeometry, Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from "three";
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import { defaults, Renderer } from './constants';
@@ -706,21 +706,24 @@ export default class Simple3DScene {
   // TODO(chab) expose class/module tied to a particular object type
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
     // get uuid from json object
-    const material: any = {};
-    material.color = new THREE.Color(newColor);
+    obj.children.forEach((o => {
+      const material = (((o as THREE.Mesh).material) as THREE.MeshStandardMaterial);
+      material.color = new THREE.Color(newColor);
+    }));
   }
 
   public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
-    const mesh: THREE.Mesh = {} as THREE.Mesh; // grab mesh from sphere
-    const geometry = mesh.geometry as SphereBufferGeometry;
+    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
     const phiStart = geometry.parameters.phiStart;
     const phiEnd = geometry.parameters.phiLength;
-    geometry.dispose();
-    // THREE examples dispose and recreate geometry
-    mesh.geometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
+    const newGeometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
+    obj.children.forEach((o => {
+      (o as THREE.Mesh).geometry.dispose();
+      (o as THREE.Mesh).geometry = newGeometry;
+    }));
   }
 
-  // arrow
+  // arrow width
   public updateHeadWidth(obj: THREE.Object3D, baseJsonObject, headWidth) {
     const geom_head = this.objectBuilder.getHeadGeometry(headWidth, baseJsonObject.headWidth);
     baseJsonObject.positionPairs.forEach((a, idx) => {
@@ -732,6 +735,7 @@ export default class Simple3DScene {
     });
   }
 
+  // arrow length
   public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
     const geom_head = this.objectBuilder.getHeadGeometry(baseJsonObject.headWidth, headLength);
     baseJsonObject.positionPairs.forEach((a, idx) => {
@@ -753,5 +757,29 @@ export default class Simple3DScene {
   public updateScale(baseJsonObject, newScale) {}
 
   // cylinder
-  public updateCylinderPositionPair(baseJsonObject, newScale) {}
+  public updateCylinderPositionPair(baseJsonObject, newScale) {
+
+  }
+
+  //TODO(chab) can be refactored with the sphere
+  public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
+    //CylinderBufferGeometry
+    const newGeometry = new THREE.CylinderBufferGeometry(
+      newRadius * this.settings.cylinderScale,
+      newRadius * this.settings.cylinderScale,
+      1.0,
+      this.settings.cylinderSegments
+    );
+    obj.children.forEach((o => {
+      (o as THREE.Mesh).geometry.dispose();
+      (o as THREE.Mesh).geometry = newGeometry;
+    }));
+  }
+
+  public updateCylinderColor(obj: THREE.Object3D, baseJsonObject, newColor) {
+    obj.children.forEach((o => {
+      const material = (((o as THREE.Mesh).material) as THREE.MeshStandardMaterial);
+      material.color = new THREE.Color(newColor);
+    }));
+  }
 }
