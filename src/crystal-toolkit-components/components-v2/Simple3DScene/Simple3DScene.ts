@@ -431,7 +431,7 @@ export default class Simple3DScene {
     }
   }
 
-  private setupCamera(rootObject) {
+  private setupCamera(rootObject: THREE.Object3D) {
     const bbox = new THREE.Box3();
     bbox.setFromObject(rootObject);
     // auto-zoom to fit object
@@ -571,7 +571,7 @@ export default class Simple3DScene {
 
   // i know this is can be done by implementing a color buffer, with each color matching one
   // object
-  getClickedReference(clientX, clientY, objectsToCheck: Object3D[]) {
+  getClickedReference(clientX: number, clientY: number, objectsToCheck: Object3D[]) {
     if (!objectsToCheck || objectsToCheck.length === 0) {
       return;
     }
@@ -641,7 +641,7 @@ export default class Simple3DScene {
     this.stop();
   }
 
-  removeObjectByName(name) {
+  removeObjectByName(name: string) {
     // name is not necessarily unique, make this recursive ?
     const object = this.scene.getObjectByName(name);
     typeof object !== 'undefined' && this.scene.remove(object);

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { JSON3DObject, Light, Material, Renderer, ThreePosition } from "./constants";
+import { JSON3DObject, Light, Material, Renderer, ThreePosition } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
@@ -18,7 +18,7 @@ export const DEFAULT_MATERIAL_COLOR = '#52afb0';
 export class ThreeBuilder {
   constructor(private settings) {}
 
-  public makeCylinders(object_json, obj) {
+  public makeCylinders(object_json, obj: THREE.Object3D) {
     const radius = object_json.radius || 1;
     const geom = this.getCylinderGeometry(radius);
     const mat = this.makeMaterial(object_json.color);
@@ -43,7 +43,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeLine(object_json, obj) {
+  public makeLine(object_json, obj: THREE.Object3D) {
     const verts = new THREE.Float32BufferAttribute([].concat.apply([], object_json.positions), 3);
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', verts);
@@ -72,7 +72,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeCube(object_json, obj) {
+  public makeCube(object_json, obj: THREE.Object3D) {
     const size = object_json.width * this.settings.sphereScale;
     const geom = new THREE.BoxBufferGeometry(size, size, size);
     const mat = this.makeMaterial(object_json.color);
@@ -85,7 +85,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeSurfaces(object_json, obj) {
+  public makeSurfaces(object_json, obj: THREE.Object3D) {
     const verts = new THREE.Float32BufferAttribute([].concat.apply([], object_json.positions), 3);
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', verts);
@@ -115,7 +115,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeConvex(object_json, obj) {
+  public makeConvex(object_json, obj: THREE.Object3D) {
     const points = object_json.positions.map(p => new THREE.Vector3(...p));
     const geom = new ConvexBufferGeometry(points);
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
@@ -136,7 +136,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public getHeadGeometry(headWidth, headLength): THREE.ConeBufferGeometry {
+  public getHeadGeometry(headWidth: number, headLength: number): THREE.ConeBufferGeometry {
     return new THREE.ConeBufferGeometry(
       headWidth * this.settings.cylinderScale,
       headLength * this.settings.cylinderScale,
@@ -144,7 +144,7 @@ export class ThreeBuilder {
     );
   }
 
-  public getCylinderGeometry(radius): THREE.CylinderBufferGeometry {
+  public getCylinderGeometry(radius: number): THREE.CylinderBufferGeometry {
     // body
     return new THREE.CylinderBufferGeometry(
       radius * this.settings.cylinderScale,
@@ -220,7 +220,7 @@ export class ThreeBuilder {
     }
   }
 
-  public makeSphere(object_json, obj) {
+  public makeSphere(object_json, obj: THREE.Object3D) {
     const { geom, mat } = this.getSphereBuffer(
       object_json.radius * this.settings.sphereScale,
       object_json.color,
@@ -236,7 +236,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeLabel(object_json, obj) {
+  public makeLabel(object_json, obj: THREE.Object3D) {
     const label = document.createElement('div');
     label.className = 'tooltip';
     label.textContent = object_json.label;
@@ -251,7 +251,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeEllipsoids(object_json, obj) {
+  public makeEllipsoids(object_json, obj: THREE.Object3D) {
     const { geom, mat } = this.getSphereBuffer(
       this.settings.sphereScale,
       object_json.color,
@@ -278,7 +278,7 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeObject(object_json, obj): THREE.Object3D {
+  public makeObject(object_json, obj: THREE.Object3D): THREE.Object3D {
     switch (object_json.type as JSON3DObject) {
       case JSON3DObject.SPHERES: {
         return this.makeSphere(object_json, obj);

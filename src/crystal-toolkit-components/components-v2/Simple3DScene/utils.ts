@@ -94,7 +94,7 @@ export function disposeSceneHierarchy(scene) {
 // CENTER = > ( 250 / 500 * 2 - 1 = 0, - (250/500) * 2 + 1 = 0)
 // SE (500/500 * 2 -1 ) = 1, ( - (500/500) * 2 + 1 = -1)
 // SW (0 - 1) = -1, -(500 / 500 ) * 2 + 1 = -1)
-export function getThreeScreenCoordinate(size, clientX, clientY) {
+export function getThreeScreenCoordinate(size, clientX: number, clientY: number) {
   return new THREE.Vector2((clientX / size.width) * 2 - 1, -(clientY / size.height) * 2 + 1);
 }
 
@@ -102,8 +102,6 @@ export interface Action<T, P> {
   type: T;
   payload: P;
 }
-
-//TODO(chab) move to dedicated class
 
 export class ObjectRegistry {
   private objectRegistry = {};
