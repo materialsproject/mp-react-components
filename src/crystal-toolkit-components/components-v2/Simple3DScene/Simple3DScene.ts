@@ -9,7 +9,7 @@ import {
 } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, Renderer } from './constants';
+import { defaults, Renderer, ThreePosition } from "./constants";
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { DEFAULT_DASHED_LINE_COLOR, DEFAULT_LINE_COLOR, getSceneWithBackground, ThreeBuilder } from "./three_builder";
@@ -387,7 +387,7 @@ export default class Simple3DScene {
           if (childObject.origin) {
             const translation = new THREE.Matrix4();
             // note(chab) have a typedefinition for the JSON
-            translation.makeTranslation(...(childObject.origin as [number, number, number]));
+            translation.makeTranslation(...(childObject.origin as ThreePosition));
             threeObject.applyMatrix4(translation);
           }
           if (!this.settings.extractAxis || threeObject.name !== 'axes') {
@@ -711,6 +711,12 @@ export default class Simple3DScene {
   }
 
   // TODO(chab) expose class/module tied to a particular object type
+
+  public updateSphereCenter(obj: THREE.Object3D, baseJsonObject, newPosition: ThreePosition, index) {
+    const mesh = obj.children[index] as THREE.Mesh;
+    mesh.position.set(...newPosition)
+  }
+
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
     // get uuid from json object
     obj.children.forEach(o => {

@@ -142,3 +142,5 @@ export const OBJECT_TO_FIELDS: { [K in JSON3DObject]: Field[] | null } = {
   [JSON3DObject.ELLIPSOIDS]: [],
   [JSON3DObject.CUBES]: []
 };
+
+export type ThreePosition = [number, number, number];

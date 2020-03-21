@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { JSON3DObject, Light, Material, Renderer } from './constants';
+import { JSON3DObject, Light, Material, Renderer, ThreePosition } from "./constants";
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
@@ -76,9 +76,9 @@ export class ThreeBuilder {
     const size = object_json.width * this.settings.sphereScale;
     const geom = new THREE.BoxBufferGeometry(size, size, size);
     const mat = this.makeMaterial(object_json.color);
-    object_json.positions.forEach(position => {
+    object_json.positions.forEach((position: ThreePosition) => {
       const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(...(position as [number, number, number]));
+      mesh.position.set(...position);
       obj.add(mesh);
     });
 
@@ -227,9 +227,9 @@ export class ThreeBuilder {
       object_json.phiStart,
       object_json.phiEnd
     );
-    object_json.positions.forEach(position => {
+    object_json.positions.forEach((position: ThreePosition) => {
       const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(...(position as [number, number, number])); //FIXME
+      mesh.position.set(...position);
       obj.add(mesh);
       return mesh;
     });
@@ -258,10 +258,10 @@ export class ThreeBuilder {
       object_json.phiStart,
       object_json.phiEnd
     );
-    const meshes = object_json.positions.map(position => {
+    const meshes = object_json.positions.map((position: ThreePosition) => {
       const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(...(position as [number, number, number]));
-      mesh.scale.set(...(object_json.scale as [number, number, number]));
+      mesh.position.set(...position);
+      mesh.scale.set(...(object_json.scale as ThreePosition));
       return mesh;
     });
     // TODO: test axes are correct!

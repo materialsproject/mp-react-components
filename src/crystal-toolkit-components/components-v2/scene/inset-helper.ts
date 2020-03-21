@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
 import { disposeSceneHierarchy } from '../Simple3DScene/utils';
+import { ThreePosition } from "../Simple3DScene/constants";
 
 export enum ScenePosition {
   NW = 'NW',
@@ -28,7 +29,7 @@ export class InsetHelper {
     private detailedObject: THREE.Object3D,
     private axisJson: any,
     baseScene: THREE.Scene,
-    private origin: [number, number, number],
+    private origin: ThreePosition,
     private cameraToFollow: THREE.Camera,
     private threebuilder: ThreeBuilder,
     private insetWidth = DEFAULT_SIZE,
