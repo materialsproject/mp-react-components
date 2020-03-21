@@ -106,7 +106,7 @@ export default class Simple3DScene {
     mountNode.appendChild(labelRenderer.domElement);
   }
 
-  mouseMoveListener = (e: any) => {
+  mouseMoveListener = (e) => {
     if (this.renderer instanceof WebGLRenderer) {
       // tooltips
       let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
@@ -128,7 +128,7 @@ export default class Simple3DScene {
       console.warn('No mousemove implementation for SVG');
     }
   };
-  clickListener = (e: any) => {
+  clickListener = (e) => {
     if (this.renderer instanceof WebGLRenderer) {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       this.onClickImplementation(p, e);
@@ -658,7 +658,7 @@ export default class Simple3DScene {
     );
   }
 
-  private getInletOrigin(pos: ScenePosition) {
+  private getInletOrigin(pos: ScenePosition): [number, number] {
     switch (pos) {
       case ScenePosition.SW: {
         return [this.inset.getPadding(), this.inset.getPadding()];
@@ -821,7 +821,23 @@ export default class Simple3DScene {
   public updateScale(baseJsonObject, newScale) {}
 
   // cylinder, see arrows
-  public updateCylinderPositionPair(baseJsonObject, newScale) {}
+  public updateCylinderPositionPair(obj: THREE.Object3D, baseJsonObject, newPositionPair, index) {
+    const mesh = obj.children[index] as THREE.Mesh;
+    const vec_a = new THREE.Vector3(...newPositionPair[0]);
+    const vec_b = new THREE.Vector3(...newPositionPair[1]);
+    const vec_rel = vec_b.sub(vec_a);
+
+    // scale cylinder to correct length
+    mesh.scale.y = vec_rel.length();
+    // set origin at midpoint of cylinder
+    const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
+    mesh.position.set(vec_midpoint.x, vec_midpoint.y, vec_midpoint.z);
+    // rotate cylinder into correct orientation
+    const quaternion = new THREE.Quaternion();
+    const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
+    quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
+    mesh.setRotationFromQuaternion(quaternion);
+  }
 
   //TODO(chab) can be refactored with the sphere
   public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {

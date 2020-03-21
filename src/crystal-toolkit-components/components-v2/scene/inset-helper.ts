@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { getSceneWithBackground, ThreeBuilder } from '../Simple3DScene/three_builder';
 import { disposeSceneHierarchy } from '../Simple3DScene/utils';
-import { ThreePosition } from "../Simple3DScene/constants";
+import { ThreePosition } from '../Simple3DScene/constants';
 
 export enum ScenePosition {
   NW = 'NW',
@@ -150,7 +150,7 @@ export class InsetHelper {
     this.setup();
   }
 
-  public render(renderer, [x, y]: any) {
+  public render(renderer, [x, y]: [number, number]) {
     if (renderer instanceof THREE.WebGLRenderer && this.detailedObject) {
       renderer.setScissorTest(true);
       // everything outside should be discarded
