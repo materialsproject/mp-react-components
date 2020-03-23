@@ -22,6 +22,7 @@ import {
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
+import { SceneEditor } from './crystal-toolkit-components/components-v2/Simple3DScene/scene-editor/Simple3DSceneEditorComponent.react';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -55,7 +56,6 @@ const vis = { atoms: true };
 
 function SceneSwitcher() {
   const [_scene, setScene] = useState(scene) as any;
-  const [_vis, setVisibility] = useState(vis) as any;
 
   return (
     <div>
@@ -66,14 +66,14 @@ function SceneSwitcher() {
       <div
         onClick={() => {
           vis.atoms = !vis.atoms;
-          setVisibility({ ...vis });
+          //setVisibility({ ...vis });
         }}
       >
         {' '}
         TOGGLE VIS{' '}
       </div>
-      <Simple3DSceneComponent
-        sceneSize={'33vw'}
+      <SceneEditor
+        sceneSize={500}
         settings={{
           renderer: Renderer.WEBGL,
           extractAxis: false,
@@ -82,7 +82,6 @@ function SceneSwitcher() {
         }}
         data={_scene}
         debug={false}
-        toggleVisibility={_vis}
       />
     </div>
   );

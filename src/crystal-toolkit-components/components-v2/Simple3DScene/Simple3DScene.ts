@@ -20,6 +20,7 @@ import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeomet
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
 const POINTER_CLASS = 'show-pointer';
+declare var window: any;
 
 export default class Simple3DScene {
   private settings;
@@ -39,7 +40,7 @@ export default class Simple3DScene {
   private inset!: InsetHelper;
   private inletPosition!: ScenePosition;
   private objectBuilder: ThreeBuilder;
-  private clickCallback: (objects: any[]) => void;
+  private clickCallback: (objects: any[], uuid: string[]) => void;
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
 
@@ -52,7 +53,7 @@ export default class Simple3DScene {
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
-  private registry = new ObjectRegistry();
+  public registry = new ObjectRegistry();
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -275,10 +276,13 @@ export default class Simple3DScene {
         }
         needRedraw = true;
       }
-      this.clickCallback(this.selectedJsonObjects);
+      this.clickCallback(
+        this.selectedJsonObjects,
+        this.selection.map(s => s.uuid)
+      );
     } else {
       if (this.selectedJsonObjects.length > 0) {
-        this.clickCallback([]);
+        this.clickCallback([], []);
       }
 
       this.selectedJsonObjects = [];
@@ -338,6 +342,8 @@ export default class Simple3DScene {
       this.debugHelper = this.getHelper();
     }
     this.isMultiSelectionEnabled = this.settings.isMultiSelectionEnabled;
+    console.log(this);
+    window.d = this;
   }
 
   updateInsetSettings(inletSize: number, inletPadding: number, axisView) {
@@ -730,8 +736,20 @@ export default class Simple3DScene {
     newPosition: ThreePosition,
     index
   ) {
+    console.log(newPosition, index);
     const mesh = obj.children[index] as THREE.Mesh;
     mesh.position.set(...newPosition);
+  }
+
+  public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
+    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
+    const phiStart = geometry.parameters.phiStart;
+    const phiEnd = geometry.parameters.phiLength;
+    const newGeometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
+    obj.children.forEach(o => {
+      (o as THREE.Mesh).geometry.dispose();
+      (o as THREE.Mesh).geometry = newGeometry;
+    });
   }
 
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
@@ -758,17 +776,6 @@ export default class Simple3DScene {
     obj.children[1].geometry = edges;
   }
 
-  public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
-    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
-    const phiStart = geometry.parameters.phiStart;
-    const phiEnd = geometry.parameters.phiLength;
-    const newGeometry = this.objectBuilder.getSphereGeometry(newRadius, phiStart, phiEnd);
-    obj.children.forEach(o => {
-      (o as THREE.Mesh).geometry.dispose();
-      (o as THREE.Mesh).geometry = newGeometry;
-    });
-  }
-
   // TODO(chab) merge the two below methods
   // arrow width
   public updateHeadWidth(obj: THREE.Object3D, baseJsonObject, headWidth) {
@@ -782,6 +789,7 @@ export default class Simple3DScene {
   }
   // arrow length
   public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
+    console.log('>>>>>');
     const geom_head = this.objectBuilder.getHeadGeometry(baseJsonObject.headWidth, headLength);
     baseJsonObject.positionPairs.forEach((a, idx) => {
       const headIndex = idx * 2 + 1;
@@ -879,6 +887,7 @@ export default class Simple3DScene {
     const vec_b = new THREE.Vector3(...newPositionPair[1]);
     const vec_rel = vec_b.sub(vec_a);
 
+    console.log(obj);
     // scale cylinder to correct length
     mesh.scale.y = vec_rel.length();
     // set origin at midpoint of cylinder
@@ -908,7 +917,13 @@ export default class Simple3DScene {
     });
   }
 
+
   public download() {
     download('rr', ExportType.png, this);
+  }
+
+  public replaceOutlineObject(oldObject, newObject: THREE.Object3D) {
+    this.outlineScene.remove(oldObject);
+    this.outlineScene.add(newObject);
   }
 }

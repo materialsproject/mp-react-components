@@ -74,10 +74,9 @@ export default function Simple3DSceneComponent(
       settings,
       inletSize,
       inletPadding,
-      objects => {
+      (objects, uuids) => {
         if (onObjectClicked) {
-          console.log('clicked', objects);
-          onObjectClicked(objects);
+          onObjectClicked(objects, uuids);
         }
       },
       (position, quaternion, zoom) => {
