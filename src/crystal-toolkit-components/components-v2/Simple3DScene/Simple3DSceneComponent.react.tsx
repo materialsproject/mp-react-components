@@ -1,5 +1,14 @@
 import PropTypes, { InferProps } from 'prop-types';
-import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  MutableRefObject,
+  Ref,
+  RefForwardingComponent,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef
+} from 'react';
 import Simple3DScene from './Simple3DScene';
 import { subscribe } from './Simple3DSceneDownloadEvent';
 import './Simple3DScene.less';
@@ -16,6 +25,10 @@ import { CameraReducerAction } from './camera-reducer';
 
 const getSceneSize = sceneSize => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
+export interface Simple3DSceneComponenHandles {
+  current: Simple3DScene;
+}
+
 let ID_GENERATOR = 0;
 /**
  * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
@@ -24,19 +37,24 @@ let ID_GENERATOR = 0;
  * intended to be a replacement for a full scene graph library, but for rapid
  * prototyping by non-experts.
  */
-export default function Simple3DSceneComponent({
-  id,
-  debug,
-  data,
-  inletSize,
-  inletPadding,
-  settings,
-  downloadRequest = {},
-  onObjectClicked,
-  toggleVisibility,
-  axisView,
-  sceneSize
-}: InferProps<typeof Simple3DSceneComponent.propTypes>) {
+
+export default function Simple3DSceneComponent(
+  {
+    id,
+    debug,
+    data,
+    inletSize,
+    inletPadding,
+    downloadRequest = {},
+    settings,
+    onObjectClicked,
+    toggleVisibility,
+    axisView,
+    sceneSize
+  }: InferProps<typeof Simple3DSceneComponent.propTypes>,
+  ref: Ref<MutableRefObject<Simple3DScene | null>>
+) {
+
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
   const mountNodeRef = useRef(null);
@@ -46,6 +64,8 @@ export default function Simple3DSceneComponent({
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
+  // we need to pass a reference, otherwise we will not get the scene once it's created
+  useImperativeHandle(ref, () => scene);
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
     const _s = (scene.current = new Simple3DScene(
@@ -230,3 +250,11 @@ Simple3DSceneComponent.propTypes = {
    */
   axisView: PropTypes.string
 };
+
+// react will give a warning, but it's not an issue, as we are assigning PropTypex to a function component
+export const SceneWithRef = forwardRef(
+  (Simple3DSceneComponent as unknown) as RefForwardingComponent<
+    Simple3DSceneComponenHandles,
+    typeof Simple3DSceneComponent.propTypes
+  >
+);
