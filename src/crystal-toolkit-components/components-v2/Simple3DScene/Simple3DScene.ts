@@ -342,14 +342,9 @@ export default class Simple3DScene {
     this.renderInlet();
   }
 
-  resizeRendererToDisplaySize(size?: number) {
+  resizeRendererToDisplaySize() {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
-    if (!size) {
-      this.cacheMountBBox(canvas.parentElement as Element);
-    } else {
-      this.cachedMountNodeSize.width = this.cachedMountNodeSize.height = size;
-    }
-
+    this.cacheMountBBox(canvas.parentElement as Element);
     const { width, height } = this.cachedMountNodeSize;
     if (canvas.width !== width || canvas.height !== height) {
       this.renderer.setSize(width, height, true);
@@ -789,9 +784,9 @@ export default class Simple3DScene {
   }
 
   public updateArrowColor(obj: THREE.Object3D, baseJsonObject, color) {
-    obj.children.forEach((o => {
+    obj.children.forEach(o => {
       ((o as THREE.Mesh).material as THREE.MeshStandardMaterial).color = new THREE.Color(color);
-    }));
+    });
   }
 
   public updateArrowRadius(obj: THREE.Object3D, baseJsonObject, radius) {

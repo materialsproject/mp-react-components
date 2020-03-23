@@ -109,7 +109,7 @@ export default function Simple3DSceneComponent({
 
   useEffect(() => {
     const size = getSceneSize(sceneSize);
-    scene.current!.resizeRendererToDisplaySize(size);
+    scene.current!.resizeRendererToDisplaySize();
   }, [sceneSize]);
 
   // use to dispatch camera changes, and react to them
@@ -217,7 +217,7 @@ Simple3DSceneComponent.propTypes = {
   /**
    * Size of scene
    */
-  sceneSize: PropTypes.number,
+  sceneSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 
   /**
    * Padding of axis inlet
