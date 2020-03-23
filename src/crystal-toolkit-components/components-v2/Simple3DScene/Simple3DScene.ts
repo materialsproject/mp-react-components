@@ -125,9 +125,9 @@ export default class Simple3DScene {
       // change mouse pointer for clickable objects
       p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       if (p) {
-        document.querySelector('body')!.classList.add(POINTER_CLASS);
+        this.renderer.domElement.classList.add(POINTER_CLASS);
       } else {
-        document.querySelector('body')!.classList.remove(POINTER_CLASS);
+        this.renderer.domElement.classList.remove(POINTER_CLASS);
       }
     } else {
       console.warn('No mousemove implementation for SVG');
