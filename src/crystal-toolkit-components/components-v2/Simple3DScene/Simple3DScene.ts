@@ -788,6 +788,22 @@ export default class Simple3DScene {
     });
   }
 
+  public updateArrowColor(obj: THREE.Object3D, baseJsonObject, color) {
+    obj.children.forEach((o => {
+      ((o as THREE.Mesh).material as THREE.MeshStandardMaterial).color = new THREE.Color(color);
+    }));
+  }
+
+  public updateArrowRadius(obj: THREE.Object3D, baseJsonObject, radius) {
+    const geom_cyl = this.objectBuilder.getCylinderGeometry(radius);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2;
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
+      (mesh_head as THREE.Mesh).geometry = geom_cyl;
+    });
+  }
+
   //TODO(chab) check if positions are different, update the whole mesh
   // OR let pass the index so we know what to update
   public updateArrowpositionPair(baseJsonObject, newScale) {
