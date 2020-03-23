@@ -9,17 +9,22 @@ import {
 } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, Renderer, ThreePosition } from "./constants";
+import { defaults, Renderer, ThreePosition } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
-import { DEFAULT_DASHED_LINE_COLOR, DEFAULT_LINE_COLOR, getSceneWithBackground, ThreeBuilder } from "./three_builder";
+import {
+  DEFAULT_DASHED_LINE_COLOR,
+  DEFAULT_LINE_COLOR,
+  getSceneWithBackground,
+  ThreeBuilder
+} from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
 import { ObjectRegistry, getThreeScreenCoordinate, disposeSceneHierarchy } from './utils';
 import { OrbitControls } from './orbitControls';
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
-import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
+import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -106,7 +111,7 @@ export default class Simple3DScene {
     mountNode.appendChild(labelRenderer.domElement);
   }
 
-  mouseMoveListener = (e) => {
+  mouseMoveListener = e => {
     if (this.renderer instanceof WebGLRenderer) {
       // tooltips
       let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
@@ -128,7 +133,7 @@ export default class Simple3DScene {
       console.warn('No mousemove implementation for SVG');
     }
   };
-  clickListener = (e) => {
+  clickListener = e => {
     if (this.renderer instanceof WebGLRenderer) {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       this.onClickImplementation(p, e);
@@ -233,10 +238,7 @@ export default class Simple3DScene {
             this.outlineScene.remove(sceneObject);
           } else {
             if (!this.registry.registryHasObject(sceneObject)) {
-              const clone = sceneObject.clone();
-              clone.matrixAutoUpdate = false;
-              clone.uuid = sceneObject.uuid;
-              this.registry.addToObjectRegisty(clone);
+              this.addClonedObject(sceneObject);
             }
             const threeObjectForOutlineScene = this.registry.getObjectFromRegistry(
               sceneObject.uuid
@@ -255,10 +257,7 @@ export default class Simple3DScene {
         } else {
           disposeSceneHierarchy(this.outlineScene);
           if (!this.registry.registryHasObject(sceneObject)) {
-            const clone = sceneObject.clone();
-            clone.matrixAutoUpdate = false;
-            clone.uuid = sceneObject.uuid;
-            this.registry.addToObjectRegisty(clone);
+            this.addClonedObject(sceneObject);
           }
           const threeObjectForOutlineScene = this.registry.getObjectFromRegistry(sceneObject.uuid);
           if (this.outlineScene.children.length > 0) {
@@ -287,6 +286,13 @@ export default class Simple3DScene {
       this.selection.length > 0 ? this.inset.showObject(this.selection) : this.inset.showAxis();
     }
     needRedraw && this.renderScene();
+  }
+
+  private addClonedObject(sceneObject: THREE.Object3D) {
+    const clone = sceneObject.clone();
+    clone.matrixAutoUpdate = false;
+    clone.uuid = sceneObject.uuid;
+    this.registry.addToObjectRegisty(clone);
   }
 
   private readonly windowListener = () => this.resizeRendererToDisplaySize();
@@ -715,9 +721,14 @@ export default class Simple3DScene {
 
   // TODO(chab) expose class/module tied to a particular object type
 
-  public updateSphereCenter(obj: THREE.Object3D, baseJsonObject, newPosition: ThreePosition, index) {
+  public updateSphereCenter(
+    obj: THREE.Object3D,
+    baseJsonObject,
+    newPosition: ThreePosition,
+    index
+  ) {
     const mesh = obj.children[index] as THREE.Mesh;
-    mesh.position.set(...newPosition)
+    mesh.position.set(...newPosition);
   }
 
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
@@ -731,7 +742,7 @@ export default class Simple3DScene {
   public updateConvexColor(obj, objjson, color) {
     obj.children.forEach(o => {
       o.material.color = new THREE.Color(color);
-    })
+    });
   }
 
   public updateConvexEdges(obj, objjson, positions) {
@@ -777,7 +788,6 @@ export default class Simple3DScene {
     });
   }
 
-
   //TODO(chab) check if positions are different, update the whole mesh
   // OR let pass the index so we know what to update
   public updateArrowpositionPair(baseJsonObject, newScale) {
@@ -786,19 +796,34 @@ export default class Simple3DScene {
   }
 
   public updateLineSegments(obj: THREE.Object3D, object_json, positions) {
-    const verts = new THREE.Float32BufferAttribute(positions, 3)
+    const verts = new THREE.Float32BufferAttribute(positions, 3);
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', verts);
     const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
     mesh.geometry = geom;
   }
 
-  public updateLineStyle(obj: THREE.Object3D, object_json, color, lineWidth, scale, dashSize, gapSize) {
+  public updateLineStyle(
+    obj: THREE.Object3D,
+    object_json,
+    color,
+    lineWidth,
+    scale,
+    dashSize,
+    gapSize
+  ) {
     const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
     let mat;
 
     //FIXME(update material instead)
-    if (object_json.dashSize || object_json.scale || object_json.gapSize || dashSize || scale || gapSize)  {
+    if (
+      object_json.dashSize ||
+      object_json.scale ||
+      object_json.gapSize ||
+      dashSize ||
+      scale ||
+      gapSize
+    ) {
       mat = new THREE.LineDashedMaterial({
         color: color || object_json.color || DEFAULT_DASHED_LINE_COLOR,
         linewidth: lineWidth || object_json.line_width || 1,
@@ -813,12 +838,17 @@ export default class Simple3DScene {
       });
     }
     mesh.material = mat;
-    if (object_json.dashSize || object_json.scale || object_json.gapSize || dashSize || scale || gapSize) {
+    if (
+      object_json.dashSize ||
+      object_json.scale ||
+      object_json.gapSize ||
+      dashSize ||
+      scale ||
+      gapSize
+    ) {
       mesh.computeLineDistances();
     }
   }
-
-
 
   // generic
   public updateScale(baseJsonObject, newScale) {}
