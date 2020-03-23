@@ -88,6 +88,7 @@ export const DEFAULT_SCENE_SIZE = 500;
 
 export enum FieldType {
   VEC3 = 'vec3',
+  VEC3_PAIRS = 'vec3Pair',
   COLOR = 'color',
   NUMBER = 'number',
   LIST = 'list'
@@ -98,6 +99,7 @@ export interface Field {
   type: FieldType;
   id: string;
   listSize?: number; // -1 for non-bounded lists
+  listModel?: FieldType;
 }
 
 const fieldColor = { id: 'color', name: 'Color', type: FieldType.COLOR };
@@ -105,8 +107,18 @@ const fieldRadius = { id: 'radius', name: 'Radius', type: FieldType.NUMBER };
 const fieldWidth = { id: 'headWidth', name: 'Head Width', type: FieldType.NUMBER };
 const fieldLength = { id: 'headLength', name: 'Head Length', type: FieldType.NUMBER };
 const fieldScale = { id: 'scale', name: 'Scale', type: FieldType.VEC3 };
-const positionPairs = { id: 'positionPairs', name: 'Position pairs', type: FieldType.LIST };
-const position = { id: 'positions', name: 'Position', type: FieldType.LIST };
+const positionPairs = {
+  id: 'positionPairs',
+  name: 'Position pairs',
+  type: FieldType.LIST,
+  listModel: FieldType.VEC3_PAIRS
+};
+const position = {
+  id: 'positions',
+  name: 'Position',
+  type: FieldType.LIST,
+  listModel: FieldType.VEC3
+};
 
 const fields = [
   fieldLength,
@@ -117,6 +129,8 @@ const fields = [
   position,
   fieldColor
 ];
+
+// map field id to to field definition
 export const fieldIndex = fields.reduce(
   (acc: { [id: string]: Field }, f) => ({ ...acc, [f.id]: f }),
   {}
@@ -133,13 +147,13 @@ export const fieldIndex = fields.reduce(
 
 export const OBJECT_TO_FIELDS: { [K in JSON3DObject]: Field[] | null } = {
   [JSON3DObject.LABEL]: null,
-  [JSON3DObject.CYLINDERS]: null,
-  [JSON3DObject.ARROWS]: [fieldColor, fieldWidth, fieldLength],
+  [JSON3DObject.CYLINDERS]: [fieldColor, fieldRadius, positionPairs],
+  [JSON3DObject.ARROWS]: [fieldRadius, fieldColor, fieldWidth, fieldLength, positionPairs],
   [JSON3DObject.SURFACES]: null,
-  [JSON3DObject.CONVEX]: null,
-  [JSON3DObject.SPHERES]: [fieldColor, fieldRadius],
+  [JSON3DObject.CONVEX]: [fieldColor, position],
+  [JSON3DObject.SPHERES]: [fieldColor, fieldRadius, position],
   [JSON3DObject.LINES]: [],
-  [JSON3DObject.ELLIPSOIDS]: [],
+  [JSON3DObject.ELLIPSOIDS]: [fieldColor, fieldRadius, position],
   [JSON3DObject.CUBES]: []
 };
 
