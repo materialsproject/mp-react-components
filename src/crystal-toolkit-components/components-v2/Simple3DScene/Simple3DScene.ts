@@ -234,6 +234,7 @@ export default class Simple3DScene {
           } else {
             if (!this.registry.registryHasObject(sceneObject)) {
               const clone = sceneObject.clone();
+              clone.matrixAutoUpdate = false;
               clone.uuid = sceneObject.uuid;
               this.registry.addToObjectRegisty(clone);
             }
@@ -255,6 +256,7 @@ export default class Simple3DScene {
           disposeSceneHierarchy(this.outlineScene);
           if (!this.registry.registryHasObject(sceneObject)) {
             const clone = sceneObject.clone();
+            clone.matrixAutoUpdate = false;
             clone.uuid = sceneObject.uuid;
             this.registry.addToObjectRegisty(clone);
           }
@@ -307,6 +309,7 @@ export default class Simple3DScene {
     this.configureScene();
     this.configurePostProcessing();
     this.clickCallback = clickCallback;
+    this.outlineScene.autoUpdate = false;
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
       this.axis,
