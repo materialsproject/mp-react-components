@@ -14,12 +14,7 @@ import {
 import { CameraContext } from './camera-context';
 import { CameraReducerAction } from './camera-reducer';
 
-const getSceneSize = sceneSize =>
-  sceneSize
-    ? sceneSize < 60
-      ? !!(console.warn('Scene size is too small') as any) || DEFAULT_SCENE_SIZE
-      : sceneSize
-    : DEFAULT_SCENE_SIZE;
+const getSceneSize = sceneSize => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
 let ID_GENERATOR = 0;
 /**
@@ -114,7 +109,7 @@ export default function Simple3DSceneComponent({
 
   useEffect(() => {
     const { filename, fileType, n_requests } = downloadRequest as any;
-    if (n_requests > 0) {
+    if (n_requests > 0 && filename && filename.length > 0) {
       download(filename, fileType, scene.current!);
     }
   }, [(downloadRequest as any).n_requests]);
