@@ -112,7 +112,7 @@ export default class Simple3DScene {
   }
 
   mouseMoveListener = e => {
-    if (this.renderer instanceof WebGLRenderer) {
+    if (this.renderer instanceof WebGLRenderer || true) {
       // tooltips
       let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
       if (p) {
@@ -134,7 +134,7 @@ export default class Simple3DScene {
     }
   };
   clickListener = e => {
-    if (this.renderer instanceof WebGLRenderer) {
+    if (this.renderer instanceof WebGLRenderer || true) {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       this.onClickImplementation(p, e);
     } else {
@@ -537,7 +537,7 @@ export default class Simple3DScene {
 
     this.renderer.render(this.scene, this.camera);
 
-    if (this.selection.length > 0) {
+    if (this.selection.length > 0 && this.outline) {
       this.outline.renderOutline(this.outlineScene, this.camera);
     }
     this.labelRenderer.render(this.scene, this.camera);
@@ -575,8 +575,8 @@ export default class Simple3DScene {
       return;
     }
 
-    const size = new THREE.Vector2();
-    (this.renderer as WebGLRenderer).getSize(size);
+    const size = new THREE.Vector2(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
+
     this.raycaster.setFromCamera(getThreeScreenCoordinate(size, clientX, clientY), this.camera);
     const intersects = this.raycaster.intersectObjects(objectsToCheck, true);
     if (intersects.length > 0) {
