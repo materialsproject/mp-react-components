@@ -162,7 +162,6 @@ export default class Simple3DScene {
   }
 
   private configureControls() {
-    //TODO(chab) investigate why orbit controls triggers a style recalculation
     const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
     controls.rotateSpeed = 2.0;
     controls.zoomSpeed = 1.2;

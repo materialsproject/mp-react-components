@@ -36,6 +36,7 @@ export default function Simple3DSceneComponent({
   inletSize,
   inletPadding,
   settings,
+  downloadRequest = {},
   onObjectClicked,
   toggleVisibility,
   axisView,
@@ -108,9 +109,15 @@ export default function Simple3DSceneComponent({
   ]);
 
   useEffect(() => {
-    const size = getSceneSize(sceneSize);
     scene.current!.resizeRendererToDisplaySize();
   }, [sceneSize]);
+
+  useEffect(() => {
+    const { filename, fileType, n_requests } = downloadRequest as any;
+    if (n_requests > 0) {
+      download(filename, fileType, scene.current!);
+    }
+  }, [(downloadRequest as any).n_requests]);
 
   // use to dispatch camera changes, and react to them
   // not this is not the  implementation, as react will re-render
