@@ -347,11 +347,7 @@ export default class Simple3DScene {
     this.cacheMountBBox(canvas.parentElement as Element);
     const { width, height } = this.cachedMountNodeSize;
     if (canvas.width !== width || canvas.height !== height) {
-      this.renderer.setSize(width, height, true);
-      this.labelRenderer.setSize(width, height);
-
-      this.renderer.render(this.scene, this.camera);
-      this.labelRenderer.render(this.scene, this.camera);
+      this.renderScene();
     }
   }
 
