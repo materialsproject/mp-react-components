@@ -151,6 +151,8 @@ export class InsetHelper {
   }
 
   public render(renderer, [x, y]: [number, number]) {
+    // NOTE(chab) this will not work with the SVG renderer, as it has no notion of
+    // viewport, if we want the SVG render to work, we'll need to have a separated renderer
     if (renderer instanceof THREE.WebGLRenderer && this.detailedObject) {
       renderer.setScissorTest(true);
       // everything outside should be discarded

@@ -345,6 +345,11 @@ export default class Simple3DScene {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
     this.cacheMountBBox(canvas.parentElement as Element);
     const { width, height } = this.cachedMountNodeSize;
+    this.labelRenderer.setSize(width, height);
+    this.labelRenderer.domElement.style.top = `-${height}px`;
+    if (this.renderer instanceof SVGRenderer) {
+      this.renderer.setSize(width, height);
+    }
     if (canvas.width !== width || canvas.height !== height) {
       this.renderScene();
     }
