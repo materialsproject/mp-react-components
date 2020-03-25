@@ -212,7 +212,6 @@ export class ThreeBuilder {
     switch (this.settings.material.type) {
       case Material.standard: {
         const mat = new THREE.MeshStandardMaterial(parameters);
-        mat.side = THREE.DoubleSide;
         return mat;
       }
       default:
