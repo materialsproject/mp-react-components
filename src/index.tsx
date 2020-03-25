@@ -75,7 +75,7 @@ function SceneSwitcher() {
       <Simple3DSceneComponent
         sceneSize={'33vw'}
         settings={{
-          renderer: Renderer.SVG,
+          renderer: Renderer.WEBGL,
           extractAxis: false,
           isMultiSelectionEnabled: true,
           secondaryObjectView: true
