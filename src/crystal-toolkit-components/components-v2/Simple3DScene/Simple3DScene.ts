@@ -1,15 +1,8 @@
 import * as THREE from 'three';
-import {
-  CylinderBufferGeometry,
-  Object3D,
-  Quaternion,
-  SphereBufferGeometry,
-  Vector3,
-  WebGLRenderer
-} from 'three';
+import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, Renderer, ThreePosition } from './constants';
+import { defaults, ExportType, Renderer, ThreePosition } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import {
@@ -19,8 +12,7 @@ import {
   ThreeBuilder
 } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
-import { ObjectRegistry, getThreeScreenCoordinate, disposeSceneHierarchy } from './utils';
-import { OrbitControls } from './orbitControls';
+import { disposeSceneHierarchy, download, getThreeScreenCoordinate, ObjectRegistry } from './utils';
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
@@ -914,5 +906,9 @@ export default class Simple3DScene {
       const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
       material.color = new THREE.Color(newColor);
     });
+  }
+
+  public download() {
+    download('rr', ExportType.png, this);
   }
 }

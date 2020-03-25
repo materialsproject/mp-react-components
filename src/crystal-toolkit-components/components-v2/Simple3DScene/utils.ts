@@ -2,6 +2,8 @@ import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { ExportType } from './constants';
 import Simple3DScene from './Simple3DScene';
 import * as THREE from 'three';
+import { WebGLRenderer } from 'three';
+import toDataUrl from 'svgtodatauri';
 
 export function downloadScreenshot(filename: string, sceneComponent) {
   //TODO(chab) extract as a general utility method
@@ -14,8 +16,20 @@ export function downloadScreenshot(filename: string, sceneComponent) {
   document.body.appendChild(link);
   sceneComponent.renderScene();
   // and set link href to renderer contents
-  link.href = (<HTMLCanvasElement>sceneComponent.renderer.domElement).toDataURL('image/png');
-  // click link to download
+  if (sceneComponent.renderer instanceof WebGLRenderer) {
+    link.href = (<HTMLCanvasElement>sceneComponent.renderer.domElement).toDataURL('image/png');
+    triggerDownload(link, filename);
+  } else {
+    toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
+      callback: function(data) {
+        link.href = data;
+        triggerDownload(link, filename);
+      }
+    });
+  }
+}
+
+function triggerDownload(link: HTMLAnchorElement, filename: string) {
   link.download = filename || 'screenshot.png';
   link.click();
 }
