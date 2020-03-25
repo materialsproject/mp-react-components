@@ -18,6 +18,8 @@ export function SceneEditor(props) {
   const scene = useRef((null as unknown) as Simple3DSceneComponenHandles);
   const [editedObject, setEditedObject] = useState(null as any);
 
+  const onObjectClicked = (objects: any[], uuids: string[]) =>
+    onObjectSelected(objects, uuids, setEditedObject);
   // editor state depends on selected object
   // editor scene is updated only if the whole json/settings change
   return (
@@ -35,13 +37,7 @@ export function SceneEditor(props) {
           <div />
         )}
       </div>
-      <SceneWithRef
-        {...props}
-        onObjectClicked={(objects: any[], uuids: string[]) =>
-          onObjectSelected(objects, uuids, setEditedObject)
-        }
-        ref={scene}
-      />
+      <SceneWithRef {...props} onObjectClicked={onObjectClicked} ref={scene} />
     </>
   );
 }
@@ -54,6 +50,7 @@ function updateObject(
   newValue: any,
   idx: number[]
 ) {
+  console.log(scene);
   const object = scene.findObjectByUUID(threeUUID);
   if (!object || !object.threeObject) {
     console.error('object does not exist', jsonObject);
@@ -118,11 +115,11 @@ function updateArrow(
 ) {
   switch (id) {
     case 'color': {
-      //scene.updateArrowColor(threeObject, jsonObject, newValue);
+      scene.updateArrowColor(threeObject, jsonObject, newValue);
       break;
     }
     case 'radius': {
-      //scene.updateArroweRadius(threeObject, jsonObject, newValue);
+      scene.updateArrowRadius(threeObject, jsonObject, newValue);
       break;
     }
     case 'headWidth': {

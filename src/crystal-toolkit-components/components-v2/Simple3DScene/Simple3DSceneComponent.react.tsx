@@ -54,7 +54,6 @@ export default function Simple3DSceneComponent(
   }: InferProps<typeof Simple3DSceneComponent.propTypes>,
   ref: Ref<MutableRefObject<Simple3DScene | null>>
 ) {
-
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
   const mountNodeRef = useRef(null);
@@ -64,8 +63,10 @@ export default function Simple3DSceneComponent(
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
-  // we need to pass a reference, otherwise we will not get the scene once it's created
+  // we only want to pass the handle if we use SceneWithRef
+
   useImperativeHandle(ref, () => scene);
+
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
     const _s = (scene.current = new Simple3DScene(
@@ -250,7 +251,7 @@ Simple3DSceneComponent.propTypes = {
   axisView: PropTypes.string
 };
 
-// react will give a warning, but it's not an issue, as we are assigning PropTypex to a function component
+// react will give a warning, but it's not an issue, as we are assigning PropType to a function component
 export const SceneWithRef = forwardRef(
   (Simple3DSceneComponent as unknown) as RefForwardingComponent<
     Simple3DSceneComponenHandles,

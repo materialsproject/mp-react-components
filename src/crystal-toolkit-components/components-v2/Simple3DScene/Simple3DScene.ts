@@ -50,7 +50,7 @@ export default class Simple3DScene {
   private selection: THREE.Object3D[] = [];
 
   private threeUUIDTojsonObject: { [uuid: string]: any } = {};
-  private computeIdToThree: {[id: string]: THREE.Object3D} = {};
+  private computeIdToThree: { [id: string]: THREE.Object3D } = {};
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
@@ -369,7 +369,7 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson) {
+  addToScene(sceneJson, updateScene) {
     // we need to clarify the  current semantics
     // currently, it will remove the old scene if the name is the same,
     // otherwise it will keep it
@@ -794,7 +794,6 @@ export default class Simple3DScene {
   }
   // arrow length
   public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
-    console.log('>>>>>');
     const geom_head = this.objectBuilder.getHeadGeometry(baseJsonObject.headWidth, headLength);
     baseJsonObject.positionPairs.forEach((a, idx) => {
       const headIndex = idx * 2 + 1;
@@ -921,7 +920,6 @@ export default class Simple3DScene {
       material.color = new THREE.Color(newColor);
     });
   }
-
 
   public download() {
     download('rr', ExportType.png, this);
