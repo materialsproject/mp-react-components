@@ -25,6 +25,7 @@ import { OrbitControls } from './orbitControls';
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -162,12 +163,20 @@ export default class Simple3DScene {
   }
 
   private configureControls() {
-    const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
+    /*const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
     controls.rotateSpeed = 2.0;
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     controls.enabled = true;
+    this.controls = controls;*/
+    const controls = new TrackballControls(this.camera, this.renderer.domElement as HTMLElement);
+    controls.rotateSpeed = 2.0;
+    controls.zoomSpeed = 1.2;
+    controls.panSpeed = 0.8;
+    controls.enabled = true;
+    controls.staticMoving = true;
     this.controls = controls;
+
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
       this.controls.addEventListener('change', () => {
@@ -176,15 +185,21 @@ export default class Simple3DScene {
       });
       this.controls.addEventListener('start', () => {
         this.controls.update();
+        document.addEventListener('mousemove', this.mouseTrackballUpdate, false);
       });
       this.controls.addEventListener('end', () => {
         this.controls.update();
+        document.removeEventListener('mousemove', this.mouseTrackballUpdate, false);
       });
     } else {
       // constantly re-render (for animation)
       this.start();
     }
   }
+
+  private readonly mouseTrackballUpdate = () => {
+    this.controls.update();
+  };
 
   public updateCamera(position: Vector3, rotation: Quaternion, zoom: number) {
     // zoom seems to be updated, be not rendered
@@ -625,6 +640,7 @@ export default class Simple3DScene {
     window.removeEventListener('resize', this.windowListener, false);
     this.renderer.domElement.removeEventListener('mousemove', this.mouseMoveListener);
     this.renderer.domElement.removeEventListener('click', this.clickListener);
+    document.removeEventListener('mousemove', this.mouseTrackballUpdate, false);
   }
 
   // call this when the parent component is destroyed
