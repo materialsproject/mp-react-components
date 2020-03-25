@@ -50,6 +50,7 @@ export default class Simple3DScene {
   private selection: THREE.Object3D[] = [];
 
   private threeUUIDTojsonObject: { [uuid: string]: any } = {};
+  private computeIdToThree: {[id: string]: THREE.Object3D} = {};
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
@@ -391,15 +392,17 @@ export default class Simple3DScene {
     sceneJson.visible && (rootObject.visible = sceneJson.visible);
 
     // recursively visit the scene, starting with the root object
-    const traverse_scene = (o, parent) => {
-      o.contents.forEach(childObject => {
+    const traverse_scene = (o, parent, currentId) => {
+      o.contents.forEach((childObject, idx) => {
         if (childObject.type) {
           const object = this.makeObject(childObject);
           parent.add(object);
           this.threeUUIDTojsonObject[object.uuid] = childObject;
+          this.computeIdToThree[`${currentId}--${idx}`] = object;
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name;
+          this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
           childObject.visible && (threeObject.visible = childObject.visible);
           if (childObject.origin) {
             const translation = new THREE.Matrix4();
@@ -410,7 +413,7 @@ export default class Simple3DScene {
           if (!this.settings.extractAxis || threeObject.name !== 'axes') {
             parent.add(threeObject);
           }
-          traverse_scene(childObject, threeObject);
+          traverse_scene(childObject, threeObject, `${currentId}--${threeObject.name}`);
           if (threeObject.name === 'axes') {
             this.axis = threeObject.clone();
             this.axisJson = { ...childObject };
@@ -419,7 +422,7 @@ export default class Simple3DScene {
       });
     };
 
-    traverse_scene(sceneJson, rootObject);
+    traverse_scene(sceneJson, rootObject, '');
     // can cause memory leak
     //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
@@ -643,6 +646,8 @@ export default class Simple3DScene {
 
   // call this when the parent component is destroyed
   public onDestroy() {
+    this.computeIdToThree = {};
+    this.threeUUIDTojsonObject = {};
     this.removeListener();
     this.debugHelper && this.debugHelper.onDestroy();
     this.inset.onDestroy();
