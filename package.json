@@ -36,6 +36,7 @@
     "react-responsive": "^8.0.3",
     "rxjs": "^6.5.4",
     "style-loader": "^1.1.2",
+    "svgtodatauri": "0.0.0",
     "three": "^0.114.0"
   },
   "devDependencies": {
