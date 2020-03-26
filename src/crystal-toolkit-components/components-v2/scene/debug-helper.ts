@@ -54,7 +54,7 @@ export class DebugHelper {
     // FIXME
     this.mountNode.appendChild(this.debugRenderer.domElement);
     this.cameraHelper = new THREE.CameraHelper(cameraToTrack);
-    //this.scene.add(this.cameraHelper);
+    this.scene.add(this.cameraHelper);
 
     this.axis = new THREE.AxesHelper(100);
     (this.axis.material as LineMaterial).linewidth = 2.5; // this does not work due to limitation

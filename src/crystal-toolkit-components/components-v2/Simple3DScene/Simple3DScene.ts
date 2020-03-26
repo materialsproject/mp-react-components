@@ -460,19 +460,19 @@ export default class Simple3DScene {
     box.getSize(size);
 
     let maxDim = Math.max(size.x, size.y, size.z);
-    const CAMERA_BOX_PADDING = maxDim / 1.65;
+    const CAMERA_BOX_PADDING = maxDim / 1.5;
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera
     const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
     // we add a lot of padding to make sure the camera is always beyond/behind the object
-    const Z_PADDING = 50;
+    const Z_PADDING = 5;
     if (this.camera) {
-      this.camera.left = center.x - maxExtent;
-      this.camera.right = center.x + maxExtent;
-      this.camera.top = center.y + maxExtent;
-      this.camera.bottom = center.y - maxExtent;
-      this.camera.near = center.z - maxExtent - Z_PADDING;
-      this.camera.far = center.z + maxExtent + Z_PADDING;
+      this.camera.left = center.x - maxExtent * 2;
+      this.camera.right = center.x + maxExtent * 2;
+      this.camera.top = center.y + maxExtent * 2;
+      this.camera.bottom = center.y - maxExtent * 2;
+      this.camera.near = center.z - maxExtent * 2 - Z_PADDING;
+      this.camera.far = center.z + maxExtent * 2 + Z_PADDING;
     } else {
       this.camera = new THREE.OrthographicCamera(
         center.x - maxExtent,
@@ -483,9 +483,14 @@ export default class Simple3DScene {
         center.z + maxExtent + Z_PADDING
       );
     }
-    // position camera behind the object
-    this.camera.position.z = center.z + maxExtent + Z_PADDING / 2;
-    this.camera.zoom = 1;
+
+    this.camera.zoom = 2;
+    // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
+    this.camera.position.z = center.z + maxExtent;
+    this.camera.position.y = center.y;
+    this.camera.position.x = center.x;
+
+    this.camera.lookAt(this.scene.position);
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
     if (this.controls) {
@@ -547,11 +552,6 @@ export default class Simple3DScene {
       );
     }
 
-    // debug view
-    if (this.debugHelper) {
-      this.debugHelper.render();
-    }
-
     this.renderer.render(this.scene, this.camera);
 
     if (this.selection.length > 0 && this.outline) {
@@ -562,6 +562,12 @@ export default class Simple3DScene {
     if (this.renderer instanceof WebGLRenderer) {
       (this.renderer as any).clearDepth();
     }
+
+    // debug view
+    if (this.debugHelper) {
+      this.debugHelper.render();
+    }
+
 
     //TODO(chab) make a dedicated rendering for SVG
     this.renderInlet();
