@@ -364,7 +364,7 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson: SceneJsonObject) {
+  addToScene(sceneJson: SceneJsonObject, bypassRendering = false) {
     // we need to clarify the  current semantics
     // currently, it will remove the old scene if the name is the same,
     // otherwise it will keep it
@@ -423,8 +423,9 @@ export default class Simple3DScene {
     this.scene.add(rootObject);
     this.setupCamera(rootObject);
 
-    this.renderScene();
-
+    if (!bypassRendering) {
+      this.renderScene();
+    }
     // we can automatically output a screenshot to be the background of the parent div
     // this helps for automated testing, printing the web page, etc.
     if (this.settings.renderDivBackground) {

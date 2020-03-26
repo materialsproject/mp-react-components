@@ -94,7 +94,8 @@ export default function Simple3DSceneComponent({
       return;
     }
 
-    !!data && scene.current!.addToScene(data);
+    //FIXME(chab) we have to much calls to renderScene
+    !!data && scene.current!.addToScene(data, true);
     scene.current!.toggleVisibility(toggleVisibility as any);
   }, [data]);
   useEffect(() => scene.current!.updateInsetSettings(inletSize!, inletPadding!, axisView), [
