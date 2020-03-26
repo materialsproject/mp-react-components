@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, ExportType, Renderer, ThreePosition } from './constants';
+import { defaults, ExportType, JSON3DObject, Renderer, ThreePosition } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import {
@@ -18,6 +18,7 @@ import { disposeSceneHierarchy, download, getThreeScreenCoordinate, ObjectRegist
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { SceneJsonObject } from '../scene/simple-scene';
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -49,7 +50,7 @@ export default class Simple3DScene {
   private selection: THREE.Object3D[] = [];
 
   private threeUUIDTojsonObject: { [uuid: string]: any } = {};
-  private computeIdToThree: {[id: string]: THREE.Object3D} = {};
+  private computeIdToThree: { [id: string]: THREE.Object3D } = {};
 
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
@@ -363,17 +364,17 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson) {
+  addToScene(sceneJson: SceneJsonObject) {
     // we need to clarify the  current semantics
     // currently, it will remove the old scene if the name is the same,
     // otherwise it will keep it
     // it will then zoom on the content of the added scene
 
     // if we found an object, we should remove all tootips and clicks related to it
-    if (this.scene.getObjectByName(sceneJson.name)) {
+    if (this.scene.getObjectByName(sceneJson.name!)) {
       this.clickableObjects = [];
       this.tooltipObjects = [];
-      this.removeObjectByName(sceneJson.name);
+      this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
         this.outlineScene.remove(...this.outlineScene.children);
       }
@@ -382,12 +383,12 @@ export default class Simple3DScene {
     }
 
     const rootObject = new THREE.Object3D();
-    rootObject.name = sceneJson.name;
+    rootObject.name = sceneJson.name!;
     sceneJson.visible && (rootObject.visible = sceneJson.visible);
 
     // recursively visit the scene, starting with the root object
-    const traverse_scene = (o, parent, currentId) => {
-      o.contents.forEach((childObject, idx) => {
+    const traverse_scene = (o: SceneJsonObject, parent: THREE.Object3D, currentId: string) => {
+      o.contents!.forEach((childObject, idx) => {
         if (childObject.type) {
           const object = this.makeObject(childObject);
           parent.add(object);
@@ -395,7 +396,7 @@ export default class Simple3DScene {
           this.computeIdToThree[`${currentId}--${idx}`] = object;
         } else {
           const threeObject = new THREE.Object3D();
-          threeObject.name = childObject.name;
+          threeObject.name = childObject.name!;
           this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
           childObject.visible && (threeObject.visible = childObject.visible);
           if (childObject.origin) {

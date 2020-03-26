@@ -1,3 +1,22 @@
+import { JSON3DObject, ThreePosition } from '../Simple3DScene/constants';
+
+export interface SceneJsonObject {
+  name?: string;
+  contents?: SceneJsonObject[];
+  type?: JSON3DObject;
+  clickable?: boolean;
+  color?: string;
+  radius?: number;
+  visible?: boolean;
+  origin?: ThreePosition;
+  positions?: ThreePosition[];
+  headLength?: number;
+  headWidth?: number;
+  tooltip?: string;
+  scale?: ThreePosition[];
+  positionPairs?: Array<ThreePosition[]>;
+}
+
 export const s4 = {
   name: '_ct_StructureMoleculeComponent_1',
   contents: [
