@@ -47,7 +47,6 @@ export default class Simple3DScene {
   private outline!: OutlineEffect;
   private selectedJsonObjects: any[] = [];
   private outlineScene = new THREE.Scene();
-  private selection: THREE.Object3D[] = [];
 
   private threeUUIDTojsonObject: { [uuid: string]: any } = {};
   private computeIdToThree: { [id: string]: THREE.Object3D } = {};
@@ -215,7 +214,7 @@ export default class Simple3DScene {
         if (this.isMultiSelectionEnabled) {
           // if the object is not in the registry, it just means it's the first time
           // we select it
-          const objectIndex = this.selection.indexOf(
+          const objectIndex = this.outlineScene.children.indexOf(
             this.registry.getObjectFromRegistry(sceneObject.uuid)
           );
           const jsonObjectIndex = this.selectedJsonObjects.indexOf(jsonObject);
@@ -241,8 +240,8 @@ export default class Simple3DScene {
 
           //TODO(chab) log warning if we have a json object without a three object, and vice-versa
           if (objectIndex > -1) {
-            const object = this.selection.splice(objectIndex, 1);
-            const sceneObject = this.registry.getObjectFromRegistry(object[0].uuid);
+            const object = this.outlineScene.children[objectIndex];
+            const sceneObject = this.registry.getObjectFromRegistry(object.uuid);
             this.outlineScene.remove(sceneObject);
           } else {
             if (!this.registry.registryHasObject(sceneObject)) {
@@ -253,13 +252,11 @@ export default class Simple3DScene {
             );
             if (e.shiftKey) {
               this.outlineScene.add(threeObjectForOutlineScene);
-              this.selection.push(threeObjectForOutlineScene);
             } else {
               if (this.outlineScene.children.length > 0) {
                 this.outlineScene.remove(...this.outlineScene.children);
               }
               this.outlineScene.add(threeObjectForOutlineScene);
-              this.selection = [threeObjectForOutlineScene];
             }
           }
         } else {
@@ -272,7 +269,6 @@ export default class Simple3DScene {
             this.outlineScene.remove(...this.outlineScene.children);
           }
           this.outlineScene.add(threeObjectForOutlineScene);
-          this.selection = [threeObjectForOutlineScene];
           this.selectedJsonObjects = [jsonObject];
         }
         needRedraw = true;
@@ -284,14 +280,15 @@ export default class Simple3DScene {
       }
 
       this.selectedJsonObjects = [];
-      if (this.selection.length > 0) {
-        this.selection = [];
+      if (this.outlineScene.children.length > 0) {
+        disposeSceneHierarchy(this.outlineScene);
+        this.outlineScene.remove(...this.outlineScene.children);
         needRedraw = true;
       }
     }
 
     if (this.settings.secondaryObjectView) {
-      this.selection.length > 0 ? this.inset.showObject(this.selection) : this.inset.showAxis();
+      this.outlineScene.children.length > 0 ? this.inset.showObject(this.outlineScene.children) : this.inset.showAxis();
     }
     needRedraw && this.renderScene();
   }
@@ -377,7 +374,6 @@ export default class Simple3DScene {
       this.tooltipObjects = [];
       this.threeUUIDTojsonObject = [];
       this.registry.clear();
-      this.selection = [];
       this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
         outlinedObject = this.selectedJsonObjects.map(o => o.id);
@@ -436,10 +432,9 @@ export default class Simple3DScene {
         const three = this.computeIdToThree[id];
         this.addClonedObject(three);
         this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
-        this.selection.push(this.registry.getObjectFromRegistry(three.uuid));
       });
       // update inlet
-      this.inset.showObject(this.selection);
+      this.inset.showObject(this.outlineScene.children);
     }
 
     if (!bypassRendering) {
@@ -573,7 +568,7 @@ export default class Simple3DScene {
 
     this.renderer.render(this.scene, this.camera);
 
-    if (this.selection.length > 0 && this.outline) {
+    if (this.outline && this.outlineScene.children.length > 0) {
       this.outline.renderOutline(this.outlineScene, this.camera);
     }
     this.labelRenderer.render(this.scene, this.camera);
