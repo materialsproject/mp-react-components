@@ -119,6 +119,9 @@ export interface Action<T, P> {
 
 export class ObjectRegistry {
   private objectRegistry = {};
+  clear(): void {
+    this.objectRegistry = {};
+  }
   addToObjectRegisty(o: THREE.Object3D): void {
     this.objectRegistry[o.uuid] = o;
   }

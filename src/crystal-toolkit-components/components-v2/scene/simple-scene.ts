@@ -15,6 +15,7 @@ export interface SceneJsonObject {
   tooltip?: string;
   scale?: ThreePosition[];
   positionPairs?: Array<ThreePosition[]>;
+  id?: string;
 }
 
 export const s4 = {

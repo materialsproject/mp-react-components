@@ -371,11 +371,15 @@ export default class Simple3DScene {
     // it will then zoom on the content of the added scene
 
     // if we found an object, we should remove all tootips and clicks related to it
+    let outlinedObject: string[] = [];
     if (this.scene.getObjectByName(sceneJson.name!)) {
       this.clickableObjects = [];
       this.tooltipObjects = [];
+      this.threeUUIDTojsonObject = [];
+      this.registry.clear();
       this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
+        outlinedObject = this.selectedJsonObjects.map(o => o.id);
         this.outlineScene.remove(...this.outlineScene.children);
       }
     } else {
@@ -394,10 +398,12 @@ export default class Simple3DScene {
           parent.add(object);
           this.threeUUIDTojsonObject[object.uuid] = childObject;
           this.computeIdToThree[`${currentId}--${idx}`] = object;
+          childObject.id = `${currentId}--${idx}`;
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name!;
           this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
+          childObject.id = `${currentId}--${threeObject.name}`;
           childObject.visible && (threeObject.visible = childObject.visible);
           if (childObject.origin) {
             const translation = new THREE.Matrix4();
@@ -423,6 +429,16 @@ export default class Simple3DScene {
     this.scene.add(rootObject);
     this.setupCamera(rootObject);
 
+    if (outlinedObject.length > 0) {
+      this.outlineScene.remove(...this.outlineScene.children);
+      outlinedObject.forEach(id => {
+        const three = this.computeIdToThree[id];
+        this.addClonedObject(three);
+        this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
+      });
+      // update inlet
+    }
+
     if (!bypassRendering) {
       this.renderScene();
     }
@@ -441,7 +457,7 @@ export default class Simple3DScene {
     }
 
     //FIXME(chab) try to move that before
-    if (this.inset && !!this.axis && !!this.axisJson) {
+    if (this.inset && !!this.axis && !!this.axisJson && this.outlineScene.children.length === 0) {
       this.inset.setAxis(this.axis, this.axisJson);
       this.inset.updateSelectedObject(this.axis, this.axisJson);
     }
@@ -567,7 +583,6 @@ export default class Simple3DScene {
     if (this.debugHelper) {
       this.debugHelper.render();
     }
-
 
     //TODO(chab) make a dedicated rendering for SVG
     this.renderInlet();
