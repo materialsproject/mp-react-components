@@ -377,6 +377,7 @@ export default class Simple3DScene {
       this.tooltipObjects = [];
       this.threeUUIDTojsonObject = [];
       this.registry.clear();
+      this.selection = [];
       this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
         outlinedObject = this.selectedJsonObjects.map(o => o.id);
@@ -435,8 +436,10 @@ export default class Simple3DScene {
         const three = this.computeIdToThree[id];
         this.addClonedObject(three);
         this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
+        this.selection.push(this.registry.getObjectFromRegistry(three.uuid));
       });
       // update inlet
+      this.inset.showObject(this.selection);
     }
 
     if (!bypassRendering) {
