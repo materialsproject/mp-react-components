@@ -288,7 +288,9 @@ export default class Simple3DScene {
     }
 
     if (this.settings.secondaryObjectView) {
-      this.outlineScene.children.length > 0 ? this.inset.showObject(this.outlineScene.children) : this.inset.showAxis();
+      this.outlineScene.children.length > 0
+        ? this.inset.showObject(this.outlineScene.children)
+        : this.inset.showAxis();
     }
     needRedraw && this.renderScene();
   }
@@ -472,39 +474,37 @@ export default class Simple3DScene {
     bbox.getCenter(center);
     const size = new THREE.Vector3();
     box.getSize(size);
+    const length = bbox.max.sub(bbox.min).length() + 1;
 
-    let maxDim = Math.max(size.x, size.y, size.z);
-    const CAMERA_BOX_PADDING = maxDim / 1.5;
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera
-    const maxExtent = maxDim / 2 + CAMERA_BOX_PADDING / 2;
     // we add a lot of padding to make sure the camera is always beyond/behind the object
     const Z_PADDING = 5;
     if (this.camera) {
-      this.camera.left = center.x - maxExtent * 2;
-      this.camera.right = center.x + maxExtent * 2;
-      this.camera.top = center.y + maxExtent * 2;
-      this.camera.bottom = center.y - maxExtent * 2;
-      this.camera.near = center.z - maxExtent * 2 - Z_PADDING;
-      this.camera.far = center.z + maxExtent * 2 + Z_PADDING;
+      this.camera.left = center.x - length;
+      this.camera.right = center.x + length;
+      this.camera.top = center.y + length;
+      this.camera.bottom = center.y - length;
+      this.camera.near = center.z - length;
+      this.camera.far = center.z + length;
     } else {
       this.camera = new THREE.OrthographicCamera(
-        center.x - maxExtent,
-        center.x + maxExtent,
-        center.y + maxExtent,
-        center.y - maxExtent,
-        center.z - maxExtent - Z_PADDING,
-        center.z + maxExtent + Z_PADDING
+        center.x - length,
+        center.x + length,
+        center.y + length,
+        center.y - length,
+        center.z - length - Z_PADDING,
+        center.z + length + Z_PADDING
       );
     }
 
     this.camera.zoom = 2;
     // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
-    this.camera.position.z = center.z + maxExtent;
+    this.camera.position.z = center.z + length / 2;
     this.camera.position.y = center.y;
     this.camera.position.x = center.x;
-
     this.camera.lookAt(this.scene.position);
+
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
     if (this.controls) {

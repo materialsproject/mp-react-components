@@ -87,7 +87,6 @@ export default function Simple3DSceneComponent({
   // An interesting classical react issue that we fixed : look at the stories, we do not pass anymore an empty object,
   // but a reference to an empty object, otherwise, it will be a different reference, and treated as a different object, thus
   // triggering the effect
-  useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
   useEffect(() => {
     if (!data || !(data as any).name || !(data as any).contents) {
       console.warn('no data passed ( or missing name /content ), scene will not be updated', data);
@@ -98,6 +97,7 @@ export default function Simple3DSceneComponent({
     !!data && scene.current!.addToScene(data, true);
     scene.current!.toggleVisibility(toggleVisibility as any);
   }, [data]);
+  useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
   useEffect(() => scene.current!.updateInsetSettings(inletSize!, inletPadding!, axisView), [
     inletSize,
     inletPadding,

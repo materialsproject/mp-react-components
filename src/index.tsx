@@ -13,15 +13,9 @@ import { StandalonePeriodicComponent } from './periodic-table/periodic-element/s
 import { useElements } from './periodic-table/periodic-table-state/table-store';
 import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-selection-context';
 import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
-import {
-  s2 as scene,
-  shperes as scene2,
-  s4 as scene3,
-  buggyScene
-} from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
-import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
+import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -61,8 +55,8 @@ function SceneSwitcher() {
     <div>
       <div onClick={() => setScene(scene)}> SCENE A </div>
       <div onClick={() => setScene(scene2)}> SCENE B </div>
-      <div onClick={() => setScene(scene3)}> SCENE C </div>
-      <div onClick={() => setScene(buggyScene)}> SCENE D </div>
+      <div onClick={() => setScene(scene)}> SCENE C </div>
+      <div onClick={() => setScene(scene2)}> SCENE D </div>
       <div
         onClick={() => {
           vis.atoms = !vis.atoms;
@@ -73,7 +67,7 @@ function SceneSwitcher() {
         TOGGLE VIS{' '}
       </div>
       <Simple3DSceneComponent
-        sceneSize={'33vw'}
+        sceneSize={'50vw'}
         settings={{
           renderer: Renderer.WEBGL,
           extractAxis: false,
@@ -81,7 +75,7 @@ function SceneSwitcher() {
           secondaryObjectView: true
         }}
         data={_scene}
-        debug={false}
+        debug={true}
         toggleVisibility={_vis}
       />
     </div>
