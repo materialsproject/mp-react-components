@@ -20,6 +20,11 @@ export enum Light {
 
 export const DEFAULT_LIGHT_COLOR = '#444444';
 
+export enum Control {
+  TRACKBALL = 'trackball',
+  ORBIT = 'orbit'
+}
+
 export const defaults = {
   antialias: true,
   transparentBackground: true,
@@ -56,6 +61,7 @@ export const defaults = {
       metalness: 0.0
     }
   },
+  controls: Control.TRACKBALL,
   enableZoom: true,
   secondaryObjectView: true,
   defaultZoom: 0.8

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { defaults, ExportType, JSON3DObject, Renderer, ThreePosition } from './constants';
+import { Control, defaults, ExportType, JSON3DObject, Renderer, ThreePosition } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import {
@@ -19,6 +19,7 @@ import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { SceneJsonObject } from '../scene/simple-scene';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const POINTER_CLASS = 'show-pointer';
 
@@ -156,19 +157,43 @@ export default class Simple3DScene {
   }
 
   private configureControls() {
-    /*const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
-    controls.rotateSpeed = 2.0;
-    controls.zoomSpeed = 1.2;
-    controls.panSpeed = 0.8;
-    controls.enabled = true;
-    this.controls = controls;*/
-    const controls = new TrackballControls(this.camera, this.renderer.domElement as HTMLElement);
-    controls.rotateSpeed = 2.0;
-    controls.zoomSpeed = 1.2;
-    controls.panSpeed = 0.8;
-    controls.enabled = true;
-    controls.staticMoving = true;
-    this.controls = controls;
+    switch (this.settings.controls) {
+      case Control.TRACKBALL: {
+        const controls = new TrackballControls(
+          this.camera,
+          this.renderer.domElement as HTMLElement
+        );
+        controls.rotateSpeed = 2.0;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.enabled = true;
+        controls.staticMoving = true;
+        this.controls = controls;
+        break;
+      }
+      case Control.ORBIT: {
+        const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
+        controls.rotateSpeed = 2.0;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.enabled = true;
+        this.controls = controls;
+        break;
+      }
+      default: {
+        const controls = new TrackballControls(
+          this.camera,
+          this.renderer.domElement as HTMLElement
+        );
+        controls.rotateSpeed = 2.0;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.enabled = true;
+        controls.staticMoving = true;
+        this.controls = controls;
+        break;
+      }
+    }
 
     if (this.settings.staticScene) {
       // only re-render when scene is rotated
@@ -178,11 +203,13 @@ export default class Simple3DScene {
       });
       this.controls.addEventListener('start', () => {
         this.controls.update();
-        document.addEventListener('mousemove', this.mouseTrackballUpdate, false);
+        this.settings.controls === Control.TRACKBALL &&
+          document.addEventListener('mousemove', this.mouseTrackballUpdate, false);
       });
       this.controls.addEventListener('end', () => {
         this.controls.update();
-        document.removeEventListener('mousemove', this.mouseTrackballUpdate, false);
+        this.settings.controls === Control.TRACKBALL &&
+          document.removeEventListener('mousemove', this.mouseTrackballUpdate, false);
       });
     } else {
       // constantly re-render (for animation)
