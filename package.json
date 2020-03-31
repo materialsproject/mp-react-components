@@ -45,7 +45,7 @@
     "@rollup/plugin-image": "^2.0.4",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-url": "^4.0.2",
-    "@storybook/addon-actions": "5.3.17",
+    "@storybook/addon-actions": "5.3.18",
     "@storybook/addon-docs": "5.3.17",
     "@storybook/addon-knobs": "5.3.17",
     "@storybook/addon-links": "^5.3.10",
