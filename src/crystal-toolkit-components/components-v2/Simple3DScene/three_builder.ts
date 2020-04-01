@@ -20,7 +20,7 @@ export class ThreeBuilder {
 
   public makeCylinders(object_json, obj: THREE.Object3D) {
     const radius = object_json.radius || 1;
-    const geom = this.getCylinderGeometry(radius);
+    const geom = this.getCylinderGeometry(radius, object_json.radiusTop, object_json.radiusBottom);
     const mat = this.makeMaterial(object_json.color);
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
@@ -144,11 +144,18 @@ export class ThreeBuilder {
     );
   }
 
-  public getCylinderGeometry(radius: number): THREE.CylinderBufferGeometry {
+  public getCylinderGeometry(
+    radius: number,
+    radiusTop?: number,
+    radiusBottom?: number
+  ): THREE.CylinderBufferGeometry {
     // body
+    radiusTop == undefined && (radiusTop = radius);
+    radiusBottom == undefined && (radiusBottom = radius);
+
     return new THREE.CylinderBufferGeometry(
-      radius * this.settings.cylinderScale,
-      radius * this.settings.cylinderScale,
+      radiusTop * this.settings.cylinderScale,
+      radiusBottom * this.settings.cylinderScale,
       1.0,
       this.settings.cylinderSegments
     );
@@ -156,13 +163,9 @@ export class ThreeBuilder {
 
   public makeArrow(object_json, obj: THREE.Object3D) {
     // TODO obj is the parent object, rename to a better name
-
-    const radius = object_json.radius || 1;
-    const headLength = object_json.headLength || 2;
-    const headWidth = object_json.headWidth || 2;
-
+    const { radius = 1, radiusTop, radiusBottom, headLength = 2, headWidth = 2 } = object_json;
     // body
-    const geom_cyl = this.getCylinderGeometry(radius);
+    const geom_cyl = this.getCylinderGeometry(radius, radiusTop, radiusBottom);
     // head
     const geom_head = this.getHeadGeometry(headWidth, headLength);
     const mat = this.makeMaterial(object_json.color);
