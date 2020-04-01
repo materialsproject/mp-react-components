@@ -18,15 +18,42 @@ export const DEFAULT_MATERIAL_COLOR = '#52afb0';
 export class ThreeBuilder {
   constructor(private settings) {}
 
+  private validateRadiusArrays({ radiusTop, radiusBottom, positionPairs }) {
+    if (!Array.isArray(radiusBottom)) {
+      console.error('radiusBottom is not an array', radiusBottom);
+      return;
+    }
+
+    if (radiusTop.length !== radiusBottom.length) {
+      console.error('radiusTop/Bottom arrays have different length');
+    }
+
+    if (radiusTop.length !== positionPairs.length || radiusBottom.length !== positionPairs.length) {
+      console.warn(
+        'radiusTop/Bottom length does not match positions array, will fallback to radius for missing values'
+      );
+    }
+  }
+
   public makeCylinders(object_json, obj: THREE.Object3D) {
-    const radius = object_json.radius || 1;
-    const geom = this.getCylinderGeometry(radius, object_json.radiusTop, object_json.radiusBottom);
-    const mat = this.makeMaterial(object_json.color);
+    const { radius = 1, radiusTop, radiusBottom, color } = object_json;
+    const perCylinderGeometry = Array.isArray(radiusTop);
+    perCylinderGeometry && this.validateRadiusArrays(object_json);
+    const perCylinderMaterial = Array.isArray(color);
+    const geom = this.getCylinderGeometry(radius, radiusTop, radiusBottom);
+    const mat = this.makeMaterial(color);
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
-    object_json.positionPairs.forEach(positionPair => {
+    object_json.positionPairs.forEach((positionPair, idx) => {
       // the following is technically correct but could be optimized?
-      const mesh = new THREE.Mesh(geom, mat);
+      const currentGeometry = perCylinderGeometry
+        ? this.getCylinderGeometry(radius, radiusTop[idx], radiusBottom[idx])
+        : geom;
+      const currentMaterial =
+        perCylinderMaterial && mat instanceof THREE.MeshStandardMaterial ? mat.clone() : mat;
+      perCylinderMaterial && (mat.color = new THREE.Color(color[idx]));
+
+      const mesh = new THREE.Mesh(currentGeometry, currentMaterial);
       const vec_a = new THREE.Vector3(...positionPair[0]);
       const vec_b = new THREE.Vector3(...positionPair[1]);
       const vec_rel = vec_b.sub(vec_a);

@@ -96,6 +96,7 @@ export const s4 = {
               [-1.9414784057759444e-8, 1.8569259826179634, 0.9824929612499999]
             ]
           ],
+
           color: '#b0b9e6',
           radius: 0.1,
           type: 'cylinders',
@@ -288,6 +289,8 @@ export const s2 = {
               [3.1500000000000004, 1.05, 1.05]
             ]
           ],
+          radiusTop: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+          radiusBottom: [0.2, 0.25, 0.1, 0.1, 0.25, 0.01],
           color: '#f9dc3c',
           radius: 0.1,
           type: 'cylinders',

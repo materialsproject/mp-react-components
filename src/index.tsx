@@ -16,6 +16,7 @@ import { TableLayout } from './periodic-table/periodic-table-component/periodic-
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
+import { s2 as s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -48,12 +49,12 @@ function SelectedComponent() {
 const vis = { atoms: true };
 
 function SceneSwitcher() {
-  const [_scene, setScene] = useState(scene) as any;
+  const [_scene, setScene] = useState(s4) as any;
   const [_vis, setVisibility] = useState(vis) as any;
 
   return (
     <div>
-      <div onClick={() => setScene(scene)}> SCENE A </div>
+      <div onClick={() => setScene(s4)}> SCENE A </div>
       <div onClick={() => setScene(scene2)}> SCENE B </div>
       <div onClick={() => setScene(scene)}> SCENE C </div>
       <div onClick={() => setScene(scene2)}> SCENE D </div>
