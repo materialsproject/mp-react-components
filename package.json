@@ -52,7 +52,7 @@
     "@storybook/addon-storysource": "5.3.18",
     "@storybook/addons": "5.3.18",
     "@storybook/core": "5.3.18",
-    "@storybook/react": "5.3.17",
+    "@storybook/react": "5.3.18",
     "@storybook/storybook-deployer": "^2.8.3",
     "@types/enzyme": "^3.10.4",
     "@types/enzyme-adapter-react-16": "^1.0.5",
