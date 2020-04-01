@@ -25,6 +25,10 @@ export enum Control {
   ORBIT = 'orbit'
 }
 
+// maybe move to settings
+export const TUBE_SEGMENTS = 150;
+export const RADIUS_SEGMENTS = 20;
+
 export const defaults = {
   antialias: true,
   transparentBackground: true,
@@ -76,7 +80,8 @@ export enum JSON3DObject {
   LINES = 'lines',
   SURFACES = 'surface',
   CONVEX = 'convex',
-  LABEL = 'labels'
+  LABEL = 'labels',
+  BEZIER = 'bezier'
 }
 
 export const DEBUG_STYLE = {
@@ -160,7 +165,8 @@ export const OBJECT_TO_FIELDS: { [K in JSON3DObject]: Field[] | null } = {
   [JSON3DObject.SPHERES]: [fieldColor, fieldRadius, position],
   [JSON3DObject.LINES]: [],
   [JSON3DObject.ELLIPSOIDS]: [fieldColor, fieldRadius, position],
-  [JSON3DObject.CUBES]: []
+  [JSON3DObject.CUBES]: [],
+  [JSON3DObject.BEZIER]: []
 };
 
 export type ThreePosition = [number, number, number];

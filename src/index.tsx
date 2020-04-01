@@ -76,7 +76,7 @@ function SceneSwitcher() {
           secondaryObjectView: true
         }}
         data={_scene}
-        debug={true}
+        debug={false}
         toggleVisibility={_vis}
       />
     </div>

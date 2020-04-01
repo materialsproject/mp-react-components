@@ -1,12 +1,49 @@
 import * as THREE from 'three';
-import { JSON3DObject, Light, Material, Renderer, ThreePosition } from './constants';
+import {
+  AmbientLight,
+  DirectionalLight,
+  HemisphereLight,
+  Object3D,
+  QuadraticBezierCurve3
+} from 'three';
+import {
+  JSON3DObject,
+  Light,
+  Material,
+  RADIUS_SEGMENTS,
+  Renderer,
+  ThreePosition,
+  TUBE_SEGMENTS
+} from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import { AmbientLight, DirectionalLight, HemisphereLight, Object3D } from 'three';
+import { RadiusTubeBufferGeometry } from './RadiusTubeBufferGeometry';
 
 export const DEFAULT_DASHED_LINE_COLOR = '#000000';
 export const DEFAULT_LINE_COLOR = '#2c3c54';
 export const DEFAULT_MATERIAL_COLOR = '#52afb0';
+
+// i think it would be better to have a mixin or a decorator, so we do not need
+// to create a sub class for each kind of curve. we would store the original curve and
+// just forward the calls to it
+class QuadraticSteppedBezierCurver extends THREE.QuadraticBezierCurve3 {
+  private delta = 0;
+  private parts = 2; // let's suppose we use a spline, we'll need to derive the parts from
+  // the length of the vector array
+
+  constructor(v0, v1, v2) {
+    super(v0, v1, v2);
+  }
+  setPart(part: number) {
+    if (part >= this.parts) {
+      console.error('Part index is too high :', part, '.Curve has:', this.parts, ' parts');
+    }
+    this.delta = (1 / this.parts) * part;
+  }
+  getPoint(t: number, optionalTarget?: THREE.Vector3): THREE.Vector3 {
+    return super.getPoint(this.delta + t / this.parts);
+  }
+}
 
 /**
  *
@@ -33,6 +70,35 @@ export class ThreeBuilder {
         'radiusTop/Bottom length does not match positions array, will fallback to radius for missing values'
       );
     }
+  }
+
+  public makeBezierTube(object_json, obj: THREE.Object3D) {
+    object_json.controlPoints.forEach(
+      (controlPoints: [ThreePosition, ThreePosition, ThreePosition]) => {
+        const cps = controlPoints.map(cp => new THREE.Vector3(...cp)) as [
+          THREE.Vector3,
+          THREE.Vector3,
+          THREE.Vector3
+        ];
+        const curve = new QuadraticSteppedBezierCurver(...cps);
+        const numberOfParts = controlPoints.length - 1;
+        for (let i = 0; i < numberOfParts; i++) {
+          curve.setPart(i);
+          const radiusStart = object_json.radius[i];
+          const radiusEnd = object_json.radius[i + 1];
+          const geometry = new RadiusTubeBufferGeometry(
+            curve,
+            TUBE_SEGMENTS,
+            radiusStart,
+            RADIUS_SEGMENTS,
+            false,
+            (a, b) => a + (radiusEnd - radiusStart) * (b / TUBE_SEGMENTS)
+          );
+          obj.add(new THREE.Mesh(geometry, this.makeMaterial(object_json.color[i])));
+        }
+      }
+    );
+    return obj;
   }
 
   public makeCylinders(object_json, obj: THREE.Object3D) {
@@ -311,6 +377,9 @@ export class ThreeBuilder {
     switch (object_json.type as JSON3DObject) {
       case JSON3DObject.SPHERES: {
         return this.makeSphere(object_json, obj);
+      }
+      case JSON3DObject.BEZIER: {
+        return this.makeBezierTube(object_json, obj);
       }
       case JSON3DObject.ELLIPSOIDS: {
         return this.makeEllipsoids(object_json, obj);
