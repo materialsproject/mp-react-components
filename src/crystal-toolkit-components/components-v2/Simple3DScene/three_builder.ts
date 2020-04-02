@@ -1,11 +1,5 @@
 import * as THREE from 'three';
-import {
-  AmbientLight,
-  DirectionalLight,
-  HemisphereLight,
-  Object3D,
-  QuadraticBezierCurve3
-} from 'three';
+import { AmbientLight, DirectionalLight, HemisphereLight, Object3D, SphereBufferGeometry } from "three";
 import {
   JSON3DObject,
   Light,
@@ -211,6 +205,7 @@ export class ThreeBuilder {
   public makeConvex(object_json, obj: THREE.Object3D) {
     const points = object_json.positions.map(p => new THREE.Vector3(...p));
     const geom = new ConvexBufferGeometry(points);
+
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
     const mat = this.makeMaterial(object_json.color, opacity);
     if (opacity) {
@@ -473,6 +468,200 @@ export class ThreeBuilder {
       }
       return acc;
     }, lightHelperGroup);
+  }
+
+  // object updates
+
+  public updateSphereCenter(
+    obj: THREE.Object3D,
+    baseJsonObject,
+    newPosition: ThreePosition,
+    index
+  ) {
+    const mesh = obj.children[index] as THREE.Mesh;
+    mesh.position.set(...newPosition);
+  }
+
+  public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
+    // get uuid from json object
+    obj.children.forEach(o => {
+      const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
+      material.color = new THREE.Color(newColor);
+    });
+  }
+
+  public updateConvexColor(obj, objjson, color) {
+    obj.children.forEach(o => {
+      o.material.color = new THREE.Color(color);
+    });
+  }
+
+  public updateConvexEdges(obj, objjson, positions) {
+    const points = positions.map(p => new THREE.Vector3(...p));
+    const geom = new ConvexBufferGeometry(points);
+    const edges = new THREE.EdgesGeometry(geom);
+    obj.children[0].geometry.dispose();
+    obj.children[1].geometry.dispose();
+    obj.children[0].geometry = geom;
+    obj.children[1].geometry = edges;
+  }
+
+  public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
+    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
+    const phiStart = geometry.parameters.phiStart;
+    const phiEnd = geometry.parameters.phiLength;
+    const newGeometry = this.getSphereGeometry(newRadius, phiStart, phiEnd);
+    obj.children.forEach(o => {
+      (o as THREE.Mesh).geometry.dispose();
+      (o as THREE.Mesh).geometry = newGeometry;
+    });
+  }
+
+  // TODO(chab) merge the two below methods
+  // arrow width
+  public updateHeadWidth(obj: THREE.Object3D, baseJsonObject, headWidth) {
+    const geom_head = this.getHeadGeometry(headWidth, baseJsonObject.headWidth);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2 + 1;
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
+      (mesh_head as THREE.Mesh).geometry = geom_head;
+    });
+  }
+
+  // arrow length
+  public updateHeadLength(obj: THREE.Object3D, baseJsonObject, headLength) {
+    const geom_head = this.getHeadGeometry(baseJsonObject.headWidth, headLength);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2 + 1;
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
+      (mesh_head as THREE.Mesh).geometry = geom_head;
+    });
+  }
+
+  public updateArrowColor(obj: THREE.Object3D, baseJsonObject, color) {
+    obj.children.forEach(o => {
+      ((o as THREE.Mesh).material as THREE.MeshStandardMaterial).color = new THREE.Color(color);
+    });
+  }
+
+  public updateArrowRadius(obj: THREE.Object3D, baseJsonObject, radius) {
+    const geom_cyl = this.getCylinderGeometry(radius);
+    baseJsonObject.positionPairs.forEach((a, idx) => {
+      const headIndex = idx * 2;
+      const mesh_head = obj.children[headIndex];
+      (mesh_head as THREE.Mesh).geometry.dispose();
+      (mesh_head as THREE.Mesh).geometry = geom_cyl;
+    });
+  }
+
+  //TODO(chab) check if positions are different, update the whole mesh
+  // OR let pass the index so we know what to update
+  public updateArrowpositionPair(baseJsonObject, newScale) {
+    //but reuse material if possible
+    baseJsonObject.positionPairs.forEach(a => {});
+  }
+
+  public updateLineSegments(obj: THREE.Object3D, object_json, positions) {
+    const verts = new THREE.Float32BufferAttribute(positions, 3);
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', verts);
+    const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
+    mesh.geometry = geom;
+  }
+
+  public updateLineStyle(
+    obj: THREE.Object3D,
+    object_json,
+    color,
+    lineWidth,
+    scale,
+    dashSize,
+    gapSize
+  ) {
+    const mesh: THREE.LineSegments = obj.children[0] as THREE.LineSegments;
+    let mat;
+
+    //FIXME(update material instead)
+    if (
+      object_json.dashSize ||
+      object_json.scale ||
+      object_json.gapSize ||
+      dashSize ||
+      scale ||
+      gapSize
+    ) {
+      mat = new THREE.LineDashedMaterial({
+        color: color || object_json.color || DEFAULT_DASHED_LINE_COLOR,
+        linewidth: lineWidth || object_json.line_width || 1,
+        scale: scale || object_json.scale || 1,
+        dashSize: dashSize || object_json.dashSize || 3,
+        gapSize: gapSize || object_json.gapSize || 1
+      });
+    } else {
+      mat = new THREE.LineBasicMaterial({
+        color: color || object_json.color || DEFAULT_LINE_COLOR,
+        linewidth: lineWidth || object_json.line_width || 1
+      });
+    }
+    mesh.material = mat;
+    if (
+      object_json.dashSize ||
+      object_json.scale ||
+      object_json.gapSize ||
+      dashSize ||
+      scale ||
+      gapSize
+    ) {
+      mesh.computeLineDistances();
+    }
+  }
+
+  // generic
+  public updateScale(baseJsonObject, newScale) {}
+
+  // cylinder, see arrows
+  public updateCylinderPositionPair(obj: THREE.Object3D, baseJsonObject, newPositionPair, index) {
+    const mesh = obj.children[index] as THREE.Mesh;
+    const { scale, position, quaternion } = this.getCylinderInfo(newPositionPair);
+    mesh.position.set(...(position as ThreePosition));
+    mesh.scale.y = scale;
+    mesh.setRotationFromQuaternion(quaternion);
+  }
+
+  public getCylinderInfo(positionPair) {
+    const vec_a = new THREE.Vector3(...positionPair[0]);
+    const vec_b = new THREE.Vector3(...positionPair[1]);
+    const vec_rel = vec_b.sub(vec_a);
+    const length = vec_rel.length();
+    const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
+    const quaternion = new THREE.Quaternion();
+    const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
+    console.log('vec_rel', vec_rel.length());
+    quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
+    return {
+      scale: length,
+      position: [vec_midpoint.x, vec_midpoint.y, vec_midpoint.z],
+      quaternion
+    };
+  }
+
+  //TODO(chab) can be refactored with the sphere
+  public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
+    //CylinderBufferGeometry
+    const newGeometry = this.getCylinderGeometry(newRadius);
+    obj.children.forEach(o => {
+      (o as THREE.Mesh).geometry.dispose();
+      (o as THREE.Mesh).geometry = newGeometry;
+    });
+  }
+
+  public updateCylinderColor(obj: THREE.Object3D, baseJsonObject, newColor) {
+    obj.children.forEach(o => {
+      const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
+      material.color = new THREE.Color(newColor);
+    });
   }
 }
 
