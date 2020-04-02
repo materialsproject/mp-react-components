@@ -430,7 +430,7 @@ export default class Simple3DScene {
           threeObject.name = childObject.name!;
           this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
           childObject.id = `${currentId}--${threeObject.name}`;
-          childObject.visible && (threeObject.visible = childObject.visible);
+          threeObject.visible = childObject.visible === undefined ? true : !!childObject.visible;
           if (childObject.origin) {
             const translation = new THREE.Matrix4();
             // note(chab) have a typedefinition for the JSON
