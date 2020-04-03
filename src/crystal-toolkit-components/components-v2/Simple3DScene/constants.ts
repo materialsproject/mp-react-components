@@ -25,12 +25,19 @@ export enum Control {
   ORBIT = 'orbit'
 }
 
+export enum AnimationStyle {
+  PLAY = 'play',
+  SLIDER = 'slider',
+  NONE = 'none'
+}
+
 // maybe move to settings
 export const TUBE_SEGMENTS = 150;
 export const RADIUS_SEGMENTS = 20;
 
 export const defaults = {
   antialias: true,
+  animation: AnimationStyle.NONE,
   transparentBackground: true,
   renderer: Renderer.WEBGL,
   renderDivBackground: false,

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Slider, Rail, Handles, Tracks } from 'react-compound-slider';
+import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
 import PropTypes from 'prop-types';
 
 const sliderStyle: any = {
@@ -70,6 +70,15 @@ class SimpleSlider extends Component<any, any> {
               </div>
             )}
           </Tracks>
+          <Ticks count={15 /* generate approximately 15 ticks within the domain */}>
+            {({ ticks }) => (
+              <div className="slider-ticks">
+                {ticks.map(tick => (
+                  <Tick key={tick.id} tick={tick} count={ticks.length} />
+                ))}
+              </div>
+            )}
+          </Ticks>
         </Slider>
       </div>
     );
