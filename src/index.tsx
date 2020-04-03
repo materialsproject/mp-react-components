@@ -14,9 +14,12 @@ import { useElements } from './periodic-table/periodic-table-state/table-store';
 import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-selection-context';
 import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
-import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
+import {
+  AnimationStyle,
+  Renderer
+} from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
-import { s2 as s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -49,15 +52,19 @@ function SelectedComponent() {
 const vis = { atoms: true };
 
 function SceneSwitcher() {
-  const [_scene, setScene] = useState(s4) as any;
+  const [_scene, setScene] = useState(s2) as any;
   const [_vis, setVisibility] = useState(vis) as any;
+  const [_anim, setAnim] = useState(AnimationStyle.NONE) as any;
 
   return (
     <div>
-      <div onClick={() => setScene(s4)}> SCENE A </div>
+      <div onClick={() => setScene(s2)}> SCENE A </div>
       <div onClick={() => setScene(scene2)}> SCENE B </div>
       <div onClick={() => setScene(scene)}> SCENE C </div>
       <div onClick={() => setScene(scene2)}> SCENE D </div>
+      <div onClick={() => setAnim(AnimationStyle.PLAY)}> PLAY </div>
+      <div onClick={() => setAnim(AnimationStyle.NONE)}> NONE </div>
+      <div onClick={() => setAnim(AnimationStyle.SLIDER)}> SLIDER </div>
       <div
         onClick={() => {
           vis.atoms = !vis.atoms;
@@ -68,15 +75,17 @@ function SceneSwitcher() {
         TOGGLE VIS{' '}
       </div>
       <Simple3DSceneComponent
-        sceneSize={'50vw'}
+        sceneSize={'30vw'}
+        animation={_anim}
         settings={{
+          staticScene: false,
           renderer: Renderer.WEBGL,
           extractAxis: false,
           isMultiSelectionEnabled: true,
           secondaryObjectView: true
         }}
         data={_scene}
-        debug={false}
+        debug={true}
         toggleVisibility={_vis}
       />
     </div>

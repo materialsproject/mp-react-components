@@ -9,6 +9,7 @@ import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
 import { CameraContextWrapper } from '../crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 import { ScenePosition } from '../crystal-toolkit-components/components-v2/scene/inset-helper';
+import { AnimationStyle } from '../crystal-toolkit-components/components-v2/Simple3DScene/constants';
 
 const emptyObject = {};
 export const scene3d = () => (
@@ -18,11 +19,16 @@ export const scene3d = () => (
     <div style={{ width: '100%', height: '100%' }}>
       <Simple3DSceneComponent
         debug={boolean('DEBUG', false)}
+        animation={select(
+          'Animation',
+          [AnimationStyle.SLIDER, AnimationStyle.PLAY, AnimationStyle.NONE] as string[],
+          AnimationStyle.NONE as string
+        )}
         axisView={select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW')}
         inletPadding={number('padding', 10)}
         inletSize={number('size', 100)}
         data={object('scene', sceneJson)}
-        sceneSize={object('Size', 500)}
+        sceneSize={object('Size', 400)}
         toggleVisibility={emptyObject}
       />
     </div>

@@ -94,7 +94,9 @@ export class ThreeBuilder {
             false,
             (a, b) => a + (radiusEnd - radiusStart) * (b / TUBE_SEGMENTS)
           );
-          obj.add(new THREE.Mesh(geometry, this.makeMaterial(object_json.color[i])));
+          obj.add(
+            new THREE.Mesh(geometry, this.makeMaterial(object_json.color[i], object_json.animate))
+          );
         }
       }
     );
@@ -107,7 +109,7 @@ export class ThreeBuilder {
     perCylinderGeometry && this.validateRadiusArrays(object_json);
     const perCylinderMaterial = Array.isArray(color);
     const geom = this.getCylinderGeometry(radius, radiusTop, radiusBottom);
-    const mat = this.makeMaterial(color);
+    const mat = this.makeMaterial(color, object_json.animate);
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
     const quaternion = new THREE.Quaternion();
     object_json.positionPairs.forEach((positionPair, idx) => {
@@ -168,7 +170,7 @@ export class ThreeBuilder {
   public makeCube(object_json, obj: THREE.Object3D) {
     const size = object_json.width * this.settings.sphereScale;
     const geom = new THREE.BoxBufferGeometry(size, size, size);
-    const mat = this.makeMaterial(object_json.color);
+    const mat = this.makeMaterial(object_json.color, object_json.animate);
     object_json.positions.forEach((position: ThreePosition) => {
       const mesh = new THREE.Mesh(geom, mat);
       mesh.position.set(...position);
@@ -184,7 +186,7 @@ export class ThreeBuilder {
     geom.setAttribute('position', verts);
 
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
-    const mat = this.makeMaterial(object_json.color, opacity);
+    const mat = this.makeMaterial(object_json.color, object_json.animate, opacity);
 
     if (object_json.normals) {
       const normals = new THREE.Float32BufferAttribute([].concat.apply([], object_json.normals), 3);
@@ -213,7 +215,7 @@ export class ThreeBuilder {
     const geom = new ConvexBufferGeometry(points);
 
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
-    const mat = this.makeMaterial(object_json.color, opacity);
+    const mat = this.makeMaterial(object_json.color, object_json.animate, opacity);
     if (opacity) {
       mat.transparent = true;
       mat.depthWrite = false;
@@ -299,7 +301,7 @@ export class ThreeBuilder {
   //Note(chab) we use morphtargets for geometries like cube, convex, beziers
   // objects that are built by scaling and rotating a simple geometry should
   // be animated by interpolating those specific properties
-  public makeMaterial(color = DEFAULT_MATERIAL_COLOR, opacity = 1.0, animated = false) {
+  public makeMaterial(color = DEFAULT_MATERIAL_COLOR, animated = false, opacity = 1.0) {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
       opacity: opacity,
@@ -430,7 +432,7 @@ export class ThreeBuilder {
 
   private getSphereBuffer(radius: number, color: string, phiStart: number, phiEnd: number) {
     const geom = this.getSphereGeometry(radius, phiStart, phiEnd);
-    const mat = this.makeMaterial(color);
+    const mat = this.makeMaterial(color, false);
     return { geom, mat };
   }
 
@@ -648,7 +650,6 @@ export class ThreeBuilder {
     const vec_midpoint = vec_a.add(vec_rel.clone().multiplyScalar(0.5));
     const quaternion = new THREE.Quaternion();
     const vec_y = new THREE.Vector3(0, 1, 0); // initial axis of cylinder
-    console.log('vec_rel', vec_rel.length());
     quaternion.setFromUnitVectors(vec_y, vec_rel.normalize());
     return {
       scale: length,

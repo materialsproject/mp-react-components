@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 
 const sliderStyle: any = {
   position: 'relative',
-  width: '100%',
+  margin: 'auto',
+  width: '80%',
   touchAction: 'none'
 };
 

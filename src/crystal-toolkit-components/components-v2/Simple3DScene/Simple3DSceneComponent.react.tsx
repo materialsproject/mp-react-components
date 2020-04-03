@@ -5,6 +5,7 @@ import { subscribe } from './Simple3DSceneDownloadEvent';
 import './Simple3DScene.less';
 import { download } from './utils';
 import {
+  AnimationStyle,
   DEBUG_STYLE,
   DEFAULT_SCENE_SIZE,
   MOUNT_DEBUG_NODE_CLASS,
@@ -13,6 +14,8 @@ import {
 } from './constants';
 import { CameraContext } from './camera-context';
 import { CameraReducerAction } from './camera-reducer';
+import SimpleSlider from './animation-slider';
+import { usePrevious } from '../../../utils/hooks';
 
 const getSceneSize = sceneSize => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -31,6 +34,7 @@ export default function Simple3DSceneComponent({
   inletSize,
   inletPadding,
   settings,
+  animation,
   downloadRequest = {},
   onObjectClicked,
   toggleVisibility,
@@ -42,7 +46,7 @@ export default function Simple3DSceneComponent({
   const mountNodeRef = useRef(null);
   const mountNodeDebugRef = useRef(null);
   const _id = useRef(++ID_GENERATOR + '');
-
+  const previousAnimationSetting = usePrevious(animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
@@ -56,7 +60,6 @@ export default function Simple3DSceneComponent({
       inletPadding,
       objects => {
         if (onObjectClicked) {
-          console.log('clicked', objects);
           onObjectClicked(objects);
         }
       },
@@ -136,6 +139,10 @@ export default function Simple3DSceneComponent({
       }
     }, [state.position, state.quaternion]);
   }
+  //
+  useEffect(() => {
+    animation && scene.current!.updateAnimationStyle(animation as AnimationStyle);
+  }, [animation]);
 
   const size = getSceneSize(sceneSize);
 
@@ -152,6 +159,14 @@ export default function Simple3DSceneComponent({
       </div>
       {debug && (
         <div style={DEBUG_STYLE} className={MOUNT_DEBUG_NODE_CLASS} ref={mountNodeDebugRef} />
+      )}
+
+      {animation === AnimationStyle.SLIDER && (
+        <SimpleSlider
+          onUpdate={a => {
+            scene.current!.updateTime(a / 100);
+          }}
+        />
       )}
     </>
   );
@@ -229,5 +244,15 @@ Simple3DSceneComponent.propTypes = {
   /**
    * Orientation of axis view
    */
-  axisView: PropTypes.string
+  axisView: PropTypes.string,
+  /**
+   * Animation
+   *
+   * Set up animation styles
+   *
+   * 'play'
+   * 'none'
+   * 'slider'
+   */
+  animation: PropTypes.string
 };

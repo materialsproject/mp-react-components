@@ -1,16 +1,26 @@
 import * as THREE from 'three';
-import { Object3D, Quaternion, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Object3D,
+  Quaternion,
+  Vector3,
+  WebGLRenderer
+} from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
-import { Control, defaults, ExportType, JSON3DObject, Renderer, ThreePosition } from './constants';
+import {
+  AnimationStyle,
+  Control,
+  defaults,
+  ExportType,
+  JSON3DObject,
+  Renderer,
+  ThreePosition
+} from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
-import {
-  DEFAULT_DASHED_LINE_COLOR,
-  DEFAULT_LINE_COLOR,
-  getSceneWithBackground,
-  ThreeBuilder
-} from './three_builder';
+import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
 import { disposeSceneHierarchy, download, getThreeScreenCoordinate, ObjectRegistry } from './utils';
 // @ts-ignore
@@ -22,7 +32,7 @@ import { SceneJsonObject } from '../scene/simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const POINTER_CLASS = 'show-pointer';
-
+let D;
 export default class Simple3DScene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
@@ -55,6 +65,11 @@ export default class Simple3DScene {
   // handle multiSelection via shift key
   private isMultiSelectionEnabled = false;
   private registry = new ObjectRegistry();
+
+  private mixer: THREE.AnimationMixer[] = [];
+  private clock = new THREE.Clock();
+
+  private lineGeometriesToUpdate: THREE.LineSegments[] = [];
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -158,19 +173,6 @@ export default class Simple3DScene {
 
   private configureControls() {
     switch (this.settings.controls) {
-      case Control.TRACKBALL: {
-        const controls = new TrackballControls(
-          this.camera,
-          this.renderer.domElement as HTMLElement
-        );
-        controls.rotateSpeed = 2.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-        controls.enabled = true;
-        controls.staticMoving = true;
-        this.controls = controls;
-        break;
-      }
       case Control.ORBIT: {
         const controls = new OrbitControls(this.camera, this.renderer.domElement as HTMLElement);
         controls.rotateSpeed = 2.0;
@@ -195,7 +197,11 @@ export default class Simple3DScene {
       }
     }
 
-    if (this.settings.staticScene) {
+    if (
+      this.settings.staticScene ||
+      this.settings.animation === AnimationStyle.NONE ||
+      this.settings.animation === AnimationStyle.SLIDER
+    ) {
       // only re-render when scene is rotated
       this.controls.addEventListener('change', () => {
         this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
@@ -329,6 +335,20 @@ export default class Simple3DScene {
     this.registry.addToObjectRegisty(clone);
   }
 
+  public updateAnimationStyle(animationStyle: AnimationStyle) {
+    this.settings.animation = animationStyle;
+    switch (animationStyle) {
+      case AnimationStyle.SLIDER:
+      case AnimationStyle.NONE: {
+        setTimeout(() => this.stop(), 0);
+        break;
+      }
+      case AnimationStyle.PLAY: {
+        setTimeout(() => this.start(), 0);
+      }
+    }
+  }
+
   private readonly windowListener = () => this.resizeRendererToDisplaySize();
 
   constructor(
@@ -398,7 +418,13 @@ export default class Simple3DScene {
 
     // if we found an object, we should remove all tootips and clicks related to it
     let outlinedObject: string[] = [];
+    let bp = false;
     if (this.scene.getObjectByName(sceneJson.name!)) {
+      console.log('Regenerating scene');
+      // see https://jsfiddle.net/L981td24/17/
+      this.mixer.forEach(m => m.stopAllAction());
+      this.mixer = [];
+      this.lineGeometriesToUpdate = [];
       this.clickableObjects = [];
       this.tooltipObjects = [];
       this.threeUUIDTojsonObject = [];
@@ -408,14 +434,16 @@ export default class Simple3DScene {
         outlinedObject = this.selectedJsonObjects.map(o => o.id);
         this.outlineScene.remove(...this.outlineScene.children);
       }
+      bp = false;
     } else {
-      console.log('The scene is a new scene', sceneJson.name);
+      console.log('The scene is a new scene:', sceneJson.name);
     }
 
     const rootObject = new THREE.Object3D();
     rootObject.name = sceneJson.name!;
     sceneJson.visible && (rootObject.visible = sceneJson.visible);
 
+    const objectToAnimate = new Set<string>();
     // recursively visit the scene, starting with the root object
     const traverse_scene = (o: SceneJsonObject, parent: THREE.Object3D, currentId: string) => {
       o.contents!.forEach((childObject, idx) => {
@@ -425,6 +453,9 @@ export default class Simple3DScene {
           this.threeUUIDTojsonObject[object.uuid] = childObject;
           this.computeIdToThree[`${currentId}--${idx}`] = object;
           childObject.id = `${currentId}--${idx}`;
+          if (childObject.animate) {
+            objectToAnimate.add(`${currentId}--${idx}`);
+          }
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name!;
@@ -466,9 +497,6 @@ export default class Simple3DScene {
       this.inset.showObject(this.outlineScene.children);
     }
 
-    if (!bypassRendering) {
-      this.renderScene();
-    }
     // we can automatically output a screenshot to be the background of the parent div
     // this helps for automated testing, printing the web page, etc.
     if (this.settings.renderDivBackground) {
@@ -488,6 +516,175 @@ export default class Simple3DScene {
       this.inset.setAxis(this.axis, this.axisJson);
       this.inset.updateSelectedObject(this.axis, this.axisJson);
     }
+
+    objectToAnimate.forEach((id: string) => {
+      const three = this.computeIdToThree[id];
+      const json: SceneJsonObject = this.threeUUIDTojsonObject[three.uuid];
+      const kf = (json as any).keyframes;
+      const kfl: number = kf.length;
+
+      if (json.type === JSON3DObject.SPHERES) {
+        const animations = json.animate!;
+
+        if (Array.isArray(animations[0])) {
+          animations.forEach((animation: any, idx) => {
+            let _three = three.children[idx];
+            const st = [_three.position.x, _three.position.y, _three.position.z];
+            const values = [
+              ...st,
+              ...[st[0] + animation[0], st[1] + animation[1], st[2] + animation[2]]
+            ];
+            const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+            const clip = new THREE.AnimationClip('Action', kfl, [positionKF]);
+            const mixer = new THREE.AnimationMixer(_three);
+            this.mixer.push(mixer);
+            const ca = mixer.clipAction(clip);
+            ca.play();
+          });
+        } else {
+          const st = [three.position.x, three.position.y, three.position.z];
+          const values = [...st, ...json.animate!]; //FIXME it's absolute, make it relative ?
+          const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+          const clip = new THREE.AnimationClip('Action', kfl, [positionKF]);
+          const mixer = new THREE.AnimationMixer(three);
+          this.mixer.push(mixer);
+          const ca = mixer.clipAction(clip);
+          ca.play();
+        }
+      } else if (json.type === JSON3DObject.CYLINDERS) {
+        const animations = json.animate!;
+        animations.forEach((animation, aIdx) => {
+          const idx = animation[2];
+          const positionPair = json.positionPairs![idx];
+          const start = positionPair[0];
+          const end = positionPair[1];
+          const targetPP = [
+            [start[0] + animation[0][0], start[1] + animation[0][1], start[2] + animation[0][2]],
+            [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]]
+          ];
+          const scaleStart = three.children[idx].scale;
+          const positionStart = three.children[idx].position;
+          const rotation = three.children[idx].quaternion;
+          const st = [positionStart.x, positionStart.y, positionStart.z];
+          const qt = [rotation.x, rotation.y, rotation.z, rotation.w];
+          const { position, scale, quaternion: quaternionEnd } = this.objectBuilder.getCylinderInfo(
+            targetPP
+          );
+          let valuesp = [...st, ...position];
+          let valuesq = [
+            ...qt,
+            ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w]
+          ];
+          const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], valuesp);
+          const scaleKF = new THREE.NumberKeyframeTrack(
+            '.scale',
+            [...kf],
+            [scaleStart.x, scaleStart.y, scaleStart.z, scaleStart.x, scale, scaleStart.z]
+          );
+          const quaternion = new THREE.VectorKeyframeTrack('.quaternion', [...kf], valuesq);
+          const clip = new THREE.AnimationClip('Cylinder' + idx, kfl, [
+            positionKF,
+            scaleKF,
+            quaternion
+          ]);
+          const mixer = new THREE.AnimationMixer(three.children[idx]);
+          const ca = mixer.clipAction(clip);
+          this.mixer.push(mixer);
+          ca.play();
+        });
+      } else if (json.type === JSON3DObject.LINES && true) {
+        const animations = json.animate!;
+        const pt: number[] = [];
+        json.positions!.forEach((p, idx) => {
+          pt.push(p[0] + animations[idx][0], p[1] + animations[idx][1], p[2] + animations[idx][2]);
+        });
+        const array = new Float32Array(pt);
+        const lines = three.children[0] as THREE.LineSegments;
+        const a: any = ((lines.geometry as THREE.BufferGeometry).attributes
+          .position as BufferAttribute).array;
+        (lines as any).value = [...a];
+        const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...pt]);
+        this.lineGeometriesToUpdate.push(lines as THREE.LineSegments);
+        const clip2 = new THREE.AnimationClip('Lines', kfl, [keyFrame2]);
+        const mixer2 = new THREE.AnimationMixer(lines);
+        const ca2 = mixer2.clipAction(clip2);
+        this.mixer.push(mixer2);
+        ca2.play();
+        //const verts = new THREE.Float32BufferAttribute(pt, 3);
+        //const geom = new THREE.BufferGeometry();
+        //geom.setAttribute('position', verts);
+      } else if (json.type === JSON3DObject.CONVEX) {
+        const animations = json.animate!;
+        const mesh = three.children[0] as THREE.Mesh;
+        const lines = three.children[1] as THREE.LineSegments;
+        const geo = mesh.geometry as BufferGeometry;
+        geo.morphAttributes.position = [];
+        // calculate morph target
+        const pt = json.positions!.map((p, idx) => {
+          //console.log(json.positions, animations, animations[idx]);
+          return new THREE.Vector3(
+            ...[
+              p[0] + animations[idx][0][0],
+              p[1] + animations[idx][0][1],
+              p[2] + animations[idx][0][2]
+            ]
+          );
+        });
+        const geom = new ConvexBufferGeometry(pt);
+        geo.morphAttributes.position[0] = geom.attributes.position;
+        mesh.morphTargetInfluences = [0];
+
+        //https://stackoverflow.com/questions/35374650
+        //Buffergeometry.morphTargets = [];
+        //Buffergeometry.morphTargets.push(0);
+
+        const keyFrame = new THREE.NumberKeyframeTrack('.morphTargetInfluences', kf, [0.0, 1.0]);
+        const clip = new THREE.AnimationClip('Convex', kfl, [keyFrame]);
+        const mixer = new THREE.AnimationMixer(mesh);
+        const ca = mixer.clipAction(clip);
+        this.mixer.push(mixer);
+        ca.play();
+        const edges = new THREE.EdgesGeometry(geom);
+        const line = new THREE.LineSegments(
+          edges,
+          new THREE.LineBasicMaterial({ color: '#000000', linewidth: 1 })
+        );
+
+        /*(lines.geometry as THREE.BufferGeometry).setAttribute(
+          'position',
+          edges.getAttribute('position')
+        );*/
+        const a: any = ((lines.geometry as THREE.BufferGeometry).attributes
+          .position as BufferAttribute).array;
+        const p: any = (line.geometry as any).attributes.position.array;
+        (lines as any).value = [...a];
+        const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...p]);
+        this.lineGeometriesToUpdate.push(lines as THREE.LineSegments);
+        const clip2 = new THREE.AnimationClip('Convexlines', kfl, [keyFrame2]);
+        const mixer2 = new THREE.AnimationMixer(lines);
+        const ca2 = mixer2.clipAction(clip2);
+        this.mixer.push(mixer2);
+        ca2.play();
+      } else if (json.type === JSON3DObject.CUBES) {
+        // if it's position, we add a mixer for each cube
+        // if it's the width/height/depth, we need a morph target
+        console.warn('Animation not supported', json.type);
+      } else if (json.type === JSON3DObject.BEZIER) {
+        console.warn('Animation not supported', json.type);
+      } else {
+        console.warn('Animation not supported', json.type);
+      }
+    });
+
+    if (!bypassRendering) {
+      this.renderScene();
+    }
+  }
+
+  private useMorphTargetForAnimation(type: JSON3DObject): boolean {
+    return (
+      type === JSON3DObject.CUBES || type === JSON3DObject.CONVEX || type === JSON3DObject.LINES
+    );
   }
 
   private setupCamera(rootObject: THREE.Object3D) {
@@ -569,7 +766,21 @@ export default class Simple3DScene {
   }
 
   animate() {
+    const delta = this.clock.getDelta();
+    if (this.mixer) {
+      this.mixer.forEach(m => m.update(delta));
+    }
+    this.lineGeometriesToUpdate.forEach(l => {
+      const geom = l.geometry as THREE.BufferGeometry;
+      const values = (l as any).value;
+      geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(values), 3));
+      (geom.attributes.position as BufferAttribute).needsUpdate = true; // what if InterleavedBufferAttribute
+    });
+
+    this.controls.update();
+    this.refreshOutline();
     this.renderScene();
+
     this.frameId = window.requestAnimationFrame(() => this.animate());
   }
 
@@ -775,7 +986,38 @@ export default class Simple3DScene {
     };
   }
 
-  // for testing purposes only
+  refreshOutline() {
+    let outlinedObject: any[] = [];
+    if (this.outlineScene.children.length > 0) {
+      outlinedObject = this.selectedJsonObjects.map((o: any) => o.id);
+      this.outlineScene.remove(...this.outlineScene.children);
+    }
+    if (outlinedObject.length > 0) {
+      this.outlineScene.remove(...this.outlineScene.children);
+      outlinedObject.forEach(id => {
+        const three = this.computeIdToThree[id];
+        this.addClonedObject(three);
+        this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
+      });
+    }
+  }
+
+  updateTime(time: number) {
+    if (this.mixer) {
+      this.mixer.forEach(m => m.setTime(time));
+    }
+    this.lineGeometriesToUpdate.forEach(l => {
+      const geom = l.geometry as THREE.BufferGeometry;
+      const values = (l as any).value;
+      geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(values), 3));
+      (geom.attributes.position as BufferAttribute).needsUpdate = true; // what if InterleavedBufferAttribute
+    });
+
+    this.refreshOutline();
+    this.renderScene();
+  }
+
+  // for testing purposes
   public download() {
     download('rr', ExportType.png, this);
   }
