@@ -582,17 +582,14 @@ export default class Simple3DScene {
             [scaleStart.x, scaleStart.y, scaleStart.z, scaleStart.x, scale, scaleStart.z]
           );
           const quaternion = new THREE.VectorKeyframeTrack('.quaternion', [...kf], valuesq);
-          const clip = new THREE.AnimationClip('Cylinder' + idx, kfl, [
-            positionKF,
-            scaleKF,
-            quaternion
-          ]);
-          const mixer = new THREE.AnimationMixer(three.children[idx]);
-          const ca = mixer.clipAction(clip);
-          this.mixer.push(mixer);
-          ca.play();
+          this.pushAnimations(
+            `Cylinder-${idx}`,
+            kfl,
+            [positionKF, scaleKF, quaternion],
+            three.children[idx]
+          );
         });
-      } else if (json.type === JSON3DObject.LINES && true) {
+      } else if (json.type === JSON3DObject.LINES) {
         const animations = json.animate!;
         const pt: number[] = [];
         json.positions!.forEach((p, idx) => {
@@ -605,14 +602,7 @@ export default class Simple3DScene {
         (lines as any).value = [...a];
         const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...pt]);
         this.lineGeometriesToUpdate.push(lines as THREE.LineSegments);
-        const clip2 = new THREE.AnimationClip('Lines', kfl, [keyFrame2]);
-        const mixer2 = new THREE.AnimationMixer(lines);
-        const ca2 = mixer2.clipAction(clip2);
-        this.mixer.push(mixer2);
-        ca2.play();
-        //const verts = new THREE.Float32BufferAttribute(pt, 3);
-        //const geom = new THREE.BufferGeometry();
-        //geom.setAttribute('position', verts);
+        this.pushAnimations('Lines', kfl, [keyFrame2], lines);
       } else if (json.type === JSON3DObject.CONVEX) {
         const animations = json.animate!;
         const mesh = three.children[0] as THREE.Mesh;
@@ -639,11 +629,7 @@ export default class Simple3DScene {
         //Buffergeometry.morphTargets.push(0);
 
         const keyFrame = new THREE.NumberKeyframeTrack('.morphTargetInfluences', kf, [0.0, 1.0]);
-        const clip = new THREE.AnimationClip('Convex', kfl, [keyFrame]);
-        const mixer = new THREE.AnimationMixer(mesh);
-        const ca = mixer.clipAction(clip);
-        this.mixer.push(mixer);
-        ca.play();
+        this.pushAnimations('Convex', kfl, [keyFrame], mesh);
         const edges = new THREE.EdgesGeometry(geom);
         const line = new THREE.LineSegments(
           edges,
@@ -660,15 +646,29 @@ export default class Simple3DScene {
         (lines as any).value = [...a];
         const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...p]);
         this.lineGeometriesToUpdate.push(lines as THREE.LineSegments);
-        const clip2 = new THREE.AnimationClip('Convexlines', kfl, [keyFrame2]);
-        const mixer2 = new THREE.AnimationMixer(lines);
-        const ca2 = mixer2.clipAction(clip2);
-        this.mixer.push(mixer2);
-        ca2.play();
+        this.pushAnimations('Convexlines', kfl, [keyFrame2], lines);
       } else if (json.type === JSON3DObject.CUBES) {
         // if it's position, we add a mixer for each cube
-        // if it's the width/height/depth, we need a morph target
-        console.warn('Animation not supported', json.type);
+        const animations = json.animate!;
+        if (Array.isArray(animations[0])) {
+          animations.forEach((animation: any, idx) => {
+            let _three = three.children[idx];
+            const st = [_three.position.x, _three.position.y, _three.position.z];
+            const values = [
+              ...st,
+              ...[st[0] + animation[0], st[1] + animation[1], st[2] + animation[2]]
+            ];
+            const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+            this.pushAnimations('Action' + idx, kfl, [positionKF], _three);
+          });
+        } else {
+          const st = [three.position.x, three.position.y, three.position.z];
+          const values = [...st, ...json.animate!]; //FIXME it's absolute, make it relative ?
+          const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+          this.pushAnimations('Action', kfl, [positionKF], three);
+        }
+
+        // for size/width/height, we'll need morphTarget OR scale x.y.z
       } else if (json.type === JSON3DObject.BEZIER) {
         console.warn('Animation not supported', json.type);
       } else {
@@ -679,6 +679,19 @@ export default class Simple3DScene {
     if (!bypassRendering) {
       this.renderScene();
     }
+  }
+
+  private pushAnimations(
+    name: string,
+    duration: number,
+    tracks: THREE.KeyframeTrack[],
+    rootObject: THREE.Object3D
+  ) {
+    const clip = new THREE.AnimationClip(name, duration, tracks);
+    const mixer = new THREE.AnimationMixer(rootObject);
+    this.mixer.push(mixer);
+    const ca = mixer.clipAction(clip);
+    ca.play();
   }
 
   private useMorphTargetForAnimation(type: JSON3DObject): boolean {
