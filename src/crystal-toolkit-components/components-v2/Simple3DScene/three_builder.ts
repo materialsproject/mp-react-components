@@ -1,5 +1,11 @@
 import * as THREE from 'three';
-import { AmbientLight, DirectionalLight, HemisphereLight, Object3D, SphereBufferGeometry } from "three";
+import {
+  AmbientLight,
+  DirectionalLight,
+  HemisphereLight,
+  Object3D,
+  SphereBufferGeometry
+} from 'three';
 import {
   JSON3DObject,
   Light,
@@ -290,10 +296,14 @@ export class ThreeBuilder {
     return obj;
   }
 
-  public makeMaterial(color = DEFAULT_MATERIAL_COLOR, opacity = 1.0) {
+  //Note(chab) we use morphtargets for geometries like cube, convex, beziers
+  // objects that are built by scaling and rotating a simple geometry should
+  // be animated by interpolating those specific properties
+  public makeMaterial(color = DEFAULT_MATERIAL_COLOR, opacity = 1.0, animated = false) {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
-      opacity: opacity
+      opacity: opacity,
+      morphTargets: animated
     });
 
     if (this.settings.renderer === Renderer.SVG) {

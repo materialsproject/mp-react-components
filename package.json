@@ -30,6 +30,7 @@
     "postcss-smart-asset": "^1.0.2",
     "postcss-url": "^8.0.0",
     "react": "^16.12.0",
+    "react-compound-slider": "^2.5.0",
     "react-dom": "^16.13.1",
     "react-graph-vis": "^1.0.5",
     "react-json-view": "^1.19.1",
