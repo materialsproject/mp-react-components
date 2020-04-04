@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { CameraHelper } from 'three';
 import { disposeSceneHierarchy } from '../Simple3DScene/utils';
-import { OrbitControls } from '../Simple3DScene/orbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const DEBUG_SIZE = 500;
 
