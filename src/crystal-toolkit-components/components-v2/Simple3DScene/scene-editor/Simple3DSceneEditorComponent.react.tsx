@@ -88,6 +88,28 @@ function internalUpdateObject(
   newValue,
   idx: number[]
 ) {
+  // update json accordingly
+  // FIXME(chab) decouple the update of the json
+  switch (id) {
+    case 'color':
+    case 'radius':
+    case 'headWidth': {
+      jsonObject[id] = newValue;
+      break;
+    }
+    case 'positions': {
+      (jsonObject[id][idx[0]] as ThreePosition)[idx[1]] = Number.parseFloat(newValue);
+      break;
+    }
+    case 'positionPairs': {
+      const positionPair = jsonObject[id][idx[0]];
+      const position = jsonObject[id][idx[0]][idx[1]] as ThreePosition;
+      positionPair[idx[1]] = position;
+      position[idx[2]] = newValue;
+      break;
+    }
+  }
+
   const objectType: JSON3DObject = jsonObject.type as JSON3DObject;
   switch (objectType) {
     case JSON3DObject.SPHERES: {
