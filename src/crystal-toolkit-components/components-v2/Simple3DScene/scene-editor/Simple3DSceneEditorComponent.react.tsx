@@ -11,6 +11,7 @@ import { SceneFields } from './scene-editor-fields';
 import Simple3DScene from '../Simple3DScene';
 
 function onObjectSelected(object: any[], uuids: string[], setCurrentObject) {
+  // it would be simpler to have a null object if nothing is selected
   setTimeout(() => setCurrentObject({ jsonObject: object[0], threeUUID: uuids[0] }, 0));
 }
 
@@ -22,9 +23,15 @@ export function SceneEditor(props) {
     onObjectSelected(objects, uuids, setEditedObject);
   // editor state depends on selected object
   // editor scene is updated only if the whole json/settings change
+
   return (
-    <>
-      <div>
+    <div className="editor-wrapper">
+      <div className="editor" style={{ width: 500 }}>
+        {!editedObject ||
+          (!editedObject.threeUUID && (
+            <div style={{ margin: 'auto' }}> Select an object on the screen to edit it</div>
+          ))}
+
         {!!editedObject && editedObject.jsonObject && editedObject.jsonObject.length !== 0 ? (
           <SceneFields
             object={editedObject.jsonObject}
@@ -36,9 +43,18 @@ export function SceneEditor(props) {
         ) : (
           <div />
         )}
+        <button
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          onClick={() => {
+            scene.current.current.download();
+          }}
+        >
+          {' '}
+          Download PNG{' '}
+        </button>
       </div>
       <SceneWithRef {...props} onObjectClicked={onObjectClicked} ref={scene} />
-    </>
+    </div>
   );
 }
 // update function
@@ -102,10 +118,11 @@ function internalUpdateObject(
       break;
     }
     case 'positionPairs': {
+      break;
       const positionPair = jsonObject[id][idx[0]];
       const position = jsonObject[id][idx[0]][idx[1]] as ThreePosition;
       positionPair[idx[1]] = position;
-      position[idx[2]] = newValue;
+      position[idx[2]] = Number.parseFloat(newValue);
       break;
     }
   }
@@ -173,10 +190,13 @@ function updateCylinder(
       break;
     }
     case 'positionPairs': {
+      const parsedValue = Number.parseFloat(newValue);
       const positionPair = [...jsonObject[id][idx[0]]];
       const position = [...jsonObject[id][idx[0]][idx[1]]] as ThreePosition;
+      console.log(positionPair);
+      position[idx[2]] = parsedValue;
       positionPair[idx[1]] = position;
-      position[idx[2]] = newValue;
+      console.log(positionPair);
       scene.updateCylinderPositionPair(threeObject, jsonObject, positionPair, idx[0]);
       break;
     }

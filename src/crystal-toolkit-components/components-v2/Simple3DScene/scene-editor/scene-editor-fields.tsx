@@ -1,6 +1,7 @@
 import { Field, FieldType } from '../constants';
 import { SketchPicker } from 'react-color';
 import React, { useEffect, useState } from 'react';
+import './scene-editor-fields.less';
 
 // three x y z position
 export function PositionField(props) {
@@ -26,16 +27,20 @@ export function PositionField(props) {
 export function PositionPairField(props) {
   return (
     <div className="position-pair-container">
-      Start
-      <PositionField
-        value={props.value[0]}
-        onChange={(v, positionIndex) => props.onChange(v, positionIndex, 0)}
-      />
-      End
-      <PositionField
-        value={props.value[1]}
-        onChange={(v, positionIndex) => props.onChange(v, positionIndex, 1)}
-      />
+      <div className="start">
+        <div className="label"> Start </div>
+        <PositionField
+          value={props.value[0]}
+          onChange={(v, positionIndex) => props.onChange(v, positionIndex, 0)}
+        />
+      </div>
+      <div className="end">
+        <div className="label">End </div>
+        <PositionField
+          value={props.value[1]}
+          onChange={(v, positionIndex) => props.onChange(v, positionIndex, 1)}
+        />
+      </div>
     </div>
   );
 }
@@ -105,7 +110,7 @@ export function ColorField(props) {
         />
       </div>
       {showColorPicker ? (
-        <div>
+        <div style={{ position: 'absolute', zIndex: 1 }}>
           <div onClick={handleClose} />
           <SketchPicker color={color} onChange={handleChange} />
         </div>
@@ -128,12 +133,14 @@ export function SceneFields(props: { fields: Field[]; object; onChange: any }) {
     <>
       {props.fields.map((field, idx) => (
         <div className="thr-scene-container" key={field.id}>
-          {field.name}
-          <EditorField
-            field={field}
-            onChange={(value, idx = []) => props.onChange(field.id, idx, value)}
-            value={props.object[field.id]}
-          />
+          <div className={'thr-field-name'}>{field.name}</div>
+          <div className={'field-value'}>
+            <EditorField
+              field={field}
+              onChange={(value, idx = []) => props.onChange(field.id, idx, value)}
+              value={props.object[field.id]}
+            />
+          </div>
         </div>
       ))}
     </>

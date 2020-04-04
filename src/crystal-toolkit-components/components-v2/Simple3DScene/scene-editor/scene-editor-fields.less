@@ -1,0 +1,49 @@
+@import '../../../../assets/mixins.less';
+
+.editor-wrapper {
+  display: inline-block;
+  .flex(row);
+}
+
+.thr-scene-container {
+  .flex(row);
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid rgb(85, 87, 89);
+
+  .thr-field-container {
+    margin: 5px;
+  }
+
+  .field-value > input {
+    margin: 5px;
+  }
+
+  .start,
+  .end {
+    display: flex;
+    font-size: 10px;
+    flex-direction: row;
+    align-items: center;
+    .label {
+      width: 50px;
+    }
+  }
+}
+
+.editor {
+  width: 500px;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f5f6f8;
+  margin: 10px;
+  padding: 13px 30px;
+  border: 1px solid #bebbbb;
+}
