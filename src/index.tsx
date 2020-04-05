@@ -23,6 +23,8 @@ import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/S
 import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 import { Renderer } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { SceneEditor } from './crystal-toolkit-components/components-v2/Simple3DScene/scene-editor/Simple3DSceneEditorComponent.react';
+import { TABLE_DICO_CLASS } from './periodic-table/periodic-table-data/table';
+import { TABLE_DICO_V2 } from './periodic-table/periodic-table-data/table-v2';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -59,19 +61,6 @@ function SceneSwitcher() {
 
   return (
     <div>
-      <div onClick={() => setScene(scene)}> SCENE A </div>
-      <div onClick={() => setScene(scene2)}> SCENE B </div>
-      <div onClick={() => setScene(scene3)}> SCENE C </div>
-      <div onClick={() => setScene(buggyScene)}> SCENE D </div>
-      <div
-        onClick={() => {
-          vis.atoms = !vis.atoms;
-          //setVisibility({ ...vis });
-        }}
-      >
-        {' '}
-        TOGGLE VIS{' '}
-      </div>
       <SceneEditor
         sceneSize={500}
         settings={{
@@ -139,10 +128,22 @@ function TestComponent(props: any) {
   );
 }
 
+const keys = new Set([...Object.keys(TABLE_DICO_V2)]);
+keys.delete('Pb');
+keys.delete('Na');
+
 ReactDOM.render(
   <>
     <SceneSwitcher />
-
+    <PeriodicContext>
+      <SelectableTable
+        maxElementSelectable={2}
+        forceTableLayout={TableLayout.MINI}
+        enabledElements={[]}
+        disabledElements={Array.from(keys)}
+        hiddenElements={[]}
+      />
+    </PeriodicContext>
     {/*<CameraContextWrapper>
       <>
         <Simple3DSceneComponent
@@ -161,7 +162,7 @@ ReactDOM.render(
       </>
     </CameraContextWrapper>*/}
 
-    <div>
+    {/*<div>
       {<TestComponent d={['B']} b={[]} e={[]} />}
       {
         <PeriodicContext>
@@ -190,7 +191,7 @@ ReactDOM.render(
           </div>
         </PeriodicContext>
       }
-    </div>
+    </div>*/}
   </>,
 
   mountNode

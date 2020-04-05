@@ -77,7 +77,7 @@ export const DEBUG_STYLE = {
   width: '500px',
   height: '500px',
   top: 0,
-  left: '500px',
+  left: '600px',
   position: 'absolute' as 'absolute'
 };
 export const MOUNT_NODE_STYLE = { position: 'absolute' as 'absolute' };

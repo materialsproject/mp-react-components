@@ -26,7 +26,7 @@ export class DebugHelper {
 
   private showAxis = true;
   private showGrid = true;
-  private showLights = false;
+  private showLights = true;
 
   private axis: THREE.AxesHelper;
   private grid: THREE.GridHelper;
@@ -75,7 +75,7 @@ export class DebugHelper {
       60, // fov
       1, // aspect
       0.1, // near
-      300 // far
+      1000 // far
     );
     this.debugCamera.position.set(10, 20, -10);
     this.debugRenderer.setSize(DEBUG_SIZE, DEBUG_SIZE);

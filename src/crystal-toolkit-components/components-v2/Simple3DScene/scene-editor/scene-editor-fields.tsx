@@ -47,7 +47,8 @@ export function PositionPairField(props) {
 
 export function ListOfPositionField(props) {
   return props.value.map((value, idx) => (
-    <div className="thr-field-container" key={idx}>
+    <div className="thr-field-container position" key={idx}>
+      <span>{idx} </span>{' '}
       <PositionField value={value} onChange={(v, pidx) => props.onChange(v, [idx, pidx])} />
     </div>
   ));
@@ -55,7 +56,8 @@ export function ListOfPositionField(props) {
 
 export function ListOfPositionPairField(props) {
   return props.value.map((value, idx) => (
-    <div className="thr-field-container" key={idx}>
+    <div className="thr-field-container position-pairs" key={idx}>
+      <span> {idx} </span>
       <PositionPairField
         onChange={(v, pidx, startEndIndex) => props.onChange(v, [idx, startEndIndex, pidx])}
         value={value}

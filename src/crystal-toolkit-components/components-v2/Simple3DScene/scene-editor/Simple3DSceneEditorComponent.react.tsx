@@ -15,9 +15,14 @@ function onObjectSelected(object: any[], uuids: string[], setCurrentObject) {
   setTimeout(() => setCurrentObject({ jsonObject: object[0], threeUUID: uuids[0] }, 0));
 }
 
+function showDebug(debug: boolean, forceDebug: boolean): boolean {
+  return forceDebug || debug;
+}
+
 export function SceneEditor(props) {
   const scene = useRef((null as unknown) as Simple3DSceneComponenHandles);
   const [editedObject, setEditedObject] = useState(null as any);
+  const [forceDebug, setForceDebug] = useState(false);
 
   const onObjectClicked = (objects: any[], uuids: string[]) =>
     onObjectSelected(objects, uuids, setEditedObject);
@@ -43,17 +48,30 @@ export function SceneEditor(props) {
         ) : (
           <div />
         )}
+
         <button
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
           onClick={() => {
             scene.current.current.download();
           }}
         >
+          Download PNG
+        </button>
+        <button
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          onClick={() => {
+            setForceDebug(!forceDebug);
+          }}
+        >
           {' '}
-          Download PNG{' '}
+          Toggle Debug View
         </button>
       </div>
-      <SceneWithRef {...props} onObjectClicked={onObjectClicked} ref={scene} />
+      <SceneWithRef
+        {...{ ...props, debug: showDebug(props.debug, forceDebug) }}
+        onObjectClicked={onObjectClicked}
+        ref={scene}
+      />
     </div>
   );
 }

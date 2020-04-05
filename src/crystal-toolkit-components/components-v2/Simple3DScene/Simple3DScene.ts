@@ -369,7 +369,7 @@ export default class Simple3DScene {
     }
   }
 
-  addToScene(sceneJson, updateScene) {
+  addToScene(sceneJson, updateScene = false) {
     // we need to clarify the  current semantics
     // currently, it will remove the old scene if the name is the same,
     // otherwise it will keep it

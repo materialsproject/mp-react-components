@@ -32,6 +32,29 @@
   }
 }
 
+.position,
+.position-pairs {
+  // too tired to use flex
+  margin-bottom: 2px;
+  font-size: 7px;
+  line-height: 12px;
+  span {
+    vertical-align: text-bottom;
+  }
+}
+
+.position-pairs {
+  .flex(row);
+  span {
+    margin: 0 5px 0 5px;
+    padding: 0 7px 0 0;
+    border-right: 1px solid grey;
+    .flex(row);
+    align-items: center;
+    display: flex;
+  }
+}
+
 .editor {
   width: 500px;
   flex-basis: auto;
