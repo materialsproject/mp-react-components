@@ -516,10 +516,7 @@ export default class Simple3DScene {
     objectToAnimate.forEach((id: string) => {
       const three = this.computeIdToThree[id];
       const json: SceneJsonObject = this.threeUUIDTojsonObject[three.uuid];
-      const kf = (json as any).keyframes;
-      const kfl: number = kf.length;
-      const animations = json.animate!;
-      this.animationHelper.buildAnimationSupport(json, three, animations, kf, kfl);
+      this.animationHelper.buildAnimationSupport(json, three);
     });
     if (!bypassRendering) {
       this.renderScene();
