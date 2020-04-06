@@ -522,12 +522,11 @@ export default class Simple3DScene {
       const json: SceneJsonObject = this.threeUUIDTojsonObject[three.uuid];
       const kf = (json as any).keyframes;
       const kfl: number = kf.length;
+      const animations = json.animate!;
 
       if (json.type === JSON3DObject.SPHERES) {
-        const animations = json.animate!;
-
         if (Array.isArray(animations[0])) {
-          animations.forEach((animation: any, idx) => {
+          animations.forEach((animation: ThreePosition, idx) => {
             let _three = three.children[idx];
             const st = [_three.position.x, _three.position.y, _three.position.z];
             const values = [
@@ -543,7 +542,10 @@ export default class Simple3DScene {
           });
         } else {
           const st = [three.position.x, three.position.y, three.position.z];
-          const values = [...st, ...json.animate!]; //FIXME it's absolute, make it relative ?
+          const values = [
+            ...st,
+            ...[st[0] + animations[0], st[1] + animations[1], st[2] + animations[2]]
+          ];
           const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
           const clip = new THREE.AnimationClip('Action', kfl, [positionKF]);
           const mixer = new THREE.AnimationMixer(three);
@@ -552,7 +554,6 @@ export default class Simple3DScene {
           ca.play();
         }
       } else if (json.type === JSON3DObject.CYLINDERS) {
-        const animations = json.animate!;
         animations.forEach((animation, aIdx) => {
           const idx = animation[2];
           const positionPair = json.positionPairs![idx];
@@ -562,9 +563,11 @@ export default class Simple3DScene {
             [start[0] + animation[0][0], start[1] + animation[0][1], start[2] + animation[0][2]],
             [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]]
           ];
-          const scaleStart = three.children[idx].scale;
-          const positionStart = three.children[idx].position;
-          const rotation = three.children[idx].quaternion;
+          const {
+            scale: scaleStart,
+            position: positionStart,
+            quaternion: rotation
+          } = three.children[idx];
           const st = [positionStart.x, positionStart.y, positionStart.z];
           const qt = [rotation.x, rotation.y, rotation.z, rotation.w];
           const { position, scale, quaternion: quaternionEnd } = this.objectBuilder.getCylinderInfo(
@@ -590,12 +593,10 @@ export default class Simple3DScene {
           );
         });
       } else if (json.type === JSON3DObject.LINES) {
-        const animations = json.animate!;
         const pt: number[] = [];
         json.positions!.forEach((p, idx) => {
           pt.push(p[0] + animations[idx][0], p[1] + animations[idx][1], p[2] + animations[idx][2]);
         });
-        const array = new Float32Array(pt);
         const lines = three.children[0] as THREE.LineSegments;
         const a: any = ((lines.geometry as THREE.BufferGeometry).attributes
           .position as BufferAttribute).array;
@@ -623,11 +624,6 @@ export default class Simple3DScene {
         const geom = new ConvexBufferGeometry(pt);
         geo.morphAttributes.position[0] = geom.attributes.position;
         mesh.morphTargetInfluences = [0];
-
-        //https://stackoverflow.com/questions/35374650
-        //Buffergeometry.morphTargets = [];
-        //Buffergeometry.morphTargets.push(0);
-
         const keyFrame = new THREE.NumberKeyframeTrack('.morphTargetInfluences', kf, [0.0, 1.0]);
         this.pushAnimations('Convex', kfl, [keyFrame], mesh);
         const edges = new THREE.EdgesGeometry(geom);
@@ -635,7 +631,6 @@ export default class Simple3DScene {
           edges,
           new THREE.LineBasicMaterial({ color: '#000000', linewidth: 1 })
         );
-
         /*(lines.geometry as THREE.BufferGeometry).setAttribute(
           'position',
           edges.getAttribute('position')
@@ -663,11 +658,13 @@ export default class Simple3DScene {
           });
         } else {
           const st = [three.position.x, three.position.y, three.position.z];
-          const values = [...st, ...json.animate!]; //FIXME it's absolute, make it relative ?
+          const values = [
+            ...st,
+            ...[st[0] + animations[0], st[1] + animations[1], st[2] + animations[2]]
+          ];
           const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
           this.pushAnimations('Action', kfl, [positionKF], three);
         }
-
         // for size/width/height, we'll need morphTarget OR scale x.y.z
       } else if (json.type === JSON3DObject.BEZIER) {
         console.warn('Animation not supported', json.type);
@@ -675,7 +672,6 @@ export default class Simple3DScene {
         console.warn('Animation not supported', json.type);
       }
     });
-
     if (!bypassRendering) {
       this.renderScene();
     }
