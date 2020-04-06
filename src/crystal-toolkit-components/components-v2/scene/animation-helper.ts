@@ -30,20 +30,12 @@ export class AnimationHelper {
       if (Array.isArray(animations[0])) {
         animations.forEach((animation: ThreePosition, idx) => {
           let _three = three.children[idx];
-          const st = [_three.position.x, _three.position.y, _three.position.z];
-          const values = [
-            ...st,
-            ...[st[0] + animation[0], st[1] + animation[1], st[2] + animation[2]]
-          ];
+          const values = this.calculateTargetPosition(_three, animation);
           const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
           this.pushAnimations('Action', kfl, [positionKF], _three);
         });
       } else {
-        const st = [three.position.x, three.position.y, three.position.z];
-        const values = [
-          ...st,
-          ...[st[0] + animations[0], st[1] + animations[1], st[2] + animations[2]]
-        ];
+        const values = this.calculateTargetPosition(three, animations);
         const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
         this.pushAnimations('Action', kfl, [positionKF], three);
       }
@@ -140,20 +132,12 @@ export class AnimationHelper {
       if (Array.isArray(animations[0])) {
         animations.forEach((animation: any, idx) => {
           let _three = three.children[idx];
-          const st = [_three.position.x, _three.position.y, _three.position.z];
-          const values = [
-            ...st,
-            ...[st[0] + animation[0], st[1] + animation[1], st[2] + animation[2]]
-          ];
+          const values = this.calculateTargetPosition(_three, animation);
           const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
           this.pushAnimations('Action' + idx, kfl, [positionKF], _three);
         });
       } else {
-        const st = [three.position.x, three.position.y, three.position.z];
-        const values = [
-          ...st,
-          ...[st[0] + animations[0], st[1] + animations[1], st[2] + animations[2]]
-        ];
+        const values = this.calculateTargetPosition(three, animations);
         const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
         this.pushAnimations('Action', kfl, [positionKF], three);
       }
@@ -163,6 +147,11 @@ export class AnimationHelper {
     } else {
       console.warn('Animation not supported', json.type);
     }
+  }
+
+  private calculateTargetPosition({ position }: THREE.Object3D, animation) {
+    const p = [position.x, position.y, position.z];
+    return [...p, ...[p[0] + animation[0], p[1] + animation[1], p[2] + animation[2]]];
   }
 
   private updateMixers(timeOrDelta, absolute = false) {
