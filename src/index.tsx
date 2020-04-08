@@ -20,8 +20,9 @@ import {
 } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
 import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
-import { SearchCard } from './search-page/search-card';
-import { Grid } from './search-page/card-grid';
+import Grid from './search-page/card-grid';
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -148,7 +149,9 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <Grid />
+    <DndProvider backend={Backend}>
+      <Grid />
+    </DndProvider>
     {/*<CameraContextWrapper>
         <SceneSwitcher />
       <>

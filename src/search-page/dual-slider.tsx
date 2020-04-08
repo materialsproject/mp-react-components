@@ -39,7 +39,6 @@ const getGradient = (steps: number[]) => {
 
 const test = [0, 0.4, 0.12, 0.9, 0.1, 0.01, 0.08, 0.13, 0.24, 0.3, 0.35];
 const gradient = getGradient(test);
-console.log(gradient);
 
 export class DualSlider extends Component<any, any> {
   static defaultProps = {
@@ -55,6 +54,19 @@ export class DualSlider extends Component<any, any> {
       reversed: false
     };
   }
+
+  shouldComponentUpdate(nextProps, nextState): boolean {
+    // bail out if we can
+    if (
+      nextProps.domain === this.props.domain &&
+      nextProps.step === this.props.step &&
+      nextState === this.state
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   onUpdate = update => {
     this.setState({ update });
   };
@@ -100,7 +112,6 @@ export class DualSlider extends Component<any, any> {
           <Handles>
             {({ handles, activeHandleID, getHandleProps }) => (
               <div className="slider-handles">
-                {console.log('DAMN', handles)}
                 {handles.map(handle => (
                   <Handle
                     key={handle.id}

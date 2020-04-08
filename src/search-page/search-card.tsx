@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { DualSlider } from './dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
-import { Card, WIDGET } from './cards-definition';
+import { Card, DICO, ItemTypes, WIDGET } from './cards-definition';
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import { CheckboxList } from './checkbox-list';
+import {
+  ConnectDragSource,
+  ConnectDropTarget,
+  DragSourceMonitor,
+  DropTargetMonitor
+} from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
+
+const DRAGGING_ITEMS: any = {};
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -26,21 +35,36 @@ const getWidget = (type: WIDGET, widgetProps) => {
   switch (type) {
     case WIDGET.SLIDERS: {
       return <DualSlider {...widgetProps} />;
-      break;
     }
     case WIDGET.CHECKBOX_LIST: {
       return <CheckboxList {...widgetProps} />;
-      break;
     }
   }
+  return <div> no component</div>;
 };
 
-export function SearchCard(props: Card) {
+export interface CardProps extends Card {
+  moveCard: Function;
+  findCard: Function;
+  connectDragSource: ConnectDragSource;
+  connectDropTarget: ConnectDropTarget;
+  isDragging: boolean;
+}
+
+const SearchCard: React.FC<CardProps> = (props: CardProps) => {
   const [isActive, setActive] = useState(true);
   const [isCollapsed, setCollapsed] = useState(false);
 
+  const opacity = props.isDragging || DRAGGING_ITEMS[props.id] ? 0.4 : 1;
+  const ref = useRef(null);
+
+  props.connectDragSource(ref);
+  props.connectDropTarget(ref);
+
   return (
     <div
+      ref={ref}
+      style={{ opacity: DICO[props.id].dragging ? 0.3 : 1 }}
       className={`card small ${isCollapsed ? 'collapsed' : 'expanded'} ${
         isActive ? 'active' : 'disabled'
       } `}
@@ -81,4 +105,48 @@ export function SearchCard(props: Card) {
       </div>
     </div>
   );
-}
+};
+
+export default DropTarget(
+  ItemTypes.CARD,
+  {
+    canDrop: () => false,
+    hover(props: CardProps, monitor: DropTargetMonitor) {
+      const { id: draggedId } = monitor.getItem();
+      const { id: overId } = props;
+
+      if (draggedId !== overId) {
+        const { index: overIndex } = props.findCard(overId);
+        props.moveCard(draggedId, overIndex);
+      }
+    }
+  },
+  connect => ({
+    connectDropTarget: connect.dropTarget()
+  })
+)(
+  DragSource(
+    ItemTypes.CARD,
+    {
+      beginDrag: (props: CardProps) => {
+        DICO[props.id].dragging = true;
+        return {
+          id: props.id,
+          originalIndex: props.findCard(props.id).index
+        };
+      },
+      endDrag(props: CardProps, monitor: DragSourceMonitor) {
+        const { id: droppedId, originalIndex } = monitor.getItem();
+        DICO[droppedId].dragging = false;
+        const didDrop = monitor.didDrop();
+        if (!didDrop) {
+          props.moveCard(droppedId, originalIndex);
+        }
+      }
+    },
+    (connect, monitor) => ({
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging()
+    })
+  )(SearchCard)
+);

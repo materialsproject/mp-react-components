@@ -1,4 +1,5 @@
 import React from 'react';
+
 export enum WIDGET {
   SLIDERS = 'SLIDER',
   CHECKBOX = 'CHECKBOX',
@@ -6,7 +7,7 @@ export enum WIDGET {
 }
 
 interface Widget {
-  name: () => any;
+  name: (() => any) | null;
   type: WIDGET;
   configuration: any;
 }
@@ -14,12 +15,19 @@ interface Widget {
 export interface Card {
   title: string;
   widgets: Widget[];
+  dragging?: boolean;
+  id: string;
+}
+
+export enum ItemTypes {
+  CARD = 'CARD'
 }
 
 //TODO try to use a simple function to render
 export const cardsDefinition: Card[] = [
   {
     title: 'Elasticity',
+    id: 'elasticity',
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -71,6 +79,7 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Dielectricity',
+    id: 'dielectricity',
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -111,6 +120,7 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Piezoelectricity',
+    id: 'piezoelectricity',
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -129,6 +139,7 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Has properties',
+    id: 'has_properties',
     widgets: [
       {
         type: WIDGET.CHECKBOX_LIST,
@@ -151,5 +162,43 @@ export const cardsDefinition: Card[] = [
         }
       }
     ]
+  },
+  {
+    title: 'A filter',
+    id: 'xzy',
+    widgets: [
+      {
+        type: WIDGET.CHECKBOX_LIST,
+        name: null,
+        configuration: {
+          checkboxes: [
+            {
+              label: 'Some content'
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    title: 'One more filter',
+    id: 'xzy2',
+    widgets: [
+      {
+        type: WIDGET.CHECKBOX_LIST,
+        name: null,
+        configuration: {
+          checkboxes: [
+            {
+              label: 'More content'
+            }
+          ]
+        }
+      }
+    ]
   }
 ];
+export const DICO = cardsDefinition.reduce((acc, card) => {
+  acc[card.id] = card;
+  return acc;
+}, {});

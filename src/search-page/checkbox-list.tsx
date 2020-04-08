@@ -15,12 +15,12 @@ enum SelectionStyle {
 }
 
 interface CheckboxList {
-  checkboxes: Checkbox;
+  checkboxes: Checkbox[];
   selectionStyle: SelectionStyle;
 }
 
 export function CheckboxList(props: CheckboxList) {
-  console.log(props);
+  //console.log(props);
   return (
     <div className="checkbox-list">
       {props.checkboxes.map(c => (
