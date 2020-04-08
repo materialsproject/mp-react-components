@@ -20,6 +20,8 @@ import {
 } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
 import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import { SearchCard } from './search-page/search-card';
+import { Grid } from './search-page/card-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -146,9 +148,9 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <SceneSwitcher />
-
+    <Grid />
     {/*<CameraContextWrapper>
+        <SceneSwitcher />
       <>
         <Simple3DSceneComponent
           settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
@@ -165,7 +167,7 @@ ReactDOM.render(
         <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
     </CameraContextWrapper>*/}
-
+    /*
     <div>
       {<TestComponent d={['B']} b={[]} e={[]} />}
       {
@@ -196,6 +198,7 @@ ReactDOM.render(
         </PeriodicContext>
       }
     </div>
+    */
   </>,
 
   mountNode

@@ -1,0 +1,65 @@
+@import '../assets/mixins.less';
+
+.card {
+  //transition: height 0.2s ease-out, flex 0.2s ease-out, padding 0.2s;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 200;
+  .elevation-1();
+  .flex(column);
+  border-radius: 4px;
+  &.small {
+    width: 340px;
+    height: 200px;
+  }
+
+  .medium {
+  }
+
+  .big {
+  }
+
+  &.disabled {
+    .card-content {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+  }
+
+  &.collapsed {
+    height: 30px;
+    .card-content {
+      flex-grow: 0;
+      flex-basis: 0;
+      padding: 0;
+    }
+  }
+
+  .card-header {
+    padding: 0 10px 0 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    .flex(row);
+    .flex-grow-shrink-basis(0, 0, 30px);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-content {
+    transition: opacity 0.2s ease-out;
+    .flex-grow-shrink-basis(1, 1, 0);
+    padding: 15px;
+    overflow-y: auto;
+  }
+  .card-tools {
+    .flex(row);
+    .collapser {
+      cursor: pointer;
+    }
+  }
+}
+
+.widget {
+  .flex-grow-shrink-basis(0, 0, 15px);
+
+  .widget-title {
+    padding-bottom: 15px;
+  }
+}
