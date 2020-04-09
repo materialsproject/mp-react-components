@@ -46,7 +46,7 @@ export class DualSlider extends Component<any, any> {
   };
   constructor(public props: any) {
     super(props);
-    const defaultValues = this.props.domain;
+    const defaultValues = this.props.value;
     this.state = {
       domain: this.props.domain,
       values: defaultValues.slice(),
@@ -72,6 +72,7 @@ export class DualSlider extends Component<any, any> {
   };
 
   onChange = values => {
+    this.props.onChange(values);
     this.setState({ values });
   };
 

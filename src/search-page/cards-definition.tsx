@@ -147,16 +147,20 @@ export const cardsDefinition: Card[] = [
         configuration: {
           checkboxes: [
             {
-              label: 'Elastic'
+              label: 'Elastic',
+              name: 'elastic'
             },
             {
-              label: 'Vibrational'
+              label: 'Vibrational',
+              name: 'vibrational'
             },
             {
-              label: 'Dielectric'
+              label: 'Dielectric',
+              name: 'dielectric'
             },
             {
-              label: 'Elec. structure'
+              label: 'Elec. structure',
+              name: 'structure'
             }
           ]
         }
@@ -202,3 +206,80 @@ export const DICO = cardsDefinition.reduce((acc, card) => {
   acc[card.id] = card;
   return acc;
 }, {});
+
+const getStartStateFromCard = (id: string) => {
+  const card = DICO[id];
+  const collapsed = false;
+  const disabled = false;
+  const values: any[] = card.widgets.reduce((outerAcc, widget) => {
+    switch (widget.type) {
+      case WIDGET.CHECKBOX_LIST: {
+        widget.configuration.checkboxes.forEach(() => outerAcc.push(false));
+        break;
+      }
+      case WIDGET.SLIDERS: {
+        outerAcc.push(widget.configuration.domain);
+        break;
+      }
+    }
+    return outerAcc;
+  }, []);
+  return { id, collapsed, disabled, values };
+};
+
+export interface CS {
+  cardDef: Card[];
+  cardSettings: { id: string; collapsed: boolean; disabled: boolean; values: any[] }[];
+  map: any;
+}
+
+export function addCard(state: CS, id: string) {
+  const definition = DICO[id];
+  const settings = getStartStateFromCard(id);
+
+  state.cardDef = [...state.cardDef, definition];
+  state.cardSettings = [...state.cardSettings, settings];
+  state.map[id] = settings; // settings are directly updated from the component
+  return state;
+}
+export function sfindCard(state: CS, id: string) {
+  return state.cardDef.findIndex(c => c.id === id);
+}
+export function sdeleteCard(state: CS, id: string) {
+  const index = sfindCard(state, id);
+  state.cardDef.splice(index, 1);
+  state.cardSettings.splice(index, 1);
+  state.cardDef = [...state.cardDef];
+  state.cardSettings = [...state.cardSettings];
+  delete state.map[id];
+  return state;
+}
+
+export function smoveCard(state: CS, id: string, atIndex: number) {
+  console.log(atIndex);
+  const index = sfindCard(state, id);
+  const array = [...state.cardDef];
+  const card = array.splice(index, 1);
+  array.splice(atIndex, 0, card[0]);
+  const array2 = [...state.cardSettings];
+  const card2 = array2.splice(index, 1);
+  array2.splice(atIndex, 0, card2[0]);
+  state.cardDef = array;
+  state.cardSettings = array2;
+  return state;
+}
+
+export const initialState: CS = {
+  cardDef: [],
+  cardSettings: [],
+  map: {}
+};
+
+addCard(initialState, 'elasticity');
+addCard(initialState, 'dielectricity');
+addCard(initialState, 'piezoelectricity');
+addCard(initialState, 'has_properties');
+
+// state is composed of
+//  - > [ {cardDef, cardSettings } ]
+// and a dico that points to the settings

@@ -3,7 +3,7 @@ import { DualSlider } from './dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
 import { Card, DICO, ItemTypes, WIDGET } from './cards-definition';
-import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
+import { AiOutlineFullscreen, AiOutlineFullscreenExit, AiOutlineDelete } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import { CheckboxList } from './checkbox-list';
 import {
@@ -31,13 +31,13 @@ export enum CARD_SIZE {
   We use a reducer to notify the change to the parent
  */
 
-const getWidget = (type: WIDGET, widgetProps) => {
+const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
   switch (type) {
     case WIDGET.SLIDERS: {
-      return <DualSlider {...widgetProps} />;
+      return <DualSlider {...widgetProps} value={widgetValue} onChange={c => onChange(c)} />;
     }
     case WIDGET.CHECKBOX_LIST: {
-      return <CheckboxList {...widgetProps} />;
+      return <CheckboxList {...widgetProps} onChange={v => onChange(v)} />;
     }
   }
   return <div> no component</div>;
@@ -46,26 +46,31 @@ const getWidget = (type: WIDGET, widgetProps) => {
 export interface CardProps extends Card {
   moveCard: Function;
   findCard: Function;
+  deleteCard: Function;
+  dispatch: Function;
   connectDragSource: ConnectDragSource;
   connectDropTarget: ConnectDropTarget;
-  isDragging: boolean;
+  values: any[];
+  dragging: boolean;
+  collapsed: boolean;
 }
 
 const SearchCard: React.FC<CardProps> = (props: CardProps) => {
   const [isActive, setActive] = useState(true);
-  const [isCollapsed, setCollapsed] = useState(false);
-
-  const opacity = props.isDragging || DRAGGING_ITEMS[props.id] ? 0.4 : 1;
+  const opacity = props.dragging ? 0.4 : 1;
   const ref = useRef(null);
-
   props.connectDragSource(ref);
   props.connectDropTarget(ref);
+
+  const remove = id => {
+    props.deleteCard(id);
+  };
 
   return (
     <div
       ref={ref}
-      style={{ opacity: DICO[props.id].dragging ? 0.3 : 1 }}
-      className={`card small ${isCollapsed ? 'collapsed' : 'expanded'} ${
+      style={{ opacity }}
+      className={`card small ${props.collapsed ? 'collapsed' : 'expanded'} ${
         isActive ? 'active' : 'disabled'
       } `}
     >
@@ -73,8 +78,18 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
         {props.title}
 
         <div className="card-tools">
-          <div className="collapser" onClick={() => setCollapsed(!isCollapsed)}>
-            {isCollapsed ? <AiOutlineFullscreen key="a" /> : <AiOutlineFullscreenExit key="b" />}
+          <div className="collapser" onClick={() => remove(props.id)}>
+            <AiOutlineDelete />
+          </div>
+          <div
+            className="collapser"
+            onClick={() => props.dispatch({ type: 'collapse', id: props.id })}
+          >
+            {props.collapsed ? (
+              <AiOutlineFullscreen key="a" />
+            ) : (
+              <AiOutlineFullscreenExit key="b" />
+            )}
           </div>
           <ReactSwitch
             checked={isActive}
@@ -99,7 +114,11 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
         {props.widgets.map((widget, idx) => (
           <div className="widget" key={idx}>
             {widget.name && <div className="widget-title">{widget.name()}</div>}
-            {getWidget(widget.type, widget.configuration)}
+            {getWidget(widget.type, widget.configuration, props.values[idx], value => {
+              const id = props.id;
+              console.log(idx, widget, value, props.id);
+              props.dispatch({ type: 'setValue', id: id, idx, widget, value });
+            })}
           </div>
         ))}
       </div>
@@ -129,7 +148,7 @@ export default DropTarget(
     ItemTypes.CARD,
     {
       beginDrag: (props: CardProps) => {
-        DICO[props.id].dragging = true;
+        props.dispatch({ type: 'startdragging', id: props.id });
         return {
           id: props.id,
           originalIndex: props.findCard(props.id).index
@@ -137,7 +156,7 @@ export default DropTarget(
       },
       endDrag(props: CardProps, monitor: DragSourceMonitor) {
         const { id: droppedId, originalIndex } = monitor.getItem();
-        DICO[droppedId].dragging = false;
+        props.dispatch({ type: 'enddragging', id: droppedId });
         const didDrop = monitor.didDrop();
         if (!didDrop) {
           props.moveCard(droppedId, originalIndex);
