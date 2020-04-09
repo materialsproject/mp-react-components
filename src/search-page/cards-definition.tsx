@@ -3,7 +3,8 @@ import React from 'react';
 export enum WIDGET {
   SLIDERS = 'SLIDER',
   CHECKBOX = 'CHECKBOX',
-  CHECKBOX_LIST = 'CHECKBOX_LIST'
+  CHECKBOX_LIST = 'CHECKBOX_LIST',
+  SP_SEARCH = 'SP_SEARCH'
 }
 
 interface Widget {
@@ -200,6 +201,17 @@ export const cardsDefinition: Card[] = [
         }
       }
     ]
+  },
+  {
+    title: 'Space search',
+    id: 'space',
+    widgets: [
+      {
+        type: WIDGET.SP_SEARCH,
+        name: null,
+        configuration: {}
+      }
+    ]
   }
 ];
 export const DICO = cardsDefinition.reduce((acc, card) => {
@@ -279,6 +291,7 @@ addCard(initialState, 'elasticity');
 addCard(initialState, 'dielectricity');
 addCard(initialState, 'piezoelectricity');
 addCard(initialState, 'has_properties');
+addCard(initialState, 'space');
 
 // state is composed of
 //  - > [ {cardDef, cardSettings } ]

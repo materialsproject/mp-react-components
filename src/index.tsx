@@ -23,6 +23,7 @@ import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-
 import Grid from './search-page/card-grid';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
+import Select from './search-page/group-space-search/property-search';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -149,6 +150,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
+    <Select></Select>
     <DndProvider backend={Backend}>
       <Grid />
     </DndProvider>

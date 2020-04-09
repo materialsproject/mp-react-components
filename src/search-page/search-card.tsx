@@ -2,17 +2,20 @@ import React, { useRef, useState } from 'react';
 import { DualSlider } from './dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
-import { Card, DICO, ItemTypes, WIDGET } from './cards-definition';
-import { AiOutlineFullscreen, AiOutlineFullscreenExit, AiOutlineDelete } from 'react-icons/ai';
+import { Card, ItemTypes, WIDGET } from './cards-definition';
+import { AiOutlineDelete, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import { CheckboxList } from './checkbox-list';
 import {
   ConnectDragSource,
   ConnectDropTarget,
+  DragSource,
   DragSourceMonitor,
+  DropTarget,
   DropTargetMonitor
 } from 'react-dnd';
-import { DragSource, DropTarget } from 'react-dnd';
+
+import SP from './group-space-search/property-search';
 
 const DRAGGING_ITEMS: any = {};
 
@@ -38,6 +41,9 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
     }
     case WIDGET.CHECKBOX_LIST: {
       return <CheckboxList {...widgetProps} onChange={v => onChange(v)} />;
+    }
+    case WIDGET.SP_SEARCH: {
+      return <SP></SP>;
     }
   }
   return <div> no component</div>;

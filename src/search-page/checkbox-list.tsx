@@ -2,20 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import CheckBox from 'rc-checkbox';
 import './checkbox-list.less';
 
-interface Checkbox {
+export interface MCheckbox {
   name: string;
   label: string;
   checked: boolean;
   disabled: boolean;
 }
 
-enum SelectionStyle {
+export enum SelectionStyle {
   SINGLE = 'single',
   MULTI = 'multi'
 }
 
-interface CheckboxList {
-  checkboxes: Checkbox[];
+export interface CheckboxList {
+  checkboxes: MCheckbox[];
   selectionStyle: SelectionStyle;
   onChange: Function;
 }
@@ -23,7 +23,7 @@ interface CheckboxList {
 export function CheckboxList(props: CheckboxList) {
   const checkbox = useRef<any>();
 
-  const [checkboxes, setCheckboxes] = useState([] as Checkbox[]);
+  const [checkboxes, setCheckboxes] = useState([] as MCheckbox[]);
 
   useEffect(() => {
     setCheckboxes([...props.checkboxes]);

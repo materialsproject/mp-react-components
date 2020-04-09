@@ -1,9 +1,10 @@
-const options = [
+export const options = [
   {
     label: 'Triclinic',
     options: [
       { number: 1, shortName: 'P1', fedorov: '1s' },
-      { number: 2, shortName: 'P1-', fedorov: '2s' }
+      { number: 2, shortName: 'P1-', fedorov: '2s' },
+      { label: 'Triclinic2', options: [{ number: 1, shortName: 'P1', fedorov: '1s' }] }
     ]
   },
   {
