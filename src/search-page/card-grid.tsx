@@ -2,8 +2,17 @@ import React, { useRef, useReducer } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import { initialState, ItemTypes, sdeleteCard, sfindCard, smoveCard } from './cards-definition';
+import {
+  addCard,
+  cardsDefinition,
+  initialState,
+  ItemTypes,
+  sdeleteCard,
+  sfindCard,
+  smoveCard
+} from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
+import { SearchPalette } from './palette/search-palette';
 
 const breakpointColumnsObj = {
   default: 3,
@@ -63,6 +72,7 @@ const reducer = (state: any, action: any) => {
   }
 };
 
+const filters = [{ name: 'a' }, { name: 'b' }];
 export const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
   const ref = useRef(null);
   const [cards, dispatch] = useReducer(reducer, startState);
@@ -88,39 +98,32 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
 
   return (
     <>
-      <div>
-        Add filters
-        {/*
-        <button disabled={cards.indexOf(cardsDefinition[0]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[0])})}> Elastic </button>
-        <button disabled={cards.indexOf(cardsDefinition[1]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[1])})}> DiElectric </button>
-        <button disabled={cards.indexOf(cardsDefinition[2]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[2])})}> Piezoelectricity </button>
-        <button disabled={cards.indexOf(cardsDefinition[3]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[3])})}> XZY Filter </button>
-        <button disabled={cards.indexOf(cardsDefinition[4]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[4])})}> Has Propery </button>
-        <button disabled={cards.indexOf(cardsDefinition[5]) >= 0} onClick={() => dispatch({type: 'setcards', cards: addCard(cards, cardsDefinition[5])})}>
-          {' '}
-          Has Property2{' '}
-        </button>*/}
-      </div>
-      {/* Masonry inserts div, the issue is that the component is unmountend and remounted*/
-      /* which leads to bad performance */}
-      <div ref={drop}>
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {cards.cardDef.map((card, idx) => (
-            <SearchCard
-              {...card}
-              {...cards.cardSettings[idx]}
-              key={card.id}
-              deleteCard={deleteCard}
-              moveCard={moveCard}
-              dispatch={dispatch}
-              findCard={findCard}
-            />
-          ))}
-        </Masonry>
+      <div className="search-funnel">
+        {/* Masonry inserts div, the issue is that the component is unmountend and remounted*/
+        /* which leads to bad performance */}
+        <div className="drag-zone" ref={drop}>
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {cards.cardDef.map((card, idx) => (
+              <SearchCard
+                {...card}
+                {...cards.cardSettings[idx]}
+                key={card.id}
+                deleteCard={deleteCard}
+                moveCard={moveCard}
+                dispatch={dispatch}
+                findCard={findCard}
+              />
+            ))}
+          </Masonry>
+        </div>
+        <SearchPalette
+          filters={cardsDefinition}
+          onFilterClick={c => dispatch({ type: 'setcards', cards: addCard(cards, c.id) })}
+        />
       </div>
     </>
   );

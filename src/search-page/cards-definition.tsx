@@ -19,6 +19,8 @@ export interface Card {
   widgets: Widget[];
   dragging?: boolean;
   id: string;
+  activeInstance?: number;
+  allowMultipleInstances: boolean;
 }
 
 export enum ItemTypes {
@@ -30,6 +32,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Elasticity',
     id: 'elasticity',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -82,6 +85,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Dielectricity',
     id: 'dielectricity',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -123,6 +127,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Piezoelectricity',
     id: 'piezoelectricity',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
@@ -142,6 +147,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Has properties',
     id: 'has_properties',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.CHECKBOX_LIST,
@@ -172,6 +178,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'A filter',
     id: 'xzy',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.CHECKBOX_LIST,
@@ -189,6 +196,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'One more filter',
     id: 'xzy2',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.CHECKBOX_LIST,
@@ -206,6 +214,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Spacegroup search',
     id: 'space',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SP_SEARCH,
@@ -217,6 +226,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Tag search',
     id: 'tag',
+    allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.TAG_SEARCH,
@@ -261,6 +271,11 @@ export function addCard(state: CS, id: string) {
   const definition = DICO[id];
   const settings = getStartStateFromCard(id);
 
+  if (!definition.activeInstance) {
+    definition.activeInstance = 0;
+  }
+  definition.activeInstance++;
+
   state.cardDef = [...state.cardDef, definition];
   state.cardSettings = [...state.cardSettings, settings];
   state.map[id] = settings; // settings are directly updated from the component
@@ -271,7 +286,8 @@ export function sfindCard(state: CS, id: string) {
 }
 export function sdeleteCard(state: CS, id: string) {
   const index = sfindCard(state, id);
-  state.cardDef.splice(index, 1);
+  const definition = state.cardDef.splice(index, 1);
+  definition[0].activeInstance!--;
   state.cardSettings.splice(index, 1);
   state.cardDef = [...state.cardDef];
   state.cardSettings = [...state.cardSettings];

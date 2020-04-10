@@ -1,0 +1,40 @@
+@import '../../assets/mixins.less';
+
+.search-palette {
+  //transition: height 0.2s ease-out, flex 0.2s ease-out, padding 0.2s;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 200;
+  .elevation-1();
+  align-self: baseline;
+  max-width: 230px;
+  .flex(column);
+  .search-palette-header {
+    padding: 10px;
+    border-bottom: 1px solid lightgrey;
+    .flex(row);
+    align-items: center;
+    justify-content: space-between;
+    div {
+      .flex(row);
+    }
+  }
+  &.collapsed {
+    .filters {
+      display: none;
+    }
+  }
+  .filters {
+    .filter {
+      padding: 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #eeeeee;
+      &:hover {
+        background-color: lightgrey;
+      }
+      &.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
