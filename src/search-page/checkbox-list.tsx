@@ -32,7 +32,7 @@ export function CheckboxList(props: CheckboxList) {
       c.checked && (acc[c.name] = c);
       return acc;
     }, {});
-    console.log(checkbox);
+    //console.log(checkbox);
   }, [props.checkboxes]);
 
   return (

@@ -53,6 +53,7 @@ const reducer = (state: any, action: any) => {
       const { id, idx, value } = action;
       const card = state.map[action.id];
       card.values[idx] = value;
+      console.log('overall state', state);
       return { ...state };
       break;
     }

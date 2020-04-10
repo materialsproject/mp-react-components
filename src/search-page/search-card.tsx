@@ -16,6 +16,7 @@ import {
 } from 'react-dnd';
 
 import SP from './group-space-search/property-search';
+import TagSearch from './tags/tag-search';
 
 const DRAGGING_ITEMS: any = {};
 
@@ -44,6 +45,9 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
     }
     case WIDGET.SP_SEARCH: {
       return <SP value={widgetValue} onChange={change => onChange(change)}></SP>;
+    }
+    case WIDGET.TAG_SEARCH: {
+      return <TagSearch value={widgetValue} onChange={change => onChange(change)}></TagSearch>;
     }
   }
   return <div> no component</div>;
@@ -122,7 +126,7 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
             {widget.name && <div className="widget-title">{widget.name()}</div>}
             {getWidget(widget.type, widget.configuration, props.values[idx], value => {
               const id = props.id;
-              console.log(idx, widget, value, props.id);
+              //console.log(idx, widget, value, props.id);
               props.dispatch({ type: 'setValue', id: id, idx, widget, value });
             })}
           </div>

@@ -37,8 +37,7 @@ export interface SelectSPProps {
 
 export const SelectSP: React.FC<SelectSPProps> = props => {
   const property = props.property ? props.property : 'number';
-  const [selection, setSelection] = useState(props.selected); // todo sync with upper state
-
+  const [selection, setSelection] = useState(props.selected);
   useEffect(() => {
     if (selection !== props.selected) {
       setSelection(props.selected);

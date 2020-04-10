@@ -4,7 +4,8 @@ export enum WIDGET {
   SLIDERS = 'SLIDER',
   CHECKBOX = 'CHECKBOX',
   CHECKBOX_LIST = 'CHECKBOX_LIST',
-  SP_SEARCH = 'SP_SEARCH'
+  SP_SEARCH = 'SP_SEARCH',
+  TAG_SEARCH = 'TAG_SEARCH'
 }
 
 interface Widget {
@@ -212,6 +213,17 @@ export const cardsDefinition: Card[] = [
         configuration: {}
       }
     ]
+  },
+  {
+    title: 'Tag search',
+    id: 'tag',
+    widgets: [
+      {
+        type: WIDGET.TAG_SEARCH,
+        name: null,
+        configuration: {}
+      }
+    ]
   }
 ];
 export const DICO = cardsDefinition.reduce((acc, card) => {
@@ -268,7 +280,6 @@ export function sdeleteCard(state: CS, id: string) {
 }
 
 export function smoveCard(state: CS, id: string, atIndex: number) {
-  console.log(atIndex);
   const index = sfindCard(state, id);
   const array = [...state.cardDef];
   const card = array.splice(index, 1);
@@ -292,6 +303,7 @@ addCard(initialState, 'dielectricity');
 addCard(initialState, 'piezoelectricity');
 addCard(initialState, 'has_properties');
 addCard(initialState, 'space');
+addCard(initialState, 'tag');
 
 // state is composed of
 //  - > [ {cardDef, cardSettings } ]

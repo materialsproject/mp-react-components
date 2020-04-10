@@ -24,6 +24,8 @@ import Grid from './search-page/card-grid';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import Select from './search-page/group-space-search/property-search';
+import TagSearch from './search-page/tags/tag-search';
+import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -150,9 +152,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <DndProvider backend={Backend}>
-      <Grid />
-    </DndProvider>
+    <ExportableGrid />
   </>,
 
   mountNode

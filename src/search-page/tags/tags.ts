@@ -1,4 +1,4 @@
-const tags = [
+export const tags = [
   'Nickel chromium (3/1)',
   'Terbium mercury (1/2)',
   'AlB2 family',
@@ -2635,7 +2635,8 @@ const tags = [
   'Cesium dihydrogenhypodiphosphate tetrahydrogenhypodiphosphate(IV)',
   'Indium lanthanum nickel (11/5/6)',
   'La5Ni6In11',
-  'Pr5Ni6In11',
+  'Pr5Ni6In11'
+]; /*
   'Thulium bromide tetraoxotungstate',
   'Cesium hexaaqua iron(II) phosphate',
   'Cesium hexakis(dideuterioaqua) iron(II) phosphate',
@@ -72175,4 +72176,4 @@ const tags = [
   'CaNiGe2O6',
   'CaCoGe2O6',
   'CaMnGe2O6'
-];
+];*/
