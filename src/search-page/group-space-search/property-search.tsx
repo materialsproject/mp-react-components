@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import './select.less';
-
 import Select, { components } from 'react-select';
-import { options, options2 } from './group-search';
 import { CheckboxList, MCheckbox, SelectionStyle } from '../checkbox-list';
+import {
+  groupCheckboxes,
+  groups,
+  propertiesCheckbox,
+  searchKeyToDisplayKey,
+  spaceGroups
+} from './space-groups';
 
-const properties = ['number', 'shortName', 'fedorov']; // introspect data source
+console.log(spaceGroups);
+
 const groupStyles = {
   display: 'flex',
   alignItems: 'center',
@@ -23,6 +29,11 @@ const groupBadgeStyles: any = {
   padding: '0.16666666666667em 0.5em',
   textAlign: 'center'
 };
+
+export interface SelectSPProps {
+  property: string;
+  grouping: string;
+}
 
 export const SelectSP: React.FC<any> = props => {
   const property = props.property ? props.property : 'number';
@@ -43,7 +54,12 @@ export const SelectSP: React.FC<any> = props => {
 
   const MultiValueLabel = props => (
     <>
-      <span> {props.data[property]} </span>
+      <span className="select-label">
+        {' '}
+        {searchKeyToDisplayKey[property]
+          ? props.data[searchKeyToDisplayKey[property]]
+          : props.data[property]}{' '}
+      </span>
     </>
   );
 
@@ -65,7 +81,9 @@ export const SelectSP: React.FC<any> = props => {
         return option[property];
       }}
       getOptionLabel={option => {
-        return option[property];
+        return searchKeyToDisplayKey[property]
+          ? option[searchKeyToDisplayKey[property]]
+          : option[property];
       }}
       className="basic-multi-select"
       classNamePrefix="select"
@@ -73,31 +91,13 @@ export const SelectSP: React.FC<any> = props => {
   );
 };
 
-const checkboxes: MCheckbox[] = properties.map(p => ({
-  checked: false,
-  disabled: false,
-  name: p,
-  label: p
-}));
+//TODO(chab) decouple the two components
 
 // we can do a simple mapper function
-const c2 = ['Crystal group', 'Point group'].map(p => ({
-  checked: false,
-  disabled: false,
-  name: p,
-  label: p
-}));
 
-const groups = {
-  'Crystal group': options,
-  'Point group': options2
-};
-
-checkboxes[0].checked = true;
-c2[0].checked = true;
 export default function(props) {
-  const [property, setProperty] = useState(properties[0]); // ultimately from the props
-  const [grouping, setGrouping] = useState(c2[0].name); // ultimately from the props
+  const [property, setProperty] = useState(propertiesCheckbox[0].name); // ultimately from the props
+  const [grouping, setGrouping] = useState(groupCheckboxes[0].name); // ultimately from the props
 
   return (
     <>
@@ -107,7 +107,7 @@ export default function(props) {
         <div className="property">
           Search By :
           <CheckboxList
-            checkboxes={checkboxes}
+            checkboxes={propertiesCheckbox}
             selectionStyle={SelectionStyle.SINGLE}
             onChange={c => {
               setProperty(c[0]);
@@ -117,7 +117,7 @@ export default function(props) {
         <div className="grouping">
           Group By:
           <CheckboxList
-            checkboxes={c2}
+            checkboxes={groupCheckboxes}
             selectionStyle={SelectionStyle.SINGLE}
             onChange={c => {
               setGrouping(c[0]);
