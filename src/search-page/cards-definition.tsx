@@ -203,7 +203,7 @@ export const cardsDefinition: Card[] = [
     ]
   },
   {
-    title: 'Space search',
+    title: 'Spacegroup search',
     id: 'space',
     widgets: [
       {

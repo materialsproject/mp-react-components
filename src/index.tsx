@@ -154,7 +154,13 @@ ReactDOM.render(
     <DndProvider backend={Backend}>
       <Grid />
     </DndProvider>
-    {/*<CameraContextWrapper>
+  </>,
+
+  mountNode
+);
+console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+
+/*<CameraContextWrapper>
         <SceneSwitcher />
       <>
         <Simple3DSceneComponent
@@ -171,41 +177,36 @@ ReactDOM.render(
         />
         <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
-    </CameraContextWrapper>*/}
-    /*
-    <div>
-      {<TestComponent d={['B']} b={[]} e={[]} />}
-      {
-        <PeriodicContext>
-          <div>
-            <div>
-              <SelectableTable
-                maxElementSelectable={2}
-                forceTableLayout={TableLayout.COMPACT}
-                hiddenElements={[]}
-                onStateChange={enabledElements => {
-                  elements = Object.keys(enabledElements).filter(el => enabledElements[el]);
-                }}
-                enabledElements={[]}
-                disabledElements={['H', 'C']}
-              />
-              <TableFilter />
-              <SelectableTable
-                maxElementSelectable={1}
-                forceTableLayout={TableLayout.MAP}
-                enabledElements={['H', 'C']}
-                disabledElements={[]}
-                hiddenElements={[]}
-              />
-            </div>
-            <SelectedComponentSimple />
-          </div>
-        </PeriodicContext>
-      }
-    </div>
-    */
-  </>,
-
-  mountNode
-);
-console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+    </CameraContextWrapper>*/
+/*
+<div>
+  {<TestComponent d={['B']} b={[]} e={[]} />}
+  {
+    <PeriodicContext>
+      <div>
+        <div>
+          <SelectableTable
+            maxElementSelectable={2}
+            forceTableLayout={TableLayout.COMPACT}
+            hiddenElements={[]}
+            onStateChange={enabledElements => {
+              elements = Object.keys(enabledElements).filter(el => enabledElements[el]);
+            }}
+            enabledElements={[]}
+            disabledElements={['H', 'C']}
+          />
+          <TableFilter />
+          <SelectableTable
+            maxElementSelectable={1}
+            forceTableLayout={TableLayout.MAP}
+            enabledElements={['H', 'C']}
+            disabledElements={[]}
+            hiddenElements={[]}
+          />
+        </div>
+        <SelectedComponentSimple />
+      </div>
+    </PeriodicContext>
+  }
+</div>
+*/

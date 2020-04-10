@@ -10,8 +10,9 @@ export interface MCheckbox {
 }
 
 export enum SelectionStyle {
-  SINGLE = 'single',
-  MULTI = 'multi'
+  SINGLE = 'single', // at most one
+  SINGLE_FORCED = 'single_forced', // always one
+  MULTI = 'multi' // *
 }
 
 export interface CheckboxList {

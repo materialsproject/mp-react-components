@@ -1,0 +1,33 @@
+@import '../../assets/mixins';
+
+.select__menu {
+  font-family: 'Helvetica Neue', Helvetica, Arial;
+}
+
+.select__group-heading {
+  padding: 5px;
+  &:hover {
+    background-color: #deebff;
+  }
+}
+.crystal-search {
+  font-size: 11px;
+
+  margin: 10px;
+}
+
+.property,
+.grouping {
+  margin: 5px;
+  .flex(row);
+  align-items: center;
+  justify-content: space-between;
+  .checkbox-list {
+    flex-direction: row;
+    align-items: center;
+    label {
+      .flex(row);
+      align-items: center;
+    }
+  }
+}
