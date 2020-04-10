@@ -1,16 +1,8 @@
-import React, { useState, useRef, useReducer } from 'react';
+import React, { useRef, useReducer } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import {
-  CS,
-  DICO,
-  initialState,
-  ItemTypes,
-  sdeleteCard,
-  sfindCard,
-  smoveCard
-} from './cards-definition';
+import { initialState, ItemTypes, sdeleteCard, sfindCard, smoveCard } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 
 const breakpointColumnsObj = {
