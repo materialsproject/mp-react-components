@@ -150,7 +150,6 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
-    <Select></Select>
     <DndProvider backend={Backend}>
       <Grid />
     </DndProvider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './select.less';
 import Select, { components } from 'react-select';
 import { CheckboxList, MCheckbox, SelectionStyle } from '../checkbox-list';
@@ -9,8 +9,6 @@ import {
   searchKeyToDisplayKey,
   spaceGroups
 } from './space-groups';
-
-console.log(spaceGroups);
 
 const groupStyles = {
   display: 'flex',
@@ -33,20 +31,22 @@ const groupBadgeStyles: any = {
 export interface SelectSPProps {
   property: string;
   grouping: string;
+  selected: any[];
+  onChange: any;
 }
 
-export const SelectSP: React.FC<any> = props => {
+export const SelectSP: React.FC<SelectSPProps> = props => {
   const property = props.property ? props.property : 'number';
-  const [selection, setSelection] = useState([] as any[]); // todo sync with upper state
+  const [selection, setSelection] = useState(props.selected); // todo sync with upper state
 
-  console.log(groups, groups[props.grouping]);
+  useEffect(() => {
+    if (selection !== props.selected) {
+      setSelection(props.selected);
+    }
+  }, [props.selected]);
+
   const formatGroupLabel = (data, p) => (
-    <div
-      onClick={() => {
-        setSelection(data.options);
-      }}
-      style={groupStyles}
-    >
+    <div onClick={() => setSelection(data.options)} style={groupStyles}>
       <span>{data.label}</span>
       <span style={groupBadgeStyles}>{data.options.length}</span>
     </div>
@@ -72,19 +72,15 @@ export const SelectSP: React.FC<any> = props => {
       formatGroupLabel={formatGroupLabel}
       name="colors"
       onChange={(selected, event) => {
-        console.log(selected, event);
         setSelection(selected);
+        props.onChange(selected);
       }}
       menuPortalTarget={document.body}
       options={groups[props.grouping]}
-      getOptionValue={option => {
-        return option[property];
-      }}
-      getOptionLabel={option => {
-        return searchKeyToDisplayKey[property]
-          ? option[searchKeyToDisplayKey[property]]
-          : option[property];
-      }}
+      getOptionValue={option => option[property]}
+      getOptionLabel={option =>
+        searchKeyToDisplayKey[property] ? option[searchKeyToDisplayKey[property]] : option[property]
+      }
       className="basic-multi-select"
       classNamePrefix="select"
     />
@@ -101,7 +97,12 @@ export default function(props) {
 
   return (
     <>
-      <SelectSP property={property} grouping={grouping} />
+      <SelectSP
+        selected={props.value}
+        onChange={selected => props.onChange(selected)}
+        property={property}
+        grouping={grouping}
+      />
 
       <div className="crystal-search">
         <div className="property">
@@ -109,9 +110,7 @@ export default function(props) {
           <CheckboxList
             checkboxes={propertiesCheckbox}
             selectionStyle={SelectionStyle.SINGLE}
-            onChange={c => {
-              setProperty(c[0]);
-            }}
+            onChange={c => setProperty(c[0])}
           />
         </div>
         <div className="grouping">
@@ -119,9 +118,7 @@ export default function(props) {
           <CheckboxList
             checkboxes={groupCheckboxes}
             selectionStyle={SelectionStyle.SINGLE}
-            onChange={c => {
-              setGrouping(c[0]);
-            }}
+            onChange={c => setGrouping(c[0])}
           />
         </div>
       </div>

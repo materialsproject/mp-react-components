@@ -43,7 +43,7 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
       return <CheckboxList {...widgetProps} onChange={v => onChange(v)} />;
     }
     case WIDGET.SP_SEARCH: {
-      return <SP></SP>;
+      return <SP value={widgetValue} onChange={change => onChange(change)}></SP>;
     }
   }
   return <div> no component</div>;

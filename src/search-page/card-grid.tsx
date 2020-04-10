@@ -70,7 +70,7 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
+export const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
   const ref = useRef(null);
   const [cards, dispatch] = useReducer(reducer, startState);
 
