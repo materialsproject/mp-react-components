@@ -9,9 +9,10 @@ export enum WIDGET {
 }
 
 interface Widget {
-  name?: string | null,
-  latexName?: string | null,
+  name?: string | null;
+  latexName?: string | null;
   type: WIDGET;
+  id: string;
   configuration: any;
 }
 
@@ -38,6 +39,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Band Gap Ev',
+        id: 'band_gap',
         configuration: {
           // we can add mode
           handle: 2,
@@ -47,7 +49,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "Energy Above Hull",
+        name: 'Energy Above Hull',
+        id: 'e_above_hull',
         configuration: {
           // we can add mode
           handle: 2,
@@ -57,7 +60,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "Formation Energy",
+        name: 'Formation Energy',
+        id: 'formation_energy_per_atom',
         configuration: {
           // we can add mode
           handle: 2,
@@ -67,7 +71,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "# unit cells",
+        name: '# unit cells',
+        id: 'nsites',
         configuration: {
           // we can add mode
           handle: 2,
@@ -77,7 +82,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "Density",
+        name: 'Density',
+        id: 'density',
         configuration: {
           // we can add mode
           handle: 2,
@@ -87,7 +93,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "Volume",
+        name: 'Volume',
+        id: 'volumne',
         configuration: {
           // we can add mode
           handle: 2,
@@ -105,6 +112,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: "Poisson's Ratio",
+        id: 'elasticity.homogeneous_poisson',
         configuration: {
           // we can add mode
           handle: 2,
@@ -114,7 +122,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: "Elastic Anisotropy",
+        name: 'Elastic Anisotropy',
+        id: 'elasticity.universal_anisotropy',
         configuration: {
           // we can add mode
           handle: 2,
@@ -124,6 +133,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Shear Modulus',
+        id: 'elasticity.G_Voigt_Reuss_Hill',
         latexName: '$\\text{G}_\\text{RVH}$',
         configuration: {
           // we can add mode
@@ -134,7 +144,8 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Bulk Modulus',
-        latexName:'$\\text{K}_\\text{RVH}$',
+        latexName: '$\\text{K}_\\text{RVH}$',
+        id: 'elasticity.K_Voigt_Reuss_Hill',
         configuration: {
           // we can add mode
           handle: 2,
@@ -150,6 +161,7 @@ export const cardsDefinition: Card[] = [
     widgets: [
       {
         type: WIDGET.SLIDERS,
+        id: 'diel.n',
         latexName: '$\\epsilon_{poly}{^\\infty}$',
         configuration: {
           domain: [1, 158]
@@ -157,6 +169,7 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
+        id: 'diel.poly_total',
         latexName: '$\\epsilon_{poly}$',
         configuration: {
           domain: [2, 257]
@@ -164,6 +177,7 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
+        id: 'diel.poly_electronic',
         name: 'Refractive index',
         configuration: {
           domain: [1, 17]
@@ -178,6 +192,7 @@ export const cardsDefinition: Card[] = [
     widgets: [
       {
         type: WIDGET.SLIDERS,
+        id: 'piezo.eij_max',
         name: 'Piezoelectric Modulus',
         latexName: '$\\lVert {e}_{ij} \\rVert_{\\max}$',
         configuration: {
@@ -187,7 +202,7 @@ export const cardsDefinition: Card[] = [
       }
     ]
   },
-  {
+  /*{
     title: 'Has properties',
     id: 'has_properties',
     allowMultipleInstances: false,
@@ -253,13 +268,14 @@ export const cardsDefinition: Card[] = [
         }
       }
     ]
-  },
+  },*/
   {
     title: 'Spacegroup search',
-    id: 'space',
+    id: 'space', // ID are extrapolated from the data itself
     allowMultipleInstances: false,
     widgets: [
       {
+        id: 'spacegroup',
         type: WIDGET.SP_SEARCH,
         name: null,
         configuration: {}
@@ -272,6 +288,7 @@ export const cardsDefinition: Card[] = [
     allowMultipleInstances: false,
     widgets: [
       {
+        id: 'tags',
         type: WIDGET.TAG_SEARCH,
         name: null,
         configuration: {}
