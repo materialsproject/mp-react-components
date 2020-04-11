@@ -39,6 +39,7 @@
     "react-graph-vis": "^1.0.5",
     "react-icons": "^3.9.0",
     "react-json-view": "^1.19.1",
+    "react-latex": "^1.6.0",
     "react-masonry-css": "^1.0.14",
     "react-responsive": "^8.0.3",
     "react-select": "^3.1.0",
