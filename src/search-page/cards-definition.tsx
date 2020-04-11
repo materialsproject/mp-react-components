@@ -9,7 +9,8 @@ export enum WIDGET {
 }
 
 interface Widget {
-  name: (() => any) | null;
+  name?: string | null,
+  latexName?: string | null,
   type: WIDGET;
   configuration: any;
 }
@@ -30,13 +31,80 @@ export enum ItemTypes {
 //TODO try to use a simple function to render
 export const cardsDefinition: Card[] = [
   {
+    title: 'General',
+    id: 'general',
+    allowMultipleInstances: false,
+    widgets: [
+      {
+        type: WIDGET.SLIDERS,
+        name: 'Band Gap Ev',
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [0, 10],
+          step: 1
+        }
+      },
+      {
+        type: WIDGET.SLIDERS,
+        name: "Energy Above Hull",
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [0, 6],
+          step: 1
+        }
+      },
+      {
+        type: WIDGET.SLIDERS,
+        name: "Formation Energy",
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [-4, 4],
+          step: 1
+        }
+      },
+      {
+        type: WIDGET.SLIDERS,
+        name: "# unit cells",
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [1, 296],
+          step: 1
+        }
+      },
+      {
+        type: WIDGET.SLIDERS,
+        name: "Density",
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [0, 24.6],
+          step: 0.1
+        }
+      },
+      {
+        type: WIDGET.SLIDERS,
+        name: "Volume",
+        configuration: {
+          // we can add mode
+          handle: 2,
+          domain: [7, 7698],
+          step: 1
+        }
+      }
+    ]
+  },
+  {
     title: 'Elasticity',
     id: 'elasticity',
     allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
-        name: () => <span>Poisson's Ratio</span>,
+        name: "Poisson's Ratio",
         configuration: {
           // we can add mode
           handle: 2,
@@ -46,7 +114,7 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: () => <span>Elastic Anisotropy</span>,
+        name: "Elastic Anisotropy",
         configuration: {
           // we can add mode
           handle: 2,
@@ -55,12 +123,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: () => (
-          <span>
-            {' '}
-            Shear Modulus G<sub>RVH</sub>
-          </span>
-        ),
+        name: 'Shear Modulus',
+        latexName: '$\\text{G}_\\text{RVH}$',
         configuration: {
           // we can add mode
           handle: 2,
@@ -69,11 +133,8 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        name: () => (
-          <span>
-            Bulk Modulus K<sub>RVH</sub>
-          </span>
-        ),
+        name: 'Bulk Modulus',
+        latexName:'$\\text{K}_\\text{RVH}$',
         configuration: {
           // we can add mode
           handle: 2,
@@ -89,35 +150,21 @@ export const cardsDefinition: Card[] = [
     widgets: [
       {
         type: WIDGET.SLIDERS,
-        name: () => (
-          <span>
-            {' '}
-            <em>ε</em>
-            <sub>poly</sub>
-            <sup>∞</sup>
-          </span>
-        ),
+        latexName: '$\\epsilon_{poly}{^\\infty}$',
         configuration: {
           domain: [1, 158]
         }
       },
       {
         type: WIDGET.SLIDERS,
-        name: () => (
-          <span>
-            {' '}
-            <em>ε</em>
-            <sub>poly</sub>
-            <sup>∞</sup>
-          </span>
-        ),
+        latexName: '$\\epsilon_{poly}$',
         configuration: {
           domain: [2, 257]
         }
       },
       {
         type: WIDGET.SLIDERS,
-        name: () => <span>Refractive index</span>,
+        name: 'Refractive index',
         configuration: {
           domain: [1, 17]
         }
@@ -131,12 +178,8 @@ export const cardsDefinition: Card[] = [
     widgets: [
       {
         type: WIDGET.SLIDERS,
-        name: () => (
-          <span>
-            Piezoelectric Modulus ‖<em>e</em>
-            <sub>ij</sub>‖<sub>max</sub>
-          </span>
-        ),
+        name: 'Piezoelectric Modulus',
+        latexName: '$\\lVert {e}_{ij} \\rVert_{\\max}$',
         configuration: {
           domain: [0, 46.2],
           step: 0.1

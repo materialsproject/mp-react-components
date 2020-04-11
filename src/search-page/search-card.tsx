@@ -14,6 +14,7 @@ import {
   DropTarget,
   DropTargetMonitor
 } from 'react-dnd';
+import Latex from 'react-latex';
 
 import SP from './group-space-search/property-search';
 import TagSearch from './tags/tag-search';
@@ -123,7 +124,11 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
       <div className="card-content">
         {props.widgets.map((widget, idx) => (
           <div className="widget" key={idx}>
-            {widget.name && <div className="widget-title">{widget.name()}</div>}
+            {(widget.name || widget.latexName) &&
+              <span className="widget-title">
+                {widget.name && <span className='standard'>{widget.name}</span>}
+                {widget.latexName && <Latex>{widget.latexName}</Latex>}
+              </span>}
             {getWidget(widget.type, widget.configuration, props.values[idx], value => {
               const id = props.id;
               //console.log(idx, widget, value, props.id);
