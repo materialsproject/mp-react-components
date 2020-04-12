@@ -6,7 +6,11 @@ import MGrid from './card-grid';
 export default function ExportableGrid() {
   return (
     <DndProvider backend={Backend}>
-      <MGrid />
+      <MGrid
+        onChange={c => {
+          console.log(c);
+        }}
+      />
     </DndProvider>
   );
 }

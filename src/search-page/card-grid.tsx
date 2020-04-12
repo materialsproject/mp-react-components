@@ -1,4 +1,4 @@
-import React, { useRef, useReducer } from 'react';
+import React, { useRef, useReducer, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
@@ -24,6 +24,7 @@ const breakpointColumnsObj = {
 
 export interface GridProps {
   connectDropTarget: ConnectDropTarget;
+  onChange: any;
 }
 
 export interface GridState {
@@ -46,6 +47,7 @@ const reducer = (state: any, action: any) => {
     }
     case 'setcards': {
       console.log('new state', action);
+      state.onChangeRef.current(state);
       return { ...action.cards };
     }
     case 'collapse': {
@@ -56,6 +58,7 @@ const reducer = (state: any, action: any) => {
     case 'disable': {
       const card = state.map[action.id];
       card.collapsed = !card.collapsed;
+      state.onChangeRef.current(state);
       return { ...state };
     }
     case 'setValue': {
@@ -65,6 +68,7 @@ const reducer = (state: any, action: any) => {
       card.state = CardState.DIRTY;
       card.values[idx] = value;
       console.log('overall state', state);
+      state.onChangeRef.current(state);
       return { ...state };
       break;
     }
@@ -74,10 +78,14 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-const filters = [{ name: 'a' }, { name: 'b' }];
-export const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
+export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
   const ref = useRef(null);
-  const [cards, dispatch] = useReducer(reducer, startState);
+  const onChangeRef = useRef<Function>(onChange);
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  const [cards, dispatch] = useReducer(reducer, { ...startState, onChangeRef });
 
   // TODO (pass cards and setCards and pull out)
   const moveCard = (id: string, atIndex: number) => {
@@ -134,3 +142,55 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget }) => {
 export default DropTarget(ItemTypes.CARD, {}, connect => ({
   connectDropTarget: connect.dropTarget()
 }))(Grid);
+
+// sliders.. take $gte and $lte
+// spacegroups.. just put everything in
+const query = {
+  volume: { $gte: 4527, $lte: 7698 },
+  density: { $gte: 13.6, $lte: 24.6 },
+  nsites: { $gte: 187, $lte: 296 },
+  formation_energy_per_atom: { $gte: 1.54, $lte: 4 },
+  e_above_hull: { $gte: 0, $lte: 3.74 },
+  band_gap: { $gte: 0, $lte: 3.2 },
+  crystal_system: { $in: ['hexagonal', 'monoclinic'] },
+  'spacegroup.number': { $in: ['0', '1', '2'] },
+  'spacegroup.symbol': { $in: ['C222', 'Cmcm', 'Cmm2', 'Cmme'] }
+};
+
+// in dielectricity
+//"diel.pot_ferroelectric":true}
+
+// Tags
+// "tags":"[\"dsfds\"]"
+
+// External provenance
+//"has_icsd_id":true,"has_icsd_exptl_id":true}
+
+/*
+const mapDispatch => dispatch => ({
+  reset: () => dispatch({ type: 'reset' }),
+  addTest: () => dispatch({ type: 'addTest' }),
+  removeTest: () => dispatch({ type: 'removeTest' })
+})
+
+const Button = (props) => (
+  <button
+    type="button"
+    onClick={props.onClick}>
+    {props.children}
+  </button>
+);
+
+const App = () => {
+  const [state, dispatch] = getReducer();
+  const actions = mapDispatch(dispatch)
+  return (
+    <React.Fragment>
+      {state.test}
+      <Button onClick={actions.addTest}>Add 1</Button>
+      <Button onClick={actions.removeTest}>Remove 1</Button>
+      <Button onClick={actions.reset}>Reset</Button>
+    </React.Fragment>
+  );
+};
+ */

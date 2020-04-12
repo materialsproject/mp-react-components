@@ -10,7 +10,7 @@ export const search = () => (
     <div> Search WIP </div>
     <hr />
     <DndProvider backend={Backend}>
-      <Grid />
+      <Grid onChange={() => {}} />
     </DndProvider>
   </>
 );

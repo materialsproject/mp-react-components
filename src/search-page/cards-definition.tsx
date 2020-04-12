@@ -330,6 +330,7 @@ export interface CS {
   cardDef: Card[];
   cardSettings: { id: string; collapsed: boolean; disabled: boolean; values: any[] }[];
   map: any;
+  onChangeRef?: React.MutableRefObject<Function>;
 }
 
 export function addCard(state: CS, id: string) {
