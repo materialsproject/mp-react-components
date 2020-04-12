@@ -5,6 +5,7 @@ import SearchCard from './search-card';
 import {
   addCard,
   cardsDefinition,
+  CardState,
   initialState,
   ItemTypes,
   sdeleteCard,
@@ -61,6 +62,7 @@ const reducer = (state: any, action: any) => {
       // expect cardId, widgetId, and value index
       const { id, idx, value } = action;
       const card = state.map[action.id];
+      card.state = CardState.DIRTY;
       card.values[idx] = value;
       console.log('overall state', state);
       return { ...state };

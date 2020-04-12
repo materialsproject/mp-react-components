@@ -8,6 +8,11 @@ export enum WIDGET {
   TAG_SEARCH = 'TAG_SEARCH'
 }
 
+export enum CardState {
+  PRISTINE = 'pristine',
+  DIRTY = 'dirty'
+}
+
 interface Widget {
   name?: string | null;
   latexName?: string | null;
@@ -318,7 +323,7 @@ const getStartStateFromCard = (id: string) => {
     }
     return outerAcc;
   }, []);
-  return { id, collapsed, disabled, values };
+  return { id, collapsed, disabled, values, state: CardState.PRISTINE };
 };
 
 export interface CS {
@@ -377,7 +382,6 @@ export const initialState: CS = {
 addCard(initialState, 'elasticity');
 addCard(initialState, 'dielectricity');
 addCard(initialState, 'piezoelectricity');
-addCard(initialState, 'has_properties');
 addCard(initialState, 'space');
 addCard(initialState, 'tag');
 
