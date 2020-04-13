@@ -1,12 +1,11 @@
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import MGrid from './card-grid';
 import { Card, CardState, Widget, WIDGET } from './cards-definition';
 import { PeriodicContext, SelectableTable } from '../periodic-table';
 import { TableLayout } from '../periodic-table/periodic-table-component/periodic-table.component';
-import { useState } from 'react';
-import { useContext } from 'react';
 import { PeriodicSelectionContext } from '../periodic-table/periodic-table-state/table-store';
 
 const cb = c => {};
@@ -85,6 +84,10 @@ export default function ExportableGrid() {
                   query['spacegroup.number'] = {
                     $in: spaceGroups.map(s => s['space-group.number'])
                   };
+                } else if (widget.type === WIDGET.CHECKBOX_LIST) {
+                  //TODO(chab) fix the update logic of the widget.
+                  console.log(card.cardSettings, card.cardDef);
+                  query['provenance'] = card.cardSettings.values[0];
                 }
               });
             });
