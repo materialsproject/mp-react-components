@@ -106,6 +106,7 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
             checked={isActive}
             onChange={c => {
               setActive(!isActive);
+              props.dispatch({ type: 'disable', id: props.id });
             }}
             onColor="#86d3ff"
             onHandleColor="#2693e6"
@@ -124,11 +125,12 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
       <div className="card-content">
         {props.widgets.map((widget, idx) => (
           <div className="widget" key={idx}>
-            {(widget.name || widget.latexName) &&
+            {(widget.name || widget.latexName) && (
               <span className="widget-title">
-                {widget.name && <span className='standard'>{widget.name}</span>}
+                {widget.name && <span className="standard">{widget.name}</span>}
                 {widget.latexName && <Latex>{widget.latexName}</Latex>}
-              </span>}
+              </span>
+            )}
             {getWidget(widget.type, widget.configuration, props.values[idx], value => {
               const id = props.id;
               //console.log(idx, widget, value, props.id);

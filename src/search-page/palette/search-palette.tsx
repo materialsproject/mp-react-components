@@ -13,9 +13,9 @@ export function SearchPalette({ filters, onFilterClick }) {
     <div className={`search-palette ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="search-palette-header">
         <div>{!isCollapsed ? 'Add filters to your search' : ''}</div>
-        <div onClick={() => setCollapsed(!isCollapsed)}>
+        {/*<div onClick={() => setCollapsed(!isCollapsed)}>
           {isCollapsed ? <AiOutlineFullscreen key="a" /> : <AiOutlineFullscreenExit key="b" />}
-        </div>
+        </div>*/}
       </div>
       <div className="filters">
         {filters.map((filter: Card) => (

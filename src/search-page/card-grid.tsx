@@ -57,7 +57,7 @@ const reducer = (state: any, action: any) => {
     }
     case 'disable': {
       const card = state.map[action.id];
-      card.collapsed = !card.collapsed;
+      card.disabled = !card.disabled;
       state.onChangeRef.current(state);
       return { ...state };
     }
@@ -111,6 +111,10 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
       <div className="search-funnel">
         {/* Masonry inserts div, the issue is that the component is unmountend and remounted*/
         /* which leads to bad performance */}
+        <SearchPalette
+          filters={cardsDefinition}
+          onFilterClick={c => dispatch({ type: 'setcards', cards: addCard(cards, c.id) })}
+        />
         <div className="drag-zone" ref={drop}>
           <Masonry
             breakpointCols={breakpointColumnsObj}
@@ -130,10 +134,6 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
             ))}
           </Masonry>
         </div>
-        <SearchPalette
-          filters={cardsDefinition}
-          onFilterClick={c => dispatch({ type: 'setcards', cards: addCard(cards, c.id) })}
-        />
       </div>
     </>
   );
@@ -154,7 +154,9 @@ const query = {
   band_gap: { $gte: 0, $lte: 3.2 },
   crystal_system: { $in: ['hexagonal', 'monoclinic'] },
   'spacegroup.number': { $in: ['0', '1', '2'] },
-  'spacegroup.symbol': { $in: ['C222', 'Cmcm', 'Cmm2', 'Cmme'] }
+  'spacegroup.symbol': { $in: ['C222', 'Cmcm', 'Cmm2', 'Cmme'] },
+  nelements: 2,
+  elements: 'Re-Ru-Pd-Cd-Ir'
 };
 
 // in dielectricity

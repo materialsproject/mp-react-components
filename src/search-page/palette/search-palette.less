@@ -4,13 +4,11 @@
   //transition: height 0.2s ease-out, flex 0.2s ease-out, padding 0.2s;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 200;
+  margin-bottom: 10px;
   .elevation-1();
-  align-self: baseline;
-  max-width: 230px;
-  .flex(column);
+  .flex(row);
   .search-palette-header {
     padding: 10px;
-    border-bottom: 1px solid lightgrey;
     .flex(row);
     align-items: center;
     justify-content: space-between;
@@ -24,10 +22,13 @@
     }
   }
   .filters {
+    .flex-container-sized();
+    .flex(row);
     .filter {
-      padding: 15px;
+      .flex-container-sized();
+      padding: 10px;
       cursor: pointer;
-      border-bottom: 1px solid #eeeeee;
+      border-left: 1px solid #d6d9d8;
       &:hover {
         background-color: lightgrey;
       }

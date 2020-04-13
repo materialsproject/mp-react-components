@@ -13,7 +13,7 @@ export enum CardState {
   DIRTY = 'dirty'
 }
 
-interface Widget {
+export interface Widget {
   name?: string | null;
   latexName?: string | null;
   type: WIDGET;
@@ -207,6 +207,31 @@ export const cardsDefinition: Card[] = [
       }
     ]
   },
+  {
+    title: 'External Provenance',
+    id: 'provenance',
+    allowMultipleInstances: false,
+    widgets: [
+      {
+        type: WIDGET.CHECKBOX_LIST,
+        name: null,
+        id: 'ck',
+        configuration: {
+          checkboxes: [
+            {
+              label: 'ICSD',
+              name: 'has_icsd_id'
+            },
+            {
+              label: 'Expt. ICSD',
+              name: 'has_icsd_exptl_id'
+            }
+          ]
+        }
+      }
+    ]
+  },
+
   /*{
     title: 'Has properties',
     id: 'has_properties',
