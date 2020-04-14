@@ -117,7 +117,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: "Poisson's Ratio",
-        id: 'elasticity.homogeneous_poisson',
+        id: 'homogeneous_poisson',
         configuration: {
           // we can add mode
           handle: 2,
@@ -128,7 +128,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Elastic Anisotropy',
-        id: 'elasticity.universal_anisotropy',
+        id: 'universal_anisotropy',
         configuration: {
           // we can add mode
           handle: 2,
@@ -138,7 +138,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Shear Modulus',
-        id: 'elasticity.G_Voigt_Reuss_Hill',
+        id: 'G_Voigt_Reuss_Hill',
         latexName: '$\\text{G}_\\text{RVH}$',
         configuration: {
           // we can add mode
@@ -150,7 +150,7 @@ export const cardsDefinition: Card[] = [
         type: WIDGET.SLIDERS,
         name: 'Bulk Modulus',
         latexName: '$\\text{K}_\\text{RVH}$',
-        id: 'elasticity.K_Voigt_Reuss_Hill',
+        id: 'K_Voigt_Reuss_Hill',
         configuration: {
           // we can add mode
           handle: 2,
@@ -161,12 +161,12 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Dielectricity',
-    id: 'dielectricity',
+    id: 'diel',
     allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
-        id: 'diel.n',
+        id: 'n',
         latexName: '$\\epsilon_{poly}{^\\infty}$',
         configuration: {
           domain: [1, 158]
@@ -174,7 +174,7 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        id: 'diel.poly_total',
+        id: 'poly_total',
         latexName: '$\\epsilon_{poly}$',
         configuration: {
           domain: [2, 257]
@@ -182,7 +182,7 @@ export const cardsDefinition: Card[] = [
       },
       {
         type: WIDGET.SLIDERS,
-        id: 'diel.poly_electronic',
+        id: 'poly_electronic',
         name: 'Refractive index',
         configuration: {
           domain: [1, 17]
@@ -192,12 +192,12 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Piezoelectricity',
-    id: 'piezoelectricity',
+    id: 'piezo',
     allowMultipleInstances: false,
     widgets: [
       {
         type: WIDGET.SLIDERS,
-        id: 'piezo.eij_max',
+        id: 'eij_max',
         name: 'Piezoelectric Modulus',
         latexName: '$\\lVert {e}_{ij} \\rVert_{\\max}$',
         configuration: {
@@ -406,8 +406,8 @@ export const initialState: CS = {
 };
 
 addCard(initialState, 'elasticity');
-addCard(initialState, 'dielectricity');
-addCard(initialState, 'piezoelectricity');
+addCard(initialState, 'diel');
+addCard(initialState, 'piezo');
 addCard(initialState, 'space');
 addCard(initialState, 'tag');
 
