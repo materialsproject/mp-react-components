@@ -12,7 +12,7 @@ jest.mock('./periodic-element/periodic-element.detailed.less', () => {});
 const enabled = ['H', 'Li'];
 
 describe('<SelectableTable/>', () => {
-  it('should be rendered', () => {
+  fit('should be rendered', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [...enabled], [], mockCallback);
     expect(wrapper.find('.table-container').length).toBe(1);
@@ -97,16 +97,15 @@ function renderElement(
   maxNumber = 5
 ) {
   // we use mount to test the rendering of the underlying elements
+  //TODO(chab) onStateChange actually belongs to the context :(
   return mount(
-    <PeriodicContext>
-      <SelectableTable
-        enabledElements={enabled}
-        disabledElements={disabled}
-        forwardOuterChange={true}
-        onStateChange={onStateChange}
-        hiddenElements={hidden}
-        maxElementSelectable={maxNumber}
-      />
+    <PeriodicContext
+      enabledElements={enabled}
+      disabledElements={disabled}
+      hiddenElements={hidden}
+      forwardOuterChange={true}
+    >
+      <SelectableTable onStateChange={onStateChange} maxElementSelectable={maxNumber} />
     </PeriodicContext>
   );
 }
