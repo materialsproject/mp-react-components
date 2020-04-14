@@ -18,13 +18,13 @@ describe('<SelectableTable/>', () => {
     expect(wrapper.find('.table-container').length).toBe(1);
     expect(wrapper.find('.mat-element').length).toBe(120);
     expect(mockCallback).toHaveBeenCalledTimes(1);
-    expect(mockCallback).toBeCalledWith(enabled);
+    expect(mockCallback).toBeCalledWith({ disabledElements: [], enabledElements: enabled });
   });
   it('callback sgould be correctly called', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [], [], mockCallback);
     expect(mockCallback).toHaveBeenCalledTimes(1);
-    expect(mockCallback).toBeCalledWith([]);
+    expect(mockCallback).toBeCalledWith({ disabledElements: [], enabledElements: [] });
   });
 
   it('clicking on an element should call the callback', () => {
@@ -35,7 +35,10 @@ describe('<SelectableTable/>', () => {
       .at(1)
       .simulate('click'); // click on he
     expect(mockCallback).toHaveBeenCalledTimes(2);
-    expect(mockCallback).toBeCalledWith(['H', 'Li', 'He']);
+    expect(mockCallback).toBeCalledWith({
+      disabledElements: [],
+      enabledElements: ['H', 'Li', 'He']
+    });
   });
 
   //TODO(layout/callback/detailed)
@@ -43,19 +46,19 @@ describe('<SelectableTable/>', () => {
     const mockCallback = jest.fn();
     const wrapper = renderElement([], [], [], mockCallback, 1);
     expect(mockCallback).toHaveBeenCalledTimes(1);
-    expect(mockCallback).toBeCalledWith([]);
+    expect(mockCallback).toBeCalledWith({ disabledElements: [], enabledElements: [] });
     wrapper
       .find('.mat-element')
       .at(1)
       .simulate('click'); // click on he
     expect(mockCallback).toHaveBeenCalledTimes(2);
-    expect(mockCallback).toBeCalledWith(['He']);
+    expect(mockCallback).toBeCalledWith({ disabledElements: [], enabledElements: ['He'] });
     wrapper
       .find('.mat-element')
       .at(2)
       .simulate('click'); // click on li
     expect(mockCallback).toHaveBeenCalledTimes(3);
-    expect(mockCallback).toBeCalledWith(['Li']);
+    expect(mockCallback).toBeCalledWith({ disabledElements: [], enabledElements: ['Li'] });
   });
 
   //TODO(chab) changing the props should RENDER the table

@@ -141,3 +141,14 @@ export class ObjectRegistry {
     return this.objectRegistry[uuid];
   }
 }
+
+export function mapArrayToBooleanObject(array: any, value: boolean = true) {
+  if (Array.isArray(array)) {
+    return array.reduce((acc, id) => {
+      acc[id] = value;
+      return acc;
+    }, {});
+  } else {
+    return array;
+  }
+}

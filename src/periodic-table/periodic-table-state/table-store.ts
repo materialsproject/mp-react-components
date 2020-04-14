@@ -8,6 +8,7 @@ import {
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
+import { mapArrayToBooleanObject } from '../../crystal-toolkit-components/components-v2/Simple3DScene/utils';
 
 // makes an abstraction on top of process
 declare const process: any; // via dotenv
@@ -45,21 +46,29 @@ export function getPeriodicSelectionStore() {
     !process.env.DEBUG && !(process.env.NODE_ENV === 'test')
       ? state$.pipe(shareReplay(1))
       : state$.pipe(
-          tap(s => {}),
+          tap(s => {
+            /*console.log(s)*/
+          }),
           shareReplay(1)
         );
   let lastElementsToggled: string = '';
   const actions = {
+    // only use it in test, instead, change the props of the context react element
     init: (initialState: State = defaultState) => {
       // use object assign instead
-      if (initialState.disabledElements) state.disabledElements = initialState.disabledElements;
-      if (initialState.enabledElements) state.enabledElements = initialState.enabledElements;
-      if (initialState.hiddenElements) state.hiddenElements = initialState.hiddenElements;
+
+      if (initialState.disabledElements)
+        state.disabledElements = mapArrayToBooleanObject(initialState.disabledElements);
+      if (initialState.enabledElements)
+        state.enabledElements = mapArrayToBooleanObject(initialState.enabledElements);
+      if (initialState.hiddenElements)
+        state.hiddenElements = mapArrayToBooleanObject(initialState.hiddenElements);
       if (initialState.detailedElement) state.detailedElement = initialState.detailedElement;
       if (initialState.forwardOuterChange)
         state.forwardOuterChange = initialState.forwardOuterChange;
-      state$.next(state);
+      state$.next({ ...state });
     },
+    selectionStyle: 'select',
     setForwardChange: fwdChange => (state.forwardOuterChange = fwdChange),
     setEnabledElements: (enabledElements: any) =>
       (state = { ...state, enabledElements }) && state$.next(state),
@@ -74,6 +83,16 @@ export function getPeriodicSelectionStore() {
     addEnabledElement: (enabledElement: string) =>
       (state.enabledElements = { ...state.enabledElements, [enabledElement]: true }) &&
       state$.next(state),
+    toggleDisabledElement: (disabledElement: string) => {
+      if (!state.disabledElements[disabledElement]) {
+        state.disabledElements = { ...state.disabledElements, [disabledElement]: true };
+      } else {
+        const _s = { ...state.disabledElements };
+        delete _s[disabledElement];
+        state.disabledElements = _s;
+      }
+      state$.next({ ...state, forwardOuterChange: actions.selectionStyle === 'enableDisable' });
+    },
     addDisabledElement: (disabledElement: string) =>
       (state.disabledElements = { ...state.disabledElements, [disabledElement]: true }) &&
       state$.next(state),
@@ -134,13 +153,7 @@ export const PeriodicSelectionContext = React.createContext({
  * Be careful, as this will trigger a rendering every time a component is selected/unselected
  *
  **/
-export function useElements(
-  initialDisabledElements?: any,
-  initialEnabledElements?: any,
-  initialHiddenElements?: any,
-  maxElementSelection: number = 10,
-  onStateChange?: any
-) {
+export function useElements(maxElementSelection: number = 10, onStateChange?: any) {
   const [disabledElements, setDisabled] = React.useState({});
   const [enabledElements, setEnabled] = React.useState({});
   const [hiddenElements, setHiddenElements] = React.useState({});
@@ -161,27 +174,25 @@ export function useElements(
     const enabledElementsSubscription = observable
       .pipe(
         //tap(a => console.log(a)),
-        map(({ enabledElements, forwardOuterChange }: any) => ({
+        map(({ enabledElements, disabledElements, forwardOuterChange }: any) => ({
           enabledElements,
+          disabledElements,
           forwardOuterChange
         })),
-        distinctUntilKeyChanged('enabledElements')
+        distinctUntilChanged((p, q) => {
+          return (
+            p.enabledElements === q.enabledElements && p.disabledElements === q.disabledElements
+          );
+        })
       )
-      .subscribe(({ enabledElements, forwardOuterChange }) => {
-        forwardOuterChange && onStateChange && onStateChange(Object.keys(enabledElements));
+      .subscribe(({ enabledElements, disabledElements, forwardOuterChange }) => {
+        forwardOuterChange &&
+          onStateChange &&
+          onStateChange({
+            enabledElements: Object.keys(enabledElements),
+            disabledElements: Object.keys(disabledElements)
+          });
       });
-
-    if (initialDisabledElements && initialEnabledElements && initialHiddenElements) {
-      actions.init({
-        enabledElements: initialEnabledElements,
-        hiddenElements: initialHiddenElements,
-        disabledElements: initialDisabledElements,
-        forwardOuterChange: true,
-        detailedElement: null
-      });
-    } else {
-      // actually make that the only way, and force the init somewhere else
-    }
 
     // clean up subscription;
     return () => {
