@@ -24,6 +24,7 @@ export interface Widget {
 export interface Card {
   title: string;
   widgets: Widget[];
+  bypassIdForKey?: true;
   dragging?: boolean;
   id: string;
   activeInstance?: number;
@@ -39,6 +40,7 @@ export const cardsDefinition: Card[] = [
   {
     title: 'General',
     id: 'general',
+    bypassIdForKey: true,
     allowMultipleInstances: false,
     widgets: [
       {
@@ -99,7 +101,7 @@ export const cardsDefinition: Card[] = [
       {
         type: WIDGET.SLIDERS,
         name: 'Volume',
-        id: 'volumne',
+        id: 'volume',
         configuration: {
           // we can add mode
           handle: 2,
@@ -314,7 +316,7 @@ export const cardsDefinition: Card[] = [
   },
   {
     title: 'Tag search',
-    id: 'tag',
+    id: 'tags',
     allowMultipleInstances: false,
     widgets: [
       {
@@ -409,7 +411,7 @@ addCard(initialState, 'elasticity');
 addCard(initialState, 'diel');
 addCard(initialState, 'piezo');
 addCard(initialState, 'space');
-addCard(initialState, 'tag');
+addCard(initialState, 'tags');
 
 // state is composed of
 //  - > [ {cardDef, cardSettings } ]

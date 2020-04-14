@@ -20,15 +20,135 @@ import {
 } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
 import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
-import Grid from './search-page/card-grid';
-import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
-import Select from './search-page/group-space-search/property-search';
-import TagSearch from './search-page/tags/tag-search';
 import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
+
+import katex from 'katex';
+
+const latexify = (string, options) => {
+  const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
+  const blockRegularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]/g;
+
+  const stripDollars = stringToStrip =>
+    stringToStrip[0] === '$' && stringToStrip[1] !== '$'
+      ? stringToStrip.slice(1, -1)
+      : stringToStrip.slice(2, -2);
+
+  const getDisplay = stringToDisplay =>
+    stringToDisplay.match(blockRegularExpression) ? 'block' : 'inline';
+
+  const renderLatexString = (s, t) => {
+    let renderedString;
+    try {
+      // returns HTML markup
+      renderedString = katex.renderToString(
+        s,
+        t === 'block' ? Object.assign({ displayMode: true }, options) : options
+      );
+    } catch (err) {
+      console.error('couldn`t convert string', s);
+      return s;
+    }
+    return renderedString;
+  };
+
+  const result: any[] = [];
+
+  const latexMatch = string.match(regularExpression);
+  const stringWithoutLatex = string.split(regularExpression);
+
+  if (latexMatch) {
+    stringWithoutLatex.forEach((s, index) => {
+      result.push({
+        string: s,
+        type: 'text'
+      });
+      if (latexMatch[index]) {
+        result.push({
+          string: stripDollars(latexMatch[index]),
+          type: getDisplay(latexMatch[index])
+        });
+      }
+    });
+  } else {
+    result.push({
+      string,
+      type: 'text'
+    });
+  }
+
+  const processResult = resultToProcess => {
+    const newResult = resultToProcess.map(r => {
+      if (r.type === 'text') {
+        return r.string;
+      }
+      return <span dangerouslySetInnerHTML={{ __html: renderLatexString(r.string, r.type) }} />;
+    });
+
+    return newResult;
+  };
+
+  // Returns list of spans with latex and non-latex strings.
+  return processResult(result);
+};
+
+class Latex extends React.Component<any, any> {
+  static defaultProps = {
+    children: '',
+    displayMode: false,
+    output: 'htmlAndMathml',
+    leqno: false,
+    fleqn: false,
+    throwOnError: true,
+    errorColor: '#cc0000',
+    macros: {},
+    minRuleThickness: 0,
+    colorIsTextColor: false,
+    strict: 'warn',
+    trust: false
+  };
+
+  render() {
+    const {
+      children,
+      displayMode,
+      leqno,
+      fleqn,
+      throwOnError,
+      errorColor,
+      macros,
+      minRuleThickness,
+      colorIsTextColor,
+      maxSize,
+      maxExpand,
+      strict,
+      trust
+    } = this.props;
+    const output = 'html';
+
+    const renderUs = latexify(children, {
+      displayMode,
+      output,
+      leqno,
+      fleqn,
+      throwOnError,
+      errorColor,
+      macros,
+      minRuleThickness,
+      colorIsTextColor,
+      maxSize,
+      maxExpand,
+      strict,
+      trust
+    });
+    renderUs.unshift(null);
+    renderUs.unshift('span'); //put everything in a span
+    // spread renderUs out to children args
+    return React.createElement.apply(null, renderUs);
+  }
+}
 
 let elements: any[] = [];
 
@@ -152,6 +272,7 @@ function TestComponent(props: any) {
 
 ReactDOM.render(
   <>
+    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
     <ExportableGrid />
   </>,
 

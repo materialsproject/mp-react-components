@@ -15,6 +15,10 @@ import {
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 import { SearchPalette } from './palette/search-palette';
 
+// Be sure to include styles at some point, probably during your bootstraping
+import '@trendmicro/react-buttons/dist/react-buttons.css';
+import '@trendmicro/react-dropdown/dist/react-dropdown.css';
+
 const breakpointColumnsObj = {
   default: 3,
   1200: 3,
@@ -47,7 +51,7 @@ const reducer = (state: any, action: any) => {
     }
     case 'setcards': {
       console.log('new state', action);
-      state.onChangeRef.current(state);
+      if (!action.meta || action.meta !== 'move') state.onChangeRef.current(state);
       return { ...action.cards };
     }
     case 'collapse': {
@@ -89,7 +93,7 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
 
   // TODO (pass cards and setCards and pull out)
   const moveCard = (id: string, atIndex: number) => {
-    dispatch({ type: 'setcards', cards: smoveCard(cards, id, atIndex) });
+    dispatch({ type: 'setcards', cards: smoveCard(cards, id, atIndex), meta: 'move' });
   };
 
   const findCard = (id: string) => {
@@ -113,8 +117,15 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
         /* which leads to bad performance */}
         <SearchPalette
           filters={cardsDefinition}
-          onFilterClick={c => dispatch({ type: 'setcards', cards: addCard(cards, c.id) })}
+          onFilterClick={c =>
+            dispatch({ type: 'setcards', cards: addCard(cards, c.id), meta: 'move' })
+          }
         />
+        {cards.cardDef.length === 0 ? (
+          <h1> You do not have any filters. Add a filter to start your search</h1>
+        ) : (
+          ''
+        )}
         <div className="drag-zone" ref={drop}>
           <Masonry
             breakpointCols={breakpointColumnsObj}
