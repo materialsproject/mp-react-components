@@ -270,9 +270,9 @@ function TestComponent(props: any) {
   );
 }
 
+//    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
-    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
     <ExportableGrid />
   </>,
 

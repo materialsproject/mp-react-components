@@ -1,4 +1,4 @@
-import React, { useRef, useReducer, useEffect } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
@@ -14,7 +14,6 @@ import {
 } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 import { SearchPalette } from './palette/search-palette';
-
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
@@ -71,6 +70,7 @@ const reducer = (state: any, action: any) => {
       const card = state.map[action.id];
       card.state = CardState.DIRTY;
       card.values[idx] = value;
+      card.widgetState[idx] = CardState.DIRTY;
       console.log('overall state', state);
       state.onChangeRef.current(state);
       return { ...state };

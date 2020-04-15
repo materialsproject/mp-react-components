@@ -135,10 +135,10 @@ function ExportableGrid() {
         </span>
       </ReactTooltip>
 
-      <button data-tip data-for="no-bs" onClick={() => fetchElements()}>
+      {/*<button data-tip data-for="no-bs" onClick={() => fetchElements()}>
         {' '}
         MAKE REQUEST
-      </button>
+      </button>*/}
       <div className="form-check">
         <label>
           <input
@@ -203,6 +203,9 @@ function ExportableGrid() {
               // look at card widget
               const def: Card = card.cardDef;
               def.widgets.forEach((widget: Widget, widgetIndex) => {
+                if (card.cardSettings.widgetState[widgetIndex] === CardState.PRISTINE) {
+                  return;
+                }
                 if (widget.type === WIDGET.SLIDERS) {
                   const key = widget.id;
                   const prefix = def.bypassIdForKey ? '' : def.id + '.';

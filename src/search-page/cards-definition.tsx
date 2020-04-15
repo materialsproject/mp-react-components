@@ -337,7 +337,9 @@ const getStartStateFromCard = (id: string) => {
   const card = DICO[id];
   const collapsed = false;
   const disabled = false;
+  const widgetState: CardState[] = [];
   const values: any[] = card.widgets.reduce((outerAcc, widget) => {
+    widgetState.push(CardState.PRISTINE);
     switch (widget.type) {
       case WIDGET.CHECKBOX_LIST: {
         widget.configuration.checkboxes.forEach(() => outerAcc.push(false));
@@ -350,7 +352,7 @@ const getStartStateFromCard = (id: string) => {
     }
     return outerAcc;
   }, []);
-  return { id, collapsed, disabled, values, state: CardState.PRISTINE };
+  return { id, collapsed, disabled, values, widgetState, state: CardState.PRISTINE };
 };
 
 export interface CS {
