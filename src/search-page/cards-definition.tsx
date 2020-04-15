@@ -23,10 +23,12 @@ export interface Widget {
 }
 
 export interface Card {
+  hero?: boolean; // an hero card take all the width
   title: string;
   widgets: Widget[];
   bypassIdForKey?: true;
   dragging?: boolean;
+  permanent?: boolean;
   id: string;
   activeInstance?: number;
   allowMultipleInstances: boolean;
@@ -41,6 +43,8 @@ export const cardsDefinition: Card[] = [
   {
     title: 'Periodic table',
     id: 'periodic',
+    hero: true,
+    permanent: true,
     bypassIdForKey: true,
     allowMultipleInstances: false,
     widgets: [
@@ -341,12 +345,22 @@ export interface CS {
   cardDef: Card[];
   cardSettings: { id: string; collapsed: boolean; disabled: boolean; values: any[] }[];
   map: any;
+  heroCardDef?: Card;
+  heroCardSetting?: any;
+  dragInitialIndex?: number | null;
   onChangeRef?: React.MutableRefObject<Function>;
 }
 
 export function addCard(state: CS, id: string) {
   const definition = DICO[id];
   const settings = getStartStateFromCard(id);
+
+  if (definition.hero) {
+    state.heroCardDef = definition;
+    state.heroCardSetting = getStartStateFromCard(id);
+    state.map[id] = state.heroCardSetting; // settings are directly updated from the component
+    return state;
+  }
 
   if (!definition.activeInstance) {
     definition.activeInstance = 0;

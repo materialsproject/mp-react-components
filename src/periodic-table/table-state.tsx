@@ -19,6 +19,7 @@ interface SelectableTableProps {
   forceTableLayout?: TableLayout;
   /** wheter to forward non-managed changes */
   forwardOuterChange?: boolean;
+  children?;
 }
 
 export function SelectableTable(props: SelectableTableProps) {

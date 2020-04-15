@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
@@ -6,6 +6,7 @@ import {
   addCard,
   cardsDefinition,
   CardState,
+  CS,
   initialState,
   ItemTypes,
   sdeleteCard,
@@ -36,21 +37,33 @@ export interface GridState {
 
 const startState = initialState;
 
-const reducer = (state: any, action: any) => {
+const reducer = (state: CS, action: any) => {
   switch (action.type) {
     case 'enddragging': {
+      console.log('the end', action.id);
       const card = state.map[action.id];
       card.dragging = false;
       return { ...state };
     }
+
+    case 'canceldragging': {
+      const card = state.map[action.id];
+      card.dragging = false;
+      console.log('moving back', action.id, state.dragInitialIndex);
+      const ns = smoveCard(state, action.id, state.dragInitialIndex!);
+      state.dragInitialIndex = null;
+      return { ...ns };
+    }
     case 'startdragging': {
       const card = state.map[action.id];
       card.dragging = true;
+      state.dragInitialIndex = sfindCard(state, action.id);
+      console.log('moving now', action.id, state.dragInitialIndex);
       return { ...state };
     }
     case 'setcards': {
       console.log('new state', action);
-      if (!action.meta || action.meta !== 'move') state.onChangeRef.current(state);
+      if (!action.meta || action.meta !== 'move') state.onChangeRef!.current(state);
       return { ...action.cards };
     }
     case 'collapse': {
@@ -61,8 +74,19 @@ const reducer = (state: any, action: any) => {
     case 'disable': {
       const card = state.map[action.id];
       card.disabled = !card.disabled;
-      state.onChangeRef.current(state);
+      state.onChangeRef!.current(state);
       return { ...state };
+    }
+    case 'deleteCard': {
+      const cardId = action.id;
+      const ns = sdeleteCard(state, cardId);
+      state.onChangeRef!.current(ns);
+      return { ...ns };
+    }
+    case 'moveCard': {
+      const { id, targetId } = action;
+      const ns = smoveCard(state, id, sfindCard(state, targetId));
+      return { ...ns };
     }
     case 'setValue': {
       // expect cardId, widgetId, and value index
@@ -72,9 +96,8 @@ const reducer = (state: any, action: any) => {
       card.values[idx] = value;
       card.widgetState[idx] = CardState.DIRTY;
       console.log('overall state', state);
-      state.onChangeRef.current(state);
+      state.onChangeRef!.current(state);
       return { ...state };
-      break;
     }
 
     default:
@@ -89,29 +112,19 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
     onChangeRef.current = onChange;
   }, [onChange]);
 
+  //TODO(chab) current implementation is naive, we should just have the list of card values, with
+  // a pointer to the definition, and an array that old the layout
   const [cards, dispatch] = useReducer(reducer, { ...startState, onChangeRef });
-
-  // TODO (pass cards and setCards and pull out)
-  const moveCard = (id: string, atIndex: number) => {
-    dispatch({ type: 'setcards', cards: smoveCard(cards, id, atIndex), meta: 'move' });
-  };
-
-  const findCard = (id: string) => {
-    const index = sfindCard(cards, id);
-    return {
-      index: index
-    };
-  };
-
   const [, drop] = useDrop({ accept: ItemTypes.CARD });
-  const deleteCard = (id: string) => {
-    dispatch({ type: 'setcards', cards: sdeleteCard(cards, id) });
-  };
-
-  const periodic = cards.cardDef.findIndex(c => c.id === 'periodic');
-  console.log(periodic);
 
   connectDropTarget(ref);
+
+  // the issue with dispatch is that the upper component will
+  // render, if you want to use useMemo, we can let the child update its state
+  // and then memoize the array ( if the reference is the same, we do not render )
+  const children = cards.cardDef.map((card, idx) => (
+    <SearchCard {...card} {...cards.cardSettings[idx]} key={card.id} dispatch={dispatch} />
+  ));
 
   return (
     <>
@@ -130,11 +143,11 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
           ''
         )}
 
-        <SearchCard
-          {...cards.cardDef[periodic]}
-          {...cards.cardSettings[periodic]}
-          dispatch={dispatch}
-        />
+        {cards.heroCardDef ? (
+          <SearchCard {...cards.heroCardDef} {...cards.heroCardSetting} dispatch={dispatch} />
+        ) : (
+          ''
+        )}
 
         <div className="drag-zone" ref={drop}>
           <Masonry
@@ -142,19 +155,7 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {cards.cardDef.map((card, idx) =>
-              card.id === 'periodic' ? null : (
-                <SearchCard
-                  {...card}
-                  {...cards.cardSettings[idx]}
-                  key={card.id}
-                  deleteCard={deleteCard}
-                  moveCard={moveCard}
-                  dispatch={dispatch}
-                  findCard={findCard}
-                />
-              )
-            )}
+            {children}
           </Masonry>
         </div>
       </div>
@@ -166,6 +167,7 @@ export default DropTarget(ItemTypes.CARD, {}, connect => ({
   connectDropTarget: connect.dropTarget()
 }))(Grid);
 
+/////////////////////////////////
 // sliders.. take $gte and $lte
 // spacegroups.. just put everything in
 const query = {

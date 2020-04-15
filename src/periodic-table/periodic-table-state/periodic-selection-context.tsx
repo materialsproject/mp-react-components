@@ -4,6 +4,7 @@ import { useMemo, useEffect } from 'react';
 
 export function PeriodicContext(props: any) {
   // We consider that the store will never change once the element is mounted
+  // the store will deliver changes, but will not change itself
   const store = useMemo(() => getPeriodicSelectionStore(), []);
 
   useEffect(() => {

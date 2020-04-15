@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DualSlider } from './dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
@@ -19,8 +19,7 @@ import Latex from 'react-latex';
 import SP from './group-space-search/property-search';
 import TagSearch from './tags/tag-search';
 import { PeriodicContext, SelectableTable } from '../periodic-table';
-
-const DRAGGING_ITEMS: any = {};
+import TableSelectionSelector from './table-selector';
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -54,7 +53,11 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
     case WIDGET.PERIODIC_TABLE: {
       return (
         <PeriodicContext {...widgetProps}>
-          <SelectableTable onStateChange={change => onChange(change)} maxElementSelectable={5} />
+          <>
+            <SelectableTable onStateChange={change => onChange(change)} maxElementSelectable={5}>
+              <TableSelectionSelector />
+            </SelectableTable>
+          </>
         </PeriodicContext>
       );
     }
@@ -63,9 +66,6 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
 };
 
 export interface CardProps extends Card {
-  moveCard: Function;
-  findCard: Function;
-  deleteCard: Function;
   dispatch: Function;
   connectDragSource: ConnectDragSource;
   connectDropTarget: ConnectDropTarget;
@@ -76,14 +76,13 @@ export interface CardProps extends Card {
 
 const SearchCard: React.FC<CardProps> = (props: CardProps) => {
   const [isActive, setActive] = useState(true);
-  const opacity = props.dragging ? 0.4 : 1;
+  const opacity = (props as any).isDragging ? 0.4 : 1; // kind of magical
   const ref = useRef(null);
-  props.connectDragSource(ref);
-  props.connectDropTarget(ref);
 
-  const remove = id => {
-    props.deleteCard(id);
-  };
+  useEffect(() => {
+    props.connectDragSource(ref);
+    props.connectDropTarget(ref);
+  }, []);
 
   return (
     <div
@@ -97,9 +96,12 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
         {props.title}
 
         <div className="card-tools">
-          <div className="collapser" onClick={() => remove(props.id)}>
+          {!props.permanent && <div
+            className="collapser"
+            onClick={() => props.dispatch({ type: 'deleteCard', id: props.id })}
+          >
             <AiOutlineDelete />
-          </div>
+          </div>}
           <div
             className="collapser"
             onClick={() => props.dispatch({ type: 'collapse', id: props.id })}
@@ -141,7 +143,6 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
             )}
             {getWidget(widget.type, widget.configuration, props.values[idx], value => {
               const id = props.id;
-              //console.log(idx, widget, value, props.id);
               props.dispatch({ type: 'setValue', id: id, idx, widget, value });
             })}
           </div>
@@ -160,8 +161,7 @@ export default DropTarget(
       const { id: overId } = props;
 
       if (draggedId !== overId) {
-        const { index: overIndex } = props.findCard(overId);
-        props.moveCard(draggedId, overIndex);
+        props.dispatch({ type: 'moveCard', targetId: overId, id: draggedId });
       }
     }
   },
@@ -175,16 +175,15 @@ export default DropTarget(
       beginDrag: (props: CardProps) => {
         props.dispatch({ type: 'startdragging', id: props.id });
         return {
-          id: props.id,
-          originalIndex: props.findCard(props.id).index
+          id: props.id
         };
       },
       endDrag(props: CardProps, monitor: DragSourceMonitor) {
-        const { id: droppedId, originalIndex } = monitor.getItem();
+        const { id: droppedId } = monitor.getItem();
         props.dispatch({ type: 'enddragging', id: droppedId });
         const didDrop = monitor.didDrop();
         if (!didDrop) {
-          props.moveCard(droppedId, originalIndex);
+          props.dispatch({ type: 'canceldragging', id: props.id });
         }
       }
     },

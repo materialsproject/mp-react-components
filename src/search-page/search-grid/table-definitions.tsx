@@ -1,0 +1,143 @@
+import { MatgenUtilities } from '../../utils/matgen';
+import { AiOutlineWarning } from 'react-icons/ai';
+import React from 'react';
+import { Card, CardState, WIDGET, Widget } from '../cards-definition';
+import ReactTooltip from 'react-tooltip';
+
+// fix typings
+export const columns = [
+  {
+    name: 'Material Id',
+    selector: 'material_id',
+    sortable: true
+  },
+  {
+    name: 'Formula',
+    selector: 'full_formula',
+    cell: row => {
+      return (
+        <div dangerouslySetInnerHTML={{ __html: MatgenUtilities.htmlFormula(row.full_formula) }} />
+      );
+    },
+    sortable: true
+  },
+  /*{
+    name: "Spacegroup",
+    selector: "year",
+    sortable: true
+  },*/
+  {
+    name: 'Volume',
+    selector: 'volume',
+    format: r => r.volume.toFixed(2),
+    sortable: true
+  },
+  {
+    name: 'Number of sites',
+    selector: 'nsites',
+    sortable: true
+  },
+  {
+    name: 'Energy above Hull',
+    selector: 'e_above_hull',
+    sortable: true
+  },
+  {
+    name: 'Density',
+    selector: 'density',
+    format: r => r.density.toFixed(2),
+    sortable: true
+  },
+  {
+    name: 'Band Gap',
+    querySelector: 'band_gap.search_gap.band_gap',
+    cell: row => (
+      <div data-tip data-for="no-bs">
+        {' '}
+        {row['band_gap.search_gap.band_gap'].toFixed(2)}
+        <span> {!row['has_bandstructure'] ? <AiOutlineWarning /> : ''}</span>
+      </div>
+    ),
+    selector: r => r['band_gap.search_gap.band_gap'],
+    sortable: true
+  }
+];
+
+export const properties = columns.map(q => (q.querySelector ? q.querySelector : q.selector));
+properties.push('theoretical', 'has_bandstructure', 'tags');
+// search_gap.band_gap does not work
+
+export const onChange = (c, executePost) => {
+  const query = {};
+  // filter cards
+  const cards = c.cardSettings.reduce((acc, card, idx) => {
+    if (card.state !== CardState.PRISTINE && !card.disabled) {
+      acc.push({ cardDef: c.cardDef[idx], cardSettings: card });
+    }
+    return acc;
+  }, []);
+  // write mongodb query
+  if (cards.length === 0 && !c.heroCardSetting && !c.heroCardSetting.disabled) {
+    return;
+  } // do not query for empty cards
+
+  if (
+    c.heroCardSetting &&
+    !c.heroCardSetting.disabled &&
+    c.heroCardSetting.state !== CardState.PRISTINE
+  ) {
+    const state = c.heroCardSetting.values[0];
+    if (state.enabledElements && state.enabledElements.length > 0) {
+      query['elements'] = { $in: state.enabledElements };
+    }
+    if (state.disabledElements && state.disabledElements.length > 0) {
+      if (query['elements']) {
+        query['elements'].$not = { $in: state.disabledElements };
+      } else {
+        query['elements'] = { $not: { $in: state.disabledElements } };
+      }
+    }
+  }
+
+  cards.forEach(card => {
+    // look at card widget
+    const def: Card = card.cardDef;
+    def.widgets.forEach((widget: Widget, widgetIndex) => {
+      if (card.cardSettings.widgetState[widgetIndex] === CardState.PRISTINE) {
+        return;
+      }
+      if (widget.type === WIDGET.SLIDERS) {
+        const key = widget.id;
+        const prefix = def.bypassIdForKey ? '' : def.id + '.';
+        query[prefix + key] = {
+          $gte: card.cardSettings.values[widgetIndex][0],
+          $lte: card.cardSettings.values[widgetIndex][1]
+        };
+      } else if (widget.type === WIDGET.TAG_SEARCH) {
+        card.cardSettings.values[widgetIndex] &&
+          (query[card.cardSettings.id] = card.cardSettings.values[widgetIndex]);
+      } else if (widget.type === WIDGET.SP_SEARCH) {
+        const spaceGroups = card.cardSettings.values[widgetIndex];
+        (spaceGroups && spaceGroups.length > 0) && (query['spacegroup.number'] = {
+          $in: spaceGroups.map(s => s['space-group.number'])
+        });
+      } else if (widget.type === WIDGET.CHECKBOX_LIST) {
+        //TODO(chab) fix the update logic of the widget.
+        console.log(card.cardSettings, card.cardDef);
+        query['provenance'] = card.cardSettings.values[0];
+      }
+    });
+  });
+  // we are queuing update, otherwise, we would trigger a re-render immediately
+  // FIXME(chab) the reducer should be defined here anyway
+  setTimeout(() => {
+    const params = new URLSearchParams();
+    params.append('properties', JSON.stringify(properties));
+    params.append('criteria', JSON.stringify(query));
+    executePost({ data: params }).then(() => {
+      setTimeout(() => {
+        ReactTooltip.rebuild();
+      }, 0);
+    });
+  }, 0);
+};

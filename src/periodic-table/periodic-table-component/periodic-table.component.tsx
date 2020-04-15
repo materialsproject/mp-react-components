@@ -52,6 +52,8 @@ export interface TableProps {
   /** Color used for the lowest value*/
   heatmapMin?: string;
   showSwitcher?: boolean;
+  plugin?: any;
+  children?: any;
 }
 
 export enum TableLayout {
@@ -96,7 +98,7 @@ function computeHeatmap(
 
 // Ultimately, we'll allow people to pass a specific component by using render props
 // the goal is to allow people to insert whatever you want there
-export function TableSpacer({ onTableSwitcherClicked, showSwitcher }: any) {
+export function TableSpacer({ onTableSwitcherClicked, showSwitcher, plugin, children }: any) {
   const detailedElement = useDetailedElement();
 
   return (
@@ -105,7 +107,7 @@ export function TableSpacer({ onTableSwitcherClicked, showSwitcher }: any) {
         {showSwitcher && <div className="table-switcher" onClick={onTableSwitcherClicked}></div>}
         <div className="input-container"></div>
       </div>
-      <div className="second-span"></div>
+      <div className="second-span">{children}</div>
       <div className="element-description">
         {detailedElement && (
           <PeriodicElement
@@ -136,13 +138,15 @@ export function Table({
   heatmapMax,
   heatmapMin,
   colorScheme,
-  showSwitcher
+  showSwitcher,
+  children,
+  plugin
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
-  const isDesktop = useMediaQuery({ minWidth: 992 });
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isDesktop = useMediaQuery({ minWidth: 1236 });
+  const isTablet = useMediaQuery({ minWidth: 900, maxWidth: 1236 });
+  const isMobile = useMediaQuery({ maxWidth: 900 });
 
   // we consider that either those properties are all defined, or not
   const {
@@ -182,6 +186,8 @@ export function Table({
         }`}
       >
         <TableSpacer
+          plugin={plugin}
+          children={children}
           showSwitcher={showSwitcher}
           onTableSwitcherClicked={() => setIsShown(!isShown)}
         />
@@ -230,7 +236,7 @@ export function Table({
                 top: `${legendPosition}%`,
                 background: 'black'
               }}
-            ></div>
+            />
           </div>
         </div>
       )}
