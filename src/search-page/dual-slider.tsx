@@ -72,8 +72,13 @@ export class DualSlider extends Component<any, any> {
   };
 
   onChange = values => {
-    this.props.onChange(values);
-    this.setState({ values });
+    const needChange = values.some((v, idx) => {
+      return v !== this.state.values[idx];
+    });
+    if (needChange) {
+      this.props.onChange(values);
+      this.setState({ values });
+    }
   };
 
   setDomain = domain => {

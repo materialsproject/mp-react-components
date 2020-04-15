@@ -261,7 +261,7 @@ function ExportableGrid() {
 
 export default function gridWithContext() {
   return (
-    <PeriodicContext disabledElements={['H', 'Cl']}>
+    <PeriodicContext>
       <ExportableGrid />
     </PeriodicContext>
   );

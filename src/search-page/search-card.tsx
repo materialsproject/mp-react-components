@@ -18,6 +18,7 @@ import Latex from 'react-latex';
 
 import SP from './group-space-search/property-search';
 import TagSearch from './tags/tag-search';
+import { PeriodicContext, SelectableTable } from '../periodic-table';
 
 const DRAGGING_ITEMS: any = {};
 
@@ -50,6 +51,13 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
     case WIDGET.TAG_SEARCH: {
       return <TagSearch value={widgetValue} onChange={change => onChange(change)}></TagSearch>;
     }
+    case WIDGET.PERIODIC_TABLE: {
+      return (
+        <PeriodicContext {...widgetProps}>
+          <SelectableTable onStateChange={change => onChange(change)} maxElementSelectable={5} />
+        </PeriodicContext>
+      );
+    }
   }
   return <div> no component</div>;
 };
@@ -81,9 +89,9 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
     <div
       ref={ref}
       style={{ opacity }}
-      className={`card small ${props.collapsed ? 'collapsed' : 'expanded'} ${
-        isActive ? 'active' : 'disabled'
-      } `}
+      className={`card ${props.id === 'periodic' ? '' : 'small'} ${
+        props.collapsed ? 'collapsed' : 'expanded'
+      } ${isActive ? 'active' : 'disabled'} `}
     >
       <div className="card-header">
         {props.title}

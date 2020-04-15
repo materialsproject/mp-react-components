@@ -5,7 +5,8 @@ export enum WIDGET {
   CHECKBOX = 'CHECKBOX',
   CHECKBOX_LIST = 'CHECKBOX_LIST',
   SP_SEARCH = 'SP_SEARCH',
-  TAG_SEARCH = 'TAG_SEARCH'
+  TAG_SEARCH = 'TAG_SEARCH',
+  PERIODIC_TABLE = 'PERIODIC_TABLE'
 }
 
 export enum CardState {
@@ -37,6 +38,23 @@ export enum ItemTypes {
 
 //TODO try to use a simple function to render
 export const cardsDefinition: Card[] = [
+  {
+    title: 'Periodic table',
+    id: 'periodic',
+    bypassIdForKey: true,
+    allowMultipleInstances: false,
+    widgets: [
+      {
+        type: WIDGET.PERIODIC_TABLE,
+        id: 'sp',
+        configuration: {
+          hiddenElements: [],
+          disabledElements: [],
+          enabledElements: []
+        }
+      }
+    ]
+  },
   {
     title: 'General',
     id: 'general',
@@ -233,7 +251,6 @@ export const cardsDefinition: Card[] = [
       }
     ]
   },
-
   /*{
     title: 'Has properties',
     id: 'has_properties',
@@ -265,42 +282,7 @@ export const cardsDefinition: Card[] = [
       }
     ]
   },
-  {
-    title: 'A filter',
-    id: 'xzy',
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.CHECKBOX_LIST,
-        name: null,
-        configuration: {
-          checkboxes: [
-            {
-              label: 'Some content'
-            }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    title: 'One more filter',
-    id: 'xzy2',
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.CHECKBOX_LIST,
-        name: null,
-        configuration: {
-          checkboxes: [
-            {
-              label: 'More content'
-            }
-          ]
-        }
-      }
-    ]
-  },*/
+  */
   {
     title: 'Spacegroup search',
     id: 'space', // ID are extrapolated from the data itself
@@ -414,6 +396,7 @@ addCard(initialState, 'diel');
 addCard(initialState, 'piezo');
 addCard(initialState, 'space');
 addCard(initialState, 'tags');
+addCard(initialState, 'periodic');
 
 // state is composed of
 //  - > [ {cardDef, cardSettings } ]

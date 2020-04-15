@@ -108,6 +108,9 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
     dispatch({ type: 'setcards', cards: sdeleteCard(cards, id) });
   };
 
+  const periodic = cards.cardDef.findIndex(c => c.id === 'periodic');
+  console.log(periodic);
+
   connectDropTarget(ref);
 
   return (
@@ -126,23 +129,32 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
         ) : (
           ''
         )}
+
+        <SearchCard
+          {...cards.cardDef[periodic]}
+          {...cards.cardSettings[periodic]}
+          dispatch={dispatch}
+        />
+
         <div className="drag-zone" ref={drop}>
           <Masonry
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {cards.cardDef.map((card, idx) => (
-              <SearchCard
-                {...card}
-                {...cards.cardSettings[idx]}
-                key={card.id}
-                deleteCard={deleteCard}
-                moveCard={moveCard}
-                dispatch={dispatch}
-                findCard={findCard}
-              />
-            ))}
+            {cards.cardDef.map((card, idx) =>
+              card.id === 'periodic' ? null : (
+                <SearchCard
+                  {...card}
+                  {...cards.cardSettings[idx]}
+                  key={card.id}
+                  deleteCard={deleteCard}
+                  moveCard={moveCard}
+                  dispatch={dispatch}
+                  findCard={findCard}
+                />
+              )
+            )}
           </Masonry>
         </div>
       </div>
