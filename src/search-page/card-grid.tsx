@@ -1,23 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import {
-  addCard,
-  cardsDefinition,
-  CardState,
-  CS,
-  initialState,
-  ItemTypes,
-  sdeleteCard,
-  sfindCard,
-  smoveCard
-} from './cards-definition';
+import { addCard, cardsDefinition, initialState, ItemTypes } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 import { SearchPalette } from './palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
+import { reducer } from './grid-reducer';
 
 const breakpointColumnsObj = {
   default: 3,
@@ -36,75 +27,6 @@ export interface GridState {
 }
 
 const startState = initialState;
-
-const reducer = (state: CS, action: any) => {
-  switch (action.type) {
-    case 'enddragging': {
-      console.log('the end', action.id);
-      const card = state.map[action.id];
-      card.dragging = false;
-      return { ...state };
-    }
-
-    case 'canceldragging': {
-      const card = state.map[action.id];
-      card.dragging = false;
-      console.log('moving back', action.id, state.dragInitialIndex);
-      const ns = smoveCard(state, action.id, state.dragInitialIndex!);
-      state.dragInitialIndex = null;
-      return { ...ns };
-    }
-    case 'startdragging': {
-      const card = state.map[action.id];
-      card.dragging = true;
-      state.dragInitialIndex = sfindCard(state, action.id);
-      console.log('moving now', action.id, state.dragInitialIndex);
-      return { ...state };
-    }
-    case 'setcards': {
-      console.log('new state', action);
-      if (!action.meta || action.meta !== 'move') state.onChangeRef!.current(state);
-      return { ...action.cards };
-    }
-    case 'collapse': {
-      const card = state.map[action.id];
-      card.collapsed = !card.collapsed;
-      return { ...state };
-    }
-    case 'disable': {
-      const card = state.map[action.id];
-      card.disabled = !card.disabled;
-      state.onChangeRef!.current(state);
-      return { ...state };
-    }
-    case 'deleteCard': {
-      const cardId = action.id;
-      const card = state.map[action.id];
-      const ns = sdeleteCard(state, cardId);
-      card.state !== CardState.PRISTINE && state.onChangeRef!.current(ns);
-      return { ...ns };
-    }
-    case 'moveCard': {
-      const { id, targetId } = action;
-      const ns = smoveCard(state, id, sfindCard(state, targetId));
-      return { ...ns };
-    }
-    case 'setValue': {
-      // expect cardId, widgetId, and value index
-      const { id, idx, value } = action;
-      const card = state.map[action.id];
-      card.state = CardState.DIRTY;
-      card.values[idx] = value;
-      card.widgetState[idx] = CardState.DIRTY;
-      console.log('overall state', state);
-      state.onChangeRef!.current(state);
-      return { ...state };
-    }
-
-    default:
-      throw new Error('incorrect action' + action.type);
-  }
-};
 
 export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
   const ref = useRef(null);
@@ -138,16 +60,12 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
             dispatch({ type: 'setcards', cards: addCard(cards, c.id), meta: 'move' })
           }
         />
-        {cards.cardDef.length === 0 ? (
+        {cards.cardDef.length === 0 && (
           <h1> You do not have any filters. Add a filter to start your search</h1>
-        ) : (
-          ''
         )}
 
-        {cards.heroCardDef ? (
+        {cards.heroCardDef && (
           <SearchCard {...cards.heroCardDef} {...cards.heroCardSetting} dispatch={dispatch} />
-        ) : (
-          ''
         )}
 
         <div className="drag-zone" ref={drop}>
@@ -184,41 +102,9 @@ const query = {
   nelements: 2,
   elements: 'Re-Ru-Pd-Cd-Ir'
 };
-
 // in dielectricity
 //"diel.pot_ferroelectric":true}
-
 // Tags
 // "tags":"[\"dsfds\"]"
-
 // External provenance
 //"has_icsd_id":true,"has_icsd_exptl_id":true}
-
-/*
-const mapDispatch => dispatch => ({
-  reset: () => dispatch({ type: 'reset' }),
-  addTest: () => dispatch({ type: 'addTest' }),
-  removeTest: () => dispatch({ type: 'removeTest' })
-})
-
-const Button = (props) => (
-  <button
-    type="button"
-    onClick={props.onClick}>
-    {props.children}
-  </button>
-);
-
-const App = () => {
-  const [state, dispatch] = getReducer();
-  const actions = mapDispatch(dispatch)
-  return (
-    <React.Fragment>
-      {state.test}
-      <Button onClick={actions.addTest}>Add 1</Button>
-      <Button onClick={actions.removeTest}>Remove 1</Button>
-      <Button onClick={actions.reset}>Reset</Button>
-    </React.Fragment>
-  );
-};
- */

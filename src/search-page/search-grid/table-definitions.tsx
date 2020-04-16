@@ -89,16 +89,24 @@ export const onChange = (c, executePost) => {
     !c.heroCardSetting.disabled &&
     c.heroCardSetting.state !== CardState.PRISTINE
   ) {
-    const state = c.heroCardSetting.values[0];
-    if (state.enabledElements && state.enabledElements.length > 0) {
-      query['elements'] = { $in: state.enabledElements };
-    }
-    if (state.disabledElements && state.disabledElements.length > 0) {
-      if (query['elements']) {
-        query['elements'].$not = { $in: state.disabledElements };
-      } else {
-        query['elements'] = { $not: { $in: state.disabledElements } };
+    const state = c.heroCardSetting.values[0]; // holds the enabled disabled/enabled elements
+
+    if (state) {
+      if (state.enabledElements && state.enabledElements.length > 0) {
+        query['elements'] = { $in: state.enabledElements };
       }
+      if (state.disabledElements && state.disabledElements.length > 0) {
+        if (query['elements']) {
+          query['elements'].$not = { $in: state.disabledElements };
+        } else {
+          query['elements'] = { $not: { $in: state.disabledElements } };
+        }
+      }
+    }
+    const maxNumberOfElements = c.heroCardSetting.values[1];
+    console.log(maxNumberOfElements);
+    if (maxNumberOfElements && maxNumberOfElements > 0) {
+      query['nelements'] = maxNumberOfElements;
     }
   }
 
@@ -133,6 +141,13 @@ export const onChange = (c, executePost) => {
       }
     });
   });
+
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // if there is only one key ( = number of elements ), we do not query
+  if (Object.keys(query).length === 1 && !!query['nelements']) {
+    return;
+  }
+
   // we are queuing update, otherwise, we would trigger a re-render immediately
   // FIXME(chab) the reducer should be defined here anyway
   setTimeout(() => {

@@ -5,7 +5,6 @@ import ReactSwitch from 'react-switch';
 import { Card, ItemTypes, WIDGET } from './cards-definition';
 import { AiOutlineDelete, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
-import { CheckboxList } from './checkbox-list';
 import {
   ConnectDragSource,
   ConnectDropTarget,
@@ -20,6 +19,7 @@ import SP from './group-space-search/property-search';
 import TagSearch from './tags/tag-search';
 import { PeriodicContext, SelectableTable } from '../periodic-table';
 import TableSelectionSelector from './table-selector';
+import { CheckboxList } from './checkboxes-list/checkbox-list';
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -51,12 +51,31 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
       return <TagSearch value={widgetValue} onChange={change => onChange(change)}></TagSearch>;
     }
     case WIDGET.PERIODIC_TABLE: {
+      const selectorWidget = <TableSelectionSelector />;
+      const inputWidget = (
+        <div className="number-elements">
+          Maximum number of elements :
+          <input
+            type="number"
+            onChange={c => {
+              const value = Number.parseInt(c.target.value);
+              if (Number.isInteger(value)) {
+                setTimeout(() => onChange(value, 1), 0);
+              }
+            }}
+          />
+        </div>
+      );
+
       return (
         <PeriodicContext {...widgetProps}>
           <>
-            <SelectableTable onStateChange={change => onChange(change)} maxElementSelectable={5}>
-              <TableSelectionSelector />
-            </SelectableTable>
+            <SelectableTable
+              selectorWidget={selectorWidget}
+              inputWidget={inputWidget}
+              onStateChange={change => onChange(change)}
+              maxElementSelectable={5}
+            ></SelectableTable>
           </>
         </PeriodicContext>
       );
@@ -96,12 +115,14 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
         {props.title}
 
         <div className="card-tools">
-          {!props.permanent && <div
-            className="collapser"
-            onClick={() => props.dispatch({ type: 'deleteCard', id: props.id })}
-          >
-            <AiOutlineDelete />
-          </div>}
+          {!props.permanent && (
+            <div
+              className="collapser"
+              onClick={() => props.dispatch({ type: 'deleteCard', id: props.id })}
+            >
+              <AiOutlineDelete />
+            </div>
+          )}
           <div
             className="collapser"
             onClick={() => props.dispatch({ type: 'collapse', id: props.id })}
@@ -141,10 +162,21 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
                 {widget.latexName && <Latex>{widget.latexName}</Latex>}
               </span>
             )}
-            {getWidget(widget.type, widget.configuration, props.values[idx], value => {
-              const id = props.id;
-              props.dispatch({ type: 'setValue', id: id, idx, widget, value });
-            })}
+            {getWidget(
+              widget.type,
+              widget.configuration,
+              props.values[idx],
+              (value, overridenIdx?: number) => {
+                const id = props.id;
+                props.dispatch({
+                  type: 'setValue',
+                  id: id,
+                  idx: !overridenIdx ? idx : overridenIdx,
+                  widget,
+                  value
+                });
+              }
+            )}
           </div>
         ))}
       </div>
@@ -172,6 +204,10 @@ export default DropTarget(
   DragSource(
     ItemTypes.CARD,
     {
+      canDrag: props => {
+        console.log(props);
+        return true;
+      },
       beginDrag: (props: CardProps) => {
         props.dispatch({ type: 'startdragging', id: props.id });
         return {

@@ -75,8 +75,14 @@
 }
 
 .second-span {
+  .flex(column);
   div {
     .flex(row);
     justify-content: flex-end;
+  }
+  .number-elements {
+    .flex(row);
+    .flex-container-sized();
+    align-items: center;
   }
 }

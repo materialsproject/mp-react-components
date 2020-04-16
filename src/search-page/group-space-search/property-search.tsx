@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './select.less';
 import Select, { components } from 'react-select';
-import { CheckboxList, MCheckbox, SelectionStyle } from '../checkbox-list';
 import {
   groupCheckboxes,
   groups,
@@ -9,6 +8,7 @@ import {
   searchKeyToDisplayKey,
   spaceGroups
 } from './space-groups';
+import { CheckboxList, SelectionStyle, MCheckbox } from '../checkboxes-list/checkbox-list';
 
 const groupStyles = {
   display: 'flex',
@@ -87,9 +87,7 @@ export const SelectSP: React.FC<SelectSPProps> = props => {
 };
 
 //TODO(chab) decouple the two components
-
 // we can do a simple mapper function
-
 export default function(props) {
   const [property, setProperty] = useState(propertiesCheckbox[0].name); // ultimately from the props
   const [grouping, setGrouping] = useState(groupCheckboxes[0].name); // ultimately from the props

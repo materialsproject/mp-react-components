@@ -14,7 +14,6 @@ import {
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-//import './tooltip.css';
 
 const sliderStyle: any = {
   position: 'relative',

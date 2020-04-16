@@ -54,6 +54,8 @@ export interface TableProps {
   showSwitcher?: boolean;
   plugin?: any;
   children?: any;
+  selectorWidget?: any;
+  inputWidget?: any;
 }
 
 export enum TableLayout {
@@ -98,7 +100,13 @@ function computeHeatmap(
 
 // Ultimately, we'll allow people to pass a specific component by using render props
 // the goal is to allow people to insert whatever you want there
-export function TableSpacer({ onTableSwitcherClicked, showSwitcher, plugin, children }: any) {
+export function TableSpacer({
+  onTableSwitcherClicked,
+  showSwitcher,
+  plugin,
+  selectorWidget,
+  inputWidget
+}: any) {
   const detailedElement = useDetailedElement();
 
   return (
@@ -107,7 +115,10 @@ export function TableSpacer({ onTableSwitcherClicked, showSwitcher, plugin, chil
         {showSwitcher && <div className="table-switcher" onClick={onTableSwitcherClicked}></div>}
         <div className="input-container"></div>
       </div>
-      <div className="second-span">{children}</div>
+      <div className="second-span">
+        {selectorWidget}
+        {inputWidget}
+      </div>
       <div className="element-description">
         {detailedElement && (
           <PeriodicElement
@@ -139,7 +150,8 @@ export function Table({
   heatmapMin,
   colorScheme,
   showSwitcher,
-  children,
+  selectorWidget,
+  inputWidget,
   plugin
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
@@ -187,7 +199,8 @@ export function Table({
       >
         <TableSpacer
           plugin={plugin}
-          children={children}
+          inputWidget={inputWidget}
+          selectorWidget={selectorWidget}
           showSwitcher={showSwitcher}
           onTableSwitcherClicked={() => setIsShown(!isShown)}
         />

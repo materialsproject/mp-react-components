@@ -1,8 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { tags } from './tags';
 import Select, { components, createFilter } from 'react-select';
 import { FixedSizeList as List } from 'react-window';
-import { CheckboxList, SelectionStyle } from '../checkbox-list';
+import { CheckboxList, SelectionStyle } from '../checkboxes-list/checkbox-list';
 
 const search = [
   { name: 'start', label: 'Start' },
@@ -15,6 +15,8 @@ export const checkboxes = search.map(p => ({
   name: p.name,
   label: p.label
 }));
+const height = 35;
+checkboxes[0].checked = true;
 
 export default function TagSearch(props) {
   const [selection, setSelection] = useState(props.value);
@@ -68,9 +70,6 @@ export default function TagSearch(props) {
     </>
   );
 }
-
-const height = 35;
-checkboxes[0].checked = true;
 
 function MenuList(props) {
   const { options, children, maxHeight, getValue } = props;
