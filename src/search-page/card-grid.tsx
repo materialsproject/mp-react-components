@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
@@ -39,6 +39,7 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
   // a pointer to the definition, and an array that old the layout
   const [cards, dispatch] = useReducer(reducer, { ...startState, onChangeRef });
   const [, drop] = useDrop({ accept: ItemTypes.CARD });
+  const [collapsed, setCollapsed] = useState(false);
 
   connectDropTarget(ref);
 
@@ -51,7 +52,7 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
 
   return (
     <>
-      <div className="search-funnel">
+      <div className={`search-funnel ${collapsed ? 'funnel-collapsed' : ''}`}>
         {/* Masonry inserts div, the issue is that the component is unmountend and remounted*/
         /* which leads to bad performance */}
         <SearchPalette
@@ -59,23 +60,26 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
           onFilterClick={c =>
             dispatch({ type: 'setcards', cards: addCard(cards, c.id), meta: 'move' })
           }
+          onCollapseClick={c => setCollapsed(c)}
         />
         {cards.cardDef.length === 0 && (
           <h1> You do not have any filters. Add a filter to start your search</h1>
         )}
 
-        {cards.heroCardDef && (
-          <SearchCard {...cards.heroCardDef} {...cards.heroCardSetting} dispatch={dispatch} />
-        )}
+        <div className="funnel-cards">
+          {cards.heroCardDef && (
+            <SearchCard {...cards.heroCardDef} {...cards.heroCardSetting} dispatch={dispatch} />
+          )}
 
-        <div className="drag-zone" ref={drop}>
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {children}
-          </Masonry>
+          <div className="drag-zone" ref={drop}>
+            <Masonry
+              breakpointCols={breakpointColumnsObj}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {children}
+            </Masonry>
+          </div>
         </div>
       </div>
     </>
