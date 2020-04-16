@@ -3,6 +3,7 @@ import { AiOutlineWarning } from 'react-icons/ai';
 import React from 'react';
 import { Card, CardState, WIDGET, Widget } from '../cards-definition';
 import ReactTooltip from 'react-tooltip';
+import axios from 'axios';
 
 // fix typings
 export const columns = [
@@ -67,6 +68,8 @@ export const properties = columns.map(q => (q.querySelector ? q.querySelector : 
 properties.push('theoretical', 'has_bandstructure', 'tags');
 // search_gap.band_gap does not work
 
+const CancelToken = axios.CancelToken;
+let cancel;
 export const onChange = (c, executePost) => {
   const query = {};
   // filter cards
@@ -118,9 +121,11 @@ export const onChange = (c, executePost) => {
           (query[card.cardSettings.id] = card.cardSettings.values[widgetIndex]);
       } else if (widget.type === WIDGET.SP_SEARCH) {
         const spaceGroups = card.cardSettings.values[widgetIndex];
-        (spaceGroups && spaceGroups.length > 0) && (query['spacegroup.number'] = {
-          $in: spaceGroups.map(s => s['space-group.number'])
-        });
+        spaceGroups &&
+          spaceGroups.length > 0 &&
+          (query['spacegroup.number'] = {
+            $in: spaceGroups.map(s => s['space-group.number'])
+          });
       } else if (widget.type === WIDGET.CHECKBOX_LIST) {
         //TODO(chab) fix the update logic of the widget.
         console.log(card.cardSettings, card.cardDef);
@@ -131,10 +136,22 @@ export const onChange = (c, executePost) => {
   // we are queuing update, otherwise, we would trigger a re-render immediately
   // FIXME(chab) the reducer should be defined here anyway
   setTimeout(() => {
+    if (cancel) {
+      console.warn('cancelling');
+      cancel();
+    }
     const params = new URLSearchParams();
     params.append('properties', JSON.stringify(properties));
     params.append('criteria', JSON.stringify(query));
-    executePost({ data: params }).then(() => {
+    executePost({
+      data: params,
+      cancelToken: new CancelToken(function executor(c) {
+        // An executor function receives a cancel function as a parameter
+        console.log('executor token');
+        cancel = c;
+      })
+    }).then(() => {
+      cancel = null;
       setTimeout(() => {
         ReactTooltip.rebuild();
       }, 0);

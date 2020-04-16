@@ -15,11 +15,17 @@ import Dropdown, {
   DropdownButton
 } from '@trendmicro/react-dropdown';
 
+import { debounce } from 'ts-debounce';
+
 import { AxiosRequestConfig } from 'axios';
 import { FilterComponent } from './search-grid/filter';
 import { columns, onChange } from './search-grid/table-definitions';
 import { useCallback, useRef } from 'react';
 import { downloadCSV, downloadExcel, downloadJSON } from './utils';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const debouncedOnChange = debounce(onChange, 500);
 
 //TODO(chab) what we do with provenance
 
@@ -68,19 +74,25 @@ function ExportableGrid() {
     };
     return (
       <>
+        <ToastContainer />
         <Dropdown
           onSelect={eventKey => {
-            console.log(eventKey);
+            let err;
             switch (eventKey) {
               case 1:
-                downloadJSON(rows.current);
+                err = downloadJSON(rows.current);
                 break;
               case 2:
-                downloadCSV(rows.current);
+                err = downloadCSV(rows.current);
                 break;
               case 3:
-                downloadExcel(rows.current);
+                err = downloadExcel(rows.current);
                 break;
+            }
+            if (err) {
+              toast.success('Successfully downloaded materials');
+            } else {
+              toast.error('Not able to generate material file');
             }
           }}
         >
@@ -134,7 +146,7 @@ function ExportableGrid() {
       </ReactTooltip>
 
       <DndProvider backend={Backend}>
-        <MGrid onChange={c => onChange(c, executePost)} />
+        <MGrid onChange={c => debouncedOnChange(c, executePost)} />
       </DndProvider>
       <DataTable
         subHeader
