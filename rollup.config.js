@@ -50,6 +50,14 @@ export default {
     }
   ],
   external: p => {
+    console.log(
+      p,
+      [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.peerDependencies || {}),
+        'prop-types'
+      ].indexOf(p) > -1
+    );
     if (
       [
         ...Object.keys(pkg.dependencies || {}),
@@ -59,7 +67,7 @@ export default {
     ) {
       return true;
     }
-    return /^three/.test(p);
+    return /^three/.test(p) || /^@trendmicro/.test(p);
   },
   plugins: [
     lessModules({ output: true, processor }),
@@ -70,7 +78,6 @@ export default {
       tsconfigDefaults: {},
       tsconfig: 'tsconfig.json',
       tsconfigOverride: {},
-      objectHashIgnoreUnknownHack: true,
       verbosity: 1 // overrides for debugging
     }),
     replace({
