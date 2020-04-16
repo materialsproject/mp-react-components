@@ -79,8 +79,9 @@ const reducer = (state: CS, action: any) => {
     }
     case 'deleteCard': {
       const cardId = action.id;
+      const card = state.map[action.id];
       const ns = sdeleteCard(state, cardId);
-      state.onChangeRef!.current(ns);
+      card.state !== CardState.PRISTINE && state.onChangeRef!.current(ns);
       return { ...ns };
     }
     case 'moveCard': {
