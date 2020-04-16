@@ -24,6 +24,7 @@ import { useCallback, useRef } from 'react';
 import { downloadCSV, downloadExcel, downloadJSON } from './utils';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import copy from 'copy-to-clipboard';
 
 const debouncedOnChange = debounce(onChange, 500);
 
@@ -69,9 +70,16 @@ function ExportableGrid() {
   }, []);
 
   const contextActions = React.useMemo(() => {
-    const handlePrint = e => {
-      console.log(e);
+    const handlePrint = e => {};
+    const handleCopy = e => {
+      copy(JSON.stringify(rows.current), {
+        debug: true,
+        message: 'Press #{key} to copy'
+      });
+      toast.success(`Copied ${rows.current.length} rows to clipboard`);
     };
+    const handleEdit = e => {};
+
     return (
       <>
         <ToastContainer />
@@ -90,7 +98,7 @@ function ExportableGrid() {
                 break;
             }
             if (err) {
-              toast.success('Successfully downloaded materials');
+              toast.success(`Successfully downloaded ${rows.current.length} materials`);
             } else {
               toast.error('Not able to generate material file');
             }
@@ -112,7 +120,7 @@ function ExportableGrid() {
 
         <button
           key="copy"
-          onClick={handlePrint}
+          onClick={handleCopy}
           style={{ padding: '10px 35px', borderRadius: '5px', fontSize: 15 }}
         >
           Copy
