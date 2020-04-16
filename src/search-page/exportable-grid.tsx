@@ -25,6 +25,7 @@ import { downloadCSV, downloadExcel, downloadJSON } from './utils';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import copy from 'copy-to-clipboard';
+import { AiOutlineCaretLeft } from 'react-icons/ai';
 
 const debouncedOnChange = debounce(onChange, 500);
 
@@ -53,6 +54,8 @@ const axiosConfig: AxiosRequestConfig = {
 
 function ExportableGrid() {
   const [filterValue, setFilterValue] = React.useState(false);
+  const [printView, setPrintView] = React.useState(false);
+
   const [
     { data: putData, loading: putLoading, error: putError },
     executePost
@@ -70,7 +73,9 @@ function ExportableGrid() {
   }, []);
 
   const contextActions = React.useMemo(() => {
-    const handlePrint = e => {};
+    const handlePrint = e => {
+      setPrintView(true);
+    };
     const handleCopy = e => {
       copy(JSON.stringify(rows.current), {
         debug: true,
@@ -146,7 +151,21 @@ function ExportableGrid() {
   }, []);
 
   return (
-    <>
+    <div className={`search-grid ${!!printView ? 'print' : ''}`}>
+      {printView && (
+        <div
+          style={{
+            padding: '10px 20px',
+            border: '1px solid grey',
+            borderRadius: 5,
+            display: 'inline-block'
+          }}
+          onClick={() => setPrintView(false)}
+        >
+          <AiOutlineCaretLeft />
+        </div>
+      )}
+
       <ReactTooltip id="no-bs" type="warning" effect="solid">
         <span style={{ fontFamily: 'Helvetica Neue' }}>
           Gap value is approximate and using a loose k-point mesh
@@ -173,10 +192,10 @@ function ExportableGrid() {
         progressPending={putLoading}
         progressComponent={<Loader type="Bars" color="#00BFFF" height={80} width={100} />}
         selectableRows
+        pagination={!printView}
         highlightOnHover
-        pagination
       />
-    </>
+    </div>
   );
 }
 
