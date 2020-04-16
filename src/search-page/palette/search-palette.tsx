@@ -1,7 +1,7 @@
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import React, { useState } from 'react';
 import './search-palette.less';
-import { Card } from '../cards-definition';
+import { Card } from '../search-grid/cards-definition';
 
 const isDisabled = filter =>
   !filter.allowMultipleInstances && filter.activeInstance && filter.activeInstance > 0;

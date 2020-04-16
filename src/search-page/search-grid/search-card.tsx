@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { DualSlider } from './dual-slider';
+import React, { useEffect, useRef, useState } from 'react';
+import { DualSlider } from '../sliders/dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
 import { Card, ItemTypes, WIDGET } from './cards-definition';
@@ -15,11 +15,13 @@ import {
 } from 'react-dnd';
 import Latex from 'react-latex';
 
-import SP from './group-space-search/property-search';
-import TagSearch from './tags/tag-search';
-import { PeriodicContext, SelectableTable } from '../periodic-table';
-import TableSelectionSelector from './table-selector';
-import { CheckboxList } from './checkboxes-list/checkbox-list';
+import SP from '../group-space-search/property-search';
+import TagSearch from '../tags/tag-search';
+import { PeriodicContext, SelectableTable } from '../../periodic-table';
+import { CheckboxList } from '../checkboxes-list/checkbox-list';
+
+//TODO(move to table configuration, so we do not need to inject it)
+import TableSelectionSelector from '../../periodic-table/table-selector';
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -54,12 +56,13 @@ const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
       const selectorWidget = <TableSelectionSelector />;
       const inputWidget = (
         <div className="number-elements">
-          Maximum number of elements :
+          Number of elements :
           <input
             type="number"
             onChange={c => {
               const value = Number.parseInt(c.target.value);
-              if (Number.isInteger(value)) {
+              // null value means we want to not impose a limit
+              if (Number.isInteger(value) || c.target.value === '' || !c.target.value) {
                 setTimeout(() => onChange(value, 1), 0);
               }
             }}

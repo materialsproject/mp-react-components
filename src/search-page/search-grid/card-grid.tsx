@@ -4,7 +4,7 @@ import './card-grid.less';
 import SearchCard from './search-card';
 import { addCard, cardsDefinition, initialState, ItemTypes } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
-import { SearchPalette } from './palette/search-palette';
+import { SearchPalette } from '../palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';

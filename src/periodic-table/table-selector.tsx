@@ -1,7 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PeriodicSelectionContext } from '../periodic-table/periodic-table-state/table-store';
 import { Button, ButtonGroup } from '@zendeskgarden/react-buttons';
 import React from 'react';
+
+/**
+ *
+ * Use this component to give the opportunity to have dual-state
+ * selection on the periodic table
+ *
+ * */
 
 export default function TableSelectionSelector() {
   const [selectedItem, setSelectedItem] = useState('select');
@@ -11,18 +18,15 @@ export default function TableSelectionSelector() {
     <ButtonGroup
       selectedItem={selectedItem}
       onSelect={s => {
-        // there is a bug in zendesk
         window.requestAnimationFrame(() => setSelectedItem(s));
         actions.selectionStyle = s;
       }}
     >
       <Button key="i1" value="select">
-        {' '}
-        Enable elements{' '}
+        Enable elements
       </Button>
       <Button key="i2" value="enableDisable">
-        {' '}
-        Exclude elements{' '}
+        Exclude elements
       </Button>
     </ButtonGroup>
   );

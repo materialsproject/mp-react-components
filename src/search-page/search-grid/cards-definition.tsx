@@ -343,12 +343,19 @@ const getStartStateFromCard = (id: string) => {
 
 export interface CS {
   cardDef: Card[];
+  viewMode: ViewMode;
   cardSettings: { id: string; collapsed: boolean; disabled: boolean; values: any[] }[];
   map: any;
   heroCardDef?: Card;
   heroCardSetting?: any;
   dragInitialIndex?: number | null;
-  onChangeRef?: React.MutableRefObject<Function>;
+  onChangeRef?: React.MutableRefObject<Function>; // callback for triggering requests
+}
+
+// PRINT displays only the table with ALL the rows ( = no pagination) , hide the table header
+export enum ViewMode {
+  STANDARD = 'standard',
+  PRINT = 'print'
 }
 
 export function addCard(state: CS, id: string) {
@@ -402,7 +409,8 @@ export function smoveCard(state: CS, id: string, atIndex: number) {
 export const initialState: CS = {
   cardDef: [],
   cardSettings: [],
-  map: {}
+  map: {},
+  viewMode: ViewMode.STANDARD
 };
 
 addCard(initialState, 'elasticity');

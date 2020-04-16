@@ -1,7 +1,7 @@
 import { MatgenUtilities } from '../../utils/matgen';
 import { AiOutlineWarning } from 'react-icons/ai';
 import React from 'react';
-import { Card, CardState, WIDGET, Widget } from '../cards-definition';
+import { Card, CardState, WIDGET, Widget } from './cards-definition';
 import ReactTooltip from 'react-tooltip';
 import axios from 'axios';
 
