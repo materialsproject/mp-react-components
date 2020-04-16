@@ -50,14 +50,6 @@ export default {
     }
   ],
   external: p => {
-    console.log(
-      p,
-      [
-        ...Object.keys(pkg.dependencies || {}),
-        ...Object.keys(pkg.peerDependencies || {}),
-        'prop-types'
-      ].indexOf(p) > -1
-    );
     if (
       [
         ...Object.keys(pkg.dependencies || {}),
@@ -67,7 +59,9 @@ export default {
     ) {
       return true;
     }
-    return /^three/.test(p) || /^@trendmicro/.test(p);
+    // prevent duplicate import of three
+    // prevent packages that have css separately bundled to fail
+    return /^three/.test(p) || /^@trendmicro/.test(p) || /^react-toastify/.test(p);
   },
   plugins: [
     lessModules({ output: true, processor }),
