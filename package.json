@@ -62,7 +62,8 @@
     "style-loader": "^1.1.2",
     "styled-components": "^5.1.0",
     "svgtodatauri": "0.0.0",
-    "three": "^0.115.0"
+    "three": "^0.115.0",
+    "xlsx": "^0.15.6"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

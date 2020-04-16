@@ -18,6 +18,8 @@ import Dropdown, {
 import { AxiosRequestConfig } from 'axios';
 import { FilterComponent } from './search-grid/filter';
 import { columns, onChange } from './search-grid/table-definitions';
+import { useCallback, useRef } from 'react';
+import { downloadCSV, downloadExcel, downloadJSON } from './utils';
 
 //TODO(chab) what we do with provenance
 
@@ -48,6 +50,7 @@ function ExportableGrid() {
     { data: putData, loading: putLoading, error: putError },
     executePost
   ] = useAxios(axiosConfig, { manual: true });
+  const rows = useRef<any[]>([]);
 
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
@@ -55,11 +58,32 @@ function ExportableGrid() {
     );
   }, [filterValue]);
 
+  const cb = useCallback(r => {
+    rows.current = r.selectedRows;
+  }, []);
+
   const contextActions = React.useMemo(() => {
-    const handlePrint = () => {};
+    const handlePrint = e => {
+      console.log(e);
+    };
     return (
       <>
-        <Dropdown onSelect={eventKey => {}}>
+        <Dropdown
+          onSelect={eventKey => {
+            console.log(eventKey);
+            switch (eventKey) {
+              case 1:
+                downloadJSON(rows.current);
+                break;
+              case 2:
+                downloadCSV(rows.current);
+                break;
+              case 3:
+                downloadExcel(rows.current);
+                break;
+            }
+          }}
+        >
           <Dropdown.Toggle
             style={{ padding: '9px 35px', borderRadius: 5, marginRight: 15 }}
             btnStyle="flat"
@@ -118,6 +142,7 @@ function ExportableGrid() {
         contextActions={contextActions}
         title="Materials"
         theme="material"
+        onSelectedRowsChange={cb}
         conditionalRowStyles={conditionalRowStyles}
         style={{ fontFamily: 'Helvetica Neue' }}
         columns={columns}
