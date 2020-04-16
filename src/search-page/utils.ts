@@ -59,4 +59,5 @@ export function downloadExcel(array) {
   XLSX.utils.book_append_sheet(wb, wks, 'materials'); // sheetAName is name of Worksheet
   // export Excel file
   XLSX.writeFile(wb, 'material.xlsx'); // name of the file is 'book.xlsx'
+  return true;
 }
