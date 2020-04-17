@@ -11,14 +11,15 @@ export function SearchPalette({ filters, onFilterClick, onCollapseClick }) {
 
   return (
     <div className={`search-palette ${isCollapsed ? 'collapsed' : ''}`}>
-      <div className="search-palette-header">
+      <div
+        className="search-palette-header"
+        onClick={() => {
+          setCollapsed(!isCollapsed);
+          onCollapseClick(!isCollapsed);
+        }}
+      >
         <div>{!isCollapsed && 'Add filters to your search'}</div>
-        <div
-          onClick={() => {
-            setCollapsed(!isCollapsed);
-            onCollapseClick(!isCollapsed);
-          }}
-        >
+        <div>
           {isCollapsed ? <AiOutlineFullscreen key="a" /> : <AiOutlineFullscreenExit key="b" />}
         </div>
       </div>

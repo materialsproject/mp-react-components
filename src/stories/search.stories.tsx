@@ -3,14 +3,14 @@ import { withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { initialGrid } from '../search-page/search-grid/cards-definition';
+import { cardsDefinition, initialGrid } from '../search-page/search-grid/cards-definition';
 
 export const search = () => (
   <>
     <div> Search WIP </div>
     <hr />
     <DndProvider backend={Backend}>
-      <Grid initCards={initialGrid} onChange={() => {}} />
+      <Grid allDefinitions={cardsDefinition} initCards={initialGrid} onChange={() => {}} />
     </DndProvider>
   </>
 );

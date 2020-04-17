@@ -38,7 +38,7 @@ export enum ItemTypes {
   CARD = 'CARD'
 }
 
-//TODO try to use a simple function to render
+// Those are some defaults you can use
 export const cardsDefinition: Card[] = [
   {
     title: 'Periodic table',
@@ -314,13 +314,9 @@ export const cardsDefinition: Card[] = [
     ]
   }
 ];
-export const DICO = cardsDefinition.reduce((acc, card) => {
-  acc[card.id] = card;
-  return acc;
-}, {});
 
-export const getStartStateFromCard = (id: string | Card) => {
-  const card = typeof id === 'string' ? DICO[id] : id;
+export const getStartStateFromCard = (id: string | Card, cardMap) => {
+  const card = typeof id === 'string' ? cardMap[id] : id;
   const collapsed = false;
   const disabled = false;
   const widgetState: CardState[] = [];
@@ -352,14 +348,16 @@ export interface CardSetting {
 }
 
 export interface CardGridState {
-  cardDef: Card[];
   viewMode: ViewMode;
-  cardSettings: CardSetting[];
+  cardDef: Card[]; // used definition
+  cardSettings: CardSetting[]; // settings
   map: { [cardId: string]: CardSetting };
   heroCardDef?: Card;
   heroCardSetting?: CardSetting;
   dragInitialIndex?: number | null;
   onChangeRef?: React.MutableRefObject<Function>; // callback for triggering requests
+  allDefinitions: Card[]; // list of all definitions
+  allDefinitionsMap: { [cardId: string]: Card };
 }
 
 // PRINT displays only the table with ALL the rows ( = no pagination) , hide the table header
@@ -369,21 +367,21 @@ export enum ViewMode {
 }
 
 export function addCard(state: CardGridState, id: string) {
+  const DICO = state.allDefinitionsMap;
   const definition = DICO[id];
 
   if (definition.hero) {
     state.heroCardDef = definition;
-    state.heroCardSetting = getStartStateFromCard(id);
+    state.heroCardSetting = getStartStateFromCard(id, DICO);
     state.map[id] = state.heroCardSetting; // settings are directly updated from the component
     return state;
   }
-  const settings = getStartStateFromCard(id);
+  const settings = getStartStateFromCard(id, DICO);
 
   if (!definition.activeInstance) {
     definition.activeInstance = 0;
   }
   definition.activeInstance++;
-
   state.cardDef = [...state.cardDef, definition];
   state.cardSettings = [...state.cardSettings, settings];
   state.map[id] = settings; // settings are directly updated from the component
@@ -420,7 +418,9 @@ export const initialState: CardGridState = {
   cardDef: [],
   cardSettings: [],
   map: {},
-  viewMode: ViewMode.STANDARD
+  viewMode: ViewMode.STANDARD,
+  allDefinitions: [],
+  allDefinitionsMap: {}
 };
 
 /*

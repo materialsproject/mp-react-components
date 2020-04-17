@@ -2,21 +2,13 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import {
-  addCard,
-  Card,
-  cardsDefinition,
-  DICO,
-  getStartStateFromCard,
-  initialState,
-  ItemTypes
-} from './cards-definition';
+import { addCard, Card, cardsDefinition, ItemTypes } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 import { SearchPalette } from '../palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
-import { reducer } from './grid-reducer';
+import { initState, reducer } from './grid-reducer';
 
 const breakpointColumnsObj = {
   default: 3,
@@ -27,44 +19,17 @@ const breakpointColumnsObj = {
 
 export interface GridProps {
   connectDropTarget: ConnectDropTarget;
+  allDefinitions: Card[];
   onChange: any;
-  initCards: (Card | string)[];
+  initCards: string[];
 }
 
-function initState({
-  initCards: cards,
-  onChangeRef
-}: {
-  initCards: (Card | string)[];
-  onChangeRef: any;
-}) {
-  const state = cards.reduce(
-    (state: any, card: Card | string) => {
-      const c: Card = typeof card === 'string' ? DICO[card] : card;
-      const settings = getStartStateFromCard(c);
-      if (c.hero) {
-        state.heroCardDef = c;
-        state.heroCardSetting = settings;
-      } else {
-        if (!c.activeInstance) {
-          c.activeInstance = 0;
-        }
-        c.activeInstance++;
-        state.cardDef = [...state.cardDef, c];
-        state.cardSettings = [...state.cardSettings, settings];
-      }
-      state.map[c.id] = state.heroCardSetting; // settings are directly updated from the component
-
-      return state;
-    },
-    { ...initialState }
-  );
-
-  state.onChangeRef = onChangeRef;
-  return state;
-}
-
-export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange, initCards }) => {
+export const Grid: React.FC<GridProps> = ({
+  connectDropTarget,
+  onChange,
+  initCards,
+  allDefinitions
+}) => {
   const ref = useRef(null);
   const onChangeRef = useRef<Function>(onChange);
   useEffect(() => {
@@ -75,7 +40,11 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange, initCar
   // a pointer to the definition, and an array that old the layout
 
   // we are making a lazy initialisation of the state, we e
-  const [cards, dispatch] = useReducer(reducer, { initCards, onChangeRef }, initState);
+  const [cards, dispatch] = useReducer(
+    reducer,
+    { initCards, onChangeRef, allDefinitions },
+    initState
+  );
   const [, drop] = useDrop({ accept: ItemTypes.CARD });
   const [collapsed, setCollapsed] = useState(false);
 

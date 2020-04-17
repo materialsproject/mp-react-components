@@ -104,7 +104,6 @@ export const onChange = (c, executePost) => {
       }
     }
     const maxNumberOfElements = c.heroCardSetting.values[1];
-    console.log(maxNumberOfElements);
     if (maxNumberOfElements && maxNumberOfElements > 0) {
       query['nelements'] = maxNumberOfElements;
     }

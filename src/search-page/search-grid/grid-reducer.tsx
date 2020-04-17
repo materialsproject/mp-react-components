@@ -1,4 +1,14 @@
-import { CardState, CardGridState, sdeleteCard, sfindCard, smoveCard } from './cards-definition';
+import {
+  CardState,
+  CardGridState,
+  sdeleteCard,
+  sfindCard,
+  smoveCard,
+  Card,
+  cardsDefinition,
+  getStartStateFromCard,
+  initialState
+} from './cards-definition';
 
 export enum ActionType {
   START_DRAG = 'startdragging',
@@ -79,3 +89,44 @@ export const reducer = (state: CardGridState, action) => {
       throw new Error('incorrect action' + action.type);
   }
 };
+
+export function initState({
+  initCards: cards,
+  onChangeRef,
+  allDefinitions
+}: {
+  initCards: string[];
+  onChangeRef: any;
+  allDefinitions: Card[];
+}): CardGridState {
+  const cardIdToCardDefinition = cardsDefinition.reduce((acc, card) => {
+    acc[card.id] = card;
+    return acc;
+  }, {});
+
+  const state: CardGridState = cards.reduce(
+    (state: any, card: string) => {
+      const c: Card = cardIdToCardDefinition[card];
+      const settings = getStartStateFromCard(c, cardIdToCardDefinition);
+      if (c.hero) {
+        state.heroCardDef = c;
+        state.heroCardSetting = settings;
+      } else {
+        if (!c.activeInstance) {
+          c.activeInstance = 0;
+        }
+        c.activeInstance++;
+        state.cardDef = [...state.cardDef, c];
+        state.cardSettings = [...state.cardSettings, settings];
+      }
+      state.map[c.id] = settings; // settings are directly updated from the component
+      return state;
+    },
+    { ...initialState }
+  );
+
+  state.onChangeRef = onChangeRef;
+  state.allDefinitions = allDefinitions;
+  state.allDefinitionsMap = cardIdToCardDefinition;
+  return state;
+}

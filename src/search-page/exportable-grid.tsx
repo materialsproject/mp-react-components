@@ -26,7 +26,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import copy from 'copy-to-clipboard';
 import { AiOutlineCaretLeft } from 'react-icons/ai';
-import { initialGrid } from './search-grid/cards-definition';
+import { cardsDefinition, initialGrid } from './search-grid/cards-definition';
 
 const debouncedOnChange = debounce(onChange, 500);
 
@@ -171,7 +171,11 @@ function ExportableGrid() {
       </ReactTooltip>
 
       <DndProvider backend={Backend}>
-        <MGrid initCards={initialGrid} onChange={c => debouncedOnChange(c, executePost)} />
+        <MGrid
+          allDefinitions={cardsDefinition}
+          initCards={initialGrid}
+          onChange={c => debouncedOnChange(c, executePost)}
+        />
       </DndProvider>
       <DataTable
         subHeader
