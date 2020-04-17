@@ -319,8 +319,8 @@ export const DICO = cardsDefinition.reduce((acc, card) => {
   return acc;
 }, {});
 
-const getStartStateFromCard = (id: string) => {
-  const card = DICO[id];
+export const getStartStateFromCard = (id: string | Card) => {
+  const card = typeof id === 'string' ? DICO[id] : id;
   const collapsed = false;
   const disabled = false;
   const widgetState: CardState[] = [];
@@ -338,7 +338,7 @@ const getStartStateFromCard = (id: string) => {
     }
     return outerAcc;
   }, []);
-  return { id, collapsed, disabled, values, widgetState, state: CardState.PRISTINE };
+  return { id: card.id, collapsed, disabled, values, widgetState, state: CardState.PRISTINE };
 };
 
 export interface CardSetting {
@@ -370,7 +370,6 @@ export enum ViewMode {
 
 export function addCard(state: CardGridState, id: string) {
   const definition = DICO[id];
-  const settings = getStartStateFromCard(id);
 
   if (definition.hero) {
     state.heroCardDef = definition;
@@ -378,6 +377,7 @@ export function addCard(state: CardGridState, id: string) {
     state.map[id] = state.heroCardSetting; // settings are directly updated from the component
     return state;
   }
+  const settings = getStartStateFromCard(id);
 
   if (!definition.activeInstance) {
     definition.activeInstance = 0;
@@ -423,12 +423,14 @@ export const initialState: CardGridState = {
   viewMode: ViewMode.STANDARD
 };
 
+/*
 addCard(initialState, 'elasticity');
 addCard(initialState, 'diel');
 addCard(initialState, 'piezo');
 addCard(initialState, 'space');
 addCard(initialState, 'tags');
-addCard(initialState, 'periodic');
+addCard(initialState, 'periodic');*/
+export const initialGrid = ['periodic', 'general', 'space'];
 
 // state is composed of
 //  - > [ {cardDef, cardSettings } ]
