@@ -1,9 +1,10 @@
 import Grid from '../search-page/search-grid/card-grid';
-import { withKnobs } from '@storybook/addon-knobs';
+import { object, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { Card, WIDGET } from '../search-page/search-grid/cards-definition';
+import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
 
 // Those are some defaults you can use
 const cardsDefinition: Card[] = [
@@ -94,8 +95,8 @@ export const search = () => (
     <hr />
     <DndProvider backend={Backend}>
       <Grid
-        allDefinitions={cardsDefinition}
-        initCards={['periodic']}
+        allDefinitions={object('cards', cardsDefinition)}
+        initCards={object('start cards', ['periodic'])}
         onChange={c => {
           console.log(c);
         }}

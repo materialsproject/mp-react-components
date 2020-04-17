@@ -11,6 +11,7 @@ import {
 } from './cards-definition';
 
 export enum ActionType {
+  INIT = 'init',
   START_DRAG = 'startdragging',
   END_DRAG = 'enddragging',
   CANCEL_DRAG = 'canceldragging',
@@ -83,6 +84,11 @@ export const reducer = (state: CardGridState, action) => {
       console.log('overall state', state);
       state.onChangeRef!.current(state);
       return { ...state };
+    }
+
+    case ActionType.INIT: {
+      const { initCards, onChangeRef, allDefinitions } = action;
+      return initState({ initCards, onChangeRef, allDefinitions });
     }
 
     default:

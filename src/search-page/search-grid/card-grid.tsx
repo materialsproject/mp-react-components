@@ -8,7 +8,7 @@ import { SearchPalette } from '../palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
-import { initState, reducer } from './grid-reducer';
+import { ActionType, initState, reducer } from './grid-reducer';
 
 const breakpointColumnsObj = {
   default: 3,
@@ -31,6 +31,8 @@ export const Grid: React.FC<GridProps> = ({
   allDefinitions
 }) => {
   const ref = useRef(null);
+  const initialSetting = useRef(true);
+
   const onChangeRef = useRef<Function>(onChange);
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -47,6 +49,14 @@ export const Grid: React.FC<GridProps> = ({
   );
   const [, drop] = useDrop({ accept: ItemTypes.CARD });
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (!initialSetting.current) {
+      dispatch({ type: ActionType.INIT, initCards, onChangeRef, allDefinitions });
+      console.log('should call init state again');
+    }
+    initialSetting.current = false;
+  }, [allDefinitions]);
 
   connectDropTarget(ref);
 
@@ -66,7 +76,7 @@ export const Grid: React.FC<GridProps> = ({
         <SearchPalette
           filters={cards.allDefinitions}
           onFilterClick={c =>
-            dispatch({ type: 'setcards', cards: addCard(cards, c.id), meta: 'move' })
+            dispatch({ type: ActionType.SET_CARDS, cards: addCard(cards, c.id), meta: 'move' })
           }
           onCollapseClick={c => setCollapsed(c)}
         />
