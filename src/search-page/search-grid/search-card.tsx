@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DualSlider } from '../sliders/dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
-import { Card, ItemTypes, WIDGET } from './cards-definition';
+import { Card, getWidgetConfiguration, ItemTypes, Widget, WIDGET } from './cards-definition';
 import { AiOutlineDelete, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import {
@@ -40,25 +40,31 @@ export enum CARD_SIZE {
  */
 
 const getWidget = (
-  type: WIDGET,
-  widgetProps,
+  widget: Widget<WIDGET>,
   widgetValue,
   onChange: (value, overridenIdx?: number) => void
 ) => {
+  const type = widget.type;
+  //Note(chab) compiler can only infer type AFTER the switch statement
   switch (type) {
     case WIDGET.SLIDERS: {
+      const widgetProps = getWidgetConfiguration(type, widget);
       return <DualSlider {...widgetProps} value={widgetValue} onChange={c => onChange(c)} />;
     }
     case WIDGET.CHECKBOX_LIST: {
+      const widgetProps = getWidgetConfiguration(type, widget);
       return <CheckboxList {...widgetProps} onChange={v => onChange(v)} />;
     }
     case WIDGET.SP_SEARCH: {
-      return <SP value={widgetValue} onChange={change => onChange(change)}></SP>;
+      //const widgetProps = getWidgetConfiguration(type, widget);
+      return <SP value={widgetValue} onChange={change => onChange(change)} />;
     }
     case WIDGET.TAG_SEARCH: {
-      return <TagSearch value={widgetValue} onChange={change => onChange(change)}></TagSearch>;
+      //const widgetProps = getWidgetConfiguration(type, widget);
+      return <TagSearch value={widgetValue} onChange={change => onChange(change)} />;
     }
     case WIDGET.PERIODIC_TABLE: {
+      const widgetProps = getWidgetConfiguration(type, widget);
       const selectorWidget = <TableSelectionSelector />;
       const inputWidget = (
         <div className="number-elements">
@@ -84,7 +90,7 @@ const getWidget = (
               inputWidget={inputWidget}
               onStateChange={change => onChange(change)}
               maxElementSelectable={5}
-            ></SelectableTable>
+            />
           </>
         </PeriodicContext>
       );
@@ -171,21 +177,16 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
                 {widget.latexName && <Latex>{widget.latexName}</Latex>}
               </span>
             )}
-            {getWidget(
-              widget.type,
-              widget.configuration,
-              props.values[idx],
-              (value, overridenIdx?: number) => {
-                const id = props.id;
-                props.dispatch({
-                  type: ActionType.SET_VALUE,
-                  id: id,
-                  idx: !overridenIdx ? idx : overridenIdx,
-                  widget,
-                  value
-                });
-              }
-            )}
+            {getWidget(widget, props.values[idx], (value, overridenIdx?: number) => {
+              const id = props.id;
+              props.dispatch({
+                type: ActionType.SET_VALUE,
+                id: id,
+                idx: !overridenIdx ? idx : overridenIdx,
+                widget,
+                value
+              });
+            })}
           </div>
         ))}
       </div>

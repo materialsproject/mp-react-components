@@ -5,8 +5,8 @@ import './checkbox-list.less';
 export interface MCheckbox {
   name: string;
   label: string;
-  checked: boolean;
-  disabled: boolean;
+  checked?: boolean;
+  disabled?: boolean;
 }
 
 export enum SelectionStyle {

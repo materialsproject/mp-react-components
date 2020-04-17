@@ -1,7 +1,8 @@
 import React from 'react';
+import { SelectionStyle } from '../checkboxes-list/checkbox-list';
 
 export enum WIDGET {
-  SLIDERS = 'SLIDER',
+  SLIDERS = 'SLIDERS',
   CHECKBOX = 'CHECKBOX',
   CHECKBOX_LIST = 'CHECKBOX_LIST',
   SP_SEARCH = 'SP_SEARCH', // try to make it generic
@@ -16,18 +17,54 @@ export enum CardState {
   DIRTY = 'dirty'
 }
 
-export interface Widget {
+export interface Widget<T extends WIDGET> {
   name?: string | null;
   latexName?: string | null;
   type: WIDGET;
   id: string;
-  configuration: any;
+  configuration: ModelInterfaceMap[T];
+}
+
+export type ModelInterfaceMap = {
+  SLIDERS: WidgetSlider;
+  CHECKBOX: WidgetCheckboxList;
+  CHECKBOX_LIST: WidgetCheckboxList;
+  PERIODIC_TABLE: WidgetPeriodicTable;
+  SP_SEARCH: any;
+  TAG_SEARCH: any;
+  FILE_UPLOAD: any;
+  INPUT_FORM: any;
+};
+
+export function getWidgetConfiguration<T extends WIDGET>(
+  widgetType: T,
+  widget
+): ModelInterfaceMap[T] {
+  return widget.configuration;
+}
+
+export interface WidgetSlider {
+  // we can add mode
+  handle: number;
+  domain: number[];
+  step: number;
+}
+
+export interface WidgetCheckboxList {
+  checkboxes: { label: string; name: string }[];
+  selectionStyle: SelectionStyle;
+}
+
+export interface WidgetPeriodicTable {
+  disabledElements: any[];
+  hiddenElements: any[];
+  enabledElements: any[];
 }
 
 export interface Card {
   hero?: boolean; // an hero card take all the width
   title: string;
-  widgets: Widget[];
+  widgets: Widget<WIDGET>[];
   bypassIdForKey?: true;
   dragging?: boolean;
   permanent?: boolean;
@@ -195,6 +232,7 @@ export const cardsDefinition: Card[] = [
         id: 'n',
         latexName: '$\\epsilon_{poly}{^\\infty}$',
         configuration: {
+          handle: 2,
           domain: [1, 158]
         }
       },
@@ -203,6 +241,7 @@ export const cardsDefinition: Card[] = [
         id: 'poly_total',
         latexName: '$\\epsilon_{poly}$',
         configuration: {
+          handle: 2,
           domain: [2, 257]
         }
       },
@@ -211,6 +250,7 @@ export const cardsDefinition: Card[] = [
         id: 'poly_electronic',
         name: 'Refractive index',
         configuration: {
+          handle: 2,
           domain: [1, 17]
         }
       }
@@ -227,6 +267,7 @@ export const cardsDefinition: Card[] = [
         name: 'Piezoelectric Modulus',
         latexName: '$\\lVert {e}_{ij} \\rVert_{\\max}$',
         configuration: {
+          handle: 2,
           domain: [0, 46.2],
           step: 0.1
         }
@@ -243,6 +284,7 @@ export const cardsDefinition: Card[] = [
         name: null,
         id: 'ck',
         configuration: {
+          selectionStyle: SelectionStyle.SINGLE,
           checkboxes: [
             {
               label: 'ICSD',
