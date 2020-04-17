@@ -112,7 +112,7 @@ export const onChange = (c, executePost) => {
   cards.forEach(card => {
     // look at card widget
     const def: Card = card.cardDef;
-    def.widgets.forEach((widget: Widget, widgetIndex) => {
+    def.widgets.forEach((widget: Widget<WIDGET>, widgetIndex) => {
       if (card.cardSettings.widgetState[widgetIndex] === CardState.PRISTINE) {
         return;
       }
