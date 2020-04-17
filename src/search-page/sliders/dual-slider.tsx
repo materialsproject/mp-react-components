@@ -44,6 +44,7 @@ export class DualSlider extends Component<any, any> {
     step: 1
   };
   constructor(public props: any) {
+    //TODO(chab) implement update from above
     super(props);
     const defaultValues = this.props.value;
     this.state = {
@@ -56,8 +57,10 @@ export class DualSlider extends Component<any, any> {
 
   shouldComponentUpdate(nextProps, nextState): boolean {
     // bail out if we can
+    // storybook will re-create a new array, so we need to check the value inside
     if (
-      nextProps.domain === this.props.domain &&
+      nextProps.domain[0] === this.props.domain[0] &&
+      nextProps.domain[1] === this.props.domain[1] &&
       nextProps.step === this.props.step &&
       nextState === this.state
     ) {

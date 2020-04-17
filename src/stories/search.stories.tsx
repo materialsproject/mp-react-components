@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { Card, WIDGET } from '../search-page/search-grid/cards-definition';
 import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
+import { SelectionStyle } from '../search-page/checkboxes-list/checkbox-list';
 
 // Those are some defaults you can use
 const cardsDefinition: Card[] = [
@@ -23,6 +24,39 @@ const cardsDefinition: Card[] = [
           hiddenElements: [],
           disabledElements: [],
           enabledElements: []
+        }
+      }
+    ]
+  },
+  {
+    title: 'Has properties',
+    id: 'has_properties',
+    allowMultipleInstances: false,
+    widgets: [
+      {
+        type: WIDGET.CHECKBOX_LIST,
+        id: 'props',
+        name: null,
+        configuration: {
+          selectionStyle: SelectionStyle.SINGLE,
+          checkboxes: [
+            {
+              label: 'Elastic',
+              name: 'elastic'
+            },
+            {
+              label: 'Vibrational',
+              name: 'vibrational'
+            },
+            {
+              label: 'Dielectric',
+              name: 'dielectric'
+            },
+            {
+              label: 'Elec. structure',
+              name: 'structure'
+            }
+          ]
         }
       }
     ]
@@ -91,12 +125,12 @@ const cardsDefinition: Card[] = [
 
 export const search = () => (
   <>
-    <div> Search WIP </div>
+    <div> Search WIP</div>
     <hr />
     <DndProvider backend={Backend}>
       <Grid
         allDefinitions={object('cards', cardsDefinition)}
-        initCards={object('start cards', ['periodic'])}
+        initCards={object('start cards', ['periodic', 'test', 'has_properties'])}
         onChange={c => {
           console.log(c);
         }}

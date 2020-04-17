@@ -255,38 +255,6 @@ export const cardsDefinition: Card[] = [
       }
     ]
   },
-  /*{
-    title: 'Has properties',
-    id: 'has_properties',
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.CHECKBOX_LIST,
-        name: null,
-        configuration: {
-          checkboxes: [
-            {
-              label: 'Elastic',
-              name: 'elastic'
-            },
-            {
-              label: 'Vibrational',
-              name: 'vibrational'
-            },
-            {
-              label: 'Dielectric',
-              name: 'dielectric'
-            },
-            {
-              label: 'Elec. structure',
-              name: 'structure'
-            }
-          ]
-        }
-      }
-    ]
-  },
-  */
   {
     title: 'Spacegroup search',
     id: 'space', // ID are extrapolated from the data itself
