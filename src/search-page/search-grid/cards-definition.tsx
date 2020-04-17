@@ -4,9 +4,11 @@ export enum WIDGET {
   SLIDERS = 'SLIDER',
   CHECKBOX = 'CHECKBOX',
   CHECKBOX_LIST = 'CHECKBOX_LIST',
-  SP_SEARCH = 'SP_SEARCH',
-  TAG_SEARCH = 'TAG_SEARCH',
-  PERIODIC_TABLE = 'PERIODIC_TABLE'
+  SP_SEARCH = 'SP_SEARCH', // try to make it generic
+  TAG_SEARCH = 'TAG_SEARCH', // try to make it generic
+  PERIODIC_TABLE = 'PERIODIC_TABLE',
+  FILE_UPLOAD = 'FILE_UPLOAD', //TODO(chab)
+  INPUT_FORM = 'INPUT_FORM' //TODO(chab)
 }
 
 export enum CardState {

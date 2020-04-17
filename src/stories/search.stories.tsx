@@ -6,6 +6,7 @@ import Backend from 'react-dnd-html5-backend';
 import { Card, WIDGET } from '../search-page/search-grid/cards-definition';
 import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
 import { SelectionStyle } from '../search-page/checkboxes-list/checkbox-list';
+import { action } from '@storybook/addon-actions';
 
 // Those are some defaults you can use
 const cardsDefinition: Card[] = [
@@ -131,9 +132,7 @@ export const search = () => (
       <Grid
         allDefinitions={object('cards', cardsDefinition)}
         initCards={object('start cards', ['periodic', 'test', 'has_properties'])}
-        onChange={c => {
-          console.log(c);
-        }}
+        onChange={action('state')}
       />
     </DndProvider>
   </>
