@@ -8106,7 +8106,7 @@ export const tags = [
   'Li5[IO6]',
   'K2CoI4',
   'EuCoO3',
-  'CS[NH]',
+  'CardGridState[NH]',
   'armstrongite',
   'Ce8Pd24In',
   'Ce8Pd24Sb',

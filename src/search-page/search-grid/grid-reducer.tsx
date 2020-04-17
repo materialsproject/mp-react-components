@@ -1,15 +1,26 @@
-import { CardState, CS, sdeleteCard, sfindCard, smoveCard } from './cards-definition';
+import { CardState, CardGridState, sdeleteCard, sfindCard, smoveCard } from './cards-definition';
 
-export const reducer = (state: CS, action: any) => {
-  switch (action.type) {
-    case 'enddragging': {
-      console.log('the end', action.id);
+export enum ActionType {
+  START_DRAG = 'startdragging',
+  END_DRAG = 'enddragging',
+  CANCEL_DRAG = 'canceldragging',
+  SET_CARDS = 'setcards',
+  COLLAPSE = 'colapse',
+  DISABLE = 'disable',
+  SET_VALUE = 'setValue',
+  DELETE = 'delete',
+  MOVE_CARD = 'move_card'
+}
+
+export const reducer = (state: CardGridState, action) => {
+  switch (action.type as ActionType) {
+    case ActionType.END_DRAG: {
       const card = state.map[action.id];
       card.dragging = false;
       return { ...state };
     }
 
-    case 'canceldragging': {
+    case ActionType.CANCEL_DRAG: {
       const card = state.map[action.id];
       card.dragging = false;
       console.log('moving back', action.id, state.dragInitialIndex);
@@ -17,42 +28,42 @@ export const reducer = (state: CS, action: any) => {
       state.dragInitialIndex = null;
       return { ...ns };
     }
-    case 'startdragging': {
+    case ActionType.START_DRAG: {
       const card = state.map[action.id];
       card.dragging = true;
       state.dragInitialIndex = sfindCard(state, action.id);
       console.log('moving now', action.id, state.dragInitialIndex);
       return { ...state };
     }
-    case 'setcards': {
+    case ActionType.SET_CARDS: {
       console.log('new state', action);
       if (!action.meta || action.meta !== 'move') state.onChangeRef!.current(state);
       return { ...action.cards };
     }
-    case 'collapse': {
+    case ActionType.COLLAPSE: {
       const card = state.map[action.id];
       card.collapsed = !card.collapsed;
       return { ...state };
     }
-    case 'disable': {
+    case ActionType.DISABLE: {
       const card = state.map[action.id];
       card.disabled = !card.disabled;
       state.onChangeRef!.current(state);
       return { ...state };
     }
-    case 'deleteCard': {
+    case ActionType.DELETE: {
       const cardId = action.id;
       const card = state.map[action.id];
       const ns = sdeleteCard(state, cardId);
       card.state !== CardState.PRISTINE && state.onChangeRef!.current(ns);
       return { ...ns };
     }
-    case 'moveCard': {
+    case ActionType.MOVE_CARD: {
       const { id, targetId } = action;
       const ns = smoveCard(state, id, sfindCard(state, targetId));
       return { ...ns };
     }
-    case 'setValue': {
+    case ActionType.SET_VALUE: {
       // expect cardId, widgetId, and value index
       const { id, idx, value } = action;
       const card = state.map[action.id];

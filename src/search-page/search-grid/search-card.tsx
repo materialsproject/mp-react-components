@@ -22,6 +22,7 @@ import { CheckboxList } from '../checkboxes-list/checkbox-list';
 
 //TODO(move to table configuration, so we do not need to inject it)
 import TableSelectionSelector from '../../periodic-table/table-selector';
+import { ActionType } from './grid-reducer';
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -38,7 +39,12 @@ export enum CARD_SIZE {
   We use a reducer to notify the change to the parent
  */
 
-const getWidget = (type: WIDGET, widgetProps, widgetValue, onChange) => {
+const getWidget = (
+  type: WIDGET,
+  widgetProps,
+  widgetValue,
+  onChange: (value, overridenIdx?: number) => void
+) => {
   switch (type) {
     case WIDGET.SLIDERS: {
       return <DualSlider {...widgetProps} value={widgetValue} onChange={c => onChange(c)} />;
@@ -121,14 +127,14 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
           {!props.permanent && (
             <div
               className="collapser"
-              onClick={() => props.dispatch({ type: 'deleteCard', id: props.id })}
+              onClick={() => props.dispatch({ type: ActionType.DELETE, id: props.id })}
             >
               <AiOutlineDelete />
             </div>
           )}
           <div
             className="collapser"
-            onClick={() => props.dispatch({ type: 'collapse', id: props.id })}
+            onClick={() => props.dispatch({ type: ActionType.COLLAPSE, id: props.id })}
           >
             {props.collapsed ? (
               <AiOutlineFullscreen key="a" />
@@ -140,7 +146,7 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
             checked={isActive}
             onChange={c => {
               setActive(!isActive);
-              props.dispatch({ type: 'disable', id: props.id });
+              props.dispatch({ type: ActionType.DISABLE, id: props.id });
             }}
             onColor="#86d3ff"
             onHandleColor="#2693e6"
@@ -172,7 +178,7 @@ const SearchCard: React.FC<CardProps> = (props: CardProps) => {
               (value, overridenIdx?: number) => {
                 const id = props.id;
                 props.dispatch({
-                  type: 'setValue',
+                  type: ActionType.SET_VALUE,
                   id: id,
                   idx: !overridenIdx ? idx : overridenIdx,
                   widget,
@@ -196,7 +202,7 @@ export default DropTarget(
       const { id: overId } = props;
 
       if (draggedId !== overId) {
-        props.dispatch({ type: 'moveCard', targetId: overId, id: draggedId });
+        props.dispatch({ type: ActionType.MOVE_CARD, targetId: overId, id: draggedId });
       }
     }
   },
@@ -212,17 +218,17 @@ export default DropTarget(
         return true;
       },
       beginDrag: (props: CardProps) => {
-        props.dispatch({ type: 'startdragging', id: props.id });
+        props.dispatch({ type: ActionType.START_DRAG, id: props.id });
         return {
           id: props.id
         };
       },
       endDrag(props: CardProps, monitor: DragSourceMonitor) {
         const { id: droppedId } = monitor.getItem();
-        props.dispatch({ type: 'enddragging', id: droppedId });
+        props.dispatch({ type: ActionType.END_DRAG, id: droppedId });
         const didDrop = monitor.didDrop();
         if (!didDrop) {
-          props.dispatch({ type: 'canceldragging', id: props.id });
+          props.dispatch({ type: ActionType.CANCEL_DRAG, id: props.id });
         }
       }
     },

@@ -46,6 +46,7 @@ export const Grid: React.FC<GridProps> = ({ connectDropTarget, onChange }) => {
   // the issue with dispatch is that the upper component will
   // render, if you want to use useMemo, we can let the child update its state
   // and then memoize the array ( if the reference is the same, we do not render )
+  // but we need to store the settings, the definition
   const children = cards.cardDef.map((card, idx) => (
     <SearchCard {...card} {...cards.cardSettings[idx]} key={card.id} dispatch={dispatch} />
   ));

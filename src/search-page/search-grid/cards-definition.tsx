@@ -341,13 +341,23 @@ const getStartStateFromCard = (id: string) => {
   return { id, collapsed, disabled, values, widgetState, state: CardState.PRISTINE };
 };
 
-export interface CS {
+export interface CardSetting {
+  id: string;
+  collapsed: boolean;
+  dragging?: boolean;
+  disabled: boolean;
+  values: any[];
+  state: CardState;
+  widgetState: CardState[];
+}
+
+export interface CardGridState {
   cardDef: Card[];
   viewMode: ViewMode;
-  cardSettings: { id: string; collapsed: boolean; disabled: boolean; values: any[] }[];
-  map: any;
+  cardSettings: CardSetting[];
+  map: { [cardId: string]: CardSetting };
   heroCardDef?: Card;
-  heroCardSetting?: any;
+  heroCardSetting?: CardSetting;
   dragInitialIndex?: number | null;
   onChangeRef?: React.MutableRefObject<Function>; // callback for triggering requests
 }
@@ -358,7 +368,7 @@ export enum ViewMode {
   PRINT = 'print'
 }
 
-export function addCard(state: CS, id: string) {
+export function addCard(state: CardGridState, id: string) {
   const definition = DICO[id];
   const settings = getStartStateFromCard(id);
 
@@ -379,10 +389,10 @@ export function addCard(state: CS, id: string) {
   state.map[id] = settings; // settings are directly updated from the component
   return state;
 }
-export function sfindCard(state: CS, id: string) {
+export function sfindCard(state: CardGridState, id: string) {
   return state.cardDef.findIndex(c => c.id === id);
 }
-export function sdeleteCard(state: CS, id: string) {
+export function sdeleteCard(state: CardGridState, id: string) {
   const index = sfindCard(state, id);
   const definition = state.cardDef.splice(index, 1);
   definition[0].activeInstance!--;
@@ -393,7 +403,7 @@ export function sdeleteCard(state: CS, id: string) {
   return state;
 }
 
-export function smoveCard(state: CS, id: string, atIndex: number) {
+export function smoveCard(state: CardGridState, id: string, atIndex: number) {
   const index = sfindCard(state, id);
   const array = [...state.cardDef];
   const card = array.splice(index, 1);
@@ -406,7 +416,7 @@ export function smoveCard(state: CS, id: string, atIndex: number) {
   return state;
 }
 
-export const initialState: CS = {
+export const initialState: CardGridState = {
   cardDef: [],
   cardSettings: [],
   map: {},

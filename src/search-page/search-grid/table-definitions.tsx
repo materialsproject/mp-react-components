@@ -142,8 +142,9 @@ export const onChange = (c, executePost) => {
     });
   });
 
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // if there is only one key ( = number of elements ), we do not query
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // if there is only one key, and its the number of elements, we do not query!!
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if (Object.keys(query).length === 1 && !!query['nelements']) {
     return;
   }

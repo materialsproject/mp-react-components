@@ -29,8 +29,6 @@ import { AiOutlineCaretLeft } from 'react-icons/ai';
 
 const debouncedOnChange = debounce(onChange, 500);
 
-//TODO(chab) what we do with provenance
-
 const conditionalRowStyles = [
   {
     when: row => row.theoretical,
@@ -122,7 +120,6 @@ function ExportableGrid() {
             <MenuItem eventKey={3}>Export as XLS</MenuItem>
           </Dropdown.Menu>
         </Dropdown>
-
         <button
           key="copy"
           onClick={handleCopy}
