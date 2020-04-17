@@ -99,7 +99,7 @@ export function initState({
   onChangeRef: any;
   allDefinitions: Card[];
 }): CardGridState {
-  const cardIdToCardDefinition = cardsDefinition.reduce((acc, card) => {
+  const cardIdToCardDefinition = allDefinitions.reduce((acc, card) => {
     acc[card.id] = card;
     return acc;
   }, {});

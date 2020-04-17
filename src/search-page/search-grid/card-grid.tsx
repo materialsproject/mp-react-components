@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import { addCard, Card, cardsDefinition, ItemTypes } from './cards-definition';
+import { addCard, Card, ItemTypes } from './cards-definition';
 import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
 import { SearchPalette } from '../palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
@@ -64,7 +64,7 @@ export const Grid: React.FC<GridProps> = ({
         {/* Masonry inserts div, the issue is that the component is unmountend and remounted*/
         /* which leads to bad performance */}
         <SearchPalette
-          filters={cardsDefinition}
+          filters={cards.allDefinitions}
           onFilterClick={c =>
             dispatch({ type: 'setcards', cards: addCard(cards, c.id), meta: 'move' })
           }

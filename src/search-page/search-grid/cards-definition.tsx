@@ -328,7 +328,7 @@ export const getStartStateFromCard = (id: string | Card, cardMap) => {
         break;
       }
       case WIDGET.SLIDERS: {
-        outerAcc.push(widget.configuration.domain);
+        outerAcc.push(widget.configuration.domain.slice(0, widget.configuration.handle));
         break;
       }
     }
@@ -351,7 +351,7 @@ export interface CardGridState {
   viewMode: ViewMode;
   cardDef: Card[]; // used definition
   cardSettings: CardSetting[]; // settings
-  map: { [cardId: string]: CardSetting };
+  map: { [cardId: string]: CardSetting }; // map of visible card
   heroCardDef?: Card;
   heroCardSetting?: CardSetting;
   dragInitialIndex?: number | null;

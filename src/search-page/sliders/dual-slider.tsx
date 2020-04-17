@@ -85,6 +85,10 @@ export class DualSlider extends Component<any, any> {
   };
 
   tooltipFormatter(handles: SliderItem[], value) {
+    if (handles.length === 1) {
+      return format('.1f')(value);
+    }
+
     const offset = Math.abs(handles[0].percent - handles[1].percent);
     const v = format('.1f')(value);
     const v1 = format('.1f')(handles[0].value);
