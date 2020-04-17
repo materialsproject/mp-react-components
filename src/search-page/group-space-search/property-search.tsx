@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './select.less';
 import Select, { components } from 'react-select';
-import {
-  groupCheckboxes,
-  groups,
-  propertiesCheckbox,
-  searchKeyToDisplayKey,
-  spaceGroups
-} from './space-groups';
-import { CheckboxList, SelectionStyle, MCheckbox } from '../checkboxes-list/checkbox-list';
+import { groupCheckboxes, groups, propertiesCheckbox, searchKeyToDisplayKey } from './space-groups';
+import { CheckboxList, SelectionStyle } from '../checkboxes-list/checkbox-list';
 
 const groupStyles = {
   display: 'flex',
@@ -45,9 +39,15 @@ export const SelectSP: React.FC<SelectSPProps> = props => {
   }, [props.selected]);
 
   const formatGroupLabel = (data, p) => (
-    <div onClick={() => setSelection(data.options)} style={groupStyles}>
+    <div
+      onClick={() => {
+        setSelection(data.options);
+        props.onChange(data.options);
+      }}
+      style={groupStyles}
+    >
       <span>{data.label}</span>
-      <span style={groupBadgeStyles}>{data.options.length}</span>
+      <span style={groupBadgeStyles}>{data.options.length} Space groups</span>
     </div>
   );
 

@@ -121,27 +121,15 @@ function ExportableGrid() {
             <MenuItem eventKey={3}>Export as XLS</MenuItem>
           </Dropdown.Menu>
         </Dropdown>
-        <button
-          key="copy"
-          onClick={handleCopy}
-          style={{ padding: '10px 35px', borderRadius: '5px', fontSize: 15 }}
-        >
+        <button className="header-button" key="copy" onClick={handleCopy}>
           Copy
         </button>
 
-        <button
-          key="print"
-          onClick={handlePrint}
-          style={{ padding: '10px 35px', borderRadius: '5px', fontSize: 15 }}
-        >
+        <button className="header-button" key="print" onClick={handlePrint}>
           Print
         </button>
 
-        <button
-          key="delete"
-          onClick={handlePrint}
-          style={{ padding: '10px 35px', borderRadius: '5px', fontSize: 15 }}
-        >
+        <button className="header-button" key="delete" onClick={handlePrint}>
           Edit
         </button>
       </>
