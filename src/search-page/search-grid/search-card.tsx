@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DualSlider } from '../sliders/dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
-import { Card, getWidgetConfiguration, ItemTypes, Widget, WIDGET } from './cards-definition';
+import { Card, Field, getWidgetConfiguration, ItemTypes, Widget, WIDGET } from './cards-definition';
 import { AiOutlineDelete, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import {
@@ -19,10 +19,11 @@ import SP from '../group-space-search/property-search';
 import TagSearch from '../tags/tag-search';
 import { PeriodicContext, SelectableTable } from '../../periodic-table';
 import { CheckboxList } from '../checkboxes-list/checkbox-list';
-
 //TODO(move to table configuration, so we do not need to inject it)
 import TableSelectionSelector from '../../periodic-table/table-selector';
 import { ActionType } from './grid-reducer';
+import { useForm } from 'react-hook-form';
+import { Simpleform } from '../form/form';
 
 export enum CARD_SIZE {
   SMALL = 'SMALL',
@@ -47,6 +48,9 @@ const getWidget = (
   const type = widget.type;
   //Note(chab) compiler can only infer type AFTER the switch statement
   switch (type) {
+    case WIDGET.INPUT_FORM:
+      const widgetProps = getWidgetConfiguration(type, widget);
+      return <Simpleform {...widgetProps} onChange={c => onChange(c)} />;
     case WIDGET.SLIDERS: {
       const widgetProps = getWidgetConfiguration(type, widget);
       return <DualSlider {...widgetProps} value={widgetValue} onChange={c => onChange(c)} />;

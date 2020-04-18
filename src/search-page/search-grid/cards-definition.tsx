@@ -1,5 +1,6 @@
 import React from 'react';
 import { SelectionStyle } from '../checkboxes-list/checkbox-list';
+import { ValidationOptions } from 'react-hook-form';
 
 export enum WIDGET {
   SLIDERS = 'SLIDERS',
@@ -33,7 +34,7 @@ export type ModelInterfaceMap = {
   SP_SEARCH: any;
   TAG_SEARCH: any;
   FILE_UPLOAD: any;
-  INPUT_FORM: any;
+  INPUT_FORM: WidgetInputForm;
 };
 
 export function getWidgetConfiguration<T extends WIDGET>(
@@ -42,6 +43,37 @@ export function getWidgetConfiguration<T extends WIDGET>(
 ): ModelInterfaceMap[T] {
   return widget.configuration;
 }
+
+export interface Field {
+  id: string;
+  label: string;
+  name: string;
+  type: 'text' | 'number';
+  placeholder?: string;
+  validationOptions: ValidationOptions; // see below for validation example
+}
+
+export interface WidgetInputForm {
+  fields: Field[];
+}
+/*export type ValidationOptions = Partial<{
+  required: Message | ValidationOption<boolean>;
+  min: ValidationOption<number | string>;
+  max: ValidationOption<number | string>;
+  maxLength: ValidationOption<number | string>;
+  minLength: ValidationOption<number | string>;
+  pattern: ValidationOption<RegExp>;
+  validate: Validate | Record<string, Validate>;
+}>;
+pattern: {
+  value: /[A-Za-z]{3}/,
+  message: 'error message' // <p>error message</p>
+}
+required: 'Field is required'
+maxLength : {
+  value: 2,
+    message: 'error message' // <p>error message</p>
+}*/
 
 export interface WidgetSlider {
   // we can add mode
