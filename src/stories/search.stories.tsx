@@ -30,6 +30,45 @@ const cardsDefinition: Card[] = [
     ]
   },
   {
+    title: 'Form example',
+    id: 'Form',
+    allowMultipleInstances: false,
+    bypassIdForKey: true,
+    widgets: [
+      {
+        type: WIDGET.INPUT_FORM,
+        id: 'sp',
+        configuration: {
+          fields: [
+            {
+              id: 'a',
+              name: 'number',
+              label: 'Some number',
+              placeholder: 'Enter a number',
+              type: 'number',
+              validationOptions: {
+                required: true,
+                min: 12,
+                max: 140
+              }
+            },
+            {
+              id: 'b',
+              name: 'Some text',
+              label: 'Some text',
+              placeholder: 'Enter a text',
+              type: 'text',
+              validationOptions: {
+                required: true,
+                maxLength: 2
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     title: 'Has properties',
     id: 'has_properties',
     allowMultipleInstances: false,
@@ -131,7 +170,7 @@ export const search = () => (
     <DndProvider backend={Backend}>
       <Grid
         allDefinitions={object('cards', cardsDefinition)}
-        initCards={object('start cards', ['periodic', 'test', 'has_properties'])}
+        initCards={object('start cards', ['Form', 'test', 'has_properties'])}
         onChange={action('state')}
       />
     </DndProvider>
