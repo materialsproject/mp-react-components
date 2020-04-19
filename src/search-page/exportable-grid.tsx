@@ -20,7 +20,7 @@ import { debounce } from 'ts-debounce';
 import { AxiosRequestConfig } from 'axios';
 import { FilterComponent } from './search-grid/filter';
 import { columns, onChange } from './search-grid/table-definitions';
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { downloadCSV, downloadExcel, downloadJSON } from './utils';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,6 +30,7 @@ import { cardsDefinition, initialGrid } from './search-grid/cards-definition';
 
 const debouncedOnChange = debounce(onChange, 500);
 
+const font = { fontFamily: 'Helvetica Neue' };
 const conditionalRowStyles = [
   {
     when: row => row.theoretical,
@@ -60,6 +61,8 @@ function ExportableGrid() {
     executePost
   ] = useAxios(axiosConfig, { manual: true });
   const rows = useRef<any[]>([]);
+
+  const change = useCallback(c => debouncedOnChange(c, executePost), [executePost]);
 
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
@@ -136,6 +139,11 @@ function ExportableGrid() {
     );
   }, []);
 
+  const gridMemo = useMemo(
+    () => <MGrid allDefinitions={cardsDefinition} initCards={initialGrid} onChange={change} />,
+    [cardsDefinition, initialGrid, onChange]
+  );
+
   return (
     <div className={`search-grid ${!!printView ? 'print' : ''}`}>
       {printView && (
@@ -153,18 +161,10 @@ function ExportableGrid() {
       )}
 
       <ReactTooltip id="no-bs" type="warning" effect="solid">
-        <span style={{ fontFamily: 'Helvetica Neue' }}>
-          Gap value is approximate and using a loose k-point mesh
-        </span>
+        <span style={font}>Gap value is approximate and using a loose k-point mesh</span>
       </ReactTooltip>
 
-      <DndProvider backend={Backend}>
-        <MGrid
-          allDefinitions={cardsDefinition}
-          initCards={initialGrid}
-          onChange={c => debouncedOnChange(c, executePost)}
-        />
-      </DndProvider>
+      <DndProvider backend={Backend}>{gridMemo}</DndProvider>
       <DataTable
         subHeader
         subHeaderComponent={subHeaderComponentMemo}
@@ -173,7 +173,7 @@ function ExportableGrid() {
         theme="material"
         onSelectedRowsChange={cb}
         conditionalRowStyles={conditionalRowStyles}
-        style={{ fontFamily: 'Helvetica Neue' }}
+        style={font}
         columns={columns}
         data={
           putData &&
@@ -190,6 +190,10 @@ function ExportableGrid() {
 }
 
 export default function gridWithContext() {
+
+  //FIXME(chab) investigate if it's worth wrapping the grid with useMemo.
+  // currently it's NOT, because we do not expect a NEW context
+
   return (
     <PeriodicContext>
       <ExportableGrid />

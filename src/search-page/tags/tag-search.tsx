@@ -75,8 +75,7 @@ function MenuList(props) {
   const { options, children, maxHeight, getValue } = props;
   const [value] = getValue();
   const initialOffset = options.indexOf(value) * height;
-  const mh =
-    !props.children[0] || props.children[0].type.name === 'NoOptionMessage' ? 0 : maxHeight;
+  const mh = !children[0] || children[0].type.name === 'NoOptionMessage' ? 0 : maxHeight;
 
   return (
     <List
