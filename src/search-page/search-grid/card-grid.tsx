@@ -2,13 +2,14 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import './card-grid.less';
 import SearchCard from './search-card';
-import { addCard, Card, ItemTypes } from './cards-definition';
-import { ConnectDropTarget, DropTarget, useDrop } from 'react-dnd';
+import { addCard, Card, CardGridState, ItemTypes } from './cards-definition';
+import { ConnectDropTarget, DropTarget, useDrop, DndProvider } from 'react-dnd';
 import { SearchPalette } from '../palette/search-palette';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
 import { ActionType, initState, reducer } from './grid-reducer';
+import Backend from 'react-dnd-html5-backend';
 
 const breakpointColumnsObj = {
   default: 3,
@@ -20,7 +21,7 @@ const breakpointColumnsObj = {
 export interface GridProps {
   connectDropTarget: ConnectDropTarget;
   allDefinitions: Card[];
-  onChange: any;
+  onChange: (change: CardGridState) => void;
   initCards: string[];
 }
 
@@ -104,9 +105,21 @@ export const Grid: React.FC<GridProps> = ({
   );
 };
 
-export default DropTarget(ItemTypes.CARD, {}, connect => ({
+const DnDGrid = DropTarget(ItemTypes.CARD, {}, connect => ({
   connectDropTarget: connect.dropTarget()
 }))(Grid);
+
+export default DnDGrid;
+
+// not sure how to handle the context, should we assume people set in dash, or should we provide
+// a component ?
+export const GridWithContext = (props: GridProps) => {
+  return (
+    <DndProvider backend={Backend}>
+      <DnDGrid {...props} />
+    </DndProvider>
+  );
+};
 
 /////////////////////////////////
 // sliders.. take $gte and $lte

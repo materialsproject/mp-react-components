@@ -189,11 +189,9 @@ function ExportableGrid() {
   );
 }
 
-export default function gridWithContext() {
-
+export default function GridWithContext() {
   //FIXME(chab) investigate if it's worth wrapping the grid with useMemo.
   // currently it's NOT, because we do not expect a NEW context
-
   return (
     <PeriodicContext>
       <ExportableGrid />

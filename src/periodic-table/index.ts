@@ -8,6 +8,7 @@ import Simple3DSceneComponent from '../crystal-toolkit-components/components-v2/
 import { CameraContextWrapper } from '../crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 import JSONViewComponent from '../crystal-toolkit-components/components-v2/JSONViewComponent.react';
 import ReactGraphComponent from '../crystal-toolkit-components/components-v2/graph.component';
+import { GridWithContext } from '../search-page/search-grid/card-grid';
 
 export {
   SelectableTable,
@@ -18,5 +19,6 @@ export {
   JSONViewComponent,
   ReactGraphComponent,
   SearchFunnel,
-  CameraContextWrapper
+  CameraContextWrapper,
+  GridWithContext
 };
