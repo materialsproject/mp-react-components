@@ -4,7 +4,7 @@ import './form.less';
 import React from 'react';
 
 export function Simpleform({ fields, onChange }) {
-  const { register, errors, handleSubmit } = useForm({ mode: 'onChange' });
+  const { register, errors, handleSubmit } = useForm({ mode: 'onChange', submitFocusError: false });
   const onSubmit = data => {
     console.log(data);
   };
@@ -12,7 +12,7 @@ export function Simpleform({ fields, onChange }) {
   return (
     <form
       className="form-widget"
-      onChange={handleSubmit(onChange)}
+      onChange={handleSubmit(onChange)} // not sure if it's a good idea
       onSubmit={handleSubmit(onSubmit)}
     >
       {fields.map((field: Field) => (

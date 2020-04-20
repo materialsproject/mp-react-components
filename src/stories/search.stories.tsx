@@ -3,165 +3,11 @@ import { object, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { Card, WIDGET } from '../search-page/search-grid/cards-definition';
-import { s2 as sceneJson } from '../crystal-toolkit-components/components-v2/scene/simple-scene';
-import { SelectionStyle } from '../search-page/checkboxes-list/checkbox-list';
 import { action } from '@storybook/addon-actions';
-
-// Those are some defaults you can use
-const cardsDefinition: Card[] = [
-  {
-    title: 'Periodic table',
-    id: 'periodic',
-    hero: true,
-    permanent: true,
-    bypassIdForKey: true,
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.PERIODIC_TABLE,
-        id: 'sp',
-        configuration: {
-          hiddenElements: [],
-          disabledElements: [],
-          enabledElements: []
-        }
-      }
-    ]
-  },
-  {
-    title: 'Form example',
-    id: 'Form',
-    allowMultipleInstances: false,
-    bypassIdForKey: true,
-    widgets: [
-      {
-        type: WIDGET.INPUT_FORM,
-        id: 'sp',
-        configuration: {
-          fields: [
-            {
-              id: 'a',
-              name: 'number',
-              label: 'Some number',
-              placeholder: 'Enter a number',
-              type: 'number',
-              validationOptions: {
-                required: true,
-                min: 12,
-                max: 140
-              }
-            },
-            {
-              id: 'b',
-              name: 'Some text',
-              label: 'Some text',
-              placeholder: 'Enter a text',
-              type: 'text',
-              validationOptions: {
-                required: true,
-                maxLength: 2
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    title: 'Has properties',
-    id: 'has_properties',
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.CHECKBOX_LIST,
-        id: 'props',
-        name: null,
-        configuration: {
-          selectionStyle: SelectionStyle.SINGLE,
-          checkboxes: [
-            {
-              label: 'Elastic',
-              name: 'elastic'
-            },
-            {
-              label: 'Vibrational',
-              name: 'vibrational'
-            },
-            {
-              label: 'Dielectric',
-              name: 'dielectric'
-            },
-            {
-              label: 'Elec. structure',
-              name: 'structure'
-            }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    title: 'General',
-    id: 'general',
-    bypassIdForKey: true,
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.SLIDERS,
-        name: 'Band Gap Ev',
-        id: 'band_gap',
-        configuration: {
-          // we can add mode
-          handle: 2,
-          domain: [0, 10],
-          step: 1
-        }
-      },
-      {
-        type: WIDGET.SLIDERS,
-        name: 'Energy Above Hull',
-        id: 'e_above_hull',
-        configuration: {
-          // we can add mode
-          handle: 2,
-          domain: [0, 6],
-          step: 1
-        }
-      }
-    ]
-  },
-  {
-    title: 'Some filter',
-    id: 'test',
-    bypassIdForKey: true,
-    allowMultipleInstances: false,
-    widgets: [
-      {
-        type: WIDGET.SLIDERS,
-        name: 'Test one',
-        id: 't1',
-        configuration: {
-          // we can add mode
-          handle: 1,
-          domain: [0, 10],
-          step: 1
-        }
-      },
-      {
-        type: WIDGET.SLIDERS,
-        name: 'Test two',
-        id: 't2',
-        configuration: {
-          // we can add mode
-          handle: 2,
-          domain: [10, 50],
-          step: 0.5
-        }
-      }
-    ]
-  }
-];
+import { card } from './search-json/simple_form';
+import cb from './search-json/checkbox';
+import { sliders } from './search-json/sliders';
+import { cardsDefinition } from './search-json/demo';
 
 export const search = () => (
   <>
@@ -171,6 +17,48 @@ export const search = () => (
       <Grid
         allDefinitions={object('cards', cardsDefinition)}
         initCards={object('start cards', ['Form', 'test', 'has_properties'])}
+        onChange={action('state')}
+      />
+    </DndProvider>
+  </>
+);
+
+export const SmallForm = () => (
+  <>
+    <div> Small Form </div>
+    <hr />
+    <DndProvider backend={Backend}>
+      <Grid
+        allDefinitions={object('cards', card)}
+        initCards={object('start cards', [card[0].id])}
+        onChange={action('state')}
+      />
+    </DndProvider>
+  </>
+);
+
+export const CheckboxList = () => (
+  <>
+    <div> Checkbox</div>
+    <hr />
+    <DndProvider backend={Backend}>
+      <Grid
+        allDefinitions={object('cards', cb)}
+        initCards={object('start cards', [cb[0].id])}
+        onChange={action('state')}
+      />
+    </DndProvider>
+  </>
+);
+
+export const SliderList = () => (
+  <>
+    <div> Sliders </div>
+    <hr />
+    <DndProvider backend={Backend}>
+      <Grid
+        allDefinitions={object('cards', sliders)}
+        initCards={object('start cards', [sliders[0].id])}
         onChange={action('state')}
       />
     </DndProvider>

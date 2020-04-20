@@ -24,6 +24,7 @@
     "@s-ui/react-molecule-button-group": "^2.1.0",
     "@storybook/client-api": "^5.3.18",
     "@trendmicro/react-dropdown": "^1.4.0",
+    "@welldone-software/why-did-you-render": "^4.1.0-alpha.1",
     "@zendeskgarden/react-buttons": "^8.5.0",
     "@zendeskgarden/react-theming": "^8.5.0",
     "add": "^2.0.6",
