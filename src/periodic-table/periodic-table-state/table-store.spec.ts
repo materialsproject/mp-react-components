@@ -107,6 +107,7 @@ function resetState(
     enabledElements,
     hiddenElements,
     detailedElement,
-    forwardOuterChange
+    forwardOuterChange,
+    lastAction: {} as any
   });
 }

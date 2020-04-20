@@ -13,7 +13,8 @@ export function PeriodicContext(props: any) {
       disabledElements: props.disabledElements || {},
       hiddenElements: props.hiddenElements || {},
       forwardOuterChange: props.forwardOuterChange,
-      detailedElement: props.detailedElement
+      detailedElement: props.detailedElement,
+      lastAction: {} as any
     });
   }, [
     props.enabledElements,

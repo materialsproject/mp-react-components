@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useElements } from './periodic-table-state/table-store';
+import { TableSelectionStyle, useElements } from './periodic-table-state/table-store';
 import { Table, TableLayout } from './periodic-table-component/periodic-table.component';
 import { useEffect } from 'react';
 import { arrayToDictionnary } from '../utils/utils';
@@ -29,7 +29,8 @@ export function SelectableTable(props: SelectableTableProps) {
   return (
     <Table
       onElementClicked={element =>
-        tableStateStore.selectionStyle === 'select'
+        tableStateStore.selectionStyle === TableSelectionStyle.SELECT ||
+        tableStateStore.selectionStyle === TableSelectionStyle.MULTI_INPUTS_SELECT
           ? tableStateStore.toggleEnabledElement(element.symbol)
           : tableStateStore.toggleDisabledElement(element.symbol)
       }

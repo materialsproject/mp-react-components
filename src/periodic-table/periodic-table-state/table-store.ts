@@ -10,6 +10,10 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { mapArrayToBooleanObject } from '../../crystal-toolkit-components/components-v2/Simple3DScene/utils';
 
+// TODO(chab) break that store into multiple pieces
+// 1) what is used for rendering, via RXJS
+// 2) what is used for internals, it's like some kind of context/private state
+
 // makes an abstraction on top of process
 declare const process: any; // via dotenv
 
@@ -26,6 +30,13 @@ interface State {
   hiddenElements: ElementState;
   detailedElement: string | null;
   forwardOuterChange: boolean;
+  lastAction: { type: string; element: string };
+}
+
+export enum TableSelectionStyle {
+  ENABLE_DISABLE = 'enableDisable',
+  SELECT = 'select',
+  MULTI_INPUTS_SELECT = 'mis'
 }
 
 const defaultState: Readonly<State> = {
@@ -33,7 +44,8 @@ const defaultState: Readonly<State> = {
   enabledElements: {},
   detailedElement: null,
   hiddenElements: {},
-  forwardOuterChange: true
+  forwardOuterChange: true,
+  lastAction: {} as any
 };
 Object.seal(defaultState);
 
@@ -68,7 +80,11 @@ export function getPeriodicSelectionStore() {
         state.forwardOuterChange = initialState.forwardOuterChange;
       state$.next({ ...state });
     },
-    selectionStyle: 'select',
+    selectionStyle: TableSelectionStyle.SELECT,
+    // used when doing multi-inputs-selection
+    currentElementIndex: 0,
+    selectedElements: {} as any,
+    //
     setForwardChange: fwdChange => (state.forwardOuterChange = fwdChange),
     setEnabledElements: (enabledElements: any) =>
       (state = { ...state, enabledElements }) && state$.next(state),
@@ -80,9 +96,11 @@ export function getPeriodicSelectionStore() {
     setHiddenElements: (hiddenElements: any) =>
       (state = { ...state, hiddenElements }) && state$.next(state),
     //TODO(chab) add check to prever unnecessary state mutation
-    addEnabledElement: (enabledElement: string) =>
+    addEnabledElement: (enabledElement: string) => {
+      state.lastAction = {} as any;
       (state.enabledElements = { ...state.enabledElements, [enabledElement]: true }) &&
-      state$.next(state),
+        state$.next(state);
+    },
     toggleDisabledElement: (disabledElement: string) => {
       if (!state.disabledElements[disabledElement]) {
         state.disabledElements = { ...state.disabledElements, [disabledElement]: true };
@@ -91,14 +109,24 @@ export function getPeriodicSelectionStore() {
         delete _s[disabledElement];
         state.disabledElements = _s;
       }
-      state$.next({ ...state, forwardOuterChange: actions.selectionStyle === 'enableDisable' });
+      state$.next({
+        ...state,
+        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE
+      });
     },
     addDisabledElement: (disabledElement: string) =>
       (state.disabledElements = { ...state.disabledElements, [disabledElement]: true }) &&
       state$.next(state),
     removeEnabledElement: (enabledElement: string) => {
+      state.lastAction = {} as any;
+      if (!state.enabledElements[enabledElement]) {
+        // if element is already removed, we do not want to trigger a state change
+        state$.next(state);
+        return;
+      }
       const _s = { ...state.enabledElements };
       delete _s[enabledElement];
+      console.log(_s, enabledElement);
       (state.enabledElements = _s) && state$.next(state);
     },
     removeDisabledElement: (disabledElement: string) => {
@@ -108,8 +136,20 @@ export function getPeriodicSelectionStore() {
     },
     toggleEnabledElement: (enabledElement: string) => {
       // we always forward toggling
+      state.lastAction = {} as any;
+      state.lastAction.element = enabledElement;
       if (!state.disabledElements[enabledElement]) {
+        state.lastAction.type = 'select';
         if (!state.enabledElements[enabledElement]) {
+          if (actions.selectionStyle === TableSelectionStyle.MULTI_INPUTS_SELECT) {
+            if (actions.selectedElements.current[actions.currentElementIndex]) {
+              //TODO(call own method)
+              const _s = { ...state.enabledElements };
+              delete _s[actions.selectedElements.current[actions.currentElementIndex]];
+              state.enabledElements = _s;
+            }
+          }
+
           const _s = { ...state.enabledElements };
           if (Object.keys(state.enabledElements).length === maxItemAllowed) {
             delete _s[lastElementsToggled];
@@ -124,6 +164,8 @@ export function getPeriodicSelectionStore() {
           }
         } else {
           delete state.enabledElements[enabledElement];
+          state.lastAction.type = 'deselect';
+
           (state.enabledElements = { ...state.enabledElements }) &&
             state$.next({ ...state, forwardOuterChange: true });
         }
