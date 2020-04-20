@@ -64,8 +64,8 @@ export function MultipleElementsSelector({ labels }) {
     observable
       .pipe(
         distinctUntilKeyChanged('enabledElements'),
-        filter(k => k.lastAction.type === 'select' || k.lastAction.type === 'deselect'),
-        tap(a => console.log(a))
+        filter(k => k.lastAction.type === 'select' || k.lastAction.type === 'deselect')
+        //tap(a => console.log(a))
       )
       .subscribe(c => {
         // if we select an element, update the input fields
