@@ -88,10 +88,16 @@ export interface WidgetCheckboxList {
 }
 
 export interface WidgetPeriodicTable {
-  disabledElements: any[];
-  hiddenElements: any[];
-  enabledElements: any[];
+  disabledElements: string[];
+  hiddenElements: string[];
+  enabledElements: string[];
+  searchPlugin: 'multi' | 'enabledisable' | 'classic' | 'formula';
 }
+
+// classic => select a bunch of elements
+// enabledisable => select a set of elements, select another set of elements (that looks disabled )
+// multi => select N elements via the table and inputs
+// formula => allow people to select a certain amount of elements ( will it work with parenthesis (..) ?? )
 
 export interface Card {
   hero?: boolean; // an hero card take all the width
@@ -123,6 +129,7 @@ export const cardsDefinition: Card[] = [
         type: WIDGET.PERIODIC_TABLE,
         id: 'sp',
         configuration: {
+          searchPlugin: 'enableDisable',
           hiddenElements: [],
           disabledElements: [],
           enabledElements: []

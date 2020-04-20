@@ -20,7 +20,9 @@ import TagSearch from '../tags/tag-search';
 import { PeriodicContext, SelectableTable } from '../../periodic-table';
 import { CheckboxList } from '../checkboxes-list/checkbox-list';
 //TODO(move to table configuration, so we do not need to inject it)
-import TableSelectionSelector from '../../periodic-table/table-selector';
+import TableSelectionSelector, {
+  MultipleElementsSelector
+} from '../../periodic-table/table-selector';
 import { ActionType } from './grid-reducer';
 import { useForm } from 'react-hook-form';
 import { Simpleform } from '../form/form';
@@ -69,8 +71,26 @@ const getWidget = (
     }
     case WIDGET.PERIODIC_TABLE: {
       const widgetProps = getWidgetConfiguration(type, widget);
-      const selectorWidget = <TableSelectionSelector />;
-      const inputWidget = (
+
+      let selectorWidget;
+      switch (widgetProps.searchPlugin) {
+        case 'classic': {
+          break;
+        }
+        case 'enabledisable': {
+          selectorWidget = <TableSelectionSelector />;
+          break;
+        }
+        case 'multi': {
+          selectorWidget = <MultipleElementsSelector labels={['label1', 'label2', 'label3']} />;
+          break;
+        }
+        case 'formula': {
+          break;
+        }
+      }
+
+      const inputWidget = widgetProps.searchPlugin === 'enabledisable' && (
         <div className="number-elements">
           Number of elements :
           <input

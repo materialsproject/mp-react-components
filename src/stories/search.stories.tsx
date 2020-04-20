@@ -11,12 +11,12 @@ import { cardsDefinition } from './search-json/demo';
 
 export const search = () => (
   <>
-    <div> Search WIP</div>
+    <div> Search Funnel</div>
     <hr />
     <DndProvider backend={Backend}>
       <Grid
         allDefinitions={object('cards', cardsDefinition)}
-        initCards={object('start cards', ['Form', 'test', 'has_properties'])}
+        initCards={object('start cards', ['periodic', 'test', 'has_properties'])}
         onChange={action('state')}
       />
     </DndProvider>
