@@ -30,7 +30,7 @@ interface State {
   hiddenElements: ElementState;
   detailedElement: string | null;
   forwardOuterChange: boolean;
-  lastAction: { type: string; element: string };
+  lastAction: { type: 'select' | 'deselect'; element: string };
 }
 
 export enum TableSelectionStyle {
