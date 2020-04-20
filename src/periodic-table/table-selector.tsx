@@ -1,11 +1,11 @@
-import React, { createRef, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react';
 import {
   PeriodicSelectionContext,
   TableSelectionStyle
 } from '../periodic-table/periodic-table-state/table-store';
 import { Button, ButtonGroup } from '@zendeskgarden/react-buttons';
 import { TABLE_DICO_V2 } from './periodic-table-data/table-v2';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, map, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, filter } from 'rxjs/operators';
 
 /**
  *
@@ -17,6 +17,13 @@ import { distinctUntilChanged, distinctUntilKeyChanged, filter, map, tap } from 
 export default function TableSelectionSelector() {
   const [selectedItem, setSelectedItem] = useState<TableSelectionStyle>(TableSelectionStyle.SELECT);
   const { actions } = useContext(PeriodicSelectionContext);
+
+  useEffect(() => {
+    actions.selectionStyle = TableSelectionStyle.SELECT;
+    return () => {
+      actions.selectionStyle = TableSelectionStyle.SELECT;
+    };
+  }, []);
 
   return (
     <ButtonGroup
@@ -85,7 +92,7 @@ export function MultipleElementsSelector({ labels }) {
       });
 
     return () => {
-      console.log('CLEAN STATE');
+      actions.selectionStyle = TableSelectionStyle.SELECT;
     };
   }, []);
 
