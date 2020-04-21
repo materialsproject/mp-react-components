@@ -2331,7 +2331,7 @@ export const groupKeyToDisplayKey = {
 
 //TODO(chab) automate that step in the components
 export const groups = keysForGrouping.reduce((acc, key) => {
-  // we build a dictionnary of space groups per each propery
+  // we build a dictionnary of space groups per each property
   const spaceGroupByKey = spaceGroups.reduce((innerAcc, spaceGroup) => {
     innerAcc[spaceGroup[key]]
       ? innerAcc[spaceGroup[key]].push(spaceGroup)

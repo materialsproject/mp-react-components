@@ -22,11 +22,12 @@ import { FilterComponent } from './search-grid/filter';
 import { columns, onChange } from './search-grid/table-definitions';
 import { useCallback, useMemo, useRef } from 'react';
 import { downloadCSV, downloadExcel, downloadJSON } from './utils';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import copy from 'copy-to-clipboard';
 import { AiOutlineCaretLeft } from 'react-icons/ai';
 import { cardsDefinition, initialGrid } from './search-grid/cards-definition';
+import CheckBox from 'rc-checkbox';
 
 const debouncedOnChange = debounce(onChange, 500);
 
@@ -55,6 +56,7 @@ const axiosConfig: AxiosRequestConfig = {
 function ExportableGrid() {
   const [filterValue, setFilterValue] = React.useState(false);
   const [printView, setPrintView] = React.useState(false);
+  const [scolumns, setColumns] = React.useState(columns);
 
   const [
     { data: putData, loading: putLoading, error: putError },
@@ -62,13 +64,53 @@ function ExportableGrid() {
   ] = useAxios(axiosConfig, { manual: true });
   const rows = useRef<any[]>([]);
 
+  const realData = useMemo(
+    () =>
+      putData &&
+      (filterValue ? putData.response.filter(r => !!r['has_bandstructure']) : putData.response),
+    [putData, filterValue]
+  );
+
   const change = useCallback(c => debouncedOnChange(c, executePost), [executePost]);
 
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
-      <FilterComponent onFilter={e => setFilterValue(!filterValue)} filterValue={filterValue} />
+      <>
+        <div
+          onDoubleClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            scolumns.forEach(s => ((s as any).omit = false));
+            setColumns([...scolumns]);
+          }}
+        >
+          <Dropdown
+            onSelect={c => {
+              console.log(c, scolumns);
+              (scolumns[c] as any).omit = !(scolumns[c] as any).omit;
+              setColumns([...scolumns]);
+            }}
+          >
+            <Dropdown.Toggle
+              style={{ padding: '9px 35px', borderRadius: 5, marginRight: 15 }}
+              btnStyle="flat"
+            >
+              Show / Hide Columns
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {scolumns.map((c, idx) => (
+                <MenuItem key={c.name} eventKey={idx}>
+                  <CheckBox value={!(c as any).omit} checked={!(c as any).omit} /> {c.name}
+                </MenuItem>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+
+        <FilterComponent onFilter={e => setFilterValue(!filterValue)} filterValue={filterValue} />
+      </>
     );
-  }, [filterValue]);
+  }, [filterValue, scolumns]);
 
   const cb = useCallback(r => {
     rows.current = r.selectedRows;
@@ -167,6 +209,7 @@ function ExportableGrid() {
       <DndProvider backend={Backend}>{gridMemo}</DndProvider>
       <DataTable
         subHeader
+        keyField="material_id"
         subHeaderComponent={subHeaderComponentMemo}
         contextActions={contextActions}
         title="Materials"
@@ -174,11 +217,9 @@ function ExportableGrid() {
         onSelectedRowsChange={cb}
         conditionalRowStyles={conditionalRowStyles}
         style={font}
-        columns={columns}
-        data={
-          putData &&
-          (filterValue ? putData.response.filter(r => !!r['has_bandstructure']) : putData.response)
-        }
+        columns={scolumns}
+        data={realData}
+        className={!realData || realData.length === 0 ? 'empty-table' : ''}
         progressPending={putLoading}
         progressComponent={<Loader type="Bars" color="#00BFFF" height={80} width={100} />}
         selectableRows
