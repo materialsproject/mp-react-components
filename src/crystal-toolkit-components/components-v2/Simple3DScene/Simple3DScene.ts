@@ -665,6 +665,33 @@ export default class Simple3DScene {
           obj.visible = !!namesToVisibility[objName];
         }
       });
+      // check all outlined objects, for each outlined object, their ancestors visibility can be false
+      // if it's the case, we'll need to remove the outlined object
+      // note that we consider that the selection is lost
+      const idsToRemove: string[] = [];
+      this.selectedJsonObjects = this.selectedJsonObjects.filter(o => {
+        let threeobject = this.computeIdToThree[o.id];
+        let visible = true;
+        if (!threeobject.visible) {
+          idsToRemove.push(threeobject.uuid);
+          return false;
+        } else {
+          const baseObject = threeobject;
+          // walk the object hierarchy to check if parent are visible
+          while (threeobject.parent && visible) {
+            threeobject = threeobject.parent;
+            visible = threeobject.visible;
+          }
+          // if it's not visible, remove it
+          !visible && idsToRemove.push(baseObject.uuid);
+        }
+        return visible;
+      });
+      idsToRemove.forEach(id => {
+        const outlineObject = this.registry.getObjectFromRegistry(id);
+        this.outlineScene.remove(outlineObject);
+        // remove from inlet too
+      });
       this.renderScene();
     }
   }
