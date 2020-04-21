@@ -129,7 +129,7 @@ export const cardsDefinition: Card[] = [
         type: WIDGET.PERIODIC_TABLE,
         id: 'sp',
         configuration: {
-          searchPlugin: 'enableDisable',
+          searchPlugin: 'enabledisable',
           hiddenElements: [],
           disabledElements: [],
           enabledElements: []

@@ -124,7 +124,7 @@ export default class Simple3DScene {
     if (this.renderer instanceof WebGLRenderer || true) {
       // tooltips
       let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
-      if (p) {
+      if (p && p.object) {
         const { object, point } = p;
         this.tooltipHelper.updateTooltip(point, object!.jsonObject, object!.sceneObject);
         this.renderScene();
@@ -133,7 +133,7 @@ export default class Simple3DScene {
       }
       // change mouse pointer for clickable objects
       p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
-      if (p) {
+      if (p && p.object) {
         this.renderer.domElement.classList.add(POINTER_CLASS);
       } else {
         this.renderer.domElement.classList.remove(POINTER_CLASS);
@@ -238,7 +238,7 @@ export default class Simple3DScene {
   private onClickImplementation(p, e) {
     let needRedraw = false;
     //TODO(chab) make it more readale
-    if (p) {
+    if (p && p.object) {
       const { object, point } = p;
       if (object?.sceneObject) {
         const sceneObject: Object3D = object?.sceneObject;
@@ -672,23 +672,26 @@ export default class Simple3DScene {
   // i know this is can be done by implementing a color buffer, with each color matching one
   // object
   getClickedReference(clientX: number, clientY: number, objectsToCheck: Object3D[]) {
+    //FIXME(chab) ideally we should recompute the objectsToCheck array for better performance
     if (!objectsToCheck || objectsToCheck.length === 0) {
       return;
     }
-
     const size = new THREE.Vector2(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
-
     this.raycaster.setFromCamera(getThreeScreenCoordinate(size, clientX, clientY), this.camera);
     const intersects = this.raycaster.intersectObjects(objectsToCheck, true);
     if (intersects.length > 0) {
       // we catch the first object that the ray touches
-      return { point: intersects[0].point, object: this.getParentObject(intersects[0].object) };
+      const info = {
+        point: intersects[0].point,
+        object: this.getParentObject(intersects[0].object)
+      };
+      return info;
     }
     return null;
   }
 
   getParentObject(object: Object3D): { sceneObject: Object3D; jsonObject: any } | null {
-    if (!object.parent) {
+    if (!object.parent || !object.parent.visible || !object.visible) {
       return null;
     }
     if (!this.objectDictionnary[object.id]) {
