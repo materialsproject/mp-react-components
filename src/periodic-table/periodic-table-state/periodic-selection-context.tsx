@@ -1,11 +1,24 @@
 import * as React from 'react';
 import { getPeriodicSelectionStore, PeriodicSelectionContext } from './table-store';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
+import { arrayToDictionnary } from '../../utils/utils';
 
 export function PeriodicContext(props: any) {
-  // We consider that the store will never change once the element is mounted
-  // the store will deliver changes, but will not change itself
   const store = useMemo(() => getPeriodicSelectionStore(), []);
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    isMounted.current &&
+      store.actions.setEnabledElements(turnToDictionnaryIfNeeded(props.enabledElements));
+  }, [props.enabledElements]);
+  useEffect(() => {
+    isMounted.current &&
+      store.actions.setDisabledElements(turnToDictionnaryIfNeeded(props.disabledElements));
+  }, [props.disabledElements]);
+  useEffect(() => {
+    isMounted.current &&
+      store.actions.setHiddenElements(turnToDictionnaryIfNeeded(props.hiddenElements));
+  }, [props.hiddenElements]);
 
   useEffect(() => {
     store.actions.init({
@@ -16,17 +29,16 @@ export function PeriodicContext(props: any) {
       detailedElement: props.detailedElement,
       lastAction: {} as any
     });
-  }, [
-    props.enabledElements,
-    props.disabledElements,
-    props.hiddenElements,
-    props.detailedElement,
-    props.forwardOuterChange
-  ]);
+    isMounted.current = true;
+  }, []);
 
   return (
     <PeriodicSelectionContext.Provider value={store}>
       {{ ...props.children }}
     </PeriodicSelectionContext.Provider>
   );
+}
+
+function turnToDictionnaryIfNeeded(arrayOrObject) {
+  return Array.isArray(arrayOrObject) ? arrayToDictionnary(arrayOrObject) : arrayOrObject;
 }

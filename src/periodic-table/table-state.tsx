@@ -2,7 +2,6 @@ import * as React from 'react';
 import { TableSelectionStyle, useElements } from './periodic-table-state/table-store';
 import { Table, TableLayout } from './periodic-table-component/periodic-table.component';
 import { useEffect } from 'react';
-import { arrayToDictionnary } from '../utils/utils';
 
 interface SelectableTableProps {
   /** array of enabled elements, e.g : ['H', 'O'] */
