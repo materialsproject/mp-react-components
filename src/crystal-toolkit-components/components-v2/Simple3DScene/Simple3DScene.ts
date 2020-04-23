@@ -22,7 +22,14 @@ import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
-import { disposeSceneHierarchy, download, getThreeScreenCoordinate, ObjectRegistry } from './utils';
+import {
+  disposeSceneHierarchy,
+  download,
+  getScreenCoordinate,
+  getThreeScreenCoordinate,
+  moveAndUnprojectPoint,
+  ObjectRegistry
+} from './utils';
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
@@ -708,8 +715,14 @@ export default class Simple3DScene {
     const intersects = this.raycaster.intersectObjects(objectsToCheck, true);
     if (intersects.length > 0) {
       // we catch the first object that the ray touches
+      let point = intersects[0].point;
+      const screenPoint = getScreenCoordinate(this.cachedMountNodeSize, point, this.camera);
+      const finalPoint = moveAndUnprojectPoint(this.cachedMountNodeSize, screenPoint, this.camera, {
+        x: 0,
+        y: -30
+      });
       const info = {
-        point: intersects[0].point,
+        point: finalPoint,
         object: this.getParentObject(intersects[0].object)
       };
       return info;

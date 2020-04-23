@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import { lightenDarkenColor } from '../../../utils/utils';
+import { rgb } from 'd3-color';
 
 export class TooltipHelper {
   private tooltipedJsonObject: any | null = null;
@@ -22,9 +22,8 @@ export class TooltipHelper {
     if (!(this.tooltipedJsonObject === jsonObject)) {
       sceneObject.children.forEach(c => {
         if (c instanceof THREE.Mesh) {
-          (c.material as THREE.MeshStandardMaterial).color = new THREE.Color(
-            lightenDarkenColor(jsonObject.color, -70)
-          );
+          const color = rgb(jsonObject.color).brighter(1);
+          (c.material as THREE.MeshStandardMaterial).color = new THREE.Color(color.formatHex());
         }
       });
       this.tooltipedJsonObject = jsonObject;

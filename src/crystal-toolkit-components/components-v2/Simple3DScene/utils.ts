@@ -112,6 +112,29 @@ export function getThreeScreenCoordinate(size, clientX: number, clientY: number)
   return new THREE.Vector2((clientX / size.width) * 2 - 1, -(clientY / size.height) * 2 + 1);
 }
 
+export function getScreenCoordinate(size, point: THREE.Vector3, camera: THREE.Camera) {
+  point = point.clone();
+  const vector = point.project(camera);
+  // we are in NDC space
+  vector.x = ((vector.x + 1) / 2) * size.width;
+  vector.y = (-(vector.y - 1) / 2) * size.height;
+  return vector;
+}
+
+export function moveAndUnprojectPoint(size, point: THREE.Vector3, camera, delta?) {
+  point = point.clone();
+  if (delta) {
+    point.x = point.x + delta.x < 0 ? point.x - delta.x : point.x + delta.x;
+    point.y = point.y + delta.y < 0 ? point.y - delta.y : point.y + delta.y;
+  }
+  // go back in NDC space
+  point.x = (point.x / size.width) * 2 - 1;
+  point.y = -(point.y / size.height) * 2 + 1;
+  // go back in scene coordinate
+  const vector = point.unproject(camera);
+  return vector;
+}
+
 export interface Action<T, P> {
   type: T;
   payload: P;
