@@ -108,14 +108,12 @@ const getWidget = (
 
       return (
         <PeriodicContext {...widgetProps}>
-          <>
-            <SelectableTable
-              selectorWidget={selectorWidget}
-              inputWidget={inputWidget}
-              onStateChange={change => onChange(change)}
-              maxElementSelectable={5}
-            />
-          </>
+          <SelectableTable
+            selectorWidget={selectorWidget}
+            inputWidget={inputWidget}
+            onStateChange={change => onChange(change)}
+            maxElementSelectable={5}
+          />
         </PeriodicContext>
       );
     }

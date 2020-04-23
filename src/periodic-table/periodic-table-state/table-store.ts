@@ -39,18 +39,17 @@ export enum TableSelectionStyle {
   MULTI_INPUTS_SELECT = 'mis'
 }
 
-const defaultState: Readonly<State> = {
+const getDefaultState: () => Readonly<State> = () => ({
   disabledElements: {},
   enabledElements: {},
   detailedElement: null,
   hiddenElements: {},
   forwardOuterChange: true,
   lastAction: {} as any
-};
-Object.seal(defaultState);
+});
 
 export function getPeriodicSelectionStore() {
-  let state: State = defaultState;
+  let state: State = getDefaultState();
   const state$: Subject<State> = new Subject();
   state$.next(state);
   let maxItemAllowed = 5; // Number.MAX_SAFE_INTEGER;
@@ -66,7 +65,7 @@ export function getPeriodicSelectionStore() {
   let lastElementsToggled: string = '';
   const actions = {
     // only use it in test, instead, change the props of the context react element
-    init: (initialState: State = defaultState) => {
+    init: (initialState: State = getDefaultState()) => {
       // use object assign instead
 
       if (initialState.disabledElements)
@@ -90,7 +89,7 @@ export function getPeriodicSelectionStore() {
       (state = { ...state, enabledElements }) && state$.next(state),
     setDisabledElements: (disabledElements: any) =>
       (state = { ...state, disabledElements }) && state$.next(state),
-    clear: () => state$.next(defaultState),
+    clear: () => state$.next(getDefaultState()),
     setDetailedElement: (el: string) =>
       (state = { ...state, detailedElement: el }) && state$.next(state),
     setHiddenElements: (hiddenElements: any) =>
