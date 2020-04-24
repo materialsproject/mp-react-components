@@ -4,7 +4,9 @@
  *
  */
 import * as React from 'react';
-import { useState } from 'react';
+
+import { Component, ReactPropTypes, useState } from 'react';
+
 import * as ReactDOM from 'react-dom';
 import './styles.less';
 import { SelectableTable } from './periodic-table/table-state';
@@ -24,8 +26,9 @@ import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
-
 import katex from 'katex';
+import GridWithContext from './search-page/exportable-grid';
+import { Sidebar } from './navigation/sidebar';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -186,8 +189,8 @@ function SceneSwitcher() {
     <div>
       <div onClick={() => setScene(s2)}> SCENE A </div>
       <div onClick={() => setScene(scene2)}> SCENE B </div>
-      <div onClick={() => setScene(scene)}> SCENE C </div>
-      <div onClick={() => setScene(scene2)}> SCENE D </div>
+      <div onClick={() => setScene(s4)}> SCENE C </div>
+      <div onClick={() => setScene(scene)}> SCENE D </div>
       <div onClick={() => setAnim(AnimationStyle.PLAY)}> PLAY </div>
       <div onClick={() => setAnim(AnimationStyle.NONE)}> NONE </div>
       <div onClick={() => setAnim(AnimationStyle.SLIDER)}> SLIDER </div>
@@ -241,24 +244,19 @@ function TestComponent(props: any) {
       <div
         onClick={() => {
           console.log('CLICKED');
-          ss(1);
-          sz(['Cl', 'Na', 'Be']);
           sd(['K', 'Be']);
         }}
       >
         CLICK ME
       </div>
-      <PeriodicContext>
+      <PeriodicContext hiddenElements={props.e} enabledElements={z} disabledElements={d}>
         <div>
           <SelectableTable
             forwardOuterChange={true}
             maxElementSelectable={sel}
-            hiddenElements={props.e}
             onStateChange={a => {
               console.log('new elements', a);
             }}
-            enabledElements={z}
-            disabledElements={d}
           />
           <TableFilter />
           <SelectedComponent />
@@ -270,10 +268,31 @@ function TestComponent(props: any) {
   );
 }
 
+export default class MpPeriodicContextTable extends Component {
+  public props: any;
+  render() {
+    return (
+      <PeriodicContext
+        enabledElements={this.props.enabledElements}
+        hiddenElements={this.props.hiddenElements}
+        forwardOuterChange={this.props.forwardOuterChange}
+        disabledElements={this.props.disabledElements}
+      >
+        <SelectableTable
+          forceTableLayout={this.props.forceTableLayout}
+          maxElementSelectable={this.props.maxElementSelectable}
+          onStateChange={v => console.log(v)}
+        />
+      </PeriodicContext>
+    );
+  }
+}
+
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
-    <ExportableGrid />
+    <MpPeriodicContextTable />
+    <Sidebar width={120} currentApp={'love'} />
   </>,
 
   mountNode

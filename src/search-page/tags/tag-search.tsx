@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { tags } from './tags';
 import Select, { components, createFilter } from 'react-select';
 import { FixedSizeList as List } from 'react-window';
@@ -76,15 +76,23 @@ function MenuList(props) {
   const [value] = getValue();
   const initialOffset = options.indexOf(value) * height;
   const mh = !children[0] || children[0].type.name === 'NoOptionMessage' ? 0 : maxHeight;
+  const cb = useCallback(({ index, style }) => <div style={style}>{children[index]}</div>, [
+    children
+  ]);
 
-  return (
-    <List
-      height={!!mh ? mh : 0}
-      itemCount={children.length || 0}
-      itemSize={50}
-      initialScrollOffset={initialOffset || 0}
-    >
-      {({ index, style }) => <div style={style}>{children[index]}</div>}
-    </List>
+  const b = useMemo(
+    () => (
+      <List
+        height={!!mh ? mh : 0}
+        itemCount={children.length || 0}
+        itemSize={50}
+        initialScrollOffset={initialOffset || 0}
+      >
+        {cb}
+      </List>
+    ),
+    [children, initialOffset]
   );
+
+  return b;
 }

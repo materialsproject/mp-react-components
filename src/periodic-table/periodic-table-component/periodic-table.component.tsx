@@ -207,7 +207,9 @@ export function Table({
         {TABLE_V2.map((element: MatElement) => (
           <PeriodicElement
             onElementHovered={element => onHover(element)}
-            onElementClicked={element => onElementClicked(element)}
+            onElementClicked={element =>
+              !DEFAULT_DISABLED_ELEMENTS[element.symbol] && onElementClicked(element)
+            }
             color={
               hasHeatmap(heatmap)
                 ? heatmap![element.symbol]
@@ -217,7 +219,7 @@ export function Table({
             }
             key={`${element.symbol}--${element.number}`}
             hidden={hiddenElement[element.symbol]}
-            disabled={disabledElement[element.symbol]}
+            disabled={disabledElement[element.symbol] || DEFAULT_DISABLED_ELEMENTS[element.symbol]}
             enabled={enabledElement[element.symbol]}
             element={element}
           />
@@ -279,3 +281,37 @@ function getLayout(
 function hasHeatmap(heatmap): boolean {
   return !!heatmap && Object.keys(heatmap).length > 0;
 }
+
+const DEFAULT_DISABLED_ELEMENTS = {
+  Po: true,
+  Rn: true,
+  Ra: true,
+  At: true,
+  Fr: true,
+  Rf: true,
+  Db: true,
+  Sg: true,
+  Bh: true,
+  Hs: true,
+  Mt: true,
+  Ds: true,
+  Rg: true,
+  Cn: true,
+  Nh: true,
+  Fl: true,
+  Mc: true,
+  Lv: true,
+  Ts: true,
+  Og: true,
+  'La-Lu': true,
+  'Ac-Lr': true,
+  Am: true,
+  Cm: true,
+  Bk: true,
+  Cf: true,
+  Es: true,
+  Fm: true,
+  Md: true,
+  No: true,
+  Lr: true
+};

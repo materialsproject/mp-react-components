@@ -259,6 +259,7 @@ export const s2 = {
           color: '#4444ff',
           radius: 0.5,
           type: 'spheres',
+          tooltip: 'label',
           clickable: true,
           animate: [1, 1, 1],
           keyframes: [0, 1]
@@ -317,6 +318,7 @@ export const s2 = {
           ],
           keyframes: [0, 1],
           color: '#f9dc3c',
+          tooltip: 'label',
           radius: 0.1,
           type: 'cylinders',
           clickable: true
@@ -370,6 +372,7 @@ export const s2 = {
           color: '#a121f6',
           radius: 0.1,
           type: 'cylinders',
+          tooltip: 'label',
           clickable: true
         }
       ],
@@ -385,8 +388,10 @@ export const s2 = {
             [10, 10, 10]
           ],
           width: 2,
+          color: '#ababaa',
           type: 'cubes',
           animate: [10, 10, 10],
+          tooltip: 'label',
           keyframes: [0, 1]
         }
       ]
@@ -423,6 +428,7 @@ export const s2 = {
         }
       ],
       origin: [-2.1, -2.1, -2.1],
+      tooltip: 'label',
       visible: true
     },
     {
