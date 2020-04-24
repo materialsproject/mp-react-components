@@ -6,6 +6,7 @@ import { AiOutlineFund, AiOutlineSetting } from 'react-icons/ai';
 
 interface SidebarProps {
   width: number;
+  onAppSelected: (appId: string) => void;
   currentApp: string;
   //clickedApp: string dash callback
 }
@@ -98,13 +99,13 @@ const AppItem = ({ name, idx, icon, svg, selectedAppId }) => {
   );
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelected }) => {
   const [currentAppId, setCurrentAppId] = useState('');
   const tooltip = useRef<any>(null);
   const isFirst = useRef(false);
 
   useEffect(() => {
-    setCurrentAppId('');
+    setCurrentAppId(currentApp ? currentApp : '');
   }, [currentApp]);
 
   const setApp = id => {
@@ -114,6 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp }) => {
       tooltip.current!.state.show = false;
       isFirst.current = app.parentId === mainApps[0].id;
       ReactTooltip.hide();
+      onAppSelected(app.id);
     } else {
       console.error('incorrect app id', id);
     }

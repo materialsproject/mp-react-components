@@ -292,7 +292,7 @@ export default class MpPeriodicContextTable extends Component {
 ReactDOM.render(
   <>
     <MpPeriodicContextTable />
-    <Sidebar width={120} currentApp={'love'} />
+    <Sidebar onAppSelected={a => console.log(a)} width={120} currentApp={'pourbaix-diagram'} />
   </>,
 
   mountNode
