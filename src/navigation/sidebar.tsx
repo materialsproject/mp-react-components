@@ -103,6 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
   const [currentAppId, setCurrentAppId] = useState('');
   const tooltip = useRef<any>(null);
   const isFirst = useRef(false);
+  const sidebar = useRef<any>(null);
 
   useEffect(() => {
     setCurrentAppId(currentApp ? currentApp : '');
@@ -122,10 +123,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
   };
 
   return (
-    <div className="sidebar" style={{ width: width }}>
+    <div ref={sidebar} className="sidebar" style={{ width: width }}>
       <ReactTooltip
         id="sidebar-menu"
         ref={tooltip}
+        offset={{ left: 20, top: 17 }}
         place="right"
         getContent={idx => {
           const app = APP_DICO[idx];
@@ -159,11 +161,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
           );
         }}
         overridePosition={({ left, top }, currentEvent, currentTarget, node) => {
-          const d = document.documentElement;
+          const d = sidebar.current as HTMLElement;
+          console.log(d.clientHeight, d.offsetTop, top);
           if (d && node) {
-            left = Math.min(d.clientWidth - node.clientWidth, left);
             top = Math.min(d.clientHeight - node.clientHeight, top);
-            left = Math.max(0, left);
             top = Math.max(0, top);
           }
           return { top, left };
