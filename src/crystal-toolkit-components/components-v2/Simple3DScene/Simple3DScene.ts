@@ -431,13 +431,16 @@ export default class Simple3DScene {
       this.animationHelper.reset();
       this.clickableObjects = [];
       this.tooltipObjects = [];
-      this.threeUUIDTojsonObject = [];
+      this.threeUUIDTojsonObject = {};
+      this.computeIdToThree = {};
       this.registry.clear();
       this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
         outlinedObject = this.selectedJsonObjects.map(o => o.id);
+        console.log(outlinedObject);
         this.outlineScene.remove(...this.outlineScene.children);
       }
+      this.selectedJsonObjects = [];
     } else {
       console.log('The scene is a new scene:', sceneJson.name);
     }
@@ -489,15 +492,22 @@ export default class Simple3DScene {
     this.scene.add(rootObject);
     this.setupCamera(rootObject);
 
+    // we try to update the outline from the preceding scene, but if the corresponding
+    // object is not there, we'll remove the outline
     if (outlinedObject.length > 0) {
       this.outlineScene.remove(...this.outlineScene.children);
       outlinedObject.forEach(id => {
         const three = this.computeIdToThree[id];
-        this.addClonedObject(three);
-        this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
+        if (three) {
+          this.addClonedObject(three);
+          this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
+          this.selectedJsonObjects.push(this.threeUUIDTojsonObject[three.uuid]);
+        } else {
+          // object has been removed from new scene, so we do not add it
+        }
       });
       // update inlet
-      this.inset.showObject(this.outlineScene.children);
+      this.outlineScene.children.length > 0 && this.inset.showObject(this.outlineScene.children);
     }
 
     // we can automatically output a screenshot to be the background of the parent div

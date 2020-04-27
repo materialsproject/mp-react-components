@@ -21,7 +21,7 @@ import {
   Renderer
 } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
-import { s2, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import { s2, s3, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
 import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
@@ -188,7 +188,7 @@ function SceneSwitcher() {
   return (
     <div>
       <div onClick={() => setScene(s2)}> SCENE A </div>
-      <div onClick={() => setScene(scene2)}> SCENE B </div>
+      <div onClick={() => setScene(s3)}> SCENE B </div>
       <div onClick={() => setScene(s4)}> SCENE C </div>
       <div onClick={() => setScene(scene)}> SCENE D </div>
       <div onClick={() => setAnim(AnimationStyle.PLAY)}> PLAY </div>
@@ -291,7 +291,7 @@ export default class MpPeriodicContextTable extends Component {
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
-    <MpPeriodicContextTable />
+    <SceneSwitcher />
     <Sidebar onAppSelected={a => console.log(a)} width={120} currentApp={'pourbaix-diagram'} />
   </>,
 
