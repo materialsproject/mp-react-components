@@ -160,10 +160,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
         }}
         overridePosition={({ left, top }, currentEvent, currentTarget, node) => {
           const d = document.documentElement;
-          left = Math.min(d.clientWidth - node.clientWidth, left);
-          top = Math.min(d.clientHeight - node.clientHeight, top);
-          left = Math.max(0, left);
-          top = Math.max(0, top);
+          if (d && node) {
+            left = Math.min(d.clientWidth - node.clientWidth, left);
+            top = Math.min(d.clientHeight - node.clientHeight, top);
+            left = Math.max(0, left);
+            top = Math.max(0, top);
+          }
           return { top, left };
         }}
         effect="solid"
