@@ -20,8 +20,8 @@ const mainApps = [
     icon: 'icon-fontastic-search',
     name: 'Explore',
     subApps: [
-      { id: 'mat_explore', name: 'Materials Explorer', icon: 'icon-fontastic-search' },
-      { id: 'mol_explore', icon: 'icon-fontastic-phase-diagram', name: 'Molecule Explorer' },
+      { id: 'mat-explore', name: 'Materials Explorer', icon: 'icon-fontastic-search' },
+      { id: 'mol-explore', icon: 'icon-fontastic-phase-diagram', name: 'Molecule Explorer' },
       { id: 'porus-explore', icon: 'icon-fontastic-nanoporous', name: 'Nanoporous Explorer' },
       {
         id: 'battery-explore',
@@ -45,7 +45,7 @@ const mainApps = [
     id: 'char',
     icon: 'icon-fontastic-xas',
     name: 'Characterize',
-    subApps: [{ name: 'XAS Matcher', id: 'XAS', icon: 'icon-fontastic-xas' }]
+    subApps: [{ name: 'XAS Matcher', id: 'xas', icon: 'icon-fontastic-xas' }]
   },
   {
     id: 'design',
