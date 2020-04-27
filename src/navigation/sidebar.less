@@ -28,8 +28,20 @@
     .flex(column);
     align-items: center;
   }
-  .flex(column);
-  height: 500px;
+
+  &.vertical {
+    .flex(column);
+    height: 500px;
+  }
+
+  &.horizontal {
+    .flex(row);
+    .content {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+  }
+
   .content {
     margin: 10px 0;
     .flex(column);

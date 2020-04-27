@@ -5,10 +5,11 @@ import ReactTooltip from 'react-tooltip';
 import { AiOutlineFund, AiOutlineSetting } from 'react-icons/ai';
 
 interface SidebarProps {
-  width: number;
+  width?: number;
+  height?: number;
   onAppSelected: (appId: string) => void;
   currentApp: string;
-  //clickedApp: string dash callback
+  layout: 'horizontal' | 'vertical';
 }
 
 //SettingOutlined
@@ -99,7 +100,13 @@ const AppItem = ({ name, idx, icon, svg, selectedAppId }) => {
   );
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelected }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  width,
+  currentApp,
+  onAppSelected,
+  layout,
+  height
+}) => {
   const [currentAppId, setCurrentAppId] = useState('');
   const tooltip = useRef<any>(null);
   const isFirst = useRef(false);
@@ -123,12 +130,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
   };
 
   return (
-    <div ref={sidebar} className="sidebar" style={{ width: width }}>
+    <div
+      ref={sidebar}
+      className={`sidebar ${layout === 'vertical' ? 'vertical' : 'horizontal'}`}
+      style={layout === 'vertical' ? { width: width } : { height: height }}
+    >
       <ReactTooltip
         id="sidebar-menu"
         ref={tooltip}
-        offset={{ left: 20, top: 17 }}
-        place="right"
+        offset={layout === 'vertical' ? { left: 20, top: 17 } : { left: 0, top: 0 }}
+        place={layout === 'vertical' ? 'right' : 'bottom'}
         getContent={idx => {
           const app = APP_DICO[idx];
           if (idx === mainApps[0].id) {
@@ -161,10 +172,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ width, currentApp, onAppSelect
           );
         }}
         overridePosition={({ left, top }, currentEvent, currentTarget, node) => {
-          const d = sidebar.current as HTMLElement;
-          console.log(d.clientHeight, d.offsetTop, top);
+          const d = document.documentElement;
           if (d && node) {
+            left = Math.min(d.clientWidth - node.clientWidth, left);
             top = Math.min(d.clientHeight - node.clientHeight, top);
+            left = Math.max(0, left);
             top = Math.max(0, top);
           }
           return { top, left };

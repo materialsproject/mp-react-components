@@ -291,8 +291,13 @@ export default class MpPeriodicContextTable extends Component {
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
+    <Sidebar
+      layout={'horizontal'}
+      onAppSelected={a => console.log(a)}
+      width={120}
+      currentApp={'pourbaix-diagram'}
+    />
     <SceneSwitcher />
-    <Sidebar onAppSelected={a => console.log(a)} width={120} currentApp={'pourbaix-diagram'} />
   </>,
 
   mountNode
