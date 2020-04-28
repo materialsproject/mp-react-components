@@ -86,7 +86,6 @@ function ExportableGrid() {
         >
           <Dropdown
             onSelect={c => {
-              console.log(c, scolumns);
               (scolumns[c] as any).omit = !(scolumns[c] as any).omit;
               setColumns([...scolumns]);
             }}

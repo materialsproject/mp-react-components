@@ -42,26 +42,24 @@
   }
 }
 
-.search-grid {
-  &.print {
-    .search-funnel {
-      display: none;
-    }
-    header {
-      display: none;
-    }
+&.print {
+  .search-funnel {
+    display: none;
   }
-  .header-button {
-    cursor: pointer;
-    padding: 10px 35px;
-    border-radius: 5px;
-    margin: 0 2px;
-    font-size: 15px;
-    &:hover {
-      background: rgb(244, 244, 244);
-    }
+  header {
+    display: none;
   }
-  .empty-table {
-    opacity: 0.45;
+}
+.header-button {
+  cursor: pointer;
+  padding: 10px 35px;
+  border-radius: 5px;
+  margin: 0 2px;
+  font-size: 15px;
+  &:hover {
+    background: rgb(244, 244, 244);
   }
+}
+.empty-table {
+  opacity: 0.45;
 }

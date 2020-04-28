@@ -36,13 +36,10 @@ const conditionalRowStyles = [
   }
 ];
 
-// you have to put the whole field eg : x.y.z for the query
-
+// this adds the print view
 export function MTGrid(props) {
   const onChange = props.onChange;
-
   const debouncedOnChange = useMemo(() => debounce(onChange, 500), [onChange]);
-
   const gridMemo = useMemo(
     () => (
       <MGrid
@@ -93,12 +90,10 @@ export function MtPrintViewContext(props) {
 }
 
 export function MtMaterialTable(props) {
-  const [printView, setPrintView] = React.useState(false);
+  const { printView, setPrintView } = React.useContext(PrintViewContext);
   const [scolumns, setColumns] = React.useState(columns);
   const rows = useRef<any[]>([]);
   const [filterValue, setFilterValue] = React.useState(false);
-
-  console.log('>>>>', props.data);
 
   const realData = useMemo(
     () =>
@@ -119,7 +114,6 @@ export function MtMaterialTable(props) {
         >
           <Dropdown
             onSelect={c => {
-              console.log(c, scolumns);
               (scolumns[c] as any).omit = !(scolumns[c] as any).omit;
               setColumns([...scolumns]);
             }}
