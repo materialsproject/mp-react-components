@@ -3,9 +3,7 @@ import Backend from 'react-dnd-html5-backend';
 import * as React from 'react';
 import MGrid from './search-grid/card-grid';
 import { PeriodicContext } from '../periodic-table';
-import useAxios from 'axios-hooks';
 import DataTable from 'react-data-table-component';
-import Loader from 'react-loader-spinner';
 import ReactTooltip from 'react-tooltip';
 import Dropdown, {
   DropdownToggle,
@@ -17,9 +15,8 @@ import Dropdown, {
 
 import { debounce } from 'ts-debounce';
 
-import { AxiosRequestConfig } from 'axios';
 import { FilterComponent } from './search-grid/filter';
-import { columns, onChange } from './search-grid/table-definitions';
+import { columns } from './search-grid/table-definitions';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { downloadCSV, downloadExcel, downloadJSON } from './utils';
 import { toast, ToastContainer } from 'react-toastify';
@@ -28,8 +25,6 @@ import copy from 'copy-to-clipboard';
 import { AiOutlineCaretLeft } from 'react-icons/ai';
 import { cardsDefinition, initialGrid } from './search-grid/cards-definition';
 import CheckBox from 'rc-checkbox';
-
-const debouncedOnChange = debounce(onChange, 500);
 
 const font = { fontFamily: 'Helvetica Neue' };
 const conditionalRowStyles = [
@@ -41,23 +36,32 @@ const conditionalRowStyles = [
   }
 ];
 
-const axiosConfig: AxiosRequestConfig = {
-  headers: {
-    'X-API-KEY': 'fJcpJy6hRNF3DzBo',
-    'Access-Control-Allow-Origin': 'localhost',
-    'Content-Type': 'application/x-www-form-urlencoded'
-  },
-  url: 'https://materialsproject.org/rest/v2/query',
-  method: 'POST'
-};
-
 // you have to put the whole field eg : x.y.z for the query
 
-function ExportableGrid() {
+export function MTGrid(props) {
+  const onChange = props.onChange;
+
+  const debouncedOnChange = useMemo(() => debounce(onChange, 500), [onChange]);
+
   const gridMemo = useMemo(
-    () => <MGrid allDefinitions={cardsDefinition} initCards={initialGrid} onChange={change} />,
-    [cardsDefinition, initialGrid, onChange]
+    () => (
+      <MGrid
+        allDefinitions={cardsDefinition}
+        initCards={initialGrid}
+        onChange={p => {
+          const propsCopy = { ...p };
+          delete propsCopy['viewMode'];
+          delete propsCopy['map'];
+          delete propsCopy['allDefinitions'];
+          delete propsCopy['allDefinitionsMap'];
+          delete propsCopy['onChangeRef'];
+          debouncedOnChange(propsCopy);
+        }}
+      />
+    ),
+    [cardsDefinition, initialGrid, props.onChange]
   );
+  const { printView, setPrintView } = React.useContext(PrintViewContext);
   return (
     <div className={`search-grid ${!!printView ? 'print' : ''}`}>
       {printView && (
@@ -78,8 +82,8 @@ function ExportableGrid() {
   );
 }
 
-const PrintViewContext = React.createContext({ printView: false });
-function PV(props) {
+const PrintViewContext = React.createContext<any>({});
+export function MtPrintViewContext(props) {
   const [printView, setPrintView] = useState(false);
   return (
     <PrintViewContext.Provider value={{ printView, setPrintView }}>
@@ -88,18 +92,17 @@ function PV(props) {
   );
 }
 
-export function MaterialTable(props) {
+export function MtMaterialTable(props) {
   const [printView, setPrintView] = React.useState(false);
   const [scolumns, setColumns] = React.useState(columns);
   const rows = useRef<any[]>([]);
   const [filterValue, setFilterValue] = React.useState(false);
 
+  console.log('>>>>', props.data);
+
   const realData = useMemo(
     () =>
-      props.data &&
-      (filterValue
-        ? props.data.response.filter(r => !!r['has_bandstructure'])
-        : props.data.response),
+      props.data && (filterValue ? props.data.filter(r => !!r['has_bandstructure']) : props.data),
     [props.data, filterValue]
   );
 
@@ -237,12 +240,12 @@ export function MaterialTable(props) {
   );
 }
 
-export default function GridWithContext() {
+export default function MTGridWithContext(props) {
   //FIXME(chab) investigate if it's worth wrapping the grid with useMemo.
   // currently it's NOT, because we do not expect a NEW context
   return (
     <PeriodicContext>
-      <ExportableGrid />
+      <MTGrid {...props} />
     </PeriodicContext>
   );
 }

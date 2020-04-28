@@ -29,6 +29,10 @@ const mountNode = document.getElementById(mountNodeSelector);
 import katex from 'katex';
 import GridWithContext from './search-page/exportable-grid';
 import { Sidebar } from './navigation/sidebar';
+import MTGridWithContext, {
+  MtMaterialTable,
+  MtPrintViewContext
+} from './search-page/exportable-grid-v2';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -288,6 +292,354 @@ export default class MpPeriodicContextTable extends Component {
   }
 }
 
+function TestPV() {
+  return (
+    <MtPrintViewContext>
+      <MTGridWithContext onChange={p => console.log(p)} />
+      <MtMaterialTable data={dmr} />
+    </MtPrintViewContext>
+  );
+}
+
+const dmr = [
+  {
+    material_id: 'mp-1215014',
+    full_formula: 'Cd2N24Cl12',
+    volume: 6688.621386213006,
+    nsites: 38,
+    e_above_hull: 1.9335258098334513,
+    density: 0.24489156024981024,
+    'band_gap.search_gap.band_gap': 0.7977000000000007,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['K4CdCl6']
+  },
+  {
+    material_id: 'mp-1206226',
+    full_formula: 'Ag1Bi3Te6',
+    volume: 6701.61836554716,
+    nsites: 10,
+    e_above_hull: 1.3255363188749967,
+    density: 0.3717741370489926,
+    'band_gap.search_gap.band_gap': 0.0,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['AgBiTe2 rhom', 'NaFeO2']
+  },
+  {
+    material_id: 'mp-1080365',
+    full_formula: 'Ce24Se48',
+    volume: 6721.531137530642,
+    nsites: 72,
+    e_above_hull: 0.5462626098611114,
+    density: 1.7670988464949904,
+    'band_gap.search_gap.band_gap': 1.0405000000000002,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-684034',
+    full_formula: 'Ba84Cd16Sb72',
+    volume: 6754.249494070039,
+    nsites: 172,
+    e_above_hull: 0,
+    density: 5.433495086026505,
+    'band_gap.search_gap.band_gap': 0.7315,
+    theoretical: false,
+    has_bandstructure: false,
+    tags: ['Barium cadmium antimonide (21/4/18)']
+  },
+  {
+    material_id: 'mp-1247881',
+    full_formula: 'Ba1Cu6P2',
+    volume: 6819.27991938967,
+    nsites: 9,
+    e_above_hull: 3.1593028507407372,
+    density: 0.14136783079594392,
+    'band_gap.search_gap.band_gap': 0.03909999999999991,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-685503',
+    full_formula: 'K4Zr48I112',
+    volume: 6832.213866418306,
+    nsites: 164,
+    e_above_hull: 0.22981566390243824,
+    density: 4.556725955208774,
+    'band_gap.search_gap.band_gap': 0.04220000000000024,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1206888',
+    full_formula: 'Dy1I6',
+    volume: 6832.325310734165,
+    nsites: 7,
+    e_above_hull: 0.6892699107142861,
+    density: 0.22455262080432084,
+    'band_gap.search_gap.band_gap': 0.037799999999999834,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['CdCl2', 'DyI2']
+  },
+  {
+    material_id: 'mp-680178',
+    full_formula: 'In80Br112',
+    volume: 6897.599712636393,
+    nsites: 192,
+    e_above_hull: 0.005331164479166706,
+    density: 4.365773407675701,
+    'band_gap.search_gap.band_gap': 2.0373,
+    theoretical: false,
+    has_bandstructure: false,
+    tags: ['Bromotriindium(I) hexabromodiindate(II)']
+  },
+  {
+    material_id: 'mp-684055',
+    full_formula: 'Tl42Bi18I96',
+    volume: 6901.604393525596,
+    nsites: 156,
+    e_above_hull: 0.009613172564102879,
+    density: 5.9016214097166095,
+    'band_gap.search_gap.band_gap': 2.2653999999999996,
+    theoretical: false,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1212550',
+    full_formula: 'Sc3Sb2',
+    volume: 6918.678032455805,
+    nsites: 5,
+    e_above_hull: 3.3884920427499994,
+    density: 0.09081613639740171,
+    'band_gap.search_gap.band_gap': 0.12919999999999998,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['DEPRECATED', 'Sc2Sb', 'Cu2Sb']
+  },
+  {
+    material_id: 'mp-1206751',
+    full_formula: 'Dy2Se2I2',
+    volume: 6936.659416611323,
+    nsites: 6,
+    e_above_hull: 2.9698624961111157,
+    density: 0.17636258223060533,
+    'band_gap.search_gap.band_gap': 0.0658000000000003,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['DySeI', 'FeClO']
+  },
+  {
+    material_id: 'mp-1080638',
+    full_formula: 'Ce24Se48',
+    volume: 6946.8272965489305,
+    nsites: 72,
+    e_above_hull: 0.5429636762500003,
+    density: 1.7097891473005467,
+    'band_gap.search_gap.band_gap': 0.9861999999999997,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1250639',
+    full_formula: 'Si120O240',
+    volume: 6978.668765898773,
+    nsites: 360,
+    e_above_hull: 0.00817499386111109,
+    density: 1.715610742185253,
+    'band_gap.search_gap.band_gap': 5.6677,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1197560',
+    full_formula: 'Ga32Sb28Te32Cl116',
+    volume: 6991.135272098002,
+    nsites: 208,
+    e_above_hull: 0,
+    density: 3.2863747576933577,
+    'band_gap.search_gap.band_gap': 1.4760999999999997,
+    theoretical: false,
+    has_bandstructure: false,
+    tags: [' Heptaantimony-octatellurium - bis(heptachloridodigallate)-tris(tetrachloridogallate)']
+  },
+  {
+    material_id: 'mp-1207336',
+    full_formula: 'Pb1I6',
+    volume: 7062.869306423033,
+    nsites: 7,
+    e_above_hull: 0.6943192842857149,
+    density: 0.2277321836237747,
+    'band_gap.search_gap.band_gap': 0.09729999999999972,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['CdCl2', 'PbI2 6R']
+  },
+  {
+    material_id: 'mp-1212042',
+    full_formula: 'Ta24Al8Co2C2',
+    volume: 7100.3449979636935,
+    nsites: 36,
+    e_above_hull: 4.320619217527777,
+    density: 1.0992910706669878,
+    'band_gap.search_gap.band_gap': 0.03639999999999999,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1215155',
+    full_formula: 'Ba84Cd16Bi72',
+    volume: 7131.810149222151,
+    nsites: 172,
+    e_above_hull: 0,
+    density: 6.608020650892473,
+    'band_gap.search_gap.band_gap': 0.32220000000000004,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['Ba21Cd4Sb18', 'Ba21Cd4Bi18']
+  },
+  {
+    material_id: 'mp-1207362',
+    full_formula: 'Tb2Cu1Sb3',
+    volume: 7256.199262691886,
+    nsites: 6,
+    e_above_hull: 3.233039162500001,
+    density: 0.17087262432046252,
+    'band_gap.search_gap.band_gap': 0.1936,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['CuTbSb2', 'CuHfSi2']
+  },
+  {
+    material_id: 'mp-1215073',
+    full_formula: 'Ag12S1I1',
+    volume: 7286.142181339207,
+    nsites: 14,
+    e_above_hull: 1.6846920478571394,
+    density: 0.33123252859085106,
+    'band_gap.search_gap.band_gap': 0.4024000000000001,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['Ag3SI rt', 'Ag3SI']
+  },
+  {
+    material_id: 'mp-1207319',
+    full_formula: 'Tl1Bi3Se6',
+    volume: 7308.1452824523,
+    nsites: 10,
+    e_above_hull: 1.4427458181406259,
+    density: 0.2965381336838557,
+    'band_gap.search_gap.band_gap': 0.0,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['NaFeO2', 'TlBiSe2']
+  },
+  {
+    material_id: 'mp-1212183',
+    full_formula: 'Li7Al6',
+    volume: 7320.900146963333,
+    nsites: 13,
+    e_above_hull: 1.7852464815384614,
+    density: 0.047740577326253225,
+    'band_gap.search_gap.band_gap': 0.06420000000000003,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['Li3Al2 rt', 'b.c.c. atom arrangement', 'Li3Al2']
+  },
+  {
+    material_id: 'mp-1215080',
+    full_formula: 'Ag12S1Br1',
+    volume: 7332.202128929559,
+    nsites: 14,
+    e_above_hull: 1.6891390007142661,
+    density: 0.31850747456208484,
+    'band_gap.search_gap.band_gap': 0.39449999999999985,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['Ag3SI', 'Ag3SBr rt']
+  },
+  {
+    material_id: 'mp-1207329',
+    full_formula: 'Ho2Cu1As3',
+    volume: 7406.67676536734,
+    nsites: 6,
+    e_above_hull: 3.481032536666666,
+    density: 0.13859087443005316,
+    'band_gap.search_gap.band_gap': 0.16930000000000023,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['CuHoAs2', 'CuHfSi2']
+  },
+  {
+    material_id: 'mp-1080628',
+    full_formula: 'Ce28Se56',
+    volume: 7480.036211572139,
+    nsites: 84,
+    e_above_hull: 0.5444600138690472,
+    density: 1.8525594236661906,
+    'band_gap.search_gap.band_gap': 0.9944999999999999,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1213171',
+    full_formula: 'K3Yb1Se6',
+    volume: 7540.35992558863,
+    nsites: 10,
+    e_above_hull: 1.1430537191249996,
+    density: 0.16826907790026316,
+    'band_gap.search_gap.band_gap': 0.06840000000000002,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-1207323',
+    full_formula: 'Nd3Tl1Te6',
+    volume: 7547.2571416622695,
+    nsites: 10,
+    e_above_hull: 2.277187038,
+    density: 0.30862252480615204,
+    'band_gap.search_gap.band_gap': 0.0,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: ['NaFeO2', 'TlNdTe2']
+  },
+  {
+    material_id: 'mp-1080371',
+    full_formula: 'Ce28Se56',
+    volume: 7549.576508413688,
+    nsites: 84,
+    e_above_hull: 0.545173348273809,
+    density: 1.8354952172044394,
+    'band_gap.search_gap.band_gap': 0.9910000000000001,
+    theoretical: true,
+    has_bandstructure: false,
+    tags: []
+  },
+  {
+    material_id: 'mp-623782',
+    full_formula: 'Eu4Ag4',
+    volume: 7697.812542566868,
+    nsites: 8,
+    e_above_hull: 2.6747938512499996,
+    density: 0.224199542175505,
+    'band_gap.search_gap.band_gap': 0.2822,
+    theoretical: false,
+    has_bandstructure: false,
+    tags: ['Silver europium (1/1)']
+  }
+];
+
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
@@ -297,7 +649,7 @@ ReactDOM.render(
       width={120}
       currentApp={'pourbaix-diagram'}
     />
-    <SceneSwitcher />
+    <TestPV />
   </>,
 
   mountNode
