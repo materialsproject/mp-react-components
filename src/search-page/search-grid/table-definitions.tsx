@@ -41,6 +41,7 @@ export const columns = [
   {
     name: 'Energy above Hull',
     selector: 'e_above_hull',
+    format: r => r['e_above_hull'].toFixed(8),
     sortable: true
   },
   {
