@@ -1,12 +1,5 @@
 import * as THREE from 'three';
-import {
-  BufferAttribute,
-  BufferGeometry,
-  Object3D,
-  Quaternion,
-  Vector3,
-  WebGLRenderer
-} from 'three';
+import { Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer';
 import {
@@ -14,7 +7,6 @@ import {
   Control,
   defaults,
   ExportType,
-  JSON3DObject,
   Renderer,
   ThreePosition
 } from './constants';
@@ -33,11 +25,11 @@ import {
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
-import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { SceneJsonObject } from '../scene/simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { AnimationHelper } from '../scene/animation-helper';
+import './Simple3DScene.less';
 
 const POINTER_CLASS = 'show-pointer';
 let D;
