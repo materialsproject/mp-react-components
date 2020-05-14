@@ -533,18 +533,18 @@ export default class Simple3DScene {
   }
 
   private setupCamera(rootObject: THREE.Object3D) {
-    const bbox = new THREE.Box3();
-    bbox.setFromObject(rootObject);
     // auto-zoom to fit object
     // TODO: maybe better to move this elsewhere (what if using perspective?)
     const box = new THREE.Box3();
     box.setFromObject(rootObject);
     const center = new THREE.Vector3();
-    bbox.getCenter(center);
+    box.getCenter(center);
     const size = new THREE.Vector3();
     box.getSize(size);
-    const length = bbox.max.sub(bbox.min).length() + 1;
+    const length = box.max.sub(box.min).length() * 2;
 
+    //const bboxobject = new THREE.Box3Helper(box, new THREE.Color('blue'));
+    //this.scene.add(bboxobject);
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera
     // we add a lot of padding to make sure the camera is always beyond/behind the object
@@ -567,7 +567,7 @@ export default class Simple3DScene {
       );
     }
 
-    this.camera.zoom = 2;
+    this.camera.zoom = 4;
     // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
     this.camera.position.z = center.z + length / 2;
     this.camera.position.y = center.y;
