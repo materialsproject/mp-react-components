@@ -16,14 +16,21 @@ export function downloadScreenshot(filename: string, sceneComponent) {
   const link = document.createElement('a');
   link.style.display = 'none';
   document.body.appendChild(link);
-  const oldRatio = sceneComponent.renderer.getPixelRatio();
-  sceneComponent.renderer.setPixelRatio(EXPORT_PIXEL_RATIO);
-  sceneComponent.renderScene();
+
   // and set link href to renderer contents
   if (sceneComponent.renderer instanceof WebGLRenderer) {
+    const oldRatio = sceneComponent.renderer.getPixelRatio();
+    sceneComponent.renderer.setPixelRatio(EXPORT_PIXEL_RATIO);
+    sceneComponent.renderScene();
     link.href = (<HTMLCanvasElement>sceneComponent.renderer.domElement).toDataURL('image/png');
     triggerDownload(link, filename);
+    // wait for next event loop before rendering
+    setTimeout(() => {
+      sceneComponent.renderer.setPixelRatio(oldRatio);
+      sceneComponent.renderScene();
+    });
   } else {
+    sceneComponent.renderScene();
     toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
       callback: function(data) {
         link.href = data;
@@ -31,11 +38,6 @@ export function downloadScreenshot(filename: string, sceneComponent) {
       }
     });
   }
-  // wait for next event loop before rendering
-  setTimeout(() => {
-    sceneComponent.renderer.setPixelRatio(oldRatio);
-    sceneComponent.renderScene();
-  });
 }
 
 function triggerDownload(link: HTMLAnchorElement, filename: string) {
