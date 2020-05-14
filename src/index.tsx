@@ -643,13 +643,7 @@ const dmr = [
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
-    <Sidebar
-      layout={'horizontal'}
-      onAppSelected={a => console.log(a)}
-      width={120}
-      currentApp={'pourbaix-diagram'}
-    />
-    <TestPV />
+    <SceneSwitcher />
   </>,
 
   mountNode

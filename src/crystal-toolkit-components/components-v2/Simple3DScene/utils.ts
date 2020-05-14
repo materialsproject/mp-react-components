@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { WebGLRenderer } from 'three';
 import toDataUrl from 'svgtodatauri';
 
+const EXPORT_PIXEL_RATIO = 8;
+
 export function downloadScreenshot(filename: string, sceneComponent) {
   //TODO(chab) extract as a general utility method
   // throw if svg render is used
@@ -14,6 +16,8 @@ export function downloadScreenshot(filename: string, sceneComponent) {
   const link = document.createElement('a');
   link.style.display = 'none';
   document.body.appendChild(link);
+  const oldRatio = sceneComponent.renderer.getPixelRatio();
+  sceneComponent.renderer.setPixelRatio(EXPORT_PIXEL_RATIO);
   sceneComponent.renderScene();
   // and set link href to renderer contents
   if (sceneComponent.renderer instanceof WebGLRenderer) {
@@ -27,6 +31,11 @@ export function downloadScreenshot(filename: string, sceneComponent) {
       }
     });
   }
+  // wait for next event loop before rendering
+  setTimeout(() => {
+    sceneComponent.renderer.setPixelRatio(oldRatio);
+    sceneComponent.renderScene();
+  });
 }
 
 function triggerDownload(link: HTMLAnchorElement, filename: string) {
