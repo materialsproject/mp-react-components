@@ -1,6 +1,9 @@
 {
-  "name": "mat-periodic-table",
-  "version": "0.1.0",
+  "name": "@materialsproject/mp-react-components",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "module": "dist/index.es.js",

@@ -23,8 +23,8 @@ Use `npm publish` to push to npm
 
 Every push triggers a build. If the build is succesfull, a snapshot is pushed
 to npm, as a tagged package. To use the latest snapshot, type the following command
-  
-`npm install mat-periodic-table@next`
+
+`npm install @materialsproject/mp-react-components@next`
 
 ### Automatically(TODO)
 
@@ -44,9 +44,9 @@ npm deploy-storybook
 
 ## Local development
 
-If you have a local version of `dash-mp-components` and `react-mp-components`, you'll probably
-want to use the local version of `react-mp-components` for a better development workflow.
-Running those commands will tell `NPM` to use your local version of `react-mp-components`
+If you have a local version of `dash-mp-components` and `mp-react-components`, you'll probably
+want to use the local version of `mp-react-components` for a better development workflow.
+Running those commands will tell `NPM` to use your local version of `mp-react-components`
 
 ```
  cd <DASH_MP_HOME>
