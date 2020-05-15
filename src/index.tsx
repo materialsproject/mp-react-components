@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 
-import { Component, ReactPropTypes, useState } from 'react';
+import { Component, useState } from 'react';
 
 import * as ReactDOM from 'react-dom';
 import './styles.less';
