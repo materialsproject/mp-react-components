@@ -6,7 +6,7 @@
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://materialsproject.github.io/mp-react-components/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-This repo contains a set of components.
+This repo contains a set of components. 
 
 ## Exported components
 
