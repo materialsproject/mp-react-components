@@ -415,6 +415,18 @@ export default class Simple3DScene {
     // otherwise it will keep it
     // it will then zoom on the content of the added scene
 
+    if (true) {
+      // this is pureley a rendering thing
+      const globalPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.1);
+      // pull it a bit back so it will be on the screen without artifacts
+      const globalPlane2 = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.1 - 0.0001);
+      const helper = new THREE.PlaneHelper(globalPlane2, 10, 0xaa0000);
+      this.scene.add(helper);
+      (this.renderer as WebGLRenderer).clippingPlanes = [globalPlane];
+    } else {
+      (this.renderer as WebGLRenderer).clippingPlanes = [];
+    }
+
     // if we found an object, we should remove all tootips and clicks related to it
     let outlinedObject: string[] = [];
     if (this.scene.getObjectByName(sceneJson.name!)) {
