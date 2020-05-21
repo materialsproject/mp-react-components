@@ -2,7 +2,7 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import * as React from 'react';
 import MGrid from './search-grid/card-grid';
-import { PeriodicContext } from '../periodic-table';
+import { PeriodicContext } from '..';
 import useAxios from 'axios-hooks';
 import DataTable from 'react-data-table-component';
 import Loader from 'react-loader-spinner';

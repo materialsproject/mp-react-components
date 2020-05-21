@@ -38,7 +38,7 @@ const processor = (code, id) => {
 };
 
 export default {
-  input: 'src/periodic-table/index.ts',
+  input: 'src/index.ts',
   output: [
     {
       file: pkg.main,

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DualSlider } from '../sliders/dual-slider';
 import './card-style.less';
 import ReactSwitch from 'react-switch';
-import { Card, Field, getWidgetConfiguration, ItemTypes, Widget, WIDGET } from './cards-definition';
+import { Card, getWidgetConfiguration, ItemTypes, Widget, WIDGET } from './cards-definition';
 import { AiOutlineDelete, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 import { MorphReplace } from 'react-svg-morph';
 import {
@@ -17,7 +17,7 @@ import Latex from 'react-latex';
 
 import SP from '../group-space-search/property-search';
 import TagSearch from '../tags/tag-search';
-import { PeriodicContext, SelectableTable } from '../../periodic-table';
+import { PeriodicContext, SelectableTable } from '../..';
 import { CheckboxList } from '../checkboxes-list/checkbox-list';
 //TODO(move to table configuration, so we do not need to inject it)
 import TableSelectionSelector, {

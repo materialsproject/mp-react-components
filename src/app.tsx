@@ -2,6 +2,8 @@
  *
  *  App bootstrapping. See index.html
  *
+ *  This is just a playground app. The real package entrypoint is in index.ts
+ *
  */
 import * as React from 'react';
 

@@ -2,7 +2,6 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import * as React from 'react';
 import MGrid from './search-grid/card-grid';
-import { PeriodicContext } from '../periodic-table';
 import DataTable from 'react-data-table-component';
 import ReactTooltip from 'react-tooltip';
 import Dropdown, {
@@ -25,6 +24,7 @@ import copy from 'copy-to-clipboard';
 import { AiOutlineCaretLeft } from 'react-icons/ai';
 import { cardsDefinition, initialGrid } from './search-grid/cards-definition';
 import CheckBox from 'rc-checkbox';
+import { PeriodicContext } from '..';
 
 const font = { fontFamily: 'Helvetica Neue' };
 const conditionalRowStyles = [
