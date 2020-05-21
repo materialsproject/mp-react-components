@@ -514,9 +514,34 @@ export default class Simple3DScene {
     this.scenesContainer.add(rootObject);
 
     if (sceneJson.repeat) {
-      for (let i = 0; i < sceneJson.repeat.length; i++) {
-        const vector = sceneJson.lattice[i];
-        const repeat = sceneJson.repeat[i];
+      const vectorA = sceneJson.lattice[0];
+      const vectorB = sceneJson.lattice[1];
+      const vectorC = sceneJson.lattice[2];
+
+      for (let i = 0; i < sceneJson.repeat[0]; i++) {
+        for (let j = 0; j < sceneJson.repeat[1]; j++) {
+          for (let k = 0; k < sceneJson.repeat[2]; k++) {
+            const rootObject = new THREE.Object3D();
+            rootObject.name = sceneJson.name!;
+            sceneJson.visible && (rootObject.visible = sceneJson.visible);
+            const translation = new THREE.Matrix4();
+            // note(chab) have a typedefinition for the JSON
+            const origin = [
+              sceneJson.origin![0] + vectorA[0] * i + vectorB[0] * j + vectorC[0] * k,
+              sceneJson.origin![1] + vectorA[1] * i + vectorB[1] * j + vectorC[1] * k,
+              sceneJson.origin![2] + vectorA[2] * i + vectorB[2] * j + vectorC[2] * k
+            ];
+            console.log(origin);
+            translation.makeTranslation(...(origin as ThreePosition));
+            rootObject.applyMatrix4(translation);
+            traverse_scene(sceneJson, rootObject, '');
+            this.scenesContainer.add(rootObject);
+          }
+        }
+      }
+    }
+    /*
+
         for (let k = 0; k < repeat; k++) {
           const rootObject = new THREE.Object3D();
           rootObject.name = sceneJson.name!;
@@ -535,7 +560,7 @@ export default class Simple3DScene {
           this.scenesContainer.add(rootObject);
         }
       }
-    }
+    }*/
     this.setupCamera(this.scenesContainer);
 
     // we try to update the outline from the preceding scene, but if the corresponding

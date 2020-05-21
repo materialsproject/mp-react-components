@@ -390,23 +390,6 @@ export const s2 = {
       visible: true
     },
     {
-      name: 'cubes',
-      contents: [
-        {
-          positions: [
-            [4, 4, 4],
-            [10, 10, 10]
-          ],
-          width: 2,
-          color: '#ababaa',
-          type: 'cubes',
-          animate: [10, 10, 10],
-          tooltip: 'label',
-          keyframes: [0, 1]
-        }
-      ]
-    },
-    {
       name: 'polyhedra',
       contents: [
         {
