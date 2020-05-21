@@ -2,6 +2,8 @@ import { JSON3DObject, ThreePosition } from '../Simple3DScene/constants';
 
 export interface SceneJsonObject {
   name?: string;
+  repeat: [number, number, number];
+  lattice: number[][];
   contents?: SceneJsonObject[];
   type?: JSON3DObject;
   clickable?: boolean;
@@ -22,9 +24,11 @@ export interface SceneJsonObject {
 
 export const s4 = {
   name: '_ct_StructureMoleculeComponent_1',
+  duplicate: [5, [2, 2, 2]],
   contents: [
     {
       name: 'atoms',
+      duplicate: [5, [4, 4, 4]], // duplicate 5 times,
       contents: [
         {
           positions: [
@@ -221,6 +225,12 @@ export const s4 = {
 
 export const s2 = {
   name: '_ct_StructureMoleculeComponent_1',
+  lattice: [
+    [8, 2, -4],
+    [3, 5, -5],
+    [1, 1, 8]
+  ],
+  repeat: [5, 10, 7],
   contents: [
     {
       name: 'atoms',

@@ -99,6 +99,7 @@ export default function Simple3DSceneComponent({
     //FIXME(chab) we have to much calls to renderScene
     !!data && scene.current!.addToScene(data, true);
     scene.current!.toggleVisibility(toggleVisibility as any);
+    //scene.current!.cloneScene(data, 5, 1.2, -1, 10);
   }, [data]);
   useEffect(() => scene.current!.toggleVisibility(toggleVisibility as any), [toggleVisibility]);
   useEffect(() => scene.current!.updateInsetSettings(inletSize!, inletPadding!, axisView), [

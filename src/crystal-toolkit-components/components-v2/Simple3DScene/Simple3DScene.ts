@@ -54,7 +54,9 @@ export default class Simple3DScene {
   private clickCallback: (objects: any[]) => void;
   private debugHelper!: DebugHelper;
   private readonly raycaster = new THREE.Raycaster();
+  private scenesContainer!: THREE.Object3D;
 
+  private outline!: OutlineEffect;
   private outline!: OutlineEffect;
   private selectedJsonObjects: any[] = [];
   private outlineScene = new THREE.Scene();
@@ -155,6 +157,8 @@ export default class Simple3DScene {
     this.clickableObjects = [];
     this.objectDictionnary = {};
     // default camera
+    this.scenesContainer = new THREE.Object3D();
+    this.scene.add(this.scenesContainer);
     this.camera = new THREE.OrthographicCamera(100, 100, 100, 100, 100);
     const lights = this.objectBuilder.makeLights(this.settings.lights);
     this.scene.add(lights);
@@ -409,6 +413,27 @@ export default class Simple3DScene {
     }
   }
 
+  cloneElement(element: THREE.Object3D, displacement: [number, number, number]) {
+    const clone = element.clone();
+    clone.translateX(displacement[0]);
+    clone.translateY(displacement[1]);
+    clone.translateZ(displacement[2]);
+    this.scene.add(clone);
+  }
+
+  cloneScene(sceneJson, x, y, z, iterations) {
+    for (let i = 0; i < iterations; i++) {
+      const newScene = JSON.parse(JSON.stringify(sceneJson));
+      newScene.name = newScene.name + '_clone_' + i;
+      newScene.origin = [
+        newScene.origin[0] + x * (i + 1),
+        newScene.origin[1] + y * (i + 1),
+        newScene.origin[2] + z * (i + 1)
+      ];
+      this.addToScene(newScene);
+    }
+  }
+
   addToScene(sceneJson: SceneJsonObject, bypassRendering = false) {
     // we need to clarify the  current semantics
     // currently, it will remove the old scene if the name is the same,
@@ -437,11 +462,6 @@ export default class Simple3DScene {
       console.log('The scene is a new scene:', sceneJson.name);
     }
 
-    const rootObject = new THREE.Object3D();
-    rootObject.name = sceneJson.name!;
-    sceneJson.visible && (rootObject.visible = sceneJson.visible);
-
-    const objectToAnimate = new Set<string>();
     // recursively visit the scene, starting with the root object
     const traverse_scene = (o: SceneJsonObject, parent: THREE.Object3D, currentId: string) => {
       o.contents!.forEach((childObject, idx) => {
@@ -465,6 +485,7 @@ export default class Simple3DScene {
             // note(chab) have a typedefinition for the JSON
             translation.makeTranslation(...(childObject.origin as ThreePosition));
             threeObject.applyMatrix4(translation);
+            console.log('>>>>>.', translation, childObject.origin, childObject.id);
           }
           if (!this.settings.extractAxis || threeObject.name !== 'axes') {
             parent.add(threeObject);
@@ -477,12 +498,45 @@ export default class Simple3DScene {
         }
       });
     };
+    const objectToAnimate = new Set<string>();
 
+    // add initial object
+    const rootObject = new THREE.Object3D();
+    rootObject.name = sceneJson.name!;
+    sceneJson.visible && (rootObject.visible = sceneJson.visible);
+    const translation = new THREE.Matrix4();
+    // note(chab) have a typedefinition for the JSON
+    translation.makeTranslation(...(sceneJson.origin as ThreePosition));
+    rootObject.applyMatrix4(translation);
     traverse_scene(sceneJson, rootObject, '');
     // can cause memory leak
     //console.log('rootObject', rootObject, rootObject);
-    this.scene.add(rootObject);
-    this.setupCamera(rootObject);
+    this.scenesContainer.add(rootObject);
+
+    if (sceneJson.repeat) {
+      for (let i = 0; i < sceneJson.repeat.length; i++) {
+        const vector = sceneJson.lattice[i];
+        const repeat = sceneJson.repeat[i];
+        for (let k = 0; k < repeat; k++) {
+          const rootObject = new THREE.Object3D();
+          rootObject.name = sceneJson.name!;
+          sceneJson.visible && (rootObject.visible = sceneJson.visible);
+          const translation = new THREE.Matrix4();
+          // note(chab) have a typedefinition for the JSON
+          const origin = [
+            sceneJson.origin![0] + vector[0] * (k + 1),
+            sceneJson.origin![1] + vector[1] * (k + 1),
+            sceneJson.origin![2] + vector[2] * (k + 1)
+          ];
+          console.log(origin);
+          translation.makeTranslation(...(origin as ThreePosition));
+          rootObject.applyMatrix4(translation);
+          traverse_scene(sceneJson, rootObject, '');
+          this.scenesContainer.add(rootObject);
+        }
+      }
+    }
+    this.setupCamera(this.scenesContainer);
 
     // we try to update the outline from the preceding scene, but if the corresponding
     // object is not there, we'll remove the outline
@@ -543,8 +597,8 @@ export default class Simple3DScene {
     box.getSize(size);
     const length = box.max.sub(box.min).length() * 2;
 
-    //const bboxobject = new THREE.Box3Helper(box, new THREE.Color('blue'));
-    //this.scene.add(bboxobject);
+    const bboxobject = new THREE.Box3Helper(box, new THREE.Color('blue'));
+    this.scenesContainer.add(bboxobject);
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera
     // we add a lot of padding to make sure the camera is always beyond/behind the object
