@@ -20,9 +20,8 @@ import { bezierScene } from '../crystal-toolkit-components/components-v2/Simple3
 const emptyObject = {};
 export const scene3d = () => (
   <>
-    This component renders a 3D scene by using the provided JSON. You are responsible for providing
-    a container that has a defined size.
-    <div style={{ width: '100%', height: '100%' }}>
+    This component renders a 3D scene by using the provided JSON.
+    <div>
       <Simple3DSceneComponent
         debug={boolean('DEBUG', false)}
         animation={select(
@@ -53,7 +52,6 @@ export const scene3d = () => (
         ></Simple3DSceneComponent>
       </>
     </CameraContextWrapper>
-    You can define an animation on the scene
   </>
 );
 
