@@ -23,6 +23,9 @@ storybook-static
 
 # Rollup artifacts
 rollup.build.*
-index.*
+index.js
+index.less
+index.css
+index.css.map
 **/wip-components/**
 
