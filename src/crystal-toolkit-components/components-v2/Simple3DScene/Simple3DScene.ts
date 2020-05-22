@@ -746,14 +746,14 @@ export default class Simple3DScene {
   public enableDebug(debugEnabled: boolean, node) {
     if (!debugEnabled) {
       if (!this.debugHelper) {
-        console.warn('Turning off debug, while its not on');
+        //
       } else {
         this.debugHelper.onDestroy();
         this.debugHelper = (null as unknown) as DebugHelper;
       }
     } else {
       if (this.debugHelper) {
-        console.warn('Turning on debug, while its not off');
+        //
       } else {
         this.debugDOMElement = node;
         this.debugHelper = this.getHelper();
