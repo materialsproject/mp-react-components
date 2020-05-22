@@ -315,6 +315,21 @@ export class ThreeBuilder {
     switch (this.settings.material.type) {
       case Material.standard: {
         const mat = new THREE.MeshStandardMaterial(parameters);
+        mat.side = THREE.DoubleSide;
+        mat.onBeforeCompile = shader => {
+          shader.fragmentShader.replace(
+            'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+            'if ( gl_FrontFacing ) {\n' +
+              '\n' +
+              '    gl_FragColor = vec4( outgoingLight, diffuseColor.a );\n' +
+              '\n' +
+              '} else {\n' +
+              '\n' +
+              '    gl_FragColor = diffuseColor;\n' +
+              '\n' +
+              '}'
+          );
+        };
         return mat;
       }
       default:
