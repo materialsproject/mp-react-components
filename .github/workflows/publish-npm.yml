@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: https://registry.npmjs.org/
-          scope: '@fjchabbey'
+          scope: '@@mkhorton'
       - name: Install dependencies
         run: |
           npm i

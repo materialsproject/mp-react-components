@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 12.x
           registry-url: https://registry.npmjs.org/
-          scope: '@fjchabbey'
+          scope: '@mkhorton'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set up Python 3.7
