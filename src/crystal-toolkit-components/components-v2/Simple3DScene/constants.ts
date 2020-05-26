@@ -31,12 +31,25 @@ export enum AnimationStyle {
   NONE = 'none'
 }
 
+export enum CameraAxis {
+  X = 'x',
+  Y = 'y',
+  Z = 'z'
+}
+
+export enum CameraPosition {
+  BACK = 'back',
+  FRONT = ' front'
+}
+
 // maybe move to settings
 export const TUBE_SEGMENTS = 150;
 export const RADIUS_SEGMENTS = 20;
 
 export const defaults = {
   antialias: true,
+  cameraAxis: 'z',
+  cameraPosition: 'back',
   animation: AnimationStyle.NONE,
   transparentBackground: true,
   renderer: Renderer.WEBGL,

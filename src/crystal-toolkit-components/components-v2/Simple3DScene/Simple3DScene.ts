@@ -542,12 +542,10 @@ export default class Simple3DScene {
     const size = new THREE.Vector3();
     box.getSize(size);
     const length = box.max.sub(box.min).length() * 2;
-
     //const bboxobject = new THREE.Box3Helper(box, new THREE.Color('blue'));
     //this.scene.add(bboxobject);
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
-    // object to go out of the camera
-    // we add a lot of padding to make sure the camera is always beyond/behind the object
+    // object to go out of the camera while still on the screen
     const Z_PADDING = 5;
     if (this.camera) {
       this.camera.left = center.x - length;
@@ -567,12 +565,19 @@ export default class Simple3DScene {
       );
     }
 
-    this.camera.zoom = 4;
     // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
-    this.camera.position.z = center.z + length / 2;
+    this.camera.position.z = center.z;
     this.camera.position.y = center.y;
     this.camera.position.x = center.x;
+
+    const axis = this.settings.cameraAxis;
+    this.camera.position[axis] =
+      this.settings.cameraPosition === 'back'
+        ? this.camera.position[axis] + length / 2
+        : this.camera.position[axis] - length / 2;
+
     this.camera.lookAt(this.scene.position);
+    this.camera.zoom = 4;
 
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
