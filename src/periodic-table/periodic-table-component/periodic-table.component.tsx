@@ -156,9 +156,16 @@ export function Table({
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
-  const isDesktop = useMediaQuery({ minWidth: 1236 });
-  const isTablet = useMediaQuery({ minWidth: 900, maxWidth: 1236 });
+  const isDesktop = useMediaQuery({ minWidth: 1436 });
+  const isTablet = useMediaQuery({ minWidth: 900, maxWidth: 1436 });
   const isMobile = useMediaQuery({ maxWidth: 900 });
+
+  // DO NOT REFACTORING USING || IT WILL CRASH THE APP, BECAUSE A DIFFERENT NUMBER OF HOOKS WILL BE
+  // CALLED
+
+  const isDesktopH = useMediaQuery({ minHeight: 670 });
+  const isTabletH = useMediaQuery({ maxHeight: 670, minHeight: 400 });
+  const isMobileH = useMediaQuery({ maxHeight: 400 });
 
   // we consider that either those properties are all defined, or not
   const {
@@ -193,9 +200,12 @@ export function Table({
   return (
     <div className={'table-legend-container'}>
       <div
-        className={`table-container ${getLayout(isDesktop, isTablet, isMobile, forceTableLayout)} ${
-          isShown ? '' : 'elements-hidden'
-        }`}
+        className={`table-container ${getLayout(
+          isDesktop || isDesktopH,
+          isTablet || isTabletH,
+          isMobile || isMobileH,
+          forceTableLayout
+        )} ${isShown ? '' : 'elements-hidden'}`}
       >
         <TableSpacer
           plugin={plugin}
@@ -266,15 +276,17 @@ function getLayout(
   tableLayout?: TableLayout
 ) {
   if (tableLayout) return tableLayout;
-  if (isDesktop) {
-    return TableLayout.SPACED;
+
+  if (isMobile) {
+    return TableLayout.MINI;
   }
   if (isTablet) {
     return TableLayout.COMPACT;
   }
-  if (isMobile) {
-    return TableLayout.MINI;
+  if (isDesktop) {
+    return TableLayout.SPACED;
   }
+
   return TableLayout.SPACED;
 }
 

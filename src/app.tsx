@@ -645,7 +645,10 @@ const dmr = [
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
+    /*
     <SceneSwitcher />
+    */
+    <TestComponent />
   </>,
 
   mountNode
