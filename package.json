@@ -64,7 +64,7 @@
     "style-loader": "^1.1.2",
     "styled-components": "^5.1.0",
     "svgtodatauri": "0.0.0",
-    "three": "^0.115.0",
+    "three": "^0.119.0",
     "ts-debounce": "^2.0.1",
     "xlsx": "^0.15.6"
   },
