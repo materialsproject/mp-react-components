@@ -1,59 +1,74 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+
+interface MenuGroup {
+	label?: string;
+	items: MenuItem[];
+}
+
+interface MenuItem {
+	label: string;
+	targetId: string;
+	items?: MenuItem[];
+}
 
 interface ScrollspyProps {
 	className: string;
-	ids: string[];
+	menuGroups: MenuGroup[]
 	activeItemClassName: string;
 	offset?: number;
-	itemContainerClassName?: string;
-	itemClassName?: string;
+	menuLabelClassName?: string;
+	menuContainerClassName?: string;
+	menuItemClassName?: string;
 }
 
-interface SpyItem {
-	inView: boolean;
-	element: HTMLElement | null;
+interface SpyItemMap {
+	[id: string]: boolean
 }
 
 export const Scrollspy: React.FC<ScrollspyProps> = ({
+	menuGroups,
 	className = 'menu',
-	ids = [],
 	activeItemClassName = 'is-active',
-	offset = 0,
-	itemContainerClassName = 'menu-list',
-	itemClassName = ''
+	offset = -20,
+	menuLabelClassName = 'menu-label',
+	menuContainerClassName = 'menu-list',
+	menuItemClassName = ''
 }) => {
-	const [items, setItems] = useState<SpyItem[]>();
-	const [count, setCount] = useState(0);
+	const [spyItemsViewMap, setSpyItemsViewMap] = useState(initSpyItemsViewMap);
 
-	function scrollTo(element: HTMLElement | null): void {
-		if(element) {
-			element.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start',
-				inline: 'nearest'
+	function initSpyItemsViewMap(): SpyItemMap {
+		let viewMap: SpyItemMap = {};
+		menuGroups.forEach((group) => {
+			group.items.forEach((item) => {
+				viewMap[item.targetId] = false;
+				item.items?.forEach((subitem) => {
+					viewMap[subitem.targetId] = false;
+				});
 			});
-		}
+		});
+		return viewMap;
 	}
 
 	function spy(): void {
 		let firstItemFound: boolean = false;
-		const items: SpyItem[] = ids.map(id => {
-			const element = document.getElementById(id);
-			const item = {
-				inView: element && !firstItemFound ? isInView(element) : false,
-				element: element ? element : null
-			};
-			if(item.inView) firstItemFound = true;
-			return item;
+		let newSpyItemsViewMap: SpyItemMap = {};
+		Object.keys(spyItemsViewMap).forEach(key => {
+			newSpyItemsViewMap[key] = firstItemFound ? false : isInView(key);
+			if(newSpyItemsViewMap[key]) firstItemFound = true;
 		});
-		setItems(items);
+		setSpyItemsViewMap(newSpyItemsViewMap);
 	}
 
-	const isInView = (element: HTMLElement) => {
-		const rect = element.getBoundingClientRect();
-		return rect.top >= 0 - offset && rect.bottom <= window.innerHeight + offset;
+	const isInView = (targetId: string) => {
+		const element = document.getElementById(targetId);
+		if(element) {
+			const rect = element.getBoundingClientRect();
+			return rect.bottom >= 0 - offset;
+		} else {
+			return false;
+		}
 	}
-	
+
 	useEffect(() => {
 		spy();
 		window.addEventListener('scroll', spy);
@@ -64,20 +79,43 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 
 	return (
 		<aside className={className} id="sidebar">
-			<ul className={itemContainerClassName}>
-				{items?.map((item, k) => {
+			{menuGroups.map((group, k) => {
 					return (
-						<li key={k}>
-							<a 
-								className={`${itemClassName} ${item.inView ? activeItemClassName : ''}`}
-								onClick={() => scrollTo(item.element)}
-							>
-								{item.element ? item.element.innerText : ''}
-							</a>								
-						</li>
+						<div key={k}>
+							{group.label ? <p className={menuLabelClassName || undefined}>{group.label}</p> : null}
+							<ul className={menuContainerClassName || undefined}>
+								{group.items.map((item, i) => {
+									return (
+										<li key={i} className={menuItemClassName || undefined}>
+											<a 
+												className={spyItemsViewMap[item.targetId] ? activeItemClassName : ''}
+												href={`#${item.targetId}`}
+											>
+												{item.label}
+											</a>
+											{item.items && 
+												<ul className={menuContainerClassName || undefined}>
+													{item.items.map((subitem, j) => {
+														return (
+															<li key={j} className={menuItemClassName || undefined}>
+																<a 
+																	className={spyItemsViewMap[subitem.targetId] ? activeItemClassName : undefined}
+																	href={`#${subitem.targetId}`}
+																>
+																	{subitem.label}
+																</a>
+															</li>
+														)
+													})}
+												</ul>
+											}
+										</li>
+									)
+							})}
+							</ul>
+						</div>
 					)
-				})}
-			</ul>
+			})}
 		</aside>
 	);
 }

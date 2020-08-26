@@ -1,24 +1,53 @@
 import React from 'react';
 import Scrollspy from '../navigation/Scrollspy';
 
+const menuContent = [
+  {
+    label: 'Table of Contents',
+    items: [
+      {
+        label: 'Crystal Structure',
+        targetId: 'one'
+      },
+      {
+        label: 'Properties',
+        targetId: 'two',
+        items: [
+          {
+            label: 'Prop One',
+            targetId: 'three'
+          }
+        ]
+      }
+    ]
+  }
+];
+
 export const SidebarScrollspy = () => (
 	<div className="sidebar-story">
-		<Scrollspy ids={["one", "two", "three"]}
+		<Scrollspy menuGroups={menuContent}
 			className="menu"
-			itemContainerClassName="menu-list"
-			activeItemClassName="is-active"/>
+			menuContainerClassName="menu-list"
+			activeItemClassName="is-active">
+		</Scrollspy>
 		<div className="content">
-			<h1 id="one">First</h1>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
-			<h1 id="two">Second</h1>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
-			<h1 id="three">Third</h1>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			<div id="one">
+				<h1>Crystal Structure</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
+			<div id="two">
+				<h1>Properties</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
+			<div id="three">
+				<h1>Prop One</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
 		</div>
 	</div>
 );
 	
 export default {
-    component: Scrollspy,
+  component: Scrollspy,
 	title: 'Sidebar'
 };
