@@ -69,6 +69,21 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 		}
 	}
 
+	const getMenuGroupLabel = (group: MenuGroup) => {
+		return group.label ? <p className={menuLabelClassName || undefined}>{group.label}</p> : null;
+	}
+
+	const getMenuItemLink = (item: MenuItem) => {
+		return (
+			<a 
+				className={spyItemsViewMap[item.targetId] ? activeItemClassName : ''} 
+				href={`#${item.targetId}`}
+			>
+					{item.label}
+			</a>
+		)
+	}
+
 	useEffect(() => {
 		spy();
 		window.addEventListener('scroll', spy);
@@ -78,32 +93,22 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 	}, []);
 
 	return (
-		<aside className={className} id="sidebar">
+		<aside className={className}>
 			{menuGroups.map((group, k) => {
 					return (
 						<div key={k}>
-							{group.label ? <p className={menuLabelClassName || undefined}>{group.label}</p> : null}
+							{getMenuGroupLabel(group)}
 							<ul className={menuContainerClassName || undefined}>
 								{group.items.map((item, i) => {
 									return (
 										<li key={i} className={menuItemClassName || undefined}>
-											<a 
-												className={spyItemsViewMap[item.targetId] ? activeItemClassName : ''}
-												href={`#${item.targetId}`}
-											>
-												{item.label}
-											</a>
+											{getMenuItemLink(item)}
 											{item.items && 
 												<ul className={menuContainerClassName || undefined}>
 													{item.items.map((subitem, j) => {
 														return (
 															<li key={j} className={menuItemClassName || undefined}>
-																<a 
-																	className={spyItemsViewMap[subitem.targetId] ? activeItemClassName : undefined}
-																	href={`#${subitem.targetId}`}
-																>
-																	{subitem.label}
-																</a>
+																{getMenuItemLink(subitem)}
 															</li>
 														)
 													})}

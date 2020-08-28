@@ -12,6 +12,7 @@ import { Sidebar } from './navigation/sidebar';
 import { GridWithContext } from './search-page/search-grid/card-grid';
 import { MtPrintViewContext, MTGrid, MtMaterialTable } from './search-page/exportable-grid-v2';
 import Simple3DScene from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DScene';
+import Scrollspy from './navigation/Scrollspy';
 
 export {
   SelectableTable,
@@ -28,5 +29,6 @@ export {
   GridWithContext,
   MtPrintViewContext,
   MTGrid,
-  MtMaterialTable
+  MtMaterialTable,
+  Scrollspy
 };

@@ -35,6 +35,8 @@ import MTGridWithContext, {
   MtMaterialTable,
   MtPrintViewContext
 } from './search-page/exportable-grid-v2';
+import Scrollspy from './navigation/Scrollspy';
+import '../node_modules/bulma/css/bulma.min.css';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -642,13 +644,54 @@ const dmr = [
   }
 ];
 
+const menuContent = [
+  {
+    label: 'Table of Contents',
+    items: [
+      {
+        label: 'Crystal Structure',
+        targetId: 'one'
+      },
+      {
+        label: 'Properties',
+        targetId: 'two',
+        items: [
+          {
+            label: 'Prop One',
+            targetId: 'three'
+          }
+        ]
+      }
+    ]
+  }
+];
+
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 ReactDOM.render(
   <>
-    /*
-    <SceneSwitcher />
-    */
-    <TestComponent />
+    <div className="sidebar-story">
+		<Scrollspy menuGroups={menuContent}
+			className="menu"
+			menuContainerClassName="menu-list"
+			activeItemClassName="is-active">
+		</Scrollspy>
+		<div className="content">
+			<div id="one">
+				<h1>Crystal Structure</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
+			<div id="two">
+				<h1>Properties</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
+			<div id="three">
+				<h1>Prop One</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
+			</div>
+		</div>
+	</div>
+    {/* <SceneSwitcher />
+    <TestComponent /> */}
   </>,
 
   mountNode
