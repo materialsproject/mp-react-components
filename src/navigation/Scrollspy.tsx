@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import HashLinkObserver from "react-hash-link";
 
 interface MenuGroup {
 	label?: string;
@@ -95,7 +94,6 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 
 	return (
 		<aside className={className}>
-			<HashLinkObserver smoothScroll />
 			{menuGroups.map((group, k) => {
 					return (
 						<div key={k}>
