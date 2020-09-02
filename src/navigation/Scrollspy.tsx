@@ -1,5 +1,51 @@
 import React, { useState, useEffect } from 'react';
 
+/**
+ * Component for building in-page navigation menus with scrollspy functionality
+ */
+interface ScrollspyProps {
+	/**
+	 * An array of MenuGroup items that is used to build the menu and its links.
+	 * Each MenuGroup has an optional label and a required 'items' array of MenuItems.
+	 * Each MenuItem has a label that is rendered in the menu and a targetId that is the id of the element it should link to.
+	 * Do not include '#' in targetId.
+	 * example:
+		  [
+				{label: '...', items: [
+					{label: '...', targetId: '...'}, 
+					{label: '...', targetId: '...', items: [
+						{label: '...', targetId: '...'}
+					}]
+				]}
+			]
+	 */
+	menuGroups: MenuGroup[]
+	/**
+	 * Class name applied to active links in the menu (default: 'is-active')
+	 */
+	activeClassName: string;
+	/**
+	 * Class name applied to the <aside> that contains the whole menu (default: 'menu')
+	 */
+	menuClassName?: string;
+	/**
+	 * Class name applied to all menu group labels (default: 'menu-label')
+	 */
+	menuGroupLabelClassName?: string;
+	/**
+	 * Class name applied to each <ul> of menu items (default: 'menu-list')
+	 */
+	menuItemContainerClassName?: string;
+	/**
+	 * Class name applied to the <li> of each menu item (default: '')
+	 */
+	menuItemClassName?: string;
+	/**
+	 * An integer to determine the scroll offset from an item that will trigger it active (default: -20)
+	 */
+	offset?: number;
+}
+
 interface MenuGroup {
 	label?: string;
 	items: MenuItem[];
@@ -11,28 +57,18 @@ interface MenuItem {
 	items?: MenuItem[];
 }
 
-interface ScrollspyProps {
-	className: string;
-	menuGroups: MenuGroup[]
-	activeItemClassName: string;
-	offset?: number;
-	menuLabelClassName?: string;
-	menuContainerClassName?: string;
-	menuItemClassName?: string;
-}
-
 interface SpyItemMap {
 	[id: string]: boolean
 }
 
 export const Scrollspy: React.FC<ScrollspyProps> = ({
 	menuGroups,
-	className = 'menu',
-	activeItemClassName = 'is-active',
-	offset = -20,
-	menuLabelClassName = 'menu-label',
-	menuContainerClassName = 'menu-list',
-	menuItemClassName = ''
+	menuClassName = 'menu',
+	activeClassName = 'is-active',
+	menuGroupLabelClassName = 'menu-label',
+	menuItemContainerClassName = 'menu-list',
+	menuItemClassName = '',
+	offset = -20
 }) => {
 	const [spyItemsViewMap, setSpyItemsViewMap] = useState(initSpyItemsViewMap);
 
@@ -70,13 +106,13 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 	}
 
 	const getMenuGroupLabel = (group: MenuGroup) => {
-		return group.label ? <p className={menuLabelClassName || undefined}>{group.label}</p> : null;
+		return group.label ? <p className={menuGroupLabelClassName || undefined}>{group.label}</p> : null;
 	}
 
 	const getMenuItemLink = (item: MenuItem) => {
 		return (
 			<a 
-				className={spyItemsViewMap[item.targetId] ? activeItemClassName : ''} 
+				className={spyItemsViewMap[item.targetId] ? activeClassName : ''} 
 				href={`#${item.targetId}`}
 			>
 					{item.label}
@@ -93,18 +129,18 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 	}, []);
 
 	return (
-		<aside className={className}>
+		<aside className={menuClassName}>
 			{menuGroups.map((group, k) => {
 					return (
 						<div key={k}>
 							{getMenuGroupLabel(group)}
-							<ul className={menuContainerClassName || undefined}>
+							<ul className={menuItemContainerClassName || undefined}>
 								{group.items.map((item, i) => {
 									return (
 										<li key={i} className={menuItemClassName || undefined}>
 											{getMenuItemLink(item)}
 											{item.items && 
-												<ul className={menuContainerClassName || undefined}>
+												<ul className={menuItemContainerClassName || undefined}>
 													{item.items.map((subitem, j) => {
 														return (
 															<li key={j} className={menuItemClassName || undefined}>
