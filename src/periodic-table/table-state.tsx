@@ -43,7 +43,7 @@ export function SelectableTable(props: SelectableTableProps) {
   );
 }
 
-const useElementsWithState = (props: SelectableTableProps) => {
+export const useElementsWithState = (props: SelectableTableProps) => {
   // could be memoized
   const {
     enabledElements: enabledEls,
