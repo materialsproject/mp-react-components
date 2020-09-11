@@ -37,6 +37,15 @@ import MTGridWithContext, {
 } from './search-page/exportable-grid-v2';
 import {Scrollspy} from './navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
+import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
+import {
+  s4 as sceneJson4,
+  s3 as sceneJson3,
+  s2 as sceneJson,
+  shperes as sceneJson2
+} from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import {complexScene} from './crystal-toolkit-components/components-v2/scene/complex-scene';
+import {surfaceJson} from './crystal-toolkit-components/components-v2/scene/surface-scene';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -667,8 +676,31 @@ const menuContent = [
 ];
 
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
+const emptyObject = {};
 ReactDOM.render(
   <>
+    <div>
+      <Simple3DSceneComponent
+        debug={boolean('DEBUG', false)}
+        animation={select(
+          'Animation',
+          [AnimationStyle.SLIDER, AnimationStyle.PLAY, AnimationStyle.NONE] as string[],
+          AnimationStyle.NONE as string
+        )}
+        axisView={select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW')}
+        inletPadding={number('padding', 10)}
+        inletSize={number('size', 100)}
+        data={object('scene', complexScene)}
+        sceneSize={object('Size', 400)}
+        toggleVisibility={emptyObject}
+      />
+    </div>
+  </>,
+
+  mountNode
+);
+console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+/*
     <div className="sidebar-story">
       <Scrollspy menuGroups={menuContent}
         className="menu"
@@ -690,14 +722,7 @@ ReactDOM.render(
         </div>
       </div>
 	  </div>
-    {/* <SceneSwitcher />
-    <TestComponent /> */}
-  </>,
-
-  mountNode
-);
-console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
-
+*/
 /*<CameraContextWrapper>
         <SceneSwitcher />
       <>
