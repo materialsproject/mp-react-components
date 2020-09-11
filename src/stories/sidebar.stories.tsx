@@ -1,5 +1,5 @@
 import React from 'react';
-// import Scrollspy from '../navigation/Scrollspy';
+import { Scrollspy } from '../navigation/Scrollspy';
 
 const menuContent = [
   {
@@ -25,11 +25,11 @@ const menuContent = [
 
 export const SidebarScrollspy = () => (
 	<div className="sidebar-story">
-		{/* <Scrollspy menuGroups={menuContent}
-			className="menu"
-			menuContainerClassName="menu-list"
-			activeItemClassName="is-active">
-		</Scrollspy> */}
+		<Scrollspy menuGroups={menuContent}
+			menuClassName="menu"
+			menuItemContainerClassName="menu-list"
+			activeClassName="is-active">
+		</Scrollspy>
 		<div className="content">
 			<div id="one">
 				<h1>Crystal Structure</h1>
