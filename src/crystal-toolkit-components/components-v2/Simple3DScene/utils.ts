@@ -186,3 +186,19 @@ export function mapArrayToBooleanObject(array: any, value: boolean = true) {
     return array;
   }
 }
+
+/**
+ * Takes an array of arrays and merges the inner arrays into a single array.
+ * This is a scalable alternative to [].concat.apply([], arr)
+ */
+export function mergeInnerArrays(arr: Array<any>): Array<any> {
+  const result: any[] = [];
+  arr.forEach((p) => {
+    if(Array.isArray(p)) {
+      p.forEach((d) => result.push(d))
+    } else {
+      result.push(p);
+    }
+  });
+  return result;
+}

@@ -22,6 +22,7 @@ import { RadiusTubeBufferGeometry } from './RadiusTubeBufferGeometry';
 export const DEFAULT_DASHED_LINE_COLOR = '#000000';
 export const DEFAULT_LINE_COLOR = '#2c3c54';
 export const DEFAULT_MATERIAL_COLOR = '#52afb0';
+import { mergeInnerArrays } from './utils';
 
 // i think it would be better to have a mixin or a decorator, so we do not need
 // to create a sub class for each kind of curve. we would store the original curve and
@@ -139,7 +140,7 @@ export class ThreeBuilder {
   }
 
   public makeLine(object_json, obj: THREE.Object3D) {
-    const verts = new THREE.Float32BufferAttribute([].concat.apply([], object_json.positions), 3);
+    const verts = new THREE.Float32BufferAttribute(mergeInnerArrays(object_json.positions), 3);
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', verts);
 
@@ -181,7 +182,7 @@ export class ThreeBuilder {
   }
 
   public makeSurfaces(object_json, obj: THREE.Object3D) {
-    const verts = new THREE.Float32BufferAttribute([].concat.apply([], object_json.positions), 3);
+    const verts = new THREE.Float32BufferAttribute(mergeInnerArrays(object_json.positions), 3);
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', verts);
 
@@ -189,7 +190,7 @@ export class ThreeBuilder {
     const mat = this.makeMaterial(object_json.color, object_json.animate, opacity);
 
     if (object_json.normals) {
-      const normals = new THREE.Float32BufferAttribute([].concat.apply([], object_json.normals), 3);
+      const normals = new THREE.Float32BufferAttribute(mergeInnerArrays(object_json.normals), 3);
 
       geom.setAttribute('normal', normals);
     } else {

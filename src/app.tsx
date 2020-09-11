@@ -44,8 +44,9 @@ import {
   s2 as sceneJson,
   shperes as sceneJson2
 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
-import {complexScene} from './crystal-toolkit-components/components-v2/scene/complex-scene';
 import {surfaceJson} from './crystal-toolkit-components/components-v2/scene/surface-scene';
+import { Dynamic3DScene } from './crystal-toolkit-components/components-v2/Simple3DScene/Dynamic3DScene'
+
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -680,20 +681,7 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <Simple3DSceneComponent
-        debug={boolean('DEBUG', false)}
-        animation={select(
-          'Animation',
-          [AnimationStyle.SLIDER, AnimationStyle.PLAY, AnimationStyle.NONE] as string[],
-          AnimationStyle.NONE as string
-        )}
-        axisView={select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW')}
-        inletPadding={number('padding', 10)}
-        inletSize={number('size', 100)}
-        data={object('scene', complexScene)}
-        sceneSize={object('Size', 400)}
-        toggleVisibility={emptyObject}
-      />
+      <Dynamic3DScene />
     </div>
   </>,
 
