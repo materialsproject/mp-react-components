@@ -38,6 +38,7 @@ import MTGridWithContext, {
 import { Scrollspy } from './navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
 import { SearchBar } from './search-page/search-bar/SearchBar';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -675,18 +676,16 @@ ReactDOM.render(
       <PeriodicContext>
         <div>
           <SearchBar />
-          <div>
-            <SelectableTable
-              maxElementSelectable={4}
-              forceTableLayout={TableLayout.COMPACT}
-              hiddenElements={[]}
-              onStateChange={enabledElements => {
-                elements = Object.keys(enabledElements).filter(el => enabledElements[el]);
-              }}
-              enabledElements={['Co']}
-              disabledElements={['H', 'C']}
-            />
-          </div>
+          <SelectableTable
+            maxElementSelectable={20}
+            forceTableLayout={TableLayout.MINI}
+            hiddenElements={[]}
+            onStateChange={enabledElements => {
+              elements = Object.keys(enabledElements).filter(el => enabledElements[el]);
+            }}
+            enabledElements={['Co']}
+            disabledElements={['H', 'C']}
+          />
         </div>
       </PeriodicContext>
     </div>
