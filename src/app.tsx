@@ -37,7 +37,7 @@ import MTGridWithContext, {
 } from './search-page/exportable-grid-v2';
 import { Scrollspy } from './navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
-import { SearchBar } from './search-page/search-bar/SearchBar';
+import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const latexify = (string, options) => {
@@ -675,7 +675,7 @@ ReactDOM.render(
     <div>
       <PeriodicContext>
         <div>
-          <SearchBar />
+          <ElementsInput />
           <SelectableTable
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}
