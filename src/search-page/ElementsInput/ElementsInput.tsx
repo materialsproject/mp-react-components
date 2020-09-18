@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
-import { useElements, PeriodicSelectionContext } from '../../periodic-table/periodic-table-state/table-store';
+import React, { useState, useEffect } from 'react';
+import { useElements } from '../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
 import { getDelimiter, elementsArrayToElementState, formulaStringToArrays, getTruthyKeys } from '../utils';
-import { Dropdown, Button } from 'react-bulma-components';
+import { Dropdown } from 'react-bulma-components';
 import { Form } from 'react-bulma-components';
-const { Input, Field, Control, Label } = Form;
-import { action } from '@storybook/addon-actions';
-import { boolean, select, text } from '@storybook/addon-knobs';
-import { usePrevious } from '../../utils/hooks';
-import { distinctUntilKeyChanged, filter } from 'rxjs/operators';
+const { Input, Field, Control } = Form;
 
 /**
  * Search types supported by this field
