@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx';
+import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
 
 export function convertArrayOfObjectsToCSV(array) {
   let result;
@@ -61,3 +62,34 @@ export function downloadExcel(array) {
   XLSX.writeFile(wb, 'material.xlsx'); // name of the file is 'book.xlsx'
   return true;
 }
+
+export function getDelimiter(str: string): string {
+  const commaIndex = str.indexOf(',');
+  const hyphenIndex = str.indexOf('-');
+  if(commaIndex > -1 && hyphenIndex > -1) {
+    return commaIndex < hyphenIndex ? ',' : '-';
+  } else if(commaIndex === -1 && hyphenIndex > -1) {
+    return '-';
+  } else {
+    return ',';
+  }
+}
+
+export function elementsArrayToElementState(elements: string[]) {
+  const elementState = {};
+  elements.forEach((d: string) => {
+    if(TABLE_DICO_V2[d]) elementState[d] = true;
+  });
+  return elementState;
+}
+
+export function formulaStringToArrays(str: string) {
+  var formulaSplitWithNumbers = str.match(/[A-Z][a-z][0-9]|[A-Z][0-9]|[A-Z][a-z]|[A-Z]/g);
+  var formulaSplitElementsOnly = formulaSplitWithNumbers ? formulaSplitWithNumbers.map((d) => d.replace(/[0-9]/, '')) : [];
+  return { formulaSplitWithNumbers, formulaSplitElementsOnly };
+}
+
+export function getTruthyKeys(obj: any) {
+  return obj ? Object.keys(obj).filter(key => obj[key]) : [];
+}
+

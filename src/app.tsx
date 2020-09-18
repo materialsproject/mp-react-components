@@ -35,18 +35,10 @@ import MTGridWithContext, {
   MtMaterialTable,
   MtPrintViewContext
 } from './search-page/exportable-grid-v2';
-import {Scrollspy} from './navigation/Scrollspy';
+import { Scrollspy } from './navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
-import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
-import {
-  s4 as sceneJson4,
-  s3 as sceneJson3,
-  s2 as sceneJson,
-  shperes as sceneJson2
-} from './crystal-toolkit-components/components-v2/scene/simple-scene';
-import {surfaceJson} from './crystal-toolkit-components/components-v2/scene/surface-scene';
-import { Dynamic3DScene } from './crystal-toolkit-components/components-v2/Simple3DScene/Dynamic3DScene'
-
+import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -181,16 +173,17 @@ function SelectedComponent() {
   return (
     <div className="cmp-list" style={{ margin: '10px', display: 'flex' }}>
       {getElementsList().map((elt: any) => (
-        <StandalonePeriodicComponent
-          key={elt}
-          size={50}
-          disabled={false}
-          enabled={false}
-          hidden={false}
-          element={elt}
-          onElementClicked={() => {}}
-          onElementHovered={() => {}}
-        />
+        // <StandalonePeriodicComponent
+        //   key={elt}
+        //   size={50}
+        //   disabled={false}
+        //   enabled={false}
+        //   hidden={false}
+        //   element={elt}
+        //   onElementClicked={() => {}}
+        //   onElementHovered={() => {}}
+        // />
+        <li key={elt}>{elt}</li>
       ))}
     </div>
   );
@@ -681,19 +674,34 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <Dynamic3DScene />
+      <PeriodicContext>
+        <div>
+          <ElementsInput />
+          <SelectableTable
+            maxElementSelectable={20}
+            forceTableLayout={TableLayout.MINI}
+            hiddenElements={[]}
+            onStateChange={enabledElements => {
+              elements = Object.keys(enabledElements).filter(el => enabledElements[el]);
+            }}
+            enabledElements={['Co']}
+            disabledElements={['H', 'C']}
+          />
+        </div>
+      </PeriodicContext>
     </div>
   </>,
 
   mountNode
 );
 console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
-/*
-    <div className="sidebar-story">
+
+/* 
+<div className="sidebar-story">
       <Scrollspy menuGroups={menuContent}
-        className="menu"
-        menuContainerClassName="menu-list"
-        activeItemClassName="is-active">
+        menuClassName="menu"
+        menuItemContainerClassName="menu-list"
+        activeClassName="is-active">
       </Scrollspy>
       <div className="content">
         <div id="one">
@@ -709,9 +717,11 @@ console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBU
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?</p>
         </div>
       </div>
-	  </div>
+    </div> 
 */
-/*<CameraContextWrapper>
+
+/*
+<CameraContextWrapper>
         <SceneSwitcher />
       <>
         <Simple3DSceneComponent
@@ -728,7 +738,9 @@ console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBU
         />
         <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} />
       </>
-    </CameraContextWrapper>*/
+    </CameraContextWrapper>
+*/
+
 /*
 <div>
   {<TestComponent d={['B']} b={[]} e={[]} />}

@@ -198,16 +198,18 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
   const [disabledElements, setDisabled] = React.useState({});
   const [enabledElements, setEnabled] = React.useState({});
   const [hiddenElements, setHiddenElements] = React.useState({});
+  const [lastAction, setLastAction] = React.useState<State['lastAction']>();
   const { observable, actions } = useContext(PeriodicSelectionContext);
 
   React.useEffect(() => {
     actions.setMaxSelectionLimit(maxElementSelection);
     // Update the view of the components that use it
     const subscription = observable.subscribe(
-      ({ enabledElements, disabledElements, hiddenElements }: any) => {
+      ({ enabledElements, disabledElements, hiddenElements, lastAction }: any) => {
         setDisabled(disabledElements);
         setEnabled(enabledElements);
         setHiddenElements(hiddenElements);
+        setLastAction(lastAction);
       }
     );
 
@@ -242,7 +244,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
     };
   }, []); // by passing an empty array, we tell React to only run this effect ONCE
 
-  return { disabledElements, enabledElements, hiddenElements, actions };
+  return { disabledElements, enabledElements, hiddenElements, lastAction, actions };
 }
 
 export function useDetailedElement() {
