@@ -110,14 +110,14 @@ export const ElementsInput = () => {
           value={searchType}
           onChange={(item: SearchType) => setSearchType(item)}
           color="info"
-          label={text('label', '')}>
-            {dropdownItems.map((item, k) => {
-              return (
-                <Dropdown.Item key={k} value={item.value} >
-                  {item.label}
-                </Dropdown.Item>
-              )
-            })}
+        >
+          {dropdownItems.map((item, k) => {
+            return (
+              <Dropdown.Item key={k} value={item.value} >
+                {item.label}
+              </Dropdown.Item>
+            )
+          })}
         </Dropdown>
       </Control>
       <Control>
