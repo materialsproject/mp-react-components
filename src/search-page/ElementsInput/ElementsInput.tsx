@@ -5,6 +5,7 @@ import { getDelimiter, elementsArrayToElementState, formulaStringToArrays, getTr
 import { Dropdown } from 'react-bulma-components';
 import { Form } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
+import { useSearchFilters } from '../SearchFiltersProvider';
 
 /**
  * Search types supported by this field
@@ -27,6 +28,7 @@ export const ElementsInput = () => {
   const [delimiter, setDelimiter] = useState(',');
   const [isFocused, setIsFocused] = useState(false);
   const [searchType, setSearchType] = useState(SearchType.ELEMENTS);
+  const {state, dispatch} = useSearchFilters();
   const dropdownItems = [
     {label: 'Materials with elements', value: SearchType.ELEMENTS},
     {label: 'Materials with formula', value: SearchType.FORMULA}
@@ -127,6 +129,20 @@ export const ElementsInput = () => {
           onChange={changeInputValue}
           onFocus={() => setIsFocused(true)} 
           onBlur={() => setIsFocused(false)}
+        />
+      </Control>
+      <Control>
+        <Input
+          type="text" 
+          value='texmex'
+          onChange={() => dispatch({type: 'taco'})}
+        />
+      </Control>
+      <Control>
+        <Input
+          type="text" 
+          value={state.elementsInputValue}
+          onChange={() => console.log('from component')}
         />
       </Control>
     </Field>
