@@ -40,6 +40,7 @@ import '../node_modules/bulma/css/bulma.min.css';
 import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchFilters } from './search-page/SearchFilters';
+import { MaterialsSearch } from './search-page/MaterialsSearch';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -674,7 +675,7 @@ const menuContent = [
 ReactDOM.render(
   <>
     <div>
-      <SearchFilters />
+      <MaterialsSearch />
     </div>
   </>,
 

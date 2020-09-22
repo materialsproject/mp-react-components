@@ -3,11 +3,16 @@ import { PeriodicContext } from '../periodic-table/periodic-table-state/periodic
 import { SelectableTable } from '../periodic-table/table-state';
 import { TableLayout } from '../periodic-table/periodic-table-component/periodic-table.component';
 import { ElementsInput } from './ElementsInput/ElementsInput';
-import { SearchFiltersProvider } from './SearchFiltersProvider';
+import { useMaterialsSearch } from './MaterialsSearchProvider';
+import { Button } from 'react-bulma-components';
 
 export const SearchFilters = () => {
+  const { state, actions } = useMaterialsSearch();
   return (
-    <SearchFiltersProvider>
+    <div>
+      <div>
+        <Button onClick={actions.getData}>Apply</Button>
+      </div>
       <PeriodicContext>
         <div>
           <ElementsInput />
@@ -23,6 +28,6 @@ export const SearchFilters = () => {
           />
         </div>
       </PeriodicContext>
-    </SearchFiltersProvider>
+    </div>
   );
 }

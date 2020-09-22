@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useElements } from '../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
 import { getDelimiter, elementsArrayToElementState, formulaStringToArrays, getTruthyKeys } from '../utils';
-import { Dropdown } from 'react-bulma-components';
-import { Form } from 'react-bulma-components';
+import { Dropdown, Form } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { useSearchFilters } from '../SearchFiltersProvider';
+import { useMaterialsSearch } from '../MaterialsSearchProvider';
 
 /**
  * Search types supported by this field
@@ -23,12 +22,12 @@ export enum SearchType {
  * and when elements are selected in the table, they are appended to the field's input
  */
 export const ElementsInput = () => {
-  const { enabledElements, lastAction, actions } = useElements();
+  const {state, actions} = useMaterialsSearch();
+  const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [inputValue, setInputValue] = useState('');
   const [delimiter, setDelimiter] = useState(',');
   const [isFocused, setIsFocused] = useState(false);
   const [searchType, setSearchType] = useState(SearchType.ELEMENTS);
-  const {state, dispatch} = useSearchFilters();
   const dropdownItems = [
     {label: 'Materials with elements', value: SearchType.ELEMENTS},
     {label: 'Materials with formula', value: SearchType.FORMULA}
@@ -58,21 +57,44 @@ export const ElementsInput = () => {
       console.log(newDelimiter);
       const cleanedInput = newInputValue.replace(/and|\s|[0-9]/gi, '');
       const inputSplit = cleanedInput.split(newDelimiter);
+      const newElements: string[] = [];
       inputSplit.forEach((el) => {
-        if(!enabledElements[el] && TABLE_DICO_V2[el]) actions.addEnabledElement(el);
+        if(TABLE_DICO_V2[el]) {
+          newElements.push(el);
+          if(!enabledElements[el]) ptActions.addEnabledElement(el);
+        }
       });
       enabledElementsList.forEach((el) => {
-        if(inputSplit.indexOf(el) === -1) actions.removeEnabledElement(el);
+        if(inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
+      actions.addFilter({field: 'elements', value: newElements});
     } else if(newSearchType == SearchType.FORMULA) {
       var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newInputValue);
       console.log(formulaSplitWithNumbers);
-      actions.setEnabledElements(elementsArrayToElementState(formulaSplitElementsOnly));
+      ptActions.setEnabledElements(elementsArrayToElementState(formulaSplitElementsOnly));
+      actions.addFilter({field: 'formula', value: newInputValue});
     }
 
-    setInputValue(newInputValue);
-    setSearchType(newSearchType);
-    setDelimiter(newDelimiter);
+    // setInputValue(newInputValue);
+    // setSearchType(newSearchType);
+    // setDelimiter(newDelimiter);
+
+    // dispatch({
+    //   type: 'update',
+    //   payload: {
+    //     elementsFilter: {
+    //       value: newInputValue,
+    //       type: newSearchType,
+    //       delimiter: newDelimiter
+    //     }
+    //   }
+    // });
+
+    actions.setElementsFilter({
+      value: newInputValue,
+      type: newSearchType,
+      delimiter: newDelimiter
+    });
   }
 
   /**
@@ -81,27 +103,34 @@ export const ElementsInput = () => {
    * If the input is focused, the function is skipped to prevent an infinite update loop
    */
   useEffect(() => {
-    if(!isFocused) {      
+    if(!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
+      let newInputValue = '';
       switch(searchType) {
         case SearchType.ELEMENTS:
-          setInputValue(enabledElementsList.toString().replace(/,/gi, delimiter));
+          newInputValue = enabledElementsList.toString().replace(/,/gi, delimiter);
           break;
         case SearchType.FORMULA:
           if(lastAction?.type === 'select') {
-            setInputValue(inputValue + enabledElementsList[enabledElementsList.length - 1]);
+            newInputValue = inputValue + enabledElementsList[enabledElementsList.length - 1];
           } else {
             var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(inputValue);
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
             });
             if(removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
-            if(formulaSplitWithNumbers) setInputValue(formulaSplitWithNumbers.toString().replace(/,/gi, ''));
+            if(formulaSplitWithNumbers) newInputValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
           break;
         default:
-          setInputValue('');
+          return;
       }
+      // dispatch({
+      //   type: 'update',
+      //   payload: {
+      //     elementsFilter: { ...state.elementsFilter, value: newInputValue }
+      //   }
+      // });
     }
   }, [enabledElements]);
 
@@ -109,8 +138,15 @@ export const ElementsInput = () => {
     <Field className="has-addons">
       <Control>
         <Dropdown
-          value={searchType}
-          onChange={(item: SearchType) => setSearchType(item)}
+          value={state.elementsFilter.type}
+          onChange={(item: SearchType) => {
+            // dispatch({
+            //   type: 'update',
+            //   payload: {
+            //     elementsFilter: { ...state.elementsFilter, type: item}
+            //   }
+            // })
+          }}
           color="info"
         >
           {dropdownItems.map((item, k) => {
@@ -123,26 +159,12 @@ export const ElementsInput = () => {
         </Dropdown>
       </Control>
       <Control>
-        <Input 
+        <Input
           type="text" 
-          value={inputValue}
+          value={state.elementsFilter.value}
           onChange={changeInputValue}
           onFocus={() => setIsFocused(true)} 
           onBlur={() => setIsFocused(false)}
-        />
-      </Control>
-      <Control>
-        <Input
-          type="text" 
-          value='texmex'
-          onChange={() => dispatch({type: 'taco'})}
-        />
-      </Control>
-      <Control>
-        <Input
-          type="text" 
-          value={state.elementsInputValue}
-          onChange={() => console.log('from component')}
         />
       </Control>
     </Field>
