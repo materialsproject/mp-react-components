@@ -24,10 +24,7 @@ export enum SearchType {
 export const ElementsInput = () => {
   const {state, actions} = useMaterialsSearch();
   const { enabledElements, lastAction, actions: ptActions } = useElements();
-  const [inputValue, setInputValue] = useState('');
-  const [delimiter, setDelimiter] = useState(',');
   const [isFocused, setIsFocused] = useState(false);
-  const [searchType, setSearchType] = useState(SearchType.ELEMENTS);
   const dropdownItems = [
     {label: 'Materials with elements', value: SearchType.ELEMENTS},
     {label: 'Materials with formula', value: SearchType.FORMULA}
@@ -42,8 +39,8 @@ export const ElementsInput = () => {
    */
   function changeInputValue(event) {
     const newInputValue = event.target.value;
-    let newSearchType = searchType;
-    let newDelimiter = delimiter;
+    let newSearchType = state.elementsFilter.type;
+    let newDelimiter = state.elementsFilter.delimiter;
 
     if(newInputValue && newInputValue.match(/[0-9]/g)) {
       newSearchType = SearchType.FORMULA;
@@ -106,31 +103,30 @@ export const ElementsInput = () => {
     if(!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newInputValue = '';
-      switch(searchType) {
+      switch(state.elementsFilter.type) {
         case SearchType.ELEMENTS:
-          newInputValue = enabledElementsList.toString().replace(/,/gi, delimiter);
+          newInputValue = enabledElementsList.toString().replace(/,/gi, state.elementsFilter.delimiter);
+          actions.addFilter({field: 'elements', value: newInputValue});
           break;
         case SearchType.FORMULA:
           if(lastAction?.type === 'select') {
-            newInputValue = inputValue + enabledElementsList[enabledElementsList.length - 1];
+            newInputValue = state.elementsFilter.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
-            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(inputValue);
+            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(state.elementsFilter.value);
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
             });
             if(removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
             if(formulaSplitWithNumbers) newInputValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
+          actions.addFilter({field: 'formula', value: newInputValue});
           break;
         default:
           return;
       }
-      // dispatch({
-      //   type: 'update',
-      //   payload: {
-      //     elementsFilter: { ...state.elementsFilter, value: newInputValue }
-      //   }
-      // });
+      actions.setElementsFilter({
+        value: newInputValue,
+      });
     }
   }, [enabledElements]);
 
@@ -140,14 +136,11 @@ export const ElementsInput = () => {
         <Dropdown
           value={state.elementsFilter.type}
           onChange={(item: SearchType) => {
-            // dispatch({
-            //   type: 'update',
-            //   payload: {
-            //     elementsFilter: { ...state.elementsFilter, type: item}
-            //   }
-            // })
+            actions.setElementsFilter({
+              type: item,
+            });
           }}
-          color="info"
+          color="primary"
         >
           {dropdownItems.map((item, k) => {
             return (
@@ -158,7 +151,7 @@ export const ElementsInput = () => {
           })}
         </Dropdown>
       </Control>
-      <Control>
+      <Control className="is-expanded">
         <Input
           type="text" 
           value={state.elementsFilter.value}

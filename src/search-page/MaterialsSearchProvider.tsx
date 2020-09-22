@@ -18,18 +18,18 @@ interface SearchState {
 const initialState: SearchState = {
   elementsFilter: {
     value: '',
-    type: '',
-    delimiter: ''
+    type: 'elements',
+    delimiter: ','
   },
   activeFilters: [],
   results: []
 };
 
-export function MaterialsSearchProvider({children}) {
+export const MaterialsSearchProvider: React.FC = ({children}) => {
   const [state, setState] = useState(initialState);
   const actions = {
     setElementsFilter: (data) => {
-      setState({...state, elementsFilter: data});
+      setState({...state, elementsFilter: {...state.elementsFilter, ...data}});
     },
     getData: () => {
       let searchParams: any = {};
@@ -65,6 +65,9 @@ export function MaterialsSearchProvider({children}) {
     },
     logFilters: () => {
       console.log(state.activeFilters);
+    },
+    reset: () => {
+      setState(initialState);
     }
   };
 

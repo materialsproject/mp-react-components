@@ -5,9 +5,11 @@ import { MaterialsDataTable } from './MaterialsDataTable';
 
 export const MaterialsSearch = () => {
   return (
-    <MaterialsSearchProvider>
-      <SearchFilters />
-      <MaterialsDataTable />
-    </MaterialsSearchProvider>
+    <div className="columns" style={{padding: '15px'}}>
+      <MaterialsSearchProvider>
+        <SearchFilters className="column"/>
+        <MaterialsDataTable className="column is-two-thirds"/>
+      </MaterialsSearchProvider>
+    </div>
   );
 }

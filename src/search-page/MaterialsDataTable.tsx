@@ -2,7 +2,11 @@ import React from 'react';
 import { useMaterialsSearch } from './MaterialsSearchProvider';
 import DataTable from 'react-data-table-component';
 
-export const MaterialsDataTable = () => {
+interface Props {
+  className: string
+}
+
+export const MaterialsDataTable: React.FC<Props> = (props) => {
   const { state, dispatch, getData } = useMaterialsSearch();
   const columns = [
     {
@@ -23,6 +27,7 @@ export const MaterialsDataTable = () => {
   ];
   return (
     <DataTable
+      className={props.className}
       title="Materials"
       theme="material"
       columns={columns}
