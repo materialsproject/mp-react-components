@@ -34,7 +34,7 @@ export function PeriodicContext(props: any) {
 
   return (
     <PeriodicSelectionContext.Provider value={store}>
-      {{ ...props.children }}
+      {props.children}
     </PeriodicSelectionContext.Provider>
   );
 }

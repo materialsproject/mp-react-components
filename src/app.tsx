@@ -39,6 +39,8 @@ import { Scrollspy } from './navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
 import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
+import { SearchFilters } from './search-page/SearchFilters';
+import { MaterialsSearch } from './search-page/MaterialsSearch';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -674,7 +676,15 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <PeriodicContext>
+      <MaterialsSearch />
+    </div>
+  </>,
+
+  mountNode
+);
+console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+/**
+ <PeriodicContext>
         <div>
           <ElementsInput />
           <SelectableTable
@@ -689,13 +699,7 @@ ReactDOM.render(
           />
         </div>
       </PeriodicContext>
-    </div>
-  </>,
-
-  mountNode
-);
-console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
-
+ */
 /* 
 <div className="sidebar-story">
       <Scrollspy menuGroups={menuContent}

@@ -14,6 +14,8 @@ import { MtPrintViewContext, MTGrid, MtMaterialTable } from './search-page/expor
 import Simple3DScene from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DScene';
 import { Scrollspy } from './navigation/Scrollspy';
 import { ElementsInput } from './search-page/ElementsInput/ElementsInput'
+import { MaterialsSearch } from './search-page/MaterialsSearch';
+import DataTable from 'react-data-table-component';
 
 export {
   SelectableTable,
@@ -32,5 +34,6 @@ export {
   MTGrid,
   MtMaterialTable,
   Scrollspy,
-  ElementsInput
+  MaterialsSearch,
+  DataTable
 };

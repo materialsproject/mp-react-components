@@ -93,3 +93,7 @@ export function getTruthyKeys(obj: any) {
   return obj ? Object.keys(obj).filter(key => obj[key]) : [];
 }
 
+export function arrayToDelimitedString(arr: any[], delimiter = ',') {
+  return arr.toString().replace(/,/gi, delimiter);
+}
+
