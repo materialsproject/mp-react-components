@@ -11,6 +11,8 @@ interface Filter {
 
 interface SearchState {
   elementsFilter: Object;
+  volume: Object;
+  filters: any[];
   activeFilters: Filter[];
   results: any[];
 };
@@ -21,6 +23,20 @@ const initialState: SearchState = {
     type: 'elements',
     delimiter: ','
   },
+  volume: {
+    domain: [3, 200],
+    values: [20, 70]
+  },
+  filters: [
+    {
+      name: 'Volume',
+      id: 'volume',
+      value: [4, 7],
+      props: {
+        domain: [3, 10]
+      }
+    }
+  ],
   activeFilters: [],
   results: []
 };
@@ -30,6 +46,15 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
   const actions = {
     setElementsFilter: (data) => {
       setState({...state, elementsFilter: {...state.elementsFilter, ...data}});
+    },
+    setVolumeFilter: (data) => {
+      setState({...state, volume: {...state.volume, ...data}});
+    },
+    setFilterValue: (value, id) => {
+      const filters = state.filters;
+      const filter = filters.find((d) => d.id === id);
+      filter.value = value;
+      setState({...state, filters: filters});
     },
     getData: () => {
       let searchParams: any = {};
