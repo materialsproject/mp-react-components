@@ -3,7 +3,7 @@ import { PeriodicContext } from '../periodic-table/periodic-table-state/periodic
 import { SelectableTable } from '../periodic-table/table-state';
 import { TableLayout } from '../periodic-table/periodic-table-component/periodic-table.component';
 import { ElementsInput } from './ElementsInput/ElementsInput';
-import { useMaterialsSearch } from './MaterialsSearchProvider';
+import { FilterType, useMaterialsSearch } from './MaterialsSearchProvider';
 import { Button } from 'react-bulma-components';
 import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
@@ -22,34 +22,62 @@ export const SearchFilters: React.FC<Props> = (props) => {
     actions.setVolumeFilter({values: values});
   }
 
+  useEffect(() => {
+    console.log('filter changed');
+    console.log(state);
+    actions.setSearchParams();
+  }, [state.values]);
+
+  function renderFilter(f) {
+    switch(f.type) {
+      case FilterType.ELEMENTS_INPUT:
+        return (
+          <PeriodicContext>
+            {state.filters[0].props.type}
+            <br />
+            {state.filters[0].props.delimiter}
+            <br />
+            <ElementsInput 
+              {...f.props}
+              value={state.values[f.id]}
+              onChange={v => actions.setFilterValue(v, f.id)}
+              onPropsChange={p => actions.setFilterProps(p, f.id)}
+            />
+            <SelectableTable
+              maxElementSelectable={20}
+              forceTableLayout={TableLayout.MINI}
+              hiddenElements={[]}
+              onStateChange={enabledElements => {
+                Object.keys(enabledElements).filter(el => enabledElements[el]);
+              }}
+              enabledElements={['Co']}
+              disabledElements={['H', 'C']}
+            />
+          </PeriodicContext>
+        );
+      case FilterType.SLIDER:
+        return (
+          <div>
+            {state.values.density.toString()}
+            {state.values[f.id].toString()}
+            <DualRangeSlider {...f.props} values={state.values[f.id]} onChange={v => actions.setFilterValue(v, f.id)}/>
+          </div>
+        );
+      default:
+        null;
+    }
+    return null;
+  }
+
   return (
     <div className={props.className}>
       <div>
         <div>
-          <PeriodicContext>
-              <ElementsInput />
-              <SelectableTable
-                maxElementSelectable={20}
-                forceTableLayout={TableLayout.MINI}
-                hiddenElements={[]}
-                onStateChange={enabledElements => {
-                  Object.keys(enabledElements).filter(el => enabledElements[el]);
-                }}
-                enabledElements={['Co']}
-                disabledElements={['H', 'C']}
-              />
-          </PeriodicContext>
-        </div>
-        <div>
-          {state.filters.map((filter, i) => {
-            return (
-              <div key={i}>
-                {state.filters[i].value?.toString()}
-                <DualRangeSlider {...filter.props} values={filter.value} onChange={v => actions.setFilterValue(v, filter.id)}/>
-              </div>
-            )
-          })}
-          {/* <DualRangeSlider {...state.volume} onChange={onSliderChange}/> */}
+          {state.filters.map((f, i) => (
+            <div key={i}>
+              {renderFilter(f)}
+            </div>
+          ))}
         </div>
       </div>
       <div style={{marginTop: '15px'}}>

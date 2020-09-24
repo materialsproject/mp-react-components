@@ -2,68 +2,111 @@ import React, { useReducer, useState } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 
-const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
+export enum FilterId {
+  ELEMENTS = 'elements',
+  VOLUME = 'volume',
+  DENSITY = 'density'
+}
+
+export enum FilterType {
+  SLIDER,
+  ELEMENTS_INPUT
+}
 
 interface Filter {
+  name: string;
+  id: FilterId;
+  type: FilterType;
+  props?: Object;
+}
+
+type FilterValues = Partial<Record<FilterId, any>>;
+
+interface SearchParam {
   field: string;
   value: any;
 }
 
 interface SearchState {
-  elementsFilter: Object;
-  volume: Object;
-  filters: any[];
-  activeFilters: Filter[];
+  filters: Filter[];
+  values: FilterValues;
+  searchParams: SearchParam[];
   results: any[];
-};
+}
 
 const initialState: SearchState = {
-  elementsFilter: {
-    value: '',
-    type: 'elements',
-    delimiter: ','
-  },
-  volume: {
-    domain: [3, 200],
-    values: [20, 70]
-  },
   filters: [
     {
+      name: 'Elements',
+      id: FilterId.ELEMENTS,
+      type: FilterType.ELEMENTS_INPUT,
+      props: {
+        type: 'elements',
+        delimiter: ','
+      }
+    },
+    {
       name: 'Volume',
-      id: 'volume',
-      value: [4, 7],
+      id: FilterId.VOLUME,
+      type: FilterType.SLIDER,
       props: {
         domain: [3, 10]
       }
     }
   ],
-  activeFilters: [],
+  values: {
+    volume: [4,8],
+    density: [1,5],
+    elements: ''
+  },
+  searchParams: [],
   results: []
 };
+
+const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
 
 export const MaterialsSearchProvider: React.FC = ({children}) => {
   const [state, setState] = useState(initialState);
   const actions = {
-    setElementsFilter: (data) => {
-      setState({...state, elementsFilter: {...state.elementsFilter, ...data}});
+    setFilterValue: (value: any, id: string) => {
+      setState({...state, values:{...state.values, [id]: value}});
     },
-    setVolumeFilter: (data) => {
-      setState({...state, volume: {...state.volume, ...data}});
-    },
-    setFilterValue: (value, id) => {
+    setFilterProps: (props: Object, id: string) => {
       const filters = state.filters;
-      const filter = filters.find((d) => d.id === id);
-      filter.value = value;
+      const filter = filters.find(f => f.id === id);
+      if(filter) filter.props = {...filter.props, ...props};
       setState({...state, filters: filters});
     },
-    getData: () => {
-      let searchParams: any = {};
-      state.activeFilters.forEach((d, i) => {
-        searchParams[d.field] = d.value;
+    setSearchParams: () => {
+      const searchParams: SearchParam[] = [];
+      state.filters.forEach(f => {
+        switch(f.type) {
+          case FilterType.SLIDER:
+            searchParams.push({
+              field: f.id + '_min',
+              value: state.values[f.id][0]
+            });
+            searchParams.push({
+              field: f.id + '_max',
+              value: state.values[f.id][1]
+            });
+            break;
+          case FilterType.ELEMENTS_INPUT:
+            
+          default:
+            return;
+        }
       });
-      searchParams.fields = ['task_id', 'formula_pretty', 'volume'];
-      axios.get('https://api.materialsproject.cloud/materials/', {
-        params: searchParams,
+      setState({...state, searchParams});
+    },
+    getData: () => {
+      let paramsConfig: any = {};
+      state.searchParams.forEach((d, i) => {
+        paramsConfig[d.field] = d.value;
+      });
+      paramsConfig.fields = ['task_id', 'formula_pretty', 'volume'];
+      axios.get('https://api.materialsproject.org/materials/', {
+        params: paramsConfig,
         paramsSerializer: params => {
           return qs.stringify(params, {arrayFormat: 'comma'});
         }
@@ -72,24 +115,24 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
         setState({...state, results: result.data.data});
       });
     },
-    addFilter: (filter: Filter) => {
-      const current = state.activeFilters.find((d) => d.field === filter.field);
-      if(current) {
-        current.value = filter.value;
-      } else {
-        state.activeFilters.push(filter);
-      }
+    // addFilter: (filter: Filter) => {
+    //   const current = state.searchParams.find((d) => d.field === filter.field);
+    //   if(current) {
+    //     current.value = filter.value;
+    //   } else {
+    //     state.searchParams.push(filter);
+    //   }
       
-      if(filter.field === 'elements') {
-        state.activeFilters = state.activeFilters.filter((d) => d.field !== 'formula');
-      } else if(filter.field === 'formula') {
-        state.activeFilters = state.activeFilters.filter((d) => d.field !== 'elements');
-      }
+    //   if(filter.field === 'elements') {
+    //     state.searchParams = state.searchParams.filter((d) => d.field !== 'formula');
+    //   } else if(filter.field === 'formula') {
+    //     state.searchParams = state.searchParams.filter((d) => d.field !== 'elements');
+    //   }
 
-      setState({...state, activeFilters: state.activeFilters});
-    },
+    //   setState({...state, searchParams: state.searchParams});
+    // },
     logFilters: () => {
-      console.log(state.activeFilters);
+      console.log(state.searchParams);
     },
     reset: () => {
       setState(initialState);

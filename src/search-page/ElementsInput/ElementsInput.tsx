@@ -15,13 +15,21 @@ export enum SearchType {
   FORMULA = 'formula'
 }
 
+interface Props {
+  value: string;
+  type: string;
+  delimiter: string;
+  onChange: (value: string) => void;
+  onPropsChange: (p: Object) => void;
+}
+
 /**
  * An input field for searching by elements or formula
  * Supports two-way binding with a SelectableTable if in the same context
  * i.e. when elements are typed into the field, they are selected in the table,
  * and when elements are selected in the table, they are appended to the field's input
  */
-export const ElementsInput = () => {
+export const ElementsInput: React.FC<Props> = (props) => {
   const {state, actions} = useMaterialsSearch();
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
@@ -34,10 +42,9 @@ export const ElementsInput = () => {
    * Handle updating the context with the new input value
    * All side effects to this change are handled in an effect hook
    */
-  function changeInputValue(event) {
-    actions.setElementsFilter({
-      value: event.target.value
-    });
+  function onChange(event) {
+    props.onChange(event.target.value);
+    //set raw value
   }
 
   /**
@@ -49,30 +56,32 @@ export const ElementsInput = () => {
     if(!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newInputValue = '';
-      switch(state.elementsFilter.type) {
+      switch(props.type) {
         case SearchType.ELEMENTS:
-          newInputValue = arrayToDelimitedString(enabledElementsList, state.elementsFilter.delimiter);
-          actions.addFilter({field: 'elements', value: newInputValue});
+          newInputValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
+          // actions.addFilter({field: 'elements', value: newInputValue});
           break;
         case SearchType.FORMULA:
           if(lastAction?.type === 'select') {
-            newInputValue = state.elementsFilter.value + enabledElementsList[enabledElementsList.length - 1];
+            newInputValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
-            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(state.elementsFilter.value);
+            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(props.value);
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
             });
             if(removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
             if(formulaSplitWithNumbers) newInputValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
-          actions.addFilter({field: 'formula', value: newInputValue});
+          // actions.addFilter({field: 'formula', value: newInputValue});
           break;
         default:
           return;
       }
-      actions.setElementsFilter({
-        value: newInputValue,
-      });
+      // actions.setElementsFilter({
+      //   value: newInputValue,
+      // });
+
+      // set raw value and clean value
     }
   }, [enabledElements]);
 
@@ -85,9 +94,9 @@ export const ElementsInput = () => {
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newInputValue = state.elementsFilter.value;
-    let newSearchType = state.elementsFilter.type;
-    let newDelimiter = state.elementsFilter.delimiter;
+    const newInputValue = props.value;
+    let newSearchType = props.type;
+    let newDelimiter = props.delimiter;
 
     if(newInputValue && newInputValue.match(/[0-9]/g)) {
       newSearchType = SearchType.FORMULA;
@@ -109,7 +118,7 @@ export const ElementsInput = () => {
       enabledElementsList.forEach((el) => {
         if(inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
-      actions.addFilter({field: 'elements', value: newElements});
+      // actions.addFilter({field: 'elements', value: newElements});
     } else if(newSearchType == SearchType.FORMULA) {
       var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newInputValue);
       formulaSplitElementsOnly.forEach((el) => {
@@ -120,20 +129,26 @@ export const ElementsInput = () => {
       enabledElementsList.forEach((el) => {
         if(formulaSplitElementsOnly.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
-      actions.addFilter({field: 'formula', value: newInputValue});
+      // actions.addFilter({field: 'formula', value: newInputValue});
     }
   
-      actions.setElementsFilter({
+      // actions.setElementsFilter({
+      //   type: newSearchType,
+      //   delimiter: newDelimiter
+      // });
+      props.onPropsChange({
         type: newSearchType,
         delimiter: newDelimiter
       });
-  }, [state.elementsFilter.value]);
+
+      // set clean value
+  }, [props.value]);
 
   return (
     <Field className="has-addons">
       <Control>
         <Dropdown
-          value={state.elementsFilter.type}
+          value={props.type}
           onChange={(item: SearchType) => {
             actions.setElementsFilter({
               type: item,
@@ -153,8 +168,8 @@ export const ElementsInput = () => {
       <Control className="is-expanded">
         <Input
           type="text" 
-          value={state.elementsFilter.value}
-          onChange={changeInputValue}
+          value={props.value}
+          onChange={onChange}
           onFocus={() => setIsFocused(true)} 
           onBlur={() => setIsFocused(false)}
         />
