@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from 'react';
 import axios from 'axios';
 import qs from 'qs';
+import { ElementsInputType } from './ElementsInput/ElementsInput';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -17,7 +18,7 @@ interface Filter {
   name: string;
   id: FilterId;
   type: FilterType;
-  props?: Object;
+  props?: any;
 }
 
 type FilterValues = Partial<Record<FilterId, any>>;
@@ -41,7 +42,8 @@ const initialState: SearchState = {
       id: FilterId.ELEMENTS,
       type: FilterType.ELEMENTS_INPUT,
       props: {
-        type: 'elements',
+        rawValue: '',
+        type: ElementsInputType.ELEMENTS,
         delimiter: ','
       }
     },
@@ -50,14 +52,14 @@ const initialState: SearchState = {
       id: FilterId.VOLUME,
       type: FilterType.SLIDER,
       props: {
-        domain: [3, 10]
+        domain: [0, 200]
       }
     }
   ],
   values: {
-    volume: [4,8],
+    volume: [0,200],
     density: [1,5],
-    elements: ''
+    elements: []
   },
   searchParams: [],
   results: []
@@ -92,9 +94,17 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
             });
             break;
           case FilterType.ELEMENTS_INPUT:
-            
+            searchParams.push({
+              field: f.props.type,
+              value: state.values[f.id]
+            });
           default:
-            return;
+            if(state.values[f.id]) {
+              searchParams.push({
+                field: f.id,
+                value: state.values[f.id]
+              });
+            }
         }
       });
       setState({...state, searchParams});
@@ -115,22 +125,6 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
         setState({...state, results: result.data.data});
       });
     },
-    // addFilter: (filter: Filter) => {
-    //   const current = state.searchParams.find((d) => d.field === filter.field);
-    //   if(current) {
-    //     current.value = filter.value;
-    //   } else {
-    //     state.searchParams.push(filter);
-    //   }
-      
-    //   if(filter.field === 'elements') {
-    //     state.searchParams = state.searchParams.filter((d) => d.field !== 'formula');
-    //   } else if(filter.field === 'formula') {
-    //     state.searchParams = state.searchParams.filter((d) => d.field !== 'elements');
-    //   }
-
-    //   setState({...state, searchParams: state.searchParams});
-    // },
     logFilters: () => {
       console.log(state.searchParams);
     },

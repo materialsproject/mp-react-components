@@ -33,10 +33,6 @@ export const SearchFilters: React.FC<Props> = (props) => {
       case FilterType.ELEMENTS_INPUT:
         return (
           <PeriodicContext>
-            {state.filters[0].props.type}
-            <br />
-            {state.filters[0].props.delimiter}
-            <br />
             <ElementsInput 
               {...f.props}
               value={state.values[f.id]}
@@ -58,7 +54,6 @@ export const SearchFilters: React.FC<Props> = (props) => {
       case FilterType.SLIDER:
         return (
           <div>
-            {state.values.density.toString()}
             {state.values[f.id].toString()}
             <DualRangeSlider {...f.props} values={state.values[f.id]} onChange={v => actions.setFilterValue(v, f.id)}/>
           </div>

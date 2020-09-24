@@ -10,16 +10,17 @@ import { useMaterialsSearch } from '../MaterialsSearchProvider';
  * Search types supported by this field
  * Displayed to users in the dropdown
  */
-export enum SearchType {
+export enum ElementsInputType {
   ELEMENTS = 'elements',
   FORMULA = 'formula'
 }
 
-interface Props {
-  value: string;
+export interface ElementsInputProps {
+  value: string | string[];
+  rawValue: string;
   type: string;
   delimiter: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | string[]) => void;
   onPropsChange: (p: Object) => void;
 }
 
@@ -29,22 +30,23 @@ interface Props {
  * i.e. when elements are typed into the field, they are selected in the table,
  * and when elements are selected in the table, they are appended to the field's input
  */
-export const ElementsInput: React.FC<Props> = (props) => {
+export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
   const {state, actions} = useMaterialsSearch();
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
   const dropdownItems = [
-    {label: 'Materials with elements', value: SearchType.ELEMENTS},
-    {label: 'Materials with formula', value: SearchType.FORMULA}
+    {label: 'Materials with elements', value: ElementsInputType.ELEMENTS},
+    {label: 'Materials with formula', value: ElementsInputType.FORMULA}
   ];
 
   /**
-   * Handle updating the context with the new input value
+   * Handle updating the context with the new raw input value
    * All side effects to this change are handled in an effect hook
    */
-  function onChange(event) {
-    props.onChange(event.target.value);
-    //set raw value
+  function onRawValueChange(event) {
+    props.onPropsChange({
+      rawValue: event.target.value
+    });
   }
 
   /**
@@ -55,22 +57,22 @@ export const ElementsInput: React.FC<Props> = (props) => {
   useEffect(() => {
     if(!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      let newInputValue = '';
+      let newRawValue = '';
       switch(props.type) {
-        case SearchType.ELEMENTS:
-          newInputValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
+        case ElementsInputType.ELEMENTS:
+          newRawValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
           // actions.addFilter({field: 'elements', value: newInputValue});
           break;
-        case SearchType.FORMULA:
+        case ElementsInputType.FORMULA:
           if(lastAction?.type === 'select') {
-            newInputValue = props.value + enabledElementsList[enabledElementsList.length - 1];
+            newRawValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
-            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(props.value);
+            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(props.rawValue);
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
             });
             if(removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
-            if(formulaSplitWithNumbers) newInputValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
+            if(formulaSplitWithNumbers) newRawValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
           // actions.addFilter({field: 'formula', value: newInputValue});
           break;
@@ -82,31 +84,37 @@ export const ElementsInput: React.FC<Props> = (props) => {
       // });
 
       // set raw value and clean value
+      props.onPropsChange({
+        rawValue: newRawValue
+      });
+      props.onChange(newRawValue);
     }
   }, [enabledElements]);
 
   /**
-   * Trigger side effects when input value changes
+   * Trigger side effects when raw input value changes
    * Detects when search type has changed based on presence of numbers (indicative of formula)
    * or delimiters (indicative of elements).
    * Adds/removes enabled elements from the periodic table.
    * Only adds/removes elements when input value and pt are not in sync (prevents infinite hooks)
+   * Sends clean input value to onChange function passed in as a prop
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newInputValue = props.value;
-    let newSearchType = props.type;
+    const newRawValue = props.rawValue;
+    let newElementsInputType = props.type;
     let newDelimiter = props.delimiter;
+    let newCleanValue: string | string[] | null = null;
 
-    if(newInputValue && newInputValue.match(/[0-9]/g)) {
-      newSearchType = SearchType.FORMULA;
-    } else if(newInputValue && newInputValue.match(/,|-/gi)) {
-      newSearchType = SearchType.ELEMENTS;
+    if(newRawValue && newRawValue.match(/[0-9]/g)) {
+      newElementsInputType = ElementsInputType.FORMULA;
+    } else if(newRawValue && newRawValue.match(/,|-/gi)) {
+      newElementsInputType = ElementsInputType.ELEMENTS;
     }
 
-    if(newSearchType === SearchType.ELEMENTS) {
-      newDelimiter = getDelimiter(newInputValue);
-      const cleanedInput = newInputValue.replace(/and|\s|[0-9]/gi, '');
+    if(newElementsInputType === ElementsInputType.ELEMENTS) {
+      newDelimiter = getDelimiter(newRawValue);
+      const cleanedInput = newRawValue.replace(/and|\s|[0-9]/gi, '');
       const inputSplit = cleanedInput.split(newDelimiter);
       const newElements: string[] = [];
       inputSplit.forEach((el) => {
@@ -118,9 +126,9 @@ export const ElementsInput: React.FC<Props> = (props) => {
       enabledElementsList.forEach((el) => {
         if(inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
-      // actions.addFilter({field: 'elements', value: newElements});
-    } else if(newSearchType == SearchType.FORMULA) {
-      var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newInputValue);
+      newCleanValue = newElements;
+    } else if(newElementsInputType == ElementsInputType.FORMULA) {
+      var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newRawValue);
       formulaSplitElementsOnly.forEach((el) => {
         if(TABLE_DICO_V2[el]) {
           if(!enabledElements[el]) ptActions.addEnabledElement(el);
@@ -129,29 +137,24 @@ export const ElementsInput: React.FC<Props> = (props) => {
       enabledElementsList.forEach((el) => {
         if(formulaSplitElementsOnly.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
-      // actions.addFilter({field: 'formula', value: newInputValue});
     }
-  
-      // actions.setElementsFilter({
-      //   type: newSearchType,
-      //   delimiter: newDelimiter
-      // });
-      props.onPropsChange({
-        type: newSearchType,
-        delimiter: newDelimiter
-      });
 
-      // set clean value
-  }, [props.value]);
+    props.onPropsChange({
+      type: newElementsInputType,
+      delimiter: newDelimiter
+    });
+    newCleanValue = newCleanValue ? newCleanValue : newRawValue;
+    props.onChange(newCleanValue);
+  }, [props.rawValue]);
 
   return (
     <Field className="has-addons">
       <Control>
         <Dropdown
           value={props.type}
-          onChange={(item: SearchType) => {
-            actions.setElementsFilter({
-              type: item,
+          onChange={(item: ElementsInputType) => {
+            props.onPropsChange({
+              type: item
             });
           }}
           color="primary"
@@ -168,8 +171,8 @@ export const ElementsInput: React.FC<Props> = (props) => {
       <Control className="is-expanded">
         <Input
           type="text" 
-          value={props.value}
-          onChange={onChange}
+          value={props.rawValue}
+          onChange={onRawValueChange}
           onFocus={() => setIsFocused(true)} 
           onBlur={() => setIsFocused(false)}
         />
