@@ -41,6 +41,7 @@ import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchFilters } from './search-page/SearchFilters';
 import { MaterialsSearch } from './search-page/MaterialsSearch';
+import { CameraContextWrapper } from './crystal-toolkit-components/components-v2/Simple3DScene/camera-context';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -675,14 +676,33 @@ const menuContent = [
 const emptyObject = {};
 ReactDOM.render(
   <>
-    <div>
-      <MaterialsSearch />
-    </div>
+  <CameraContextWrapper>
+      <>
+        <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: false, transparentBackground: false, background: '#e63946' }}
+          data={scene}
+          debug={true}
+          toggleVisibility={{}}
+        />
+        {/* <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          data={scene2}
+          debug={false}
+          toggleVisibility={{}}
+        /> */}
+        {/* <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} /> */}
+      </>
+    </CameraContextWrapper>
   </>,
 
   mountNode
 );
 console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+/**
+     <div>
+      <MaterialsSearch />
+    </div>
+ */
 /**
  <PeriodicContext>
         <div>
