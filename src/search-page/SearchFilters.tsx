@@ -76,8 +76,8 @@ export const SearchFilters: React.FC<Props> = (props) => {
         </div>
       </div>
       <div style={{marginTop: '15px'}}>
-        <Button onClick={actions.getData} className="is-primary" style={{marginRight: '5px'}}>Apply</Button>
-        <Button onClick={actions.reset}>Reset</Button>
+        <Button onClick={() => actions.getData()} className="is-primary" style={{marginRight: '5px'}}>Apply</Button>
+        <Button onClick={() => actions.reset()}>Reset</Button>
       </div>
     </div>
   );

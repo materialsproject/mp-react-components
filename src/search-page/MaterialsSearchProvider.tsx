@@ -33,6 +33,10 @@ interface SearchState {
   values: FilterValues;
   searchParams: SearchParam[];
   results: any[];
+  totalResults: number;
+  resultsPerPage: number;
+  page: number;
+  loading: boolean;
 }
 
 const initialState: SearchState = {
@@ -62,7 +66,11 @@ const initialState: SearchState = {
     elements: []
   },
   searchParams: [],
-  results: []
+  results: [],
+  totalResults: 0,
+  resultsPerPage: 10,
+  page: 1,
+  loading: false
 };
 
 const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
@@ -109,20 +117,32 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
       });
       setState({...state, searchParams});
     },
-    getData: () => {
-      let paramsConfig: any = {};
-      state.searchParams.forEach((d, i) => {
-        paramsConfig[d.field] = d.value;
+    getData: (page = state.page) => {
+      setState({
+        ...state, 
+        page: page,
+        loading: true
       });
-      paramsConfig.fields = ['task_id', 'formula_pretty', 'volume'];
+      let params: any = {};
+      state.searchParams.forEach((d, i) => {
+        params[d.field] = d.value;
+      });
+      params.fields = ['task_id', 'formula_pretty', 'volume'];
+      params.limit = state.resultsPerPage;
+      params.skip = (page - 1) * state.resultsPerPage;
       axios.get('https://api.materialsproject.org/materials/', {
-        params: paramsConfig,
-        paramsSerializer: params => {
-          return qs.stringify(params, {arrayFormat: 'comma'});
+        params: params,
+        paramsSerializer: p => {
+          return qs.stringify(p, {arrayFormat: 'comma'});
         }
       }).then((result) => {
         console.log(result);
-        setState({...state, results: result.data.data});
+        setState({
+          ...state, 
+          results: result.data.data, 
+          totalResults: result.data.meta.total,
+          loading: false
+        });
       });
     },
     logFilters: () => {
