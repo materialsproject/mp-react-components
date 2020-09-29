@@ -7,6 +7,7 @@ import { FilterType, useMaterialsSearch } from './MaterialsSearchProvider';
 import { Button } from 'react-bulma-components';
 import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
+import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 
 interface Props {
   className: string;
@@ -70,27 +71,35 @@ export const SearchFilters: React.FC<Props> = props => {
 
   return (
     <div className={props.className}>
-      <div>
-        <div>
-          {state.groups.map((g, i) => (
-            <div key={i}>
-              <p>{g.name}</p>
-              {g.filters.map((f, j) => (
-                <div key={j}>{renderFilter(f, g.name)}</div>
-              ))}
+      <div className="panel">
+        <p className="panel-heading">Filters</p>
+        {state.groups.map((g, i) => (
+          <div className="panel-block" key={i}>
+            <div className="control">
+              <div className="is-clickable" onClick={() => actions.toggleGroup(g.name)}>
+                <span>{g.name}</span>
+                <div className="is-pulled-right">
+                  {g.collapsed ? <AiFillCaretRight /> : <AiFillCaretDown />}
+                </div>
+              </div>
+              <div className={`mt-3 ${g.collapsed ? 'is-hidden' : ''}`}>
+                {g.filters.map((f, j) => (
+                  <div key={j}>{renderFilter(f, g.name)}</div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
+        ))}
+        <div style={{ marginTop: '15px' }}>
+          <Button
+            onClick={() => actions.getData()}
+            className="is-primary"
+            style={{ marginRight: '5px' }}
+          >
+            Apply
+          </Button>
+          <Button onClick={() => actions.reset()}>Reset</Button>
         </div>
-      </div>
-      <div style={{ marginTop: '15px' }}>
-        <Button
-          onClick={() => actions.getData()}
-          className="is-primary"
-          style={{ marginRight: '5px' }}
-        >
-          Apply
-        </Button>
-        <Button onClick={() => actions.reset()}>Reset</Button>
       </div>
     </div>
   );

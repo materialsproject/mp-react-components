@@ -30,7 +30,6 @@ interface SearchParam {
 
 interface SearchState {
   groups: any[];
-  filters: Filter[];
   values: FilterValues;
   searchParams: SearchParam[];
   results: any[];
@@ -69,33 +68,21 @@ const initialState: SearchState = {
           props: {
             domain: [0, 200]
           }
+        },
+        {
+          name: 'Density',
+          id: FilterId.DENSITY,
+          type: FilterType.SLIDER,
+          props: {
+            domain: [0, 200]
+          }
         }
       ]
     }
   ],
-  filters: [
-    {
-      name: 'Elements',
-      id: FilterId.ELEMENTS,
-      type: FilterType.ELEMENTS_INPUT,
-      props: {
-        rawValue: '',
-        type: ElementsInputType.ELEMENTS,
-        delimiter: ','
-      }
-    },
-    {
-      name: 'Volume',
-      id: FilterId.VOLUME,
-      type: FilterType.SLIDER,
-      props: {
-        domain: [0, 200]
-      }
-    }
-  ],
   values: {
     volume: [0, 200],
-    density: [1, 5],
+    density: [10, 50],
     elements: ''
   },
   searchParams: [],
@@ -119,6 +106,12 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       const group = groups.find(g => g.name === groupId);
       const filter = group.filters.find(f => f.id === filterId);
       if (filter) filter.props = { ...filter.props, ...props };
+      setState({ ...state, groups: groups });
+    },
+    toggleGroup: (groupId: string) => {
+      const groups = state.groups;
+      const group = groups.find(g => g.name === groupId);
+      group.collapsed = !group.collapsed;
       setState({ ...state, groups: groups });
     },
     setSearchParams: () => {
@@ -164,7 +157,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       state.searchParams.forEach((d, i) => {
         params[d.field] = d.value;
       });
-      params.fields = ['task_id', 'formula_pretty', 'volume'];
+      params.fields = ['task_id', 'formula_pretty', 'volume', 'density'];
       params.limit = state.resultsPerPage;
       params.skip = (page - 1) * state.resultsPerPage;
       axios

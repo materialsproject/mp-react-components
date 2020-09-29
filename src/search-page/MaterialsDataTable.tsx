@@ -3,10 +3,10 @@ import { useMaterialsSearch } from './MaterialsSearchProvider';
 import DataTable from 'react-data-table-component';
 
 interface Props {
-  className: string
+  className: string;
 }
 
-export const MaterialsDataTable: React.FC<Props> = (props) => {
+export const MaterialsDataTable: React.FC<Props> = props => {
   const { state, actions } = useMaterialsSearch();
   const [data, setData] = useState(state.results);
   const [loading, setLoading] = useState(false);
@@ -28,13 +28,18 @@ export const MaterialsDataTable: React.FC<Props> = (props) => {
       name: 'Volume',
       selector: 'volume',
       sortable: true
+    },
+    {
+      name: 'Density',
+      selector: 'density',
+      sortable: true
     }
   ];
 
   const handlePageChange = async page => {
     console.log(page);
     actions.getData(page);
-  }
+  };
 
   // const handlePerRowsChange = async (perPage, page) => {
   //   this.setState({ loading: true });
@@ -50,19 +55,20 @@ export const MaterialsDataTable: React.FC<Props> = (props) => {
   //   });
   // }
   return (
-    <DataTable
-      className={props.className}
-      title="Materials"
-      theme="material"
-      columns={columns}
-      data={state.results}
-      selectableRows
-      highlightOnHover
-      pagination
-      paginationServer
-      onChangePage={handlePageChange}
-      progressPending={state.loading}
-      paginationTotalRows={state.totalResults}
-    />
+    <div className={props.className}>
+      <DataTable
+        title="Materials"
+        theme="material"
+        columns={columns}
+        data={state.results}
+        selectableRows
+        highlightOnHover
+        pagination
+        paginationServer
+        onChangePage={handlePageChange}
+        progressPending={state.loading}
+        paginationTotalRows={state.totalResults}
+      />
+    </div>
   );
-}
+};
