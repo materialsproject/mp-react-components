@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useElements } from '../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
-import { getDelimiter, elementsArrayToElementState, formulaStringToArrays, getTruthyKeys, arrayToDelimitedString } from '../utils';
+import {
+  getDelimiter,
+  elementsArrayToElementState,
+  formulaStringToArrays,
+  getTruthyKeys,
+  arrayToDelimitedString
+} from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 import { useMaterialsSearch } from '../MaterialsSearchProvider';
@@ -16,8 +22,8 @@ export enum ElementsInputType {
 }
 
 export interface ElementsInputProps {
-  value: string | string[];
-  rawValue: string;
+  value: string;
+  parsedValue: string | string[];
   type: string;
   delimiter: string;
   onChange: (value: string | string[]) => void;
@@ -30,13 +36,13 @@ export interface ElementsInputProps {
  * i.e. when elements are typed into the field, they are selected in the table,
  * and when elements are selected in the table, they are appended to the field's input
  */
-export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
-  const {state, actions} = useMaterialsSearch();
+export const ElementsInput: React.FC<ElementsInputProps> = props => {
+  const { state, actions } = useMaterialsSearch();
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
   const dropdownItems = [
-    {label: 'Materials with elements', value: ElementsInputType.ELEMENTS},
-    {label: 'Materials with formula', value: ElementsInputType.FORMULA}
+    { label: 'Required elements', value: ElementsInputType.ELEMENTS },
+    { label: 'Formula', value: ElementsInputType.FORMULA }
   ];
 
   /**
@@ -44,9 +50,7 @@ export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
    * All side effects to this change are handled in an effect hook
    */
   function onRawValueChange(event) {
-    props.onPropsChange({
-      rawValue: event.target.value
-    });
+    props.onChange(event.target.value);
   }
 
   /**
@@ -55,24 +59,27 @@ export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
    * If the input is focused, the function is skipped to prevent an infinite update loop
    */
   useEffect(() => {
-    if(!isFocused) {
+    if (!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      let newRawValue = '';
-      switch(props.type) {
+      let newValue = '';
+      switch (props.type) {
         case ElementsInputType.ELEMENTS:
-          newRawValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
+          newValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
           // actions.addFilter({field: 'elements', value: newInputValue});
           break;
         case ElementsInputType.FORMULA:
-          if(lastAction?.type === 'select') {
-            newRawValue = props.value + enabledElementsList[enabledElementsList.length - 1];
+          if (lastAction?.type === 'select') {
+            newValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
-            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(props.rawValue);
+            var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
+              props.value
+            );
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
             });
-            if(removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
-            if(formulaSplitWithNumbers) newRawValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
+            if (removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
+            if (formulaSplitWithNumbers)
+              newValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
           // actions.addFilter({field: 'formula', value: newInputValue});
           break;
@@ -85,9 +92,9 @@ export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
 
       // set raw value and clean value
       props.onPropsChange({
-        rawValue: newRawValue
+        parsedValue: newValue
       });
-      props.onChange(newRawValue);
+      props.onChange(newValue);
     }
   }, [enabledElements]);
 
@@ -101,51 +108,60 @@ export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newRawValue = props.rawValue;
+    const newValue = props.value;
     let newElementsInputType = props.type;
     let newDelimiter = props.delimiter;
-    let newCleanValue: string | string[] | null = null;
+    let newParsedValue: string | string[] | null = null;
 
-    if(newRawValue && newRawValue.match(/[0-9]/g)) {
+    if (newValue && newValue.match(/[0-9]/g)) {
       newElementsInputType = ElementsInputType.FORMULA;
-    } else if(newRawValue && newRawValue.match(/,|-/gi)) {
+    } else if (newValue && newValue.match(/,|-/gi)) {
       newElementsInputType = ElementsInputType.ELEMENTS;
     }
 
-    if(newElementsInputType === ElementsInputType.ELEMENTS) {
-      newDelimiter = getDelimiter(newRawValue);
-      const cleanedInput = newRawValue.replace(/and|\s|[0-9]/gi, '');
+    if (newElementsInputType === ElementsInputType.ELEMENTS) {
+      newDelimiter = getDelimiter(newValue);
+      const cleanedInput = newValue.replace(/and|\s|[0-9]/gi, '');
       const inputSplit = cleanedInput.split(newDelimiter);
       const newElements: string[] = [];
-      inputSplit.forEach((el) => {
-        if(TABLE_DICO_V2[el]) {
+      inputSplit.forEach(el => {
+        if (TABLE_DICO_V2[el]) {
           newElements.push(el);
-          if(!enabledElements[el]) ptActions.addEnabledElement(el);
+          if (!enabledElements[el]) ptActions.addEnabledElement(el);
         }
       });
-      enabledElementsList.forEach((el) => {
-        if(inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
+      enabledElementsList.forEach(el => {
+        if (inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
-      newCleanValue = newElements;
-    } else if(newElementsInputType == ElementsInputType.FORMULA) {
-      var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newRawValue);
-      formulaSplitElementsOnly.forEach((el) => {
-        if(TABLE_DICO_V2[el]) {
-          if(!enabledElements[el]) ptActions.addEnabledElement(el);
+      newParsedValue = newElements;
+    } else if (newElementsInputType == ElementsInputType.FORMULA) {
+      var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newValue);
+      formulaSplitElementsOnly.forEach(el => {
+        if (TABLE_DICO_V2[el]) {
+          if (!enabledElements[el]) ptActions.addEnabledElement(el);
         }
       });
-      enabledElementsList.forEach((el) => {
-        if(formulaSplitElementsOnly.indexOf(el) === -1) ptActions.removeEnabledElement(el);
+      enabledElementsList.forEach(el => {
+        if (formulaSplitElementsOnly.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
     }
 
+    newParsedValue = newParsedValue ? newParsedValue : newValue;
     props.onPropsChange({
       type: newElementsInputType,
-      delimiter: newDelimiter
+      delimiter: newDelimiter,
+      parsedValue: newParsedValue
     });
-    newCleanValue = newCleanValue ? newCleanValue : newRawValue;
-    props.onChange(newCleanValue);
-  }, [props.rawValue]);
+    props.onChange(newValue);
+  }, [props.value]);
+
+  // useEffect(() => {
+  //   if(Array.isArray(props.value) && props.value.length === 0) {
+  //     props.onPropsChange({
+  //       value: ''
+  //     });
+  //   }
+  // }, [props.value]);
 
   return (
     <Field className="has-addons">
@@ -161,22 +177,22 @@ export const ElementsInput: React.FC<ElementsInputProps> = (props) => {
         >
           {dropdownItems.map((item, k) => {
             return (
-              <Dropdown.Item key={k} value={item.value} >
+              <Dropdown.Item key={k} value={item.value}>
                 {item.label}
               </Dropdown.Item>
-            )
+            );
           })}
         </Dropdown>
       </Control>
       <Control className="is-expanded">
         <Input
-          type="text" 
-          value={props.rawValue}
+          type="text"
+          value={props.value}
           onChange={onRawValueChange}
-          onFocus={() => setIsFocused(true)} 
+          onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
       </Control>
     </Field>
   );
-}
+};

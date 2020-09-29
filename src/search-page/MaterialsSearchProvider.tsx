@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { ElementsInputType } from './ElementsInput/ElementsInput';
@@ -29,6 +29,7 @@ interface SearchParam {
 }
 
 interface SearchState {
+  groups: any[];
   filters: Filter[];
   values: FilterValues;
   searchParams: SearchParam[];
@@ -40,6 +41,38 @@ interface SearchState {
 }
 
 const initialState: SearchState = {
+  groups: [
+    {
+      name: 'Elements',
+      collapsed: false,
+      filters: [
+        {
+          name: 'Elements',
+          id: FilterId.ELEMENTS,
+          type: FilterType.ELEMENTS_INPUT,
+          props: {
+            parsedValue: [],
+            type: ElementsInputType.ELEMENTS,
+            delimiter: ','
+          }
+        }
+      ]
+    },
+    {
+      name: 'General',
+      collapsed: false,
+      filters: [
+        {
+          name: 'Volume',
+          id: FilterId.VOLUME,
+          type: FilterType.SLIDER,
+          props: {
+            domain: [0, 200]
+          }
+        }
+      ]
+    }
+  ],
   filters: [
     {
       name: 'Elements',
@@ -61,9 +94,9 @@ const initialState: SearchState = {
     }
   ],
   values: {
-    volume: [0,200],
-    density: [1,5],
-    elements: []
+    volume: [0, 200],
+    density: [1, 5],
+    elements: ''
   },
   searchParams: [],
   results: [],
@@ -75,51 +108,55 @@ const initialState: SearchState = {
 
 const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
 
-export const MaterialsSearchProvider: React.FC = ({children}) => {
+export const MaterialsSearchProvider: React.FC = ({ children }) => {
   const [state, setState] = useState(initialState);
   const actions = {
     setFilterValue: (value: any, id: string) => {
-      setState({...state, values:{...state.values, [id]: value}});
+      setState({ ...state, values: { ...state.values, [id]: value } });
     },
-    setFilterProps: (props: Object, id: string) => {
-      const filters = state.filters;
-      const filter = filters.find(f => f.id === id);
-      if(filter) filter.props = {...filter.props, ...props};
-      setState({...state, filters: filters});
+    setFilterProps: (props: Object, filterId: string, groupId: string) => {
+      const groups = state.groups;
+      const group = groups.find(g => g.name === groupId);
+      const filter = group.filters.find(f => f.id === filterId);
+      if (filter) filter.props = { ...filter.props, ...props };
+      setState({ ...state, groups: groups });
     },
     setSearchParams: () => {
       const searchParams: SearchParam[] = [];
-      state.filters.forEach(f => {
-        switch(f.type) {
-          case FilterType.SLIDER:
-            searchParams.push({
-              field: f.id + '_min',
-              value: state.values[f.id][0]
-            });
-            searchParams.push({
-              field: f.id + '_max',
-              value: state.values[f.id][1]
-            });
-            break;
-          case FilterType.ELEMENTS_INPUT:
-            searchParams.push({
-              field: f.props.type,
-              value: state.values[f.id]
-            });
-          default:
-            if(state.values[f.id]) {
+      state.groups.forEach(g => {
+        g.filters.forEach(f => {
+          switch (f.type) {
+            case FilterType.SLIDER:
               searchParams.push({
-                field: f.id,
-                value: state.values[f.id]
+                field: f.id + '_min',
+                value: state.values[f.id][0]
               });
-            }
-        }
+              searchParams.push({
+                field: f.id + '_max',
+                value: state.values[f.id][1]
+              });
+              break;
+            case FilterType.ELEMENTS_INPUT:
+              searchParams.push({
+                field: f.props.type,
+                value: f.props.parsedValue
+              });
+              break;
+            default:
+              if (state.values[f.id]) {
+                searchParams.push({
+                  field: f.id,
+                  value: state.values[f.id]
+                });
+              }
+          }
+        });
       });
-      setState({...state, searchParams});
+      setState({ ...state, searchParams });
     },
     getData: (page = state.page) => {
       setState({
-        ...state, 
+        ...state,
         page: page,
         loading: true
       });
@@ -130,20 +167,25 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
       params.fields = ['task_id', 'formula_pretty', 'volume'];
       params.limit = state.resultsPerPage;
       params.skip = (page - 1) * state.resultsPerPage;
-      axios.get('https://api.materialsproject.org/materials/', {
-        params: params,
-        paramsSerializer: p => {
-          return qs.stringify(p, {arrayFormat: 'comma'});
-        }
-      }).then((result) => {
-        console.log(result);
-        setState({
-          ...state, 
-          results: result.data.data, 
-          totalResults: result.data.meta.total,
-          loading: false
+      axios
+        .get('https://api.materialsproject.org/materials/', {
+          params: params,
+          paramsSerializer: p => {
+            return qs.stringify(p, { arrayFormat: 'comma' });
+          },
+          headers: {
+            'X-Api-Key': 'a2lgLZnE18AdXlJ0mO3yIzcqmcCV8U5J'
+          }
+        })
+        .then(result => {
+          console.log(result);
+          setState({
+            ...state,
+            results: result.data.data,
+            totalResults: result.data.meta.total,
+            loading: false
+          });
         });
-      });
     },
     logFilters: () => {
       console.log(state.searchParams);
@@ -153,17 +195,21 @@ export const MaterialsSearchProvider: React.FC = ({children}) => {
     }
   };
 
+  useEffect(() => {
+    actions.getData();
+  }, []);
+
   return (
     <MaterialsSearchContext.Provider value={{ state, actions }}>
       {children}
     </MaterialsSearchContext.Provider>
-  )
-}
+  );
+};
 
 export function useMaterialsSearch() {
-  const context = React.useContext(MaterialsSearchContext)
+  const context = React.useContext(MaterialsSearchContext);
   if (context === undefined) {
-    throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider')
+    throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
   }
-  return context
+  return context;
 }

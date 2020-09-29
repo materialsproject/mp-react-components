@@ -9,17 +9,17 @@ import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
 
 interface Props {
-  className: string
+  className: string;
 }
 
-export const SearchFilters: React.FC<Props> = (props) => {
+export const SearchFilters: React.FC<Props> = props => {
   const { state, actions } = useMaterialsSearch();
   // const [values, setValues] = useState([10, 50]);
-  
+
   function onSliderChange(values: ReadonlyArray<number>) {
     console.log(values);
     console.log(state.volume.values);
-    actions.setVolumeFilter({values: values});
+    actions.setVolumeFilter({ values: values });
   }
 
   useEffect(() => {
@@ -28,16 +28,16 @@ export const SearchFilters: React.FC<Props> = (props) => {
     actions.setSearchParams();
   }, [state.values]);
 
-  function renderFilter(f) {
-    switch(f.type) {
+  function renderFilter(f, groupId) {
+    switch (f.type) {
       case FilterType.ELEMENTS_INPUT:
         return (
           <PeriodicContext>
-            <ElementsInput 
+            <ElementsInput
               {...f.props}
               value={state.values[f.id]}
               onChange={v => actions.setFilterValue(v, f.id)}
-              onPropsChange={p => actions.setFilterProps(p, f.id)}
+              onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
             />
             <SelectableTable
               maxElementSelectable={20}
@@ -55,7 +55,11 @@ export const SearchFilters: React.FC<Props> = (props) => {
         return (
           <div>
             {state.values[f.id].toString()}
-            <DualRangeSlider {...f.props} values={state.values[f.id]} onChange={v => actions.setFilterValue(v, f.id)}/>
+            <DualRangeSlider
+              {...f.props}
+              values={state.values[f.id]}
+              onChange={v => actions.setFilterValue(v, f.id)}
+            />
           </div>
         );
       default:
@@ -68,17 +72,26 @@ export const SearchFilters: React.FC<Props> = (props) => {
     <div className={props.className}>
       <div>
         <div>
-          {state.filters.map((f, i) => (
+          {state.groups.map((g, i) => (
             <div key={i}>
-              {renderFilter(f)}
+              <p>{g.name}</p>
+              {g.filters.map((f, j) => (
+                <div key={j}>{renderFilter(f, g.name)}</div>
+              ))}
             </div>
           ))}
         </div>
       </div>
-      <div style={{marginTop: '15px'}}>
-        <Button onClick={() => actions.getData()} className="is-primary" style={{marginRight: '5px'}}>Apply</Button>
+      <div style={{ marginTop: '15px' }}>
+        <Button
+          onClick={() => actions.getData()}
+          className="is-primary"
+          style={{ marginRight: '5px' }}
+        >
+          Apply
+        </Button>
         <Button onClick={() => actions.reset()}>Reset</Button>
       </div>
     </div>
   );
-}
+};
