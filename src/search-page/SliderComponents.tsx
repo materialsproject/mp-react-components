@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  GetRailProps,
-  GetHandleProps,
-  GetTrackProps,
-  SliderItem,
-} from 'react-compound-slider';
+import { GetRailProps, GetHandleProps, GetTrackProps, SliderItem } from 'react-compound-slider';
 
 // *******************************************************
 // RAIL
@@ -12,20 +7,20 @@ import {
 const railOuterStyle = {
   position: 'absolute' as 'absolute',
   width: '100%',
-  height: 42,
+  height: 35,
   transform: 'translate(0%, -50%)',
   borderRadius: 7,
-  cursor: 'pointer',
+  cursor: 'pointer'
 };
 
 const railInnerStyle = {
   position: 'absolute' as 'absolute',
   width: '100%',
-  height: 14,
+  height: 5,
   transform: 'translate(0%, -50%)',
   borderRadius: 7,
   pointerEvents: 'none' as 'none',
-  backgroundColor: 'rgb(155,155,155)',
+  backgroundColor: 'rgb(155,155,155)'
 };
 
 interface SliderRailProps {
@@ -55,7 +50,7 @@ export const Handle: React.FC<HandleProps> = ({
   domain: [min, max],
   handle: { id, value, percent },
   disabled = false,
-  getHandleProps,
+  getHandleProps
 }) => {
   return (
     <>
@@ -69,7 +64,7 @@ export const Handle: React.FC<HandleProps> = ({
           width: 28,
           height: 42,
           cursor: 'pointer',
-          backgroundColor: 'none',
+          backgroundColor: 'none'
         }}
         {...getHandleProps(id)}
       />
@@ -83,11 +78,11 @@ export const Handle: React.FC<HandleProps> = ({
           position: 'absolute',
           transform: 'translate(-50%, -50%)',
           zIndex: 2,
-          width: 24,
-          height: 24,
+          width: 15,
+          height: 15,
           borderRadius: '50%',
           boxShadow: '1px 1px 1px 1px rgba(0, 0, 0, 0.3)',
-          backgroundColor: disabled ? '#666' : '#9BBFD4',
+          backgroundColor: disabled ? '#666' : '#9BBFD4'
         }}
       />
     </>
@@ -102,7 +97,7 @@ export const KeyboardHandle: React.FC<HandleProps> = ({
   domain: [min, max],
   handle: { id, value, percent },
   disabled = false,
-  getHandleProps,
+  getHandleProps
 }) => {
   return (
     <button
@@ -119,7 +114,7 @@ export const KeyboardHandle: React.FC<HandleProps> = ({
         height: 24,
         borderRadius: '50%',
         boxShadow: '1px 1px 1px 1px rgba(0, 0, 0, 0.3)',
-        backgroundColor: disabled ? '#666' : '#9BBFD4',
+        backgroundColor: disabled ? '#666' : '#9BBFD4'
       }}
       {...getHandleProps(id)}
     />
@@ -140,20 +135,20 @@ export const Track: React.FC<TrackProps> = ({
   source,
   target,
   getTrackProps,
-  disabled = false,
+  disabled = false
 }) => {
   return (
     <div
       style={{
         position: 'absolute',
         transform: 'translate(0%, -50%)',
-        height: 14,
+        height: 10,
         zIndex: 1,
         backgroundColor: disabled ? '#999' : '#607E9E',
         borderRadius: 7,
         cursor: 'pointer',
         left: `${source.percent}%`,
-        width: `${target.percent - source.percent}%`,
+        width: `${target.percent - source.percent}%`
       }}
       {...getTrackProps()}
     />
@@ -179,7 +174,7 @@ export const Tick: React.FC<TickProps> = ({ tick, count, format = d => d }) => {
           width: 1,
           height: 5,
           backgroundColor: 'rgb(200,200,200)',
-          left: `${tick.percent}%`,
+          left: `${tick.percent}%`
         }}
       />
       <div
@@ -190,7 +185,7 @@ export const Tick: React.FC<TickProps> = ({ tick, count, format = d => d }) => {
           textAlign: 'center',
           marginLeft: `${-(100 / count) / 2}%`,
           width: `${100 / count}%`,
-          left: `${tick.percent}%`,
+          left: `${tick.percent}%`
         }}
       >
         {format(tick.value)}

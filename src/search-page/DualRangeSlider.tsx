@@ -4,7 +4,7 @@ import { SliderRail, Handle, Track, Tick } from './SliderComponents';
 
 const sliderStyle = {
   position: 'relative' as 'relative',
-  width: '100%',
+  width: '100%'
 };
 
 const defaultValues = [10, 50];
@@ -17,7 +17,7 @@ interface SliderState {
 
 interface Props {
   domain: number[];
-  values: ReadonlyArray<number>,
+  values: ReadonlyArray<number>;
   onChange?: (values: readonly number[]) => void;
 }
 
@@ -27,20 +27,21 @@ const initialState: SliderState = {
   reversed: false
 };
 
-export const DualRangeSlider: React.FC<Props> = (props) => {
-  
+export const DualRangeSlider: React.FC<Props> = props => {
   const [state, setState] = useState(initialState);
 
   const onUpdate = (update: ReadonlyArray<number>) => {
     setState({ ...state, update });
   };
 
-  const onChange = props.onChange ? props.onChange : (values: ReadonlyArray<number>) => {
-    setState({ ...state, values });
-  };
+  const onChange = props.onChange
+    ? props.onChange
+    : (values: ReadonlyArray<number>) => {
+        setState({ ...state, values });
+      };
 
   return (
-    <div style={{ height: 150, width: '100%' }}>
+    <div style={{ height: 50, width: '100%' }}>
       <Slider
         mode={1}
         step={1}
@@ -51,9 +52,7 @@ export const DualRangeSlider: React.FC<Props> = (props) => {
         onChange={onChange}
         values={props.values}
       >
-        <Rail>
-          {({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}
-        </Rail>
+        <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
         <Handles>
           {({ handles, getHandleProps }) => (
             <div className="slider-handles">
@@ -72,12 +71,7 @@ export const DualRangeSlider: React.FC<Props> = (props) => {
           {({ tracks, getTrackProps }) => (
             <div className="slider-tracks">
               {tracks.map(({ id, source, target }) => (
-                <Track
-                  key={id}
-                  source={source}
-                  target={target}
-                  getTrackProps={getTrackProps}
-                />
+                <Track key={id} source={source} target={target} getTrackProps={getTrackProps} />
               ))}
             </div>
           )}
@@ -94,4 +88,4 @@ export const DualRangeSlider: React.FC<Props> = (props) => {
       </Slider>
     </div>
   );
-}
+};

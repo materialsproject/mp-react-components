@@ -32,6 +32,7 @@ interface SearchState {
   groups: any[];
   values: FilterValues;
   searchParams: SearchParam[];
+  activeFilters: any;
   results: any[];
   totalResults: number;
   resultsPerPage: number;
@@ -86,6 +87,7 @@ const initialState: SearchState = {
     elements: ''
   },
   searchParams: [],
+  activeFilters: [],
   results: [],
   totalResults: 0,
   resultsPerPage: 10,
@@ -116,24 +118,43 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
     },
     setSearchParams: () => {
       const searchParams: SearchParam[] = [];
+      const activeFilters: any[] = [];
       state.groups.forEach(g => {
         g.filters.forEach(f => {
           switch (f.type) {
             case FilterType.SLIDER:
-              searchParams.push({
-                field: f.id + '_min',
-                value: state.values[f.id][0]
-              });
-              searchParams.push({
-                field: f.id + '_max',
-                value: state.values[f.id][1]
-              });
+              if (
+                state.values[f.id][0] !== f.props.domain[0] ||
+                state.values[f.id][1] !== f.props.domain[1]
+              ) {
+                activeFilters.push({
+                  id: f.id,
+                  value: state.values[f.id],
+                  defaultValue: f.props.domain
+                });
+                searchParams.push({
+                  field: f.id + '_min',
+                  value: state.values[f.id][0]
+                });
+                searchParams.push({
+                  field: f.id + '_max',
+                  value: state.values[f.id][1]
+                });
+              }
               break;
             case FilterType.ELEMENTS_INPUT:
-              searchParams.push({
-                field: f.props.type,
-                value: f.props.parsedValue
-              });
+              if (state.values[f.id] !== '') {
+                activeFilters.push({
+                  id: f.id,
+                  displayName: f.props.type,
+                  value: f.props.parsedValue,
+                  defaultValue: ''
+                });
+                searchParams.push({
+                  field: f.props.type,
+                  value: f.props.parsedValue
+                });
+              }
               break;
             default:
               if (state.values[f.id]) {
@@ -145,7 +166,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
           }
         });
       });
-      setState({ ...state, searchParams });
+      setState({ ...state, searchParams, activeFilters });
     },
     getData: (page = state.page) => {
       setState({
@@ -189,6 +210,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
+    actions.setSearchParams();
     actions.getData();
   }, []);
 

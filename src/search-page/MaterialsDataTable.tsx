@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useMaterialsSearch } from './MaterialsSearchProvider';
 import DataTable from 'react-data-table-component';
+import { ActiveFilterButtons } from './ActiveFilterButtons';
 
 interface Props {
-  className: string;
+  className?: string;
 }
 
 export const MaterialsDataTable: React.FC<Props> = props => {
@@ -57,7 +58,12 @@ export const MaterialsDataTable: React.FC<Props> = props => {
   return (
     <div className={props.className}>
       <DataTable
-        title="Materials"
+        title={
+          <ActiveFilterButtons
+            filters={state.activeFilters}
+            onClick={(v, id) => actions.setFilterValue(v, id)}
+          />
+        }
         theme="material"
         columns={columns}
         data={state.results}

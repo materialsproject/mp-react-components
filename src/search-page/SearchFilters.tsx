@@ -7,10 +7,11 @@ import { FilterType, useMaterialsSearch } from './MaterialsSearchProvider';
 import { Button } from 'react-bulma-components';
 import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
-import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
+import { AiFillCaretDown, AiFillCaretRight, AiOutlineEllipsis } from 'react-icons/ai';
+import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 
 interface Props {
-  className: string;
+  className?: string;
 }
 
 export const SearchFilters: React.FC<Props> = props => {
@@ -47,7 +48,7 @@ export const SearchFilters: React.FC<Props> = props => {
               onStateChange={enabledElements => {
                 Object.keys(enabledElements).filter(el => enabledElements[el]);
               }}
-              enabledElements={['Co']}
+              enabledElements={[]}
               disabledElements={['H', 'C']}
             />
           </PeriodicContext>
@@ -55,7 +56,7 @@ export const SearchFilters: React.FC<Props> = props => {
       case FilterType.SLIDER:
         return (
           <div>
-            {state.values[f.id].toString()}
+            <p className="mb-2">{f.name}</p>
             <DualRangeSlider
               {...f.props}
               values={state.values[f.id]}
@@ -72,14 +73,19 @@ export const SearchFilters: React.FC<Props> = props => {
   return (
     <div className={props.className}>
       <div className="panel">
-        <p className="panel-heading">Filters</p>
+        <div className="panel-heading">
+          <span>Filters</span>
+          <span className="is-pulled-right">
+            <FaEllipsisV />
+          </span>
+        </div>
         {state.groups.map((g, i) => (
           <div className="panel-block" key={i}>
             <div className="control">
               <div className="is-clickable" onClick={() => actions.toggleGroup(g.name)}>
-                <span>{g.name}</span>
+                <span className="title is-5">{g.name}</span>
                 <div className="is-pulled-right">
-                  {g.collapsed ? <AiFillCaretRight /> : <AiFillCaretDown />}
+                  {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
                 </div>
               </div>
               <div className={`mt-3 ${g.collapsed ? 'is-hidden' : ''}`}>
