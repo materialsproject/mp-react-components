@@ -9,6 +9,7 @@ import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
 import { AiFillCaretDown, AiFillCaretRight, AiOutlineEllipsis } from 'react-icons/ai';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
+import { debounce } from 'ts-debounce';
 
 interface Props {
   className?: string;
@@ -18,19 +19,24 @@ export const SearchFilters: React.FC<Props> = props => {
   const { state, actions } = useMaterialsSearch();
   // const [values, setValues] = useState([10, 50]);
 
-  function onSliderChange(values: ReadonlyArray<number>) {
+  const onSliderChange = (values: ReadonlyArray<number>) => {
     console.log(values);
     console.log(state.volume.values);
     actions.setVolumeFilter({ values: values });
-  }
+  };
 
-  useEffect(() => {
-    console.log('filter changed');
-    console.log(state);
-    actions.setSearchParams();
-  }, [state.values]);
+  // useEffect(() => {
+  //   console.log('filter changed');
+  //   console.log(state);
+  //   actions.setSearchParams();
+  // }, [state.values]);
 
-  function renderFilter(f, groupId) {
+  // useEffect(() => {
+  //   console.log('search params changed');
+  //   actions.getData();
+  // }, [state.searchParams]);
+
+  const renderFilter = (f, groupId) => {
     switch (f.type) {
       case FilterType.ELEMENTS_INPUT:
         return (
@@ -68,7 +74,7 @@ export const SearchFilters: React.FC<Props> = props => {
         null;
     }
     return null;
-  }
+  };
 
   return (
     <div className={props.className}>

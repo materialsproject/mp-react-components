@@ -210,6 +210,12 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log('filter changed');
+    console.log(state);
+    actions.setSearchParams();
+  }, [state.values]);
+
+  useEffect(() => {
     actions.setSearchParams();
     actions.getData();
   }, []);
@@ -221,10 +227,10 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   );
 };
 
-export function useMaterialsSearch() {
+export const useMaterialsSearch = () => {
   const context = React.useContext(MaterialsSearchContext);
   if (context === undefined) {
     throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
   }
   return context;
-}
+};

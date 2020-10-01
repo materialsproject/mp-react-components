@@ -65,7 +65,6 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
       switch (props.type) {
         case ElementsInputType.ELEMENTS:
           newValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
-          // actions.addFilter({field: 'elements', value: newInputValue});
           break;
         case ElementsInputType.FORMULA:
           if (lastAction?.type === 'select') {
@@ -81,16 +80,10 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
             if (formulaSplitWithNumbers)
               newValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
-          // actions.addFilter({field: 'formula', value: newInputValue});
           break;
         default:
           return;
       }
-      // actions.setElementsFilter({
-      //   value: newInputValue,
-      // });
-
-      // set raw value and clean value
       props.onPropsChange({
         parsedValue: newValue
       });
@@ -152,16 +145,7 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
       delimiter: newDelimiter,
       parsedValue: newParsedValue
     });
-    props.onChange(newValue);
   }, [props.value]);
-
-  // useEffect(() => {
-  //   if(Array.isArray(props.value) && props.value.length === 0) {
-  //     props.onPropsChange({
-  //       value: ''
-  //     });
-  //   }
-  // }, [props.value]);
 
   return (
     <Field className="has-addons">
