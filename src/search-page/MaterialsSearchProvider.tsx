@@ -51,6 +51,7 @@ const initialState: SearchState = {
           name: 'Elements',
           id: FilterId.ELEMENTS,
           type: FilterType.ELEMENTS_INPUT,
+          hasParsedValue: true,
           props: {
             parsedValue: [],
             type: ElementsInputType.ELEMENTS,
@@ -161,7 +162,12 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       const group = groups.find(g => g.name === groupId);
       const filter = group.filters.find(f => f.id === filterId);
       if (filter) filter.props = { ...filter.props, ...props };
-      setState({ ...state, groups: groups });
+      const stateWithNewFilterProps = { ...state, groups: groups };
+      const newState =
+        filter && filter.hasParsedValue
+          ? getState(stateWithNewFilterProps)
+          : stateWithNewFilterProps;
+      setState({ ...newState });
     },
     toggleGroup: (groupId: string) => {
       const groups = state.groups;
