@@ -69,6 +69,7 @@
     "svgtodatauri": "0.0.0",
     "three": "^0.115.0",
     "ts-debounce": "^2.0.1",
+    "use-deep-compare-effect": "^1.4.0",
     "xlsx": "^0.15.6"
   },
   "devDependencies": {

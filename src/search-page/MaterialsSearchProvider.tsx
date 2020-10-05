@@ -1,7 +1,8 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { ElementsInputType } from './ElementsInput/ElementsInput';
+import { useDeepCompareDebounce } from '../utils/hooks';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -95,13 +96,65 @@ const initialState: SearchState = {
   loading: false
 };
 
+const getState = (currentState, values = { ...currentState.values }) => {
+  const searchParams: SearchParam[] = [];
+  const activeFilters: any[] = [];
+  currentState.groups.forEach(g => {
+    g.filters.forEach(f => {
+      switch (f.type) {
+        case FilterType.SLIDER:
+          if (values[f.id][0] !== f.props.domain[0] || values[f.id][1] !== f.props.domain[1]) {
+            activeFilters.push({
+              id: f.id,
+              value: values[f.id],
+              defaultValue: f.props.domain
+            });
+            searchParams.push({
+              field: f.id + '_min',
+              value: values[f.id][0]
+            });
+            searchParams.push({
+              field: f.id + '_max',
+              value: values[f.id][1]
+            });
+          }
+          break;
+        case FilterType.ELEMENTS_INPUT:
+          if (values[f.id] !== '') {
+            activeFilters.push({
+              id: f.id,
+              displayName: f.props.type,
+              value: f.props.parsedValue,
+              defaultValue: ''
+            });
+            searchParams.push({
+              field: f.props.type,
+              value: f.props.parsedValue
+            });
+          }
+          break;
+        default:
+          if (values[f.id]) {
+            searchParams.push({
+              field: f.id,
+              value: values[f.id]
+            });
+          }
+      }
+    });
+  });
+  return { ...currentState, values, searchParams, activeFilters };
+};
+
 const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
+const MaterialsSearchContextActions = React.createContext<any | undefined>(undefined);
 
 export const MaterialsSearchProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(() => getState(initialState));
+  const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
     setFilterValue: (value: any, id: string) => {
-      setState({ ...state, values: { ...state.values, [id]: value } });
+      setState(currentState => getState(currentState, { ...currentState.values, [id]: value }));
     },
     setFilterProps: (props: Object, filterId: string, groupId: string) => {
       const groups = state.groups;
@@ -116,90 +169,42 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       group.collapsed = !group.collapsed;
       setState({ ...state, groups: groups });
     },
-    setSearchParams: () => {
-      const searchParams: SearchParam[] = [];
-      const activeFilters: any[] = [];
-      state.groups.forEach(g => {
-        g.filters.forEach(f => {
-          switch (f.type) {
-            case FilterType.SLIDER:
-              if (
-                state.values[f.id][0] !== f.props.domain[0] ||
-                state.values[f.id][1] !== f.props.domain[1]
-              ) {
-                activeFilters.push({
-                  id: f.id,
-                  value: state.values[f.id],
-                  defaultValue: f.props.domain
-                });
-                searchParams.push({
-                  field: f.id + '_min',
-                  value: state.values[f.id][0]
-                });
-                searchParams.push({
-                  field: f.id + '_max',
-                  value: state.values[f.id][1]
-                });
-              }
-              break;
-            case FilterType.ELEMENTS_INPUT:
-              if (state.values[f.id] !== '') {
-                activeFilters.push({
-                  id: f.id,
-                  displayName: f.props.type,
-                  value: f.props.parsedValue,
-                  defaultValue: ''
-                });
-                searchParams.push({
-                  field: f.props.type,
-                  value: f.props.parsedValue
-                });
-              }
-              break;
-            default:
-              if (state.values[f.id]) {
-                searchParams.push({
-                  field: f.id,
-                  value: state.values[f.id]
-                });
-              }
-          }
-        });
-      });
-      setState({ ...state, searchParams, activeFilters });
-    },
     getData: (page = state.page) => {
-      setState({
-        ...state,
-        page: page,
-        loading: true
-      });
-      let params: any = {};
-      state.searchParams.forEach((d, i) => {
-        params[d.field] = d.value;
-      });
-      params.fields = ['task_id', 'formula_pretty', 'volume', 'density'];
-      params.limit = state.resultsPerPage;
-      params.skip = (page - 1) * state.resultsPerPage;
-      axios
-        .get('https://api.materialsproject.org/materials/', {
-          params: params,
-          paramsSerializer: p => {
-            return qs.stringify(p, { arrayFormat: 'comma' });
-          },
-          headers: {
-            'X-Api-Key': 'a2lgLZnE18AdXlJ0mO3yIzcqmcCV8U5J'
-          }
-        })
-        .then(result => {
-          console.log(result);
-          setState({
-            ...state,
-            results: result.data.data,
-            totalResults: result.data.meta.total,
-            loading: false
-          });
+      setState(currentState => {
+        let params: any = {};
+        currentState.searchParams.forEach((d, i) => {
+          params[d.field] = d.value;
         });
+        params.fields = ['task_id', 'formula_pretty', 'volume', 'density'];
+        params.limit = currentState.resultsPerPage;
+        params.skip = (page - 1) * currentState.resultsPerPage;
+        axios
+          .get('https://api.materialsproject.org/materials/', {
+            params: params,
+            paramsSerializer: p => {
+              return qs.stringify(p, { arrayFormat: 'comma' });
+            },
+            headers: {
+              'X-Api-Key': 'a2lgLZnE18AdXlJ0mO3yIzcqmcCV8U5J'
+            }
+          })
+          .then(result => {
+            console.log(result);
+            setState(currentState => {
+              return {
+                ...currentState,
+                results: result.data.data,
+                totalResults: result.data.meta.total,
+                loading: false
+              };
+            });
+          });
+        return {
+          ...state,
+          page: page,
+          loading: true
+        };
+      });
     },
     logFilters: () => {
       console.log(state.searchParams);
@@ -210,19 +215,15 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('filter changed');
-    console.log(state);
-    actions.setSearchParams();
-  }, [state.values]);
-
-  useEffect(() => {
-    actions.setSearchParams();
     actions.getData();
-  }, []);
+  }, [debouncedActiveFilters]);
 
   return (
-    <MaterialsSearchContext.Provider value={{ state, actions }}>
-      {children}
+    <MaterialsSearchContext.Provider value={state}>
+      <MaterialsSearchContextActions.Provider value={actions}>
+        {children}
+        {console.log('render provider')}
+      </MaterialsSearchContextActions.Provider>
     </MaterialsSearchContext.Provider>
   );
 };
@@ -234,3 +235,33 @@ export const useMaterialsSearch = () => {
   }
   return context;
 };
+
+export const useMaterialsSearchContextActions = () => {
+  const context = React.useContext(MaterialsSearchContextActions);
+  if (context === undefined) {
+    throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
+  }
+  return context;
+};
+
+/**
+ * Reducer version
+ */
+
+// enum ActionType {
+//   SET_FILTER_VALUE = 'SET_FILTER_VALUE'
+// }
+
+// interface Action {
+//   type: string;
+//   payload: any;
+// };
+
+// const reducer = (state: SearchState, action: Action) => {
+//   switch (action.type) {
+//     case ActionType.SET_FILTER_VALUE:
+//       return { ...state, values: { ...state.values, [action.payload.id]: action.payload.value } };
+//     default:
+//       return state;
+//   }
+// }

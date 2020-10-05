@@ -3,38 +3,26 @@ import { PeriodicContext } from '../periodic-table/periodic-table-state/periodic
 import { SelectableTable } from '../periodic-table/table-state';
 import { TableLayout } from '../periodic-table/periodic-table-component/periodic-table.component';
 import { ElementsInput } from './ElementsInput/ElementsInput';
-import { FilterType, useMaterialsSearch } from './MaterialsSearchProvider';
+import {
+  FilterType,
+  useMaterialsSearch,
+  useMaterialsSearchContextActions
+} from './MaterialsSearchProvider';
 import { Button } from 'react-bulma-components';
 import { DualSlider } from './sliders/dual-slider';
 import { DualRangeSlider } from './DualRangeSlider';
 import { AiFillCaretDown, AiFillCaretRight, AiOutlineEllipsis } from 'react-icons/ai';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
-import { debounce } from 'ts-debounce';
+import { Dropdown } from 'react-bulma-components';
 
 interface Props {
   className?: string;
 }
 
 export const SearchFilters: React.FC<Props> = props => {
-  const { state, actions } = useMaterialsSearch();
-  // const [values, setValues] = useState([10, 50]);
-
-  const onSliderChange = (values: ReadonlyArray<number>) => {
-    console.log(values);
-    console.log(state.volume.values);
-    actions.setVolumeFilter({ values: values });
-  };
-
-  // useEffect(() => {
-  //   console.log('filter changed');
-  //   console.log(state);
-  //   actions.setSearchParams();
-  // }, [state.values]);
-
-  // useEffect(() => {
-  //   console.log('search params changed');
-  //   actions.getData();
-  // }, [state.searchParams]);
+  const state = useMaterialsSearch();
+  const actions = useMaterialsSearchContextActions();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const renderFilter = (f, groupId) => {
     switch (f.type) {
@@ -82,7 +70,22 @@ export const SearchFilters: React.FC<Props> = props => {
         <div className="panel-heading">
           <span>Filters</span>
           <span className="is-pulled-right">
-            <FaEllipsisV />
+            <div className={`dropdown is-right ${menuOpen ? 'is-active' : ''}`}>
+              <div
+                className="dropdown-trigger is-clickable"
+                onClick={() => setMenuOpen(!menuOpen)}
+                onBlur={() => setMenuOpen(false)}
+              >
+                <FaEllipsisV />
+              </div>
+              <div className="dropdown-menu" id="dropdown-menu6" role="menu">
+                <div className="dropdown-content">
+                  <div className="dropdown-item">
+                    <p onClick={() => actions.reset()}>Reset filters</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </span>
         </div>
         {state.groups.map((g, i) => (

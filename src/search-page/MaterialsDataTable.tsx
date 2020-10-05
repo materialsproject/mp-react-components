@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMaterialsSearch } from './MaterialsSearchProvider';
+import { useMaterialsSearch, useMaterialsSearchContextActions } from './MaterialsSearchProvider';
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from './ActiveFilterButtons';
 
@@ -8,7 +8,9 @@ interface Props {
 }
 
 export const MaterialsDataTable: React.FC<Props> = props => {
-  const { state, actions } = useMaterialsSearch();
+  // const { state, actions } = useMaterialsSearch();
+  const state = useMaterialsSearch();
+  const actions = useMaterialsSearchContextActions();
   const [data, setData] = useState(state.results);
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
@@ -74,6 +76,11 @@ export const MaterialsDataTable: React.FC<Props> = props => {
         onChangePage={handlePageChange}
         progressPending={state.loading}
         paginationTotalRows={state.totalResults}
+        progressComponent={
+          <progress className="progress is-small is-primary" max="100">
+            15%
+          </progress>
+        }
       />
     </div>
   );
