@@ -85,14 +85,14 @@ const initialState: SearchState = {
   ],
   values: {
     volume: [0, 200],
-    density: [10, 50],
+    density: [0, 200],
     elements: ''
   },
   searchParams: [],
   activeFilters: [],
   results: [],
   totalResults: 0,
-  resultsPerPage: 10,
+  resultsPerPage: 15,
   page: 1,
   loading: false
 };
@@ -133,6 +133,9 @@ const getState = (currentState, values = { ...currentState.values }) => {
               value: f.props.parsedValue
             });
           }
+          if (true) {
+            break;
+          }
           break;
         default:
           if (values[f.id]) {
@@ -154,6 +157,16 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   const [state, setState] = useState(() => getState(initialState));
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
+    setPage: (value: number) => {
+      setState(currentState => {
+        return { ...currentState, page: value };
+      });
+    },
+    setResultsPerPage: (value: number) => {
+      setState(currentState => {
+        return { ...currentState, resultsPerPage: value };
+      });
+    },
     setFilterValue: (value: any, id: string) => {
       setState(currentState => getState(currentState, { ...currentState.values, [id]: value }));
     },
@@ -175,7 +188,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       group.collapsed = !group.collapsed;
       setState({ ...state, groups: groups });
     },
-    getData: (page = state.page) => {
+    getData: () => {
       setState(currentState => {
         let params: any = {};
         currentState.searchParams.forEach((d, i) => {
@@ -183,7 +196,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
         });
         params.fields = ['task_id', 'formula_pretty', 'volume', 'density'];
         params.limit = currentState.resultsPerPage;
-        params.skip = (page - 1) * currentState.resultsPerPage;
+        params.skip = (currentState.page - 1) * currentState.resultsPerPage;
         axios
           .get('https://api.materialsproject.org/materials/', {
             params: params,
@@ -204,10 +217,20 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
                 loading: false
               };
             });
+          })
+          .catch(error => {
+            console.log(error);
+            setState(currentState => {
+              return {
+                ...currentState,
+                results: [],
+                totalResults: 0,
+                loading: false
+              };
+            });
           });
         return {
-          ...state,
-          page: page,
+          ...currentState,
           loading: true
         };
       });
@@ -222,13 +245,12 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     actions.getData();
-  }, [debouncedActiveFilters]);
+  }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
 
   return (
     <MaterialsSearchContext.Provider value={state}>
       <MaterialsSearchContextActions.Provider value={actions}>
         {children}
-        {console.log('render provider')}
       </MaterialsSearchContextActions.Provider>
     </MaterialsSearchContext.Provider>
   );

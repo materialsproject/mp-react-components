@@ -11,10 +11,6 @@ export const MaterialsDataTable: React.FC<Props> = props => {
   // const { state, actions } = useMaterialsSearch();
   const state = useMaterialsSearch();
   const actions = useMaterialsSearchContextActions();
-  const [data, setData] = useState(state.results);
-  const [loading, setLoading] = useState(false);
-  const [perPage, setPerPage] = useState(10);
-  const [totalRows, setTotalRows] = useState(0);
 
   const columns = [
     {
@@ -39,24 +35,14 @@ export const MaterialsDataTable: React.FC<Props> = props => {
     }
   ];
 
-  const handlePageChange = async page => {
-    console.log(page);
-    actions.getData(page);
+  const handlePageChange = async (page: number) => {
+    actions.setPage(page);
   };
 
-  // const handlePerRowsChange = async (perPage, page) => {
-  //   this.setState({ loading: true });
+  const handlePerRowsChange = async (perPage: number) => {
+    actions.setResultsPerPage(perPage);
+  };
 
-  //   const response = await axios.get(
-  //     `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`,
-  //   );
-
-  //   this.setState({
-  //     loading: false,
-  //     data: response.data.data,
-  //     perPage,
-  //   });
-  // }
   return (
     <div className={props.className}>
       <DataTable
@@ -74,8 +60,10 @@ export const MaterialsDataTable: React.FC<Props> = props => {
         pagination
         paginationServer
         onChangePage={handlePageChange}
+        onChangeRowsPerPage={handlePerRowsChange}
         progressPending={state.loading}
         paginationTotalRows={state.totalResults}
+        paginationPerPage={state.resultsPerPage}
         progressComponent={
           <progress className="progress is-small is-primary" max="100">
             15%

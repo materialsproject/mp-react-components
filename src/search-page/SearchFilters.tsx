@@ -68,28 +68,17 @@ export const SearchFilters: React.FC<Props> = props => {
     <div className={props.className}>
       <div className="panel">
         <div className="panel-heading">
-          <span>Filters</span>
-          <span className="is-pulled-right">
-            <div className={`dropdown is-right ${menuOpen ? 'is-active' : ''}`}>
-              <div
-                className="dropdown-trigger is-clickable"
-                onClick={() => setMenuOpen(!menuOpen)}
-                onBlur={() => setMenuOpen(false)}
-              >
-                <FaEllipsisV />
-              </div>
-              <div className="dropdown-menu" id="dropdown-menu6" role="menu">
-                <div className="dropdown-content">
-                  <div className="dropdown-item">
-                    <p onClick={() => actions.reset()}>Reset filters</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </span>
+          <div className="level">
+            <span>Filters</span>
+            <Dropdown className="mp-dropdown" value="" label={<FaEllipsisV />} right={true}>
+              <Dropdown.Item value="reset">
+                <p onClick={e => actions.reset()}>Reset filters</p>
+              </Dropdown.Item>
+            </Dropdown>
+          </div>
         </div>
         {state.groups.map((g, i) => (
-          <div className="panel-block" key={i}>
+          <div className="panel-block" style={{ padding: '1em' }} key={i}>
             <div className="control">
               <div className="is-clickable" onClick={() => actions.toggleGroup(g.name)}>
                 <span className="title is-5">{g.name}</span>
