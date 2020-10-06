@@ -7,50 +7,27 @@ const sliderStyle = {
   width: '100%'
 };
 
-const defaultValues = [10, 50];
-
-interface SliderState {
-  values: ReadonlyArray<number>;
-  update: ReadonlyArray<number>;
-  reversed: boolean;
-}
-
 interface Props {
   domain: number[];
   values: ReadonlyArray<number>;
   onChange?: (values: readonly number[]) => void;
 }
 
-const initialState: SliderState = {
-  values: defaultValues.slice(),
-  update: defaultValues.slice(),
-  reversed: false
-};
-
-export const DualRangeSlider: React.FC<Props> = props => {
-  const [state, setState] = useState(initialState);
-
-  const onUpdate = (update: ReadonlyArray<number>) => {
-    setState({ ...state, update });
-  };
-
-  const onChange = props.onChange
-    ? props.onChange
-    : (values: ReadonlyArray<number>) => {
-        setState({ ...state, values });
-      };
+export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = undefined }) => {
+  const [reversed, setReversed] = useState(false);
+  const [update, setUpdate] = useState<ReadonlyArray<number>>(values.slice());
 
   return (
     <div style={{ height: 50, width: '100%' }}>
       <Slider
         mode={1}
         step={1}
-        domain={props.domain}
-        reversed={state.reversed}
+        domain={domain}
+        reversed={reversed}
         rootStyle={sliderStyle}
-        onUpdate={onUpdate}
+        onUpdate={(value: ReadonlyArray<number>) => setUpdate(value)}
         onChange={onChange}
-        values={props.values}
+        values={values}
       >
         <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
         <Handles>
@@ -60,7 +37,7 @@ export const DualRangeSlider: React.FC<Props> = props => {
                 <Handle
                   key={handle.id}
                   handle={handle}
-                  domain={props.domain}
+                  domain={domain}
                   getHandleProps={getHandleProps}
                 />
               ))}

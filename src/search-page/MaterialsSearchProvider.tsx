@@ -68,6 +68,7 @@ const initialState: SearchState = {
           name: 'Volume',
           id: FilterId.VOLUME,
           type: FilterType.SLIDER,
+          decimalPlaces: 2,
           props: {
             domain: [0, 200]
           }
@@ -77,7 +78,8 @@ const initialState: SearchState = {
           id: FilterId.DENSITY,
           type: FilterType.SLIDER,
           props: {
-            domain: [0, 200]
+            domain: [0, 200],
+            decimalPlaces: 2
           }
         }
       ]
@@ -133,9 +135,6 @@ const getState = (currentState, values = { ...currentState.values }) => {
               value: f.props.parsedValue
             });
           }
-          if (true) {
-            break;
-          }
           break;
         default:
           if (values[f.id]) {
@@ -158,17 +157,15 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
     setPage: (value: number) => {
-      setState(currentState => {
-        return { ...currentState, page: value };
-      });
+      setState((currentState: SearchState) => ({ ...currentState, page: value }));
     },
     setResultsPerPage: (value: number) => {
-      setState(currentState => {
-        return { ...currentState, resultsPerPage: value };
-      });
+      setState((currentState: SearchState) => ({ ...currentState, resultsPerPage: value }));
     },
     setFilterValue: (value: any, id: string) => {
-      setState(currentState => getState(currentState, { ...currentState.values, [id]: value }));
+      setState((currentState: SearchState) =>
+        getState(currentState, { ...currentState.values, [id]: value })
+      );
     },
     setFilterProps: (props: Object, filterId: string, groupId: string) => {
       const groups = state.groups;
@@ -189,7 +186,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
       setState({ ...state, groups: groups });
     },
     getData: () => {
-      setState(currentState => {
+      setState((currentState: SearchState) => {
         let params: any = {};
         currentState.searchParams.forEach((d, i) => {
           params[d.field] = d.value;
@@ -220,7 +217,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
           })
           .catch(error => {
             console.log(error);
-            setState(currentState => {
+            setState((currentState: SearchState) => {
               return {
                 ...currentState,
                 results: [],

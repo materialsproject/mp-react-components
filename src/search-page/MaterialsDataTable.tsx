@@ -26,12 +26,14 @@ export const MaterialsDataTable: React.FC<Props> = props => {
     {
       name: 'Volume',
       selector: 'volume',
-      sortable: true
+      sortable: true,
+      format: (row: any) => row.volume.toFixed(2)
     },
     {
       name: 'Density',
       selector: 'density',
-      sortable: true
+      sortable: true,
+      format: (row: any) => row.density.toFixed(2)
     }
   ];
 
