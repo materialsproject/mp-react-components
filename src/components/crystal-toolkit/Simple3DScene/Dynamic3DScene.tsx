@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Simple3DSceneComponent from './Simple3DSceneComponent.react';
 import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
-import {
-  AnimationStyle,
-  Renderer
-} from './constants';
+import { AnimationStyle, Renderer } from './constants';
 
 export const Dynamic3DScene: React.FC = () => {
   const [sceneData, setSceneData] = useState<Object | null>(null);
@@ -13,8 +10,11 @@ export const Dynamic3DScene: React.FC = () => {
   const emptyObject = {};
 
   function show() {
-    if(inputRef && inputRef.current) {
-      const cleanJsonString = inputRef.current.value.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
+    if (inputRef && inputRef.current) {
+      const cleanJsonString = inputRef.current.value.replace(
+        /(['"])?([a-z0-9A-Z_]+)(['"])?:/g,
+        '"$2": '
+      );
       const cleanerJsonString = cleanJsonString.replace("'", '"');
       setSceneData(JSON.parse(cleanerJsonString));
     } else {
@@ -33,7 +33,7 @@ export const Dynamic3DScene: React.FC = () => {
       <textarea ref={inputRef}></textarea>
       <button onClick={show}>show</button>
       <button onClick={remove}>remove</button>
-      { showScene && sceneData ?
+      {showScene && sceneData ? (
         <Simple3DSceneComponent
           debug={boolean('DEBUG', false)}
           animation={select(
@@ -48,7 +48,7 @@ export const Dynamic3DScene: React.FC = () => {
           sceneSize={object('Size', 400)}
           toggleVisibility={emptyObject}
         />
-      : null }
+      ) : null}
     </div>
-  )
-}
+  );
+};

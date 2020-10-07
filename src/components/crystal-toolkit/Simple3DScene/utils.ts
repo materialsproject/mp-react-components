@@ -193,9 +193,9 @@ export function mapArrayToBooleanObject(array: any, value: boolean = true) {
  */
 export function mergeInnerArrays(arr: Array<any>): Array<any> {
   const result: any[] = [];
-  arr.forEach((p) => {
-    if(Array.isArray(p)) {
-      p.forEach((d) => result.push(d))
+  arr.forEach(p => {
+    if (Array.isArray(p)) {
+      p.forEach(d => result.push(d));
     } else {
       result.push(p);
     }

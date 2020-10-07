@@ -17,13 +17,10 @@ import { StandalonePeriodicComponent } from '~/components/periodic-table/periodi
 import { useElements } from '~/components/periodic-table/periodic-table-state/table-store';
 import { PeriodicContext } from '~/components/periodic-table/periodic-table-state/periodic-selection-context';
 import { TableLayout } from '~/components/periodic-table/periodic-table-component/periodic-table.component';
-import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
-import {
-  AnimationStyle,
-  Renderer
-} from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
-import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
-import { s2, s3, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
+import Simple3DSceneComponent from '~/components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
+import { AnimationStyle, Renderer } from '~/components/crystal-toolkit/Simple3DScene/constants';
+import { scene, scene2 } from '~/components/crystal-toolkit/scene/mike';
+import { s2, s3, s4 } from '~/components/crystal-toolkit/scene/simple-scene';
 // import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
