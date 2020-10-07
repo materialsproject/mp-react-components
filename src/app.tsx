@@ -41,6 +41,11 @@ import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchFilters } from './search-page/SearchFilters';
 import { MaterialsSearch } from './search-page/MaterialsSearch';
+import {
+  materialsColumns,
+  materialsGroups,
+  materialsValues
+} from './search-page/MaterialsSearchConstants';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -676,7 +681,11 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <MaterialsSearch />
+      <MaterialsSearch
+        columns={materialsColumns}
+        groups={materialsGroups}
+        values={materialsValues}
+      />
     </div>
   </>,
 

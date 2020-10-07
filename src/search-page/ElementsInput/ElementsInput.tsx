@@ -10,7 +10,6 @@ import {
 } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { useMaterialsSearch } from '../MaterialsSearchProvider';
 
 /**
  * Search types supported by this field
@@ -37,7 +36,6 @@ export interface ElementsInputProps {
  * and when elements are selected in the table, they are appended to the field's input
  */
 export const ElementsInput: React.FC<ElementsInputProps> = props => {
-  const { state, actions } = useMaterialsSearch();
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
   const dropdownItems = [

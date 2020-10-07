@@ -4,8 +4,7 @@ import { SelectableTable } from '../periodic-table/table-state';
 import { TableLayout } from '../periodic-table/periodic-table-component/periodic-table.component';
 import { ElementsInput } from './ElementsInput/ElementsInput';
 import {
-  FilterType,
-  useMaterialsSearch,
+  useMaterialsSearchContext,
   useMaterialsSearchContextActions
 } from './MaterialsSearchProvider';
 import { Button } from 'react-bulma-components';
@@ -14,13 +13,14 @@ import { DualRangeSlider } from './DualRangeSlider';
 import { AiFillCaretDown, AiFillCaretRight, AiOutlineEllipsis } from 'react-icons/ai';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
+import { FilterType } from './MaterialsSearchConstants';
 
 interface Props {
   className?: string;
 }
 
 export const SearchFilters: React.FC<Props> = props => {
-  const state = useMaterialsSearch();
+  const state = useMaterialsSearchContext();
   const actions = useMaterialsSearchContextActions();
   const [menuOpen, setMenuOpen] = useState(false);
 

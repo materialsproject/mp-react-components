@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { useMaterialsSearch, useMaterialsSearchContextActions } from './MaterialsSearchProvider';
+import {
+  useMaterialsSearchContext,
+  useMaterialsSearchContextActions
+} from './MaterialsSearchProvider';
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from './ActiveFilterButtons';
 
@@ -9,33 +12,8 @@ interface Props {
 
 export const MaterialsDataTable: React.FC<Props> = props => {
   // const { state, actions } = useMaterialsSearch();
-  const state = useMaterialsSearch();
+  const state = useMaterialsSearchContext();
   const actions = useMaterialsSearchContextActions();
-
-  const columns = [
-    {
-      name: 'Material Id',
-      selector: 'task_id',
-      sortable: true
-    },
-    {
-      name: 'Formula',
-      selector: 'formula_pretty',
-      sortable: true
-    },
-    {
-      name: 'Volume',
-      selector: 'volume',
-      sortable: true,
-      format: (row: any) => row.volume.toFixed(2)
-    },
-    {
-      name: 'Density',
-      selector: 'density',
-      sortable: true,
-      format: (row: any) => row.density.toFixed(2)
-    }
-  ];
 
   const handlePageChange = async (page: number) => {
     actions.setPage(page);
@@ -55,7 +33,7 @@ export const MaterialsDataTable: React.FC<Props> = props => {
           />
         }
         theme="material"
-        columns={columns}
+        columns={state.columns}
         data={state.results}
         selectableRows
         highlightOnHover

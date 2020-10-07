@@ -3,93 +3,20 @@ import axios from 'axios';
 import qs from 'qs';
 import { ElementsInputType } from './ElementsInput/ElementsInput';
 import { useDeepCompareDebounce } from '../utils/hooks';
+import { FilterType, FilterValues, SearchParam, SearchState } from './MaterialsSearchConstants';
 
-export enum FilterId {
-  ELEMENTS = 'elements',
-  VOLUME = 'volume',
-  DENSITY = 'density'
-}
+const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
+const MaterialsSearchContextActions = React.createContext<any | undefined>(undefined);
 
-export enum FilterType {
-  SLIDER,
-  ELEMENTS_INPUT
-}
-
-interface Filter {
-  name: string;
-  id: FilterId;
-  type: FilterType;
-  props?: any;
-}
-
-type FilterValues = Partial<Record<FilterId, any>>;
-
-interface SearchParam {
-  field: string;
-  value: any;
-}
-
-interface SearchState {
+interface Props {
+  columns: any[];
   groups: any[];
   values: FilterValues;
-  searchParams: SearchParam[];
-  activeFilters: any;
-  results: any[];
-  totalResults: number;
-  resultsPerPage: number;
-  page: number;
-  loading: boolean;
 }
 
 const initialState: SearchState = {
-  groups: [
-    {
-      name: 'Elements',
-      collapsed: false,
-      filters: [
-        {
-          name: 'Elements',
-          id: FilterId.ELEMENTS,
-          type: FilterType.ELEMENTS_INPUT,
-          hasParsedValue: true,
-          props: {
-            parsedValue: [],
-            type: ElementsInputType.ELEMENTS,
-            delimiter: ','
-          }
-        }
-      ]
-    },
-    {
-      name: 'General',
-      collapsed: false,
-      filters: [
-        {
-          name: 'Volume',
-          id: FilterId.VOLUME,
-          type: FilterType.SLIDER,
-          decimalPlaces: 2,
-          props: {
-            domain: [0, 200]
-          }
-        },
-        {
-          name: 'Density',
-          id: FilterId.DENSITY,
-          type: FilterType.SLIDER,
-          props: {
-            domain: [0, 200],
-            decimalPlaces: 2
-          }
-        }
-      ]
-    }
-  ],
-  values: {
-    volume: [0, 200],
-    density: [0, 200],
-    elements: ''
-  },
+  groups: [],
+  values: {},
   searchParams: [],
   activeFilters: [],
   results: [],
@@ -149,11 +76,15 @@ const getState = (currentState, values = { ...currentState.values }) => {
   return { ...currentState, values, searchParams, activeFilters };
 };
 
-const MaterialsSearchContext = React.createContext<any | undefined>(undefined);
-const MaterialsSearchContextActions = React.createContext<any | undefined>(undefined);
+const initState = (state, columns, groups, values) => {
+  state.columns = columns;
+  state.groups = groups;
+  state.values = values;
+  return getState(state);
+};
 
-export const MaterialsSearchProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState(() => getState(initialState));
+export const MaterialsSearchProvider: React.FC<Props> = ({ columns, groups, values, children }) => {
+  const [state, setState] = useState(() => initState(initialState, columns, groups, values));
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
     setPage: (value: number) => {
@@ -253,7 +184,7 @@ export const MaterialsSearchProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useMaterialsSearch = () => {
+export const useMaterialsSearchContext = () => {
   const context = React.useContext(MaterialsSearchContext);
   if (context === undefined) {
     throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
