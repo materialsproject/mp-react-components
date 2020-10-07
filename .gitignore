@@ -29,3 +29,5 @@ index.css
 index.css.map
 **/wip-components/**
 
+# Unused files used only for reference
+src/archive/

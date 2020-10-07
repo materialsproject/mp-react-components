@@ -11,12 +11,12 @@ import { Component, useState } from 'react';
 
 import * as ReactDOM from 'react-dom';
 import './styles.less';
-import { SelectableTable } from './periodic-table/table-state';
-import { TableFilter } from './periodic-table/periodic-filter/table-filter';
-import { StandalonePeriodicComponent } from './periodic-table/periodic-element/standalone-periodic-component';
-import { useElements } from './periodic-table/periodic-table-state/table-store';
-import { PeriodicContext } from './periodic-table/periodic-table-state/periodic-selection-context';
-import { TableLayout } from './periodic-table/periodic-table-component/periodic-table.component';
+import { SelectableTable } from '~/components/periodic-table/table-state';
+import { TableFilter } from '~/components/periodic-table/periodic-filter/table-filter';
+import { StandalonePeriodicComponent } from '~/components/periodic-table/periodic-element/standalone-periodic-component';
+import { useElements } from '~/components/periodic-table/periodic-table-state/table-store';
+import { PeriodicContext } from '~/components/periodic-table/periodic-table-state/periodic-selection-context';
+import { TableLayout } from '~/components/periodic-table/periodic-table-component/periodic-table.component';
 import Simple3DSceneComponent from './crystal-toolkit-components/components-v2/Simple3DScene/Simple3DSceneComponent.react';
 import {
   AnimationStyle,
@@ -24,28 +24,28 @@ import {
 } from './crystal-toolkit-components/components-v2/Simple3DScene/constants';
 import { scene, scene2 } from './crystal-toolkit-components/components-v2/scene/mike';
 import { s2, s3, s4 } from './crystal-toolkit-components/components-v2/scene/simple-scene';
-import ExportableGrid from './search-page/exportable-grid';
+// import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
 import katex from 'katex';
-import GridWithContext from './search-page/exportable-grid';
-import { Sidebar } from './navigation/sidebar';
-import MTGridWithContext, {
-  MtMaterialTable,
-  MtPrintViewContext
-} from './search-page/exportable-grid-v2';
-import { Scrollspy } from './navigation/Scrollspy';
+// import GridWithContext from './search-page/exportable-grid';
+// import { Sidebar } from './navigation/sidebar';
+// import MTGridWithContext, {
+//   MtMaterialTable,
+//   MtPrintViewContext
+// } from './search-page/exportable-grid-v2';
+import { Scrollspy } from '~/components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
-import { ElementsInput } from './search-page/ElementsInput/ElementsInput';
+import { ElementsInput } from '~/components/search/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { SearchFilters } from './search-page/SearchFilters';
-import { MaterialsSearch } from './search-page/MaterialsSearch';
+import { SearchUIFilters } from '~/components/search/SearchUI/SearchUIFilters';
+import { SearchUI } from '~/components/search/SearchUI';
 import {
   materialsColumns,
   materialsGroups,
   materialsValues
-} from './search-page/MaterialsSearchConstants';
+} from '~/components/search/SearchUI/constants';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -306,14 +306,14 @@ export default class MpPeriodicContextTable extends Component {
   }
 }
 
-function TestPV() {
-  return (
-    <MtPrintViewContext>
-      <MTGridWithContext onChange={p => console.log(p)} />
-      <MtMaterialTable data={dmr} />
-    </MtPrintViewContext>
-  );
-}
+// function TestPV() {
+//   return (
+//     <MtPrintViewContext>
+//       <MTGridWithContext onChange={p => console.log(p)} />
+//       <MtMaterialTable data={dmr} />
+//     </MtPrintViewContext>
+//   );
+// }
 
 const dmr = [
   {
@@ -681,11 +681,7 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <MaterialsSearch
-        columns={materialsColumns}
-        groups={materialsGroups}
-        values={materialsValues}
-      />
+      <SearchUI columns={materialsColumns} groups={materialsGroups} values={materialsValues} />
     </div>
   </>,
 

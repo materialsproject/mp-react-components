@@ -1,0 +1,1 @@
+export { SearchUIDataTable } from './SearchUIDataTable';

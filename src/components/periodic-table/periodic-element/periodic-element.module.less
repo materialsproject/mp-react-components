@@ -1,0 +1,147 @@
+@import '~/assets/mixins.less';
+@import '../table-variable.less';
+
+.mat-element {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  transition: all 100ms ease-in-out;
+  margin: 0;
+  border-radius: 2px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  position: relative;
+  .flex(column);
+  &.disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+
+  &.enabled {
+    filter: brightness(90%);
+    border: 3px solid rgba(0, 0, 0, 0.25);
+  }
+
+  &:hover {
+    transform: scale(1.075);
+    &:not(.enabled) {
+      filter: brightness(91%);
+    }
+  }
+
+  &.active {
+    background: #cbf3f0;
+  }
+
+  .mat-symbol {
+    .flex-container-sized();
+    .flex-centered-container(row);
+    .equal_width_height(100%);
+    font-size: 1.3em;
+    font-weight: 400;
+    position: absolute;
+  }
+  .element {
+    .flex-container-sized();
+  }
+  .mat-number {
+    font-size: 0.7em;
+    margin: 5px;
+  }
+}
+
+/* -------------------
+	Elements
+-------------------- */
+.element-metal {
+  background-color: darken(@metal, 8%);
+}
+.element-alkali-metal {
+  background-color: darken(@alkali-metal, 8%);
+}
+.element-alkali-earth-metal {
+  background-color: darken(@alkali-earth-metal, 8%);
+}
+.element-transition-metal {
+  background-color: darken(@transition-metal, 8%);
+}
+.element-lanthoid {
+  background-color: darken(@lanthoid, 8%);
+}
+.element-actinoid {
+  background-color: darken(@actinoid, 8%);
+}
+.element-metalloid {
+  background-color: darken(@metalloid, 8%);
+}
+.element-non-metal {
+  background-color: darken(@non-metal, 8%);
+}
+.element-halogen {
+  background-color: darken(@halogen, 8%);
+}
+.element-noble-gas {
+  background-color: darken(@noble-gas, 8%);
+}
+.element-lanthanoid-transitional-metal,
+.element-actinoid-transitional-metal {
+  .mat-symbol {
+    font-size: 0.8em;
+  }
+}
+.element-lanthanoid-transitional-metal {
+  background-color: darken(@lanthoid, 15%);
+}
+.element-actinoid-transitional-metal {
+  background-color: darken(@actinoid, 15%);
+}
+
+.compact.table-container {
+  .mat-number {
+    display: none;
+  }
+
+  .main-panel {
+    .mat-number {
+      font-size: 1em;
+      display: initial;
+    }
+    .mat-symbol {
+      font-size: 1.5rem;
+    }
+  }
+  .mat-symbol {
+    font-size: 1rem;
+  }
+  .mat-name,
+  .mat-weight {
+    font-size: 0.7rem;
+    font-weight: normal;
+  }
+  .mat-side-panel {
+    font-size: 0.4rem;
+  }
+}
+
+.small.table-container {
+  .mat-number,
+  .detailed,
+  .mat-name {
+    display: none;
+  }
+  .mat-symbol {
+    font-size: 0.7rem;
+  }
+}
+
+.map.table-container {
+  .mat-element {
+  }
+  .mat-number,
+  .detailed,
+  .mat-name,
+  .mat-symbol {
+    display: none;
+  }
+}
+.mat-group .main-panel .mat-symbol {
+  font-size: 2em;
+}

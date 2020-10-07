@@ -1,0 +1,115 @@
+@import '../table-variable.less';
+@import '~/assets/mixins.less';
+
+// 18 / 7 Periods
+.table-legend-container {
+  .flex(row);
+  .legend-container {
+    margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    .table-legend {
+      position: relative; // so children with position absolute are positioned in respect with this element
+      .flex(column);
+      flex-basis: 90%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      border: 1px solid black;
+      .table-legend-pointer {
+        transition: all 100ms;
+      }
+    }
+  }
+}
+
+.table-container {
+  display: grid;
+  &.spaced {
+    grid-template-columns: repeat(18, @element-width-spaced);
+    grid-template-rows: repeat(7, @element-height-spaced) @spacer-spaced repeat(
+        2,
+        @element-height-spaced
+      );
+    grid-gap: @grid-gap-spaced;
+  }
+  &.compact {
+    grid-template-columns: repeat(18, @element-width-compact);
+    grid-template-rows: repeat(7, @element-height-compact) @spacer-compact repeat(
+        2,
+        @element-height-compact
+      );
+    grid-gap: @grid-gap-compact;
+  }
+  &.small {
+    grid-template-columns: repeat(18, @element-width-small);
+    grid-template-rows: repeat(7, @element-height-small) @spacer-small repeat(
+        2,
+        @element-height-small
+      );
+    grid-gap: @grid-gap-small;
+  }
+  &.map {
+    grid-template-columns: repeat(18, @element-width-map);
+    grid-template-rows: repeat(7, @element-height-map) @spacer-small repeat(2, @element-height-map);
+    grid-gap: @grid-gap-map;
+  }
+
+  &.elements-hidden {
+    .mat-element {
+      opacity: 0;
+    }
+  }
+
+  .first-span {
+    grid-column: 2 / span 16;
+    grid-row: 1 / span 1;
+    .flex(row);
+    //TODO(chab) extract as its own component
+    .table-switcher {
+      width: 50px;
+      opacity: 0.5;
+      cursor: pointer;
+      background: url('~/assets/images/periodictable.png') center no-repeat;
+      background-size: contain;
+    }
+    .input-container {
+    }
+  }
+  .second-span {
+    grid-column: 3 / span 10;
+    grid-row: 2 / span 2;
+  }
+  .third-span {
+    grid-column: 13 / span 6;
+    grid-row: 7 / span 1;
+  }
+  .separator-span {
+    grid-column: 1 / span 18;
+    grid-row: 8 / span 1;
+  }
+  .first-lower-span {
+    grid-column: 1 / span 2;
+    grid-row: 9 / span 2;
+  }
+
+  .second-lower-span {
+    grid-column: 18 / span 1;
+    grid-row: 9 / span 2;
+  }
+  .item {
+    border: 1px solid transparent;
+  }
+
+  .element-description {
+    grid-column-start: 3;
+    grid-column-end: 5;
+    grid-row-end: 2;
+    grid-row-start: 4;
+    .flex(row);
+    .mat-element {
+      .flex-container-sized();
+      overflow: hidden;
+    }
+  }
+}
