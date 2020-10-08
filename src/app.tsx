@@ -671,10 +671,16 @@ const menuContent = [
 
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 const emptyObject = {};
+console.log(process.env.REACT_APP_API_KEY);
 ReactDOM.render(
   <>
     <div>
-      <SearchUI columns={materialsColumns} filterGroups={materialsGroups} />
+      <SearchUI
+        columns={materialsColumns}
+        filterGroups={materialsGroups}
+        baseURL="https://api.materialsproject.org/materials/"
+        apiKey={process.env.REACT_APP_API_KEY}
+      />
     </div>
   </>,
 

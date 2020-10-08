@@ -20,6 +20,8 @@ const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 interface Props {
   columns: Column[];
   filterGroups: FilterGroup[];
+  baseURL: string;
+  apiKey?: string;
 }
 
 const initialState: SearchState = {
@@ -106,7 +108,13 @@ const initState = (state: SearchState, columns: Column[], filterGroups: FilterGr
   return getState(state);
 };
 
-export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups, children }) => {
+export const SearchUIContextProvider: React.FC<Props> = ({
+  columns,
+  filterGroups,
+  baseURL,
+  apiKey,
+  children
+}) => {
   const [state, setState] = useState(() => initState(initialState, columns, filterGroups));
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
@@ -151,14 +159,16 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups
         params.limit = currentState.resultsPerPage;
         params.skip = (currentState.page - 1) * currentState.resultsPerPage;
         axios
-          .get('https://api.materialsproject.org/materials/', {
+          .get(baseURL, {
             params: params,
             paramsSerializer: p => {
               return qs.stringify(p, { arrayFormat: 'comma' });
             },
-            headers: {
-              'X-Api-Key': 'a2lgLZnE18AdXlJ0mO3yIzcqmcCV8U5J'
-            }
+            headers: apiKey
+              ? {
+                  'X-Api-Key': apiKey
+                }
+              : null
           })
           .then(result => {
             console.log(result);
