@@ -10,13 +10,12 @@ const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 interface Props {
   columns: any[];
-  groups: any[];
-  values: FilterValues;
+  filterGroups: any[];
 }
 
 const initialState: SearchState = {
-  groups: [],
-  values: {},
+  filterGroups: [],
+  filterValues: {},
   searchParams: [],
   activeFilters: [],
   results: [],
@@ -26,31 +25,36 @@ const initialState: SearchState = {
   loading: false
 };
 
-const getState = (currentState, values = { ...currentState.values }) => {
+const getState = (currentState, filterValues = { ...currentState.filterValues }) => {
   const searchParams: SearchParam[] = [];
   const activeFilters: any[] = [];
-  currentState.groups.forEach(g => {
+  currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
       switch (f.type) {
         case FilterType.SLIDER:
-          if (values[f.id][0] !== f.props.domain[0] || values[f.id][1] !== f.props.domain[1]) {
+          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
+          if (
+            filterValues[f.id][0] !== f.props.domain[0] ||
+            filterValues[f.id][1] !== f.props.domain[1]
+          ) {
             activeFilters.push({
               id: f.id,
-              value: values[f.id],
+              value: filterValues[f.id],
               defaultValue: f.props.domain
             });
             searchParams.push({
               field: f.id + '_min',
-              value: values[f.id][0]
+              value: filterValues[f.id][0]
             });
             searchParams.push({
               field: f.id + '_max',
-              value: values[f.id][1]
+              value: filterValues[f.id][1]
             });
           }
           break;
         case FilterType.ELEMENTS_INPUT:
-          if (values[f.id] !== '') {
+          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = '';
+          if (filterValues[f.id] !== '') {
             activeFilters.push({
               id: f.id,
               displayName: f.props.type,
@@ -64,27 +68,27 @@ const getState = (currentState, values = { ...currentState.values }) => {
           }
           break;
         default:
-          if (values[f.id]) {
+          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
+          if (filterValues[f.id]) {
             searchParams.push({
               field: f.id,
-              value: values[f.id]
+              value: filterValues[f.id]
             });
           }
       }
     });
   });
-  return { ...currentState, values, searchParams, activeFilters };
+  return { ...currentState, filterValues, searchParams, activeFilters };
 };
 
-const initState = (state, columns, groups, values) => {
+const initState = (state, columns, filterGroups) => {
   state.columns = columns;
-  state.groups = groups;
-  state.values = values;
+  state.filterGroups = filterGroups;
   return getState(state);
 };
 
-export const SearchUIContextProvider: React.FC<Props> = ({ columns, groups, values, children }) => {
-  const [state, setState] = useState(() => initState(initialState, columns, groups, values));
+export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups, children }) => {
+  const [state, setState] = useState(() => initState(initialState, columns, filterGroups));
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
     setPage: (value: number) => {
@@ -95,26 +99,26 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, groups, valu
     },
     setFilterValue: (value: any, id: string) => {
       setState((currentState: SearchState) =>
-        getState(currentState, { ...currentState.values, [id]: value })
+        getState(currentState, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterProps: (props: Object, filterId: string, groupId: string) => {
-      const groups = state.groups;
-      const group = groups.find(g => g.name === groupId);
+      const filterGroups = state.filterGroups;
+      const group = filterGroups.find(g => g.name === groupId);
       const filter = group.filters.find(f => f.id === filterId);
       if (filter) filter.props = { ...filter.props, ...props };
-      const stateWithNewFilterProps = { ...state, groups: groups };
+      const stateWithNewFilterProps = { ...state, filterGroups: filterGroups };
       const newState =
-        filter && filter.hasParsedValue
+        filter && filter.props.hasOwnProperty('parsedValue')
           ? getState(stateWithNewFilterProps)
           : stateWithNewFilterProps;
       setState({ ...newState });
     },
     toggleGroup: (groupId: string) => {
-      const groups = state.groups;
-      const group = groups.find(g => g.name === groupId);
+      const filterGroups = state.filterGroups;
+      const group = filterGroups.find(g => g.name === groupId);
       group.collapsed = !group.collapsed;
-      setState({ ...state, groups: groups });
+      setState({ ...state, filterGroups: filterGroups });
     },
     getData: () => {
       setState((currentState: SearchState) => {
@@ -214,7 +218,7 @@ export const useSearchUIContextActions = () => {
 // const reducer = (state: SearchState, action: Action) => {
 //   switch (action.type) {
 //     case ActionType.SET_FILTER_VALUE:
-//       return { ...state, values: { ...state.values, [action.payload.id]: action.payload.value } };
+//       return { ...state, filterValues: { ...state.filterValues, [action.payload.id]: action.payload.value } };
 //     default:
 //       return state;
 //   }

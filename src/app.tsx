@@ -678,7 +678,7 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div>
-      <SearchUI columns={materialsColumns} groups={materialsGroups} values={materialsValues} />
+      <SearchUI columns={materialsColumns} filterGroups={materialsGroups} />
     </div>
   </>,
 

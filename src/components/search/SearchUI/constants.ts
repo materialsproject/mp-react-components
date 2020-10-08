@@ -7,8 +7,8 @@ export enum FilterId {
 }
 
 export enum FilterType {
-  SLIDER,
-  ELEMENTS_INPUT
+  SLIDER = 'SLIDER',
+  ELEMENTS_INPUT = 'ELEMENTS_INPUT'
 }
 
 interface Filter {
@@ -16,6 +16,12 @@ interface Filter {
   id: FilterId;
   type: FilterType;
   props?: any;
+}
+
+interface FilterGroup {
+  name: string;
+  collapsed: boolean;
+  filters: Filter[];
 }
 
 export type FilterValues = Partial<Record<FilterId, any>>;
@@ -26,8 +32,8 @@ export interface SearchParam {
 }
 
 export interface SearchState {
-  groups: any[];
-  values: FilterValues;
+  filterGroups: FilterGroup[];
+  filterValues: FilterValues;
   searchParams: SearchParam[];
   activeFilters: any;
   results: any[];
@@ -37,7 +43,7 @@ export interface SearchState {
   loading: boolean;
 }
 
-export const materialsGroups = [
+export const materialsGroups: FilterGroup[] = [
   {
     name: 'Elements',
     collapsed: false,
@@ -46,7 +52,6 @@ export const materialsGroups = [
         name: 'Elements',
         id: FilterId.ELEMENTS,
         type: FilterType.ELEMENTS_INPUT,
-        hasParsedValue: true,
         props: {
           parsedValue: [],
           type: ElementsInputType.ELEMENTS,
@@ -63,7 +68,6 @@ export const materialsGroups = [
         name: 'Volume',
         id: FilterId.VOLUME,
         type: FilterType.SLIDER,
-        decimalPlaces: 2,
         props: {
           domain: [0, 200]
         }

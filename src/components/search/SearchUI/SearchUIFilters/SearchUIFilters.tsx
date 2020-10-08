@@ -25,7 +25,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
           <PeriodicContext>
             <ElementsInput
               {...f.props}
-              value={state.values[f.id]}
+              value={state.filterValues[f.id]}
               onChange={v => actions.setFilterValue(v, f.id)}
               onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
             />
@@ -47,7 +47,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
             <p className="mb-2">{f.name}</p>
             <DualRangeSlider
               {...f.props}
-              values={state.values[f.id]}
+              values={state.filterValues[f.id]}
               onChange={v => actions.setFilterValue(v, f.id)}
             />
           </div>
@@ -71,7 +71,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
             </Dropdown>
           </div>
         </div>
-        {state.groups.map((g, i) => (
+        {state.filterGroups.map((g, i) => (
           <div className="panel-block" style={{ padding: '1em' }} key={i}>
             <div className="control">
               <div className="is-clickable" onClick={() => actions.toggleGroup(g.name)}>

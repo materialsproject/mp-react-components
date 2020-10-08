@@ -6,14 +6,13 @@ import { FilterValues } from './constants';
 
 interface Props {
   columns: any[];
-  groups: any[];
-  values: FilterValues;
+  filterGroups: any[];
 }
 
-export const SearchUI: React.FC<Props> = ({ columns, groups, values }) => {
+export const SearchUI: React.FC<Props> = ({ columns, filterGroups }) => {
   return (
     <div className="columns" style={{ padding: '15px' }}>
-      <SearchUIContextProvider columns={columns} groups={groups} values={values}>
+      <SearchUIContextProvider columns={columns} filterGroups={filterGroups}>
         <SearchUIFilters className="column is-narrow" />
         <SearchUIDataTable className="column" />
       </SearchUIContextProvider>
