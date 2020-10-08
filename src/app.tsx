@@ -38,11 +38,7 @@ import { ElementsInput } from '~/components/search/ElementsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchUIFilters } from '~/components/search/SearchUI/SearchUIFilters';
 import { SearchUI } from '~/components/search/SearchUI';
-import {
-  materialsColumns,
-  materialsGroups,
-  materialsValues
-} from '~/components/search/SearchUI/constants';
+import { materialsColumns, materialsGroups } from '~/components/search/SearchUI/constants';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;

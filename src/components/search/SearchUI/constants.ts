@@ -11,37 +11,67 @@ export enum FilterType {
   ELEMENTS_INPUT = 'ELEMENTS_INPUT'
 }
 
-interface Filter {
+export interface Filter {
   name: string;
   id: FilterId;
   type: FilterType;
   props?: any;
 }
 
-interface FilterGroup {
+export interface FilterGroup {
   name: string;
   collapsed: boolean;
   filters: Filter[];
 }
-
-export type FilterValues = Partial<Record<FilterId, any>>;
 
 export interface SearchParam {
   field: string;
   value: any;
 }
 
+export interface ActiveFilter {
+  id: string;
+  displayName?: string;
+  value: any;
+  defaultValue: any;
+  searchParams?: SearchParam[];
+}
+
+export type FilterValues = Partial<Record<FilterId, any>>;
+
+export interface Column {
+  name: string;
+  selector: string;
+  [id: string]: any;
+}
+
 export interface SearchState {
+  columns: Column[];
   filterGroups: FilterGroup[];
   filterValues: FilterValues;
-  searchParams: SearchParam[];
-  activeFilters: any;
+  activeFilters: ActiveFilter[];
   results: any[];
   totalResults: number;
   resultsPerPage: number;
   page: number;
   loading: boolean;
 }
+
+enum ColumnFormat {
+  TWO_DECIMALS = 'TWO_DECIMALS'
+}
+
+export const initColumns = (columns: Column[]) => {
+  return columns.map(c => {
+    switch (c.format) {
+      case ColumnFormat.TWO_DECIMALS:
+        c.format = (row: any) => row[c.selector].toFixed(2);
+        return c;
+      default:
+        return c;
+    }
+  });
+};
 
 export const materialsGroups: FilterGroup[] = [
   {
@@ -77,21 +107,14 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.DENSITY,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 200],
-          decimalPlaces: 2
+          domain: [0, 200]
         }
       }
     ]
   }
 ];
 
-export const materialsValues = {
-  volume: [0, 200],
-  density: [0, 200],
-  elements: ''
-};
-
-export const materialsColumns = [
+export const materialsColumns: Column[] = [
   {
     name: 'Material Id',
     selector: 'task_id',
@@ -100,18 +123,19 @@ export const materialsColumns = [
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    sortable: true
+    sortable: true,
+    format: 'test'
   },
   {
     name: 'Volume',
     selector: 'volume',
     sortable: true,
-    format: (row: any) => row.volume.toFixed(2)
+    format: ColumnFormat.TWO_DECIMALS
   },
   {
     name: 'Density',
     selector: 'density',
     sortable: true,
-    format: (row: any) => row.density.toFixed(2)
+    format: ColumnFormat.TWO_DECIMALS
   }
 ];

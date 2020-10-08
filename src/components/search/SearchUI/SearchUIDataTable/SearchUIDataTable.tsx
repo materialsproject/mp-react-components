@@ -8,15 +8,14 @@ interface Props {
 }
 
 export const SearchUIDataTable: React.FC<Props> = props => {
-  // const { state, actions } = useMaterialsSearch();
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
 
-  const handlePageChange = async (page: number) => {
+  const handlePageChange = (page: number) => {
     actions.setPage(page);
   };
 
-  const handlePerRowsChange = async (perPage: number) => {
+  const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
   };
 

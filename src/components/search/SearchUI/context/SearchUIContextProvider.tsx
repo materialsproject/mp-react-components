@@ -3,20 +3,29 @@ import axios from 'axios';
 import qs from 'qs';
 import { ElementsInputType } from '~/components/search/ElementsInput';
 import { useDeepCompareDebounce } from '~/utils/hooks';
-import { FilterType, FilterValues, SearchParam, SearchState } from '../constants';
+import {
+  FilterGroup,
+  FilterType,
+  FilterValues,
+  ActiveFilter,
+  SearchState,
+  SearchParam,
+  Column,
+  initColumns
+} from '../constants';
 
 const SearchUIContext = React.createContext<any | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 interface Props {
-  columns: any[];
-  filterGroups: any[];
+  columns: Column[];
+  filterGroups: FilterGroup[];
 }
 
 const initialState: SearchState = {
+  columns: [],
   filterGroups: [],
   filterValues: {},
-  searchParams: [],
   activeFilters: [],
   results: [],
   totalResults: 0,
@@ -25,9 +34,8 @@ const initialState: SearchState = {
   loading: false
 };
 
-const getState = (currentState, filterValues = { ...currentState.filterValues }) => {
-  const searchParams: SearchParam[] = [];
-  const activeFilters: any[] = [];
+const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }) => {
+  const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
       switch (f.type) {
@@ -40,15 +48,17 @@ const getState = (currentState, filterValues = { ...currentState.filterValues })
             activeFilters.push({
               id: f.id,
               value: filterValues[f.id],
-              defaultValue: f.props.domain
-            });
-            searchParams.push({
-              field: f.id + '_min',
-              value: filterValues[f.id][0]
-            });
-            searchParams.push({
-              field: f.id + '_max',
-              value: filterValues[f.id][1]
+              defaultValue: f.props.domain,
+              searchParams: [
+                {
+                  field: f.id + '_min',
+                  value: filterValues[f.id][0]
+                },
+                {
+                  field: f.id + '_max',
+                  value: filterValues[f.id][1]
+                }
+              ]
             });
           }
           break;
@@ -59,30 +69,39 @@ const getState = (currentState, filterValues = { ...currentState.filterValues })
               id: f.id,
               displayName: f.props.type,
               value: f.props.parsedValue,
-              defaultValue: ''
-            });
-            searchParams.push({
-              field: f.props.type,
-              value: f.props.parsedValue
+              defaultValue: '',
+              searchParams: [
+                {
+                  field: f.props.type,
+                  value: f.props.parsedValue
+                }
+              ]
             });
           }
           break;
         default:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
           if (filterValues[f.id]) {
-            searchParams.push({
-              field: f.id,
-              value: filterValues[f.id]
+            activeFilters.push({
+              id: f.id,
+              value: filterValues[f.id],
+              defaultValue: '',
+              searchParams: [
+                {
+                  field: f.id,
+                  value: filterValues[f.id]
+                }
+              ]
             });
           }
       }
     });
   });
-  return { ...currentState, filterValues, searchParams, activeFilters };
+  return { ...currentState, filterValues, activeFilters };
 };
 
-const initState = (state, columns, filterGroups) => {
-  state.columns = columns;
+const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]) => {
+  state.columns = initColumns(columns);
   state.filterGroups = filterGroups;
   return getState(state);
 };
@@ -92,20 +111,20 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
   const actions = {
     setPage: (value: number) => {
-      setState((currentState: SearchState) => ({ ...currentState, page: value }));
+      setState(currentState => ({ ...currentState, page: value }));
     },
     setResultsPerPage: (value: number) => {
-      setState((currentState: SearchState) => ({ ...currentState, resultsPerPage: value }));
+      setState(currentState => ({ ...currentState, resultsPerPage: value }));
     },
     setFilterValue: (value: any, id: string) => {
-      setState((currentState: SearchState) =>
+      setState(currentState =>
         getState(currentState, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterProps: (props: Object, filterId: string, groupId: string) => {
       const filterGroups = state.filterGroups;
       const group = filterGroups.find(g => g.name === groupId);
-      const filter = group.filters.find(f => f.id === filterId);
+      const filter = group?.filters.find(f => f.id === filterId);
       if (filter) filter.props = { ...filter.props, ...props };
       const stateWithNewFilterProps = { ...state, filterGroups: filterGroups };
       const newState =
@@ -117,16 +136,18 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups
     toggleGroup: (groupId: string) => {
       const filterGroups = state.filterGroups;
       const group = filterGroups.find(g => g.name === groupId);
-      group.collapsed = !group.collapsed;
+      if (group) group.collapsed = !group.collapsed;
       setState({ ...state, filterGroups: filterGroups });
     },
     getData: () => {
-      setState((currentState: SearchState) => {
+      setState(currentState => {
         let params: any = {};
-        currentState.searchParams.forEach((d, i) => {
-          params[d.field] = d.value;
+        currentState.activeFilters.forEach(a => {
+          a.searchParams?.forEach(s => {
+            params[s.field] = s.value;
+          });
         });
-        params.fields = ['task_id', 'formula_pretty', 'volume', 'density'];
+        params.fields = currentState.columns.map(d => d.selector);
         params.limit = currentState.resultsPerPage;
         params.skip = (currentState.page - 1) * currentState.resultsPerPage;
         axios
@@ -152,7 +173,7 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups
           })
           .catch(error => {
             console.log(error);
-            setState((currentState: SearchState) => {
+            setState(currentState => {
               return {
                 ...currentState,
                 results: [],
@@ -167,11 +188,20 @@ export const SearchUIContextProvider: React.FC<Props> = ({ columns, filterGroups
         };
       });
     },
-    logFilters: () => {
-      console.log(state.searchParams);
-    },
-    reset: () => {
-      setState(initialState);
+    resetFilters: () => {
+      setState(currentState => {
+        const filterValues = currentState.filterValues;
+        let activeFilters = currentState.activeFilters;
+        activeFilters.forEach(a => {
+          filterValues[a.id] = a.defaultValue;
+        });
+        activeFilters = [];
+        return {
+          ...currentState,
+          filterValues,
+          activeFilters
+        };
+      });
     }
   };
 

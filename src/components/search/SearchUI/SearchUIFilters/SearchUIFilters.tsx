@@ -22,24 +22,26 @@ export const SearchUIFilters: React.FC<Props> = props => {
     switch (f.type) {
       case FilterType.ELEMENTS_INPUT:
         return (
-          <PeriodicContext>
-            <ElementsInput
-              {...f.props}
-              value={state.filterValues[f.id]}
-              onChange={v => actions.setFilterValue(v, f.id)}
-              onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
-            />
-            <SelectableTable
-              maxElementSelectable={20}
-              forceTableLayout={TableLayout.MINI}
-              hiddenElements={[]}
-              onStateChange={enabledElements => {
-                Object.keys(enabledElements).filter(el => enabledElements[el]);
-              }}
-              enabledElements={[]}
-              disabledElements={['H', 'C']}
-            />
-          </PeriodicContext>
+          <div style={{}}>
+            <PeriodicContext>
+              <ElementsInput
+                {...f.props}
+                value={state.filterValues[f.id]}
+                onChange={v => actions.setFilterValue(v, f.id)}
+                onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
+              />
+              <SelectableTable
+                maxElementSelectable={20}
+                forceTableLayout={TableLayout.MINI}
+                hiddenElements={[]}
+                onStateChange={enabledElements => {
+                  Object.keys(enabledElements).filter(el => enabledElements[el]);
+                }}
+                enabledElements={[]}
+                disabledElements={['H', 'C']}
+              />
+            </PeriodicContext>
+          </div>
         );
       case FilterType.SLIDER:
         return (
@@ -66,7 +68,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
             <span>Filters</span>
             <Dropdown className="mp-dropdown" value="" label={<FaEllipsisV />} right={true}>
               <Dropdown.Item value="reset">
-                <p onClick={e => actions.reset()}>Reset filters</p>
+                <p onClick={e => actions.resetFilters()}>Reset filters</p>
               </Dropdown.Item>
             </Dropdown>
           </div>
@@ -74,7 +76,11 @@ export const SearchUIFilters: React.FC<Props> = props => {
         {state.filterGroups.map((g, i) => (
           <div className="panel-block" style={{ padding: '1em' }} key={i}>
             <div className="control">
-              <div className="is-clickable" onClick={() => actions.toggleGroup(g.name)}>
+              <div
+                className="is-clickable"
+                style={{ minWidth: '484px' }}
+                onClick={() => actions.toggleGroup(g.name)}
+              >
                 <span className="title is-5">{g.name}</span>
                 <div className="is-pulled-right">
                   {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
