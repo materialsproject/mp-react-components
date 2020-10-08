@@ -671,7 +671,6 @@ const menuContent = [
 
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
 const emptyObject = {};
-console.log(process.env.REACT_APP_API_KEY);
 ReactDOM.render(
   <>
     <div>
