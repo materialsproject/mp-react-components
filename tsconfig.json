@@ -16,7 +16,7 @@
     "types": ["jest"],
     "baseUrl": "src",
     "paths": {
-      "~*": ["./*"]
+      "~/*": ["./*"]
     }
   },
   "awesomeTypescriptLoaderOptions": {
