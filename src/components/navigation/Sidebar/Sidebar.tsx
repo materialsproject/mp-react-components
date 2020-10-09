@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../assets/styles.css';
-import './sidebar.less';
+import './Sidebar.less';
 import ReactTooltip from 'react-tooltip';
 import { AiOutlineFund, AiOutlineSetting } from 'react-icons/ai';
 
