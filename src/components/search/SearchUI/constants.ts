@@ -1,4 +1,4 @@
-import { ElementsInputType } from '~/components/search/ElementsInput';
+import { ElementsInputType } from '../../search/ElementsInput';
 
 export enum FilterId {
   ELEMENTS = 'elements',

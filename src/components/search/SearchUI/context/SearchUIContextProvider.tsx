@@ -1,8 +1,8 @@
 import React, { useReducer, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { ElementsInputType } from '~/components/search/ElementsInput';
-import { useDeepCompareDebounce } from '~/utils/hooks';
+import { ElementsInputType } from '../../../search/ElementsInput';
+import { useDeepCompareDebounce } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,

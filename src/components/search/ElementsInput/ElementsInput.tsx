@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useElements } from '~/components/periodic-table/periodic-table-state/table-store';
-import { TABLE_DICO_V2 } from '~/components/periodic-table/periodic-table-data/table-v2';
+import { useElements } from '../../periodic-table/periodic-table-state/table-store';
+import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
 import {
   getDelimiter,
   elementsArrayToElementState,
   formulaStringToArrays,
   getTruthyKeys,
   arrayToDelimitedString
-} from '~/components/search/utils';
+} from '../../search/utils';
 import { Dropdown, Form } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 

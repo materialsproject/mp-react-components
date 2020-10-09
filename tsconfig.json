@@ -13,11 +13,7 @@
     "jsx": "react",
     "lib": ["es5", "es6", "dom"],
     "strictNullChecks": true,
-    "types": ["jest"],
-    "baseUrl": "src",
-    "paths": {
-      "~/*": ["./*"]
-    }
+    "types": ["jest"]
   },
   "awesomeTypescriptLoaderOptions": {
     // see https://github.com/storybookjs/storybook/issues/7829

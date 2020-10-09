@@ -4,15 +4,15 @@ import {
   s2,
   s2 as sceneJson,
   shperes as sceneJson2
-} from '.~/components/crystal-toolkit/scene/simple-scene';
-import JSONViewComponent from '.~/components/crystal-toolkit/JSONViewComponent.react';
-import Simple3DSceneComponent from '.~/components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
-import ReactGraphComponent from '.~/components/crystal-toolkit/graph.component';
-import { CameraContextWrapper } from '.~/components/crystal-toolkit/Simple3DScene/camera-context';
-import { ScenePosition } from '.~/components/crystal-toolkit/scene/inset-helper';
-import { AnimationStyle, Renderer } from '.~/components/crystal-toolkit/Simple3DScene/constants';
+} from '../components/crystal-toolkit/scene/simple-scene';
+import JSONViewComponent from '../components/crystal-toolkit/JSONViewComponent.react';
+import Simple3DSceneComponent from '../components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
+import ReactGraphComponent from '../components/crystal-toolkit/graph.component';
+import { CameraContextWrapper } from '../components/crystal-toolkit/Simple3DScene/camera-context';
+import { ScenePosition } from '../components/crystal-toolkit/scene/inset-helper';
+import { AnimationStyle, Renderer } from '../components/crystal-toolkit/Simple3DScene/constants';
 import { DEFAULT_OPTIONS, GRAPH } from './constants';
-import { bezierScene } from '.~/components/crystal-toolkit/Simple3DScene/bezier-scene';
+import { bezierScene } from '../components/crystal-toolkit/Simple3DScene/bezier-scene';
 
 const emptyObject = {};
 export const scene3d = () => (

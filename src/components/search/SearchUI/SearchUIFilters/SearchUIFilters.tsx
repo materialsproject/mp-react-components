@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { PeriodicContext } from '~/components/periodic-table/periodic-table-state/periodic-selection-context';
-import { SelectableTable } from '~/components/periodic-table/table-state';
-import { TableLayout } from '~/components/periodic-table/periodic-table-component/periodic-table.component';
-import { ElementsInput } from '~/components/search/ElementsInput';
+import { PeriodicContext } from '../../../periodic-table/periodic-table-state/periodic-selection-context';
+import { SelectableTable } from '../../../periodic-table/table-state';
+import { TableLayout } from '../../../periodic-table/periodic-table-component/periodic-table.component';
+import { ElementsInput } from '../../../search/ElementsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../context/SearchUIContextProvider';
-import { DualRangeSlider } from '~/components/search/DualRangeSlider';
+import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
 import { FilterType } from '../constants';

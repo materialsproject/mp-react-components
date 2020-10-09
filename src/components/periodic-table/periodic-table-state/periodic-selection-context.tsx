@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getPeriodicSelectionStore, PeriodicSelectionContext } from './table-store';
 import { useMemo, useEffect, useRef } from 'react';
-import { arrayToDictionnary } from '~/utils/utils';
+import { arrayToDictionnary } from '../../../utils/utils';
 
 export function PeriodicContext(props: any) {
   const store = useMemo(() => getPeriodicSelectionStore(), []);

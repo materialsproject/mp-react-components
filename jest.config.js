@@ -7,9 +7,6 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!(three)/)'], // force JEST to process this module
   modulePaths: ['<rootDir>'],
   moduleDirectories: ['node_modules', '<rootDir>'],
-  moduleNameMapper: {
-    '~/(.*)': '<rootDir>/src/$1'
-  },
   coverageReporters: ['json', 'html'],
   setupFiles: ['./src/jest-setup.ts'],
   globals: {

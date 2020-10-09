@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../context/SearchUIContextProvider';
 import DataTable from 'react-data-table-component';
-import { ActiveFilterButtons } from '~/components/search/ActiveFilterButtons';
+import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 
 interface Props {
   className?: string;

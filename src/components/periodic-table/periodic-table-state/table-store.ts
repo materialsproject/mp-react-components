@@ -8,7 +8,7 @@ import {
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
-import { mapArrayToBooleanObject } from '~/components/crystal-toolkit/Simple3DScene/utils';
+import { mapArrayToBooleanObject } from '../../../components/crystal-toolkit/Simple3DScene/utils';
 
 // TODO(chab) break that store into multiple pieces
 // 1) what is used for rendering, via RXJS
