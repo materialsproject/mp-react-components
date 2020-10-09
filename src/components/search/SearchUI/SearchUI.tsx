@@ -4,6 +4,10 @@ import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { FilterValues } from './constants';
 
+/**
+ * Component for rendering advanced search interfaces for data in an API
+ * Renders results in a data table alongside a set of filters that map to properties in the data.
+ */
 interface Props {
   columns: any[];
   filterGroups: any[];
