@@ -58,14 +58,20 @@ export interface SearchState {
 }
 
 enum ColumnFormat {
-  TWO_DECIMALS = 'TWO_DECIMALS'
+  FIXED_DECIMAL = 'FIXED_DECIMAL',
+  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES'
 }
 
 export const initColumns = (columns: Column[]) => {
   return columns.map(c => {
     switch (c.format) {
-      case ColumnFormat.TWO_DECIMALS:
-        c.format = (row: any) => row[c.selector].toFixed(2);
+      case ColumnFormat.FIXED_DECIMAL:
+        const decimalPlaces = c.formatArg ? c.formatArg : 2;
+        c.format = (row: any) => row[c.selector].toFixed(decimalPlaces);
+        return c;
+      case ColumnFormat.SIGNIFICANT_FIGURES:
+        const sigFigs = c.formatArg ? c.formatArg : 5;
+        c.format = (row: any) => row[c.selector].toPrecision(sigFigs);
         return c;
       default:
         return c;
@@ -130,12 +136,14 @@ export const materialsColumns: Column[] = [
     name: 'Volume',
     selector: 'volume',
     sortable: true,
-    format: ColumnFormat.TWO_DECIMALS
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 3
   },
   {
     name: 'Density',
     selector: 'density',
     sortable: true,
-    format: ColumnFormat.TWO_DECIMALS
+    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    formatArg: 4
   }
 ];
