@@ -20,7 +20,7 @@ export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = un
   return (
     <div style={{ height: 50, width: '100%' }}>
       <Slider
-        mode={1}
+        mode={3}
         step={1}
         domain={domain}
         reversed={reversed}
@@ -31,13 +31,14 @@ export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = un
       >
         <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
         <Handles>
-          {({ handles, getHandleProps }) => (
+          {({ handles, activeHandleID, getHandleProps }) => (
             <div className="slider-handles">
               {handles.map(handle => (
                 <Handle
                   key={handle.id}
                   handle={handle}
                   domain={domain}
+                  isActive={handle.id === activeHandleID}
                   getHandleProps={getHandleProps}
                 />
               ))}
