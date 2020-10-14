@@ -84,7 +84,7 @@ export const initColumns = (columns: Column[]) => {
 
 export const materialsGroups: FilterGroup[] = [
   {
-    name: 'Elements',
+    name: 'Material',
     collapsed: false,
     filters: [
       {

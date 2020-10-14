@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useElements } from '../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
 import {
@@ -29,10 +29,13 @@ export interface MaterialsInputBoxProps {
   value: string;
   parsedValue: string | string[];
   field: string;
+  liftInputRef: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onParsedValueChange: (value: string | string[]) => void;
   onFieldChange?: (value: string) => void;
   onSubmit?: (value?: any) => any;
+  onFocus?: (value?: any) => any;
+  onBlur?: (value?: any) => any;
 }
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
@@ -46,9 +49,32 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
  * and when elements are selected in the table, they are appended to the field's input
  */
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
+  const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
+  const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' ? true : false
   );
+
+  const getOnFocusProp = () => {
+    if (props.periodicTableMode === 'onFocus') {
+      return setShowPeriodicTable(true);
+    } else {
+      return;
+    }
+  };
+
+  const getOnBlurProp = () => {
+    if (props.periodicTableMode === 'onFocus' && !periodicTableClicked) {
+      return setShowPeriodicTable(false);
+    } else {
+      return;
+    }
+  };
+
+  const showTable = () => {
+    setShowPeriodicTable(true);
+  };
+
   return (
     <div className="has-text-centered">
       <PeriodicContext>
@@ -61,6 +87,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             onParsedValueChange={props.onParsedValueChange}
             onFieldChange={props.onFieldChange}
             onSubmit={props.onSubmit}
+            onFocus={getOnFocusProp}
+            onBlur={getOnBlurProp}
+            liftInputRef={ref => setInputRef(ref)}
           />
         </div>
         {props.periodicTableMode === 'toggle' && (
@@ -71,7 +100,17 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             {showPeriodicTable ? 'Hide' : 'Show'} Periodic Table
           </button>
         )}
-        <div className={`${showPeriodicTable ? '' : 'is-hidden'}`}>
+        <div
+          className={`${showPeriodicTable ? '' : 'is-hidden'}`}
+          onMouseDown={event => {
+            console.log('clicking pt');
+            setPeriodicTableClicked(true);
+            setTimeout(() => {
+              if (inputRef && inputRef.current) inputRef.current.focus();
+              setPeriodicTableClicked(false);
+            }, 250);
+          }}
+        >
           <SelectableTable
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}

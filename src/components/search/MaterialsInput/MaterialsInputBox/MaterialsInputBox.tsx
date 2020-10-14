@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useElements } from '../../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../../periodic-table/periodic-table-data/table-v2';
 import {
@@ -22,6 +22,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
   const [delimiter, setDelimiter] = useState(',');
+  const inputRef = useRef<HTMLInputElement>(null);
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
     { label: 'By formula', value: MaterialsInputField.FORMULA },
@@ -32,16 +33,24 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    * Handle updating the context with the new raw input value
    * All side effects to this change are handled in an effect hook
    */
-  const onRawValueChange = event => {
+  const handleRawValueChange = event => {
     props.onChange(event.target.value);
   };
 
-  const onSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
     if (props.onSubmit) {
       props.onSubmit();
     }
+  };
+
+  const handleFocus = () => {
+    if (props.onFocus) props.onFocus();
+  };
+
+  const handleBlur = event => {
+    if (props.onBlur) props.onBlur();
   };
 
   /**
@@ -146,15 +155,21 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     props.onParsedValueChange(newParsedValue);
   }, [props.value]);
 
+  useEffect(() => {
+    props.liftInputRef(inputRef);
+  }, []);
+
   const inputControl = (
     <Control className="is-expanded">
-      <Input
+      <input
+        className="input"
         type="search"
         value={props.value}
-        onChange={onRawValueChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onChange={handleRawValueChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         placeholder={props.onFieldChange ? 'Search by elements, formula, or ID' : undefined}
+        ref={inputRef}
       />
     </Control>
   );
@@ -162,7 +177,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   return (
     <>
       {props.onSubmit && (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <Field className="has-addons">
             {inputControl}
             <Control className="">
