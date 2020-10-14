@@ -1,4 +1,4 @@
-import { ElementsInputType } from '../../search/ElementsInput';
+import { MaterialsInputField } from '../../search/MaterialsInput';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -90,8 +90,7 @@ export const materialsGroups: FilterGroup[] = [
         type: FilterType.ELEMENTS_INPUT,
         props: {
           parsedValue: [],
-          type: ElementsInputType.ELEMENTS,
-          delimiter: ','
+          field: MaterialsInputField.ELEMENTS
         }
       }
     ]

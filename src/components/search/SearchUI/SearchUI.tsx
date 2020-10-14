@@ -3,6 +3,9 @@ import { SearchUIContextProvider } from './context/SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';
+import { PeriodicContext, SelectableTable } from '../../..';
+import { SearchUISearchBar } from './SearchUISearchBar/SearchUISearchBar';
+import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -90,16 +93,44 @@ interface Props {
 }
 
 export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiKey }) => {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
+  const [searchField, setSearchField] = useState<string>('elements');
   return (
-    <div className="columns" style={{ padding: '15px' }}>
+    <div className="" style={{ padding: '15px' }}>
       <SearchUIContextProvider
         columns={columns}
         filterGroups={filterGroups}
         baseURL={baseURL}
         apiKey={apiKey}
       >
-        <SearchUIFilters className="column is-narrow" />
-        <SearchUIDataTable className="column" />
+        <div style={{}}>
+          <PeriodicContext>
+            <SearchUISearchBar
+              value={searchValue}
+              parsedValue={searchParsedValue}
+              field={searchField}
+              onChange={v => setSearchValue(v)}
+              onParsedValueChange={parsedValue => setSearchParsedValue(parsedValue)}
+              onFieldChange={field => setSearchField(field)}
+              onSubmit={field => setSearchField(field)}
+            />
+            <SelectableTable
+              maxElementSelectable={20}
+              forceTableLayout={TableLayout.MINI}
+              hiddenElements={[]}
+              onStateChange={enabledElements => {
+                Object.keys(enabledElements).filter(el => enabledElements[el]);
+              }}
+              enabledElements={[]}
+              disabledElements={['H', 'C']}
+            />
+          </PeriodicContext>
+        </div>
+        <div className="columns" style={{ padding: '15px' }}>
+          <SearchUIFilters className="column is-narrow" />
+          <SearchUIDataTable className="column" />
+        </div>
       </SearchUIContextProvider>
     </div>
   );

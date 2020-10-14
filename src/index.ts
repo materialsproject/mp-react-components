@@ -12,7 +12,7 @@ import { Sidebar } from './components/navigation/Sidebar';
 // import { MtPrintViewContext, MTGrid, MtMaterialTable } from './components/search/exportable-grid-v2';
 import Simple3DScene from './components/crystal-toolkit/Simple3DScene/Simple3DScene';
 import { Scrollspy } from './components/navigation/Scrollspy';
-import { ElementsInput } from './components/search/ElementsInput/ElementsInput';
+import { MaterialsInput } from './components/search/MaterialsInput/MaterialsInput';
 import { SearchUI } from './components/search/SearchUI';
 import DataTable from 'react-data-table-component';
 

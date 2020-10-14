@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PeriodicContext } from '../../../periodic-table/periodic-table-state/periodic-selection-context';
 import { SelectableTable } from '../../../periodic-table/table-state';
 import { TableLayout } from '../../../periodic-table/periodic-table-component/periodic-table.component';
-import { ElementsInput } from '../../../search/ElementsInput';
+import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../context/SearchUIContextProvider';
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
@@ -24,11 +24,15 @@ export const SearchUIFilters: React.FC<Props> = props => {
         return (
           <div style={{}}>
             <PeriodicContext>
-              <ElementsInput
+              <MaterialsInput
                 {...f.props}
                 value={state.filterValues[f.id]}
                 onChange={v => actions.setFilterValue(v, f.id)}
                 onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
+                onParsedValueChange={parsedValue =>
+                  actions.setFilterProps({ parsedValue }, f.id, groupId)
+                }
+                onFieldChange={type => actions.setFilterProps({ type }, f.id, groupId)}
               />
               <SelectableTable
                 maxElementSelectable={20}

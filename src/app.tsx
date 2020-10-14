@@ -34,7 +34,7 @@ import katex from 'katex';
 // } from './search-page/exportable-grid-v2';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
-import { ElementsInput } from './components/search/ElementsInput';
+import { MaterialsInput } from './components/search/MaterialsInput';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchUIFilters } from './components/search/SearchUI/SearchUIFilters';
 import { SearchUI } from './components/search/SearchUI';
@@ -689,7 +689,7 @@ console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBU
 /**
  <PeriodicContext>
         <div>
-          <ElementsInput />
+          <MaterialsInput />
           <SelectableTable
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}

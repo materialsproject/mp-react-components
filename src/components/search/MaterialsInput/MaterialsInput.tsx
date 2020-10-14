@@ -15,18 +15,20 @@ const { Input, Field, Control } = Form;
  * Search types supported by this field
  * Displayed to users in the dropdown
  */
-export enum ElementsInputType {
+export enum MaterialsInputField {
   ELEMENTS = 'elements',
-  FORMULA = 'formula'
+  FORMULA = 'formula',
+  MP_ID = 'task_ids'
 }
 
-export interface ElementsInputProps {
+interface MaterialsInputProps {
   value: string;
   parsedValue: string | string[];
-  type: string;
-  delimiter: string;
-  onChange: (value: string | string[]) => void;
-  onPropsChange: (p: Object) => void;
+  field: string;
+  onChange: (value: string) => void;
+  onParsedValueChange: (value: string | string[]) => void;
+  onFieldChange: (value: string) => void;
+  onSubmit?: (value: any) => any;
 }
 
 /**
@@ -35,12 +37,14 @@ export interface ElementsInputProps {
  * i.e. when elements are typed into the field, they are selected in the table,
  * and when elements are selected in the table, they are appended to the field's input
  */
-export const ElementsInput: React.FC<ElementsInputProps> = props => {
+export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [isFocused, setIsFocused] = useState(false);
+  const [delimiter, setDelimiter] = useState(',');
   const dropdownItems = [
-    { label: 'Required elements', value: ElementsInputType.ELEMENTS },
-    { label: 'Formula', value: ElementsInputType.FORMULA }
+    { label: 'By elements', value: MaterialsInputField.ELEMENTS },
+    { label: 'By formula', value: MaterialsInputField.FORMULA },
+    { label: 'By mp-id', value: MaterialsInputField.MP_ID }
   ];
 
   /**
@@ -60,11 +64,11 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
     if (!isFocused) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newValue = '';
-      switch (props.type) {
-        case ElementsInputType.ELEMENTS:
-          newValue = arrayToDelimitedString(enabledElementsList, props.delimiter);
+      switch (props.field) {
+        case MaterialsInputField.ELEMENTS:
+          newValue = arrayToDelimitedString(enabledElementsList, delimiter);
           break;
-        case ElementsInputType.FORMULA:
+        case MaterialsInputField.FORMULA:
           if (lastAction?.type === 'select') {
             newValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
@@ -82,9 +86,7 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
         default:
           return;
       }
-      props.onPropsChange({
-        parsedValue: newValue
-      });
+      props.onParsedValueChange(newValue);
       props.onChange(newValue);
     }
   }, [enabledElements]);
@@ -100,17 +102,17 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
     const newValue = props.value;
-    let newElementsInputType = props.type;
-    let newDelimiter = props.delimiter;
+    let newMaterialsInputField = props.field;
+    let newDelimiter = delimiter;
     let newParsedValue: string | string[] | null = null;
 
     if (newValue && newValue.match(/[0-9]/g)) {
-      newElementsInputType = ElementsInputType.FORMULA;
+      newMaterialsInputField = MaterialsInputField.FORMULA;
     } else if (newValue && newValue.match(/,|-/gi)) {
-      newElementsInputType = ElementsInputType.ELEMENTS;
+      newMaterialsInputField = MaterialsInputField.ELEMENTS;
     }
 
-    if (newElementsInputType === ElementsInputType.ELEMENTS) {
+    if (newMaterialsInputField === MaterialsInputField.ELEMENTS) {
       newDelimiter = getDelimiter(newValue);
       const cleanedInput = newValue.replace(/and|\s|[0-9]/gi, '');
       const inputSplit = cleanedInput.split(newDelimiter);
@@ -125,7 +127,7 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
         if (inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
       });
       newParsedValue = newElements;
-    } else if (newElementsInputType == ElementsInputType.FORMULA) {
+    } else if (newMaterialsInputField == MaterialsInputField.FORMULA) {
       var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newValue);
       formulaSplitElementsOnly.forEach(el => {
         if (TABLE_DICO_V2[el]) {
@@ -138,22 +140,18 @@ export const ElementsInput: React.FC<ElementsInputProps> = props => {
     }
 
     newParsedValue = newParsedValue ? newParsedValue : newValue;
-    props.onPropsChange({
-      type: newElementsInputType,
-      delimiter: newDelimiter,
-      parsedValue: newParsedValue
-    });
+    setDelimiter(newDelimiter);
+    props.onFieldChange(newMaterialsInputField);
+    props.onParsedValueChange(newParsedValue);
   }, [props.value]);
 
   return (
     <Field className="has-addons">
       <Control>
         <Dropdown
-          value={props.type}
-          onChange={(item: ElementsInputType) => {
-            props.onPropsChange({
-              type: item
-            });
+          value={props.field}
+          onChange={(item: MaterialsInputField) => {
+            props.onFieldChange(item);
           }}
           color="primary"
         >
