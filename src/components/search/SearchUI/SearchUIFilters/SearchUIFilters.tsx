@@ -8,6 +8,7 @@ import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
 import { FilterType } from '../constants';
+import { Form } from 'react-bulma-components';
 
 interface Props {
   className?: string;
@@ -20,37 +21,38 @@ export const SearchUIFilters: React.FC<Props> = props => {
 
   const renderFilter = (f, groupId) => {
     switch (f.type) {
-      case FilterType.ELEMENTS_INPUT:
+      case FilterType.TEXT_INPUT:
         return (
-          <div style={{}}>
-            <PeriodicContext>
-              <MaterialsInput
-                {...f.props}
-                value={state.filterValues[f.id]}
-                onChange={v => actions.setFilterValue(v, f.id)}
-                onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
-                onParsedValueChange={parsedValue =>
-                  actions.setFilterProps({ parsedValue }, f.id, groupId)
-                }
-                onFieldChange={type => actions.setFilterProps({ type }, f.id, groupId)}
-              />
-              <SelectableTable
-                maxElementSelectable={20}
-                forceTableLayout={TableLayout.MINI}
-                hiddenElements={[]}
-                onStateChange={enabledElements => {
-                  Object.keys(enabledElements).filter(el => enabledElements[el]);
-                }}
-                enabledElements={[]}
-                disabledElements={['H', 'C']}
-              />
-            </PeriodicContext>
+          <div>
+            <p className="has-text-weight-bold mb-1">{f.name}</p>
+            <Form.Input
+              {...f.props}
+              type="text"
+              value={state.filterValues[f.id]}
+              onChange={v => actions.setFilterValue(v, f.id)}
+            />
+          </div>
+        );
+      case FilterType.MATERIALS_INPUT:
+        return (
+          <div>
+            <p className="has-text-weight-bold mb-1">{f.name}</p>
+            <MaterialsInput
+              {...f.props}
+              value={state.filterValues[f.id]}
+              onChange={v => actions.setFilterValue(v, f.id)}
+              onPropsChange={p => actions.setFilterProps(p, f.id, groupId)}
+              onParsedValueChange={parsedValue =>
+                actions.setFilterProps({ parsedValue }, f.id, groupId)
+              }
+              // onFieldChange={type => actions.setFilterProps({ type }, f.id, groupId)}
+            />
           </div>
         );
       case FilterType.SLIDER:
         return (
           <div>
-            <p className="mb-2">{f.name}</p>
+            <p className="has-text-weight-bold mb-3">{f.name}</p>
             <DualRangeSlider
               {...f.props}
               values={state.filterValues[f.id]}
@@ -85,14 +87,16 @@ export const SearchUIFilters: React.FC<Props> = props => {
                 style={{ minWidth: '484px' }}
                 onClick={() => actions.toggleGroup(g.name)}
               >
-                <span className="title is-5">{g.name}</span>
+                <span className="is-size-5">{g.name}</span>
                 <div className="is-pulled-right">
                   {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
                 </div>
               </div>
-              <div className={`mt-3 ${g.collapsed ? 'is-hidden' : ''}`}>
+              <div className={`panel-block-children ${g.collapsed ? 'is-hidden' : ''}`}>
                 {g.filters.map((f, j) => (
-                  <div key={j}>{renderFilter(f, g.name)}</div>
+                  <div className="mb-2" key={j}>
+                    {renderFilter(f, g.name)}
+                  </div>
                 ))}
               </div>
             </div>

@@ -36,7 +36,7 @@ interface Props {
    * An array of filter groups and their respective array of filters.
    * A filter group is a collapsible section of the filters panel that contains one or more filters.
    * A filter is a type of input element that filters the data based on its value.
-   * Filter "type" must be one of these strings: "SLIDER", "ELEMENTS_INPUT"
+   * Filter "type" must be one of these strings: "SLIDER", "MATERIALS_INPUT"
    * Filter "id" must be a queryable field
    * Filter props defines how that filter should be rendered. See example for props format based on filter type.
    * example:
@@ -48,7 +48,7 @@ interface Props {
           {
             name: 'Elements',
             id: 'elements',
-            type: 'ELEMENTS_INPUT',
+            type: 'MATERIALS_INPUT',
             props: {
               parsedValue: [],
               type: 'elements',
@@ -93,9 +93,6 @@ interface Props {
 }
 
 export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiKey }) => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchField, setSearchField] = useState<string>('elements');
   return (
     <div className="" style={{ padding: '15px' }}>
       <SearchUIContextProvider
@@ -104,30 +101,12 @@ export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiK
         baseURL={baseURL}
         apiKey={apiKey}
       >
-        <div style={{}}>
-          <PeriodicContext>
-            <SearchUISearchBar
-              value={searchValue}
-              parsedValue={searchParsedValue}
-              field={searchField}
-              onChange={v => setSearchValue(v)}
-              onParsedValueChange={parsedValue => setSearchParsedValue(parsedValue)}
-              onFieldChange={field => setSearchField(field)}
-              onSubmit={field => setSearchField(field)}
-            />
-            <SelectableTable
-              maxElementSelectable={20}
-              forceTableLayout={TableLayout.MINI}
-              hiddenElements={[]}
-              onStateChange={enabledElements => {
-                Object.keys(enabledElements).filter(el => enabledElements[el]);
-              }}
-              enabledElements={[]}
-              disabledElements={['H', 'C']}
-            />
-          </PeriodicContext>
+        <div className="columns is-centered">
+          <div className="column is-7 p-0 pt-3">
+            <SearchUISearchBar />
+          </div>
         </div>
-        <div className="columns" style={{ padding: '15px' }}>
+        <div className="columns pl-3 pr-3 pb-3 pt-0">
           <SearchUIFilters className="column is-narrow" />
           <SearchUIDataTable className="column" />
         </div>

@@ -64,17 +64,17 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
             });
           }
           break;
-        case FilterType.ELEMENTS_INPUT:
+        case FilterType.MATERIALS_INPUT:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = '';
           if (filterValues[f.id] !== '') {
             activeFilters.push({
               id: f.id,
-              displayName: f.props.type,
+              displayName: f.props.field,
               value: f.props.parsedValue,
               defaultValue: '',
               searchParams: [
                 {
-                  field: f.props.type,
+                  field: f.props.field,
                   value: f.props.parsedValue
                 }
               ]
@@ -86,6 +86,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           if (filterValues[f.id]) {
             activeFilters.push({
               id: f.id,
+              displayName: f.name,
               value: filterValues[f.id],
               defaultValue: '',
               searchParams: [

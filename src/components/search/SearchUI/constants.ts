@@ -3,12 +3,15 @@ import { MaterialsInputField } from '../../search/MaterialsInput';
 export enum FilterId {
   ELEMENTS = 'elements',
   VOLUME = 'volume',
-  DENSITY = 'density'
+  DENSITY = 'density',
+  MP_ID = 'task_ids',
+  FORMULA = 'formula'
 }
 
 export enum FilterType {
   SLIDER = 'SLIDER',
-  ELEMENTS_INPUT = 'ELEMENTS_INPUT'
+  MATERIALS_INPUT = 'MATERIALS_INPUT',
+  TEXT_INPUT = 'TEXT_INPUT'
 }
 
 export interface Filter {
@@ -85,18 +88,32 @@ export const materialsGroups: FilterGroup[] = [
     collapsed: false,
     filters: [
       {
-        name: 'Elements',
+        name: 'ID',
+        id: FilterId.MP_ID,
+        type: FilterType.TEXT_INPUT
+      },
+      {
+        name: 'Required Elements',
         id: FilterId.ELEMENTS,
-        type: FilterType.ELEMENTS_INPUT,
+        type: FilterType.MATERIALS_INPUT,
         props: {
           parsedValue: [],
           field: MaterialsInputField.ELEMENTS
+        }
+      },
+      {
+        name: 'Formula',
+        id: FilterId.FORMULA,
+        type: FilterType.MATERIALS_INPUT,
+        props: {
+          parsedValue: [],
+          field: MaterialsInputField.FORMULA
         }
       }
     ]
   },
   {
-    name: 'General',
+    name: 'Properties',
     collapsed: false,
     filters: [
       {
