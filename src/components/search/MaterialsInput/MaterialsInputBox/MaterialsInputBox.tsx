@@ -156,7 +156,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   }, [props.value]);
 
   useEffect(() => {
-    props.liftInputRef(inputRef);
+    if (props.liftInputRef) props.liftInputRef(inputRef);
   }, []);
 
   const inputControl = (

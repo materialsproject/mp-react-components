@@ -1,3 +1,4 @@
+import React from 'react';
 import { MaterialsInputField } from '../../search/MaterialsInput';
 
 export enum FilterId {
@@ -62,7 +63,8 @@ export interface SearchState {
 
 enum ColumnFormat {
   FIXED_DECIMAL = 'FIXED_DECIMAL',
-  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES'
+  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES',
+  FORMULA = 'FORMULA'
 }
 
 export const initColumns = (columns: Column[]) => {
@@ -75,6 +77,25 @@ export const initColumns = (columns: Column[]) => {
       case ColumnFormat.SIGNIFICANT_FIGURES:
         const sigFigs = c.formatArg ? c.formatArg : 5;
         c.format = (row: any) => row[c.selector].toPrecision(sigFigs);
+        return c;
+      case ColumnFormat.FORMULA:
+        c.cell = (row: any) => {
+          const splitFormula: string[] = row[c.selector].split(/([0-9]+)/g);
+          const formulaItem = (str: string) => {
+            if (parseInt(str)) {
+              return <sub>{str}</sub>;
+            } else {
+              return <span>{str}</span>;
+            }
+          };
+          return (
+            <span>
+              {splitFormula.map((s, i) => (
+                <span key={i}>{formulaItem(s)}</span>
+              ))}
+            </span>
+          );
+        };
         return c;
       default:
         return c;
@@ -146,7 +167,7 @@ export const materialsColumns: Column[] = [
     name: 'Formula',
     selector: 'formula_pretty',
     sortable: true,
-    format: 'test'
+    format: ColumnFormat.FORMULA
   },
   {
     name: 'Volume',

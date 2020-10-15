@@ -29,7 +29,7 @@ export interface MaterialsInputBoxProps {
   value: string;
   parsedValue: string | string[];
   field: string;
-  liftInputRef: (value: React.RefObject<HTMLInputElement>) => any;
+  liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onParsedValueChange: (value: string | string[]) => void;
   onFieldChange?: (value: string) => void;
