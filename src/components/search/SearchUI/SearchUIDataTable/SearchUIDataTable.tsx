@@ -21,13 +21,12 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   return (
     <div className={props.className}>
+      <ActiveFilterButtons
+        filters={state.activeFilters}
+        onClick={(v, id) => actions.setFilterValue(v, id)}
+      />
       <DataTable
-        title={
-          <ActiveFilterButtons
-            filters={state.activeFilters}
-            onClick={(v, id) => actions.setFilterValue(v, id)}
-          />
-        }
+        noHeader
         theme="material"
         columns={state.columns}
         data={state.results}

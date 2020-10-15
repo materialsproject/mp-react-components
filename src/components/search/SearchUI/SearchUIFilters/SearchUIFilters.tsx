@@ -83,8 +83,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
           <div className="panel-block" style={{ padding: '1em' }} key={i}>
             <div className="control">
               <div
-                className="is-clickable"
-                style={{ minWidth: '484px' }}
+                className="panel-block-title is-clickable"
                 onClick={() => actions.toggleGroup(g.name)}
               >
                 <span className="is-size-5">{g.name}</span>
