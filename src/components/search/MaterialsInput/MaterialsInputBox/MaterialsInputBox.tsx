@@ -83,6 +83,10 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
               newValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
           break;
+        case MaterialsInputField.MP_ID:
+          newValue = arrayToDelimitedString(enabledElementsList, delimiter);
+          if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
+          break;
         default:
           return;
       }

@@ -109,6 +109,19 @@ const initState = (state: SearchState, columns: Column[], filterGroups: FilterGr
   return getState(state);
 };
 
+const getResetFiltersAndValues = (state: SearchState) => {
+  const filterValues = state.filterValues;
+  let activeFilters = state.activeFilters;
+  activeFilters.forEach(a => {
+    filterValues[a.id] = a.defaultValue;
+  });
+  activeFilters = [];
+  return {
+    filterValues,
+    activeFilters
+  };
+};
+
 export const SearchUIContextProvider: React.FC<Props> = ({
   columns,
   filterGroups,
@@ -129,6 +142,12 @@ export const SearchUIContextProvider: React.FC<Props> = ({
       setState(currentState =>
         getState(currentState, { ...currentState.filterValues, [id]: value })
       );
+    },
+    resetAllFiltersExcept: (value: any, id: string) => {
+      setState(currentState => {
+        const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
+        return getState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
+      });
     },
     setFilterProps: (props: Object, filterId: string, groupId: string) => {
       const filterGroups = state.filterGroups;
@@ -201,12 +220,7 @@ export const SearchUIContextProvider: React.FC<Props> = ({
     },
     resetFilters: () => {
       setState(currentState => {
-        const filterValues = currentState.filterValues;
-        let activeFilters = currentState.activeFilters;
-        activeFilters.forEach(a => {
-          filterValues[a.id] = a.defaultValue;
-        });
-        activeFilters = [];
+        const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
         return {
           ...currentState,
           filterValues,

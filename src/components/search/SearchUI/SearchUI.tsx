@@ -4,7 +4,7 @@ import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';
 import { PeriodicContext, SelectableTable } from '../../..';
-import { SearchUISearchBar } from './SearchUISearchBar/SearchUISearchBar';
+import { SearchUISearchBar } from './SearchUISearchBar';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 
 /**

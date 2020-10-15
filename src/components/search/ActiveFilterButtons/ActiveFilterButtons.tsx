@@ -23,7 +23,10 @@ export const ActiveFilterButtons: React.FC<Props> = props => {
       <div className={props.filters.length > 0 ? 'columns' : ''}>
         {props.filters.map((f, i) => (
           <div className="column is-narrow" key={i}>
-            <Button className="is-small" onClick={() => props.onClick(f.defaultValue, f.id)}>
+            <Button
+              className="is-rounded is-small"
+              onClick={() => props.onClick(f.defaultValue, f.id)}
+            >
               <FaTimes />
               <span className="ml-1">
                 {f.displayName ? f.displayName : f.id}: {formatValue(f.value)}

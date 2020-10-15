@@ -16,7 +16,7 @@ export const SearchUISearchBar: React.FC = () => {
       onChange={v => setSearchValue(v)}
       onParsedValueChange={parsedValue => setSearchParsedValue(parsedValue)}
       onFieldChange={field => setSearchField(field)}
-      onSubmit={() => actions.setFilterValue(searchValue, searchField)}
+      onSubmit={() => actions.resetAllFiltersExcept(searchValue, searchField)}
       periodicTableMode="toggle"
     />
   );
