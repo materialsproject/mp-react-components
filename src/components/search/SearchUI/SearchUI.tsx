@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SearchUIContextProvider } from './context/SearchUIContextProvider';
+import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';

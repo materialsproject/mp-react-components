@@ -1,1 +1,5 @@
-export { SearchUIContextProvider } from './SearchUIContextProvider';
+export {
+  SearchUIContextProvider,
+  useSearchUIContext,
+  useSearchUIContextActions
+} from './SearchUIContextProvider';

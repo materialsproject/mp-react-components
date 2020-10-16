@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MaterialsInput } from '../../MaterialsInput';
-import { useSearchUIContextActions } from '../context/SearchUIContextProvider';
+import { useSearchUIContextActions } from '../SearchUIContextProvider';
 
 export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();

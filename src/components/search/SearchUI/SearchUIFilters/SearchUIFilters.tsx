@@ -3,7 +3,7 @@ import { PeriodicContext } from '../../../periodic-table/periodic-table-state/pe
 import { SelectableTable } from '../../../periodic-table/table-state';
 import { TableLayout } from '../../../periodic-table/periodic-table-component/periodic-table.component';
 import { MaterialsInput } from '../../../search/MaterialsInput';
-import { useSearchUIContext, useSearchUIContextActions } from '../context/SearchUIContextProvider';
+import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';

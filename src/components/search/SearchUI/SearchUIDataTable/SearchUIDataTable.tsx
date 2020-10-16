@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchUIContext, useSearchUIContextActions } from '../context/SearchUIContextProvider';
+import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 
