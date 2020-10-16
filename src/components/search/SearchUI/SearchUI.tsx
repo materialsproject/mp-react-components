@@ -94,7 +94,7 @@ interface Props {
 
 export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiKey }) => {
   return (
-    <div className="" style={{ padding: '15px' }}>
+    <div className="p-4">
       <SearchUIContextProvider
         columns={columns}
         filterGroups={filterGroups}
@@ -106,7 +106,7 @@ export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiK
             <SearchUISearchBar />
           </div>
         </div>
-        <div className="columns pl-3 pr-3 pb-3 pt-0">
+        <div className="columns">
           <SearchUIFilters className="column is-narrow" />
           <SearchUIDataTable className="column" />
         </div>

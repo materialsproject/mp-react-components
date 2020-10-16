@@ -6,7 +6,8 @@ export enum FilterId {
   VOLUME = 'volume',
   DENSITY = 'density',
   MP_ID = 'task_ids',
-  FORMULA = 'formula'
+  FORMULA = 'formula',
+  NELEMENTS = 'nelements'
 }
 
 export enum FilterType {
@@ -16,7 +17,7 @@ export enum FilterType {
 }
 
 export interface Filter {
-  name: string;
+  name?: string;
   id: FilterId;
   type: FilterType;
   props?: any;
@@ -131,6 +132,23 @@ export const materialsGroups: FilterGroup[] = [
           field: MaterialsInputField.FORMULA
         }
       }
+      // {
+      //   name: 'Search',
+      //   id: FilterId.ELEMENTS,
+      //   type: FilterType.MATERIALS_INPUT,
+      //   props: {
+      //     parsedValue: [],
+      //     field: MaterialsInputField.ELEMENTS
+      //   }
+      // },
+      // {
+      //   name: 'Number of Elements',
+      //   id: FilterId.NELEMENTS,
+      //   type: FilterType.SLIDER,
+      //   props: {
+      //     domain: [0, 20]
+      //   }
+      // },
     ]
   },
   {

@@ -256,25 +256,3 @@ export const useSearchUIContextActions = () => {
   }
   return context;
 };
-
-/**
- * Reducer version
- */
-
-// enum ActionType {
-//   SET_FILTER_VALUE = 'SET_FILTER_VALUE'
-// }
-
-// interface Action {
-//   type: string;
-//   payload: any;
-// };
-
-// const reducer = (state: SearchState, action: Action) => {
-//   switch (action.type) {
-//     case ActionType.SET_FILTER_VALUE:
-//       return { ...state, filterValues: { ...state.filterValues, [action.payload.id]: action.payload.value } };
-//     default:
-//       return state;
-//   }
-// }

@@ -172,15 +172,15 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        placeholder={props.onFieldChange ? 'Search by elements, formula, or ID' : undefined}
+        placeholder={props.onSubmit ? 'Search by elements, formula, or ID' : undefined}
         ref={inputRef}
       />
     </Control>
   );
 
-  return (
-    <>
-      {props.onSubmit && (
+  const inputField = () => {
+    if (props.onSubmit) {
+      return (
         <form onSubmit={handleSubmit}>
           <Field className="has-addons">
             {inputControl}
@@ -191,29 +191,34 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
             </Control>
           </Field>
         </form>
-      )}
-      {!props.onSubmit && (
-        <Field>
-          {/* <Control>
-              <Dropdown
-                value={props.field}
-                onChange={(item: MaterialsInputField) => {
-                  props.onFieldChange(item);
-                }}
-                color="primary"
-              >
-                {dropdownItems.map((item, k) => {
-                  return (
-                    <Dropdown.Item key={k} value={item.value}>
-                      {item.label}
-                    </Dropdown.Item>
-                  );
-                })}
-              </Dropdown>
-            </Control> */}
+      );
+    } else if (!props.onSubmit && props.onFieldChange) {
+      return (
+        <Field className="has-addons">
+          <Control>
+            <Dropdown
+              value={props.field}
+              onChange={(item: MaterialsInputField) => {
+                if (props.onFieldChange) props.onFieldChange(item);
+              }}
+              color="primary"
+            >
+              {dropdownItems.map((item, k) => {
+                return (
+                  <Dropdown.Item key={k} value={item.value}>
+                    {item.label}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown>
+          </Control>
           {inputControl}
         </Field>
-      )}
-    </>
-  );
+      );
+    } else {
+      return <Field>{inputControl}</Field>;
+    }
+  };
+
+  return <>{inputField()}</>;
 };

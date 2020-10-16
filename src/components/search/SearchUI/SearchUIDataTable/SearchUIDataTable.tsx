@@ -21,6 +21,11 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   return (
     <div className={props.className}>
+      <p className="title is-4 mb-3">
+        {state.loading
+          ? 'Searching materials...'
+          : `${state.totalResults} materials match your search`}
+      </p>
       <ActiveFilterButtons
         filters={state.activeFilters}
         onClick={(v, id) => actions.setFilterValue(v, id)}
@@ -40,7 +45,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         paginationTotalRows={state.totalResults}
         paginationPerPage={state.resultsPerPage}
         progressComponent={
-          <progress className="progress is-small is-primary" max="100">
+          <progress className="progress is-small is-primary mt-3" max="100">
             15%
           </progress>
         }
