@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { PeriodicContext } from '../../../periodic-table/periodic-table-state/periodic-selection-context';
-import { SelectableTable } from '../../../periodic-table/table-state';
-import { TableLayout } from '../../../periodic-table/periodic-table-component/periodic-table.component';
+import React from 'react';
 import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
-import { FilterType } from '../constants';
+import { FilterType, Filter } from '../constants';
 import { Form } from 'react-bulma-components';
+
+/**
+ * Component for rendering a panel of filters that are part of a SearchUI component
+ */
 
 interface Props {
   className?: string;
@@ -17,9 +18,14 @@ interface Props {
 export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  const renderFilter = (f, groupId) => {
+  /**
+   * Render filter component based on the filter's "type" property
+   * Accepts the full filter object as an argument to render components
+   * The groupId argument is used for components that need to
+   * dynamically change their "props" property with actions.setFilterProps().
+   */
+  const renderFilter = (f: Filter, groupId: string) => {
     switch (f.type) {
       case FilterType.TEXT_INPUT:
         return (
@@ -29,7 +35,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
               {...f.props}
               type="text"
               value={state.filterValues[f.id]}
-              onChange={v => actions.setFilterValue(v, f.id)}
+              onChange={e => actions.setFilterValue(e.target.value, f.id)}
             />
           </div>
         );

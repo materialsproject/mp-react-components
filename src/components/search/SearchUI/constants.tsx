@@ -68,6 +68,13 @@ enum ColumnFormat {
   FORMULA = 'FORMULA'
 }
 
+/**
+ * Initialize columns with their proper format function
+ * The "format" prop should initially be one of the ColumnFormat strings
+ * which maps to one of the format (or cell) functions defined here.
+ * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
+ * that will specify how many decimals or figures to apply to the format.
+ */
 export const initColumns = (columns: Column[]) => {
   return columns.map(c => {
     switch (c.format) {
@@ -119,7 +126,6 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.ELEMENTS,
         type: FilterType.MATERIALS_INPUT,
         props: {
-          parsedValue: [],
           field: MaterialsInputField.ELEMENTS
         }
       },
@@ -128,7 +134,6 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.FORMULA,
         type: FilterType.MATERIALS_INPUT,
         props: {
-          parsedValue: [],
           field: MaterialsInputField.FORMULA
         }
       }

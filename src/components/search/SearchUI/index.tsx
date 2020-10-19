@@ -1,1 +1,1 @@
-export { SearchUI } from './SearchUI';
+export { SearchUI, SearchUIProps } from './SearchUI';

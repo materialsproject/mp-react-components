@@ -13,14 +13,12 @@ import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
 const { Input, Field, Control } = Form;
 
 /**
- * An input field for searching by elements or formula
- * Supports two-way binding with a SelectableTable if in the same context
- * i.e. when elements are typed into the field, they are selected in the table,
- * and when elements are selected in the table, they are appended to the field's input
+ * The text input component of a MaterialsInput component
+ * Handles the two-way binding between input and periodic table
  */
+
 export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
-  const [isFocused, setIsFocused] = useState(false);
   const [delimiter, setDelimiter] = useState(',');
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownItems = [

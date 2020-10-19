@@ -1,28 +1,25 @@
-import React, { useReducer, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { MaterialsInputField } from '../../../search/MaterialsInput';
 import { useDeepCompareDebounce } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,
-  FilterValues,
   ActiveFilter,
   SearchState,
-  SearchParam,
   Column,
   initColumns
 } from '../constants';
 
+import { SearchUIProps } from '../../SearchUI';
+
+/**
+ * Two contexts are invoked inside the SearchUI component
+ * SearchUIContext exposes the search state to all of its consumers
+ * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
+ */
 const SearchUIContext = React.createContext<any | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
-
-interface Props {
-  columns: Column[];
-  filterGroups: FilterGroup[];
-  baseURL: string;
-  apiKey?: string;
-}
 
 const initialState: SearchState = {
   columns: [],
@@ -36,6 +33,13 @@ const initialState: SearchState = {
   loading: false
 };
 
+/**
+ * Method for initializing and updating the search state's active filters.
+ * Returns a full state object
+ * Optionally accepts a filterValues argument which represents a new hash map
+ * of values for building the activeFilters list.
+ * The activeFilters list is recomputed whenever a filter is modified in the UI.
+ */
 const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }) => {
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
@@ -66,6 +70,9 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           break;
         case FilterType.MATERIALS_INPUT:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = '';
+          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
+          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue'))
+            f.props.parsedValue = [];
           if (filterValues[f.id] !== '') {
             activeFilters.push({
               id: f.id,
@@ -122,7 +129,11 @@ const getResetFiltersAndValues = (state: SearchState) => {
   };
 };
 
-export const SearchUIContextProvider: React.FC<Props> = ({
+/**
+ * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
+ * Accepts the same props as SearchUI and uses them to build the context state
+ */
+export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   columns,
   filterGroups,
   baseURL,
@@ -241,6 +252,11 @@ export const SearchUIContextProvider: React.FC<Props> = ({
   );
 };
 
+/**
+ * Custom hook for consuming the SearchUIContext
+ * Must only be used by child components of SearchUIContextProvider
+ * The context returns one property called "state"
+ */
 export const useSearchUIContext = () => {
   const context = React.useContext(SearchUIContext);
   if (context === undefined) {
@@ -249,6 +265,11 @@ export const useSearchUIContext = () => {
   return context;
 };
 
+/**
+ * Custom hook for consuming the SearchUIContextActions
+ * Must only be used by child components of SearchUIContextProvider
+ * The context returns one property called "actions"
+ */
 export const useSearchUIContextActions = () => {
   const context = React.useContext(SearchUIContextActions);
   if (context === undefined) {

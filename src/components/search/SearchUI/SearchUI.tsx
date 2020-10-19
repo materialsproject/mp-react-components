@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';
-import { PeriodicContext, SelectableTable } from '../../..';
 import { SearchUISearchBar } from './SearchUISearchBar';
-import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
  * Renders results in a data table alongside a set of filters that map to properties in the data.
  */
-interface Props {
+
+export interface SearchUIProps {
   /**
    * An array of column definitions for the results in the SearchUIDataTable
    * Column properties are based on the react-data-table column settings (https://github.com/jbetancur/react-data-table-component#columns)
@@ -42,17 +41,15 @@ interface Props {
    * example:
     [
       {
-        name: 'Elements',
+        name: 'Material',
         collapsed: false,
         filters: [
           {
-            name: 'Elements',
+            name: 'Required Elements',
             id: 'elements',
             type: 'MATERIALS_INPUT',
             props: {
-              parsedValue: [],
-              type: 'elements',
-              delimiter: ','
+              field: 'elements'
             }
           }
         ]
@@ -92,7 +89,7 @@ interface Props {
   apiKey?: string;
 }
 
-export const SearchUI: React.FC<Props> = ({ columns, filterGroups, baseURL, apiKey }) => {
+export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseURL, apiKey }) => {
   return (
     <div className="p-4">
       <SearchUIContextProvider

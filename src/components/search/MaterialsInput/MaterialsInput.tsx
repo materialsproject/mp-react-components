@@ -16,6 +16,14 @@ import { TableLayout } from '../../periodic-table/periodic-table-component/perio
 import { SelectableTable } from '../../periodic-table/table-state';
 
 /**
+ * An input field component for searching by mp-id, elements, or formula.
+ * Renders a text input and a periodic table within a PeriodicContext to support
+ * two-way binding between the input and periodic table.
+ * i.e. when elements are typed into the field, they are selected in the table,
+ * and when elements are selected in the table, they are appended to the field's input.
+ */
+
+/**
  * Search types supported by this field
  * Displayed to users in the dropdown
  */
@@ -42,12 +50,6 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
   periodicTableMode?: string;
 }
 
-/**
- * An input field for searching by elements or formula
- * Supports two-way binding with a SelectableTable if in the same context
- * i.e. when elements are typed into the field, they are selected in the table,
- * and when elements are selected in the table, they are appended to the field's input
- */
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
@@ -69,10 +71,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     } else {
       return;
     }
-  };
-
-  const showTable = () => {
-    setShowPeriodicTable(true);
   };
 
   return (
