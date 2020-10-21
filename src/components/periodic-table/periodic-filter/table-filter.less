@@ -1,0 +1,68 @@
+@import '../../../assets/mixins.less';
+
+.mat-table-filter {
+  .flex(row);
+  font-family: Helvetica Neue, sans-serif;
+  background-color: #f5f6f8;
+  margin-bottom: 10px;
+  padding: 13px 30px;
+  border: 1px solid #bebbbb;
+  .left-side {
+    .flex(row);
+    .centered-container();
+    .flex-fixed-size(100px);
+  }
+  .right-side {
+    .flex(column);
+    .flex-container-sized();
+    .filter-selector {
+      .flex(row);
+      .filter-group {
+        .flex(row);
+      }
+      .filter-group:not(:last-child):after {
+        content: '';
+        display: inline-block;
+        border-left: 1px solid #bebbbb;
+        margin: 8px 0;
+      }
+    }
+    .sub-filter-selector {
+      .flex(row);
+    }
+    .current-filter-selector {
+      background-color: transparent;
+      color: #555759;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 10px;
+      line-height: 1;
+      text-align: center;
+      cursor: pointer;
+      padding: 7px 15px;
+      border: 1px solid #555759;
+      border-radius: 4px;
+      &.selected {
+        background-color: #555759;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.mat-element.hidden {
+  background: rgba(200, 200, 200);
+  * {
+    display: none;
+  }
+}
+
+// we need those wrappers to force CSS selectors to apply
+.mp-element-wrapper,
+.table-container {
+  .mat-element.hidden {
+    * {
+      display: none;
+    }
+  }
+}

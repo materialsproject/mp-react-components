@@ -1,25 +1,24 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "strict": true,
-        "noImplicitReturns": true,
-        "noImplicitAny": false,
-        "module": "es6",
-        "moduleResolution": "node",
-        "target": "es6",
-        "esModuleInterop": true,
-        "allowJs": true,
-        "jsx": "react",
-        "lib": ["es5", "es6", "dom"],
-        "strictNullChecks": true,
-        "types": ["jest"]
-    },
-    "awesomeTypescriptLoaderOptions": { // see https://github.com/storybookjs/storybook/issues/7829
-        "ignoreDiagnostics": [7005, 2300]
-    },
-    "include": [
-        "./src/**/*"
-    ],
-    //"exclude": ["node_modules", "**/*.spec.ts"]
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "module": "es6",
+    "moduleResolution": "node",
+    "target": "es6",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "jsx": "react",
+    "lib": ["es5", "es6", "dom"],
+    "strictNullChecks": true,
+    "types": ["jest"]
+  },
+  "awesomeTypescriptLoaderOptions": {
+    // see https://github.com/storybookjs/storybook/issues/7829
+    "ignoreDiagnostics": [7005, 2300]
+  },
+  "include": ["./src/**/*"]
+  //"exclude": ["node_modules", "**/*.spec.ts"]
 }

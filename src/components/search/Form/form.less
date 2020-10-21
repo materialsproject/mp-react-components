@@ -1,0 +1,28 @@
+@import '../../../assets/mixins';
+
+.form-widget {
+  .flex(column);
+
+  .form-field {
+    margin: 5px;
+    justify-content: space-between;
+    .flex(row);
+    label {
+      .flex-container-sized();
+    }
+    input {
+      .flex-container-sized();
+    }
+
+    &.error {
+      color: red;
+      input {
+        border: 1px solid red;
+        &:focus {
+          outline-color: red;
+          outline-offset: -2px;
+        }
+      }
+    }
+  }
+}
