@@ -203,7 +203,8 @@ Simple3DSceneComponent.propTypes = {
    *    sphereSegments: 32, // decrease to improve performance
    *    cylinderSegments: 16, // decrease to improve performance
    *    staticScene: true, // disable if animation required
-   *    defaultZoom: 1, // 1 will fill the screen with sufficient room to rotate
+   *    defaultZoom: 1, // 1 will zoom to fit object exactly, <1 will add padding between object and box bounds
+   *    zoomToFit2D: false // if true, will zoom to fit object only along the X and Y axes (not Z)
    *    extractAxis: false // will remove the axis from the main scene
    * }
    * There are several additional options used for debugging and testing,
