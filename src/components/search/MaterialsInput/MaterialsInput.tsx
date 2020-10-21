@@ -99,9 +99,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
           </button>
         )}
         <div
-          className={`${showPeriodicTable ? '' : 'is-hidden'}`}
+          className={`
+            table-transition-wrapper-small 
+            can-hide-with-transition 
+            ${showPeriodicTable ? '' : 'is-hidden-with-transition'} 
+            ${props.periodicTableMode === 'onFocus' ? 'mt-3' : ''}
+          `}
           onMouseDown={event => {
-            console.log('clicking pt');
             setPeriodicTableClicked(true);
             setTimeout(() => {
               if (inputRef && inputRef.current) inputRef.current.focus();
