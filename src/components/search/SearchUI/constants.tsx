@@ -1,5 +1,5 @@
 import React from 'react';
-import { MaterialsInputField } from '../../search/MaterialsInput';
+import { MaterialsInputField } from '../MaterialsInput';
 
 export enum FilterId {
   ELEMENTS = 'elements',
