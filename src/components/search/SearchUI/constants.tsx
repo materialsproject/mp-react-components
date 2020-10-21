@@ -60,6 +60,8 @@ export interface SearchState {
   resultsPerPage: number;
   page: number;
   loading: boolean;
+  sortColumn: FilterId;
+  sortDirection: 'asc' | 'desc';
 }
 
 enum ColumnFormat {

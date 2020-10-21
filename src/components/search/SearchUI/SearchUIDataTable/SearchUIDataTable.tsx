@@ -25,6 +25,10 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     actions.setResultsPerPage(perPage);
   };
 
+  const handleSort = (column, sortDirection) => {
+    return;
+  };
+
   const TableHeader = () => {
     if (state.loading) {
       return <p className="title is-4 mb-3">Searching materials...</p>;
@@ -54,6 +58,9 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         highlightOnHover
         pagination
         paginationServer
+        sortServer
+        onSort={handleSort}
+        sortIcon={<span></span>}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
         progressPending={state.loading}

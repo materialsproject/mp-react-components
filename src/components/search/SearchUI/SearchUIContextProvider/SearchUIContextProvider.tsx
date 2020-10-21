@@ -5,6 +5,7 @@ import { useDeepCompareDebounce } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,
+  FilterId,
   ActiveFilter,
   SearchState,
   Column,
@@ -30,7 +31,9 @@ const initialState: SearchState = {
   totalResults: 0,
   resultsPerPage: 15,
   page: 1,
-  loading: false
+  loading: false,
+  sortColumn: FilterId.MP_ID,
+  sortDirection: 'asc'
 };
 
 /**
