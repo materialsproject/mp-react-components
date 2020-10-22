@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GetRailProps, GetHandleProps, GetTrackProps, SliderItem } from 'react-compound-slider';
+import { GetRailProps, GetTrackProps, SliderItem } from 'react-compound-slider';
 
 // *******************************************************
 // RAIL
