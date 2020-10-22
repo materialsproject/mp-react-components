@@ -88,7 +88,8 @@ export const defaults = {
   controls: Control.TRACKBALL,
   enableZoom: true,
   secondaryObjectView: true,
-  defaultZoom: 0.8
+  defaultZoom: 0.8,
+  zoomToFit2D: false
 };
 
 export enum JSON3DObject {

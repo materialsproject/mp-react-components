@@ -223,6 +223,7 @@ export default class Simple3DScene {
 
   private readonly mouseTrackballUpdate = () => {
     this.controls.update();
+    console.log(this.camera.zoom);
   };
 
   public updateCamera(position: Vector3, rotation: Quaternion, zoom: number) {
@@ -541,17 +542,21 @@ export default class Simple3DScene {
     box.getCenter(center);
     const size = new THREE.Vector3();
     box.getSize(size);
-    const length = box.max.sub(box.min).length() * 2;
-    //const bboxobject = new THREE.Box3Helper(box, new THREE.Color('blue'));
-    //this.scene.add(bboxobject);
+    const extent = box.max.sub(box.min);
+    let length = extent.length() * 2;
+
+    if (this.settings.zoomToFit2D) {
+      length = extent.x > extent.y ? extent.x * 2 : extent.y * 2;
+    }
+
     // we add a bit of padding, let's suppose we rotate, we want to avoid the
     // object to go out of the camera while still on the screen
-    const Z_PADDING = 5;
+    const Z_PADDING = 50;
     if (this.camera) {
-      this.camera.left = center.x - length;
-      this.camera.right = center.x + length;
-      this.camera.top = center.y + length;
-      this.camera.bottom = center.y - length;
+      this.camera.left = (center.x - length) / this.settings.defaultZoom;
+      this.camera.right = (center.x + length) / this.settings.defaultZoom;
+      this.camera.top = (center.y + length) / this.settings.defaultZoom;
+      this.camera.bottom = (center.y - length) / this.settings.defaultZoom;
       this.camera.near = center.z - length;
       this.camera.far = center.z + length;
     } else {

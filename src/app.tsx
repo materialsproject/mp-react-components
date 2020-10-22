@@ -39,6 +39,7 @@ import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchUIFilters } from './components/search/SearchUI/SearchUIFilters';
 import { SearchUI } from './components/search/SearchUI';
 import { materialsColumns, materialsGroups } from './components/search/SearchUI/constants';
+import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -673,19 +674,46 @@ const menuContent = [
 const emptyObject = {};
 ReactDOM.render(
   <>
-    <div>
+    <CameraContextWrapper>
+      <>
+        <Simple3DSceneComponent
+          settings={{
+            renderer: Renderer.WEBGL,
+            extractAxis: false,
+            transparentBackground: false,
+            background: '#e63946'
+          }}
+          data={scene}
+          debug={true}
+          toggleVisibility={{}}
+        />
+        {/* <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          data={scene2}
+          debug={false}
+          toggleVisibility={{}}
+        /> */}
+        {/* <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} /> */}
+      </>
+    </CameraContextWrapper>
+    {/* <div>
       <SearchUI
         columns={materialsColumns}
         filterGroups={materialsGroups}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL : ''}
         apiKey={process.env.REACT_APP_API_KEY}
       />
-    </div>
+    </div> */}
   </>,
 
   mountNode
 );
 console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+/**
+     <div>
+      <MaterialsSearch />
+    </div>
+ */
 /**
  <PeriodicContext>
         <div>
