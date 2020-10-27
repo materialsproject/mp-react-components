@@ -1,5 +1,6 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
+import { Link } from '../../navigation/Link';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -65,9 +66,10 @@ export interface SearchState {
 }
 
 enum ColumnFormat {
-  FIXED_DECIMAL = 'FIXED_DECIMAL',
-  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES',
-  FORMULA = 'FORMULA'
+  FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
+  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
+  FORMULA = 'FORMULA', // formatArg: none
+  LINK = 'LINK' // formatArg: string to prefix column value in link (e.g. '/materials/')
 }
 
 /**
@@ -106,6 +108,14 @@ export const initColumns = (columns: Column[]) => {
             </span>
           );
         };
+        return c;
+      case ColumnFormat.LINK:
+        c.cell = (row: any) => {
+          const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
+          return (
+            <Link href={path}>{row[c.selector]}</Link>
+          );
+        }
         return c;
       default:
         return c;
@@ -186,25 +196,23 @@ export const materialsColumns: Column[] = [
   {
     name: 'Material Id',
     selector: 'task_id',
-    sortable: true
+    format: ColumnFormat.LINK,
+    formatArg: '/materials/'
   },
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    sortable: true,
     format: ColumnFormat.FORMULA
   },
   {
     name: 'Volume',
     selector: 'volume',
-    sortable: true,
     format: ColumnFormat.FIXED_DECIMAL,
     formatArg: 3
   },
   {
     name: 'Density',
     selector: 'density',
-    sortable: true,
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4
   }
