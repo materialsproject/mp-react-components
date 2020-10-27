@@ -674,7 +674,7 @@ const menuContent = [
 const emptyObject = {};
 ReactDOM.render(
   <>
-    <CameraContextWrapper>
+    {/* <CameraContextWrapper>
       <>
         <Simple3DSceneComponent
           settings={{
@@ -687,23 +687,16 @@ ReactDOM.render(
           debug={true}
           toggleVisibility={{}}
         />
-        {/* <Simple3DSceneComponent
-          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
-          data={scene2}
-          debug={false}
-          toggleVisibility={{}}
-        /> */}
-        {/* <Simple3DSceneComponent data={scene3} debug={false} toggleVisibility={{}} /> */}
       </>
-    </CameraContextWrapper>
-    {/* <div>
+    </CameraContextWrapper> */}
+    <div>
       <SearchUI
         columns={materialsColumns}
         filterGroups={materialsGroups}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL : ''}
         apiKey={process.env.REACT_APP_API_KEY}
       />
-    </div> */}
+    </div>
   </>,
 
   mountNode
