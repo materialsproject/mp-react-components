@@ -4,6 +4,7 @@ import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';
 import { SearchUISearchBar } from './SearchUISearchBar';
+import './SearchUI.css';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -91,7 +92,7 @@ export interface SearchUIProps {
 
 export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseURL, apiKey }) => {
   return (
-    <div className="p-4">
+    <div className="search-ui p-4">
       <SearchUIContextProvider
         columns={columns}
         filterGroups={filterGroups}
@@ -103,7 +104,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseU
             <SearchUISearchBar />
           </div>
         </div>
-        <div className="columns">
+        <div className="columns content">
           <SearchUIFilters className="column is-narrow" />
           <SearchUIDataTable className="column" />
         </div>

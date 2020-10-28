@@ -102,7 +102,6 @@ export class Handle extends React.Component<HandleProps> {
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
             WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-            zIndex: 400,
             cursor: 'pointer',
             backgroundColor: 'none'
           }}
@@ -122,7 +121,6 @@ export class Handle extends React.Component<HandleProps> {
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
             WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-            zIndex: 300
           }}
         />
       </React.Fragment>

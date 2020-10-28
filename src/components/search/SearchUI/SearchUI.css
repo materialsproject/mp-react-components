@@ -1,0 +1,24 @@
+.search-ui .panel {
+  height: 100%;
+  max-height: 100%;
+  position: relative;
+}
+
+.search-ui .panel-heading {
+  position: absolute;
+  width: 100%;
+  z-index: 4;
+  height: 70px;
+}
+
+.search-ui .panel-block-container {
+  max-height: 100%;
+  overflow: auto;
+  position: relative;
+  padding-top: 70px;
+}
+
+.search-ui .content {
+  min-height: 80vh;
+  max-height: 80vh;
+}
