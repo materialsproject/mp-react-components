@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
 import { SliderRail, Handle, Track, Tick } from './SliderComponents';
+import './DualRangeSlider.css';
 
 const sliderStyle = {
   position: 'relative' as 'relative',
@@ -18,7 +19,10 @@ export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = un
   const [update, setUpdate] = useState<ReadonlyArray<number>>(values.slice());
 
   return (
-    <div style={{ height: 50, width: '100%' }}>
+    <div 
+      className="slider"
+      style={{ height: 50, width: '100%' }}
+    >
       <Slider
         mode={3}
         step={1}

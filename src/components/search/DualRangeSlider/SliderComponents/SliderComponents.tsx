@@ -7,20 +7,15 @@ import { GetRailProps, GetTrackProps, SliderItem } from 'react-compound-slider';
 const railOuterStyle = {
   position: 'absolute' as 'absolute',
   width: '100%',
-  height: 35,
   transform: 'translate(0%, -50%)',
-  borderRadius: 7,
   cursor: 'pointer'
 };
 
 const railInnerStyle = {
   position: 'absolute' as 'absolute',
   width: '100%',
-  height: 5,
   transform: 'translate(0%, -50%)',
-  borderRadius: 7,
   pointerEvents: 'none' as 'none',
-  backgroundColor: 'rgb(155,155,155)'
 };
 
 interface SliderRailProps {
@@ -30,8 +25,8 @@ interface SliderRailProps {
 export const SliderRail: React.FC<SliderRailProps> = ({ getRailProps }) => {
   return (
     <>
-      <div style={railOuterStyle} {...getRailProps()} />
-      <div style={railInnerStyle} />
+      <div className="outer-rail" style={railOuterStyle} {...getRailProps()} />
+      <div className="inner-rail" style={railInnerStyle} />
     </>
   );
 };
@@ -87,27 +82,26 @@ export class Handle extends React.Component<HandleProps> {
       <React.Fragment>
         {(mouseOver || isActive) && !disabled ? (
           <div
+            className="tooltip"
             style={{
               left: `${percent}%`,
               position: 'absolute',
-              marginLeft: '-11px',
-              marginTop: '-35px'
+              transform: 'translate(-50%, 0)',
+              marginTop: '-45px'
             }}
           >
-            <div className="tooltip">
+            <div>
               <span>{value}</span>
             </div>
           </div>
         ) : null}
         <div
+          className="handle-cover"
           style={{
             left: `${percent}%`,
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
             WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-            zIndex: 400,
-            width: 26,
-            height: 42,
             cursor: 'pointer',
             backgroundColor: 'none'
           }}
@@ -117,6 +111,7 @@ export class Handle extends React.Component<HandleProps> {
           })}
         />
         <div
+          className={`handle${disabled ? ' disabled' : ''}`}
           role="slider"
           aria-valuemin={min}
           aria-valuemax={max}
@@ -126,13 +121,6 @@ export class Handle extends React.Component<HandleProps> {
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
             WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-            zIndex: 300,
-            width: 24,
-            height: 24,
-            border: 0,
-            borderRadius: '50%',
-            boxShadow: '1px 1px 1px 1px rgba(0, 0, 0, 0.2)',
-            backgroundColor: disabled ? '#666' : '#8b6068'
           }}
         />
       </React.Fragment>
@@ -190,13 +178,11 @@ export const Track: React.FC<TrackProps> = ({
 }) => {
   return (
     <div
+      className={`track${disabled ? ' disabled' : ''}`}
       style={{
         position: 'absolute',
         transform: 'translate(0%, -50%)',
-        height: 10,
         zIndex: 1,
-        backgroundColor: disabled ? '#999' : '#607E9E',
-        borderRadius: 7,
         cursor: 'pointer',
         left: `${source.percent}%`,
         width: `${target.percent - source.percent}%`

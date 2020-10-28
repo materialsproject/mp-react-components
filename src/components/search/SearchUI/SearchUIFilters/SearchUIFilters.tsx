@@ -51,7 +51,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                 actions.setFilterProps({ parsedValue }, f.id, groupId)
               }
               periodicTableMode="onFocus"
-              // onFieldChange={type => actions.setFilterProps({ type }, f.id, groupId)}
+              onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
             />
           </div>
         );
@@ -85,28 +85,30 @@ export const SearchUIFilters: React.FC<Props> = props => {
             </Dropdown>
           </div>
         </div>
-        {state.filterGroups.map((g, i) => (
-          <div className="panel-block" style={{ padding: '1em' }} key={i}>
-            <div className="control">
-              <div
-                className="panel-block-title is-clickable"
-                onClick={() => actions.toggleGroup(g.name)}
-              >
-                <span className="is-size-5">{g.name}</span>
-                <div className="is-pulled-right">
-                  {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
+        <div className="panel-block-container">
+          {state.filterGroups.map((g, i) => (
+            <div className="panel-block" style={{ padding: '1em' }} key={i}>
+              <div className="control">
+                <div
+                  className="panel-block-title is-clickable"
+                  onClick={() => actions.toggleGroup(g.name)}
+                >
+                  <span className="is-size-5">{g.name}</span>
+                  <div className="is-pulled-right">
+                    {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
+                  </div>
+                </div>
+                <div className={`panel-block-children ${g.collapsed ? 'is-hidden' : ''}`}>
+                  {g.filters.map((f, j) => (
+                    <div className="mb-2" key={j}>
+                      {renderFilter(f, g.name)}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className={`panel-block-children ${g.collapsed ? 'is-hidden' : ''}`}>
-                {g.filters.map((f, j) => (
-                  <div className="mb-2" key={j}>
-                    {renderFilter(f, g.name)}
-                  </div>
-                ))}
-              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

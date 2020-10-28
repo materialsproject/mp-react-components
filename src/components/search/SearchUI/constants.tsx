@@ -128,11 +128,11 @@ export const materialsGroups: FilterGroup[] = [
     name: 'Material',
     collapsed: false,
     filters: [
-      {
-        name: 'ID',
-        id: FilterId.MP_ID,
-        type: FilterType.TEXT_INPUT
-      },
+      // {
+      //   name: 'ID',
+      //   id: FilterId.MP_ID,
+      //   type: FilterType.TEXT_INPUT
+      // },
       {
         name: 'Required Elements',
         id: FilterId.ELEMENTS,
@@ -141,14 +141,14 @@ export const materialsGroups: FilterGroup[] = [
           field: MaterialsInputField.ELEMENTS
         }
       },
-      {
-        name: 'Formula',
-        id: FilterId.FORMULA,
-        type: FilterType.MATERIALS_INPUT,
-        props: {
-          field: MaterialsInputField.FORMULA
-        }
-      }
+      // {
+      //   name: 'Formula',
+      //   id: FilterId.FORMULA,
+      //   type: FilterType.MATERIALS_INPUT,
+      //   props: {
+      //     field: MaterialsInputField.FORMULA
+      //   }
+      // }
       // {
       //   name: 'Search',
       //   id: FilterId.ELEMENTS,
