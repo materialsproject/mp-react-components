@@ -20,7 +20,6 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
-  const [groupHeights, setGroupHeights] = useState(new Array(state.filterGroups.length));
 
   /**
    * Render filter component based on the filter's "type" property
@@ -75,8 +74,22 @@ export const SearchUIFilters: React.FC<Props> = props => {
     return null;
   };
 
+  const renderActiveFilterCount = (group) => {
+    let count = 0;
+    const activeIds = state.activeFilters.map(f => f.id);
+    group.filters.forEach((f) => {
+      if (activeIds.indexOf(f.id) > -1) count++;
+    });
+    if (count > 0) {
+      return <span> ({count})</span>
+    } else {
+      return null;
+    }
+  };
+
   useEffect(() => {
     groupRefs.current.forEach((el, i) => {
+      // This is a special case for groups with periodic tables in them, should make more dynamic later
       if (state.filterGroups[i].name === 'Material') {
         el.style.maxHeight = (el.children[0].clientHeight + 244) + 'px';
       } else {
@@ -103,10 +116,13 @@ export const SearchUIFilters: React.FC<Props> = props => {
             <div className="panel-block" style={{ padding: '1em' }} key={i}>
               <div className="control">
                 <div
-                  className="panel-block-title is-clickable"
+                  className={classNames('panel-block-title', 'is-clickable', {
+                    'has-text-black-bis': !g.collapsed,
+                    'has-text-grey': g.collapsed
+                  })}
                   onClick={() => actions.toggleGroup(g.name)}
                 >
-                  <span className="is-size-5">{g.name}</span>
+                  <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
                   <div className="is-pulled-right">
                     {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
                   </div>

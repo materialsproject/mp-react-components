@@ -19,7 +19,7 @@ import { SearchUIProps } from '../../SearchUI';
  * SearchUIContext exposes the search state to all of its consumers
  * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
  */
-const SearchUIContext = React.createContext<any | undefined>(undefined);
+const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const initialState: SearchState = {
@@ -43,7 +43,7 @@ const initialState: SearchState = {
  * of values for building the activeFilters list.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }) => {
+const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }): SearchState => {
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
@@ -115,7 +115,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
   return { ...currentState, filterValues, activeFilters };
 };
 
-const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]) => {
+const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
   state.columns = initColumns(columns);
   state.filterGroups = filterGroups;
   return getState(state);

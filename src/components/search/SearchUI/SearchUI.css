@@ -18,6 +18,14 @@
   padding-top: 70px;
 }
 
+.search-ui .panel-block-title {
+  transition: 0.25s;
+}
+
+.search-ui .panel-block-title:hover {
+  color: #000000 !important;
+}
+
 /* .search-ui .content {
   min-height: 80vh;
   max-height: 80vh;

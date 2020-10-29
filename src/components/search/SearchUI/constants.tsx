@@ -186,7 +186,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Thermodynamics',
-    collapsed: false,
+    collapsed: true,
     filters: [
       {
         name: 'e_above_hull',
@@ -207,7 +207,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Symmetry',
-    collapsed: false,
+    collapsed: true,
     filters: [
       {
         name: 'spacegroup_symbol',
@@ -228,7 +228,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Electronic Structure',
-    collapsed: false,
+    collapsed: true,
     filters: [  
       {
         name: 'sc_band_gap',
