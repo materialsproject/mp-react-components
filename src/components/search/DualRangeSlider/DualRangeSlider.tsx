@@ -11,10 +11,16 @@ const sliderStyle = {
 interface Props {
   domain: number[];
   values: ReadonlyArray<number>;
+  step: number;
   onChange?: (values: readonly number[]) => void;
 }
 
-export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = undefined }) => {
+export const DualRangeSlider: React.FC<Props> = ({ 
+  domain = [0, 100],
+  step = 1,
+  values = domain.slice(), 
+  onChange = undefined 
+}) => {
   const [reversed, setReversed] = useState(false);
   const [update, setUpdate] = useState<ReadonlyArray<number>>(values.slice());
 
@@ -25,7 +31,7 @@ export const DualRangeSlider: React.FC<Props> = ({ domain, values, onChange = un
     >
       <Slider
         mode={3}
-        step={1}
+        step={step}
         domain={domain}
         reversed={reversed}
         rootStyle={sliderStyle}

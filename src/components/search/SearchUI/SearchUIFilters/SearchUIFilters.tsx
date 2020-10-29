@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
@@ -6,6 +6,7 @@ import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
 import { FilterType, Filter } from '../constants';
 import { Form } from 'react-bulma-components';
+import classNames from 'classnames';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -18,6 +19,8 @@ interface Props {
 export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
+  const groupRefs = useRef(new Array(state.filterGroups.length));
+  const [groupHeights, setGroupHeights] = useState(new Array(state.filterGroups.length));
 
   /**
    * Render filter component based on the filter's "type" property
@@ -51,7 +54,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                 actions.setFilterProps({ parsedValue }, f.id, groupId)
               }
               periodicTableMode="onFocus"
-              onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
+              // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
             />
           </div>
         );
@@ -71,6 +74,16 @@ export const SearchUIFilters: React.FC<Props> = props => {
     }
     return null;
   };
+
+  useEffect(() => {
+    groupRefs.current.forEach((el, i) => {
+      if (state.filterGroups[i].name === 'Material') {
+        el.style.maxHeight = (el.children[0].clientHeight + 244) + 'px';
+      } else {
+        el.style.maxHeight = el.children[0].clientHeight + 'px';
+      }
+    });
+  }, []);
 
   return (
     <div className={props.className}>
@@ -98,12 +111,17 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
                   </div>
                 </div>
-                <div className={`panel-block-children ${g.collapsed ? 'is-hidden' : ''}`}>
-                  {g.filters.map((f, j) => (
-                    <div className="mb-2" key={j}>
-                      {renderFilter(f, g.name)}
-                    </div>
-                  ))}
+                <div
+                  ref={el => (groupRefs.current[i] = el)}
+                  className={classNames('panel-block-children', 'can-hide-with-transition', {'is-hidden-with-transition' : g.collapsed})}
+                >
+                  <div>
+                    {g.filters.map((f, j) => (
+                      <div className="mb-2" key={j}>
+                        {renderFilter(f, g.name)}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

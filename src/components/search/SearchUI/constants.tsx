@@ -19,7 +19,7 @@ export enum FilterType {
 
 export interface Filter {
   name?: string;
-  id: FilterId;
+  id: string;
   type: FilterType;
   props?: any;
 }
@@ -128,11 +128,11 @@ export const materialsGroups: FilterGroup[] = [
     name: 'Material',
     collapsed: false,
     filters: [
-      // {
-      //   name: 'ID',
-      //   id: FilterId.MP_ID,
-      //   type: FilterType.TEXT_INPUT
-      // },
+      {
+        name: 'ID',
+        id: FilterId.MP_ID,
+        type: FilterType.TEXT_INPUT
+      },
       {
         name: 'Required Elements',
         id: FilterId.ELEMENTS,
@@ -141,43 +141,27 @@ export const materialsGroups: FilterGroup[] = [
           field: MaterialsInputField.ELEMENTS
         }
       },
-      // {
-      //   name: 'Formula',
-      //   id: FilterId.FORMULA,
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     field: MaterialsInputField.FORMULA
-      //   }
-      // }
-      // {
-      //   name: 'Search',
-      //   id: FilterId.ELEMENTS,
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     parsedValue: [],
-      //     field: MaterialsInputField.ELEMENTS
-      //   }
-      // },
-      // {
-      //   name: 'Number of Elements',
-      //   id: FilterId.NELEMENTS,
-      //   type: FilterType.SLIDER,
-      //   props: {
-      //     domain: [0, 20]
-      //   }
-      // },
+      {
+        name: 'Formula',
+        id: FilterId.FORMULA,
+        type: FilterType.MATERIALS_INPUT,
+        props: {
+          field: MaterialsInputField.FORMULA
+        }
+      }
     ]
   },
   {
-    name: 'Properties',
-    collapsed: false,
+    name: 'Basic Properties',
+    collapsed: true,
     filters: [
       {
         name: 'Volume',
         id: FilterId.VOLUME,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 200]
+          domain: [0, 100],
+          step: 1
         }
       },
       {
@@ -185,8 +169,76 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.DENSITY,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 200]
+          domain: [0, 100],
+          step: 1
         }
+      },
+      {
+        name: 'Number of Sites',
+        id: 'nsites',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
+      }
+    ]
+  },
+  {
+    name: 'Thermodynamics',
+    collapsed: false,
+    filters: [
+      {
+        name: 'e_above_hull',
+        id: 'e_above_hull',
+        type: FilterType.SLIDER
+      },
+      {
+        name: 'formation_energy_per_atom',
+        id: 'formation_energy_per_atom',
+        type: FilterType.SLIDER
+      },
+      {
+        name: 'is_stable',
+        id: 'is_stable',
+        type: FilterType.SLIDER
+      }
+    ]
+  },
+  {
+    name: 'Symmetry',
+    collapsed: false,
+    filters: [
+      {
+        name: 'spacegroup_symbol',
+        id: 'spacegroup_symbol',
+        type: FilterType.SLIDER
+      },
+      {
+        name: 'spacegroup_number',
+        id: 'spacegroup_number',
+        type: FilterType.SLIDER
+      },
+      {
+        name: 'Crystal System',
+        id: 'crystal_system',
+        type: FilterType.SLIDER
+      }
+    ]
+  },
+  {
+    name: 'Electronic Structure',
+    collapsed: false,
+    filters: [  
+      {
+        name: 'sc_band_gap',
+        id: 'sc_band_gap',
+        type: FilterType.SLIDER
+      },
+      {
+        name: 'sc_direct',
+        id: 'sc_direct',
+        type: FilterType.SLIDER
       }
     ]
   }

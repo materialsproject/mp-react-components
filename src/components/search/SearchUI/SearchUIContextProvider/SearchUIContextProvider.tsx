@@ -49,6 +49,8 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
     g.filters.forEach(f => {
       switch (f.type) {
         case FilterType.SLIDER:
+          if (!f.hasOwnProperty('props')) f.props = {domain: [0, 100]};
+          if (f.hasOwnProperty('props') && f.props.hasOwnProperty('domain')) f.props.domain = [0, 100];  
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
@@ -176,9 +178,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState({ ...newState });
     },
     toggleGroup: (groupId: string) => {
-      const filterGroups = state.filterGroups;
-      const group = filterGroups.find(g => g.name === groupId);
-      if (group) group.collapsed = !group.collapsed;
+      const filterGroups = state.filterGroups.map((g) => {
+        if (g.name !== groupId) {
+          g.collapsed = true;
+        } else {
+          g.collapsed = !g.collapsed;
+        }
+        return g;
+      });
+      // const group = filterGroups.find(g => g.name === groupId);
+      // if (group) group.collapsed = !group.collapsed;
       setState({ ...state, filterGroups: filterGroups });
     },
     getData: () => {
