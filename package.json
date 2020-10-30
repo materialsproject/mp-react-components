@@ -48,7 +48,7 @@
     "react": "^16.13.1",
     "react-bulma-components": "^3.4.0",
     "react-compound-slider": "^2.5.0",
-    "react-data-table-component": "^6.7.0",
+    "react-data-table-component": "^6.11.5",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.13.1",

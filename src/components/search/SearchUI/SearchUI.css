@@ -26,6 +26,10 @@
   color: #000000 !important;
 }
 
+.search-ui .content > .column:last-child {
+  overflow: hidden;
+}
+
 /* .search-ui .content {
   min-height: 80vh;
   max-height: 80vh;

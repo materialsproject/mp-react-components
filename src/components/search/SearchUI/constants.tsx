@@ -160,7 +160,7 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.VOLUME,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 100],
+          domain: [5, 19407],
           step: 1
         }
       },
@@ -169,8 +169,8 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.DENSITY,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 100],
-          step: 1
+          domain: [0, 25],
+          step: 0.1
         }
       },
       {
@@ -178,7 +178,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'nsites',
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 100],
+          domain: [1, 360],
           step: 1
         }
       }
@@ -191,17 +191,29 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'e_above_hull',
         id: 'e_above_hull',
-        type: FilterType.SLIDER
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 7],
+          step: 0.1
+        }
       },
       {
         name: 'formation_energy_per_atom',
         id: 'formation_energy_per_atom',
-        type: FilterType.SLIDER
+        type: FilterType.SLIDER,
+        props: {
+          domain: [-10, 6],
+          step: 0.1
+        }
       },
       {
         name: 'is_stable',
         id: 'is_stable',
-        type: FilterType.SLIDER
+        type: FilterType.TEXT_INPUT,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       }
     ]
   },
@@ -212,17 +224,29 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'spacegroup_symbol',
         id: 'spacegroup_symbol',
-        type: FilterType.SLIDER
+        type: FilterType.TEXT_INPUT,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       },
       {
         name: 'spacegroup_number',
         id: 'spacegroup_number',
-        type: FilterType.SLIDER
+        type: FilterType.TEXT_INPUT,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       },
       {
         name: 'Crystal System',
         id: 'crystal_system',
-        type: FilterType.SLIDER
+        type: FilterType.TEXT_INPUT,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       }
     ]
   },
@@ -233,12 +257,20 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'sc_band_gap',
         id: 'sc_band_gap',
-        type: FilterType.SLIDER
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       },
       {
         name: 'sc_direct',
         id: 'sc_direct',
-        type: FilterType.SLIDER
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
       }
     ]
   }
@@ -267,5 +299,33 @@ export const materialsColumns: Column[] = [
     selector: 'density',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4
+  },
+  {
+    name: 'Sites',
+    selector: 'nsites'
+  },
+  {
+    name: 'Energy Above Hull',
+    selector: 'e_above_hull',
+    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    formatArg: 4
+  },
+  {
+    name: 'Formation Energy',
+    selector: 'formation_energy_per_atom',
+    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    formatArg: 4
+  },
+  {
+    name: 'Spacegroup Symbol',
+    selector: 'spacegroup_symbol'
+  },
+  {
+    name: 'Spacegroup Number',
+    selector: 'spacegroup_number'
+  },
+  {
+    name: 'Crystal System',
+    selector: 'crystal_system'
   }
 ];

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
-import { SliderRail, Handle, Track, Tick } from './SliderComponents';
+import { SliderRail, Handle, Track, Tick, KeyboardHandle } from './SliderComponents';
 import './DualRangeSlider.css';
+import { countDecimals } from '../utils';
 
 const sliderStyle = {
   position: 'relative' as 'relative',
@@ -23,6 +24,15 @@ export const DualRangeSlider: React.FC<Props> = ({
 }) => {
   const [reversed, setReversed] = useState(false);
   const [update, setUpdate] = useState<ReadonlyArray<number>>(values.slice());
+  const decimals = countDecimals(step);
+
+  const handleChange = (vals) => {
+    if (onChange) {
+      onChange(vals.map((val) => {  
+        return parseFloat(val.toFixed(decimals));
+      }));
+    }
+  }
 
   return (
     <div 
@@ -35,8 +45,10 @@ export const DualRangeSlider: React.FC<Props> = ({
         domain={domain}
         reversed={reversed}
         rootStyle={sliderStyle}
-        onUpdate={(value: ReadonlyArray<number>) => setUpdate(value)}
-        onChange={onChange}
+        onUpdate={(value: ReadonlyArray<number>) => setUpdate(values.map((val) => {  
+          return parseFloat(val.toFixed(decimals));
+        }))}
+        onChange={handleChange}
         values={values}
       >
         <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
@@ -48,6 +60,7 @@ export const DualRangeSlider: React.FC<Props> = ({
                   key={handle.id}
                   handle={handle}
                   domain={domain}
+                  decimals={decimals}
                   isActive={handle.id === activeHandleID}
                   getHandleProps={getHandleProps}
                 />

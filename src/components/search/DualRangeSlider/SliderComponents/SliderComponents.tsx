@@ -51,6 +51,7 @@ interface HandleProps {
   isActive: boolean;
   domain: number[];
   handle: SliderItem;
+  decimals?: number;
   getHandleProps: GetHandleProps;
   disabled?: boolean;
 }
@@ -72,6 +73,7 @@ export class Handle extends React.Component<HandleProps> {
     const {
       domain: [min, max],
       handle: { id, value, percent },
+      decimals,
       isActive,
       disabled,
       getHandleProps
@@ -91,7 +93,7 @@ export class Handle extends React.Component<HandleProps> {
             }}
           >
             <div>
-              <span>{value}</span>
+              <span>{decimals && value !== 0 ? value.toFixed(decimals) : value}</span>
             </div>
           </div>
         ) : null}
