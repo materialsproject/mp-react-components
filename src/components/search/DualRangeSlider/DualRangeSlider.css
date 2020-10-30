@@ -1,3 +1,9 @@
+.slider {
+  padding-left: 1.2em;
+  padding-right: 1.2em;
+  padding-top: 0.7em;
+}
+
 .slider .handle, .slider .handle-cover {
   width: 15px;
   height: 15px;
