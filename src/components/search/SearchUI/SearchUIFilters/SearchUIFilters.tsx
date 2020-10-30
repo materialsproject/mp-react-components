@@ -7,6 +7,8 @@ import { Dropdown } from 'react-bulma-components';
 import { FilterType, Filter } from '../constants';
 import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
+import Select from 'react-select';
+import { CheckboxList } from '../../CheckboxList';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -68,6 +70,27 @@ export const SearchUIFilters: React.FC<Props> = props => {
             />
           </div>
         );
+        case FilterType.SELECT:
+          return (
+            <div>
+              <p className="has-text-weight-bold mb-3">{f.name}</p>
+              <Select
+                {...f.props}
+                menuPosition="fixed"
+                onChange={item => actions.setFilterValue(item.value, f.id)}
+              />
+            </div>
+          );
+        case FilterType.CHECKBOX_LIST:
+          return (
+            <div>
+              <p className="has-text-weight-bold mb-3">{f.name}</p>
+              <CheckboxList
+                {...f.props}
+                onChange={v => actions.setFilterValue(v, f.id)}
+              />
+            </div>
+          );
       default:
         null;
     }
@@ -81,7 +104,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
       if (activeIds.indexOf(f.id) > -1) count++;
     });
     if (count > 0) {
-      return <span> ({count})</span>
+      return <span className=""> ({count})</span>
     } else {
       return null;
     }

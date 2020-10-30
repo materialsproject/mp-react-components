@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 export const spaceGroups = [
   {
     'full-symbol': 'P1',
@@ -2365,6 +2367,37 @@ export const groupCheckboxes = keysForGrouping.map(p => ({
   name: p,
   label: keyToLabel[p]
 }));
+
+export const spaceGroupNumberOptions = () => {
+  return spaceGroups.map(g => {
+    return {
+      value: g["space-group.number"],
+      label: g["space-group.number"]
+    }
+  });
+};
+
+export const spaceGroupSymbolOptions = () => {
+  return spaceGroups.map(g => {
+    return {
+      value: g["space-group.symbol"],
+      label: g["space-group.symbol"]
+    }
+  });
+};
+
+export const crystalSystemOptions = () => {
+  var spaceGroupsByCrystalSystem = d3.nest()
+    .key((d: any) => d.crystal_system)
+    .entries(spaceGroups);
+
+  return spaceGroupsByCrystalSystem.map(d => {
+    return {
+      value: d.key,
+      label: d.key
+    }
+  }); 
+};
 
 propertiesCheckbox[0].checked = true;
 groupCheckboxes[0].checked = true;

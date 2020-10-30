@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
 import { Link } from '../../navigation/Link';
+import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../GroupSpaceSearch/space-groups'
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -14,7 +15,9 @@ export enum FilterId {
 export enum FilterType {
   SLIDER = 'SLIDER',
   MATERIALS_INPUT = 'MATERIALS_INPUT',
-  TEXT_INPUT = 'TEXT_INPUT'
+  TEXT_INPUT = 'TEXT_INPUT',
+  SELECT = 'SELECT',
+  CHECKBOX_LIST = 'CHECKBOX_LIST'
 }
 
 export interface Filter {
@@ -189,7 +192,7 @@ export const materialsGroups: FilterGroup[] = [
     collapsed: true,
     filters: [
       {
-        name: 'e_above_hull',
+        name: 'Energy Above Hull',
         id: 'e_above_hull',
         type: FilterType.SLIDER,
         props: {
@@ -198,7 +201,7 @@ export const materialsGroups: FilterGroup[] = [
         }
       },
       {
-        name: 'formation_energy_per_atom',
+        name: 'Formation Energy',
         id: 'formation_energy_per_atom',
         type: FilterType.SLIDER,
         props: {
@@ -207,12 +210,20 @@ export const materialsGroups: FilterGroup[] = [
         }
       },
       {
-        name: 'is_stable',
+        name: 'Stability',
         id: 'is_stable',
-        type: FilterType.TEXT_INPUT,
+        type: FilterType.CHECKBOX_LIST,
         props: {
-          domain: [0, 100],
-          step: 1
+          options: [
+            {
+              label: 'Is stable',
+              value: true
+            },
+            {
+              label: 'Is not stable',
+              value: false
+            }
+          ]
         }
       }
     ]
@@ -222,30 +233,27 @@ export const materialsGroups: FilterGroup[] = [
     collapsed: true,
     filters: [
       {
-        name: 'spacegroup_symbol',
+        name: 'Spacegroup Symbol',
         id: 'spacegroup_symbol',
-        type: FilterType.TEXT_INPUT,
+        type: FilterType.SELECT,
         props: {
-          domain: [0, 100],
-          step: 1
+          options: spaceGroupSymbolOptions()
         }
       },
       {
-        name: 'spacegroup_number',
+        name: 'Spacegroup Number',
         id: 'spacegroup_number',
-        type: FilterType.TEXT_INPUT,
+        type: FilterType.SELECT,
         props: {
-          domain: [0, 100],
-          step: 1
+          options: spaceGroupNumberOptions()
         }
       },
       {
         name: 'Crystal System',
         id: 'crystal_system',
-        type: FilterType.TEXT_INPUT,
+        type: FilterType.SELECT,
         props: {
-          domain: [0, 100],
-          step: 1
+          options: crystalSystemOptions()
         }
       }
     ]
@@ -255,7 +263,7 @@ export const materialsGroups: FilterGroup[] = [
     collapsed: true,
     filters: [  
       {
-        name: 'sc_band_gap',
+        name: 'Band Gap',
         id: 'sc_band_gap',
         type: FilterType.SLIDER,
         props: {
@@ -264,12 +272,20 @@ export const materialsGroups: FilterGroup[] = [
         }
       },
       {
-        name: 'sc_direct',
+        name: 'Direct Band Gap',
         id: 'sc_direct',
-        type: FilterType.SLIDER,
+        type: FilterType.CHECKBOX_LIST,
         props: {
-          domain: [0, 100],
-          step: 1
+          options: [
+            {
+              label: 'Is direct',
+              value: true
+            },
+            {
+              label: 'Is not direct',
+              value: false
+            }
+          ]
         }
       }
     ]
@@ -317,15 +333,19 @@ export const materialsColumns: Column[] = [
     formatArg: 4
   },
   {
+    name: 'Is Stable',
+    selector: 'symmetry.is_stable'
+  },
+  {
     name: 'Spacegroup Symbol',
-    selector: 'spacegroup_symbol'
+    selector: 'symmetry.symbol'
   },
   {
     name: 'Spacegroup Number',
-    selector: 'spacegroup_number'
+    selector: 'symmetry.number'
   },
   {
     name: 'Crystal System',
-    selector: 'crystal_system'
+    selector: 'symmetry.crystal_system'
   }
 ];

@@ -1,5 +1,5 @@
 .search-ui .panel {
-  height: 100%;
+  height: auto;
   max-height: 100%;
   position: relative;
 }
