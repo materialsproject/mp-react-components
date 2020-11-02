@@ -95,12 +95,12 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           break;
         default:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
-          if (filterValues[f.id]) {
+          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null ) {
             activeFilters.push({
               id: f.id,
               displayName: f.name,
               value: filterValues[f.id],
-              defaultValue: '',
+              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id,

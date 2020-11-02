@@ -17,6 +17,7 @@ export enum FilterType {
   MATERIALS_INPUT = 'MATERIALS_INPUT',
   TEXT_INPUT = 'TEXT_INPUT',
   SELECT = 'SELECT',
+  THREE_STATE_BOOLEAN_SELECT = 'THREE_STATE_BOOLEAN_SELECT',
   CHECKBOX_LIST = 'CHECKBOX_LIST'
 }
 
@@ -212,7 +213,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Stability',
         id: 'is_stable',
-        type: FilterType.CHECKBOX_LIST,
+        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
         props: {
           options: [
             {
@@ -274,7 +275,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Direct Band Gap',
         id: 'sc_direct',
-        type: FilterType.CHECKBOX_LIST,
+        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
         props: {
           options: [
             {
@@ -334,7 +335,7 @@ export const materialsColumns: Column[] = [
   },
   {
     name: 'Is Stable',
-    selector: 'symmetry.is_stable'
+    selector: 'is_stable'
   },
   {
     name: 'Spacegroup Symbol',

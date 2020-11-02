@@ -7,8 +7,9 @@ import { Dropdown } from 'react-bulma-components';
 import { FilterType, Filter } from '../constants';
 import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
-import Select from 'react-select';
+import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
+import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect'
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -77,6 +78,17 @@ export const SearchUIFilters: React.FC<Props> = props => {
               <Select
                 {...f.props}
                 menuPosition="fixed"
+                onChange={item => actions.setFilterValue(item.value, f.id)}
+              />
+            </div>
+          );
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          return (
+            <div>
+              <p className="has-text-weight-bold mb-3">{f.name}</p>
+              <ThreeStateBooleanSelect
+                {...f.props}
+                value={state.filterValues[f.id]}
                 onChange={item => actions.setFilterValue(item.value, f.id)}
               />
             </div>
