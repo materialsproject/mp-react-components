@@ -18,6 +18,9 @@ export enum FilterType {
   TEXT_INPUT = 'TEXT_INPUT',
   SELECT = 'SELECT',
   THREE_STATE_BOOLEAN_SELECT = 'THREE_STATE_BOOLEAN_SELECT',
+  SELECT_SPACEGROUP_SYMBOL = 'SELECT_SPACEGROUP_SYMBOL',
+  SELECT_SPACEGROUP_NUMBER = 'SELECT_SPACEGROUP_NUMBER',
+  SELECT_CRYSTAL_SYSTEM = 'SELECT_CRYSTAL_SYSTEM',
   CHECKBOX_LIST = 'CHECKBOX_LIST'
 }
 
@@ -134,6 +137,27 @@ export const initColumns = (columns: Column[]) => {
   });
 };
 
+export const initFilterGroups = (filterGroups: FilterGroup[]) => {
+  return filterGroups.map(g => {
+    g.filters = g.filters.map(f => {
+      switch (f.type) {
+        case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          f.props = {options: spaceGroupSymbolOptions()};
+          return f;
+        case FilterType.SELECT_SPACEGROUP_NUMBER:
+          f.props = {options: spaceGroupNumberOptions()};
+          return f;
+        case FilterType.SELECT_CRYSTAL_SYSTEM:
+          f.props = {options: crystalSystemOptions()};
+          return f;
+        default:
+          return f;
+      }
+    });
+    return g;
+  });
+}
+
 export const materialsGroups: FilterGroup[] = [
   {
     name: 'Material',
@@ -243,26 +267,17 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Spacegroup Symbol',
         id: 'spacegroup_symbol',
-        type: FilterType.SELECT,
-        props: {
-          options: spaceGroupSymbolOptions()
-        }
+        type: FilterType.SELECT_SPACEGROUP_SYMBOL
       },
       {
         name: 'Spacegroup Number',
         id: 'spacegroup_number',
-        type: FilterType.SELECT,
-        props: {
-          options: spaceGroupNumberOptions()
-        }
+        type: FilterType.SELECT_SPACEGROUP_NUMBER
       },
       {
         name: 'Crystal System',
         id: 'crystal_system',
-        type: FilterType.SELECT,
-        props: {
-          options: crystalSystemOptions()
-        }
+        type: FilterType.SELECT_CRYSTAL_SYSTEM
       }
     ]
   },

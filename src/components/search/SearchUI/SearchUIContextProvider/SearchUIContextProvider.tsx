@@ -9,7 +9,8 @@ import {
   ActiveFilter,
   SearchState,
   Column,
-  initColumns
+  initColumns,
+  initFilterGroups
 } from '../constants';
 
 import { SearchUIProps } from '../../SearchUI';
@@ -117,7 +118,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
 
 const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
   state.columns = initColumns(columns);
-  state.filterGroups = filterGroups;
+  state.filterGroups = initFilterGroups(filterGroups);
   return getState(state);
 };
 
