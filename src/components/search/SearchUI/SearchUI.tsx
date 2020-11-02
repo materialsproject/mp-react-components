@@ -99,8 +99,8 @@ export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseU
         baseURL={baseURL}
         apiKey={apiKey}
       >
-        <div className="columns is-centered">
-          <div className="column is-7 p-0 pt-3">
+        <div className="columns">
+          <div className="column">
             <SearchUISearchBar />
           </div>
         </div>

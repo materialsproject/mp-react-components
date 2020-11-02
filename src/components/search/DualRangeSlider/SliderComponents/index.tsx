@@ -1,1 +1,1 @@
-export { SliderRail, Handle, Track, Tick } from './SliderComponents';
+export { SliderRail, Handle, Track, Tick, KeyboardHandle } from './SliderComponents';

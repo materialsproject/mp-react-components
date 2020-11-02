@@ -1,0 +1,4 @@
+.select-outer-container.is-open {
+  position: relative;
+  z-index: 100;
+}

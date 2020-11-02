@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
 import { Link } from '../../navigation/Link';
+import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../GroupSpaceSearch/space-groups'
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -14,12 +15,15 @@ export enum FilterId {
 export enum FilterType {
   SLIDER = 'SLIDER',
   MATERIALS_INPUT = 'MATERIALS_INPUT',
-  TEXT_INPUT = 'TEXT_INPUT'
+  TEXT_INPUT = 'TEXT_INPUT',
+  SELECT = 'SELECT',
+  THREE_STATE_BOOLEAN_SELECT = 'THREE_STATE_BOOLEAN_SELECT',
+  CHECKBOX_LIST = 'CHECKBOX_LIST'
 }
 
 export interface Filter {
   name?: string;
-  id: FilterId;
+  id: string;
   type: FilterType;
   props?: any;
 }
@@ -69,7 +73,8 @@ enum ColumnFormat {
   FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
   SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
   FORMULA = 'FORMULA', // formatArg: none
-  LINK = 'LINK' // formatArg: string to prefix column value in link (e.g. '/materials/')
+  LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
+  BOOLEAN = 'BOOLEAN'
 }
 
 /**
@@ -117,6 +122,12 @@ export const initColumns = (columns: Column[]) => {
           );
         }
         return c;
+      case ColumnFormat.BOOLEAN:
+        const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
+        const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
+        const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
+        c.format = (row: any) => row[c.selector] ? truthyLabel : falsyLabel;
+        return c;    
       default:
         return c;
     }
@@ -128,11 +139,11 @@ export const materialsGroups: FilterGroup[] = [
     name: 'Material',
     collapsed: false,
     filters: [
-      // {
-      //   name: 'ID',
-      //   id: FilterId.MP_ID,
-      //   type: FilterType.TEXT_INPUT
-      // },
+      {
+        name: 'ID',
+        id: FilterId.MP_ID,
+        type: FilterType.TEXT_INPUT
+      },
       {
         name: 'Required Elements',
         id: FilterId.ELEMENTS,
@@ -141,43 +152,27 @@ export const materialsGroups: FilterGroup[] = [
           field: MaterialsInputField.ELEMENTS
         }
       },
-      // {
-      //   name: 'Formula',
-      //   id: FilterId.FORMULA,
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     field: MaterialsInputField.FORMULA
-      //   }
-      // }
-      // {
-      //   name: 'Search',
-      //   id: FilterId.ELEMENTS,
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     parsedValue: [],
-      //     field: MaterialsInputField.ELEMENTS
-      //   }
-      // },
-      // {
-      //   name: 'Number of Elements',
-      //   id: FilterId.NELEMENTS,
-      //   type: FilterType.SLIDER,
-      //   props: {
-      //     domain: [0, 20]
-      //   }
-      // },
+      {
+        name: 'Formula',
+        id: FilterId.FORMULA,
+        type: FilterType.MATERIALS_INPUT,
+        props: {
+          field: MaterialsInputField.FORMULA
+        }
+      }
     ]
   },
   {
-    name: 'Properties',
-    collapsed: false,
+    name: 'Basic Properties',
+    collapsed: true,
     filters: [
       {
         name: 'Volume',
         id: FilterId.VOLUME,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 200]
+          domain: [5, 19407],
+          step: 1
         }
       },
       {
@@ -185,7 +180,120 @@ export const materialsGroups: FilterGroup[] = [
         id: FilterId.DENSITY,
         type: FilterType.SLIDER,
         props: {
-          domain: [0, 200]
+          domain: [0, 25],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Number of Sites',
+        id: 'nsites',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [1, 360],
+          step: 1
+        }
+      }
+    ]
+  },
+  {
+    name: 'Thermodynamics',
+    collapsed: true,
+    filters: [
+      {
+        name: 'Energy Above Hull',
+        id: 'e_above_hull',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 7],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Formation Energy',
+        id: 'formation_energy_per_atom',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [-10, 6],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Stability',
+        id: 'is_stable',
+        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
+        props: {
+          options: [
+            {
+              label: 'Is stable',
+              value: true
+            },
+            {
+              label: 'Is not stable',
+              value: false
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    name: 'Symmetry',
+    collapsed: true,
+    filters: [
+      {
+        name: 'Spacegroup Symbol',
+        id: 'spacegroup_symbol',
+        type: FilterType.SELECT,
+        props: {
+          options: spaceGroupSymbolOptions()
+        }
+      },
+      {
+        name: 'Spacegroup Number',
+        id: 'spacegroup_number',
+        type: FilterType.SELECT,
+        props: {
+          options: spaceGroupNumberOptions()
+        }
+      },
+      {
+        name: 'Crystal System',
+        id: 'crystal_system',
+        type: FilterType.SELECT,
+        props: {
+          options: crystalSystemOptions()
+        }
+      }
+    ]
+  },
+  {
+    name: 'Electronic Structure',
+    collapsed: true,
+    filters: [  
+      {
+        name: 'Band Gap',
+        id: 'sc_band_gap',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 1
+        }
+      },
+      {
+        name: 'Direct Band Gap',
+        id: 'sc_direct',
+        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
+        props: {
+          options: [
+            {
+              label: 'Is direct',
+              value: true
+            },
+            {
+              label: 'Is not direct',
+              value: false
+            }
+          ]
         }
       }
     ]
@@ -215,5 +323,39 @@ export const materialsColumns: Column[] = [
     selector: 'density',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4
+  },
+  {
+    name: 'Sites',
+    selector: 'nsites'
+  },
+  {
+    name: 'Energy Above Hull',
+    selector: 'e_above_hull',
+    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    formatArg: 4
+  },
+  {
+    name: 'Formation Energy',
+    selector: 'formation_energy_per_atom',
+    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    formatArg: 4
+  },
+  {
+    name: 'Is Stable',
+    selector: 'is_stable',
+    format: ColumnFormat.BOOLEAN,
+    formatArg: ['yes', 'no']
+  },
+  {
+    name: 'Spacegroup Symbol',
+    selector: 'symmetry.symbol'
+  },
+  {
+    name: 'Spacegroup Number',
+    selector: 'symmetry.number'
+  },
+  {
+    name: 'Crystal System',
+    selector: 'symmetry.crystal_system'
   }
 ];

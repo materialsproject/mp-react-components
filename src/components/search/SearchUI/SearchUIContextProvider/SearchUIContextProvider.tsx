@@ -19,7 +19,7 @@ import { SearchUIProps } from '../../SearchUI';
  * SearchUIContext exposes the search state to all of its consumers
  * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
  */
-const SearchUIContext = React.createContext<any | undefined>(undefined);
+const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const initialState: SearchState = {
@@ -43,12 +43,14 @@ const initialState: SearchState = {
  * of values for building the activeFilters list.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }) => {
+const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }): SearchState => {
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
       switch (f.type) {
         case FilterType.SLIDER:
+          // if (!f.hasOwnProperty('props')) f.props = {domain: [0, 100]};
+          // if (f.hasOwnProperty('props') && f.props.hasOwnProperty('domain')) f.props.domain = [0, 100];  
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
@@ -93,12 +95,12 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           break;
         default:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
-          if (filterValues[f.id]) {
+          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null ) {
             activeFilters.push({
               id: f.id,
               displayName: f.name,
               value: filterValues[f.id],
-              defaultValue: '',
+              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id,
@@ -113,7 +115,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
   return { ...currentState, filterValues, activeFilters };
 };
 
-const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]) => {
+const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
   state.columns = initColumns(columns);
   state.filterGroups = filterGroups;
   return getState(state);
@@ -157,6 +159,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         getState(currentState, { ...currentState.filterValues, [id]: value })
       );
     },
+    setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
+      setState(currentState => {
+        let newFilterValues = {[id]: value};
+        overrideFields.forEach((field) => {
+          const activeFilter = currentState.activeFilters.find((a) => a.id === field);
+          if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+        });
+        return getState(currentState, { ...currentState.filterValues, ...newFilterValues });
+      });
+    },
     resetAllFiltersExcept: (value: any, id: string) => {
       setState(currentState => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
@@ -176,9 +188,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState({ ...newState });
     },
     toggleGroup: (groupId: string) => {
-      const filterGroups = state.filterGroups;
-      const group = filterGroups.find(g => g.name === groupId);
-      if (group) group.collapsed = !group.collapsed;
+      const filterGroups = state.filterGroups.map((g) => {
+        if (g.name !== groupId) {
+          g.collapsed = true;
+        } else {
+          g.collapsed = !g.collapsed;
+        }
+        return g;
+      });
+      // const group = filterGroups.find(g => g.name === groupId);
+      // if (group) group.collapsed = !group.collapsed;
       setState({ ...state, filterGroups: filterGroups });
     },
     getData: () => {
