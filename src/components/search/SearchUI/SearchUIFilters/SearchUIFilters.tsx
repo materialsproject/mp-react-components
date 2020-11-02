@@ -126,7 +126,8 @@ export const SearchUIFilters: React.FC<Props> = props => {
     groupRefs.current.forEach((el, i) => {
       // This is a special case for groups with periodic tables in them, should make more dynamic later
       if (state.filterGroups[i].name === 'Material') {
-        el.style.maxHeight = (el.children[0].clientHeight + 244) + 'px';
+        const marginTop = 15;
+        el.style.maxHeight = (el.children[0].clientHeight + 244 + marginTop) + 'px';
       } else {
         el.style.maxHeight = el.children[0].clientHeight + 'px';
       }
@@ -155,7 +156,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     'has-text-black-bis': !g.collapsed,
                     'has-text-grey': g.collapsed
                   })}
-                  onClick={() => actions.toggleGroup(g.name)}
+                  onMouseDown={() => actions.toggleGroup(g.name)}
                 >
                   <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
                   <div className="is-pulled-right">

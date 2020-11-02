@@ -14,6 +14,7 @@ import { PeriodicContext } from '../../periodic-table/periodic-table-state/perio
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 import { SelectableTable } from '../../periodic-table/table-state';
+import classNames from 'classnames';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -99,12 +100,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
           </button>
         )}
         <div
-          className={`
-            table-transition-wrapper-small 
-            can-hide-with-transition 
-            ${showPeriodicTable ? '' : 'is-hidden-with-transition'} 
-            ${props.periodicTableMode === 'onFocus' ? 'mt-3' : ''}
-          `}
+          className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
+            'is-hidden-with-transition': !showPeriodicTable,
+            'mt-3': props.periodicTableMode === 'onFocus' && showPeriodicTable
+          })}
           onMouseDown={event => {
             setPeriodicTableClicked(true);
             setTimeout(() => {
