@@ -74,6 +74,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   };
 
+  const handleSubmit = () => {
+    if (props.onSubmit) {
+      setShowPeriodicTable(false);
+      props.onSubmit();
+    }
+  };
+
   return (
     <div className="has-text-centered">
       <PeriodicContext>
@@ -85,7 +92,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             onChange={props.onChange}
             onParsedValueChange={props.onParsedValueChange}
             onFieldChange={props.onFieldChange}
-            onSubmit={props.onSubmit}
+            onSubmit={props.onSubmit ? handleSubmit : undefined}
             onFocus={getOnFocusProp}
             onBlur={getOnBlurProp}
             liftInputRef={ref => setInputRef(ref)}

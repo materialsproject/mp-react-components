@@ -159,6 +159,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         getState(currentState, { ...currentState.filterValues, [id]: value })
       );
     },
+    setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
+      setState(currentState => {
+        let newFilterValues = {[id]: value};
+        overrideFields.forEach((field) => {
+          const activeFilter = currentState.activeFilters.find((a) => a.id === field);
+          if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+        });
+        return getState(currentState, { ...currentState.filterValues, ...newFilterValues });
+      });
+    },
     resetAllFiltersExcept: (value: any, id: string) => {
       setState(currentState => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
