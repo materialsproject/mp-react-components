@@ -73,7 +73,8 @@ enum ColumnFormat {
   FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
   SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
   FORMULA = 'FORMULA', // formatArg: none
-  LINK = 'LINK' // formatArg: string to prefix column value in link (e.g. '/materials/')
+  LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
+  BOOLEAN = 'BOOLEAN'
 }
 
 /**
@@ -121,6 +122,12 @@ export const initColumns = (columns: Column[]) => {
           );
         }
         return c;
+      case ColumnFormat.BOOLEAN:
+        const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
+        const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
+        const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
+        c.format = (row: any) => row[c.selector] ? truthyLabel : falsyLabel;
+        return c;    
       default:
         return c;
     }
@@ -335,7 +342,9 @@ export const materialsColumns: Column[] = [
   },
   {
     name: 'Is Stable',
-    selector: 'is_stable'
+    selector: 'is_stable',
+    format: ColumnFormat.BOOLEAN,
+    formatArg: ['yes', 'no']
   },
   {
     name: 'Spacegroup Symbol',
