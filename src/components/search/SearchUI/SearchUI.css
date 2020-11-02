@@ -30,7 +30,6 @@
   overflow: hidden;
 }
 
-/* .search-ui .content {
-  min-height: 80vh;
-  max-height: 80vh;
-} */
+.search-ui .content {
+  min-height: 100vh;
+}
