@@ -99,15 +99,6 @@ export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseU
         baseURL={baseURL}
         apiKey={apiKey}
       >
-        {/* <div className="columns">
-          <div className="column">
-            <SearchUISearchBar />
-          </div>
-        </div>
-        <div className="columns content">
-          <SearchUIFilters className="column is-narrow" />
-          <SearchUIDataTable className="column" />
-        </div> */}
         <div className="columns">
           <div className="column is-narrow">
             <div className="columns">
@@ -125,21 +116,6 @@ export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseU
             <SearchUIDataTable />
           </div>
         </div>
-        {/* <div className="tile is-ancestor">
-          <div className="tile is-parent is-vertical">
-            <div className="tile is-child">
-                <SearchUISearchBar />
-            </div>
-            <div className="tile is-child">
-                <SearchUIFilters />
-            </div>
-          </div>
-          <div className="tile is-parent">
-            <div className="tile is-child">
-              <SearchUIDataTable />
-            </div>
-          </div>
-        </div> */}
       </SearchUIContextProvider>
     </div>
   );

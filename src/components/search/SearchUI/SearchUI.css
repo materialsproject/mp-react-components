@@ -4,6 +4,10 @@
   position: relative;
 }
 
+.search-ui .panel-block.is-active {
+  border-left: 4px solid #3273dc;
+}
+
 .search-ui .panel-heading {
   position: absolute;
   width: 100%;
@@ -26,6 +30,7 @@
   width: 100%;
   border: none;
   border-radius: 0;
+  background: none;
   transition: 0.25s;
 }
 

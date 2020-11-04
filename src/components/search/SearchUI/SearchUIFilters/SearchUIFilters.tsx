@@ -158,7 +158,10 @@ export const SearchUIFilters: React.FC<Props> = props => {
         </div>
         <div className="panel-block-container">
           {state.filterGroups.map((g, i) => (
-            <div className="panel-block" key={i}>
+            <div 
+              className={classNames('panel-block', {'is-active' : !g.collapsed})} 
+              key={i}
+            >
               <div className="control">
                 <h3 className="panel-block-title">
                   <button
@@ -199,7 +202,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                   role="region"
                   aria-labelledby={'filter-group-button-' + i}
                   ref={el => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', {'is-hidden' : g.collapsed})}
+                  className={classNames('panel-block-children', 'can-hide-with-transition', {'is-hidden-with-transition' : g.collapsed})}
                 >
                   <div>
                     {g.filters.map((f, j) => (
