@@ -18,11 +18,18 @@
   padding-top: 70px;
 }
 
-.search-ui .panel-block-title {
+.search-ui .panel-block-title > .button {
+  padding: 1em;
+  height: auto;
+  text-align: left;
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 0;
   transition: 0.25s;
 }
 
-.search-ui .panel-block-title:hover {
+.search-ui .panel-block-title > .button:hover {
   color: #000000 !important;
 }
 
@@ -30,6 +37,6 @@
   overflow: hidden;
 }
 
-.search-ui .content {
+.search-ui {
   min-height: 100vh;
 }

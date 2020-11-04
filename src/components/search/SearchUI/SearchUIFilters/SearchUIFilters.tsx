@@ -23,6 +23,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
+  const [clicked, setClicked] = useState(false);
 
   /**
    * Render filter component based on the filter's "type" property
@@ -125,17 +126,22 @@ export const SearchUIFilters: React.FC<Props> = props => {
     }
   };
 
-  useEffect(() => {
-    groupRefs.current.forEach((el, i) => {
-      // This is a special case for groups with periodic tables in them, should make more dynamic later
-      if (state.filterGroups[i].name === 'Material') {
-        const marginTop = 15;
-        el.style.maxHeight = (el.children[0].clientHeight + 244 + marginTop) + 'px';
-      } else {
-        el.style.maxHeight = el.children[0].clientHeight + 'px';
-      }
-    });
-  }, []);
+  /**
+   * This hook initializes panel groups with their max height values
+   * This is to allow a smooth transition for showing/hiding the group
+   * ! Currently removed because animated show/hide causes strange behavior with focus and auto scroll
+   */
+  // useEffect(() => {
+  //   groupRefs.current.forEach((el, i) => {
+  //     // This is a special case for groups with periodic tables in them, should make more dynamic later
+  //     if (state.filterGroups[i].name === 'Material') {
+  //       const marginTop = 15;
+  //       el.style.maxHeight = (el.children[0].clientHeight + 244 + marginTop) + 'px';
+  //     } else {
+  //       el.style.maxHeight = el.children[0].clientHeight + 'px';
+  //     }
+  //   });
+  // }, []);
 
   return (
     <div className={props.className}>
@@ -152,23 +158,48 @@ export const SearchUIFilters: React.FC<Props> = props => {
         </div>
         <div className="panel-block-container">
           {state.filterGroups.map((g, i) => (
-            <div className="panel-block" style={{ padding: '1em' }} key={i}>
+            <div className="panel-block" key={i}>
               <div className="control">
+                <h3 className="panel-block-title">
+                  <button
+                    className={classNames('button', 'is-fullwidth', {
+                      'has-text-black-bis': !g.collapsed,
+                      'has-text-grey': g.collapsed
+                    })}
+                    onClick={(e) => {
+                      /**
+                       * Must include onClick event for accessibility
+                       * Will be omitted if mousedown event was just executed
+                       */
+                      if (!clicked) actions.toggleGroup(g.name);
+                      setClicked(false);
+                    }}
+                    onMouseDown={() => {
+                      /**
+                       * Using mousedown event to prevent event order issues
+                       * Periodic tables close on blur which fires before click events, 
+                       * causing click event to be skipped because button position changes when table is hidden
+                       */
+                      setClicked(true);
+                      actions.toggleGroup(g.name);
+                    }}
+                    aria-expanded={!g.collapsed}
+                    aria-controls={'filter-group-' + i}
+                    id={'filter-group-button-' + i}
+                    type="button"
+                  >
+                    <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
+                    <div className="is-pulled-right">
+                      {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
+                    </div>
+                  </button>
+                </h3>
                 <div
-                  className={classNames('panel-block-title', 'is-clickable', {
-                    'has-text-black-bis': !g.collapsed,
-                    'has-text-grey': g.collapsed
-                  })}
-                  onMouseDown={() => actions.toggleGroup(g.name)}
-                >
-                  <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
-                  <div className="is-pulled-right">
-                    {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
-                  </div>
-                </div>
-                <div
+                  id={'filter-group-region-' + i}
+                  role="region"
+                  aria-labelledby={'filter-group-button-' + i}
                   ref={el => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', 'can-hide-with-transition', {'is-hidden-with-transition' : g.collapsed})}
+                  className={classNames('panel-block-children', {'is-hidden' : g.collapsed})}
                 >
                   <div>
                     {g.filters.map((f, j) => (
