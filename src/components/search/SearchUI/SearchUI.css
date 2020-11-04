@@ -33,7 +33,7 @@
   color: #000000 !important;
 }
 
-.search-ui .content > .column:last-child {
+.search-ui .column.data-table-column {
   overflow: hidden;
 }
 

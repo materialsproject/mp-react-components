@@ -59,7 +59,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           ) {
             activeFilters.push({
               id: f.id,
-              displayName: f.name,
+              displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: f.props.domain,
               searchParams: [
@@ -101,7 +101,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           if (filterValues[f.id] !== undefined && filterValues[f.id] !== null ) {
             activeFilters.push({
               id: f.id,
-              displayName: f.name,
+              displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: undefined,
               searchParams: [
