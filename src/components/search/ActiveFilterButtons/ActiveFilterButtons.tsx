@@ -29,7 +29,7 @@ export const ActiveFilterButtons: React.FC<Props> = props => {
             >
               <FaTimes />
               <span className="ml-1">
-                {f.displayName ? f.displayName : f.id}: {formatValue(f.value)}
+                {f.displayName}: {formatValue(f.value)}
               </span>
             </Button>
           </div>

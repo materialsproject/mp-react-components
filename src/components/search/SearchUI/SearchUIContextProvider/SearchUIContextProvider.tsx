@@ -59,6 +59,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           ) {
             activeFilters.push({
               id: f.id,
+              displayName: f.name,
               value: filterValues[f.id],
               defaultValue: f.props.domain,
               searchParams: [
@@ -77,8 +78,9 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
         case FilterType.MATERIALS_INPUT:
           if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = '';
           if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
-          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue'))
+          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue')) {
             f.props.parsedValue = [];
+          }
           if (filterValues[f.id] !== '') {
             activeFilters.push({
               id: f.id,
