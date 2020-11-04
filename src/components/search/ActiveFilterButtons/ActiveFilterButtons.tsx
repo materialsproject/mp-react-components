@@ -20,20 +20,22 @@ function formatValue(value: any) {
 export const ActiveFilterButtons: React.FC<Props> = props => {
   return (
     <div className={props.className}>
-      <div className={props.filters.length > 0 ? 'columns' : ''}>
-        {props.filters.map((f, i) => (
-          <div className="column is-narrow" key={i}>
-            <Button
-              className="is-rounded is-small"
-              onClick={() => props.onClick(f.defaultValue, f.id)}
-            >
-              <FaTimes />
-              <span className="ml-1">
-                {f.displayName}: {formatValue(f.value)}
-              </span>
-            </Button>
-          </div>
-        ))}
+      <div className={props.filters.length > 0 ? 'columns is-multiline' : ''}>
+        <div className={props.filters.length > 0 ? 'columns is-multiline column m-0 pb-1' : ''}>
+          {props.filters.map((f, i) => (
+            <div className="column is-narrow p-0 mr-2 mb-2" key={i}>
+              <Button
+                className="is-rounded is-small"
+                onClick={() => props.onClick(f.defaultValue, f.id)}
+              >
+                <FaTimes />
+                <span className="ml-1">
+                  {f.displayName}: {formatValue(f.value)}
+                </span>
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
