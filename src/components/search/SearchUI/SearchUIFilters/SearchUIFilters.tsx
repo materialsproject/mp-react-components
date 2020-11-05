@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
 import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect'
+import { initArray } from '../../utils';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -23,6 +24,8 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
+  const [expandedGroupsByIndex, setExpandedGroupsByIndex] = useState(initArray(state.filterGroups.length, false));
+  const [expandedGroupIndex, setExpandedGroupIndex] = useState<number | null>(null);
   const [clicked, setClicked] = useState(false);
 
   /**
@@ -126,6 +129,14 @@ export const SearchUIFilters: React.FC<Props> = props => {
     }
   };
 
+  const toggleGroup = (i: number) => {
+    let newExpandedGroups = [...expandedGroupsByIndex];
+    for (let index = 0; index < newExpandedGroups.length; index++) {
+      newExpandedGroups[index] = index === i ? !newExpandedGroups[index] : false;
+    }
+    setExpandedGroupsByIndex(newExpandedGroups);
+  }
+
   /**
    * This hook initializes panel groups with their max height values
    * This is to allow a smooth transition for showing/hiding the group
@@ -159,41 +170,35 @@ export const SearchUIFilters: React.FC<Props> = props => {
         <div className="panel-block-container">
           {state.filterGroups.map((g, i) => (
             <div 
-              className={classNames('panel-block', {'is-active' : !g.collapsed})} 
+              className={classNames('panel-block', {'is-active' : expandedGroupsByIndex[i]})} 
               key={i}
             >
               <div className="control">
                 <h3 className="panel-block-title">
                   <button
                     className={classNames('button', 'is-fullwidth', {
-                      'has-text-black-bis': !g.collapsed,
-                      'has-text-grey': g.collapsed
+                      'has-text-black-bis': expandedGroupsByIndex[i],
+                      'has-text-grey': !expandedGroupsByIndex[i]
                     })}
-                    onClick={(e) => {
-                      /**
-                       * Must include onClick event for accessibility
-                       * Will be omitted if mousedown event was just executed
-                       */
-                      if (!clicked) actions.toggleGroup(g.name);
-                      setClicked(false);
-                    }}
-                    onMouseDown={() => {
-                      /**
-                       * Using mousedown event to prevent event order issues
-                       * Periodic tables close on blur which fires before click events, 
-                       * causing click event to be skipped because button position changes when table is hidden
-                       */
-                      setClicked(true);
-                      actions.toggleGroup(g.name);
-                    }}
-                    aria-expanded={!g.collapsed}
+                    /**
+                     * Using keydown event for accessibility
+                     * Avoiding click event due to performance issues and collisions with mousedown
+                     */
+                    onKeyDown={(e) => { if (e.key === 'Enter') toggleGroup(i); }}
+                    /**
+                     * Using mousedown event to prevent event order issues
+                     * Periodic tables close on blur which fires before click events, 
+                     * causing click event to be skipped because button position changes when table is hidden
+                     */
+                    onMouseDown={(e) => toggleGroup(i)}
+                    aria-expanded={expandedGroupsByIndex[i]}
                     aria-controls={'filter-group-' + i}
                     id={'filter-group-button-' + i}
                     type="button"
                   >
                     <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
                     <div className="is-pulled-right">
-                      {g.collapsed ? <FaCaretRight /> : <FaCaretDown />}
+                      {!expandedGroupsByIndex[i] ? <FaCaretRight /> : <FaCaretDown />}
                     </div>
                   </button>
                 </h3>
@@ -202,9 +207,9 @@ export const SearchUIFilters: React.FC<Props> = props => {
                   role="region"
                   aria-labelledby={'filter-group-button-' + i}
                   ref={el => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', 'can-hide-with-transition', {'is-hidden-with-transition' : g.collapsed})}
+                  className={classNames('panel-block-children', {'is-hidden' : !expandedGroupsByIndex[i]})}
                 >
-                  <div>
+                  <div aria-hidden={!expandedGroupsByIndex[i]}>
                     {g.filters.map((f, j) => (
                       <div className="mb-2" key={j}>
                         {renderFilter(f, g.name)}

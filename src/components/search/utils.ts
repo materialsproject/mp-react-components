@@ -113,3 +113,9 @@ export const countDecimals = (value: number) => {
   }
   return 0;
 }
+
+export const initArray = (length: number, value: any) => {
+  let arr: any[] = [];
+  while(length--) arr[length] = value;
+  return arr;
+}
