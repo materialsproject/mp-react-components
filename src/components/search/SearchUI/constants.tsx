@@ -50,7 +50,7 @@ export interface ActiveFilter {
   searchParams?: SearchParam[];
 }
 
-export type FilterValues = Partial<Record<FilterId, any>>;
+export type FilterValues = Partial<Record<string, any>>;
 
 export interface Column {
   name: string;
@@ -137,25 +137,45 @@ export const initColumns = (columns: Column[]) => {
   });
 };
 
-export const initFilterGroups = (filterGroups: FilterGroup[]) => {
-  return filterGroups.map(g => {
+export const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
+  const initializedValues = {};
+  const initializedGroups = filterGroups.map(g => {
     g.filters = g.filters.map(f => {
+      let queryParamValue: any = query.get(f.id);
       switch (f.type) {
+        case FilterType.SLIDER:
+          const queryParamMin = query.get(f.id + '_min');
+          const queryParamMax = query.get(f.id + '_max');
+          queryParamValue = queryParamMin && queryParamMax ? [parseFloat(queryParamMin), parseFloat(queryParamMax)] : null;
+          initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
+          return f;
+        case FilterType.MATERIALS_INPUT:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : '';
+          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
+          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue')) {
+            f.props.parsedValue = [];
+          }
+          return f;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = {options: spaceGroupSymbolOptions()};
           return f;
         case FilterType.SELECT_SPACEGROUP_NUMBER:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = {options: spaceGroupNumberOptions()};
           return f;
         case FilterType.SELECT_CRYSTAL_SYSTEM:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = {options: crystalSystemOptions()};
           return f;
         default:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
       }
     });
     return g;
   });
+  return { initializedGroups, initializedValues}
 }
 
 export const materialsGroups: FilterGroup[] = [

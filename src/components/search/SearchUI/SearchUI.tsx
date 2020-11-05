@@ -5,6 +5,7 @@ import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './constants';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
+import { BrowserRouter as Router } from "react-router-dom";
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -93,30 +94,32 @@ export interface SearchUIProps {
 export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseURL, apiKey }) => {
   return (
     <div className="search-ui p-4">
-      <SearchUIContextProvider
-        columns={columns}
-        filterGroups={filterGroups}
-        baseURL={baseURL}
-        apiKey={apiKey}
-      >
-        <div className="columns">
-          <div className="column is-narrow">
-            <div className="columns">
-              <div className="column">
-                <SearchUISearchBar />
+      <Router>
+        <SearchUIContextProvider
+          columns={columns}
+          filterGroups={filterGroups}
+          baseURL={baseURL}
+          apiKey={apiKey}
+        >
+          <div className="columns">
+            <div className="column is-narrow">
+              <div className="columns">
+                <div className="column">
+                  <SearchUISearchBar />
+                </div>
+              </div>
+              <div className="columns">
+                <div className="column">
+                  <SearchUIFilters />
+                </div>
               </div>
             </div>
-            <div className="columns">
-              <div className="column">
-                <SearchUIFilters />
-              </div>
+            <div className="column data-table-column">
+              <SearchUIDataTable />
             </div>
           </div>
-          <div className="column data-table-column">
-            <SearchUIDataTable />
-          </div>
-        </div>
-      </SearchUIContextProvider>
+        </SearchUIContextProvider>
+      </Router>
     </div>
   );
 };

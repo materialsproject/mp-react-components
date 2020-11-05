@@ -12,8 +12,9 @@ import {
   initColumns,
   initFilterGroups
 } from '../constants';
-
 import { SearchUIProps } from '../../SearchUI';
+import { useHistory } from 'react-router-dom';
+import { useQuery } from '../../../../utils/hooks';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -44,7 +45,10 @@ const initialState: SearchState = {
  * of values for building the activeFilters list.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }): SearchState => {
+const getState = (
+  currentState: SearchState, 
+  filterValues = { ...currentState.filterValues }
+): SearchState => {
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
@@ -52,7 +56,7 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
         case FilterType.SLIDER:
           // if (!f.hasOwnProperty('props')) f.props = {domain: [0, 100]};
           // if (f.hasOwnProperty('props') && f.props.hasOwnProperty('domain')) f.props.domain = [0, 100];  
-          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
+          // if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
             filterValues[f.id][1] !== f.props.domain[1]
@@ -120,7 +124,9 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
 
 const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
   state.columns = initColumns(columns);
-  state.filterGroups = initFilterGroups(filterGroups);
+  const { initializedGroups, initializedValues } = initFilterGroups(filterGroups);
+  state.filterGroups = initializedGroups;
+  state.filterValues = initializedValues;
   return getState(state);
 };
 
@@ -148,8 +154,17 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   apiKey,
   children
 }) => {
-  const [state, setState] = useState(() => initState(initialState, columns, filterGroups));
+  const query = useQuery();
+  const history = useHistory();
+  const [state, setState] = useState(() => {
+    initialState.columns = initColumns(columns);
+    const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
+    initialState.filterGroups = initializedGroups;
+    initialState.filterValues = initializedValues;
+    return getState(initialState);
+  });
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
+
   const actions = {
     setPage: (value: number) => {
       setState(currentState => ({ ...currentState, page: value }));
@@ -268,6 +283,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
   useEffect(() => {
     actions.getData();
+    let query = new URLSearchParams();
+    debouncedActiveFilters.forEach(d => {
+      d.searchParams?.forEach((param) => query.set(param.field, param.value));
+    });
+    history.push({search: query.toString()});
   }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
 
   return (
