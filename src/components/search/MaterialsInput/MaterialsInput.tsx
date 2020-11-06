@@ -40,7 +40,6 @@ export interface MaterialsInputBoxProps {
   field: string;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
-  onParsedValueChange: (value: string | string[]) => void;
   onFieldChange?: (value: string) => void;
   onSubmit?: (value?: any) => any;
   onFocus?: (value?: any) => any;
@@ -49,6 +48,7 @@ export interface MaterialsInputBoxProps {
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
   periodicTableMode?: string;
+  enabledElements?: string[];
 }
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
@@ -83,14 +83,15 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
 
   return (
     <div className="has-text-centered">
-      <PeriodicContext>
+      <PeriodicContext 
+        // enabledElements={props.enabledElements ? props.enabledElements : undefined}
+      >
         <div>
           <MaterialsInputBox
             value={props.value}
             parsedValue={props.parsedValue}
             field={props.field}
             onChange={props.onChange}
-            onParsedValueChange={props.onParsedValueChange}
             onFieldChange={props.onFieldChange}
             onSubmit={props.onSubmit ? handleSubmit : undefined}
             onFocus={getOnFocusProp}
@@ -126,8 +127,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             onStateChange={enabledElements => {
               Object.keys(enabledElements).filter(el => enabledElements[el]);
             }}
-            enabledElements={[]}
-            disabledElements={['H', 'C']}
           />
         </div>
       </PeriodicContext>

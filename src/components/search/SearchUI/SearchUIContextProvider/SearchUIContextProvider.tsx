@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { useDeepCompareDebounce } from '../../../../utils/hooks';
+import { useDeepCompareDebounce, useQuery } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,
@@ -12,8 +12,9 @@ import {
   initColumns,
   initFilterGroups
 } from '../constants';
-
 import { SearchUIProps } from '../../SearchUI';
+import { useHistory } from 'react-router-dom';
+import { getDelimiter, parseElements } from '../../utils';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -44,7 +45,10 @@ const initialState: SearchState = {
  * of values for building the activeFilters list.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-const getState = (currentState: SearchState, filterValues = { ...currentState.filterValues }): SearchState => {
+const getState = (
+  currentState: SearchState, 
+  filterValues = { ...currentState.filterValues }
+): SearchState => {
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach(g => {
     g.filters.forEach(f => {
@@ -52,13 +56,14 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
         case FilterType.SLIDER:
           // if (!f.hasOwnProperty('props')) f.props = {domain: [0, 100]};
           // if (f.hasOwnProperty('props') && f.props.hasOwnProperty('domain')) f.props.domain = [0, 100];  
-          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
+          // if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
             filterValues[f.id][1] !== f.props.domain[1]
           ) {
             activeFilters.push({
               id: f.id,
+              displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: f.props.domain,
               searchParams: [
@@ -75,31 +80,38 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
           }
           break;
         case FilterType.MATERIALS_INPUT:
-          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = '';
-          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
-          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue'))
-            f.props.parsedValue = [];
           if (filterValues[f.id] !== '') {
+            /**
+             * If the input controls the elements param,
+             * parse the input's value into an array of valid elements.
+             * Otherwise, use the raw input value for the param.
+             */
+            let parsedValue = filterValues[f.id];
+            if (f.id === 'elements') {
+              const delimiter = getDelimiter(filterValues[f.id]);
+              parsedValue = parseElements(filterValues[f.id], delimiter);
+              f.props.enabledElements = parsedValue;
+            }
             activeFilters.push({
               id: f.id,
               displayName: f.props.field,
-              value: f.props.parsedValue,
+              value: parsedValue,
               defaultValue: '',
               searchParams: [
                 {
                   field: f.props.field,
-                  value: f.props.parsedValue
+                  value: parsedValue
                 }
               ]
             });
           }
           break;
         default:
-          if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
+          // if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
           if (filterValues[f.id] !== undefined && filterValues[f.id] !== null ) {
             activeFilters.push({
               id: f.id,
-              displayName: f.name,
+              displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: undefined,
               searchParams: [
@@ -116,11 +128,13 @@ const getState = (currentState: SearchState, filterValues = { ...currentState.fi
   return { ...currentState, filterValues, activeFilters };
 };
 
-const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
-  state.columns = initColumns(columns);
-  state.filterGroups = initFilterGroups(filterGroups);
-  return getState(state);
-};
+// const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
+//   state.columns = initColumns(columns);
+//   const { initializedGroups, initializedValues } = initFilterGroups(filterGroups);
+//   state.filterGroups = initializedGroups;
+//   state.filterValues = initializedValues;
+//   return getState(state);
+// };
 
 const getResetFiltersAndValues = (state: SearchState) => {
   const filterValues = state.filterValues;
@@ -146,8 +160,17 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   apiKey,
   children
 }) => {
-  const [state, setState] = useState(() => initState(initialState, columns, filterGroups));
+  const query = useQuery();
+  const history = useHistory();
+  const [state, setState] = useState(() => {
+    initialState.columns = initColumns(columns);
+    const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
+    initialState.filterGroups = initializedGroups;
+    initialState.filterValues = initializedValues;
+    return getState(initialState);
+  });
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
+
   const actions = {
     setPage: (value: number) => {
       setState(currentState => ({ ...currentState, page: value }));
@@ -266,6 +289,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
   useEffect(() => {
     actions.getData();
+    let query = new URLSearchParams();
+    debouncedActiveFilters.forEach(d => {
+      d.searchParams?.forEach((param) => query.set(param.field, param.value));
+    });
+    history.push({search: query.toString()});
   }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
 
   return (

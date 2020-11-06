@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useElements } from '../../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../../periodic-table/periodic-table-data/table-v2';
 import {
@@ -6,7 +6,8 @@ import {
   elementsArrayToElementState,
   formulaStringToArrays,
   getTruthyKeys,
-  arrayToDelimitedString
+  arrayToDelimitedString,
+  parseElements
 } from '../../../search/utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
@@ -17,9 +18,15 @@ const { Input, Field, Control } = Form;
  * Handles the two-way binding between input and periodic table
  */
 
+interface DispatchAction {
+  action: (payload: any) => void;
+  payload?: any;
+}
+
 export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(',');
+  const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
@@ -50,6 +57,95 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const handleBlur = event => {
     if (props.onBlur) props.onBlur();
   };
+
+  /**
+   * Trigger side effects when raw input value changes
+   * Detects when search type has changed based on presence of numbers (indicative of formula)
+   * or delimiters (indicative of elements).
+   * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
+   * Only adds/removes elements when input value and pt are not in sync (prevents infinite hooks)
+   * Sends clean input value to onChange function passed in as a prop
+   */
+  useEffect(() => {
+    const enabledElementsList = getTruthyKeys(enabledElements);
+    const newValue = props.value;
+    let newMaterialsInputField = props.field;
+    let newDelimiter = delimiter;
+    let newPtActionsToDispatch: DispatchAction[] = [];
+
+    if (props.onFieldChange && newValue && newValue.indexOf('mp') === 0) {
+      newMaterialsInputField = MaterialsInputField.MP_ID;
+    } else if (props.onFieldChange && newValue && newValue.match(/[0-9]/g)) {
+      newMaterialsInputField = MaterialsInputField.FORMULA;
+    } else if (props.onFieldChange && newValue && newValue.match(/,|-/gi)) {
+      newMaterialsInputField = MaterialsInputField.ELEMENTS;
+    }
+
+    switch (newMaterialsInputField) {
+      case MaterialsInputField.MP_ID:
+        newPtActionsToDispatch.push({
+          action: ptActions.clear, 
+        });
+        break;
+      case MaterialsInputField.ELEMENTS:
+        newDelimiter = getDelimiter(newValue);
+        const parsedElements = parseElements(newValue, newDelimiter);
+        parsedElements.forEach((el) => {
+          if (!enabledElements[el]) {
+            newPtActionsToDispatch.push({
+              action: ptActions.addEnabledElement, 
+              payload: el
+            });
+          }
+        })
+        enabledElementsList.forEach(el => {
+          if (parsedElements.indexOf(el) === -1) {
+            newPtActionsToDispatch.push({
+              action: ptActions.removeEnabledElement, 
+              payload: el
+            });
+          }
+        });
+        break;
+      case MaterialsInputField.FORMULA:
+        var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newValue);
+        formulaSplitElementsOnly.forEach(el => {
+          if (TABLE_DICO_V2[el]) {
+            if (!enabledElements[el]) {
+              newPtActionsToDispatch.push({
+                action: ptActions.addEnabledElement, 
+                payload: el
+              });
+            }
+          }
+        });
+        enabledElementsList.forEach(el => {
+          if (formulaSplitElementsOnly.indexOf(el) === -1) {
+            newPtActionsToDispatch.push({
+              action: ptActions.removeEnabledElement, 
+              payload: el
+            });
+          }
+        });
+        break;
+      default:
+        throw 'invalid field in materials input';
+    }
+
+    setPtActionsToDispatch(newPtActionsToDispatch);
+    setDelimiter(newDelimiter);
+    if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
+  }, [props.value]);
+
+  /**
+   * Execute the periodic table context actions collected by the value effect (above)
+   * These are executed in a separate effect (rather than inside the value effect)
+   * to prevent issues with execution order when MaterialsInputs are 
+   * initialized with values (e.g. search param value from the URL).
+   */
+  useEffect(() => {
+    ptActionsToDispatch.forEach(d => d.action(d.payload));
+  }, [ptActionsToDispatch]);
 
   /**
    * Handle direct interactions with the periodic table
@@ -88,74 +184,9 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
         default:
           return;
       }
-      props.onParsedValueChange(newValue);
       props.onChange(newValue);
     }
   }, [enabledElements]);
-
-  /**
-   * Trigger side effects when raw input value changes
-   * Detects when search type has changed based on presence of numbers (indicative of formula)
-   * or delimiters (indicative of elements).
-   * Adds/removes enabled elements from the periodic table.
-   * Only adds/removes elements when input value and pt are not in sync (prevents infinite hooks)
-   * Sends clean input value to onChange function passed in as a prop
-   */
-  useEffect(() => {
-    const enabledElementsList = getTruthyKeys(enabledElements);
-    const newValue = props.value;
-    let newMaterialsInputField = props.field;
-    let newDelimiter = delimiter;
-    let newParsedValue: string | string[] | null = null;
-
-    if (props.onFieldChange && newValue && newValue.indexOf('mp') === 0) {
-      newMaterialsInputField = MaterialsInputField.MP_ID;
-    } else if (props.onFieldChange && newValue && newValue.match(/[0-9]/g)) {
-      newMaterialsInputField = MaterialsInputField.FORMULA;
-    } else if (props.onFieldChange && newValue && newValue.match(/,|-/gi)) {
-      newMaterialsInputField = MaterialsInputField.ELEMENTS;
-    }
-
-    switch (newMaterialsInputField) {
-      case MaterialsInputField.MP_ID:
-        ptActions.clear();
-        break;
-      case MaterialsInputField.ELEMENTS:
-        newDelimiter = getDelimiter(newValue);
-        const cleanedInput = newValue.replace(/and|\s|[0-9]/gi, '');
-        const inputSplit = cleanedInput.split(newDelimiter);
-        const newElements: string[] = [];
-        inputSplit.forEach(el => {
-          if (TABLE_DICO_V2[el]) {
-            newElements.push(el);
-            if (!enabledElements[el]) ptActions.addEnabledElement(el);
-          }
-        });
-        enabledElementsList.forEach(el => {
-          if (inputSplit.indexOf(el) === -1) ptActions.removeEnabledElement(el);
-        });
-        newParsedValue = newElements;
-        break;
-      case MaterialsInputField.FORMULA:
-        var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(newValue);
-        formulaSplitElementsOnly.forEach(el => {
-          if (TABLE_DICO_V2[el]) {
-            if (!enabledElements[el]) ptActions.addEnabledElement(el);
-          }
-        });
-        enabledElementsList.forEach(el => {
-          if (formulaSplitElementsOnly.indexOf(el) === -1) ptActions.removeEnabledElement(el);
-        });
-        break;
-      default:
-        throw 'invalid field in materials input';
-    }
-
-    newParsedValue = newParsedValue ? newParsedValue : newValue;
-    setDelimiter(newDelimiter);
-    if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
-    props.onParsedValueChange(newParsedValue);
-  }, [props.value]);
 
   useEffect(() => {
     if (props.liftInputRef) props.liftInputRef(inputRef);

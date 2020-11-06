@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useLocation } from 'react-router-dom';
 
 // hooks are run on every render, when the prop change, we return the non-update value,
 // and update it
@@ -67,4 +68,12 @@ export function useDeepCompareDebounce(value, delay) {
   }, [value]);
 
   return debouncedValue;
+}
+
+/**
+ * A custom hook that builds on useLocation to parse
+ * the url query string for you.
+ */
+export const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
 }
