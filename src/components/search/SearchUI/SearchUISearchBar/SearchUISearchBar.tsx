@@ -29,7 +29,6 @@ export const SearchUISearchBar: React.FC = () => {
       parsedValue={searchParsedValue}
       field={searchField}
       onChange={v => setSearchValue(v)}
-      onParsedValueChange={parsedValue => setSearchParsedValue(parsedValue)}
       onFieldChange={field => setSearchField(field)}
       // onSubmit={() => actions.resetAllFiltersExcept(searchValue, searchField)}
       onSubmit={() => actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField))}
