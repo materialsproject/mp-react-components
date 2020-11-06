@@ -119,3 +119,19 @@ export const initArray = (length: number, value: any) => {
   while(length--) arr[length] = value;
   return arr;
 }
+
+/**
+ * Parses an array of valid elements from a string of elements separated by a delimiter
+ * Returns an array of valid element symbols (e.g. ['Na', 'Cl']) 
+ */
+export const parseElements = (str: string, delimiter: string, context: any = null) => {
+  const cleanedInput = str.replace(/and|\s|[0-9]/gi, '');
+  const unparsedElements = cleanedInput.split(delimiter);
+  const parsedElements: string[] = [];
+  unparsedElements.forEach(el => {
+    if (TABLE_DICO_V2[el]) {
+      parsedElements.push(el);
+    }
+  });
+  return parsedElements;
+}

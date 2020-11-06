@@ -56,9 +56,6 @@ export const SearchUIFilters: React.FC<Props> = props => {
               {...f.props}
               value={state.filterValues[f.id]}
               onChange={v => actions.setFilterValue(v, f.id)}
-              onParsedValueChange={parsedValue =>
-                actions.setFilterProps({ parsedValue }, f.id, groupId)
-              }
               periodicTableMode="onFocus"
               // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
             />
