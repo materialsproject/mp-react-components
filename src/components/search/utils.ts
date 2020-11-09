@@ -63,15 +63,32 @@ export function downloadExcel(array) {
   return true;
 }
 
-export function getDelimiter(str: string): string {
-  const commaIndex = str.indexOf(',');
-  const hyphenIndex = str.indexOf('-');
-  if (commaIndex > -1 && hyphenIndex > -1) {
-    return commaIndex < hyphenIndex ? ',' : '-';
-  } else if (commaIndex === -1 && hyphenIndex > -1) {
-    return '-';
+/**
+ * Determine if a string is delimited by commas, hyphens, or spaces
+ * Return the delimiter as a regular expression object
+ * If multiple delimiters are present, the delimiter with the lowest index is used
+ */
+export const getDelimiter = (input: string): RegExp => {
+  const comma = input.match(/,/);
+  const hyphen = input.match(/-/);
+  const space = input.match(/\s/);
+  if (comma && comma.index &&
+    (!hyphen || (hyphen.index && hyphen.index > comma.index)) &&
+    (!space || (space.index && space.index > comma.index))
+  ) {
+    return new RegExp(',');
+  } else if (hyphen && hyphen.index &&
+    (!comma || (comma.index && comma.index > hyphen.index)) &&
+    (!space || (space.index && space.index > hyphen.index))
+  ) {
+    return new RegExp('-');
+  } else if (space && space.index &&
+    (!comma || (comma.index && comma.index > space.index)) &&
+    (!hyphen || (hyphen.index && space.index > space.index))
+  ) {
+    return new RegExp(/\s/);
   } else {
-    return ',';
+    return new RegExp(',');
   }
 }
 
@@ -95,7 +112,13 @@ export function getTruthyKeys(obj: any) {
   return obj ? Object.keys(obj).filter(key => obj[key]) : [];
 }
 
-export function arrayToDelimitedString(arr: any[], delimiter = ',') {
+export function arrayToDelimitedString(arr: any[], delimiter: string | RegExp = ',') {
+  delimiter = delimiter.toString();
+  if (delimiter.indexOf('\s')  > -1) {
+    delimiter = ' ';
+  } else if (delimiter.indexOf('/') === 0) {
+    delimiter = delimiter.replace(/\//g, '');
+  }
   return arr.toString().replace(/,/gi, delimiter);
 }
 
@@ -124,8 +147,16 @@ export const initArray = (length: number, value: any) => {
  * Parses an array of valid elements from a string of elements separated by a delimiter
  * Returns an array of valid element symbols (e.g. ['Na', 'Cl']) 
  */
-export const parseElements = (str: string, delimiter: string, context: any = null) => {
-  const cleanedInput = str.replace(/and|\s|[0-9]/gi, '');
+export const parseElements = (str: string, delimiter: RegExp, context: any = null) => {
+  let cleanedInput = '';
+  const delimiterString = delimiter.toString();
+  if (delimiterString === new RegExp(/,/).toString()) {
+    cleanedInput = str.replace(/and|\s|-|[0-9]/gi, '');
+  } else if (delimiterString === new RegExp(/-/).toString()) {
+    cleanedInput = str.replace(/and|\s|,|[0-9]/gi, '');
+  } else if (delimiterString === new RegExp(/\s/).toString()) {
+    cleanedInput = str.replace(/and|,|-|[0-9]/gi, '');
+  }
   const unparsedElements = cleanedInput.split(delimiter);
   const parsedElements: string[] = [];
   unparsedElements.forEach(el => {

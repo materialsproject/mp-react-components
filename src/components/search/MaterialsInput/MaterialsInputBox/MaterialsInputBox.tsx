@@ -25,7 +25,7 @@ interface DispatchAction {
 
 export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
-  const [delimiter, setDelimiter] = useState(',');
+  const [delimiter, setDelimiter] = useState(new RegExp(','));
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownItems = [
@@ -60,8 +60,8 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
 
   /**
    * Trigger side effects when raw input value changes
-   * Detects when search type has changed based on presence of numbers (indicative of formula)
-   * or delimiters (indicative of elements).
+   * If onFieldChange prop is included, dynamically determine if the input
+   * is an mp-id, list of elements, or formula.
    * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
    * Only adds/removes elements when input value and pt are not in sync (prevents infinite hooks)
    * Sends clean input value to onChange function passed in as a prop
@@ -69,16 +69,24 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
     const newValue = props.value;
+    const capitalLettersMatch = newValue.match(/[A-Z]/g);
+    const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
     let newMaterialsInputField = props.field;
     let newDelimiter = delimiter;
     let newPtActionsToDispatch: DispatchAction[] = [];
 
-    if (props.onFieldChange && newValue && newValue.indexOf('mp') === 0) {
+    /**
+     * Field name switches to MP_ID if the input starts with 'mp' or 'mvc'.
+     * Field name switches to ELEMENTS if the input contains one of the accepted delimiters (comma, hyphen, or space).
+     * Field name switches to FORMULA if the input doesn't contain a delimiter
+     * and does contain multiple capital letters or a number.
+     */
+    if (props.onFieldChange && newValue && (newValue.indexOf('mp') === 0 || newValue.indexOf('mvc') === 0)) {
       newMaterialsInputField = MaterialsInputField.MP_ID;
-    } else if (props.onFieldChange && newValue && newValue.match(/[0-9]/g)) {
-      newMaterialsInputField = MaterialsInputField.FORMULA;
-    } else if (props.onFieldChange && newValue && newValue.match(/,|-/gi)) {
+    } else if (props.onFieldChange && newValue && newValue.match(/,|-|\s/gi)) {
       newMaterialsInputField = MaterialsInputField.ELEMENTS;
+    } else if (props.onFieldChange && newValue &&  (capitalLetters > 1 || newValue.match(/[0-9]/gi))) {
+      newMaterialsInputField = MaterialsInputField.FORMULA;
     }
 
     switch (newMaterialsInputField) {
