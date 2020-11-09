@@ -35,8 +35,17 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     } else {
       return (
         <p className="title is-4 mb-3">
-          <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} />
-          {`${state.totalResults === 1 ? ' material matches' : ' materials match'} your search`}
+          {state.activeFilters.length === 0 &&
+            <span>
+              Showing all <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> materials
+            </span>
+          }
+          {state.activeFilters.length > 0 &&
+            <span>
+              <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} />
+              {`${state.totalResults === 1 ? ' material matches' : ' materials match'} your search`}
+            </span>
+          }
         </p>
       );
     }
