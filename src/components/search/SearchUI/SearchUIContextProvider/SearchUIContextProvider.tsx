@@ -169,7 +169,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     initialState.filterValues = initializedValues;
     return getState(initialState);
   });
-  const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 1000);
+  const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 500);
 
   const actions = {
     setPage: (value: number) => {
@@ -224,8 +224,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       // if (group) group.collapsed = !group.collapsed;
       setState({ ...state, filterGroups: filterGroups });
     },
-    getData: () => {
+    getData: (showLoading: boolean = false) => {
       setState(currentState => {
+        let isLoading = showLoading;
+        let minLoadTime = 1000;
+        let minLoadTimeReached = false;
         let params: any = {};
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
@@ -249,29 +252,46 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           })
           .then(result => {
             console.log(result);
+            isLoading = false;
+            const loadingValue = minLoadTimeReached ? false : true;
             setState(currentState => {
               return {
                 ...currentState,
                 results: result.data.data,
                 totalResults: result.data.meta.total,
-                loading: false
+                loading: loadingValue
               };
             });
           })
           .catch(error => {
             console.log(error);
+            isLoading = false;
+            const loadingValue = minLoadTimeReached ? false : true;
             setState(currentState => {
               return {
                 ...currentState,
                 results: [],
                 totalResults: 0,
-                loading: false
+                loading: loadingValue
               };
             });
           });
+
+        if (showLoading) {
+          setTimeout(() => {
+            if (!isLoading) {
+              setState(currentState => {
+                return { ...currentState, loading: false };
+              });
+            } else {
+              minLoadTimeReached = true;
+            }
+          }, minLoadTime);
+        }
+
         return {
           ...currentState,
-          loading: true
+          loading: showLoading
         };
       });
     },
@@ -287,14 +307,31 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
+  // useEffect(() => {
+  //   // if (state.activeFilters.length === debouncedActiveFilters.length) {
+  //     actions.getData(true);
+  //     let query = new URLSearchParams();
+  //     debouncedActiveFilters.forEach(d => {
+  //       d.searchParams?.forEach((param) => query.set(param.field, param.value));
+  //     });
+  //     history.push({search: query.toString()});
+  //   // }
+  // }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
+
   useEffect(() => {
-    actions.getData();
-    let query = new URLSearchParams();
-    debouncedActiveFilters.forEach(d => {
-      d.searchParams?.forEach((param) => query.set(param.field, param.value));
-    });
-    history.push({search: query.toString()});
-  }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
+    // if (state.activeFilters.length < debouncedActiveFilters.length) {
+      actions.getData(true);
+      let query = new URLSearchParams();
+      state.activeFilters.forEach(d => {
+        d.searchParams?.forEach((param) => query.set(param.field, param.value));
+      });
+      history.push({search: query.toString()});
+    // }
+  }, [state.activeFilters]);
+
+  useEffect(() => {
+    actions.getData(false);
+  }, [state.resultsPerPage, state.page]);
 
   return (
     <SearchUIContext.Provider value={state}>
