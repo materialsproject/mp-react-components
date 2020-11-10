@@ -46,13 +46,13 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (props.onSubmit) {
-      props.onSubmit();
-    }
-  };
+  // const handleSubmit = e => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   if (props.onSubmit) {
+  //     props.onSubmit();
+  //   }
+  // };
 
   const handleFocus = () => {
     if (props.onFocus) props.onFocus();
@@ -227,7 +227,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     if (props.liftInputRef) props.liftInputRef(inputRef);
   }, []);
 
-  const inputControl = (
+  const inputControl = 
     <Control className="is-expanded">
       <input
         className="input"
@@ -239,50 +239,30 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
         placeholder={props.onSubmit ? 'Search by elements, formula, or ID' : undefined}
         ref={inputRef}
       />
-    </Control>
+    </Control>;
+
+  return (
+    <>
+      {props.showFieldDropdown && 
+        <Control>
+          <Dropdown
+            value={props.field}
+            onChange={(item: MaterialsInputField) => {
+              if (props.onFieldChange) props.onFieldChange(item);
+            }}
+            color="primary"
+          >
+            {dropdownItems.map((item, k) => {
+              return (
+                <Dropdown.Item key={k} value={item.value}>
+                  {item.label}
+                </Dropdown.Item>
+              );
+            })}
+          </Dropdown>
+        </Control>
+      }
+      {inputControl}
+    </>
   );
-
-  const inputField = () => {
-    if (props.onSubmit) {
-      return (
-        <form onSubmit={handleSubmit}>
-          <Field className="has-addons">
-            {inputControl}
-            <Control className="">
-              <Button color="primary" type="submit">
-                Search
-              </Button>
-            </Control>
-          </Field>
-        </form>
-      );
-    } else if (!props.onSubmit && props.onFieldChange) {
-      return (
-        <Field className="has-addons">
-          <Control>
-            <Dropdown
-              value={props.field}
-              onChange={(item: MaterialsInputField) => {
-                if (props.onFieldChange) props.onFieldChange(item);
-              }}
-              color="primary"
-            >
-              {dropdownItems.map((item, k) => {
-                return (
-                  <Dropdown.Item key={k} value={item.value}>
-                    {item.label}
-                  </Dropdown.Item>
-                );
-              })}
-            </Dropdown>
-          </Control>
-          {inputControl}
-        </Field>
-      );
-    } else {
-      return <Field>{inputControl}</Field>;
-    }
-  };
-
-  return <>{inputField()}</>;
 };
