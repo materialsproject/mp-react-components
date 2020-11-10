@@ -11,6 +11,7 @@ import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
 import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect'
 import { initArray } from '../../utils';
+import { TextInput } from '../../TextInput';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -40,11 +41,12 @@ export const SearchUIFilters: React.FC<Props> = props => {
         return (
           <div>
             <p className="has-text-weight-bold mb-1">{f.name}</p>
-            <Form.Input
-              {...f.props}
+            <TextInput
+              debounce={1000}
               type="text"
               value={state.filterValues[f.id]}
-              onChange={e => actions.setFilterValue(e.target.value, f.id)}
+              onChange={v => actions.setFilterValue(v, f.id)}
+              {...f.props}
             />
           </div>
         );
