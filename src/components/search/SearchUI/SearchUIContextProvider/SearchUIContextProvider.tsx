@@ -34,7 +34,7 @@ const initialState: SearchState = {
   totalResults: 0,
   resultsPerPage: 15,
   page: 1,
-  loading: true,
+  loading: false,
   sortColumn: FilterId.MP_ID,
   sortDirection: 'asc'
 };
@@ -229,7 +229,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState(currentState => {
         let isLoading = showLoading;
         let minLoadTime = 1000;
-        let minLoadTimeReached = false;
+        let minLoadTimeReached = !showLoading;
         let params: any = {};
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
