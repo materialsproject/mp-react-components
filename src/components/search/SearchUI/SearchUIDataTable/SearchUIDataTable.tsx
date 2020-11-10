@@ -31,13 +31,13 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   };
 
   const TableHeaderTitle = () => {
-    if (state.activeFilters.length === 0 && !state.loading) {
+    if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
         <p className="title is-4">
           Showing all <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> materials
         </p>
       );
-    } else if (state.activeFilters.length > 0) {
+    } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
         <p className="title is-4">
             <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} />
@@ -81,14 +81,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         sortIcon={<span></span>}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
-        // progressPending={state.loading}
         paginationTotalRows={state.totalResults}
         paginationPerPage={state.resultsPerPage}
-        // progressComponent={
-          // <progress className="progress is-small is-primary mt-3" max="100">
-          //   15%
-          // </progress>
-        // }
       />
     </div>
   );

@@ -33,7 +33,7 @@ const initialState: SearchState = {
   totalResults: 0,
   resultsPerPage: 15,
   page: 1,
-  loading: false,
+  loading: true,
   sortColumn: FilterId.MP_ID,
   sortDirection: 'asc'
 };
