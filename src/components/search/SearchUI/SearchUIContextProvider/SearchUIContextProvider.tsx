@@ -15,6 +15,7 @@ import {
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import { getDelimiter, parseElements } from '../../utils';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -318,15 +319,13 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   //   // }
   // }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
 
-  useEffect(() => {
-    // if (state.activeFilters.length < debouncedActiveFilters.length) {
+  useDeepCompareEffect(() => {
       actions.getData(true);
       let query = new URLSearchParams();
       state.activeFilters.forEach(d => {
         d.searchParams?.forEach((param) => query.set(param.field, param.value));
       });
       history.push({search: query.toString()});
-    // }
   }, [state.activeFilters]);
 
   useEffect(() => {

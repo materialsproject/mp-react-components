@@ -53,10 +53,11 @@ export const SearchUIFilters: React.FC<Props> = props => {
           <div>
             <p className="has-text-weight-bold mb-1">{f.name}</p>
             <MaterialsInput
-              {...f.props}
+              debounce={1000}
               value={state.filterValues[f.id]}
               onChange={v => actions.setFilterValue(v, f.id)}
               periodicTableMode="onFocus"
+              {...f.props}
               // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
             />
           </div>

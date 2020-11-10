@@ -11,6 +11,7 @@ import {
 } from '../../../search/utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
+import { useDebounce } from '../../../../utils/hooks';
 const { Input, Field, Control } = Form;
 
 /**
@@ -28,6 +29,9 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const [delimiter, setDelimiter] = useState(new RegExp(','));
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState(props.value);
+  console.log(props.debounce);
+  const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
     { label: 'By formula', value: MaterialsInputField.FORMULA },
@@ -38,13 +42,13 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    * Handle updating the context with the new raw input value
    * All side effects to this change are handled in an effect hook
    */
-  const handleRawValueChange = event => {
-    props.onChange(event.target.value);
+  const handleRawValueChange = e => {
+    setInputValue(e.target.value);
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleSubmit = e => {
+    e.preventDefault();
+    e.stopPropagation();
     if (props.onSubmit) {
       props.onSubmit();
     }
@@ -59,7 +63,15 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   };
 
   /**
-   * Trigger side effects when raw input value changes
+   * This effect is triggered when the value prop is changed directly from outside this component
+   * Here inputValue is set, triggering debouncedInputValue to get set after the debounce timer
+   */
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value]);
+
+  /**
+   * This effect triggers immediately after the inputValue changes
    * If onFieldChange prop is included, dynamically determine if the input
    * is an mp-id, list of elements, or formula.
    * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
@@ -68,7 +80,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newValue = props.value;
+    const newValue = inputValue;
     const capitalLettersMatch = newValue.match(/[A-Z]/g);
     const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
     let newMaterialsInputField = props.field;
@@ -143,10 +155,10 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     setPtActionsToDispatch(newPtActionsToDispatch);
     setDelimiter(newDelimiter);
     if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
-  }, [props.value]);
+  }, [inputValue]);
 
   /**
-   * Execute the periodic table context actions collected by the value effect (above)
+   * This effect executes the periodic table context actions collected by the value effect (above)
    * These are executed in a separate effect (rather than inside the value effect)
    * to prevent issues with execution order when MaterialsInputs are 
    * initialized with values (e.g. search param value from the URL).
@@ -156,7 +168,17 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   }, [ptActionsToDispatch]);
 
   /**
-   * Handle direct interactions with the periodic table
+   * This effect is triggered after the debouncedInputValue is set
+   * The debouncedInputValue is set with inputValue after the specified debounce time
+   * If no debounce prop is supplied, there is no debounce and debouncedInputValue is exactly the same as inputValue
+   * Triggers the onChange event prop for the value prop
+   */
+  useEffect(() => {
+    props.onChange(debouncedInputValue);
+  }, [debouncedInputValue]);
+
+  /**
+   * This effect handles direct interactions with the periodic table
    * This hook is triggered any time enabledElements changes
    * To prevent an infinite update loop, the function is skipped
    * if enabledElements was changed from an external action, not a direct element click
@@ -192,10 +214,15 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
         default:
           return;
       }
-      props.onChange(newValue);
+      setInputValue(newValue);
     }
   }, [enabledElements]);
 
+  /**
+   * This effect lifts the ref placed in the input element
+   * up to the parent MaterialsInput component
+   * This allows MaterialsInput to handle focusing the input when the periodic table is clicked
+   */
   useEffect(() => {
     if (props.liftInputRef) props.liftInputRef(inputRef);
   }, []);
@@ -205,7 +232,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
       <input
         className="input"
         type="search"
-        value={props.value}
+        value={inputValue}
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

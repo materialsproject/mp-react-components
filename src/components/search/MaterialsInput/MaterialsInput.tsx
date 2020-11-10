@@ -38,6 +38,7 @@ export interface MaterialsInputBoxProps {
   value: string;
   parsedValue: string | string[];
   field: string;
+  debounce?: number;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onFieldChange?: (value: string) => void;
@@ -91,6 +92,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             value={props.value}
             parsedValue={props.parsedValue}
             field={props.field}
+            debounce={props.debounce}
             onChange={props.onChange}
             onFieldChange={props.onFieldChange}
             onSubmit={props.onSubmit ? handleSubmit : undefined}
