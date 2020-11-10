@@ -10,7 +10,7 @@ import {
 } from '../../search/utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { FaTimes } from 'react-icons/fa';
+import { FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
@@ -111,7 +111,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
               className="button"
               onClick={() => setShowPeriodicTable(!showPeriodicTable)}
             >
-              {showPeriodicTable ? 'Hide' : 'Show'}
+              <i 
+                className={classNames(
+                  'fontastic', 
+                  'icon-periodic-table', 
+                  'mr-1',
+                  {'is-active': showPeriodicTable}
+                )} 
+              />
             </button>
           </Control>
           {materialsInputControl}

@@ -34,7 +34,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
         <p className="title is-4">
-          Showing all <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> materials
+          All <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> materials
         </p>
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
