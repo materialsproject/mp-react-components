@@ -53,8 +53,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   return (
     <div className={props.className}>
-      <div className="columns mb-0">
-        <div className="column">
+      <div className="columns is-vcentered mb-0">
+        <div className="column is-narrow">
           <TableHeaderTitle />
         </div>
         {state.loading &&
