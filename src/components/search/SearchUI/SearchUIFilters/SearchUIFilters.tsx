@@ -116,12 +116,17 @@ export const SearchUIFilters: React.FC<Props> = props => {
     return null;
   };
 
-  const renderActiveFilterCount = (group) => {
+  const getActiveFilterCount = (group) => {
     let count = 0;
     const activeIds = state.activeFilters.map(f => f.id);
     group.filters.forEach((f) => {
       if (activeIds.indexOf(f.id) > -1) count++;
     });
+    return count;
+  };
+
+  const renderActiveFilterCount = (group) => {
+    let count = getActiveFilterCount(group);
     if (count > 0) {
       return <span className=""> ({count})</span>
     } else {
@@ -160,11 +165,17 @@ export const SearchUIFilters: React.FC<Props> = props => {
         <div className="panel-heading">
           <div className="level">
             <span>Filters</span>
-            <Dropdown className="mp-dropdown" value="" label={<FaEllipsisV />} right={true}>
+            <button 
+              className="button"
+              onClick={e => actions.resetFilters()}
+            >
+              Reset
+            </button>
+            {/* <Dropdown className="mp-dropdown" value="" label={<FaEllipsisV />} right={true}>
               <Dropdown.Item value="reset">
                 <p onClick={e => actions.resetFilters()}>Reset filters</p>
               </Dropdown.Item>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
         <div className="panel-block-container">

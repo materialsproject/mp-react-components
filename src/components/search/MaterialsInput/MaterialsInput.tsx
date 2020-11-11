@@ -111,11 +111,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
               className="button"
               onClick={() => setShowPeriodicTable(!showPeriodicTable)}
             >
-              <i 
+              <i
                 className={classNames(
-                  'fontastic', 
-                  'icon-periodic-table', 
-                  'mr-1',
+                  'icon-fontastic-periodic-table', 
                   {'is-active': showPeriodicTable}
                 )} 
               />
