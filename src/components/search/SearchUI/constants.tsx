@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
 import { Link } from '../../navigation/Link';
-import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../GroupSpaceSearch/space-groups'
+import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions, spaceGroups } from '../GroupSpaceSearch/space-groups'
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -77,7 +77,8 @@ enum ColumnFormat {
   SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
   FORMULA = 'FORMULA', // formatArg: none
   LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
-  BOOLEAN = 'BOOLEAN'
+  BOOLEAN = 'BOOLEAN',
+  SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL'
 }
 
 /**
@@ -130,7 +131,15 @@ export const initColumns = (columns: Column[]) => {
         const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
         const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
         c.format = (row: any) => row[c.selector] ? truthyLabel : falsyLabel;
-        return c;    
+        return c;
+      case ColumnFormat.SPACEGROUP_SYMBOL:
+        c.format = (row: any) => {
+          const selectors = c.selector.split('.');
+          const rowValue = selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
+          const spaceGroup = spaceGroups.find(d => d["space-group.symbol"] === rowValue);
+          const formattedSymbol = spaceGroup ? spaceGroup["uni-symbol"] : rowValue;
+          return formattedSymbol;
+        }
       default:
         return c;
     }
@@ -383,7 +392,8 @@ export const materialsColumns: Column[] = [
   },
   {
     name: 'Spacegroup Symbol',
-    selector: 'symmetry.symbol'
+    selector: 'symmetry.symbol',
+    format: ColumnFormat.SPACEGROUP_SYMBOL
   },
   {
     name: 'Spacegroup Number',

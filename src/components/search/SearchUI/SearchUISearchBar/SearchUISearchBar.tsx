@@ -30,7 +30,6 @@ export const SearchUISearchBar: React.FC = () => {
       field={searchField}
       onChange={v => setSearchValue(v)}
       onFieldChange={field => setSearchField(field)}
-      // onSubmit={() => actions.resetAllFiltersExcept(searchValue, searchField)}
       onSubmit={() => actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField))}
       periodicTableMode="toggle"
     />

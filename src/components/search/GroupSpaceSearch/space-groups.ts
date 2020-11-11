@@ -2381,7 +2381,7 @@ export const spaceGroupSymbolOptions = () => {
   return spaceGroups.map(g => {
     return {
       value: g["space-group.symbol"],
-      label: g["space-group.symbol"]
+      label: g["uni-symbol"]
     }
   });
 };

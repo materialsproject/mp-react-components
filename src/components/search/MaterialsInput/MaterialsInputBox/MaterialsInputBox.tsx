@@ -11,6 +11,7 @@ import {
 } from '../../../search/utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
+import { useDebounce } from '../../../../utils/hooks';
 const { Input, Field, Control } = Form;
 
 /**
@@ -25,9 +26,12 @@ interface DispatchAction {
 
 export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
-  const [delimiter, setDelimiter] = useState(',');
+  const [delimiter, setDelimiter] = useState(new RegExp(','));
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState(props.value);
+  console.log(props.debounce);
+  const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
     { label: 'By formula', value: MaterialsInputField.FORMULA },
@@ -38,17 +42,17 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    * Handle updating the context with the new raw input value
    * All side effects to this change are handled in an effect hook
    */
-  const handleRawValueChange = event => {
-    props.onChange(event.target.value);
+  const handleRawValueChange = e => {
+    setInputValue(e.target.value);
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (props.onSubmit) {
-      props.onSubmit();
-    }
-  };
+  // const handleSubmit = e => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   if (props.onSubmit) {
+  //     props.onSubmit();
+  //   }
+  // };
 
   const handleFocus = () => {
     if (props.onFocus) props.onFocus();
@@ -59,26 +63,42 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   };
 
   /**
-   * Trigger side effects when raw input value changes
-   * Detects when search type has changed based on presence of numbers (indicative of formula)
-   * or delimiters (indicative of elements).
+   * This effect is triggered when the value prop is changed directly from outside this component
+   * Here inputValue is set, triggering debouncedInputValue to get set after the debounce timer
+   */
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value]);
+
+  /**
+   * This effect triggers immediately after the inputValue changes
+   * If onFieldChange prop is included, dynamically determine if the input
+   * is an mp-id, list of elements, or formula.
    * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
    * Only adds/removes elements when input value and pt are not in sync (prevents infinite hooks)
    * Sends clean input value to onChange function passed in as a prop
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newValue = props.value;
+    const newValue = inputValue;
+    const capitalLettersMatch = newValue.match(/[A-Z]/g);
+    const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
     let newMaterialsInputField = props.field;
     let newDelimiter = delimiter;
     let newPtActionsToDispatch: DispatchAction[] = [];
 
-    if (props.onFieldChange && newValue && newValue.indexOf('mp') === 0) {
+    /**
+     * Field name switches to MP_ID if the input starts with 'mp' or 'mvc'.
+     * Field name switches to ELEMENTS if the input contains one of the accepted delimiters (comma, hyphen, or space).
+     * Field name switches to FORMULA if the input doesn't contain a delimiter
+     * and does contain multiple capital letters or a number.
+     */
+    if (props.onFieldChange && newValue && (newValue.indexOf('mp') === 0 || newValue.indexOf('mvc') === 0)) {
       newMaterialsInputField = MaterialsInputField.MP_ID;
-    } else if (props.onFieldChange && newValue && newValue.match(/[0-9]/g)) {
-      newMaterialsInputField = MaterialsInputField.FORMULA;
-    } else if (props.onFieldChange && newValue && newValue.match(/,|-/gi)) {
+    } else if (props.onFieldChange && newValue && newValue.match(/,|-|\s/gi)) {
       newMaterialsInputField = MaterialsInputField.ELEMENTS;
+    } else if (props.onFieldChange && newValue &&  (capitalLetters > 1 || newValue.match(/[0-9]/gi))) {
+      newMaterialsInputField = MaterialsInputField.FORMULA;
     }
 
     switch (newMaterialsInputField) {
@@ -135,10 +155,10 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     setPtActionsToDispatch(newPtActionsToDispatch);
     setDelimiter(newDelimiter);
     if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
-  }, [props.value]);
+  }, [inputValue]);
 
   /**
-   * Execute the periodic table context actions collected by the value effect (above)
+   * This effect executes the periodic table context actions collected by the value effect (above)
    * These are executed in a separate effect (rather than inside the value effect)
    * to prevent issues with execution order when MaterialsInputs are 
    * initialized with values (e.g. search param value from the URL).
@@ -148,7 +168,17 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   }, [ptActionsToDispatch]);
 
   /**
-   * Handle direct interactions with the periodic table
+   * This effect is triggered after the debouncedInputValue is set
+   * The debouncedInputValue is set with inputValue after the specified debounce time
+   * If no debounce prop is supplied, there is no debounce and debouncedInputValue is exactly the same as inputValue
+   * Triggers the onChange event prop for the value prop
+   */
+  useEffect(() => {
+    props.onChange(debouncedInputValue);
+  }, [debouncedInputValue]);
+
+  /**
+   * This effect handles direct interactions with the periodic table
    * This hook is triggered any time enabledElements changes
    * To prevent an infinite update loop, the function is skipped
    * if enabledElements was changed from an external action, not a direct element click
@@ -184,70 +214,55 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
         default:
           return;
       }
-      props.onChange(newValue);
+      setInputValue(newValue);
     }
   }, [enabledElements]);
 
+  /**
+   * This effect lifts the ref placed in the input element
+   * up to the parent MaterialsInput component
+   * This allows MaterialsInput to handle focusing the input when the periodic table is clicked
+   */
   useEffect(() => {
     if (props.liftInputRef) props.liftInputRef(inputRef);
   }, []);
 
-  const inputControl = (
+  const inputControl = 
     <Control className="is-expanded">
       <input
         className="input"
         type="search"
-        value={props.value}
+        value={inputValue}
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={props.onSubmit ? 'Search by elements, formula, or ID' : undefined}
         ref={inputRef}
       />
-    </Control>
+    </Control>;
+
+  return (
+    <>
+      {props.showFieldDropdown && 
+        <Control>
+          <Dropdown
+            value={props.field}
+            onChange={(item: MaterialsInputField) => {
+              if (props.onFieldChange) props.onFieldChange(item);
+            }}
+            color="primary"
+          >
+            {dropdownItems.map((item, k) => {
+              return (
+                <Dropdown.Item key={k} value={item.value}>
+                  {item.label}
+                </Dropdown.Item>
+              );
+            })}
+          </Dropdown>
+        </Control>
+      }
+      {inputControl}
+    </>
   );
-
-  const inputField = () => {
-    if (props.onSubmit) {
-      return (
-        <form onSubmit={handleSubmit}>
-          <Field className="has-addons">
-            {inputControl}
-            <Control className="">
-              <Button color="primary" type="submit">
-                Search
-              </Button>
-            </Control>
-          </Field>
-        </form>
-      );
-    } else if (!props.onSubmit && props.onFieldChange) {
-      return (
-        <Field className="has-addons">
-          <Control>
-            <Dropdown
-              value={props.field}
-              onChange={(item: MaterialsInputField) => {
-                if (props.onFieldChange) props.onFieldChange(item);
-              }}
-              color="primary"
-            >
-              {dropdownItems.map((item, k) => {
-                return (
-                  <Dropdown.Item key={k} value={item.value}>
-                    {item.label}
-                  </Dropdown.Item>
-                );
-              })}
-            </Dropdown>
-          </Control>
-          {inputControl}
-        </Field>
-      );
-    } else {
-      return <Field>{inputControl}</Field>;
-    }
-  };
-
-  return <>{inputField()}</>;
 };

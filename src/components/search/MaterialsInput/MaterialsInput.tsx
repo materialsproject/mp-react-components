@@ -8,8 +8,9 @@ import {
   getTruthyKeys,
   arrayToDelimitedString
 } from '../../search/utils';
-import { Dropdown, Form, Button } from 'react-bulma-components';
-import { FaTimes } from 'react-icons/fa';
+import { Form, Button } from 'react-bulma-components';
+const { Input, Field, Control } = Form;
+import { FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
@@ -38,6 +39,8 @@ export interface MaterialsInputBoxProps {
   value: string;
   parsedValue: string | string[];
   field: string;
+  debounce?: number;
+  showFieldDropdown?: boolean;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onFieldChange?: (value: string) => void;
@@ -74,43 +77,71 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     if (props.onSubmit) {
+      e.preventDefault();
+      e.stopPropagation();
       setShowPeriodicTable(false);
       props.onSubmit();
     }
   };
 
+  const materialsInputControl = <MaterialsInputBox
+        value={props.value}
+        parsedValue={props.parsedValue}
+        field={props.field}
+        debounce={props.debounce}
+        onChange={props.onChange}
+        onFieldChange={props.onFieldChange}
+        onSubmit={props.onSubmit ? handleSubmit : undefined}
+        onFocus={getOnFocusProp}
+        onBlur={getOnBlurProp}
+        liftInputRef={ref => setInputRef(ref)}
+      />;
+
+  let materialsInputField: JSX.Element | null = null; 
+  
+  if (props.onSubmit) {
+    materialsInputField =
+      <form onSubmit={handleSubmit}>
+        <Field className="has-addons">
+          <Control>
+            <button
+              type="button"
+              className="button"
+              onClick={() => setShowPeriodicTable(!showPeriodicTable)}
+            >
+              <i
+                className={classNames(
+                  'icon-fontastic-periodic-table', 
+                  {'is-active': showPeriodicTable}
+                )} 
+              />
+            </button>
+          </Control>
+          {materialsInputControl}
+          <Control>
+            <Button color="primary" type="submit">
+              Search
+            </Button>
+          </Control>
+        </Field>
+      </form>;
+  } else {
+    materialsInputField =
+      <Field className="has-addons">
+        {materialsInputControl}
+      </Field>;
+  }
+
   return (
     <div className="has-text-centered">
-      <PeriodicContext 
-        // enabledElements={props.enabledElements ? props.enabledElements : undefined}
-      >
-        <div>
-          <MaterialsInputBox
-            value={props.value}
-            parsedValue={props.parsedValue}
-            field={props.field}
-            onChange={props.onChange}
-            onFieldChange={props.onFieldChange}
-            onSubmit={props.onSubmit ? handleSubmit : undefined}
-            onFocus={getOnFocusProp}
-            onBlur={getOnBlurProp}
-            liftInputRef={ref => setInputRef(ref)}
-          />
-        </div>
-        {props.periodicTableMode === 'toggle' && (
-          <button
-            className="button is-small bt-0"
-            onClick={() => setShowPeriodicTable(!showPeriodicTable)}
-          >
-            {showPeriodicTable ? 'Hide' : 'Show'} Periodic Table
-          </button>
-        )}
+      <PeriodicContext>
+        {materialsInputField}
         <div
           className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
             'is-hidden-with-transition': !showPeriodicTable,
-            'mt-3': props.periodicTableMode === 'onFocus' && showPeriodicTable
+            'mt-3': showPeriodicTable
           })}
           onMouseDown={event => {
             setPeriodicTableClicked(true);
