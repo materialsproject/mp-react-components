@@ -32,6 +32,10 @@
   min-width: 528px;
 }
 
+.search-ui .panel-block-title * {
+  transition: 0.25s;
+}
+
 .search-ui .panel-block-title > .button {
   padding: 1em;
   height: auto;
@@ -41,7 +45,6 @@
   border: none;
   border-radius: 0;
   background: none;
-  transition: 0.25s;
 }
 
 .search-ui .panel-block.is-active .panel-block-title {
@@ -50,6 +53,10 @@
 
 .search-ui .panel-block-title > .button:hover {
   color: #000000 !important;
+}
+
+.search-ui .panel-block-title > .button:hover * {
+  opacity: 1 !important;
 }
 
 .search-ui .panel-block-children {

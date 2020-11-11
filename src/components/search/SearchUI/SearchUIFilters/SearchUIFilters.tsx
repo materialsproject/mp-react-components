@@ -4,7 +4,7 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
-import { FilterType, Filter } from '../constants';
+import { FilterType, Filter, FilterGroup, ActiveFilter } from '../constants';
 import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
 import { Select } from '../../Select';
@@ -21,11 +21,33 @@ interface Props {
   className?: string;
 }
 
+const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[]) => {
+  let count = 0;
+  const activeIds = activeFilters.map(f => f.id);
+  group.filters.forEach((f) => {
+    if (activeIds.indexOf(f.id) > -1) count++;
+  });
+  return count;
+};
+
+const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) => {
+  let groupsByName = {};
+  groups.forEach((g) => {
+    groupsByName[g.name] = {
+      expanded: false,
+      activeFilterCount: getActiveFilterCount(g, activeFilters),
+      filters: g.filters
+    };
+  });
+  return groupsByName;
+}
+
 export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
   const [expandedGroupsByIndex, setExpandedGroupsByIndex] = useState(initArray(state.filterGroups.length, false));
+  const [groupsByName, setGroupsByName] = useState(getGroupsByName(state.filterGroups, state.activeFilters));
   const [expandedGroupIndex, setExpandedGroupIndex] = useState<number | null>(null);
   const [clicked, setClicked] = useState(false);
 
@@ -116,31 +138,35 @@ export const SearchUIFilters: React.FC<Props> = props => {
     return null;
   };
 
-  const getActiveFilterCount = (group) => {
-    let count = 0;
-    const activeIds = state.activeFilters.map(f => f.id);
-    group.filters.forEach((f) => {
-      if (activeIds.indexOf(f.id) > -1) count++;
-    });
-    return count;
-  };
-
-  const renderActiveFilterCount = (group) => {
-    let count = getActiveFilterCount(group);
+  const renderActiveFilterCount = (count) => {
     if (count > 0) {
-      return <span className=""> ({count})</span>
+      return <span className="badge ml-2">{count} active</span>
     } else {
       return null;
     }
   };
 
-  const toggleGroup = (i: number) => {
-    let newExpandedGroups = [...expandedGroupsByIndex];
-    for (let index = 0; index < newExpandedGroups.length; index++) {
-      newExpandedGroups[index] = index === i ? !newExpandedGroups[index] : false;
+  const toggleGroup = (groupName: string) => {
+    let newGroupsByName = { ...groupsByName };
+    for (const name in newGroupsByName) {
+      newGroupsByName[name].expanded = groupName === name ? ! newGroupsByName[name].expanded : false;
     }
-    setExpandedGroupsByIndex(newExpandedGroups);
+    setGroupsByName(newGroupsByName);
+    // let newExpandedGroups = [...expandedGroupsByIndex];
+    // for (let index = 0; index < newExpandedGroups.length; index++) {
+    //   newExpandedGroups[index] = index === i ? !newExpandedGroups[index] : false;
+    // }
+    // setExpandedGroupsByIndex(newExpandedGroups);
   }
+
+  useEffect(() => {
+    let newGroupsByName = { ...groupsByName };
+    for (const name in newGroupsByName) {
+      const g = newGroupsByName[name];
+      g.activeFilterCount = getActiveFilterCount(g, state.activeFilters);
+    };
+    setGroupsByName(newGroupsByName);
+  }, [state.activeFilters]);
 
   /**
    * This hook initializes panel groups with their max height values
@@ -181,35 +207,38 @@ export const SearchUIFilters: React.FC<Props> = props => {
         <div className="panel-block-container">
           {state.filterGroups.map((g, i) => (
             <div 
-              className={classNames('panel-block', {'is-active' : expandedGroupsByIndex[i]})} 
+              className={classNames('panel-block', {'is-active' : groupsByName[g.name].expanded})} 
               key={i}
             >
               <div className="control">
                 <h3 className="panel-block-title">
                   <button
-                    className={classNames('button', 'is-fullwidth', {
-                      'has-text-black-bis': expandedGroupsByIndex[i],
-                      'has-text-grey': !expandedGroupsByIndex[i]
-                    })}
+                    className={classNames('button', 'is-fullwidth')}
                     /**
                      * Using keydown event for accessibility
                      * Avoiding click event due to performance issues and collisions with mousedown
                      */
-                    onKeyDown={(e) => { if (e.key === 'Enter') toggleGroup(i); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') toggleGroup(g.name); }}
                     /**
                      * Using mousedown event to prevent event order issues
                      * Periodic tables close on blur which fires before click events, 
                      * causing click event to be skipped because button position changes when table is hidden
                      */
-                    onMouseDown={(e) => toggleGroup(i)}
-                    aria-expanded={expandedGroupsByIndex[i]}
+                    onMouseDown={(e) => toggleGroup(g.name)}
+                    aria-expanded={groupsByName[g.name].expanded}
                     aria-controls={'filter-group-' + i}
                     id={'filter-group-button-' + i}
                     type="button"
                   >
-                    <span className="is-size-5">{g.name}{renderActiveFilterCount(g)}</span>
+                    <span 
+                      className={classNames('is-size-5', {
+                        'has-opacity-70': !groupsByName[g.name].expanded
+                      })}
+                    >
+                      {g.name}{renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
+                    </span>
                     <div className="is-pulled-right">
-                      {!expandedGroupsByIndex[i] ? <FaCaretRight /> : <FaCaretDown />}
+                      {!groupsByName[g.name].expanded ? <FaCaretRight /> : <FaCaretDown />}
                     </div>
                   </button>
                 </h3>
@@ -218,9 +247,9 @@ export const SearchUIFilters: React.FC<Props> = props => {
                   role="region"
                   aria-labelledby={'filter-group-button-' + i}
                   ref={el => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', {'is-hidden' : !expandedGroupsByIndex[i]})}
+                  className={classNames('panel-block-children', {'is-hidden' : !groupsByName[g.name].expanded})}
                 >
-                  <div aria-hidden={!expandedGroupsByIndex[i]}>
+                  <div aria-hidden={!groupsByName[g.name].expanded}>
                     {g.filters.map((f, j) => (
                       <div className="mb-2" key={j}>
                         {renderFilter(f, g.name)}
