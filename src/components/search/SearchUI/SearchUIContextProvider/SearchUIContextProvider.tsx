@@ -16,6 +16,7 @@ import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import { getDelimiter, parseElements } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -55,9 +56,6 @@ const getState = (
     g.filters.forEach(f => {
       switch (f.type) {
         case FilterType.SLIDER:
-          // if (!f.hasOwnProperty('props')) f.props = {domain: [0, 100]};
-          // if (f.hasOwnProperty('props') && f.props.hasOwnProperty('domain')) f.props.domain = [0, 100];  
-          // if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = f.props.domain;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
             filterValues[f.id][1] !== f.props.domain[1]
@@ -107,9 +105,34 @@ const getState = (
             });
           }
           break;
+        case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          if (
+            filterValues[f.id] !== undefined && 
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
+            const spaceGroup = spaceGroups.find(d => d["space-group.symbol"] === filterValues[f.id]);
+            const formattedSymbol = spaceGroup ? spaceGroup["uni-symbol"] : filterValues[f.id];
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: formattedSymbol,
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id,
+                  value: filterValues[f.id]
+                }
+              ]
+            });
+          }
+          break;
         default:
-          // if (!filterValues.hasOwnProperty(f.id)) filterValues[f.id] = undefined;
-          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null ) {
+          if (
+            filterValues[f.id] !== undefined && 
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,

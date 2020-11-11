@@ -101,12 +101,14 @@ export const SearchUIFilters: React.FC<Props> = props => {
         case FilterType.SELECT_SPACEGROUP_NUMBER:
         case FilterType.SELECT_CRYSTAL_SYSTEM:
         case FilterType.SELECT:
+          const selected = f.props.options.filter(option => option.value === state.filterValues[f.id]);
           return (
             <div>
               <p className="has-text-weight-bold mb-3">{f.name}</p>
               <Select
                 {...f.props}
                 menuPosition="fixed"
+                value={selected}
                 onChange={item => actions.setFilterValue(item.value, f.id)}
               />
             </div>
