@@ -67,3 +67,20 @@
 .search-ui .column.data-table-column {
   overflow: hidden;
 }
+
+.search-ui .progress-container {
+  /* height: 0;
+  overflow-y: visible;
+  z-index: 2;
+  position: relative;
+  top: 15px; */
+  position: relative;
+}
+
+.search-ui .progress {
+  /* height: 30px;
+  opacity: 0.7; */
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}

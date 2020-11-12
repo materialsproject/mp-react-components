@@ -36,7 +36,7 @@ import katex from 'katex';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
 import { MaterialsInput } from './components/search/MaterialsInput';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
+// import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { SearchUIFilters } from './components/search/SearchUI/SearchUIFilters';
 import { SearchUI } from './components/search/SearchUI';
 import { materialsColumns, materialsGroups } from './components/search/SearchUI/constants';
