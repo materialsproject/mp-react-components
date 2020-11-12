@@ -270,7 +270,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             },
             headers: apiKey
               ? {
-                  'X-Api-Key': apiKey
+                  'X-Api-Key': apiKey,
+                  'Access-Control-Allow-Origin': '*'
                 }
               : null
           })

@@ -66,3 +66,30 @@ body {
   font-size: 0.7em;
   padding: 0em 1em;
 }
+
+.has-oversized-icon {
+  height: 100% !important;
+  padding: 0 1em !important;
+}
+
+.has-oversized-icon > [class^="icon-"],
+.has-oversized-icon > [class*=" icon-"],
+.has-oversized-icon > i {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  line-height: 0;
+  position: relative;
+  top: 1px;
+}
+
+i.is-active, 
+span.is-active, 
+p.is-active, 
+svg.is-active {
+  color: #3273dc;
+}

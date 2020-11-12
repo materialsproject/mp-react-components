@@ -10,7 +10,7 @@ import {
 } from '../../search/utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
+import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
@@ -108,16 +108,16 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
           <Control>
             <button
               type="button"
-              className="button"
+              className="button has-oversized-icon is-size-2"
               onClick={() => setShowPeriodicTable(!showPeriodicTable)}
             >
-              <i
-                className={classNames(
-                  'icon-fontastic-periodic-table', 
-                  {'is-active': showPeriodicTable}
-                )} 
-              />
-            </button>
+                <i
+                  className={classNames(
+                    'icon-fontastic-periodic-table-squares',
+                    {'is-active': showPeriodicTable}
+                  )}
+                />
+            </button>            
           </Control>
           {materialsInputControl}
           <Control>

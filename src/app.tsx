@@ -12,7 +12,6 @@ import { Component, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles.less';
 import './assets/styles.css';
-import './assets/icon-periodic-table.css';
 import { SelectableTable } from './components/periodic-table/table-state';
 import { TableFilter } from './components/periodic-table/periodic-filter/table-filter';
 import { StandalonePeriodicComponent } from './components/periodic-table/periodic-element/standalone-periodic-component';
