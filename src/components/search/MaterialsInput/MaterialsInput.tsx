@@ -51,7 +51,6 @@ export interface MaterialsInputBoxProps {
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
   periodicTableMode?: string;
-  enabledElements?: string[];
 }
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
@@ -86,18 +85,20 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   };
 
-  const materialsInputControl = <MaterialsInputBox
-        value={props.value}
-        parsedValue={props.parsedValue}
-        field={props.field}
-        debounce={props.debounce}
-        onChange={props.onChange}
-        onFieldChange={props.onFieldChange}
-        onSubmit={props.onSubmit ? handleSubmit : undefined}
-        onFocus={getOnFocusProp}
-        onBlur={getOnBlurProp}
-        liftInputRef={ref => setInputRef(ref)}
-      />;
+  const materialsInputControl = 
+    <MaterialsInputBox
+      value={props.value}
+      parsedValue={props.parsedValue}
+      field={props.field}
+      debounce={props.debounce}
+      onChange={props.onChange}
+      onFieldChange={props.onFieldChange}
+      onSubmit={props.onSubmit ? handleSubmit : undefined}
+      onFocus={getOnFocusProp}
+      onBlur={getOnBlurProp}
+      liftInputRef={ref => setInputRef(ref)}
+      showFieldDropdown={props.showFieldDropdown}
+    />;
 
   let materialsInputField: JSX.Element | null = null; 
   

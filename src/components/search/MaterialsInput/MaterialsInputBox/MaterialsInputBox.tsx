@@ -30,7 +30,6 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(props.value);
-  console.log(props.debounce);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },

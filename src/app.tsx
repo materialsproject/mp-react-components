@@ -690,7 +690,7 @@ ReactDOM.render(
         />
       </>
     </CameraContextWrapper> */}
-    <div>
+    <div className="p-4">
       <SearchUI
         columns={materialsColumns}
         filterGroups={materialsGroups}

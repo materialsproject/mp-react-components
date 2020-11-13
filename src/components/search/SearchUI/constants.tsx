@@ -70,6 +70,7 @@ export interface SearchState {
   loading: boolean;
   sortColumn: FilterId;
   sortDirection: 'asc' | 'desc';
+  topLevelSearchField: string;
 }
 
 enum ColumnFormat {

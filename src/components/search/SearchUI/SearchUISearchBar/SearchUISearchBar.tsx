@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MaterialsInput } from '../../MaterialsInput';
-import { useSearchUIContextActions } from '../SearchUIContextProvider';
+import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { MaterialsInputField } from '../../MaterialsInput';
 
 /**
@@ -11,9 +11,10 @@ import { MaterialsInputField } from '../../MaterialsInput';
 
 export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();
+  const state = useSearchUIContext();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchField, setSearchField] = useState<string>('elements');
+  const [searchField, setSearchField] = useState<string>(state.topLevelSearchField);
 
   const getFieldsToOverride = (selectedField: string) => {
     let fields: string[] = [];
@@ -22,6 +23,11 @@ export const SearchUISearchBar: React.FC = () => {
     });
     return fields;
   };
+
+  // useEffect(() => {
+  //   setSearchField(state.topLevelSearchField);
+  //   setSearchValue(state.filterValues[state.topLevelSearchField]);
+  // }, [state.topLevelSearchField]);
 
   return (
     <MaterialsInput

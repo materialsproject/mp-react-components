@@ -37,7 +37,8 @@ const initialState: SearchState = {
   page: 1,
   loading: false,
   sortColumn: FilterId.MP_ID,
-  sortDirection: 'asc'
+  sortDirection: 'asc',
+  topLevelSearchField: 'elements'
 };
 
 /**
