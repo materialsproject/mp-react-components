@@ -3,8 +3,8 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { Dropdown } from '../../Dropdown';
 import { FaAngleDown } from 'react-icons/fa';
+import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -32,10 +32,10 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     return;
   };
 
-  const toggleColumn = (checked, column) => {
+  const toggleColumn = (column) => {
     const newColumns = [...columns];
     const changedColumn = newColumns.find((col) => col.name === column.name);
-    if (changedColumn) changedColumn.omit = !checked;
+    if (changedColumn) changedColumn.omit = !changedColumn.omit;
     setColumns(newColumns);
   };
 
@@ -60,6 +60,47 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     }
   };
 
+  const columnsMenu =
+    <MenuWrapper 
+      className='dropdown is-right is-active has-text-left'
+      closeOnSelection={false}
+    >
+      <div className="dropdown-trigger">
+        <Button className='button'>
+          <span>Columns</span>
+          <span className="icon"><FaAngleDown/></span>
+        </Button>
+      </div>
+      <Menu className='dropdown-menu'>
+        <ul className="dropdown-content">
+          {columns.map((col, i) => (
+            <MenuItem key={i}>
+              <li className="dropdown-item">
+                <label className="checkbox is-block">
+                  <input
+                    type="checkbox"
+                    role="checkbox"
+                    checked={!col.omit}
+                    aria-checked={!col.omit}
+                    /**
+                     * Use key-up event to allow toggling with the space bar
+                     * Must use key-up instead of key-down to prevent double-firing in Firefox
+                     */
+                    onKeyUp={(e) => {
+                      e.preventDefault();
+                      if (e.keyCode === 32) toggleColumn(col);
+                    }}
+                    onChange={(e) => toggleColumn(col)}
+                  />
+                  <span>{col.name}</span>
+                </label>
+              </li>
+            </MenuItem>
+          ))}
+        </ul>
+      </Menu>
+    </MenuWrapper>;
+
   return (
     <div className={props.className}>
       <div className="columns mb-0">
@@ -72,30 +113,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
           </div>
         }
         <div className="column pb-0 has-text-right">
-          <Dropdown
-            trigger={
-              <button className="button">
-                <span>Columns</span>
-                <span className="icon"><FaAngleDown/></span>
-              </button>
-            }
-            hideOnLinkClick={false}
-            isAnimated={false}
-            className="is-right"
-          >
-            {columns.map((col, i) => (
-              <a href="#" className="dropdown-item" key={i}>
-                <label className="checkbox is-block">
-                  <input
-                    type="checkbox"
-                    checked={!col.omit}
-                    onChange={(e) => toggleColumn(e.target.checked, col)}
-                  />
-                  <span>{col.name}</span>
-                </label>
-              </a>
-            ))}
-          </Dropdown>
+          {columnsMenu}
         </div>
       </div>
       <ActiveFilterButtons
