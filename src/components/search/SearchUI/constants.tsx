@@ -1,6 +1,6 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
-import { Link } from '../../navigation/Link';
+import { Link } from 'react-router-dom';
 import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions, spaceGroups } from '../GroupSpaceSearch/space-groups'
 
 export enum FilterId {
@@ -123,7 +123,7 @@ export const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
           return (
-            <Link href={path}>{row[c.selector]}</Link>
+            <Link to={path}>{row[c.selector]}</Link>
           );
         }
         return c;
@@ -199,7 +199,7 @@ export const materialsGroups: FilterGroup[] = [
         type: FilterType.TEXT_INPUT
       },
       {
-        name: 'Required Elements',
+        name: 'Elements',
         id: FilterId.ELEMENTS,
         type: FilterType.MATERIALS_INPUT,
         props: {
@@ -349,8 +349,8 @@ export const materialsColumns: Column[] = [
   {
     name: 'Material Id',
     selector: 'task_id',
-    format: ColumnFormat.LINK,
-    formatArg: '/materials/'
+    format: ColumnFormat.LINK
+    // formatArg: '/materials/'
   },
   {
     name: 'Formula',

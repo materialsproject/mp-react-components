@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useElements } from '../../periodic-table/periodic-table-state/table-store';
 import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
 import {
@@ -16,6 +16,7 @@ import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 import { SelectableTable } from '../../periodic-table/table-state';
 import classNames from 'classnames';
+import { usePrevious } from '../../../utils/hooks';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -55,6 +56,8 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
+  // const [isChemSys, setIsChemSys] = useState<boolean | undefined>(false);
+  // const prevChemSys = usePrevious(isChemSys);
   const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' ? true : false
@@ -84,6 +87,22 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       props.onSubmit();
     }
   };
+
+  // const checkIfChemSys = (value) => {
+  //   if (value.match(/-/gi)) {
+  //     return setIsChemSys(true);
+  //   } else if (value.match(/,|\s/gi)) {
+  //     return setIsChemSys(false);
+  //   } else {
+  //     return setIsChemSys(prevChemSys);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // const newIsChemSys = props.value.match(/-/gi) ? true : false;
+  //   // setIsChemSys(newIsChemSys);
+  //   checkIfChemSys(props.value);
+  // }, [props.value]);
 
   const materialsInputControl = 
     <MaterialsInputBox
@@ -135,10 +154,36 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       </Field>;
   }
 
+  let chemSysCheckbox: JSX.Element | null = null;
+
+  if (props.field === 'elements' && !props.onSubmit) {
+    const isChemSys = props.value.match(/-/gi) ? true : false;
+    chemSysCheckbox = 
+      <label className="checkbox is-block">
+        <input
+          type="checkbox"
+          role="checkbox"
+          checked={isChemSys}
+          aria-checked={isChemSys}
+          onChange={(e) => {
+            let newValue = '';
+            if (e.target.checked) {
+              newValue = props.value.replace(/,\sand|,\s|,/gi, '-');
+            } else {
+              newValue = props.value.replace(/-/gi, ',');
+            }
+            props.onChange(newValue);
+          }}
+        />
+        <span>Contains no other elements</span>
+      </label>
+  }
+
   return (
-    <div className="has-text-centered">
+    <div>
       <PeriodicContext>
         {materialsInputField}
+        {chemSysCheckbox}
         <div
           className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
             'is-hidden-with-transition': !showPeriodicTable,

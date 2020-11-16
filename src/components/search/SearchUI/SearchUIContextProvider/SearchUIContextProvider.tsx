@@ -14,7 +14,7 @@ import {
 } from '../constants';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { getDelimiter, parseElements } from '../../utils';
+import { arrayToDelimitedString, getDelimiter, parseElements } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
 
@@ -87,14 +87,24 @@ const getState = (
              * Otherwise, use the raw input value for the param.
              */
             let parsedValue = filterValues[f.id];
+            let filterDisplayName = f.props.field;
             if (f.id === 'elements') {
               const delimiter = getDelimiter(filterValues[f.id]);
               parsedValue = parseElements(filterValues[f.id], delimiter);
+              filterDisplayName = 'contains elements';
+              /**
+               * If the input is dash-delimited, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
+               * This will tell the API to return materials with this exact chemical system
+               */
+              if (delimiter.toString() === new RegExp(/-/).toString()) {
+                parsedValue = arrayToDelimitedString(parsedValue, '-');
+                filterDisplayName = 'contains only elements';
+              }
               f.props.enabledElements = parsedValue;
             }
             activeFilters.push({
               id: f.id,
-              displayName: f.props.field,
+              displayName: filterDisplayName,
               value: parsedValue,
               defaultValue: '',
               searchParams: [
@@ -257,7 +267,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let params: any = {};
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
-            params[s.field] = s.value;
+            let field = s.field;
+            let value = s.value;
+            /**
+             * Elements values that are strings should be interpreted as formula fields
+             * This lets the elements field handle chemical system searches (e.g. Fe-Co-Si)
+             */
+            if (field === 'elements' && typeof value === 'string') {
+              field = 'formula';
+            }
+            params[field] = value;
           });
         });
         params.fields = currentState.columns.map(d => d.selector);
