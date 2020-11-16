@@ -225,7 +225,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           const activeFilter = currentState.activeFilters.find((a) => a.id === field);
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
-        return getState(currentState, { ...currentState.filterValues, ...newFilterValues });
+        let newFilterGroups = currentState.filterGroups.slice();
+        newFilterGroups[0].expanded = true;
+        return getState({ ...currentState, filterGroups: newFilterGroups }, { ...currentState.filterValues, ...newFilterValues });
       });
     },
     resetAllFiltersExcept: (value: any, id: string) => {

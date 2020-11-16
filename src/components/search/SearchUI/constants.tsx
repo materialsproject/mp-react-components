@@ -33,7 +33,7 @@ export interface Filter {
 
 export interface FilterGroup {
   name: string;
-  collapsed: boolean;
+  expanded: boolean;
   filters: Filter[];
 }
 
@@ -191,7 +191,7 @@ export const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchPa
 export const materialsGroups: FilterGroup[] = [
   {
     name: 'Material',
-    collapsed: false,
+    expanded: false,
     filters: [
       {
         name: 'ID',
@@ -218,7 +218,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Basic Properties',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Volume',
@@ -251,7 +251,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Thermodynamics',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Energy Above Hull',
@@ -292,7 +292,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Symmetry',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Spacegroup Symbol',
@@ -313,7 +313,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Electronic Structure',
-    collapsed: true,
+    expanded: false,
     filters: [  
       {
         name: 'Band Gap',

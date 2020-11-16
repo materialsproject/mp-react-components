@@ -24,6 +24,11 @@ export const SearchUISearchBar: React.FC = () => {
     return fields;
   };
 
+  const handleSubmit = () => {
+    actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
+    // setSearchValue('');
+  };
+
   // useEffect(() => {
   //   setSearchField(state.topLevelSearchField);
   //   setSearchValue(state.filterValues[state.topLevelSearchField]);
@@ -36,7 +41,7 @@ export const SearchUISearchBar: React.FC = () => {
       field={searchField}
       onChange={v => setSearchValue(v)}
       onFieldChange={field => setSearchField(field)}
-      onSubmit={() => actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField))}
+      onSubmit={handleSubmit}
       periodicTableMode="toggle"
     />
   );

@@ -34,7 +34,7 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
   let groupsByName = {};
   groups.forEach((g) => {
     groupsByName[g.name] = {
-      expanded: false,
+      expanded: g.expanded === true ? true : false,
       activeFilterCount: getActiveFilterCount(g, activeFilters),
       filters: g.filters
     };
@@ -48,6 +48,17 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const groupRefs = useRef(new Array(state.filterGroups.length));
   const [expandedGroupsByIndex, setExpandedGroupsByIndex] = useState(initArray(state.filterGroups.length, false));
   const [groupsByName, setGroupsByName] = useState(getGroupsByName(state.filterGroups, state.activeFilters));
+  // const [groupsByName, setGroupsByName] = useState(() => {
+  //   let grouped = {};
+  //   state.filterGroups.forEach((g) => {
+  //     grouped[g.name] = {
+  //       expanded: g.expanded === true ? true : false,
+  //       activeFilterCount: getActiveFilterCount(g, state.activeFilters),
+  //       filters: g.filters
+  //     };
+  //   });
+  //   return grouped;
+  // });
   const [expandedGroupIndex, setExpandedGroupIndex] = useState<number | null>(null);
   const [clicked, setClicked] = useState(false);
 
@@ -155,11 +166,6 @@ export const SearchUIFilters: React.FC<Props> = props => {
       newGroupsByName[name].expanded = groupName === name ? ! newGroupsByName[name].expanded : false;
     }
     setGroupsByName(newGroupsByName);
-    // let newExpandedGroups = [...expandedGroupsByIndex];
-    // for (let index = 0; index < newExpandedGroups.length; index++) {
-    //   newExpandedGroups[index] = index === i ? !newExpandedGroups[index] : false;
-    // }
-    // setExpandedGroupsByIndex(newExpandedGroups);
   }
 
   useEffect(() => {
@@ -170,6 +176,15 @@ export const SearchUIFilters: React.FC<Props> = props => {
     };
     setGroupsByName(newGroupsByName);
   }, [state.activeFilters]);
+
+  /**
+   * This effect will set a new groupsByName if filterGroups is changed
+   * from outside of this component (e.g. when a quick search is submitted)
+   */
+  useEffect(() => {
+    const newGroupsByName = getGroupsByName(state.filterGroups, state.activeFilters);
+    setGroupsByName(newGroupsByName);
+  }, [state.filterGroups]);
 
   /**
    * This hook initializes panel groups with their max height values
