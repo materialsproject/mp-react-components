@@ -167,6 +167,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         highlightOnHover
         pagination
         paginationServer
+        paginationDefaultPage={state.page}
         sortServer
         onSort={handleSort}
         sortIcon={<span></span>}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { useDeepCompareDebounce, useQuery } from '../../../../utils/hooks';
+import { useDeepCompareDebounce, usePrevious, useQuery } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,
@@ -215,10 +215,15 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const [state, setState] = useState(() => {
     initialState.columns = initColumns(columns);
     const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
+    const urlLimit = query.get('limit');
+    const urlSkip = query.get('skip');
+    if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
+    if (urlSkip) initialState.page = (parseInt(urlSkip) / initialState.resultsPerPage) + 1;
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
     return getState(initialState);
   });
+  const prevActiveFilters = usePrevious(state.activeFilters);
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 500);
 
   const actions = {
@@ -230,7 +235,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     setFilterValue: (value: any, id: string) => {
       setState(currentState =>
-        getState(currentState, { ...currentState.filterValues, [id]: value })
+        getState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
@@ -263,25 +268,23 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           : stateWithNewFilterProps;
       setState({ ...newState });
     },
-    toggleGroup: (groupId: string) => {
-      const filterGroups = state.filterGroups.map((g) => {
-        if (g.name !== groupId) {
-          g.collapsed = true;
-        } else {
-          g.collapsed = !g.collapsed;
-        }
-        return g;
-      });
-      // const group = filterGroups.find(g => g.name === groupId);
-      // if (group) group.collapsed = !group.collapsed;
-      setState({ ...state, filterGroups: filterGroups });
-    },
-    getData: (showLoading: boolean = false) => {
+    getData: () => {
       setState(currentState => {
+        /**
+         * Only show the loading icon if this is a filter change
+         * not on simple page change
+         */
+        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
         let params: any = {};
+        let query = new URLSearchParams();
+        params.fields = currentState.columns.map(d => d.selector);
+        params.limit = currentState.resultsPerPage;
+        params.skip = (currentState.page - 1) * currentState.resultsPerPage;
+        query.set('limit', params.limit);
+        query.set('skip', params.skip);
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
             let field = s.field;
@@ -294,11 +297,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
               field = 'formula';
             }
             params[field] = value;
+            query.set(field, value)
           });
         });
-        params.fields = currentState.columns.map(d => d.selector);
-        params.limit = currentState.resultsPerPage;
-        params.skip = (currentState.page - 1) * currentState.resultsPerPage;
+
         axios
           .get(baseURL, {
             params: params,
@@ -314,6 +316,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           })
           .then(result => {
             console.log(result);
+            history.push({search: query.toString()});
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState(currentState => {
@@ -369,29 +372,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
-  // useEffect(() => {
-  //   // if (state.activeFilters.length === debouncedActiveFilters.length) {
-  //     actions.getData(true);
-  //     let query = new URLSearchParams();
-  //     debouncedActiveFilters.forEach(d => {
-  //       d.searchParams?.forEach((param) => query.set(param.field, param.value));
-  //     });
-  //     history.push({search: query.toString()});
-  //   // }
-  // }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
-
   useDeepCompareEffect(() => {
-      actions.getData(true);
-      let query = new URLSearchParams();
-      state.activeFilters.forEach(d => {
-        d.searchParams?.forEach((param) => query.set(param.field, param.value));
-      });
-      history.push({search: query.toString()});
-  }, [state.activeFilters]);
-
-  useEffect(() => {
-    actions.getData(false);
-  }, [state.resultsPerPage, state.page]);
+      actions.getData();
+  }, [state.activeFilters, state.resultsPerPage, state.page]);
 
   return (
     <SearchUIContext.Provider value={state}>

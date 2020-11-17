@@ -59,7 +59,7 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
-  const [isChemSys, setIsChemSys] = useState<boolean | undefined>(false);
+  const [isChemSys, setIsChemSys] = useState<boolean>(() => props.isChemSys ? props.isChemSys : false);
   // const prevChemSys = usePrevious(isChemSys);
   const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
@@ -102,15 +102,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   // };
 
   useEffect(() => {
-    let isChemSys = props.isChemSys;
+    let newIsChemSys = isChemSys;
     if (props.value.match(/-/gi) || (props.value.length < 3 && !props.value.match(/,|\s/gi))) {
-      isChemSys = true;
+      newIsChemSys = true;
     } else if(props.value.match(/,|\s/gi)) {
-      isChemSys = false;
+      newIsChemSys = false;
     }
-    if (props.onPropsChange) props.onPropsChange({ isChemSys });
-    // setIsChemSys(newIsChemSys);
-    // checkIfChemSys(props.value);
+    if (props.onPropsChange) props.onPropsChange({isChemSys: newIsChemSys});
+    setIsChemSys(newIsChemSys);
   }, [props.value]);
 
   const materialsInputControl = 
@@ -172,8 +171,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
         <input
           type="checkbox"
           role="checkbox"
-          checked={props.isChemSys}
-          aria-checked={props.isChemSys}
+          checked={isChemSys}
+          aria-checked={isChemSys}
           onChange={(e) => {
             let newValue = '';
             if (e.target.checked) {
@@ -181,7 +180,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             } else {
               newValue = props.value.replace(/-/gi, ',');
             }
-            // setIsChemSys(e.target.checked);
+            setIsChemSys(e.target.checked);
             if (props.onPropsChange) props.onPropsChange({isChemSys: e.target.checked});
             props.onChange(newValue);
           }}
