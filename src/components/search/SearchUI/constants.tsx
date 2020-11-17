@@ -1,7 +1,8 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
 import { Link } from 'react-router-dom';
-import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions, spaceGroups } from '../GroupSpaceSearch/space-groups'
+import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../utils';
+import { spaceGroups } from '../GroupSpaceSearch/spacegroups';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -137,8 +138,8 @@ export const initColumns = (columns: Column[]) => {
         c.format = (row: any) => {
           const selectors = c.selector.split('.');
           const rowValue = selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
-          const spaceGroup = spaceGroups.find(d => d["space-group.symbol"] === rowValue);
-          const formattedSymbol = spaceGroup ? spaceGroup["uni-symbol"] : rowValue;
+          const spaceGroup = spaceGroups.find(d => d["symbol"] === rowValue);
+          const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
           return formattedSymbol;
         }
       default:
