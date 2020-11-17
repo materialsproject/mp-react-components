@@ -19,6 +19,10 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [columns, setColumns] = useState(state.columns);
+  const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
+    const anyNotSelected = columns.find((col) => col.omit);
+    return !anyNotSelected;
+  });
 
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -32,12 +36,24 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     return;
   };
 
-  const toggleColumn = (column) => {
+  const toggleColumn = (columnIndex: number) => {
     const newColumns = [...columns];
-    const changedColumn = newColumns.find((col) => col.name === column.name);
+    const changedColumn = newColumns[columnIndex];
     if (changedColumn) changedColumn.omit = !changedColumn.omit;
+    const anyNotSelected = newColumns.find((col) => col.omit);
+    setAllCollumnsSelected(!anyNotSelected);
     setColumns(newColumns);
   };
+
+  const toggleAllColumns = () => {
+    const newAllColumnsSelected = !allCollumnsSelected;
+    const newColumns = columns.map((col) => {
+      col.omit = !newAllColumnsSelected;
+      return col;
+    });
+    setAllCollumnsSelected(newAllColumnsSelected);
+    setColumns(newColumns);
+  }
 
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
@@ -73,6 +89,28 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       </div>
       <Menu className='dropdown-menu'>
         <ul className="dropdown-content">
+          <MenuItem>
+            <li className="dropdown-item">
+              <label className="checkbox is-block">
+                <input
+                  type="checkbox"
+                  role="checkbox"
+                  checked={allCollumnsSelected}
+                  aria-checked={allCollumnsSelected}
+                  /**
+                   * Use key-up event to allow toggling with the space bar
+                   * Must use key-up instead of key-down to prevent double-firing in Firefox
+                   */
+                  onKeyUp={(e) => {
+                    e.preventDefault();
+                    if (e.keyCode === 32) toggleAllColumns();
+                  }}
+                  onChange={(e) => toggleAllColumns()}
+                />
+                <span><strong>Select all</strong></span>
+              </label>
+            </li>
+          </MenuItem>
           {columns.map((col, i) => (
             <MenuItem key={i}>
               <li className="dropdown-item">
@@ -88,9 +126,9 @@ export const SearchUIDataTable: React.FC<Props> = props => {
                      */
                     onKeyUp={(e) => {
                       e.preventDefault();
-                      if (e.keyCode === 32) toggleColumn(col);
+                      if (e.keyCode === 32) toggleColumn(i);
                     }}
-                    onChange={(e) => toggleColumn(col)}
+                    onChange={(e) => toggleColumn(i)}
                   />
                   <span>{col.name}</span>
                 </label>

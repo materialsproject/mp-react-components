@@ -350,8 +350,8 @@ export const materialsColumns: Column[] = [
   {
     name: 'Material Id',
     selector: 'task_id',
-    format: ColumnFormat.LINK
-    // formatArg: '/materials/'
+    format: ColumnFormat.LINK,
+    formatArg: '/materials/'
   },
   {
     name: 'Formula',
@@ -362,13 +362,15 @@ export const materialsColumns: Column[] = [
     name: 'Volume',
     selector: 'volume',
     format: ColumnFormat.FIXED_DECIMAL,
-    formatArg: 3
+    formatArg: 3,
+    omit: true
   },
   {
     name: 'Density',
     selector: 'density',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 4
+    formatArg: 4,
+    omit: true
   },
   {
     name: 'Sites',
@@ -384,13 +386,15 @@ export const materialsColumns: Column[] = [
     name: 'Formation Energy',
     selector: 'formation_energy_per_atom',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 4
+    formatArg: 4,
+    omit: true
   },
   {
     name: 'Is Stable',
     selector: 'is_stable',
     format: ColumnFormat.BOOLEAN,
-    formatArg: ['yes', 'no']
+    formatArg: ['yes', 'no'],
+    omit: true
   },
   {
     name: 'Spacegroup Symbol',
