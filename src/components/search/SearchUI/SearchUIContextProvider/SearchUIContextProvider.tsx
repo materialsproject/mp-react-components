@@ -114,6 +114,13 @@ const getState = (
                 }
               ]
             });
+            /**
+             * Expand the Material filter group by default if one of the
+             * main filters are active
+             */
+            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
+              g.expanded = true;
+            }
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
@@ -156,6 +163,13 @@ const getState = (
                 }
               ]
             });
+            /**
+             * Expand the Material filter group by default if one of the
+             * main filters are active
+             */
+            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
+              g.expanded = true;
+            }
           }
       }
     });

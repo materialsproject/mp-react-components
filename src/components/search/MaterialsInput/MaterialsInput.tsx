@@ -42,6 +42,7 @@ export interface MaterialsInputBoxProps {
   field: string;
   debounce?: number;
   showFieldDropdown?: boolean;
+  hidePeriodicTable?: boolean;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onFieldChange?: (value: string) => void;
@@ -60,7 +61,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   // const prevChemSys = usePrevious(isChemSys);
   const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
-    props.periodicTableMode === 'toggle' ? true : false
+    props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
   );
 
   const getOnFocusProp = () => {

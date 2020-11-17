@@ -16,6 +16,14 @@ export const SearchUISearchBar: React.FC = () => {
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
   const [searchField, setSearchField] = useState<string>(state.topLevelSearchField);
 
+  const shouldHidePeriodicTable = () => {
+    if (state.activeFilters && state.activeFilters.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const getFieldsToOverride = (selectedField: string) => {
     let fields: string[] = [];
     Object.values(MaterialsInputField).forEach((field) => {
@@ -43,6 +51,7 @@ export const SearchUISearchBar: React.FC = () => {
       onFieldChange={field => setSearchField(field)}
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
+      hidePeriodicTable={shouldHidePeriodicTable()}
     />
   );
 };
