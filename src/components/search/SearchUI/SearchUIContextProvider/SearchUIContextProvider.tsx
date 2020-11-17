@@ -93,11 +93,12 @@ const getState = (
               parsedValue = parseElements(filterValues[f.id], delimiter);
               filterDisplayName = 'contains elements';
               /**
-               * If the input is dash-delimited, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
+               * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
                * This will tell the API to return materials with this exact chemical system
                */
-              if (delimiter.toString() === new RegExp(/-/).toString()) {
-                parsedValue = arrayToDelimitedString(parsedValue, '-');
+              // if (delimiter.toString() === new RegExp(/-/).toString()) {
+              if (f.props.isChemSys) {
+                parsedValue = arrayToDelimitedString(parsedValue, delimiter);
                 filterDisplayName = 'contains only elements';
               }
               f.props.enabledElements = parsedValue;

@@ -43,8 +43,10 @@ export interface MaterialsInputBoxProps {
   debounce?: number;
   showFieldDropdown?: boolean;
   hidePeriodicTable?: boolean;
+  isChemSys?: boolean;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
+  onPropsChange?: (propsObject: any) => void;
   onFieldChange?: (value: string) => void;
   onSubmit?: (value?: any) => any;
   onFocus?: (value?: any) => any;
@@ -57,7 +59,7 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
-  // const [isChemSys, setIsChemSys] = useState<boolean | undefined>(false);
+  const [isChemSys, setIsChemSys] = useState<boolean | undefined>(false);
   // const prevChemSys = usePrevious(isChemSys);
   const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
@@ -99,11 +101,17 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   //   }
   // };
 
-  // useEffect(() => {
-  //   // const newIsChemSys = props.value.match(/-/gi) ? true : false;
-  //   // setIsChemSys(newIsChemSys);
-  //   checkIfChemSys(props.value);
-  // }, [props.value]);
+  useEffect(() => {
+    let isChemSys = props.isChemSys;
+    if (props.value.match(/-/gi) || (props.value.length < 3 && !props.value.match(/,|\s/gi))) {
+      isChemSys = true;
+    } else if(props.value.match(/,|\s/gi)) {
+      isChemSys = false;
+    }
+    if (props.onPropsChange) props.onPropsChange({ isChemSys });
+    // setIsChemSys(newIsChemSys);
+    // checkIfChemSys(props.value);
+  }, [props.value]);
 
   const materialsInputControl = 
     <MaterialsInputBox
@@ -111,6 +119,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       parsedValue={props.parsedValue}
       field={props.field}
       debounce={props.debounce}
+      isChemSys={props.isChemSys}
       onChange={props.onChange}
       onFieldChange={props.onFieldChange}
       onSubmit={props.onSubmit ? handleSubmit : undefined}
@@ -158,21 +167,22 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   let chemSysCheckbox: JSX.Element | null = null;
 
   if (props.field === 'elements' && !props.onSubmit) {
-    const isChemSys = props.value.match(/-/gi) ? true : false;
     chemSysCheckbox = 
       <label className="checkbox is-block">
         <input
           type="checkbox"
           role="checkbox"
-          checked={isChemSys}
-          aria-checked={isChemSys}
+          checked={props.isChemSys}
+          aria-checked={props.isChemSys}
           onChange={(e) => {
             let newValue = '';
             if (e.target.checked) {
-              newValue = props.value.replace(/,\sand|,\s|,/gi, '-');
+              newValue = props.value.replace(/,\sand|,\s|,|\s/gi, '-');
             } else {
               newValue = props.value.replace(/-/gi, ',');
             }
+            // setIsChemSys(e.target.checked);
+            if (props.onPropsChange) props.onPropsChange({isChemSys: e.target.checked});
             props.onChange(newValue);
           }}
         />
