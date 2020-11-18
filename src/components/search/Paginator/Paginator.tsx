@@ -76,7 +76,13 @@ export const Paginator: React.FC<Props> = ({
 
   let paginationItems = pageIsFourOrMore;
 
-  if (currentPage < 4) {
+  if (pageCount < 6) {
+    let listItems: JSX.Element[] = [];
+    for (let index = 0; index < pageCount; index++) {
+      listItems.push(getPaginationItem(index + 1));
+    }
+    paginationItems = <ul className="pagination-list">{listItems}</ul>
+  } else if (currentPage < 4) {
     paginationItems = pageIsUnderFour;
   } else if (currentPage > pageCount - 3) {
     paginationItems = pageIsWithinFourOfLast;
