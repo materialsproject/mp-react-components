@@ -172,8 +172,8 @@ export const parseElements = (str: string, delimiter: RegExp, context: any = nul
 export const spaceGroupNumberOptions = () => {
   return spaceGroups.map(g => {
     return {
-      value: g["space-group.number"],
-      label: g["space-group.number"]
+      value: g["int_number"],
+      label: g["int_number"]
     }
   });
 };
@@ -181,8 +181,8 @@ export const spaceGroupNumberOptions = () => {
 export const spaceGroupSymbolOptions = () => {
   return spaceGroups.map(g => {
     return {
-      value: g["space-group.symbol"],
-      label: g["uni-symbol"]
+      value: g["symbol"],
+      label: g["symbol_unicode"]
     }
   });
 };
