@@ -93,6 +93,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
               onChange={v => actions.setFilterValue(v, f.id)}
               periodicTableMode="onFocus"
               onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
+              apiKey={state.apiKey}
               // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
               // showFieldDropdown={true}
               {...f.props}

@@ -23,7 +23,7 @@ export const Paginator: React.FC<Props> = ({
   const getPaginationItem = (pageNumber: number) => {
     const isCurrent = currentPage === pageNumber;
     return (
-      <li>
+      <li key={pageNumber}>
         <a
           className={classNames('pagination-link', {'is-current': isCurrent})} 
           aria-label={isCurrent ? `Go to page ${pageNumber}` : `Page ${pageNumber}`}

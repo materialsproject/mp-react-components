@@ -17,6 +17,7 @@ import { TableLayout } from '../../periodic-table/periodic-table-component/perio
 import { SelectableTable } from '../../periodic-table/table-state';
 import classNames from 'classnames';
 import { usePrevious } from '../../../utils/hooks';
+import axios from 'axios';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -44,6 +45,7 @@ export interface MaterialsInputBoxProps {
   showFieldDropdown?: boolean;
   hidePeriodicTable?: boolean;
   isChemSys?: boolean;
+  apiKey?: string;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onPropsChange?: (propsObject: any) => void;
@@ -91,17 +93,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   };
 
-  // const checkIfChemSys = (value) => {
-  //   if (value.match(/-/gi)) {
-  //     return setIsChemSys(true);
-  //   } else if (value.match(/,|\s/gi)) {
-  //     return setIsChemSys(false);
-  //   } else {
-  //     return setIsChemSys(prevChemSys);
-  //   }
-  // };
-
-  useEffect(() => {
+  const handleChemSysCheck = () => {
     let newIsChemSys = isChemSys;
     if (props.value.match(/-/gi) || (props.value.length < 3 && !props.value.match(/,|\s/gi))) {
       newIsChemSys = true;
@@ -110,6 +102,25 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
     if (props.onPropsChange) props.onPropsChange({isChemSys: newIsChemSys});
     setIsChemSys(newIsChemSys);
+  };
+
+  useEffect(() => {
+    handleChemSysCheck();
+    // if (props.apiKey && props.value.length) {
+    //   axios.get('https://api.materialsproject.org/materials/formula_autocomplete/', {
+    //     params: {text: props.value},
+    //     headers: props.apiKey
+    //       ? {
+    //           'X-Api-Key': props.apiKey,
+    //           'Access-Control-Allow-Origin': '*'
+    //         }
+    //       : null
+    //   }).then(result => {
+    //     console.log(result);
+    //   }).catch(error => {
+    //     console.log(error);
+    //   });
+    // }
   }, [props.value]);
 
   const materialsInputControl = 
@@ -194,6 +205,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       <PeriodicContext>
         {materialsInputField}
         {chemSysCheckbox}
+        <div className={classNames('dropdown-menu')}>
+
+        </div>
         <div
           className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
             'is-hidden-with-transition': !showPeriodicTable,

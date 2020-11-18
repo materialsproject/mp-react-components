@@ -69,9 +69,10 @@ export interface SearchState {
   resultsPerPage: number;
   page: number;
   loading: boolean;
-  sortColumn: FilterId;
-  sortDirection: 'asc' | 'desc';
+  sortField?: string;
+  sortDirection?: 'asc' | 'desc';
   topLevelSearchField: string;
+  apiKey?: string;
 }
 
 enum ColumnFormat {
@@ -92,6 +93,7 @@ enum ColumnFormat {
  */
 export const initColumns = (columns: Column[]) => {
   return columns.map(c => {
+    c.sortable = c.sortable !== undefined ? c.sortable : true;
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;

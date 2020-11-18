@@ -36,9 +36,10 @@ const initialState: SearchState = {
   resultsPerPage: 15,
   page: 1,
   loading: false,
-  sortColumn: FilterId.MP_ID,
+  sortField: undefined,
   sortDirection: 'asc',
-  topLevelSearchField: 'elements'
+  topLevelSearchField: 'elements',
+  apiKey: ''
 };
 
 /**
@@ -217,10 +218,15 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
     const urlLimit = query.get('limit');
     const urlSkip = query.get('skip');
+    const urlSortField = query.get('field');
+    const urlAscending = query.get('ascending');
     if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
     if (urlSkip) initialState.page = (parseInt(urlSkip) / initialState.resultsPerPage) + 1;
+    if (urlSortField) initialState.sortField = urlSortField;
+    if (urlAscending) initialState.sortDirection = urlAscending === 'true' ? 'asc' : 'desc';
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
+    initialState.apiKey = apiKey;
     return getState(initialState);
   });
   const prevActiveFilters = usePrevious(state.activeFilters);
@@ -232,6 +238,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     setResultsPerPage: (value: number) => {
       setState(currentState => ({ ...currentState, resultsPerPage: value }));
+    },
+    setSort: (field: string, direction: 'asc' | 'desc') => {
+      setState(currentState => ({ ...currentState, sortField: field, sortDirection: direction}));
     },
     setFilterValue: (value: any, id: string) => {
       setState(currentState =>
@@ -285,6 +294,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         params.skip = (currentState.page - 1) * currentState.resultsPerPage;
         query.set('limit', params.limit);
         query.set('skip', params.skip);
+        if (currentState.sortField) {
+          params.field = currentState.sortField;
+          params.ascending = currentState.sortDirection === 'desc' ? false : true;
+          query.set('field', params.field);
+          query.set('ascending', params.ascending);
+        }
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
             let field = s.field;
@@ -374,7 +389,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
   useDeepCompareEffect(() => {
       actions.getData();
-  }, [state.activeFilters, state.resultsPerPage, state.page]);
+  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortDirection]);
 
   return (
     <SearchUIContext.Provider value={state}>

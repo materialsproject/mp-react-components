@@ -3,7 +3,7 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown } from 'react-icons/fa';
+import { FaAngleDown, FaCaretDown } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
 
@@ -34,7 +34,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   };
 
   const handleSort = (column, sortDirection) => {
-    return;
+    actions.setSort(column.selector, sortDirection);
   };
 
   const toggleColumn = (columnIndex: number) => {
@@ -170,13 +170,15 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         paginationServer
         paginationDefaultPage={state.page}
         paginationComponent={Paginator}
-        sortServer
-        onSort={handleSort}
-        sortIcon={<span></span>}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
         paginationTotalRows={state.totalResults}
         paginationPerPage={state.resultsPerPage}
+        onChangePage={handlePageChange}
+        onChangeRowsPerPage={handlePerRowsChange}
+        sortServer
+        sortIcon={<FaCaretDown/>}
+        defaultSortField={state.sortField}
+        defaultSortAsc={state.sortDirection === 'desc' ? false : true}
+        onSort={handleSort}
       />
     </div>
   );
