@@ -125,7 +125,6 @@ export function getPeriodicSelectionStore() {
       }
       const _s = { ...state.enabledElements };
       delete _s[enabledElement];
-      console.log(_s, enabledElement);
       (state.enabledElements = _s) && state$.next(state);
     },
     removeDisabledElement: (disabledElement: string) => {

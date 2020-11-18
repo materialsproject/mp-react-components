@@ -51,6 +51,8 @@ export const SearchUISearchBar: React.FC = () => {
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
       hidePeriodicTable={shouldHidePeriodicTable()}
+      autocompleteFormulaUrl="https://api.materialsproject.org/materials/formula_autocomplete/"
+      autocompleteApiKey={state.apiKey}
     />
   );
 };

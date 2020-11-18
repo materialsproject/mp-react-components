@@ -45,7 +45,6 @@ export interface MaterialsInputBoxProps {
   showFieldDropdown?: boolean;
   hidePeriodicTable?: boolean;
   isChemSys?: boolean;
-  apiKey?: string;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onPropsChange?: (propsObject: any) => void;
@@ -57,6 +56,13 @@ export interface MaterialsInputBoxProps {
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
   periodicTableMode?: string;
+  autocompleteFormulaUrl?:string;
+  autocompleteApiKey?: string;
+}
+
+interface FormulaSuggestion {
+  _id: string;
+  score: number;
 }
 
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
@@ -67,8 +73,18 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
   );
+  const [showAutocomplete, setShowAutocomplete] = useState(true);
+  const [formulaSuggestions, setFormulaSuggestions] = useState<FormulaSuggestion[]>([]);
 
+  const shouldShowAutocomplete = () => {
+    if(formulaSuggestions.length > 0) {
+      return setShowAutocomplete(true);
+    } else {
+      return setShowAutocomplete(false);
+    }
+  }
   const getOnFocusProp = () => {
+    shouldShowAutocomplete();
     if (props.periodicTableMode === 'onFocus') {
       return setShowPeriodicTable(true);
     } else {
@@ -77,10 +93,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   };
 
   const getOnBlurProp = () => {
+    setShowAutocomplete(false);
     if (props.periodicTableMode === 'onFocus' && !periodicTableClicked) {
       return setShowPeriodicTable(false);
     } else {
-      return;
+      return setShowAutocomplete(false);
     }
   };
 
@@ -104,24 +121,45 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     setIsChemSys(newIsChemSys);
   };
 
+  /**
+   * This effect triggers when the input value changes
+   * It handles modifying the chemsys flag (checked when input is dash-delimited or one element)
+   * It also handles fetching formula suggestions if the necessary props are supplied
+   */
   useEffect(() => {
     handleChemSysCheck();
-    // if (props.apiKey && props.value.length) {
-    //   axios.get('https://api.materialsproject.org/materials/formula_autocomplete/', {
-    //     params: {text: props.value},
-    //     headers: props.apiKey
-    //       ? {
-    //           'X-Api-Key': props.apiKey,
-    //           'Access-Control-Allow-Origin': '*'
-    //         }
-    //       : null
-    //   }).then(result => {
-    //     console.log(result);
-    //   }).catch(error => {
-    //     console.log(error);
-    //   });
-    // }
+    if (
+      props.field === 'formula' &&
+      props.autocompleteApiKey &&
+      props.autocompleteFormulaUrl && 
+      props.value.length
+    ) {
+      axios.get(props.autocompleteFormulaUrl, {
+        params: {text: props.value},
+        headers: {'X-Api-Key': props.autocompleteApiKey}
+      }).then(result => {
+        setFormulaSuggestions(result.data.data);
+      }).catch(error => {
+        console.log(error);
+        setFormulaSuggestions([]);
+      });
+    } else {
+      setFormulaSuggestions([]);
+    }
   }, [props.value]);
+
+  /**
+   * This effect ensures that the visibility
+   * of the autocomplete menu responds to changes
+   * in the number of suggestions (if no suggestions, hide the menu)
+   */
+  useEffect(() => {
+    if (formulaSuggestions.length > 0 && document.activeElement === inputRef?.current) {
+      setShowAutocomplete(true);
+    } else {
+      setShowAutocomplete(false);
+    }
+  }, [formulaSuggestions]);
 
   const materialsInputControl = 
     <MaterialsInputBox
@@ -140,7 +178,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     />;
 
   let materialsInputField: JSX.Element | null = null; 
-  
+  let chemSysCheckbox: JSX.Element | null = null;
+  const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
+  let autocompleteMenu: JSX.Element | null = null;
+  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
+
   if (props.onSubmit) {
     materialsInputField =
       <form onSubmit={handleSubmit}>
@@ -174,9 +216,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       </Field>;
   }
 
-  let chemSysCheckbox: JSX.Element | null = null;
-
-  if (props.field === 'elements' && !props.onSubmit) {
+  if (hasChemSysCheckbox) {
     chemSysCheckbox = 
       <label className="checkbox is-block">
         <input
@@ -200,14 +240,38 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       </label>
   }
 
+  if (hasAutocompleteMenu) {
+    autocompleteMenu =
+      <div
+        className={classNames('dropdown-menu', 'autocomplete-right', {
+          'is-hidden': !showAutocomplete
+        })}
+        /**
+         * Currently not accessible by keyboard so hiding it to screen readers
+         */
+        aria-hidden={true}
+      >
+        <div className="dropdown-content">
+          <p className="autocomplete-label">Suggested formulas</p>
+          {formulaSuggestions.map((d, i) => (
+            <a 
+              key={i} 
+              className="dropdown-item"
+              onMouseDown={() => props.onChange(d._id)}
+            >
+              {d._id}
+            </a>
+          ))}
+        </div>
+      </div>;
+  }
+
   return (
-    <div>
+    <div className="materials-input">
       <PeriodicContext>
         {materialsInputField}
         {chemSysCheckbox}
-        <div className={classNames('dropdown-menu')}>
-
-        </div>
+        {autocompleteMenu}
         <div
           className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
             'is-hidden-with-transition': !showPeriodicTable,
