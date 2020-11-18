@@ -93,7 +93,7 @@ export interface SearchUIProps {
 
 export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseURL, apiKey }) => {
   return (
-    <div className="search-ui p-4">
+    <div className="search-ui">
       <Router>
         <SearchUIContextProvider
           columns={columns}

@@ -46,6 +46,7 @@
     "querystring": "^0.2.0",
     "rc-checkbox": "^2.2.0",
     "react": "^16.13.1",
+    "react-aria-menubutton": "^7.0.0",
     "react-bulma-components": "^3.4.0",
     "react-compound-slider": "^2.5.0",
     "react-data-table-component": "^6.11.5",

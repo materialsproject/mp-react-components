@@ -1,7 +1,8 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
-import { Link } from '../../navigation/Link';
-import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions, spaceGroups } from '../GroupSpaceSearch/space-groups'
+import { Link } from 'react-router-dom';
+import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../utils';
+import { spaceGroups } from '../GroupSpaceSearch/spacegroups';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -33,7 +34,7 @@ export interface Filter {
 
 export interface FilterGroup {
   name: string;
-  collapsed: boolean;
+  expanded: boolean;
   filters: Filter[];
 }
 
@@ -68,8 +69,10 @@ export interface SearchState {
   resultsPerPage: number;
   page: number;
   loading: boolean;
-  sortColumn: FilterId;
-  sortDirection: 'asc' | 'desc';
+  sortField?: string;
+  sortDirection?: 'asc' | 'desc';
+  topLevelSearchField: string;
+  apiKey?: string;
 }
 
 enum ColumnFormat {
@@ -90,6 +93,7 @@ enum ColumnFormat {
  */
 export const initColumns = (columns: Column[]) => {
   return columns.map(c => {
+    c.sortable = c.sortable !== undefined ? c.sortable : true;
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
@@ -122,7 +126,7 @@ export const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
           return (
-            <Link href={path}>{row[c.selector]}</Link>
+            <Link to={path}>{row[c.selector]}</Link>
           );
         }
         return c;
@@ -136,8 +140,8 @@ export const initColumns = (columns: Column[]) => {
         c.format = (row: any) => {
           const selectors = c.selector.split('.');
           const rowValue = selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
-          const spaceGroup = spaceGroups.find(d => d["space-group.symbol"] === rowValue);
-          const formattedSymbol = spaceGroup ? spaceGroup["uni-symbol"] : rowValue;
+          const spaceGroup = spaceGroups.find(d => d["symbol"] === rowValue);
+          const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
           return formattedSymbol;
         }
       default:
@@ -190,7 +194,7 @@ export const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchPa
 export const materialsGroups: FilterGroup[] = [
   {
     name: 'Material',
-    collapsed: false,
+    expanded: false,
     filters: [
       {
         name: 'ID',
@@ -198,7 +202,7 @@ export const materialsGroups: FilterGroup[] = [
         type: FilterType.TEXT_INPUT
       },
       {
-        name: 'Required Elements',
+        name: 'Elements',
         id: FilterId.ELEMENTS,
         type: FilterType.MATERIALS_INPUT,
         props: {
@@ -217,7 +221,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Basic Properties',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Volume',
@@ -250,7 +254,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Thermodynamics',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Energy Above Hull',
@@ -291,7 +295,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Symmetry',
-    collapsed: true,
+    expanded: false,
     filters: [
       {
         name: 'Spacegroup Symbol',
@@ -312,7 +316,7 @@ export const materialsGroups: FilterGroup[] = [
   },
   {
     name: 'Electronic Structure',
-    collapsed: true,
+    expanded: false,
     filters: [  
       {
         name: 'Band Gap',
@@ -360,13 +364,15 @@ export const materialsColumns: Column[] = [
     name: 'Volume',
     selector: 'volume',
     format: ColumnFormat.FIXED_DECIMAL,
-    formatArg: 3
+    formatArg: 3,
+    omit: true
   },
   {
     name: 'Density',
     selector: 'density',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 4
+    formatArg: 4,
+    omit: true
   },
   {
     name: 'Sites',
@@ -382,13 +388,15 @@ export const materialsColumns: Column[] = [
     name: 'Formation Energy',
     selector: 'formation_energy_per_atom',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 4
+    formatArg: 4,
+    omit: true
   },
   {
     name: 'Is Stable',
     selector: 'is_stable',
     format: ColumnFormat.BOOLEAN,
-    formatArg: ['yes', 'no']
+    formatArg: ['yes', 'no'],
+    omit: true
   },
   {
     name: 'Spacegroup Symbol',

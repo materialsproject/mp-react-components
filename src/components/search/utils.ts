@@ -1,5 +1,7 @@
 import * as XLSX from 'xlsx';
 import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
+import * as d3 from 'd3';
+import { spaceGroups } from './GroupSpaceSearch/spacegroups'; 
 
 export function convertArrayOfObjectsToCSV(array) {
   let result;
@@ -166,3 +168,34 @@ export const parseElements = (str: string, delimiter: RegExp, context: any = nul
   });
   return parsedElements;
 }
+
+export const spaceGroupNumberOptions = () => {
+  return spaceGroups.map(g => {
+    return {
+      value: g["int_number"],
+      label: g["int_number"]
+    }
+  });
+};
+
+export const spaceGroupSymbolOptions = () => {
+  return spaceGroups.map(g => {
+    return {
+      value: g["symbol"],
+      label: g["symbol_unicode"]
+    }
+  });
+};
+
+export const crystalSystemOptions = () => {
+  var spaceGroupsByCrystalSystem = d3.nest()
+    .key((d: any) => d.crystal_system)
+    .entries(spaceGroups);
+
+  return spaceGroupsByCrystalSystem.map(d => {
+    return {
+      value: d.key,
+      label: d.key
+    }
+  }); 
+};

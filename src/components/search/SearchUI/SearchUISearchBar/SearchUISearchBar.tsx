@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MaterialsInput } from '../../MaterialsInput';
-import { useSearchUIContextActions } from '../SearchUIContextProvider';
+import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { MaterialsInputField } from '../../MaterialsInput';
 
 /**
@@ -11,9 +11,18 @@ import { MaterialsInputField } from '../../MaterialsInput';
 
 export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();
+  const state = useSearchUIContext();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchField, setSearchField] = useState<string>('elements');
+  const [searchField, setSearchField] = useState<string>(state.topLevelSearchField);
+
+  const shouldHidePeriodicTable = () => {
+    if (state.activeFilters && state.activeFilters.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   const getFieldsToOverride = (selectedField: string) => {
     let fields: string[] = [];
@@ -23,6 +32,15 @@ export const SearchUISearchBar: React.FC = () => {
     return fields;
   };
 
+  const handleSubmit = () => {
+    actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
+  };
+
+  // useEffect(() => {
+  //   setSearchField(state.topLevelSearchField);
+  //   setSearchValue(state.filterValues[state.topLevelSearchField]);
+  // }, [state.topLevelSearchField]);
+
   return (
     <MaterialsInput
       value={searchValue}
@@ -30,8 +48,11 @@ export const SearchUISearchBar: React.FC = () => {
       field={searchField}
       onChange={v => setSearchValue(v)}
       onFieldChange={field => setSearchField(field)}
-      onSubmit={() => actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField))}
+      onSubmit={handleSubmit}
       periodicTableMode="toggle"
+      hidePeriodicTable={shouldHidePeriodicTable()}
+      autocompleteFormulaUrl="https://api.materialsproject.org/materials/formula_autocomplete/"
+      autocompleteApiKey={state.apiKey}
     />
   );
 };

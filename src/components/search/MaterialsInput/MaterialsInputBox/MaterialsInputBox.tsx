@@ -26,11 +26,10 @@ interface DispatchAction {
 
 export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
-  const [delimiter, setDelimiter] = useState(new RegExp(','));
+  const [delimiter, setDelimiter] = useState(() => props.isChemSys ? new RegExp('-') : new RegExp(','));
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(props.value);
-  console.log(props.debounce);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
@@ -194,10 +193,10 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
           break;
         case MaterialsInputField.FORMULA:
           if (lastAction.type === 'select') {
-            newValue = props.value + enabledElementsList[enabledElementsList.length - 1];
+            newValue = inputValue + enabledElementsList[enabledElementsList.length - 1];
           } else {
             var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
-              props.value
+              inputValue
             );
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;

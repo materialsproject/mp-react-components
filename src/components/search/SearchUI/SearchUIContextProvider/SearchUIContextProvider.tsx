@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { useDeepCompareDebounce, useQuery } from '../../../../utils/hooks';
+import { useDeepCompareDebounce, usePrevious, useQuery } from '../../../../utils/hooks';
 import {
   FilterGroup,
   FilterType,
@@ -14,7 +14,7 @@ import {
 } from '../constants';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { getDelimiter, parseElements } from '../../utils';
+import { arrayToDelimitedString, getDelimiter, parseElements } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
 
@@ -36,8 +36,10 @@ const initialState: SearchState = {
   resultsPerPage: 15,
   page: 1,
   loading: false,
-  sortColumn: FilterId.MP_ID,
-  sortDirection: 'asc'
+  sortField: undefined,
+  sortDirection: 'asc',
+  topLevelSearchField: 'elements',
+  apiKey: ''
 };
 
 /**
@@ -86,14 +88,25 @@ const getState = (
              * Otherwise, use the raw input value for the param.
              */
             let parsedValue = filterValues[f.id];
+            let filterDisplayName = f.props.field;
             if (f.id === 'elements') {
               const delimiter = getDelimiter(filterValues[f.id]);
               parsedValue = parseElements(filterValues[f.id], delimiter);
+              filterDisplayName = 'contains elements';
+              /**
+               * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
+               * This will tell the API to return materials with this exact chemical system
+               */
+              // if (delimiter.toString() === new RegExp(/-/).toString()) {
+              if (f.props.isChemSys) {
+                parsedValue = arrayToDelimitedString(parsedValue, delimiter);
+                filterDisplayName = 'contains only elements';
+              }
               f.props.enabledElements = parsedValue;
             }
             activeFilters.push({
               id: f.id,
-              displayName: f.props.field,
+              displayName: filterDisplayName,
               value: parsedValue,
               defaultValue: '',
               searchParams: [
@@ -103,6 +116,13 @@ const getState = (
                 }
               ]
             });
+            /**
+             * Expand the Material filter group by default if one of the
+             * main filters are active
+             */
+            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
+              g.expanded = true;
+            }
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
@@ -145,6 +165,13 @@ const getState = (
                 }
               ]
             });
+            /**
+             * Expand the Material filter group by default if one of the
+             * main filters are active
+             */
+            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
+              g.expanded = true;
+            }
           }
       }
     });
@@ -189,10 +216,20 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const [state, setState] = useState(() => {
     initialState.columns = initColumns(columns);
     const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
+    const urlLimit = query.get('limit');
+    const urlSkip = query.get('skip');
+    const urlSortField = query.get('field');
+    const urlAscending = query.get('ascending');
+    if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
+    if (urlSkip) initialState.page = (parseInt(urlSkip) / initialState.resultsPerPage) + 1;
+    if (urlSortField) initialState.sortField = urlSortField;
+    if (urlAscending) initialState.sortDirection = urlAscending === 'true' ? 'asc' : 'desc';
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
+    initialState.apiKey = apiKey;
     return getState(initialState);
   });
+  const prevActiveFilters = usePrevious(state.activeFilters);
   const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 500);
 
   const actions = {
@@ -202,9 +239,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setResultsPerPage: (value: number) => {
       setState(currentState => ({ ...currentState, resultsPerPage: value }));
     },
+    setSort: (field: string, direction: 'asc' | 'desc') => {
+      setState(currentState => ({ ...currentState, sortField: field, sortDirection: direction}));
+    },
     setFilterValue: (value: any, id: string) => {
       setState(currentState =>
-        getState(currentState, { ...currentState.filterValues, [id]: value })
+        getState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
@@ -214,7 +254,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           const activeFilter = currentState.activeFilters.find((a) => a.id === field);
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
-        return getState(currentState, { ...currentState.filterValues, ...newFilterValues });
+        let newFilterGroups = currentState.filterGroups.slice();
+        newFilterGroups[0].expanded = true;
+        return getState({ ...currentState, filterGroups: newFilterGroups }, { ...currentState.filterValues, ...newFilterValues });
       });
     },
     resetAllFiltersExcept: (value: any, id: string) => {
@@ -235,33 +277,45 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           : stateWithNewFilterProps;
       setState({ ...newState });
     },
-    toggleGroup: (groupId: string) => {
-      const filterGroups = state.filterGroups.map((g) => {
-        if (g.name !== groupId) {
-          g.collapsed = true;
-        } else {
-          g.collapsed = !g.collapsed;
-        }
-        return g;
-      });
-      // const group = filterGroups.find(g => g.name === groupId);
-      // if (group) group.collapsed = !group.collapsed;
-      setState({ ...state, filterGroups: filterGroups });
-    },
-    getData: (showLoading: boolean = false) => {
+    getData: () => {
       setState(currentState => {
+        /**
+         * Only show the loading icon if this is a filter change
+         * not on simple page change
+         */
+        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
         let params: any = {};
-        currentState.activeFilters.forEach(a => {
-          a.searchParams?.forEach(s => {
-            params[s.field] = s.value;
-          });
-        });
+        let query = new URLSearchParams();
         params.fields = currentState.columns.map(d => d.selector);
         params.limit = currentState.resultsPerPage;
         params.skip = (currentState.page - 1) * currentState.resultsPerPage;
+        query.set('limit', params.limit);
+        query.set('skip', params.skip);
+        if (currentState.sortField) {
+          params.field = currentState.sortField;
+          params.ascending = currentState.sortDirection === 'desc' ? false : true;
+          query.set('field', params.field);
+          query.set('ascending', params.ascending);
+        }
+        currentState.activeFilters.forEach(a => {
+          a.searchParams?.forEach(s => {
+            let field = s.field;
+            let value = s.value;
+            /**
+             * Elements values that are strings should be interpreted as formula fields
+             * This lets the elements field handle chemical system searches (e.g. Fe-Co-Si)
+             */
+            if (field === 'elements' && typeof value === 'string') {
+              field = 'formula';
+            }
+            params[field] = value;
+            query.set(field, value)
+          });
+        });
+
         axios
           .get(baseURL, {
             params: params,
@@ -270,12 +324,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             },
             headers: apiKey
               ? {
-                  'X-Api-Key': apiKey
+                  'X-Api-Key': apiKey,
+                  'Access-Control-Allow-Origin': '*'
                 }
               : null
           })
           .then(result => {
             console.log(result);
+            history.push({search: query.toString()});
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState(currentState => {
@@ -331,29 +387,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
-  // useEffect(() => {
-  //   // if (state.activeFilters.length === debouncedActiveFilters.length) {
-  //     actions.getData(true);
-  //     let query = new URLSearchParams();
-  //     debouncedActiveFilters.forEach(d => {
-  //       d.searchParams?.forEach((param) => query.set(param.field, param.value));
-  //     });
-  //     history.push({search: query.toString()});
-  //   // }
-  // }, [debouncedActiveFilters, state.resultsPerPage, state.page]);
-
   useDeepCompareEffect(() => {
-      actions.getData(true);
-      let query = new URLSearchParams();
-      state.activeFilters.forEach(d => {
-        d.searchParams?.forEach((param) => query.set(param.field, param.value));
-      });
-      history.push({search: query.toString()});
-  }, [state.activeFilters]);
-
-  useEffect(() => {
-    actions.getData(false);
-  }, [state.resultsPerPage, state.page]);
+      actions.getData();
+  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortDirection]);
 
   return (
     <SearchUIContext.Provider value={state}>

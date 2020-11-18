@@ -2368,36 +2368,5 @@ export const groupCheckboxes = keysForGrouping.map(p => ({
   label: keyToLabel[p]
 }));
 
-export const spaceGroupNumberOptions = () => {
-  return spaceGroups.map(g => {
-    return {
-      value: g["space-group.number"],
-      label: g["space-group.number"]
-    }
-  });
-};
-
-export const spaceGroupSymbolOptions = () => {
-  return spaceGroups.map(g => {
-    return {
-      value: g["space-group.symbol"],
-      label: g["uni-symbol"]
-    }
-  });
-};
-
-export const crystalSystemOptions = () => {
-  var spaceGroupsByCrystalSystem = d3.nest()
-    .key((d: any) => d.crystal_system)
-    .entries(spaceGroups);
-
-  return spaceGroupsByCrystalSystem.map(d => {
-    return {
-      value: d.key,
-      label: d.key
-    }
-  }); 
-};
-
 propertiesCheckbox[0].checked = true;
 groupCheckboxes[0].checked = true;
