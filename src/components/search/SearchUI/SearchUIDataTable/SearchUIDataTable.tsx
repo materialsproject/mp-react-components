@@ -5,6 +5,7 @@ import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
 import { FaAngleDown } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
+import { Paginator } from '../../Paginator';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -168,6 +169,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         pagination
         paginationServer
         paginationDefaultPage={state.page}
+        paginationComponent={Paginator}
         sortServer
         onSort={handleSort}
         sortIcon={<span></span>}
