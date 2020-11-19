@@ -24,15 +24,29 @@ h1 {
   height: 500px;
 }
 
+body {
+  font-family: Helvetica Neue !important;
+  background: #f3f3f3 !important;
+}
+
 /*******************************************************
 
-Destined for mp-web
+Destined for overrides.scss in mp-web
 
 *******************************************************/
 
-body {
-  font-family: Helvetica Neue !important;
+[class^="icon-"],
+[class*=" icon-"] {
+  line-height: 0;
+  position: relative;
+  top: 1px;
 }
+
+/*******************************************************
+
+Destined for bulma-custom.scss in mp-web
+
+*******************************************************/
 
 .mp-dropdown .icon {
   display: none;
@@ -84,13 +98,6 @@ body {
   transform: translate(0, -50%);
 }
 
-[class^="icon-"],
-[class*=" icon-"] {
-  line-height: 0;
-  position: relative;
-  top: 1px;
-}
-
 i.is-active, 
 span.is-active, 
 p.is-active, 
@@ -101,4 +108,14 @@ svg.is-active {
 .checkbox input + * {
   vertical-align: text-bottom;
   margin-left: 0.25em;
+}
+
+.panel {
+  background-color: #fff;
+}
+
+.pagination-next,
+.pagination-previous,
+.pagination-link {
+  background-color: #fff;
 }

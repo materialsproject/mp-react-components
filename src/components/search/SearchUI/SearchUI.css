@@ -14,6 +14,7 @@
   width: 100%;
   z-index: 4;
   height: 70px;
+  background: #ebebeb;
 }
 
 .search-ui .panel-block.is-active {
@@ -64,8 +65,12 @@
   padding-left: 1rem;
 }
 
-.search-ui .column.data-table-column {
+.search-ui .column.data-table-container {
   overflow: hidden;
+}
+
+.search-ui .react-data-table {
+  border-radius: 6px;
 }
 
 .search-ui .progress-container {

@@ -141,45 +141,57 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     </MenuWrapper>;
 
   return (
-    <div className={props.className}>
-      <div className="columns mb-0">
-        <div className="column is-narrow pb-0">
-          <TableHeaderTitle />
-        </div>
-        {state.loading &&
-          <div className="column pb-0 progress-container">
-            <progress className="progress is-small is-primary" max="100"></progress>
+    <div>
+      <div className="columns mb-1">
+        <div className="column pb-2">
+          <div className="columns mb-0">
+            <div className="column is-narrow pb-0">
+              <TableHeaderTitle />
+            </div>
+            {state.loading &&
+              <div className="column pb-0 progress-container">
+                <progress className="progress is-small is-primary" max="100"></progress>
+              </div>
+            }
+            <div className="column pb-0 has-text-right">
+              {columnsMenu}
+            </div>
           </div>
-        }
-        <div className="column pb-0 has-text-right">
-          {columnsMenu}
         </div>
       </div>
-      <ActiveFilterButtons
-        filters={state.activeFilters}
-        onClick={(v, id) => actions.setFilterValue(v, id)}
-      />
-      <DataTable
-        noHeader
-        theme="material"
-        columns={columns}
-        data={state.results}
-        selectableRows
-        highlightOnHover
-        pagination
-        paginationServer
-        paginationDefaultPage={state.page}
-        paginationComponent={Paginator}
-        paginationTotalRows={state.totalResults}
-        paginationPerPage={state.resultsPerPage}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
-        sortServer
-        sortIcon={<FaCaretDown/>}
-        defaultSortField={state.sortField}
-        defaultSortAsc={state.sortDirection === 'desc' ? false : true}
-        onSort={handleSort}
-      />
+      <div className="columns mb-0">
+        <div  className="column pb-0">
+          <ActiveFilterButtons
+            filters={state.activeFilters}
+            onClick={(v, id) => actions.setFilterValue(v, id)}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column">
+          <DataTable
+            className="react-data-table"
+            noHeader
+            theme="material"
+            columns={columns}
+            data={state.results}
+            highlightOnHover
+            pagination
+            paginationServer
+            paginationDefaultPage={state.page}
+            paginationComponent={Paginator}
+            paginationTotalRows={state.totalResults}
+            paginationPerPage={state.resultsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            sortServer
+            sortIcon={<FaCaretDown/>}
+            defaultSortField={state.sortField}
+            defaultSortAsc={state.sortDirection === 'desc' ? false : true}
+            onSort={handleSort}
+          />
+        </div>
+      </div>
     </div>
   );
 };
