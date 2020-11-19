@@ -1,6 +1,6 @@
 import React from 'react';
 import { MaterialsInputField } from '../MaterialsInput';
-import { Link } from 'react-router-dom';
+import { Link } from '../../navigation/Link';
 import { crystalSystemOptions, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../utils';
 import { spaceGroups } from '../GroupSpaceSearch/spacegroups';
 
@@ -126,7 +126,7 @@ export const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
           return (
-            <Link to={path}>{row[c.selector]}</Link>
+            <Link href={path}>{row[c.selector]}</Link>
           );
         }
         return c;
