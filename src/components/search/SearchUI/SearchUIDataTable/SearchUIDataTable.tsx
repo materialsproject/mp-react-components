@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import { FaAngleDown, FaCaretDown } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
+import classNames from 'classnames';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -140,6 +141,31 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       </Menu>
     </MenuWrapper>;
 
+const resultsPerPageOptions = [10, 15, 30, 50, 75];
+const resultsPerPageMenu =
+  <MenuWrapper 
+    className='dropdown is-right is-active has-text-left mr-1'
+    onSelection={handlePerRowsChange}
+  >
+    <div className="dropdown-trigger">
+      <Button className='button'>
+        <span>Results per page: {state.resultsPerPage}</span>
+        <span className="icon"><FaAngleDown/></span>
+      </Button>
+    </div>
+    <Menu className='dropdown-menu'>
+      <ul className="dropdown-content">
+        {resultsPerPageOptions.map((d, i) => (
+          <MenuItem key={i} value={d}>
+            <li className={classNames('dropdown-item', {'is-active': d === state.resultsPerPage})}>
+              {d}
+            </li>
+          </MenuItem>
+        ))}
+      </ul>
+    </Menu>
+  </MenuWrapper>;
+
   return (
     <div>
       <div className="columns mb-1">
@@ -148,12 +174,13 @@ export const SearchUIDataTable: React.FC<Props> = props => {
             <div className="column is-narrow pb-0">
               <TableHeaderTitle />
             </div>
-            {state.loading &&
-              <div className="column pb-0 progress-container">
+            <div className="column pb-0 progress-container">
+              {state.loading &&
                 <progress className="progress is-small is-primary" max="100"></progress>
-              </div>
-            }
-            <div className="column pb-0 has-text-right">
+              }
+            </div>
+            <div className="column is-narrow pb-0 has-text-right">
+              {resultsPerPageMenu}
               {columnsMenu}
             </div>
           </div>
