@@ -36,10 +36,15 @@ export const SearchUISearchBar: React.FC = () => {
     actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
   };
 
-  // useEffect(() => {
-  //   setSearchField(state.topLevelSearchField);
-  //   setSearchValue(state.filterValues[state.topLevelSearchField]);
-  // }, [state.topLevelSearchField]);
+  /**
+   * This effect clears the search value if its corresponding filter value changes.
+   * This ensures the search value is not contradicted by the filter value.
+   */
+  useEffect(() => {
+    if (state.filterValues[searchField] !== searchValue) {
+      setSearchValue('');
+    }
+  }, [state.filterValues]);
 
   return (
     <MaterialsInput
