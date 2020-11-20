@@ -170,16 +170,16 @@ const resultsPerPageMenu =
     <div>
       <div className="columns mb-1">
         <div className="column pb-2">
-          <div className="columns mb-0">
-            <div className="column is-narrow pb-0">
+          <div className="table-header">
+            <div>
               <TableHeaderTitle />
             </div>
-            <div className="column pb-0 progress-container">
+            <div className="progress-container">
               {state.loading &&
                 <progress className="progress is-small is-primary" max="100"></progress>
               }
             </div>
-            <div className="column is-narrow pb-0 has-text-right">
+            <div>
               {resultsPerPageMenu}
               {columnsMenu}
             </div>
@@ -195,7 +195,7 @@ const resultsPerPageMenu =
         </div>
       </div>
       <div className="columns">
-        <div className="column">
+        <div className="column react-data-table-container">
           <DataTable
             className="react-data-table"
             noHeader

@@ -114,7 +114,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseU
                 </div>
               </div>
             </div>
-            <div className="column data-table-container">
+            <div className="column results-container">
               <SearchUIDataTable />
             </div>
           </div>

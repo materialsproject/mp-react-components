@@ -65,12 +65,22 @@
   padding-left: 1rem;
 }
 
-.search-ui .column.data-table-container {
+.search-ui .column.results-container {
+  overflow: hidden;
+}
+
+.search-ui .react-data-table-container {
   overflow: hidden;
 }
 
 .search-ui .react-data-table {
   border-radius: 6px;
+}
+
+.search-ui .table-header {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: wrap;
 }
 
 .search-ui .progress-container {
@@ -80,6 +90,8 @@
   position: relative;
   top: 15px; */
   position: relative;
+  flex-grow: 1;
+  margin: 0 1em;
 }
 
 .search-ui .progress {
