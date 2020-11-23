@@ -1,0 +1,45 @@
+.slider {
+  padding-left: 1.2em;
+  padding-right: 1.2em;
+  padding-top: 0.7em;
+}
+
+.slider .handle, .slider .handle-cover {
+  width: 15px;
+  height: 15px;
+}
+
+.slider .handle {
+  background: hsl(217, 71%, 53%);
+  border: 0;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.slider .handle-cover {
+  z-index: 3;
+}
+
+.slider .track {
+  background: hsl(217, 71%, 53%);
+  height: 5px;
+  border-radius: 5px;
+}
+
+.slider .outer-rail {
+  height: 10px;
+  border-radius: 5px;
+}
+
+.slider .inner-rail {
+  height: 3px;
+  border-radius: 5px;
+  background: rgb(163, 163, 163);
+}
+
+.slider .tooltip {
+  background: hsl(217, 71%, 53%);
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.3em;
+}

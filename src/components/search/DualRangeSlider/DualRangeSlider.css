@@ -1,45 +1,47 @@
+.slider-container .input {
+  flex-basis: 75px;
+}
+
 .slider {
-  padding-left: 1.2em;
-  padding-right: 1.2em;
-  padding-top: 0.7em;
+  padding: 0 0.75em;
 }
 
-.slider .handle, .slider .handle-cover {
-  width: 15px;
-  height: 15px;
+.slider-track {
+  height: 1.5em;
+  display: flex;
+  justify-content: center;
 }
 
-.slider .handle {
-  background: hsl(217, 71%, 53%);
-  border: 0;
-  border-radius: 50%;
-  z-index: 2;
-}
-
-.slider .handle-cover {
-  z-index: 3;
-}
-
-.slider .track {
-  background: hsl(217, 71%, 53%);
+.slider-track-inner {
   height: 5px;
-  border-radius: 5px;
+  width: 100%;
+  align-self: center;
 }
 
-.slider .outer-rail {
-  height: 10px;
-  border-radius: 5px;
+.button.is-slider {
+  padding: 0;
+  height: 1.5em;
+  width: 1.5em;
 }
 
-.slider .inner-rail {
-  height: 3px;
-  border-radius: 5px;
-  background: rgb(163, 163, 163);
+.button.is-slider > .inner-slider-button {
+  height: 1em;
+  width: 5px;
+  background-color: #ccc;
 }
 
-.slider .tooltip {
-  background: hsl(217, 71%, 53%);
-  color: #fff;
-  border-radius: 5px;
-  padding: 0.3em;
+.button.is-slider.is-dragged > .inner-slider-button {
+  background-color: #3273dc;
+}
+
+.slider-tick-mark {
+  height: 0.75em;
+  width: 3px;
+}
+
+.slider-tick-value {
+  position: absolute;
+  top: 2em;
+  font-size: 0.8em;
+  transform: translate(-50%, 0);
 }

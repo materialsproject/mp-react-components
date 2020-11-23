@@ -157,9 +157,11 @@ export const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchPa
       let queryParamValue: any = query.get(f.id);
       switch (f.type) {
         case FilterType.SLIDER:
-          const queryParamMin = query.get(f.id + '_min');
-          const queryParamMax = query.get(f.id + '_max');
-          queryParamValue = queryParamMin && queryParamMax ? [parseFloat(queryParamMin), parseFloat(queryParamMax)] : null;
+          const queryParamMinString = query.get(f.id + '_min');
+          const queryParamMaxString = query.get(f.id + '_max');
+          const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
+          const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
+          queryParamValue = queryParamMin && queryParamMax ? [queryParamMin, queryParamMax] : null;
           initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
           return f;
         case FilterType.MATERIALS_INPUT:

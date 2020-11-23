@@ -1,0 +1,1 @@
+export { DualRangeCompoundSlider } from './DualRangeCompoundSlider';

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
-import { DualRangeSlider } from '../../../search/DualRangeSlider';
+// import { DualRangeSlider } from '../../../search/DualRangeSlider';
+import { DualRangeSlider } from '../../../search/DualRangeSlider/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
 import { FilterType, Filter, FilterGroup, ActiveFilter } from '../constants';
@@ -72,45 +73,37 @@ export const SearchUIFilters: React.FC<Props> = props => {
     switch (f.type) {
       case FilterType.TEXT_INPUT:
         return (
-          <div>
-            <p className="has-text-weight-bold mb-1">{f.name}</p>
-            <TextInput
-              debounce={1000}
-              type="text"
-              value={state.filterValues[f.id]}
-              onChange={v => actions.setFilterValue(v, f.id)}
-              {...f.props}
-            />
-          </div>
+          <TextInput
+            debounce={1000}
+            type="text"
+            value={state.filterValues[f.id]}
+            onChange={v => actions.setFilterValue(v, f.id)}
+            {...f.props}
+          />
         );
       case FilterType.MATERIALS_INPUT:
         return (
-          <div>
-            <p className="has-text-weight-bold mb-1">{f.name}</p>
-            <MaterialsInput
-              debounce={1000}
-              value={state.filterValues[f.id]}
-              onChange={v => actions.setFilterValue(v, f.id)}
-              periodicTableMode="onFocus"
-              onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
-              autocompleteFormulaUrl="https://api.materialsproject.org/materials/formula_autocomplete/"
-              autocompleteApiKey={state.apiKey}
-              // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
-              // showFieldDropdown={true}
-              {...f.props}
-            />
-          </div>
+          <MaterialsInput
+            debounce={1000}
+            value={state.filterValues[f.id]}
+            onChange={v => actions.setFilterValue(v, f.id)}
+            periodicTableMode="onFocus"
+            onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
+            autocompleteFormulaUrl="https://api.materialsproject.org/materials/formula_autocomplete/"
+            autocompleteApiKey={state.apiKey}
+            // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
+            // showFieldDropdown={true}
+            {...f.props}
+          />
         );
       case FilterType.SLIDER:
         return (
-          <div>
-            <p className="has-text-weight-bold mb-3">{f.name}</p>
-            <DualRangeSlider
-              {...f.props}
-              values={state.filterValues[f.id]}
-              onChange={v => actions.setFilterValue(v, f.id)}
-            />
-          </div>
+          <DualRangeSlider
+            {...f.props}
+            initialValues={state.filterValues[f.id]}
+            onChange={v => actions.setFilterValue(v, f.id)}
+            onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
+          />
         );
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
         case FilterType.SELECT_SPACEGROUP_NUMBER:
@@ -118,40 +111,31 @@ export const SearchUIFilters: React.FC<Props> = props => {
         case FilterType.SELECT:
           const selected = f.props.options.filter(option => option.value === state.filterValues[f.id]);
           return (
-            <div>
-              <p className="has-text-weight-bold mb-3">{f.name}</p>
-              <Select
-                {...f.props}
-                menuPosition="fixed"
-                isClearable
-                value={selected}
-                onChange={item => {
-                  const value = item && item.value ? item.value : null;
-                  actions.setFilterValue(value, f.id)
-                }}
-              />
-            </div>
+            <Select
+              {...f.props}
+              menuPosition="fixed"
+              isClearable
+              value={selected}
+              onChange={item => {
+                const value = item && item.value ? item.value : null;
+                actions.setFilterValue(value, f.id)
+              }}
+            />
           );
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
           return (
-            <div>
-              <p className="has-text-weight-bold mb-3">{f.name}</p>
-              <ThreeStateBooleanSelect
-                {...f.props}
-                value={state.filterValues[f.id]}
-                onChange={item => actions.setFilterValue(item.value, f.id)}
-              />
-            </div>
+            <ThreeStateBooleanSelect
+              {...f.props}
+              value={state.filterValues[f.id]}
+              onChange={item => actions.setFilterValue(item.value, f.id)}
+            />
           );
         case FilterType.CHECKBOX_LIST:
           return (
-            <div>
-              <p className="has-text-weight-bold mb-3">{f.name}</p>
-              <CheckboxList
-                {...f.props}
-                onChange={v => actions.setFilterValue(v, f.id)}
-              />
-            </div>
+            <CheckboxList
+              {...f.props}
+              onChange={v => actions.setFilterValue(v, f.id)}
+            />
           );
       default:
         null;
@@ -276,8 +260,11 @@ export const SearchUIFilters: React.FC<Props> = props => {
                 >
                   <div aria-hidden={!groupsByName[g.name].expanded}>
                     {g.filters.map((f, j) => (
-                      <div className="mb-2" key={j}>
-                        {renderFilter(f, g.name)}
+                      <div className="mb-4" key={j}>
+                        <div>
+                          <p className="has-text-weight-bold mb-2">{f.name}</p>
+                          {renderFilter(f, g.name)}
+                        </div>
                       </div>
                     ))}
                   </div>
