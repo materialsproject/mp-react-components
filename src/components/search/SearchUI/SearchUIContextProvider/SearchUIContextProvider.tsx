@@ -265,17 +265,20 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         return getState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
       });
     },
-    setFilterProps: (props: Object, filterId: string, groupId: string) => {
-      const filterGroups = state.filterGroups;
-      const group = filterGroups.find(g => g.name === groupId);
-      const filter = group?.filters.find(f => f.id === filterId);
-      if (filter) filter.props = { ...filter.props, ...props };
-      const stateWithNewFilterProps = { ...state, filterGroups: filterGroups };
-      const newState =
-        filter && filter.props.hasOwnProperty('parsedValue')
-          ? getState(stateWithNewFilterProps)
-          : stateWithNewFilterProps;
-      setState({ ...newState });
+    setFilterProps: (props: any, filterId: string, groupId: string) => {
+      setState(currentState => {
+        const filterGroups = currentState.filterGroups;
+        const group = filterGroups.find(g => g.name === groupId);
+        const filter = group?.filters.find(f => f.id === filterId);
+        if (filter) filter.props = { ...filter.props, ...props };
+        const stateWithNewFilterProps = { ...currentState, filterGroups: filterGroups };
+        // const newState =
+        //   filter && filter.props.hasOwnProperty('parsedValue')
+        //     ? getState(stateWithNewFilterProps)
+        //     : stateWithNewFilterProps;
+        const newFilterValues = props.hasOwnProperty('initialValues') ? { ...currentState.filterValues, [filterId]: props.initialValues } : undefined;
+        return getState({ ...stateWithNewFilterProps }, newFilterValues);
+      });
     },
     getData: () => {
       setState(currentState => {
