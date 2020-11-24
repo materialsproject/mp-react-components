@@ -243,7 +243,7 @@ export const DualRangeSlider: React.FC<Props> = ({
             const tickValue = niceDomain[0] + (index * step);
             if (ticks.indexOf(tickValue) > -1) {
               return (
-                <div key={index + Math.random()}>
+                <div key={'tick-' + index}>
                   <div
                     {...props}
                     className="slider-tick-mark"

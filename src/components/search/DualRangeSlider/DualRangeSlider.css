@@ -1,3 +1,7 @@
+.slider-container {
+  padding-bottom: 1em;
+}
+
 .slider-container .input {
   flex-basis: 75px;
   min-width: 75px;

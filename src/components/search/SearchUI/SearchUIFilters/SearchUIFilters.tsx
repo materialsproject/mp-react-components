@@ -177,23 +177,6 @@ export const SearchUIFilters: React.FC<Props> = props => {
     setGroupsByName(newGroupsByName);
   }, [state.filterGroups]);
 
-  /**
-   * This hook initializes panel groups with their max height values
-   * This is to allow a smooth transition for showing/hiding the group
-   * ! Currently removed because animated show/hide causes strange behavior with focus and auto scroll
-   */
-  // useEffect(() => {
-  //   groupRefs.current.forEach((el, i) => {
-  //     // This is a special case for groups with periodic tables in them, should make more dynamic later
-  //     if (state.filterGroups[i].name === 'Material') {
-  //       const marginTop = 15;
-  //       el.style.maxHeight = (el.children[0].clientHeight + 244 + marginTop) + 'px';
-  //     } else {
-  //       el.style.maxHeight = el.children[0].clientHeight + 'px';
-  //     }
-  //   });
-  // }, []);
-
   return (
     <div className={props.className}>
       <div className="panel">
@@ -206,11 +189,6 @@ export const SearchUIFilters: React.FC<Props> = props => {
             >
               Reset
             </button>
-            {/* <Dropdown className="mp-dropdown" value="" label={<FaEllipsisV />} right={true}>
-              <Dropdown.Item value="reset">
-                <p onClick={e => actions.resetFilters()}>Reset filters</p>
-              </Dropdown.Item>
-            </Dropdown> */}
           </div>
         </div>
         <div className="panel-block-container">
@@ -260,7 +238,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                 >
                   <div aria-hidden={!groupsByName[g.name].expanded}>
                     {g.filters.map((f, j) => (
-                      <div className="mb-4" key={j}>
+                      <div className="mb-3" key={j}>
                         <div>
                           <p className="has-text-weight-bold mb-2">{f.name}</p>
                           {renderFilter(f, g.name)}
