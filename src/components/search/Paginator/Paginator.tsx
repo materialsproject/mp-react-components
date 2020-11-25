@@ -89,34 +89,9 @@ export const Paginator: React.FC<Props> = ({
   }
 
   return (
-    // <nav className="pagination columns is-small is-centered pt-3" role="navigation" aria-label="pagination">
-    //   <div className="column is-4 has-text-left">
-    //     <a
-    //       className={classNames('pagination-previous', {'is-hidden': currentPage === 1})} 
-    //       aria-hidden={currentPage === 1}
-    //       onClick={() => onChangePage(currentPage - 1)}
-    //     >
-    //       <FaArrowLeft/><span className="ml-1">Previous</span>
-    //     </a>
-    //     <span className="button is-small">Showing {rowsPerPage} of {rowCount} results</span>
-    //   </div>
-    //   <div className="column is-4">
-    //     {paginationItems}
-    //   </div>
-    //   <div className="column is-4 has-text-right">
-    //   <a 
-    //     className={classNames('pagination-next', {'has-opacity-0': currentPage === pageCount})}
-    //     aria-hidden={currentPage === pageCount}
-    //     onClick={() => onChangePage(currentPage + 1)}
-    //   >
-    //     <span className="mr-1">Next</span><FaArrowRight/>
-    //   </a>
-    //   </div>
-    // </nav>
     <nav className="pagination is-small is-centered pt-3" role="navigation" aria-label="pagination">
-      {/* <span className="pagination-previous">Showing {rowsPerPage} of {rowCount} results</span> */}
         <a
-          className={classNames('pagination-previous', {'has-opacity-0': currentPage === 1})} 
+          className={classNames('pagination-previous', {'is-hidden-by-opacity': currentPage === 1})} 
           aria-hidden={currentPage === 1}
           onClick={() => onChangePage(currentPage - 1)}
         >
@@ -125,7 +100,7 @@ export const Paginator: React.FC<Props> = ({
       
       {paginationItems}
       <a 
-        className={classNames('pagination-next', {'has-opacity-0': currentPage === pageCount})}
+        className={classNames('pagination-next', {'is-hidden-by-opacity': currentPage === pageCount})}
         aria-hidden={currentPage === pageCount}
         onClick={() => onChangePage(currentPage + 1)}
       >

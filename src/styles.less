@@ -56,14 +56,19 @@ Destined for bulma-custom.scss in mp-web
   border-top: 0 !important;
 }
 
-.is-hidden-with-transition {
+.can-hide-by-height {
+  transition: 0.25s;
+  overflow: hidden;
+}
+
+.is-hidden-by-height {
   max-height: 0 !important;
   margin: 0;
 }
 
-.can-hide-with-transition {
-  transition: 0.25s;
-  overflow: hidden;
+.is-hidden-by-opacity {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .has-opacity-70 {

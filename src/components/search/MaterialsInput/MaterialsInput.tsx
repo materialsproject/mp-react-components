@@ -273,8 +273,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
         {chemSysCheckbox}
         {autocompleteMenu}
         <div
-          className={classNames('table-transition-wrapper-small','can-hide-with-transition', {
-            'is-hidden-with-transition': !showPeriodicTable,
+          className={classNames('table-transition-wrapper-small','can-hide-by-height', {
+            'is-hidden-by-height': !showPeriodicTable,
             'mt-3': showPeriodicTable
           })}
           onMouseDown={event => {
