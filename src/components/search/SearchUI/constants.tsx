@@ -72,6 +72,7 @@ export interface SearchState {
   sortField?: string;
   sortDirection?: 'asc' | 'desc';
   topLevelSearchField: string;
+  autocompleteFormulaUrl?: string;
   apiKey?: string;
 }
 

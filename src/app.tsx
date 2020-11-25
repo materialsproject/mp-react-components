@@ -695,6 +695,7 @@ ReactDOM.render(
         columns={materialsColumns}
         filterGroups={materialsGroups}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL : ''}
+        autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
       />
     </div>

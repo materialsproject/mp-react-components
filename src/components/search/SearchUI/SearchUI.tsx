@@ -86,20 +86,21 @@ export interface SearchUIProps {
    */
   baseURL: string;
   /**
+   * The URL endpoint for fetching autocompletion results
+   */
+  autocompleteFormulaUrl?: string;
+  /**
    * API key (if needed) that will be used when making queries
    */
   apiKey?: string;
 }
 
-export const SearchUI: React.FC<SearchUIProps> = ({ columns, filterGroups, baseURL, apiKey }) => {
+export const SearchUI: React.FC<SearchUIProps> = props => {
   return (
     <div className="search-ui">
       <Router>
         <SearchUIContextProvider
-          columns={columns}
-          filterGroups={filterGroups}
-          baseURL={baseURL}
-          apiKey={apiKey}
+          {...props}
         >
           <div className="columns">
             <div className="column is-narrow">

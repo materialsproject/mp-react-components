@@ -39,6 +39,7 @@ const initialState: SearchState = {
   sortField: undefined,
   sortDirection: 'asc',
   topLevelSearchField: 'elements',
+  autocompleteFormulaUrl: undefined,
   apiKey: ''
 };
 
@@ -208,6 +209,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   columns,
   filterGroups,
   baseURL,
+  autocompleteFormulaUrl,
   apiKey,
   children
 }) => {
@@ -226,6 +228,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     if (urlAscending) initialState.sortDirection = urlAscending === 'true' ? 'asc' : 'desc';
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
+    initialState.autocompleteFormulaUrl = autocompleteFormulaUrl;
     initialState.apiKey = apiKey;
     return getState(initialState);
   });
