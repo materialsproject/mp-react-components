@@ -51,7 +51,7 @@ export const table = () => (
     </div>
     <div> Look below, if you want to colorize some elements of the table </div>
     <Table
-      onElementHovered={action('element-hovered')}
+      onElementMouseOver={action('element-hovered')}
       disabledElement={disabledElement}
       hiddenElement={{}}
       enabledElement={selectedElement}
@@ -196,7 +196,7 @@ export const component = () => (
       )}
       element={select(label, options, defaultValue)}
       onElementClicked={() => {}}
-      onElementHovered={() => {}}
+      onElementMouseOver={() => {}}
     />
   </>
 );
@@ -297,7 +297,7 @@ export const heatmapTable = props => {
             ) as keyof typeof COLORSCHEME
           }
           onElementClicked={() => {}}
-          onElementHovered={() => {}}
+          onElementMouseOver={() => {}}
           hiddenElement={{}}
         />
       </div>

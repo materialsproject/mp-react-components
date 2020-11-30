@@ -73,7 +73,7 @@ function renderElement(
       enabled={enabled}
       hidden={false}
       element={element}
-      onElementHovered={onClick}
+      onElementMouseOver={onClick}
       displayMode={display}
       onElementClicked={onClick}
     />

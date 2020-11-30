@@ -25,8 +25,10 @@ export interface PeriodicElementProps {
   displayMode?: DISPLAY_MODE;
   /** callback called when an element clicked */
   onElementClicked?: (e: MatElement) => void;
-  /** callback called when an element is hovered */
-  onElementHovered?: (e: MatElement) => void;
+  /** callback called when an element is moused over */
+  onElementMouseOver?: (e: MatElement) => void;
+  /** callback called when mouse leaves an element */
+  onElementMouseLeave?: (e: MatElement) => void;
 }
 
 //TODO(chab) use render props to customize layout
@@ -39,10 +41,12 @@ export function PeriodicElement({
   disabled = false,
   color,
   onElementClicked = () => {},
-  onElementHovered = () => {}
+  onElementMouseOver = () => {},
+  onElementMouseLeave = () => {}
 }: PeriodicElementProps) {
   const handleClick = (element: MatElement) => !element.hasGroup && onElementClicked(element);
-  const handleHover = (element: MatElement) => onElementHovered(element);
+  const handleHover = (element: MatElement) => onElementMouseOver(element);
+  const handleLeave = (element: MatElement) => onElementMouseLeave(element);
   const cl = {
     enabled: !hidden && enabled && !disabled,
     disabled: !hidden && disabled,
@@ -61,6 +65,7 @@ export function PeriodicElement({
     <div
       onClick={() => handleClick(element as MatElement)}
       onMouseOver={() => handleHover(element as MatElement)}
+      onMouseLeave={() => handleLeave(element as MatElement)}
       style={color ? { background: color } : {}}
       className={`mat-element ${displayMode} ${TABLE_DICO_CLASS[element.symbol]} ${
         cl.hidden ? 'hidden' : ''

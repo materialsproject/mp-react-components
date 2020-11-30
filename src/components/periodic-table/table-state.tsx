@@ -33,7 +33,8 @@ export function SelectableTable(props: SelectableTableProps) {
           ? tableStateStore.toggleEnabledElement(element.symbol)
           : tableStateStore.toggleDisabledElement(element.symbol)
       }
-      onElementHovered={element => tableStateStore.setDetailedElement(element.symbol)}
+      onElementMouseOver={element => tableStateStore.setDetailedElement(element.symbol)}
+      onElementMouseLeave={element => tableStateStore.setDetailedElement(null)}
       forceTableLayout={props.forceTableLayout}
       disabledElement={disabledEls}
       hiddenElement={hiddenEls}

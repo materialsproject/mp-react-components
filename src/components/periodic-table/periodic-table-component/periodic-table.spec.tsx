@@ -132,7 +132,7 @@ export function renderElement(
     <Table
       enabledElement={enabled}
       disabledElement={disabled}
-      onElementHovered={onHover}
+      onElementMouseOver={onHover}
       forceTableLayout={TableLayout.SPACED}
       hiddenElement={hidden}
       heatmap={heatmap}

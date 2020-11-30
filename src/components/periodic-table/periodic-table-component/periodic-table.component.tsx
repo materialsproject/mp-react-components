@@ -34,7 +34,8 @@ export interface TableProps {
   hiddenElement: { [symbol: string]: boolean };
   /** Callback who gets called once the user clicked an element; the clicked element is passed **/
   onElementClicked: (mat: MatElement) => void;
-  onElementHovered: (mat: MatElement) => void;
+  onElementMouseOver: (mat: MatElement) => void;
+  onElementMouseLeave?: (mat: MatElement) => void;
   /** Force the layout of the table **/
   forceTableLayout?: TableLayout;
   /** Colorize the table by using an heatmap
@@ -143,7 +144,8 @@ export function Table({
   enabledElement,
   hiddenElement,
   onElementClicked,
-  onElementHovered,
+  onElementMouseOver,
+  onElementMouseLeave = () => {},
   forceTableLayout,
   heatmap,
   heatmapMax,
@@ -184,7 +186,7 @@ export function Table({
 
   const onHover = (element: MatElement) => {
     if (!hasHeatmap(heatmap)) {
-      onElementHovered(element);
+      onElementMouseOver(element);
       return;
     }
     const value = heatmap![element.symbol];
@@ -194,7 +196,7 @@ export function Table({
       const legendPosition = legendPositionScale(value);
       setLegendPosition(legendPosition);
     }
-    onElementHovered(element);
+    onElementMouseOver(element);
   };
 
   return (
@@ -216,7 +218,10 @@ export function Table({
         />
         {TABLE_V2.map((element: MatElement) => (
           <PeriodicElement
-            onElementHovered={element => onHover(element)}
+            onElementMouseOver={element => onHover(element)}
+            onElementMouseLeave={element => {
+              onElementMouseLeave(element)
+            }}
             onElementClicked={element =>
               !DEFAULT_DISABLED_ELEMENTS[element.symbol] && onElementClicked(element)
             }

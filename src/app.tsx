@@ -183,7 +183,7 @@ function SelectedComponent() {
         //   hidden={false}
         //   element={elt}
         //   onElementClicked={() => {}}
-        //   onElementHovered={() => {}}
+        //   onElementMouseOver={() => {}}
         // />
         <li key={elt}>{elt}</li>
       ))}

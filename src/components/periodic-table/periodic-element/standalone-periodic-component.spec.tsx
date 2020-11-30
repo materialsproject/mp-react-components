@@ -32,7 +32,7 @@ function renderElement(
       size={20}
       hidden={false}
       element={element}
-      onElementHovered={onClick}
+      onElementMouseOver={onClick}
       onElementClicked={onClick}
     />
   );

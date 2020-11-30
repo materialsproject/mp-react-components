@@ -90,7 +90,7 @@ export function getPeriodicSelectionStore() {
     setDisabledElements: (disabledElements: any) =>
       (state = { ...state, disabledElements }) && state$.next(state),
     clear: () => state$.next(getDefaultState()),
-    setDetailedElement: (el: string) =>
+    setDetailedElement: (el: string | null) =>
       (state = { ...state, detailedElement: el }) && state$.next(state),
     setHiddenElements: (hiddenElements: any) =>
       (state = { ...state, hiddenElements }) && state$.next(state),
@@ -258,9 +258,7 @@ export function useDetailedElement() {
 
   React.useEffect(() => {
     const subscription = observable.subscribe(({ detailedElement }) => {
-      if (detailedElement) {
-        setDetailedElement(detailedElement!);
-      }
+      setDetailedElement(detailedElement!);
     });
 
     // clean up subscription;

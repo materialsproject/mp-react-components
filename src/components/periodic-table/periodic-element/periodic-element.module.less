@@ -121,14 +121,38 @@
   }
 }
 
-.small.table-container {
+.small.table-container .mat-element:not(.detailed)  {
   .mat-number,
-  .detailed,
   .mat-name {
     display: none;
   }
   .mat-symbol {
     font-size: 0.7rem;
+  }
+}
+
+.small.table-container .mat-element.detailed  {
+  overflow: visible;
+  .mat-weight,
+  .mat-side-panel {
+    display: none;
+  }
+  .main-panel {
+    width: 100%;
+    font-size: 0.8em;
+    justify-content: center;
+    overflow: visible;
+  }
+  .mat-number {
+    font-size: 1em;
+    margin: 0;
+  }
+  .mat-symbol {
+    font-size: 1em;
+  }
+  .mat-name {
+    font-size: 0.8em;
+    align-self: center;
   }
 }
 
