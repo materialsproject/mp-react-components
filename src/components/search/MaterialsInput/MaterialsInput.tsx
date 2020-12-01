@@ -51,7 +51,8 @@ export interface MaterialsInputBoxProps {
   onFieldChange?: (value: string) => void;
   onSubmit?: (value?: any) => any;
   onFocus?: (value?: any) => any;
-  onBlur?: (value?: any) => any;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => any;
+  setImmediateInputValue?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
@@ -65,11 +66,13 @@ interface FormulaSuggestion {
   score: number;
 }
 
+let requestCount = 0;
+
 export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
+  const [immediateInputValue, setImmediateInputValue] = useState(props.value);
   const [isChemSys, setIsChemSys] = useState<boolean>(() => props.isChemSys ? props.isChemSys : false);
   // const prevChemSys = usePrevious(isChemSys);
-  const [periodicTableClicked, setPeriodicTableClicked] = useState(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
   );
@@ -92,12 +95,21 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   };
 
-  const getOnBlurProp = () => {
-    setShowAutocomplete(false);
-    if (props.periodicTableMode === 'onFocus' && !periodicTableClicked) {
-      return setShowPeriodicTable(false);
+  /**
+   * When blurring out of the input,
+   * make sure the user is not clicking on a periodic table element button.
+   * If so, keep the input in focus.
+   * Otherwise, close the autocomplete menu and hide the periodic table (if using show onFocus mode)
+   */
+  const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    if (!relatedTarget || relatedTarget.className.indexOf('mat-element') === -1 ) {
+      setShowAutocomplete(false);
+      if (props.periodicTableMode === 'onFocus') {
+        return setShowPeriodicTable(false);
+      }
     } else {
-      return setShowAutocomplete(false);
+      e.target.focus();
     }
   };
 
@@ -126,22 +138,36 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
    * It handles modifying the chemsys flag (checked when input is dash-delimited or one element)
    * It also handles fetching formula suggestions if the necessary props are supplied
    */
+  
   useEffect(() => {
     handleChemSysCheck();
+    console.log(props.value);
     if (
       props.field === 'formula' &&
       props.autocompleteApiKey &&
       props.autocompleteFormulaUrl && 
       props.value.length
     ) {
+      requestCount++;
+      const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {
         params: {text: props.value},
         headers: {'X-Api-Key': props.autocompleteApiKey}
       }).then(result => {
-        setFormulaSuggestions(result.data.data);
+        console.log(result.data.data);
+        if (requestIndex === requestCount) {
+          setFormulaSuggestions(result.data.data);
+          console.log('in order: ' + props.value);
+          console.log('index: ' + requestIndex);
+          console.log('count: ' + requestCount);
+        } else {
+          console.log('out of order: ' + props.value);
+        }
       }).catch(error => {
         console.log(error);
-        setFormulaSuggestions([]);
+        if (requestIndex === requestCount) {
+          setFormulaSuggestions([]);
+        }
       });
     } else {
       setFormulaSuggestions([]);
@@ -175,6 +201,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       onBlur={getOnBlurProp}
       liftInputRef={ref => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
+      setImmediateInputValue={setImmediateInputValue}
     />;
 
   let materialsInputField: JSX.Element | null = null; 
@@ -278,11 +305,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             'mt-3': showPeriodicTable
           })}
           onMouseDown={event => {
-            setPeriodicTableClicked(true);
-            setTimeout(() => {
-              if (inputRef && inputRef.current) inputRef.current.focus();
-              setPeriodicTableClicked(false);
-            }, 250);
+            if (inputRef && inputRef.current) inputRef.current.focus();
           }}
         >
           <SelectableTable

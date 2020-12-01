@@ -43,6 +43,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    */
   const handleRawValueChange = e => {
     setInputValue(e.target.value);
+    if (props.setImmediateInputValue) props.setImmediateInputValue(e.target.value);
   };
 
   // const handleSubmit = e => {
@@ -58,7 +59,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   };
 
   const handleBlur = event => {
-    if (props.onBlur) props.onBlur();
+    if (props.onBlur) props.onBlur(event);
   };
 
   /**

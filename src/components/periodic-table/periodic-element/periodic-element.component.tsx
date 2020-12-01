@@ -62,7 +62,7 @@ export function PeriodicElement({
   }
 
   return (
-    <div
+    <button
       onClick={() => handleClick(element as MatElement)}
       onMouseOver={() => handleHover(element as MatElement)}
       onMouseLeave={() => handleLeave(element as MatElement)}
@@ -71,6 +71,8 @@ export function PeriodicElement({
         cl.hidden ? 'hidden' : ''
       } ${cl.enabled ? 'enabled' : ''}
           ${element.hasGroup ? 'mat-group' : ''}  ${cl.disabled ? 'disabled' : ''}`}
+      aria-disabled={cl.disabled}
+      aria-hidden={cl.hidden}
     >
       {displayMode === DISPLAY_MODE.SIMPLE ? (
         <React.Fragment>
@@ -94,6 +96,6 @@ export function PeriodicElement({
           )}
         </React.Fragment>
       )}
-    </div>
+    </button>
   );
 }
