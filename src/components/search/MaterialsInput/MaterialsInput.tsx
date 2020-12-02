@@ -34,7 +34,8 @@ import axios from 'axios';
 export enum MaterialsInputField {
   ELEMENTS = 'elements',
   FORMULA = 'formula',
-  MP_ID = 'task_ids'
+  MP_ID = 'task_ids',
+  SMILES = 'smiles'
 }
 
 export interface MaterialsInputBoxProps {
@@ -43,8 +44,8 @@ export interface MaterialsInputBoxProps {
   field: string;
   debounce?: number;
   showFieldDropdown?: boolean;
-  hidePeriodicTable?: boolean;
   isChemSys?: boolean;
+  allowSmiles?: boolean;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onChange: (value: string) => void;
   onPropsChange?: (propsObject: any) => void;
@@ -57,6 +58,7 @@ export interface MaterialsInputBoxProps {
 
 interface MaterialsInputProps extends MaterialsInputBoxProps {
   periodicTableMode?: string;
+  hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?:string;
   autocompleteApiKey?: string;
 }

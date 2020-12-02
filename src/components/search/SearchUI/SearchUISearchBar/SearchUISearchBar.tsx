@@ -15,6 +15,7 @@ export const SearchUISearchBar: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
   const [searchField, setSearchField] = useState<string>(state.topLevelSearchField);
+  const allowSmiles = state.resultLabel === 'molecule';
 
   const shouldHidePeriodicTable = () => {
     if (state.activeFilters && state.activeFilters.length > 0) {
@@ -58,6 +59,7 @@ export const SearchUISearchBar: React.FC = () => {
       hidePeriodicTable={shouldHidePeriodicTable()}
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
+      allowSmiles={allowSmiles}
     />
   );
 };

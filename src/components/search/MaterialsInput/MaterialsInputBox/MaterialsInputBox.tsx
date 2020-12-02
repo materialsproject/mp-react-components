@@ -99,10 +99,17 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
       newMaterialsInputField = MaterialsInputField.ELEMENTS;
     } else if (props.onFieldChange && newValue &&  (capitalLetters > 1 || newValue.match(/[0-9]/gi))) {
       newMaterialsInputField = MaterialsInputField.FORMULA;
+    } else if (props.allowSmiles) {
+      newMaterialsInputField = MaterialsInputField.SMILES;
     }
 
     switch (newMaterialsInputField) {
       case MaterialsInputField.MP_ID:
+        newPtActionsToDispatch.push({
+          action: ptActions.clear, 
+        });
+        break;
+      case MaterialsInputField.SMILES:
         newPtActionsToDispatch.push({
           action: ptActions.clear, 
         });

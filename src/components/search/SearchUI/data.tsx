@@ -234,11 +234,11 @@ export const moleculesGroups: FilterGroup[] = [
     name: 'Molecule',
     expanded: false,
     filters: [
-      // {
-      //   name: 'ID',
-      //   id: 'task_ids',
-      //   type: FilterType.TEXT_INPUT
-      // },
+      {
+        name: 'ID',
+        id: 'task_ids',
+        type: FilterType.TEXT_INPUT
+      },
       {
         name: 'Elements',
         id: 'elements',
