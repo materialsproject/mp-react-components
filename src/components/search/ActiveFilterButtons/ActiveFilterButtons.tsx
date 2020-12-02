@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bulma-components';
 import { FaTimes } from 'react-icons/fa';
-import { ActiveFilter } from '../SearchUI/constants';
+import { ActiveFilter } from '../SearchUI/types';
 
 interface Props {
   className?: string;

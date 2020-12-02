@@ -10,13 +10,15 @@ import {
   SearchState,
   Column,
   initColumns,
-  initFilterGroups
-} from '../constants';
+  initFilterGroups,
+  ColumnFormat
+} from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { arrayToDelimitedString, getDelimiter, parseElements } from '../../utils';
+import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
+import { Link } from '../../../navigation/Link';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -26,7 +28,8 @@ import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
 const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
-const initialState: SearchState = {
+const defaultState: SearchState = {
+  baseURL: '',
   columns: [],
   filterGroups: [],
   filterValues: {},
@@ -38,9 +41,7 @@ const initialState: SearchState = {
   loading: false,
   sortField: undefined,
   sortDirection: 'asc',
-  topLevelSearchField: 'elements',
-  autocompleteFormulaUrl: undefined,
-  apiKey: ''
+  topLevelSearchField: 'elements'
 };
 
 /**
@@ -180,13 +181,118 @@ const getState = (
   return { ...currentState, filterValues, activeFilters };
 };
 
-// const initState = (state: SearchState, columns: Column[], filterGroups: FilterGroup[]): SearchState => {
-//   state.columns = initColumns(columns);
-//   const { initializedGroups, initializedValues } = initFilterGroups(filterGroups);
-//   state.filterGroups = initializedGroups;
-//   state.filterValues = initializedValues;
-//   return getState(state);
-// };
+/**
+ * Initialize columns with their proper format function
+ * The "format" prop should initially be one of the ColumnFormat strings
+ * which maps to one of the format (or cell) functions defined here.
+ * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
+ * that will specify how many decimals or figures to apply to the format.
+ */
+const initColumns = (columns: Column[]) => {
+  return columns.map(c => {
+    c.sortable = c.sortable !== undefined ? c.sortable : true;
+    switch (c.format) {
+      case ColumnFormat.FIXED_DECIMAL:
+        const decimalPlaces = c.formatArg ? c.formatArg : 2;
+        c.format = (row: any) => row[c.selector] ? row[c.selector].toFixed(decimalPlaces) : '';
+        return c;
+      case ColumnFormat.SIGNIFICANT_FIGURES:
+        const sigFigs = c.formatArg ? c.formatArg : 5;
+        c.format = (row: any) => row[c.selector] ? row[c.selector].toPrecision(sigFigs) : '';
+        return c;
+      case ColumnFormat.FORMULA:
+        c.cell = (row: any) => {
+          if (row[c.selector] && typeof row[c.selector] === 'string') {
+            const splitFormula: string[] = row[c.selector].split(/([0-9]+)/g);
+            const formulaItem = (str: string) => {
+              if (parseInt(str)) {
+                return <sub>{str}</sub>;
+              } else {
+                return <span>{str}</span>;
+              }
+            };
+            return (
+              <span>
+                {splitFormula.map((s, i) => (
+                  <span key={i}>{formulaItem(s)}</span>
+                ))}
+              </span>
+            );
+          } else {
+            return <span></span>;
+          }
+        };
+        return c;
+      case ColumnFormat.LINK:
+        c.cell = (row: any) => {
+          const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
+          return (
+            <Link href={path}>{row[c.selector]}</Link>
+          );
+        }
+        return c;
+      case ColumnFormat.BOOLEAN:
+        const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
+        const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
+        const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
+        c.format = (row: any) => row[c.selector] ? truthyLabel : falsyLabel;
+        return c;
+      case ColumnFormat.SPACEGROUP_SYMBOL:
+        c.format = (row: any) => {
+          const selectors = c.selector.split('.');
+          const rowValue = selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
+          const spaceGroup = spaceGroups.find(d => d["symbol"] === rowValue);
+          const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
+          return formattedSymbol;
+        }
+      default:
+        return c;
+    }
+  });
+};
+
+const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
+  const initializedValues = {};
+  const initializedGroups = filterGroups.map(g => {
+    g.filters = g.filters.map(f => {
+      let queryParamValue: any = query.get(f.id);
+      switch (f.type) {
+        case FilterType.SLIDER:
+          const queryParamMinString = query.get(f.id + '_min');
+          const queryParamMaxString = query.get(f.id + '_max');
+          const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
+          const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
+          queryParamValue = queryParamMin && queryParamMax ? [queryParamMin, queryParamMax] : null;
+          initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
+          return f;
+        case FilterType.MATERIALS_INPUT:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : '';
+          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
+          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue')) {
+            f.props.parsedValue = [];
+          }
+          return f;
+        case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          f.props = {options: spaceGroupSymbolOptions()};
+          return f;
+        case FilterType.SELECT_SPACEGROUP_NUMBER:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          f.props = {options: spaceGroupNumberOptions()};
+          return f;
+        case FilterType.SELECT_CRYSTAL_SYSTEM:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          f.props = {options: crystalSystemOptions()};
+          return f;
+        default:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          return f;
+      }
+    });
+    return g;
+  });
+  return { initializedGroups, initializedValues}
+}
 
 const getResetFiltersAndValues = (state: SearchState) => {
   const filterValues = state.filterValues;
@@ -205,19 +311,18 @@ const getResetFiltersAndValues = (state: SearchState) => {
  * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
  * Accepts the same props as SearchUI and uses them to build the context state
  */
-export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
-  columns,
-  filterGroups,
-  baseURL,
-  autocompleteFormulaUrl,
-  apiKey,
-  children
-}) => {
+export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
+  const { children, ...propsWithoutChildren } = props;
   const query = useQuery();
   const history = useHistory();
   const [state, setState] = useState(() => {
-    initialState.columns = initColumns(columns);
-    const { initializedGroups, initializedValues } = initFilterGroups(filterGroups, query);
+    /**
+     * Initial state is a combination of the defaultState values above
+     * and all the values provided in props (except props.children)
+     */
+    const initialState: SearchState = {...defaultState, ...propsWithoutChildren};
+    initialState.columns = initColumns(props.columns);
+    const { initializedGroups, initializedValues } = initFilterGroups(props.filterGroups, query);
     const urlLimit = query.get('limit');
     const urlSkip = query.get('skip');
     const urlSortField = query.get('field');
@@ -228,8 +333,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     if (urlAscending) initialState.sortDirection = urlAscending === 'true' ? 'asc' : 'desc';
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
-    initialState.autocompleteFormulaUrl = autocompleteFormulaUrl;
-    initialState.apiKey = apiKey;
     return getState(initialState);
   });
   const prevActiveFilters = usePrevious(state.activeFilters);
@@ -323,14 +426,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         });
 
         axios
-          .get(baseURL, {
+          .get(props.baseURL, {
             params: params,
             paramsSerializer: p => {
               return qs.stringify(p, { arrayFormat: 'comma' });
             },
-            headers: apiKey
+            headers: props.apiKey
               ? {
-                  'X-Api-Key': apiKey,
+                  'X-Api-Key': props.apiKey,
                   'Access-Control-Allow-Origin': '*'
                 }
               : null

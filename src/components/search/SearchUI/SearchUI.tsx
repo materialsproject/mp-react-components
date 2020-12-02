@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
-import { Column, FilterGroup } from './constants';
+import { Column, FilterGroup } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from "react-router-dom";
@@ -93,9 +93,17 @@ export interface SearchUIProps {
    * API key (if needed) that will be used when making queries
    */
   apiKey?: string;
+  /**
+   * A noun in singular form to describe what a result represents (default: "result")
+   * e.g. "material"
+   * Note that only some special plural mappings are handled automatically (e.g. battery -> batteries)
+   * In all other cases, an "s" is appended to resultLabel
+   */
+  resultLabel?: string;
 }
 
 export const SearchUI: React.FC<SearchUIProps> = props => {
+  console.log(props);
   return (
     <div className="search-ui">
       <Router>
@@ -123,4 +131,8 @@ export const SearchUI: React.FC<SearchUIProps> = props => {
       </Router>
     </div>
   );
+};
+
+SearchUI.defaultProps = {
+  resultLabel: 'results'
 };

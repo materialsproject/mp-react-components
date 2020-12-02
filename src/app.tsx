@@ -22,24 +22,14 @@ import Simple3DSceneComponent from './components/crystal-toolkit/Simple3DScene/S
 import { AnimationStyle, Renderer } from './components/crystal-toolkit/Simple3DScene/constants';
 import { scene, scene2 } from './components/crystal-toolkit/scene/mike';
 import { s2, s3, s4 } from './components/crystal-toolkit/scene/simple-scene';
-// import ExportableGrid from './search-page/exportable-grid';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
 import katex from 'katex';
-// import GridWithContext from './search-page/exportable-grid';
-// import { Sidebar } from './navigation/sidebar';
-// import MTGridWithContext, {
-//   MtMaterialTable,
-//   MtPrintViewContext
-// } from './search-page/exportable-grid-v2';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
-import { MaterialsInput } from './components/search/MaterialsInput';
-// import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { SearchUIFilters } from './components/search/SearchUI/SearchUIFilters';
 import { SearchUI } from './components/search/SearchUI';
-import { materialsColumns, materialsGroups } from './components/search/SearchUI/constants';
+import { materialsColumns, materialsGroups, moleculesColumns, moleculesGroups } from './components/search/SearchUI/data';
 import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 
 const latexify = (string, options) => {
@@ -675,26 +665,13 @@ const menuContent = [
 const emptyObject = {};
 ReactDOM.render(
   <>
-    {/* <CameraContextWrapper>
-      <>
-        <Simple3DSceneComponent
-          settings={{
-            renderer: Renderer.WEBGL,
-            extractAxis: false,
-            transparentBackground: false,
-            background: '#e63946'
-          }}
-          data={scene}
-          debug={true}
-          toggleVisibility={{}}
-        />
-      </>
-    </CameraContextWrapper> */}
     <div className="p-4">
+      <h1 className="title">Molecules Explorer</h1>
       <SearchUI
-        columns={materialsColumns}
-        filterGroups={materialsGroups}
-        baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL : ''}
+        resultLabel="molecule"
+        columns={moleculesColumns}
+        filterGroups={moleculesGroups}
+        baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''}
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
       />
@@ -704,6 +681,17 @@ ReactDOM.render(
   mountNode
 );
 console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBUG);
+/**
+ <h1 className="title">Materials Explorer</h1>
+ <SearchUI
+    resultLabel="material"
+    columns={materialsColumns}
+    filterGroups={materialsGroups}
+    baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
+    autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+    apiKey={process.env.REACT_APP_API_KEY}
+  />
+ */
 /**
      <div>
       <MaterialsSearch />

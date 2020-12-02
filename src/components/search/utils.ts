@@ -199,3 +199,12 @@ export const crystalSystemOptions = () => {
     }
   }); 
 };
+
+export const pluralize = (noun) => {
+  let plural = noun + 's';
+  const specialNouns = {
+    battery: 'batteries'
+  }
+  if (specialNouns[noun]) plural = specialNouns[noun];
+  return plural;
+}

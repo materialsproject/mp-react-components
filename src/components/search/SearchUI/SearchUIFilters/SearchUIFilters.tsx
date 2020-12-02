@@ -5,7 +5,7 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import { DualRangeSlider } from '../../../search/DualRangeSlider/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
 import { Dropdown } from 'react-bulma-components';
-import { FilterType, Filter, FilterGroup, ActiveFilter } from '../constants';
+import { FilterType, Filter, FilterGroup, ActiveFilter } from '../types';
 import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
 import { Select } from '../../Select';

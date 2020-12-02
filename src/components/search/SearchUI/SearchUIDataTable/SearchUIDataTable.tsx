@@ -7,6 +7,7 @@ import { FaAngleDown, FaCaretDown } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
+import { pluralize } from '../../utils';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -61,19 +62,21 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
         <p className="title is-4">
-          All <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> materials
+          All <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}
         </p>
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
         <p className="title is-4">
             <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} />
-            {`${state.totalResults === 1 ? ' material matches' : ' materials match'} your search`}
+            {`${state.totalResults === 1 
+              ? ' ' + state.resultLabel + ' matches'
+              : ' ' + pluralize(state.resultLabel) + ' match'} your search`}
         </p>
       );
     } else {
       return (
-        <p className="title is-4">Loading materials...</p>
+        <p className="title is-4">Loading {pluralize(state.resultLabel)}...</p>
       );
     }
   };
