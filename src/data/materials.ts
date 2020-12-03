@@ -6,7 +6,7 @@ import { Column, ColumnFormat, FilterGroup, FilterType } from "../components/sea
  */
 export const materialsGroups: FilterGroup[] = [
   {
-    name: 'Material',
+    name: 'Material Definition',
     expanded: false,
     filters: [
       {

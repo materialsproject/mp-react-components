@@ -6,7 +6,7 @@ import { Column, ColumnFormat, FilterGroup, FilterType } from "../components/sea
  */
 export const moleculesGroups: FilterGroup[] = [
   {
-    name: 'Molecule',
+    name: 'Molecule Definition',
     expanded: false,
     filters: [
       {
@@ -47,7 +47,7 @@ export const moleculesGroups: FilterGroup[] = [
     ]
   },
   {
-    name: 'Electrons',
+    name: 'Basic Properties',
     expanded: false,
     filters: [
       {
@@ -76,6 +76,11 @@ export const moleculesGroups: FilterGroup[] = [
           domain: [-1, 1],
           step: 1
         }
+      },
+      {
+        name: 'Point Group',
+        id: 'pointgroup',
+        type: FilterType.SELECT_POINTGROUP
       }
       // {
       //   name: 'Charge',
@@ -98,17 +103,6 @@ export const moleculesGroups: FilterGroup[] = [
       //     ]
       //   }
       // }
-    ]
-  },
-  {
-    name: 'Symmetry',
-    expanded: false,
-    filters: [
-      {
-        name: 'Point Group',
-        id: 'pointgroup',
-        type: FilterType.SELECT_POINTGROUP
-      }
     ]
   }
 ];
