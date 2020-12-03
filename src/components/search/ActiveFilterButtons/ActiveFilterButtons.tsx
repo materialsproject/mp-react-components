@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bulma-components';
 import { FaTimes } from 'react-icons/fa';
+import { filter } from 'rxjs/operators';
 import { ActiveFilter } from '../SearchUI/types';
+import { formatPointGroup } from '../utils';
 
 interface Props {
   className?: string;
@@ -9,13 +11,15 @@ interface Props {
   onClick: (defaultValue: any, id: string) => any;
 }
 
-function formatValue(value: any) {
-  if (Array.isArray(value) && value.length === 2 && !isNaN(value[0])) {
-    return value[0] + ' to ' + value[1];
+const formatValue = (filter: ActiveFilter) => {
+  if (Array.isArray(filter.value) && filter.value.length === 2 && !isNaN(filter.value[0])) {
+    return filter.value[0] + ' to ' + filter.value[1];
+  } else if (filter.id === 'pointgroup') {
+    return formatPointGroup(filter.value);
   } else {
-    return value.toString();
+    return filter.value.toString();
   }
-}
+};
 
 export const ActiveFilterButtons: React.FC<Props> = props => {
   return (
@@ -28,7 +32,7 @@ export const ActiveFilterButtons: React.FC<Props> = props => {
           >
             <FaTimes />
             <span className="ml-1">
-              {f.displayName}: {formatValue(f.value)}
+              {f.displayName}: {formatValue(f)}
             </span>
           </Button>
         </div>

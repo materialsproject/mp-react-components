@@ -29,7 +29,8 @@ import katex from 'katex';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
 import { SearchUI } from './components/search/SearchUI';
-import { materialsColumns, materialsGroups, moleculesColumns, moleculesGroups } from './components/search/SearchUI/data';
+import { materialsColumns, materialsGroups } from './data/materials';
+import { moleculesColumns, moleculesGroups } from './data/molecules';
 import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 
 const latexify = (string, options) => {
@@ -675,6 +676,15 @@ ReactDOM.render(
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
       />
+      {/* <h1 className="title">Materials Explorer</h1>
+      <SearchUI
+          resultLabel="material"
+          columns={materialsColumns}
+          filterGroups={materialsGroups}
+          baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
+          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+          apiKey={process.env.REACT_APP_API_KEY}
+        /> */}
     </div>
   </>,
 

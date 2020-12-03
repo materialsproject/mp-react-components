@@ -1,7 +1,9 @@
+import React from 'react';
 import * as XLSX from 'xlsx';
 import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
 import * as d3 from 'd3';
-import { spaceGroups } from './GroupSpaceSearch/spacegroups'; 
+import { spaceGroups } from '../../data/spaceGroups'; 
+import { pointGroups } from '../../data/pointGroups'; 
 
 export function convertArrayOfObjectsToCSV(array) {
   let result;
@@ -200,6 +202,15 @@ export const crystalSystemOptions = () => {
   }); 
 };
 
+export const pointGroupOptions = () => {
+  return pointGroups.map(val => {
+    return {
+      value: val,
+      label: val
+    }
+  });
+};
+
 export const pluralize = (noun) => {
   let plural = noun + 's';
   const specialNouns = {
@@ -227,4 +238,42 @@ export const parseFormula = (str: string) => {
   const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
   const formula = capitalLetters > 1 || str.match(/[0-9]/gi) ? str : null;
   return formula;
+}
+
+export const formatPointGroup = (pointGroup: string): JSX.Element => {
+  if (pointGroup && typeof pointGroup === 'string') {
+    const firstCharacter = pointGroup.substring(0,1);
+    const subCharacters = pointGroup.substring(1);
+    const unicodeSubCharacters = subCharacters.replace('*', '\u221E');
+    return (
+      <span>
+        <span>{firstCharacter}</span>
+        <sub>{unicodeSubCharacters}</sub>
+      </span>
+    );
+  } else {
+    return <span></span>;
+  }
+};
+
+export const formatFormula = (formula: string): JSX.Element => {
+  if (formula && typeof formula === 'string') {
+    const splitFormula: string[] = formula.split(/([0-9]+)/g);
+    const formulaItem = (str: string) => {
+      if (parseInt(str)) {
+        return <sub>{str}</sub>;
+      } else {
+        return <span>{str}</span>;
+      }
+    };
+    return (
+      <span>
+        {splitFormula.map((s, i) => (
+          <span key={i}>{formulaItem(s)}</span>
+        ))}
+      </span>
+    );
+  } else {
+    return <span></span>;
+  }
 }

@@ -108,6 +108,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
         case FilterType.SELECT_SPACEGROUP_NUMBER:
         case FilterType.SELECT_CRYSTAL_SYSTEM:
+        case FilterType.SELECT_POINTGROUP:
         case FilterType.SELECT:
           const selected = f.props.options.filter(option => option.value === state.filterValues[f.id]);
           return (

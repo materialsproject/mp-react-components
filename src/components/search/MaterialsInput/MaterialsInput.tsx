@@ -6,8 +6,9 @@ import {
   elementsArrayToElementState,
   formulaStringToArrays,
   getTruthyKeys,
-  arrayToDelimitedString
-} from '../../search/utils';
+  arrayToDelimitedString,
+  formatFormula
+} from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
@@ -289,7 +290,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
               className="dropdown-item"
               onMouseDown={() => props.onChange(d._id)}
             >
-              {d._id}
+              {formatFormula(d._id)}
             </a>
           ))}
         </div>

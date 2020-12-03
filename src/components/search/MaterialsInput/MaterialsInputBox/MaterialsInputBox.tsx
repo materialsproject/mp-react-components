@@ -10,7 +10,7 @@ import {
   parseElements,
   parseSmiles,
   parseFormula
-} from '../../../search/utils';
+} from '../../utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
 import { useDebounce } from '../../../../utils/hooks';

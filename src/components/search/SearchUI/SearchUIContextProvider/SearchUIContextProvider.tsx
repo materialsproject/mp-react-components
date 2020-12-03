@@ -9,15 +9,14 @@ import {
   ActiveFilter,
   SearchState,
   Column,
-  initColumns,
-  initFilterGroups,
   ColumnFormat
 } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions } from '../../utils';
+import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions, pointGroupOptions, formatPointGroup, formatFormula } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { spaceGroups } from '../../GroupSpaceSearch/space-groups';
+import { spaceGroups } from '../../../../data/spaceGroups';
+import { pointGroups } from '../../../../data/pointGroups';
 import { Link } from '../../../navigation/Link';
 
 /**
@@ -133,8 +132,8 @@ const getState = (
             filterValues[f.id] !== null &&
             filterValues[f.id] !== ''
           ) {
-            const spaceGroup = spaceGroups.find(d => d["space-group.symbol"] === filterValues[f.id]);
-            const formattedSymbol = spaceGroup ? spaceGroup["uni-symbol"] : filterValues[f.id];
+            const spaceGroup = spaceGroups.find(d => d["symbol"] === filterValues[f.id]);
+            const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : filterValues[f.id];
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -202,25 +201,7 @@ const initColumns = (columns: Column[]) => {
         return c;
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {
-          if (row[c.selector] && typeof row[c.selector] === 'string') {
-            const splitFormula: string[] = row[c.selector].split(/([0-9]+)/g);
-            const formulaItem = (str: string) => {
-              if (parseInt(str)) {
-                return <sub>{str}</sub>;
-              } else {
-                return <span>{str}</span>;
-              }
-            };
-            return (
-              <span>
-                {splitFormula.map((s, i) => (
-                  <span key={i}>{formulaItem(s)}</span>
-                ))}
-              </span>
-            );
-          } else {
-            return <span></span>;
-          }
+          return formatFormula(row[c.selector]);
         };
         return c;
       case ColumnFormat.LINK:
@@ -245,6 +226,11 @@ const initColumns = (columns: Column[]) => {
           const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
           return formattedSymbol;
         }
+      case ColumnFormat.POINTGROUP:
+        c.cell = (row: any) => {
+          return formatPointGroup(row[c.selector]);
+        };
+        return c;
       default:
         return c;
     }
@@ -284,6 +270,14 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = {options: crystalSystemOptions()};
           return f;
+        case FilterType.SELECT_POINTGROUP:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          f.props = {
+            options: pointGroupOptions(),
+            formatOptionLabel: ({ value, label, customAbbreviation }) => {
+              return formatPointGroup(label);
+            }
+          };
         default:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
