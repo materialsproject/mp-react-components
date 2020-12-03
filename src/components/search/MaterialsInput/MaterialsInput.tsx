@@ -196,6 +196,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       field={props.field}
       debounce={props.debounce}
       isChemSys={props.isChemSys}
+      allowSmiles={props.allowSmiles}
       onChange={props.onChange}
       onFieldChange={props.onFieldChange}
       onSubmit={props.onSubmit ? handleSubmit : undefined}

@@ -7,7 +7,9 @@ import {
   formulaStringToArrays,
   getTruthyKeys,
   arrayToDelimitedString,
-  parseElements
+  parseElements,
+  parseSmiles,
+  parseFormula
 } from '../../../search/utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
@@ -81,8 +83,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
     const newValue = inputValue;
-    const capitalLettersMatch = newValue.match(/[A-Z]/g);
-    const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
+    const shouldCheckField = props.onFieldChange && newValue;
     let newMaterialsInputField = props.field;
     let newDelimiter = delimiter;
     let newPtActionsToDispatch: DispatchAction[] = [];
@@ -93,14 +94,14 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
      * Field name switches to FORMULA if the input doesn't contain a delimiter
      * and does contain multiple capital letters or a number.
      */
-    if (props.onFieldChange && newValue && (newValue.indexOf('mp') === 0 || newValue.indexOf('mvc') === 0)) {
+    if (shouldCheckField && (newValue.indexOf('mp') === 0 || newValue.indexOf('mvc') === 0 || newValue.indexOf('mol') === 0)) {
       newMaterialsInputField = MaterialsInputField.MP_ID;
-    } else if (props.onFieldChange && newValue && newValue.match(/,|-|\s/gi)) {
+    } else if (shouldCheckField && newValue.match(/,|-|\s/gi)) {
       newMaterialsInputField = MaterialsInputField.ELEMENTS;
-    } else if (props.onFieldChange && newValue &&  (capitalLetters > 1 || newValue.match(/[0-9]/gi))) {
-      newMaterialsInputField = MaterialsInputField.FORMULA;
-    } else if (props.allowSmiles) {
+    } else if (shouldCheckField && props.allowSmiles && parseSmiles(newValue)) {
       newMaterialsInputField = MaterialsInputField.SMILES;
+    } else if (shouldCheckField && parseFormula(newValue)) {
+      newMaterialsInputField = MaterialsInputField.FORMULA;
     }
 
     switch (newMaterialsInputField) {
@@ -214,11 +215,9 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
               newValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
           }
           break;
-        case MaterialsInputField.MP_ID:
+        default:
           newValue = arrayToDelimitedString(enabledElementsList, delimiter);
           if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
-          break;
-        default:
           return;
       }
       setInputValue(newValue);
