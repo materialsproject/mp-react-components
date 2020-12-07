@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
@@ -22,6 +22,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [columns, setColumns] = useState(state.columns);
+  // const [resultsPerPage, setResultsPerPage] = useState(state.resultsPerPage);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
@@ -33,6 +34,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
+    // setResultsPerPage(perPage);
   };
 
   const handleSort = (column, sortDirection) => {
@@ -144,30 +146,40 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       </Menu>
     </MenuWrapper>;
 
-const resultsPerPageOptions = [10, 15, 30, 50, 75];
-const resultsPerPageMenu =
-  <MenuWrapper 
-    className='dropdown is-right is-active has-text-left mr-1'
-    onSelection={handlePerRowsChange}
-  >
-    <div className="dropdown-trigger">
-      <Button className='button'>
-        <span>Results per page: {state.resultsPerPage}</span>
-        <span className="icon"><FaAngleDown/></span>
-      </Button>
-    </div>
-    <Menu className='dropdown-menu'>
-      <ul className="dropdown-content">
-        {resultsPerPageOptions.map((d, i) => (
-          <MenuItem key={i} value={d}>
-            <li className={classNames('dropdown-item', {'is-active': d === state.resultsPerPage})}>
-              {d}
-            </li>
-          </MenuItem>
-        ))}
-      </ul>
-    </Menu>
-  </MenuWrapper>;
+  const resultsPerPageOptions = [10, 15, 30, 50, 75];
+  const resultsPerPageMenu =
+    <MenuWrapper 
+      className='dropdown is-right is-active has-text-left mr-1'
+      onSelection={handlePerRowsChange}
+    >
+      <div className="dropdown-trigger">
+        <Button className='button'>
+          <span>Results per page: {state.resultsPerPage}</span>
+          <span className="icon"><FaAngleDown/></span>
+        </Button>
+      </div>
+      <Menu className='dropdown-menu'>
+        <ul className="dropdown-content">
+          {resultsPerPageOptions.map((d, i) => (
+            <MenuItem key={i} value={d}>
+              <li className={classNames('dropdown-item', {'is-active': d === state.resultsPerPage})}>
+                {d}
+              </li>
+            </MenuItem>
+          ))}
+        </ul>
+      </Menu>
+    </MenuWrapper>;
+
+  const CustomPaginator = () => (
+    <Paginator
+      rowCount={state.totalResults}
+      rowsPerPage={state.resultsPerPage}
+      currentPage={state.page}
+      onChangePage={handlePageChange}
+      onChangeRowsPerPage={handlePerRowsChange}
+    />
+  );
 
   return (
     <div>
@@ -208,12 +220,7 @@ const resultsPerPageMenu =
             highlightOnHover
             pagination
             paginationServer
-            paginationDefaultPage={state.page}
-            paginationComponent={Paginator}
-            paginationTotalRows={state.totalResults}
-            paginationPerPage={state.resultsPerPage}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handlePerRowsChange}
+            paginationComponent={CustomPaginator}
             sortServer
             sortIcon={<FaCaretDown/>}
             defaultSortField={state.sortField}

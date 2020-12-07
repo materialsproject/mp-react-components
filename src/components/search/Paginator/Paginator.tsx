@@ -1,7 +1,8 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { getPageCount } from '../utils';
 
 interface Props {
   rowsPerPage: number;
@@ -18,7 +19,7 @@ export const Paginator: React.FC<Props> = ({
   onChangeRowsPerPage,
   currentPage
 }) => {
-  const pageCount = Math.ceil(rowCount / rowsPerPage);
+  const [pageCount, setPageCount] = useState(getPageCount(rowCount, rowsPerPage));
 
   const getPaginationItem = (pageNumber: number) => {
     const isCurrent = currentPage === pageNumber;
@@ -87,6 +88,14 @@ export const Paginator: React.FC<Props> = ({
   } else if (currentPage > pageCount - 3) {
     paginationItems = pageIsWithinFourOfLast;
   }
+
+  /**
+   * This effect handles changes to rowsPerPage prop
+   * that occur outside this component
+   */
+  useEffect(() => {
+    setPageCount(getPageCount(rowCount, rowsPerPage));
+  }, [rowsPerPage]);
 
   return (
     <nav className="pagination is-small is-centered pt-3" role="navigation" aria-label="pagination">

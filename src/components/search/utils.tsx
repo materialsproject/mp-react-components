@@ -276,4 +276,8 @@ export const formatFormula = (formula: string): JSX.Element => {
   } else {
     return <span></span>;
   }
-}
+};
+
+export const getPageCount = (totalResults: number, resultsPerPage: number) => {
+  return Math.ceil(totalResults / resultsPerPage);
+};

@@ -667,7 +667,7 @@ const emptyObject = {};
 ReactDOM.render(
   <>
     <div className="p-4">
-      <h1 className="title">Molecules Explorer</h1>
+      {/* <h1 className="title">Molecules Explorer</h1>
       <SearchUI
         resultLabel="molecule"
         columns={moleculesColumns}
@@ -675,8 +675,8 @@ ReactDOM.render(
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''}
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
-      />
-      {/* <h1 className="title">Materials Explorer</h1>
+      /> */}
+      <h1 className="title">Materials Explorer</h1>
       <SearchUI
           resultLabel="material"
           columns={materialsColumns}
@@ -684,7 +684,7 @@ ReactDOM.render(
           baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
           apiKey={process.env.REACT_APP_API_KEY}
-        /> */}
+        />
     </div>
   </>,
 

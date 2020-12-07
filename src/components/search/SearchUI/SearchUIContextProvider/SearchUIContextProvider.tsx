@@ -13,7 +13,7 @@ import {
 } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions, pointGroupOptions, formatPointGroup, formatFormula } from '../../utils';
+import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions, pointGroupOptions, formatPointGroup, formatFormula, getPageCount } from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../../../data/spaceGroups';
 import { pointGroups } from '../../../../data/pointGroups';
@@ -438,10 +438,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState(currentState => {
+              const totalResults = result.data.meta.total;
+              const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
+              const page = currentState.page > pageCount ? pageCount : currentState.page;
               return {
                 ...currentState,
                 results: result.data.data,
-                totalResults: result.data.meta.total,
+                totalResults: totalResults,
+                page: page,
                 loading: loadingValue
               };
             });
