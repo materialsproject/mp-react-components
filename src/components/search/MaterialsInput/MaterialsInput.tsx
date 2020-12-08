@@ -19,6 +19,7 @@ import { SelectableTable } from '../../periodic-table/table-state';
 import classNames from 'classnames';
 import { useDebounce, usePrevious } from '../../../utils/hooks';
 import axios from 'axios';
+import { MaterialsInputFormulaButtons } from './MaterialsInputFormulaButtons';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -252,13 +253,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       </div>;
   }
 
-  const formulaButtons = 
-    <button 
-      className="button"
-      onClick={() => setInputValue(inputValue + '2')}
-    >
-      2
-    </button>;
+  const formulaButtons = <MaterialsInputFormulaButtons onClick={(v) => setInputValue(inputValue + v)}/>;
 
   /**
    * This effect triggers when the input value changes
