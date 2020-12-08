@@ -136,6 +136,7 @@ export const MaterialsInput: React.FC<Props> = props => {
 
   let materialsInputField: JSX.Element | null = null;
   let tooltipControl: JSX.Element | null = null;
+  let formulaButtons: JSX.Element | null = null;
   let chemSysCheckbox: JSX.Element | null = null;
   let autocompleteMenu: JSX.Element | null = null;
   const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
@@ -253,7 +254,9 @@ export const MaterialsInput: React.FC<Props> = props => {
       </div>;
   }
 
-  const formulaButtons = <MaterialsInputFormulaButtons onClick={(v) => setInputValue(inputValue + v)}/>;
+  if (props.field === 'formula') {
+    formulaButtons = <MaterialsInputFormulaButtons onClick={(v) => setInputValue(inputValue + v)}/>;
+  }
 
   /**
    * This effect triggers when the input value changes

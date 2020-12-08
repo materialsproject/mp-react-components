@@ -231,7 +231,7 @@ export const parseSmiles = (str: string) => {
 
 /**
  * Perform a naive validation of a string as a formula
- * Returns the string if it has at least one capital letter or a number
+ * Returns the string if it has more than one capital letter or a number
  */
 export const parseFormula = (str: string) => {
   const capitalLettersMatch = str.match(/[A-Z]/g);

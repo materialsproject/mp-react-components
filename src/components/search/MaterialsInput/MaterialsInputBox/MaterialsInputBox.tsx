@@ -91,6 +91,8 @@ export const MaterialsInputBox: React.FC<Props> = props => {
       newMaterialsInputField = MaterialsInputField.SMILES;
     } else if (shouldCheckField && parseFormula(newValue)) {
       newMaterialsInputField = MaterialsInputField.FORMULA;
+    } else if (shouldCheckField) {
+      newMaterialsInputField = MaterialsInputField.ELEMENTS;
     }
 
     switch (newMaterialsInputField) {
