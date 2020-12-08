@@ -112,7 +112,8 @@ export const moleculesColumns: Column[] = [
     name: 'Molecule Id',
     selector: 'task_id',
     format: ColumnFormat.LINK,
-    formatArg: '/molecules/'
+    formatArg: '/molecules/',
+    minWidth: '130px'
   },
   {
     name: 'Formula',

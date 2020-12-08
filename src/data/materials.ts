@@ -23,7 +23,7 @@ export const materialsGroups: FilterGroup[] = [
         }
       },
       {
-        name: 'Formula',
+        name: 'Formula or Chemical System',
         id: 'formula',
         type: FilterType.MATERIALS_INPUT,
         props: {
@@ -171,7 +171,8 @@ export const materialsColumns: Column[] = [
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    format: ColumnFormat.FORMULA
+    format: ColumnFormat.FORMULA,
+    minWidth: '130px'
   },
   {
     name: 'Volume',

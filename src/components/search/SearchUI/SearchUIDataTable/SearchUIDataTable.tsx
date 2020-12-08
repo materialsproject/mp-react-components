@@ -83,6 +83,14 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     }
   };
 
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '3em', // override the row height
+      }
+    }
+  };
+
   const columnsMenu =
     <MenuWrapper 
       className='dropdown is-right is-active has-text-left'
@@ -226,6 +234,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
             defaultSortField={state.sortField}
             defaultSortAsc={state.sortDirection === 'desc' ? false : true}
             onSort={handleSort}
+            customStyles={customStyles}
           />
         </div>
       </div>

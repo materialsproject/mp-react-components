@@ -226,6 +226,7 @@ const initColumns = (columns: Column[]) => {
           const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
           return formattedSymbol;
         }
+        return c;
       case ColumnFormat.POINTGROUP:
         c.cell = (row: any) => {
           return formatPointGroup(row[c.selector]);
