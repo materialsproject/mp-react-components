@@ -100,6 +100,14 @@ export interface SearchUIProps {
    * In all other cases, an "s" is appended to resultLabel
    */
   resultLabel?: string;
+  /**
+   * Optionally add a help icon with a tooltip in the search bar
+   * This should be used to provide instructions on how to use the search bar
+   * e.g. 
+   *  "Type in a comma-separated list of element symbols (e.g. Ga, N), 
+   *  a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). 
+   *  You can also click elements on the periodic table to add them to your search."
+   */
   searchBarTooltip?: string;
 }
 

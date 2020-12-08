@@ -23,7 +23,7 @@ export const materialsGroups: FilterGroup[] = [
         }
       },
       {
-        name: 'Formula or Chemical System',
+        name: 'Formula',
         id: 'formula',
         type: FilterType.MATERIALS_INPUT,
         props: {
