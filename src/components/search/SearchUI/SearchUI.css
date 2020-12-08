@@ -10,10 +10,10 @@
 }
 
 .search-ui .panel-heading {
-  position: absolute;
+  /* position: absolute;
   width: 100%;
   z-index: 4;
-  height: 70px;
+  height: 70px; */
   background: #ebebeb;
 }
 
@@ -21,12 +21,12 @@
   border-left: 4px solid #3273dc;
 }
 
-.search-ui .panel-block-container {
+/* .search-ui .panel-block-container {
   max-height: 100%;
   overflow: visible;
   position: relative;
   padding-top: 70px;
-}
+} */
 
 .search-ui .panel-block-title {
   margin: -0.5em -0.75em;

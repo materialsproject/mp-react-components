@@ -60,6 +60,7 @@ export const SearchUISearchBar: React.FC = () => {
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
       allowSmiles={allowSmiles}
+      tooltip={state.searchBarTooltip}
     />
   );
 };

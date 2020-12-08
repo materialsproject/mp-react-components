@@ -11,7 +11,7 @@ import {
 } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
+import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaQuestionCircle, FaTimes } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
@@ -62,6 +62,7 @@ interface MaterialsInputProps extends MaterialsInputBoxProps {
   hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?:string;
   autocompleteApiKey?: string;
+  tooltip?: string;
 }
 
 interface FormulaSuggestion {
@@ -190,6 +191,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     }
   }, [formulaSuggestions]);
 
+  let materialsInputField: JSX.Element | null = null; 
+  let tooltipControl: JSX.Element | null = null;
+  let chemSysCheckbox: JSX.Element | null = null;
+  let autocompleteMenu: JSX.Element | null = null;
+  const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
+  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
+
   const materialsInputControl = 
     <MaterialsInputBox
       value={props.value}
@@ -208,11 +216,18 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       setImmediateInputValue={setImmediateInputValue}
     />;
 
-  let materialsInputField: JSX.Element | null = null; 
-  let chemSysCheckbox: JSX.Element | null = null;
-  const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
-  let autocompleteMenu: JSX.Element | null = null;
-  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
+  if (props.tooltip) {
+    tooltipControl = 
+      <Control>
+        <button
+          type="button"
+          className="button has-tooltip-multiline has-tooltip-bottom" 
+          data-tooltip={props.tooltip}
+        >
+          <FaQuestionCircle/>
+        </button>
+      </Control>
+  }
 
   if (props.onSubmit) {
     materialsInputField =
@@ -233,6 +248,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             </button>            
           </Control>
           {materialsInputControl}
+          {tooltipControl}
           <Control>
             <Button color="primary" type="submit">
               Search

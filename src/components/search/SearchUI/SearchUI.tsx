@@ -100,6 +100,7 @@ export interface SearchUIProps {
    * In all other cases, an "s" is appended to resultLabel
    */
   resultLabel?: string;
+  searchBarTooltip?: string;
 }
 
 export const SearchUI: React.FC<SearchUIProps> = props => {
