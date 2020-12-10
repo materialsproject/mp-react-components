@@ -106,25 +106,3 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-.materials-input {
-  position: relative;
-}
-
-.materials-input .autocomplete-right {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 100%;
-  padding: 0;
-  margin-left: 1em;
-  border: solid 1px #eee;
-  border-radius: 5px;
-}
-
-.materials-input .autocomplete-label {
-  font-size: 0.8em;
-  font-style: italic;
-  padding: 0 0 0.5em 1em;
-
-}

@@ -20,6 +20,7 @@ import classNames from 'classnames';
 import { useDebounce, usePrevious } from '../../../utils/hooks';
 import axios from 'axios';
 import { MaterialsInputFormulaButtons } from './MaterialsInputFormulaButtons';
+import './MaterialsInput.css';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -180,7 +181,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       <Control>
         <button
           type="button"
-          className="button has-tooltip-multiline has-tooltip-bottom" 
+          className="button has-tooltip-multiline has-tooltip-bottom has-text-grey-light" 
           data-tooltip={props.tooltip}
         >
           <FaQuestionCircle/>
