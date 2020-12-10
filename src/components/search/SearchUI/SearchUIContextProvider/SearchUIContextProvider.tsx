@@ -488,6 +488,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
         return {
           ...currentState,
+          page: 1,
           filterValues,
           activeFilters
         };

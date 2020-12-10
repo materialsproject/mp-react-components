@@ -83,6 +83,10 @@
   flex-flow: wrap;
 }
 
+.search-ui .table-header .subtitle {
+  height: 0;
+}
+
 .search-ui .progress-container {
   /* height: 0;
   overflow-y: visible;

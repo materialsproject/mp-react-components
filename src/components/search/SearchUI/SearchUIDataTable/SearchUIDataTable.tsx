@@ -8,6 +8,7 @@ import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menub
 import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
 import { pluralize } from '../../utils';
+import { getPageCount } from '../../utils';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -22,11 +23,13 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [columns, setColumns] = useState(state.columns);
-  // const [resultsPerPage, setResultsPerPage] = useState(state.resultsPerPage);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
+
+  const lowerResultBound = (state.page - 1) * state.resultsPerPage;
+  const upperResultBound = lowerResultBound + state.resultsPerPage;
 
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -34,7 +37,6 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
-    // setResultsPerPage(perPage);
   };
 
   const handleSort = (column, sortDirection) => {
@@ -63,22 +65,38 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
-        <p className="title is-4">
-          All <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}
+        <p className="title is-5">
+          <span className="has-text-weight-normal">All </span>
+          <span className="has-text-weight-bold"><NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}</span>
         </p>
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
-        <p className="title is-4">
-            <NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} />
-            {`${state.totalResults === 1 
-              ? ' ' + state.resultLabel + ' matches'
-              : ' ' + pluralize(state.resultLabel) + ' match'} your search`}
+        <p className="title is-5">
+            <NumberFormat 
+              className="has-text-weight-bold" 
+              value={state.totalResults} 
+              displayType={'text'} 
+              thousandSeparator={true} 
+            />
+            {state.totalResults === 1 && (
+              <span>
+                <span className="has-text-weight-bold"> {state.resultLabel}</span>
+                <span className="has-text-weight-normal"> matches</span>
+              </span>
+            )}
+            {state.totalResults !== 1 && (
+              <span>
+                <span className="has-text-weight-bold"> {pluralize(state.resultLabel)}</span>
+                <span className="has-text-weight-normal"> match</span>
+              </span>
+            )}
+            <span className="has-text-weight-normal"> your search</span>
         </p>
       );
     } else {
       return (
-        <p className="title is-4">Loading {pluralize(state.resultLabel)}...</p>
+        <p className="title is-5 has-text-weight-normal">Loading {pluralize(state.resultLabel)}...</p>
       );
     }
   };
@@ -86,7 +104,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const customStyles = {
     rows: {
       style: {
-        minHeight: '3em', // override the row height
+        minHeight: '3em'
       }
     }
   };
@@ -196,6 +214,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
           <div className="table-header">
             <div>
               <TableHeaderTitle />
+              <p className="subtitle is-7">Showing {lowerResultBound} to {upperResultBound}</p>
             </div>
             <div className="progress-container">
               {state.loading &&
