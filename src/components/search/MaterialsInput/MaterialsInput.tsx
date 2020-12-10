@@ -96,6 +96,13 @@ export const MaterialsInput: React.FC<Props> = props => {
     }
   };
 
+  const hideAutoCompleteAndPeriodicTable = () => {
+    setShowAutocomplete(false);
+    if (props.periodicTableMode === 'onFocus') {
+      return setShowPeriodicTable(false);
+    }
+  }
+
   /**
    * When blurring out of the input,
    * make sure the user is not clicking on a periodic table element button.
@@ -105,12 +112,22 @@ export const MaterialsInput: React.FC<Props> = props => {
   const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
     if (!relatedTarget || relatedTarget.className.indexOf('mat-element') === -1 ) {
-      setShowAutocomplete(false);
-      if (props.periodicTableMode === 'onFocus') {
-        return setShowPeriodicTable(false);
-      }
+      hideAutoCompleteAndPeriodicTable();
     } else {
       e.target.focus();
+    }
+  };
+
+  /**
+   * If the user is tabbing out of the input,
+   * force autocomplete and periodic table to close.
+   * This allows users to tab past MaterialInputs that 
+   * only show periodic tables on focus.
+   * Tha above blur function doesn't work because the relatedTarget on tab would be a mat-element.
+   */
+  const getOnKeyDownProp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 9) {
+      hideAutoCompleteAndPeriodicTable();
     }
   };
 
@@ -153,6 +170,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       onSubmit={props.onSubmit ? handleSubmit : undefined}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
+      onKeyDown={getOnKeyDownProp}
       liftInputRef={ref => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
     />;
@@ -340,11 +358,13 @@ export const MaterialsInput: React.FC<Props> = props => {
             'is-hidden-by-height': !showPeriodicTable,
             'mt-3': showPeriodicTable
           })}
+          aria-hidden={!showPeriodicTable}
           onMouseDown={event => {
             if (inputRef && inputRef.current) inputRef.current.focus();
           }}
         >
           <SelectableTable
+            disabled={!showPeriodicTable}
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}
             hiddenElements={[]}

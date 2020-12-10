@@ -56,7 +56,8 @@ export interface TableProps {
   plugin?: any;
   children?: any;
   selectorWidget?: any;
-  inputWidget?: any;
+  /** toggle disabling all table components */
+  disabled?: boolean;
 }
 
 export enum TableLayout {
@@ -106,7 +107,7 @@ export function TableSpacer({
   showSwitcher,
   plugin,
   selectorWidget,
-  inputWidget
+  disabled
 }: any) {
   const detailedElement = useDetailedElement();
 
@@ -117,8 +118,7 @@ export function TableSpacer({
         <div className="input-container"></div>
       </div>
       <div className="second-span">
-        {selectorWidget}
-        {inputWidget}
+        {!disabled && (selectorWidget)}
       </div>
       <div className="element-description">
         {detailedElement && (
@@ -153,8 +153,8 @@ export function Table({
   colorScheme,
   showSwitcher,
   selectorWidget,
-  inputWidget,
-  plugin
+  plugin,
+  disabled
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
@@ -211,10 +211,10 @@ export function Table({
       >
         <TableSpacer
           plugin={plugin}
-          inputWidget={inputWidget}
           selectorWidget={selectorWidget}
           showSwitcher={showSwitcher}
           onTableSwitcherClicked={() => setIsShown(!isShown)}
+          disabled={disabled}
         />
         {TABLE_V2.map((element: MatElement) => (
           <PeriodicElement
@@ -234,7 +234,7 @@ export function Table({
             }
             key={`${element.symbol}--${element.number}`}
             hidden={hiddenElement[element.symbol]}
-            disabled={disabledElement[element.symbol] || DEFAULT_DISABLED_ELEMENTS[element.symbol]}
+            disabled={disabled || disabledElement[element.symbol] || DEFAULT_DISABLED_ELEMENTS[element.symbol]}
             enabled={enabledElement[element.symbol]}
             element={element}
           />

@@ -71,6 +71,7 @@ export function PeriodicElement({
         cl.hidden ? 'hidden' : ''
       } ${cl.enabled ? 'enabled' : ''}
           ${element.hasGroup ? 'mat-group' : ''}  ${cl.disabled ? 'disabled' : ''}`}
+      disabled={cl.disabled || cl.hidden}
       aria-disabled={cl.disabled}
       aria-hidden={cl.hidden}
     >

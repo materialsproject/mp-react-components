@@ -27,6 +27,7 @@ interface Props extends MaterialsInputSharedProps {
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onFocus?: (value?: any) => any;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => any;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => any;
 }
 
 interface DispatchAction {
@@ -225,6 +226,7 @@ export const MaterialsInputBox: React.FC<Props> = props => {
         onBlur={handleBlur}
         placeholder={props.onSubmit ? 'Search by elements, formula, or ID' : undefined}
         ref={inputRef}
+        onKeyDown={props.onKeyDown}
       />
     </Control>;
 

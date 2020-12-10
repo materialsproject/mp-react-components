@@ -20,7 +20,8 @@ interface SelectableTableProps {
   forwardOuterChange?: boolean;
   selectorWidget?;
   children?;
-  inputWidget?;
+  /** toggle disabling all table components */
+  disabled?: boolean;
 }
 
 export function SelectableTable(props: SelectableTableProps) {
