@@ -193,11 +193,11 @@ const initColumns = (columns: Column[]) => {
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
-        c.format = (row: any) => row[c.selector] ? row[c.selector].toFixed(decimalPlaces) : '';
+        c.format = (row: any) => isNaN(row[c.selector]) ? '' : row[c.selector].toFixed(decimalPlaces);
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
         const sigFigs = c.formatArg ? c.formatArg : 5;
-        c.format = (row: any) => row[c.selector] ? row[c.selector].toPrecision(sigFigs) : '';
+        c.format = (row: any) => isNaN(row[c.selector]) ? '' : row[c.selector].toPrecision(sigFigs);
         return c;
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {
