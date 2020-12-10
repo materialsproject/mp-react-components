@@ -28,6 +28,7 @@ const mountNode = document.getElementById(mountNodeSelector);
 import katex from 'katex';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import '../node_modules/bulma/css/bulma.min.css';
+import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { SearchUI } from './components/search/SearchUI';
 import { materialsColumns, materialsGroups } from './data/materials';
 import { moleculesColumns, moleculesGroups } from './data/molecules';
@@ -678,14 +679,14 @@ ReactDOM.render(
       /> */}
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
-        resultLabel="material"
-        columns={materialsColumns}
-        filterGroups={materialsGroups}
-        baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
-        autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
-        apiKey={process.env.REACT_APP_API_KEY}
-        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-      />
+          resultLabel="material"
+          columns={materialsColumns}
+          filterGroups={materialsGroups}
+          baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
+          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+          apiKey={process.env.REACT_APP_API_KEY}
+          searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        />
     </div>
   </>,
 

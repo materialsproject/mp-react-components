@@ -12,7 +12,7 @@ import {
   parseFormula
 } from '../../utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
-import { MaterialsInputField, MaterialsInputBoxProps } from '../MaterialsInput';
+import { MaterialsInputField, MaterialsInputSharedProps } from '../MaterialsInput';
 import { useDebounce } from '../../../../utils/hooks';
 const { Input, Field, Control } = Form;
 
@@ -21,18 +21,24 @@ const { Input, Field, Control } = Form;
  * Handles the two-way binding between input and periodic table
  */
 
+interface Props extends MaterialsInputSharedProps {
+  value: string;
+  setValue: (value: string) => void;
+  liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
+  onFocus?: (value?: any) => any;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => any;
+}
+
 interface DispatchAction {
   action: (payload: any) => void;
   payload?: any;
 }
 
-export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
+export const MaterialsInputBox: React.FC<Props> = props => {
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(() => props.isChemSys ? new RegExp('-') : new RegExp(','));
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState(props.value);
-  const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputField.ELEMENTS },
     { label: 'By formula', value: MaterialsInputField.FORMULA },
@@ -44,17 +50,8 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    * All side effects to this change are handled in an effect hook
    */
   const handleRawValueChange = e => {
-    setInputValue(e.target.value);
-    if (props.setImmediateInputValue) props.setImmediateInputValue(e.target.value);
+    props.setValue(e.target.value);
   };
-
-  // const handleSubmit = e => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   if (props.onSubmit) {
-  //     props.onSubmit();
-  //   }
-  // };
 
   const handleFocus = () => {
     if (props.onFocus) props.onFocus();
@@ -65,15 +62,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   };
 
   /**
-   * This effect is triggered when the value prop is changed directly from outside this component
-   * Here inputValue is set, triggering debouncedInputValue to get set after the debounce timer
-   */
-  useEffect(() => {
-    setInputValue(props.value);
-  }, [props.value]);
-
-  /**
-   * This effect triggers immediately after the inputValue changes
+   * This effect triggers immediately after the props.value changes
    * If onFieldChange prop is included, dynamically determine if the input
    * is an mp-id, list of elements, or formula.
    * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
@@ -82,7 +71,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
    */
   useEffect(() => {
     const enabledElementsList = getTruthyKeys(enabledElements);
-    const newValue = inputValue;
+    const newValue = props.value;
     const shouldCheckField = props.onFieldChange && newValue;
     let newMaterialsInputField = props.field;
     let newDelimiter = delimiter;
@@ -102,6 +91,8 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
       newMaterialsInputField = MaterialsInputField.SMILES;
     } else if (shouldCheckField && parseFormula(newValue)) {
       newMaterialsInputField = MaterialsInputField.FORMULA;
+    } else if (shouldCheckField) {
+      newMaterialsInputField = MaterialsInputField.ELEMENTS;
     }
 
     switch (newMaterialsInputField) {
@@ -163,7 +154,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
     setPtActionsToDispatch(newPtActionsToDispatch);
     setDelimiter(newDelimiter);
     if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
-  }, [inputValue]);
+  }, [props.value]);
 
   /**
    * This effect executes the periodic table context actions collected by the value effect (above)
@@ -174,16 +165,6 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
   useEffect(() => {
     ptActionsToDispatch.forEach(d => d.action(d.payload));
   }, [ptActionsToDispatch]);
-
-  /**
-   * This effect is triggered after the debouncedInputValue is set
-   * The debouncedInputValue is set with inputValue after the specified debounce time
-   * If no debounce prop is supplied, there is no debounce and debouncedInputValue is exactly the same as inputValue
-   * Triggers the onChange event prop for the value prop
-   */
-  useEffect(() => {
-    props.onChange(debouncedInputValue);
-  }, [debouncedInputValue]);
 
   /**
    * This effect handles direct interactions with the periodic table
@@ -202,10 +183,10 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
           break;
         case MaterialsInputField.FORMULA:
           if (lastAction.type === 'select') {
-            newValue = inputValue + enabledElementsList[enabledElementsList.length - 1];
+            newValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
             var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
-              inputValue
+              props.value
             );
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
               return enabledElementsList.indexOf(d) === -1;
@@ -220,7 +201,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
           if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
           return;
       }
-      setInputValue(newValue);
+      props.setValue(newValue);
     }
   }, [enabledElements]);
 
@@ -238,7 +219,7 @@ export const MaterialsInputBox: React.FC<MaterialsInputBoxProps> = props => {
       <input
         className="input"
         type="search"
-        value={inputValue}
+        value={props.value}
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

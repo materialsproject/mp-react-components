@@ -50,7 +50,6 @@ export const SearchUISearchBar: React.FC = () => {
   return (
     <MaterialsInput
       value={searchValue}
-      parsedValue={searchParsedValue}
       field={searchField}
       onChange={v => setSearchValue(v)}
       onFieldChange={field => setSearchField(field)}
@@ -60,6 +59,7 @@ export const SearchUISearchBar: React.FC = () => {
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
       allowSmiles={allowSmiles}
+      tooltip={state.searchBarTooltip}
     />
   );
 };

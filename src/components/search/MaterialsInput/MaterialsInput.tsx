@@ -11,14 +11,15 @@ import {
 } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaTimes } from 'react-icons/fa';
+import { FaBalanceScale, FaBandAid, FaBlender, FaCaretDown, FaCaretUp, FaQuestionCircle, FaTimes } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 import { SelectableTable } from '../../periodic-table/table-state';
 import classNames from 'classnames';
-import { usePrevious } from '../../../utils/hooks';
+import { useDebounce, usePrevious } from '../../../utils/hooks';
 import axios from 'axios';
+import { MaterialsInputFormulaButtons } from './MaterialsInputFormulaButtons';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -39,29 +40,25 @@ export enum MaterialsInputField {
   SMILES = 'smiles'
 }
 
-export interface MaterialsInputBoxProps {
+export interface MaterialsInputSharedProps {
   value: string;
-  parsedValue: string | string[];
   field: string;
-  debounce?: number;
   showFieldDropdown?: boolean;
   isChemSys?: boolean;
   allowSmiles?: boolean;
-  liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
-  onChange: (value: string) => void;
-  onPropsChange?: (propsObject: any) => void;
   onFieldChange?: (value: string) => void;
   onSubmit?: (value?: any) => any;
-  onFocus?: (value?: any) => any;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => any;
-  setImmediateInputValue?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface MaterialsInputProps extends MaterialsInputBoxProps {
+interface Props extends MaterialsInputSharedProps {
+  debounce?: number;
   periodicTableMode?: string;
   hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?:string;
   autocompleteApiKey?: string;
+  tooltip?: string;
+  onChange: (value: string) => void;
+  onPropsChange?: (propsObject: any) => void;
 }
 
 interface FormulaSuggestion {
@@ -71,9 +68,10 @@ interface FormulaSuggestion {
 
 let requestCount = 0;
 
-export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
+export const MaterialsInput: React.FC<Props> = props => {
+  const [inputValue, setInputValue] = useState(props.value);
+  const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
-  const [immediateInputValue, setImmediateInputValue] = useState(props.value);
   const [isChemSys, setIsChemSys] = useState<boolean>(() => props.isChemSys ? props.isChemSys : false);
   // const prevChemSys = usePrevious(isChemSys);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
@@ -136,83 +134,41 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     setIsChemSys(newIsChemSys);
   };
 
-  /**
-   * This effect triggers when the input value changes
-   * It handles modifying the chemsys flag (checked when input is dash-delimited or one element)
-   * It also handles fetching formula suggestions if the necessary props are supplied
-   */
-  
-  useEffect(() => {
-    handleChemSysCheck();
-    console.log(props.value);
-    if (
-      props.field === 'formula' &&
-      props.autocompleteApiKey &&
-      props.autocompleteFormulaUrl && 
-      props.value.length
-    ) {
-      requestCount++;
-      const requestIndex = requestCount;
-      axios.get(props.autocompleteFormulaUrl, {
-        params: {text: props.value},
-        headers: {'X-Api-Key': props.autocompleteApiKey}
-      }).then(result => {
-        console.log(result.data.data);
-        if (requestIndex === requestCount) {
-          setFormulaSuggestions(result.data.data);
-          console.log('in order: ' + props.value);
-          console.log('index: ' + requestIndex);
-          console.log('count: ' + requestCount);
-        } else {
-          console.log('out of order: ' + props.value);
-        }
-      }).catch(error => {
-        console.log(error);
-        if (requestIndex === requestCount) {
-          setFormulaSuggestions([]);
-        }
-      });
-    } else {
-      setFormulaSuggestions([]);
-    }
-  }, [props.value]);
-
-  /**
-   * This effect ensures that the visibility
-   * of the autocomplete menu responds to changes
-   * in the number of suggestions (if no suggestions, hide the menu)
-   */
-  useEffect(() => {
-    if (formulaSuggestions.length > 0 && document.activeElement === inputRef?.current) {
-      setShowAutocomplete(true);
-    } else {
-      setShowAutocomplete(false);
-    }
-  }, [formulaSuggestions]);
+  let materialsInputField: JSX.Element | null = null;
+  let tooltipControl: JSX.Element | null = null;
+  let formulaButtons: JSX.Element | null = null;
+  let chemSysCheckbox: JSX.Element | null = null;
+  let autocompleteMenu: JSX.Element | null = null;
+  const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
+  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
 
   const materialsInputControl = 
     <MaterialsInputBox
-      value={props.value}
-      parsedValue={props.parsedValue}
+      value={inputValue}
       field={props.field}
-      debounce={props.debounce}
       isChemSys={props.isChemSys}
       allowSmiles={props.allowSmiles}
-      onChange={props.onChange}
+      setValue={setInputValue}
       onFieldChange={props.onFieldChange}
       onSubmit={props.onSubmit ? handleSubmit : undefined}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       liftInputRef={ref => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
-      setImmediateInputValue={setImmediateInputValue}
     />;
 
-  let materialsInputField: JSX.Element | null = null; 
-  let chemSysCheckbox: JSX.Element | null = null;
-  const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
-  let autocompleteMenu: JSX.Element | null = null;
-  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
+  if (props.tooltip) {
+    tooltipControl = 
+      <Control>
+        <button
+          type="button"
+          className="button has-tooltip-multiline has-tooltip-bottom" 
+          data-tooltip={props.tooltip}
+        >
+          <FaQuestionCircle/>
+        </button>
+      </Control>
+  }
 
   if (props.onSubmit) {
     materialsInputField =
@@ -233,6 +189,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             </button>            
           </Control>
           {materialsInputControl}
+          {tooltipControl}
           <Control>
             <Button color="primary" type="submit">
               Search
@@ -297,6 +254,81 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       </div>;
   }
 
+  if (props.field === 'formula') {
+    formulaButtons = <MaterialsInputFormulaButtons onClick={(v) => setInputValue(inputValue + v)}/>;
+  }
+
+  /**
+   * This effect triggers when the input value changes
+   * It handles modifying the chemsys flag (checked when input is dash-delimited or one element)
+   * It also handles fetching formula suggestions if the necessary props are supplied
+   */
+  useEffect(() => {
+    handleChemSysCheck();
+    console.log(props.value);
+    if (
+      props.field === 'formula' &&
+      props.autocompleteApiKey &&
+      props.autocompleteFormulaUrl && 
+      props.value.length
+    ) {
+      requestCount++;
+      const requestIndex = requestCount;
+      axios.get(props.autocompleteFormulaUrl, {
+        params: {text: props.value},
+        headers: {'X-Api-Key': props.autocompleteApiKey}
+      }).then(result => {
+        console.log(result.data.data);
+        if (requestIndex === requestCount) {
+          setFormulaSuggestions(result.data.data);
+          console.log('in order: ' + props.value);
+          console.log('index: ' + requestIndex);
+          console.log('count: ' + requestCount);
+        } else {
+          console.log('out of order: ' + props.value);
+        }
+      }).catch(error => {
+        console.log(error);
+        if (requestIndex === requestCount) {
+          setFormulaSuggestions([]);
+        }
+      });
+    } else {
+      setFormulaSuggestions([]);
+    }
+  }, [props.value]);
+
+  /**
+   * This effect ensures that the visibility
+   * of the autocomplete menu responds to changes
+   * in the number of suggestions (if no suggestions, hide the menu)
+   */
+  useEffect(() => {
+    if (formulaSuggestions.length > 0 && document.activeElement === inputRef?.current) {
+      setShowAutocomplete(true);
+    } else {
+      setShowAutocomplete(false);
+    }
+  }, [formulaSuggestions]);
+
+  /**
+   * This effect is triggered when the value prop is changed from outside this component
+   * Here inputValue is set, triggering debouncedInputValue to get set after the debounce timer
+   */
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value]);
+
+  /**
+   * This effect is triggered after the debouncedInputValue is set
+   * The debouncedInputValue is set with inputValue after the specified debounce time
+   * If no debounce prop is supplied, there is no debounce and debouncedInputValue is exactly the same as inputValue
+   * Triggers the onChange event prop for the value prop
+   */
+  useEffect(() => {
+    props.onChange(debouncedInputValue);
+  }, [debouncedInputValue]);
+
   return (
     <div className="materials-input">
       <PeriodicContext>
@@ -316,6 +348,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}
             hiddenElements={[]}
+            selectorWidget={formulaButtons}
             onStateChange={enabledElements => {
               Object.keys(enabledElements).filter(el => enabledElements[el]);
             }}

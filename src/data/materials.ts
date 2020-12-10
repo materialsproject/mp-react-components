@@ -171,7 +171,8 @@ export const materialsColumns: Column[] = [
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    format: ColumnFormat.FORMULA
+    format: ColumnFormat.FORMULA,
+    minWidth: '130px'
   },
   {
     name: 'Volume',
