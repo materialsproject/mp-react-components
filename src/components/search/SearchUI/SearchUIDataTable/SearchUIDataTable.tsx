@@ -3,12 +3,12 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaCaretDown } from 'react-icons/fa';
+import { FaAngleDown, FaCaretDown, FaLink } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
 import { pluralize } from '../../utils';
-import { getPageCount } from '../../utils';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -19,15 +19,17 @@ interface Props {
   className?: string;
 }
 
+const componentHtmlId = uuidv4();
+
 export const SearchUIDataTable: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
+  const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
-
   const lowerResultBound = (state.page - 1) * state.resultsPerPage;
   const upperResultBound = lowerResultBound + state.resultsPerPage;
 
@@ -65,10 +67,19 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
-        <p className="title is-5">
-          <span className="has-text-weight-normal">All </span>
-          <span className="has-text-weight-bold"><NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}</span>
-        </p>
+        <div>
+          <a 
+            href={'#' + componentHtmlId} 
+            className="title is-5"
+            onMouseOver={() => setTitleHover(true)}
+            onMouseLeave={() => setTitleHover(false)}
+            onClick={() => setTitleHover(false)}
+          >
+            <span className="has-text-weight-normal">All </span>
+            <span className="has-text-weight-bold"><NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}</span>
+            {titleHover && <FaLink className="is-size-7 ml-1"/>}
+          </a>
+        </div>
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
@@ -208,7 +219,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   );
 
   return (
-    <div>
+    <div id={componentHtmlId}>
       <div className="columns mb-1">
         <div className="column pb-2">
           <div className="table-header">
