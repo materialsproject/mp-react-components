@@ -163,7 +163,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
                     }}
                     onChange={(e) => toggleColumn(i)}
                   />
-                  <span>{col.name}</span>
+                  <span>{col.nameString}</span>
                 </label>
               </li>
             </MenuItem>

@@ -18,6 +18,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../../../data/spaceGroups';
 import { pointGroups } from '../../../../data/pointGroups';
 import { Link } from '../../../navigation/Link';
+import classNames from 'classnames';
 // import * as d3 from 'd3';
 
 /**
@@ -181,6 +182,11 @@ const getState = (
   return { ...currentState, filterValues, activeFilters };
 };
 
+const getRowValueFromSelectorString = (selector: string, row: any) => {
+  const selectors = selector.split('.');
+  return selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
+};
+
 /**
  * Initialize columns with their proper format function
  * The "format" prop should initially be one of the ColumnFormat strings
@@ -191,12 +197,24 @@ const getState = (
 const initColumns = (columns: Column[]) => {
   return columns.map(c => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
+    c.nameString = c.name.toString();
+    c.name = 
+      <div className={classNames({
+        'column-header-right': c.right,
+        'column-header-center': c.center,
+        'column-header-left': !c.right && !c.center
+      })}>
+        <div>{c.name}</div>
+        {c.units && (
+          <div className="column-units">{c.units}</div>
+        )}
+      </div>;
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
-        c.format = (row: any) => isNaN(row[c.selector]) ? '' : row[c.selector].toFixed(decimalPlaces);
         c.format = (row: any) => {
-          const value = row[c.selector];
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
           const min = Math.pow(10, -(decimalPlaces));
           if (value === 0 || value >= min) {
             return value.toFixed(decimalPlaces);
@@ -210,16 +228,22 @@ const initColumns = (columns: Column[]) => {
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
         const sigFigs = c.formatArg ? c.formatArg : 5;
-        c.format = (row: any) => isNaN(row[c.selector]) ? '' : row[c.selector].toPrecision(sigFigs);
+        c.format = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
+          return isNaN(value) ? '' : value.toPrecision(sigFigs);
+        };
         return c;
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {
-          return formatFormula(row[c.selector]);
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          return formatFormula(rowValue);
         };
         return c;
       case ColumnFormat.LINK:
         c.cell = (row: any) => {
-          const path = c.formatArg ? c.formatArg + row[c.selector] : row[c.selector];
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const path = c.formatArg ? c.formatArg + rowValue : rowValue;
           return (
             <Link href={path}>{row[c.selector]}</Link>
           );
@@ -229,12 +253,14 @@ const initColumns = (columns: Column[]) => {
         const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
         const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
         const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
-        c.format = (row: any) => row[c.selector] ? truthyLabel : falsyLabel;
+        c.format = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          return rowValue ? truthyLabel : falsyLabel;
+        }
         return c;
       case ColumnFormat.SPACEGROUP_SYMBOL:
         c.format = (row: any) => {
-          const selectors = c.selector.split('.');
-          const rowValue = selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
           const spaceGroup = spaceGroups.find(d => d["symbol"] === rowValue);
           const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
           return formattedSymbol;
@@ -242,10 +268,17 @@ const initColumns = (columns: Column[]) => {
         return c;
       case ColumnFormat.POINTGROUP:
         c.cell = (row: any) => {
-          return formatPointGroup(row[c.selector]);
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          return formatPointGroup(rowValue);
         };
         return c;
       default:
+        c.format = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const isNumber = !isNaN(rowValue);
+          const value = c.conversionFactor && isNumber ? rowValue * c.conversionFactor : rowValue;
+          return value;
+        };
         return c;
     }
   });

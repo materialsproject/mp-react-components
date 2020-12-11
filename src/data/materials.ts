@@ -166,7 +166,8 @@ export const materialsColumns: Column[] = [
     name: 'Material Id',
     selector: 'task_id',
     format: ColumnFormat.LINK,
-    formatArg: '/materials/'
+    formatArg: '/materials/',
+    minWidth: '110px'
   },
   {
     name: 'Formula',
@@ -175,12 +176,12 @@ export const materialsColumns: Column[] = [
     minWidth: '130px'
   },
   {
-    name: 'Spacegroup Symbol',
+    name: 'Space Group Symbol',
     selector: 'symmetry.symbol',
     format: ColumnFormat.SPACEGROUP_SYMBOL
   },
   {
-    name: 'Spacegroup Number',
+    name: 'Space Group Number',
     selector: 'symmetry.number',
     omit: true
   },
@@ -214,6 +215,8 @@ export const materialsColumns: Column[] = [
     selector: 'e_above_hull',
     format: ColumnFormat.FIXED_DECIMAL,
     formatArg: 2,
+    units: 'meV/atom',
+    conversionFactor: 1000,
     right: true,
     wrap: false
   },
@@ -222,6 +225,7 @@ export const materialsColumns: Column[] = [
     selector: 'formation_energy_per_atom',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4,
+    units: 'eV/atom',
     omit: true,
     right: true
   },

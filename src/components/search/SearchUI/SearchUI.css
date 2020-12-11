@@ -77,6 +77,18 @@
   border-radius: 6px;
 }
 
+.search-ui .react-data-table .column-header-right {
+  text-align: right;
+}
+
+.search-ui .react-data-table .column-header-center {
+  text-align: center;
+}
+
+.search-ui .react-data-table .column-units {
+  font-weight: normal;
+}
+
 .search-ui .table-header {
   display: flex;
   justify-content: space-between;

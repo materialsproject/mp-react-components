@@ -51,8 +51,11 @@ export interface ActiveFilter {
 export type FilterValues = Partial<Record<string, any>>;
 
 export interface Column {
-  name: string;
+  name: string | number | JSX.Element;
   selector: string;
+  units?: string;
+  conversionFactor?: number;
+  nameString?: string;
   [id: string]: any;
 }
 
