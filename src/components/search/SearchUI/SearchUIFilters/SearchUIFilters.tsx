@@ -26,7 +26,12 @@ const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[])
   let count = 0;
   const activeIds = activeFilters.map(f => f.id);
   group.filters.forEach((f) => {
-    if (activeIds.indexOf(f.id) > -1) count++;
+    if (activeIds.indexOf(f.id) > -1) {
+      f.active = true;
+      count++;
+    } else {
+      f.active = false;
+    }
   });
   return count;
 };
@@ -241,7 +246,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
                         <div>
-                          <p className="has-text-weight-bold mb-2">{f.name}</p>
+                          <p className={classNames('has-text-weight-bold mb-2', {'has-text-link': f.active})}>{f.name}</p>
                           {renderFilter(f, g.name)}
                         </div>
                       </div>

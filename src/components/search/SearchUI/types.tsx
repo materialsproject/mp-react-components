@@ -26,6 +26,7 @@ export interface Filter {
   name?: string;
   id: string;
   type: FilterType;
+  active?: boolean;
   props?: any;
 }
 
