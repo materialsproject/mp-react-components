@@ -18,6 +18,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../../../data/spaceGroups';
 import { pointGroups } from '../../../../data/pointGroups';
 import { Link } from '../../../navigation/Link';
+// import * as d3 from 'd3';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -194,6 +195,18 @@ const initColumns = (columns: Column[]) => {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
         c.format = (row: any) => isNaN(row[c.selector]) ? '' : row[c.selector].toFixed(decimalPlaces);
+        c.format = (row: any) => {
+          const value = row[c.selector];
+          const min = Math.pow(10, -(decimalPlaces));
+          if (value === 0 || value >= min) {
+            return value.toFixed(decimalPlaces);
+          } else if (value < min) {
+            return '< ' + min.toString();
+          } else {
+            return '';
+          }
+        }
+        c.right = true;
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
         const sigFigs = c.formatArg ? c.formatArg : 5;

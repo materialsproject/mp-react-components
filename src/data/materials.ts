@@ -175,35 +175,55 @@ export const materialsColumns: Column[] = [
     minWidth: '130px'
   },
   {
+    name: 'Spacegroup Symbol',
+    selector: 'symmetry.symbol',
+    format: ColumnFormat.SPACEGROUP_SYMBOL
+  },
+  {
+    name: 'Spacegroup Number',
+    selector: 'symmetry.number',
+    omit: true
+  },
+  {
+    name: 'Crystal System',
+    selector: 'symmetry.crystal_system'
+  },
+  {
     name: 'Volume',
     selector: 'volume',
     format: ColumnFormat.FIXED_DECIMAL,
     formatArg: 3,
-    omit: true
+    omit: true,
+    right: true
   },
   {
     name: 'Density',
     selector: 'density',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4,
-    omit: true
+    omit: true,
+    right: true
   },
   {
     name: 'Sites',
-    selector: 'nsites'
+    selector: 'nsites',
+    right: true
   },
   {
     name: 'Energy Above Hull',
     selector: 'e_above_hull',
-    format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 4
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    right: true,
+    wrap: false
   },
   {
     name: 'Formation Energy',
     selector: 'formation_energy_per_atom',
     format: ColumnFormat.SIGNIFICANT_FIGURES,
     formatArg: 4,
-    omit: true
+    omit: true,
+    right: true
   },
   {
     name: 'Is Stable',
@@ -211,18 +231,5 @@ export const materialsColumns: Column[] = [
     format: ColumnFormat.BOOLEAN,
     formatArg: ['yes', 'no'],
     omit: true
-  },
-  {
-    name: 'Spacegroup Symbol',
-    selector: 'symmetry.symbol',
-    format: ColumnFormat.SPACEGROUP_SYMBOL
-  },
-  {
-    name: 'Spacegroup Number',
-    selector: 'symmetry.number'
-  },
-  {
-    name: 'Crystal System',
-    selector: 'symmetry.crystal_system'
   }
 ];
