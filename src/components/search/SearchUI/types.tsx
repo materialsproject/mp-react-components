@@ -27,6 +27,8 @@ export interface Filter {
   id: string;
   type: FilterType;
   active?: boolean;
+  conversionFactor?: number;
+  units?: string;
   props?: any;
 }
 
@@ -46,6 +48,7 @@ export interface ActiveFilter {
   displayName: string;
   value: any;
   defaultValue: any;
+  conversionFactor?: number;
   searchParams?: SearchParam[];
 }
 

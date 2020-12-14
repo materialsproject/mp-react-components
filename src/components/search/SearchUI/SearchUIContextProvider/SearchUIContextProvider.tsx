@@ -70,6 +70,7 @@ const getState = (
               displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: f.props.domain,
+              conversionFactor: f.conversionFactor,
               searchParams: [
                 {
                   field: f.id + '_min',
@@ -463,7 +464,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         currentState.activeFilters.forEach(a => {
           a.searchParams?.forEach(s => {
             let field = s.field;
-            let value = s.value;
+            let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
             /**
              * Elements values that are strings should be interpreted as formula fields
              * This lets the elements field handle chemical system searches (e.g. Fe-Co-Si)
