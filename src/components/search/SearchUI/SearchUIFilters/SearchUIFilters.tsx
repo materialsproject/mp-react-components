@@ -22,6 +22,10 @@ interface Props {
   className?: string;
 }
 
+const getActiveFilterById = (id: string, activeFilters: ActiveFilter[]) => {
+  return activeFilters.find(af => af.id === id);
+};
+
 const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[]) => {
   let count = 0;
   const activeIds = activeFilters.map(f => f.id);
@@ -35,6 +39,7 @@ const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[])
   });
   return count;
 };
+
 
 const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) => {
   let groupsByName = {};
@@ -149,11 +154,18 @@ export const SearchUIFilters: React.FC<Props> = props => {
     return null;
   };
 
-  const renderActiveFilterCount = (count) => {
+  const renderActiveFilterCount = (count: number) => {
     if (count > 0) {
       return <span className="badge ml-2">{count} active</span>
     } else {
       return null;
+    }
+  };
+
+  const resetFilter = (id: string) => {
+    const activeFilter = getActiveFilterById(id, state.activeFilters);
+    if (activeFilter) {
+      actions.setFilterValue(activeFilter.defaultValue, id);
     }
   };
 
@@ -246,7 +258,18 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
                         <div>
-                          <p className={classNames('has-text-weight-bold mb-2', {'has-text-link': f.active})}>{f.name}</p>
+                          {!f.active && (
+                            <p className="has-text-weight-bold mb-2">{f.name}</p>
+                          )}
+                          {f.active && (
+                            <p className="has-text-weight-bold mb-2">
+                              <a 
+                                onClick={() => resetFilter(f.id)}
+                              >
+                                {f.name}
+                              </a>
+                            </p>
+                          )}
                           {renderFilter(f, g.name)}
                         </div>
                       </div>
@@ -261,3 +284,4 @@ export const SearchUIFilters: React.FC<Props> = props => {
     </div>
   );
 };
+// onClick={(v, id) => actions.setFilterValue(v, id)}
