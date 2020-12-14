@@ -413,7 +413,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         });
         let newFilterGroups = currentState.filterGroups.slice();
         newFilterGroups[0].expanded = true;
-        return getState({ ...currentState, filterGroups: newFilterGroups }, { ...currentState.filterValues, ...newFilterValues });
+        return getState({ ...currentState, filterGroups: newFilterGroups, page: 1 }, { ...currentState.filterValues, ...newFilterValues });
       });
     },
     resetAllFiltersExcept: (value: any, id: string) => {
