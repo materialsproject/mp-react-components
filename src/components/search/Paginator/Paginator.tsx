@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { getPageCount } from '../utils';
+import * as d3 from 'd3';
 
 interface Props {
   rowsPerPage: number;
@@ -30,7 +31,7 @@ export const Paginator: React.FC<Props> = ({
           aria-label={isCurrent ? `Go to page ${pageNumber}` : `Page ${pageNumber}`}
           onClick={() => onChangePage(pageNumber)}
         >
-          {pageNumber}
+          {d3.format(',')(pageNumber)}
         </a>
       </li>
     );

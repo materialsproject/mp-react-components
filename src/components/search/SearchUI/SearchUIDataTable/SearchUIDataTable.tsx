@@ -9,6 +9,7 @@ import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
 import { pluralize } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
+import * as d3 from 'd3';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -30,8 +31,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
-  const lowerResultBound = (state.page - 1) * state.resultsPerPage;
-  const upperResultBound = lowerResultBound + state.resultsPerPage;
+  const lowerResultBound = ((state.page - 1) * state.resultsPerPage) + 1;
+  const upperResultBound = (lowerResultBound - 1) + state.resultsPerPage;
 
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -84,12 +85,9 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
         <p className="title is-5">
-            <NumberFormat 
-              className="has-text-weight-bold" 
-              value={state.totalResults} 
-              displayType={'text'} 
-              thousandSeparator={true} 
-            />
+            <span className="has-text-weight-bold">
+              {d3.format(',')(state.totalResults)}
+            </span>
             {state.totalResults === 1 && (
               <span>
                 <span className="has-text-weight-bold"> {state.resultLabel}</span>
@@ -225,7 +223,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
           <div className="table-header">
             <div>
               <TableHeaderTitle />
-              <p className="subtitle is-7">Showing {lowerResultBound} to {upperResultBound}</p>
+              <p className="subtitle is-7">Showing {d3.format(',')(lowerResultBound)} to {d3.format(',')(upperResultBound)}</p>
             </div>
             <div className="progress-container">
               {state.loading &&
