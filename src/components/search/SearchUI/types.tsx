@@ -60,6 +60,7 @@ export interface Column {
   units?: string;
   conversionFactor?: number;
   nameString?: string;
+  abbreviateNearZero?: boolean;
   [id: string]: any;
 }
 

@@ -217,12 +217,16 @@ const initColumns = (columns: Column[]) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
           const min = Math.pow(10, -(decimalPlaces));
-          if (value === 0 || value >= min) {
-            return value.toFixed(decimalPlaces);
-          } else if (value < min) {
-            return '< ' + min.toString();
+          if (c.abbreviateNearZero) {
+            if (value === 0 || value >= min) {
+              return value.toFixed(decimalPlaces);
+            } else if (value < min) {
+              return '< ' + min.toString();
+            } else {
+              return '';
+            }
           } else {
-            return '';
+            return isNaN(value) ? '' : value.toFixed(decimalPlaces);
           }
         }
         c.right = true;
@@ -234,6 +238,7 @@ const initColumns = (columns: Column[]) => {
           const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
           return isNaN(value) ? '' : value.toPrecision(sigFigs);
         };
+        c.right = true;
         return c;
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {

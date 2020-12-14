@@ -220,14 +220,15 @@ export const materialsColumns: Column[] = [
     formatArg: 2,
     units: 'meV/atom',
     conversionFactor: 1000,
+    abbreviateNearZero: true,
     right: true,
     wrap: false
   },
   {
     name: 'Formation Energy',
     selector: 'formation_energy_per_atom',
-    format: ColumnFormat.SIGNIFICANT_FIGURES,
-    formatArg: 3,
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
     units: 'eV/atom',
     omit: true,
     right: true
