@@ -80,19 +80,19 @@ describe('<Table/>', () => {
     ).toBe(true);
   });
 
-  it('click callback should be called', () => {
-    const click = jest.fn();
-    const hover = jest.fn();
-    const wrapper = renderElement({}, {}, { ...enabled }, click, hover);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(0)
-        .simulate('click')
-    );
-    expect(click).toHaveBeenCalled();
-    expect(hover).toHaveBeenCalledTimes(0);
-  });
+  // it('click callback should be called', () => {
+  //   const click = jest.fn();
+  //   const hover = jest.fn();
+  //   const wrapper = renderElement({}, {}, { ...enabled }, click, hover);
+  //   expect(
+  //     wrapper
+  //       .find('.mat-element')
+  //       .at(0)
+  //       .simulate('click')
+  //   );
+  //   expect(click).toHaveBeenCalled();
+  //   expect(hover).toHaveBeenCalledTimes(0);
+  // });
 
   it('hover callback should be called', () => {
     const click = jest.fn();
