@@ -473,7 +473,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
               field = 'formula';
             }
             params[field] = value;
-            query.set(field, value)
+            query.set(field, s.value);
           });
         });
 

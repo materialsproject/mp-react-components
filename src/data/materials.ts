@@ -73,6 +73,7 @@ export const materialsGroups: FilterGroup[] = [
         name: 'Energy Above Hull',
         id: 'e_above_hull',
         type: FilterType.SLIDER,
+        units: 'meV/atom',
         conversionFactor: 0.001,
         props: {
           domain: [0, 7000],
@@ -83,6 +84,7 @@ export const materialsGroups: FilterGroup[] = [
         name: 'Formation Energy',
         id: 'formation_energy_per_atom',
         type: FilterType.SLIDER,
+        units: 'eV/atom',
         props: {
           domain: [-10, 6],
           step: 0.1

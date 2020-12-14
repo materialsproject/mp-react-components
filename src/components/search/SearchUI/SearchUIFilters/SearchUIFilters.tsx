@@ -163,6 +163,14 @@ export const SearchUIFilters: React.FC<Props> = props => {
       newGroupsByName[name].expanded = groupName === name ? ! newGroupsByName[name].expanded : false;
     }
     setGroupsByName(newGroupsByName);
+  };
+
+  const getUnitsComponent = (units?: string) => {
+    if (units) {
+      return <span className="has-text-weight-normal is-size-7"> ({units})</span>;
+    } else {
+      return null;
+    }
   }
 
   useEffect(() => {
@@ -246,18 +254,18 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
                         <div>
-                          {!f.active && (
-                            <p className="has-text-weight-bold mb-2">{f.name}</p>
-                          )}
-                          {f.active && (
-                            <p className="has-text-weight-bold mb-2">
+                          <p className="has-text-weight-bold mb-2">
+                            {!f.active && (
+                              <span>{f.name}{getUnitsComponent(f.units)}</span>
+                            )}
+                            {f.active && (
                               <a 
                                 onClick={() => resetFilter(f.id)}
                               >
-                                {f.name}
+                                {f.name}{getUnitsComponent(f.units)}
                               </a>
-                            </p>
-                          )}
+                            )}
+                          </p>
                           {renderFilter(f, g.name)}
                         </div>
                       </div>
