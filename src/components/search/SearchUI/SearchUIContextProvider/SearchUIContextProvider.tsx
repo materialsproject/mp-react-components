@@ -207,7 +207,7 @@ const initColumns = (columns: Column[]) => {
       })}>
         <div>{c.name}</div>
         {c.units && (
-          <div className="column-units">{c.units}</div>
+          <div className="column-units">({c.units})</div>
         )}
       </div>;
     switch (c.format) {
