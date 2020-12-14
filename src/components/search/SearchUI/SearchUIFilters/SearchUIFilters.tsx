@@ -1,17 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
-// import { DualRangeSlider } from '../../../search/DualRangeSlider';
-import { DualRangeSlider } from '../../../search/DualRangeSlider/DualRangeSlider';
+import { DualRangeSlider } from '../../../search/DualRangeSlider';
 import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
-import { Dropdown } from 'react-bulma-components';
 import { FilterType, Filter, FilterGroup, ActiveFilter } from '../types';
-import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
 import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
 import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect'
-import { initArray } from '../../utils';
 import { TextInput } from '../../TextInput';
 
 /**
@@ -57,21 +53,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
-  const [expandedGroupsByIndex, setExpandedGroupsByIndex] = useState(initArray(state.filterGroups.length, false));
   const [groupsByName, setGroupsByName] = useState(getGroupsByName(state.filterGroups, state.activeFilters));
-  // const [groupsByName, setGroupsByName] = useState(() => {
-  //   let grouped = {};
-  //   state.filterGroups.forEach((g) => {
-  //     grouped[g.name] = {
-  //       expanded: g.expanded === true ? true : false,
-  //       activeFilterCount: getActiveFilterCount(g, state.activeFilters),
-  //       filters: g.filters
-  //     };
-  //   });
-  //   return grouped;
-  // });
-  const [expandedGroupIndex, setExpandedGroupIndex] = useState<number | null>(null);
-  const [clicked, setClicked] = useState(false);
 
   /**
    * Render filter component based on the filter's "type" property
@@ -120,7 +102,13 @@ export const SearchUIFilters: React.FC<Props> = props => {
         case FilterType.SELECT_CRYSTAL_SYSTEM:
         case FilterType.SELECT_POINTGROUP:
         case FilterType.SELECT:
-          const selected = f.props.options.filter(option => option.value === state.filterValues[f.id]);
+          /**
+           * Find the selected option based on the filter value and render the select dropdown
+           * If this filter is not activated, pass in null to the value prop
+           * The react-select component does not recognize undefined as a null value
+           */
+          let selected = f.props.options.find(option => option.value === state.filterValues[f.id]);
+          selected = selected ? selected : null;
           return (
             <Select
               {...f.props}

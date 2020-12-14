@@ -325,6 +325,16 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
               return formatPointGroup(label);
             }
           };
+          return f;
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          if (queryParamValue === 'true') {
+            initializedValues[f.id] = true;
+          } else if (queryParamValue === 'false') {
+            initializedValues[f.id] = false;
+          } else {
+            initializedValues[f.id] = undefined;
+          }
+          return f;
         default:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;

@@ -18,7 +18,7 @@ export const ThreeStateBooleanSelect: React.FC<Props> = ({
   onChange
 }) => {
   const threeOptions = [{label: 'Any', value: undefined}, options[0], options[1]];
-  const selected = threeOptions.filter(option => option.value === value);
+  const selected = threeOptions.find(option => option.value === value);
   return (
     <Select
       options={threeOptions}
