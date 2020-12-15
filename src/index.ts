@@ -16,6 +16,7 @@ import { MaterialsInput } from './components/search/MaterialsInput/MaterialsInpu
 import { SearchUI } from './components/search/SearchUI';
 import DataTable from 'react-data-table-component';
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
+import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
 
 export {
   SelectableTable,
@@ -34,5 +35,9 @@ export {
   Scrollspy,
   SearchUI,
   DataTable,
-  GlobalSearchBar
+  GlobalSearchBar,
+  MenuWrapper,
+  MenuButton,
+  Menu,
+  MenuItem
 };

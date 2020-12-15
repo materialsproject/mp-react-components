@@ -34,6 +34,7 @@ import { materialsColumns, materialsGroups } from './data/materials';
 import { moleculesColumns, moleculesGroups } from './data/molecules';
 import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
+import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -668,6 +669,87 @@ const menuContent = [
 const emptyObject = {};
 ReactDOM.render(
   <>
+    <nav className="navbar" role="navigation" aria-label="main navigation">
+      <div className="navbar-brand">
+        <a className="navbar-item" href="https://bulma.io">
+        </a>
+
+        <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" className="navbar-menu">
+        <div className="navbar-start">
+          <a className="navbar-item">
+            Home
+          </a>
+
+          <a className="navbar-item">
+            Documentation
+          </a>
+          <MenuWrapper 
+            className='navbar-item has-dropdown is-hoverable'
+          >
+            <MenuButton className='navbar-link'>
+              <span>
+                Menu
+              </span>
+            </MenuButton>
+            <Menu className='navbar-dropdown'>
+              <MenuItem>
+                <a className="navbar-item">
+                  About
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a className="navbar-item">
+                  Jars
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a className="navbar-item">
+                  Carrots
+                </a>
+              </MenuItem>
+            </Menu>
+          </MenuWrapper>
+          <div className="navbar-item has-dropdown is-hoverable">
+            <a className="navbar-link">
+              More
+            </a>
+            <div className="navbar-dropdown">
+              <a className="navbar-item">
+                About
+              </a>
+              <a className="navbar-item">
+                Jobs
+              </a>
+              <a className="navbar-item">
+                Contact
+              </a>
+              <a className="navbar-item">
+                Report an issue
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="navbar-end">
+          <div className="navbar-item">
+            <div className="buttons">
+              <a className="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+              <a className="button is-light">
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
     <div className="p-4">
       {/* <h1 className="title">Molecules Explorer</h1>
       <SearchUI

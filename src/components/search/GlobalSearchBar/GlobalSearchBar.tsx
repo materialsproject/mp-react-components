@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { linkOnClick } from '../../../utils/utils';
-import { MaterialsInput, MaterialsInputField } from '../MaterialsInput';
+import { MaterialsInput } from '../MaterialsInput';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
