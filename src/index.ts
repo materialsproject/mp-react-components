@@ -15,6 +15,7 @@ import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/search/MaterialsInput/MaterialsInput';
 import { SearchUI } from './components/search/SearchUI';
 import DataTable from 'react-data-table-component';
+import { GlobalSearchBar } from './components/search/GlobalSearchBar';
 
 export {
   SelectableTable,
@@ -32,5 +33,6 @@ export {
   // MtMaterialTable,
   Scrollspy,
   SearchUI,
-  DataTable
+  DataTable,
+  GlobalSearchBar
 };

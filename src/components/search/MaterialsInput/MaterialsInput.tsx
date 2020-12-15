@@ -48,7 +48,7 @@ export interface MaterialsInputSharedProps {
   isChemSys?: boolean;
   allowSmiles?: boolean;
   onFieldChange?: (value: string) => void;
-  onSubmit?: (value?: any) => any;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
 }
 
 interface Props extends MaterialsInputSharedProps {
@@ -137,7 +137,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       e.preventDefault();
       e.stopPropagation();
       setShowPeriodicTable(false);
-      props.onSubmit();
+      props.onSubmit(e);
     }
   };
 
@@ -156,9 +156,9 @@ export const MaterialsInput: React.FC<Props> = props => {
   let tooltipControl: JSX.Element | null = null;
   let formulaButtons: JSX.Element | null = null;
   let chemSysCheckbox: JSX.Element | null = null;
-  let autocompleteMenu: JSX.Element | null = null;
+  // let autocompleteMenu: JSX.Element | null = null;
   const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
-  const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
+  // const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
 
   const materialsInputControl = 
     <MaterialsInputBox
@@ -175,6 +175,30 @@ export const MaterialsInput: React.FC<Props> = props => {
       liftInputRef={ref => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
     />;
+
+  const autocompleteMenu =
+    <div
+      className={classNames('dropdown-menu', 'autocomplete-right', {
+        'is-hidden': !showAutocomplete
+      })}
+      /**
+       * Currently not accessible by keyboard so hiding it to screen readers
+       */
+      aria-hidden={true}
+    >
+      <div className="dropdown-content">
+        <p className="autocomplete-label">Suggested formulas</p>
+        {formulaSuggestions.map((d, i) => (
+          <a 
+            key={i} 
+            className="dropdown-item"
+            onMouseDown={() => props.onChange(d._id)}
+          >
+            {formatFormula(d._id)}
+          </a>
+        ))}
+      </div>
+    </div>;
 
   if (props.tooltip) {
     tooltipControl = 
@@ -247,31 +271,9 @@ export const MaterialsInput: React.FC<Props> = props => {
       </label>
   }
 
-  if (hasAutocompleteMenu) {
-    autocompleteMenu =
-      <div
-        className={classNames('dropdown-menu', 'autocomplete-right', {
-          'is-hidden': !showAutocomplete
-        })}
-        /**
-         * Currently not accessible by keyboard so hiding it to screen readers
-         */
-        aria-hidden={true}
-      >
-        <div className="dropdown-content">
-          <p className="autocomplete-label">Suggested formulas</p>
-          {formulaSuggestions.map((d, i) => (
-            <a 
-              key={i} 
-              className="dropdown-item"
-              onMouseDown={() => props.onChange(d._id)}
-            >
-              {formatFormula(d._id)}
-            </a>
-          ))}
-        </div>
-      </div>;
-  }
+  // if (hasAutocompleteMenu) {
+    
+  // }
 
   if (props.field === 'formula') {
     formulaButtons = <MaterialsInputFormulaButtons onClick={(v) => setInputValue(inputValue + v)}/>;

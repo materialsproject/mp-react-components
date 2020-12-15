@@ -33,7 +33,7 @@ export const SearchUISearchBar: React.FC = () => {
     return fields;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
   };
 
