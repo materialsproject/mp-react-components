@@ -85,24 +85,33 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
-        <p className="title is-5">
-            <span className="has-text-weight-bold">
-              {d3.format(',')(state.totalResults)}
-            </span>
-            {state.totalResults === 1 && (
-              <span>
-                <span className="has-text-weight-bold"> {state.resultLabel}</span>
-                <span className="has-text-weight-normal"> matches</span>
+        <div>
+          <a 
+            className="title is-5"
+            href={'#' + componentHtmlId}
+            onMouseOver={() => setTitleHover(true)}
+            onMouseLeave={() => setTitleHover(false)}
+            onClick={() => setTitleHover(false)}
+          >
+              <span className="has-text-weight-bold">
+                {d3.format(',')(state.totalResults)}
               </span>
-            )}
-            {state.totalResults !== 1 && (
-              <span>
-                <span className="has-text-weight-bold"> {pluralize(state.resultLabel)}</span>
-                <span className="has-text-weight-normal"> match</span>
-              </span>
-            )}
-            <span className="has-text-weight-normal"> your search</span>
-        </p>
+              {state.totalResults === 1 && (
+                <span>
+                  <span className="has-text-weight-bold"> {state.resultLabel}</span>
+                  <span className="has-text-weight-normal"> matches</span>
+                </span>
+              )}
+              {state.totalResults !== 1 && (
+                <span>
+                  <span className="has-text-weight-bold"> {pluralize(state.resultLabel)}</span>
+                  <span className="has-text-weight-normal"> match</span>
+                </span>
+              )}
+              <span className="has-text-weight-normal"> your search</span>
+              {titleHover && <FaLink className="is-size-7 ml-1"/>}
+          </a>
+        </div>
       );
     } else {
       return (
