@@ -100,22 +100,21 @@ export const Paginator: React.FC<Props> = ({
 
   return (
     <nav className="pagination is-small is-centered pt-3" role="navigation" aria-label="pagination">
-        <a
-          className={classNames('pagination-previous', {'is-hidden-by-opacity': currentPage === 1})} 
-          aria-hidden={currentPage === 1}
-          onClick={() => onChangePage(currentPage - 1)}
-        >
-          <FaArrowLeft/><span className="ml-1">Previous</span>
-        </a>
-      
-      {paginationItems}
+      <a
+        className={classNames('pagination-previous', {'is-hidden-by-opacity': currentPage === 1})} 
+        aria-hidden={currentPage === 1}
+        onClick={() => onChangePage(currentPage - 1)}
+      >
+        <FaArrowLeft/><span className="ml-1 is-hidden-touch">Previous</span>
+      </a>
       <a 
         className={classNames('pagination-next', {'is-hidden-by-opacity': currentPage === pageCount})}
         aria-hidden={currentPage === pageCount}
         onClick={() => onChangePage(currentPage + 1)}
       >
-        <span className="mr-1">Next</span><FaArrowRight/>
+        <span className="mr-1 is-hidden-touch">Next</span><FaArrowRight/>
       </a>
+      {paginationItems}
     </nav>
   );
 };
