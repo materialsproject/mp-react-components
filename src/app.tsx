@@ -697,7 +697,7 @@ ReactDOM.render(
             items={[
               {
                 text: 'One',
-                href: '#one'
+                href: '/one'
               },
               {
                 text: 'Two',
@@ -716,63 +716,6 @@ ReactDOM.render(
               }
             ]}
           />
-          {/* <MenuWrapper 
-            className='navbar-item has-dropdown is-hoverable'
-          >
-            <MenuButton className='navbar-link'>
-              <span>
-                Menu
-              </span>
-            </MenuButton>
-            <Menu className='navbar-dropdown'>
-              <MenuItem>
-                <a className="navbar-item">
-                  About
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a className="navbar-item">
-                  Jars
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a className="navbar-item">
-                  Carrots
-                </a>
-              </MenuItem>
-            </Menu>
-          </MenuWrapper> */}
-          <div className="navbar-item has-dropdown is-hoverable">
-            <a className="navbar-link">
-              More
-            </a>
-            <div className="navbar-dropdown">
-              <a className="navbar-item">
-                About
-              </a>
-              <a className="navbar-item">
-                Jobs
-              </a>
-              <a className="navbar-item">
-                Contact
-              </a>
-              <a className="navbar-item">
-                Report an issue
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="navbar-end">
-          <div className="navbar-item">
-            <div className="buttons">
-              <a className="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-              <a className="button is-light">
-                Log in
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </nav>
@@ -803,6 +746,14 @@ ReactDOM.render(
           sortField="e_above_hull"
           sortAscending={true}
         />
+      <GlobalSearchBar
+        redirectRoute="/materials"
+        hidePeriodicTable={true}
+        apiKey={process.env.REACT_APP_API_KEY}
+        autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+        tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        placeholder="Search by elements, SMILES, or mp-id"
+      />
     </div>
   </>,
 

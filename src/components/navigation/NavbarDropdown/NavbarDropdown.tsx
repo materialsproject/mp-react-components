@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React, { useState } from "react";
+import { Link } from '../Link';
 
 interface NavbarItem {
   className?: string;
@@ -32,19 +33,19 @@ export const NavbarDropdown: React.FC<Props> = props => {
       <div className="navbar-dropdown">
         {props.items.map((item, i) => {
           if(item.isDivider) {
-            return <hr className="navbar-divider" key={i}/>;  
+            return <hr className="navbar-divider" key={i}/>;
           } else if(item.isMenuLabel) {
             return <span className="navbar-item menu-label" key={i}>{item.text}</span>;
           } else {
             return (
-              <a
+              <Link
                 key={i}
-                href={item.href} 
+                href={item.href}
                 className={classNames("navbar-item", item.className)} 
                 onClick={() => setIsActive(false)}
               >
                 {item.text}
-              </a>
+              </Link>
             )
           }      
         })}
