@@ -168,3 +168,24 @@ svg.is-active {
   background-color: #3273dc;
   color: #fff;
 }
+
+/*******************************************************
+
+Destined for app.scss in mp-web
+
+*******************************************************/
+
+@media screen and (max-width: 769px - 1px) {
+  .search-ui .table-transition-wrapper-small  {
+    display: none;
+  }
+  .search-ui .materials-input .field > .control:first-child:not(.is-expanded)  {
+    display: none;
+  }
+  .search-ui .panel, .search-ui .panel-block-title {
+    min-width: 0 !important;
+  }
+  .search-ui .panel-block-children {
+    padding-left: 0 !important;
+  }
+}

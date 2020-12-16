@@ -176,7 +176,7 @@ export const DualRangeSlider: React.FC<Props> = ({
 
   return (
     <div className="slider-container">
-      <div className="level mb-1">
+      <div className="level is-mobile mb-1">
         <div className="level-left">
           <input
             className="input is-small"

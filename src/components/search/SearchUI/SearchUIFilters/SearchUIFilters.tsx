@@ -195,7 +195,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
     <div className={props.className}>
       <div className="panel">
         <div className="panel-heading">
-          <div className="level">
+          <div className="level is-mobile">
             <span>Filters</span>
             <button 
               className="button"
