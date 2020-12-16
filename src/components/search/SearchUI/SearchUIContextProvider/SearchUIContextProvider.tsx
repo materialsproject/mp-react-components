@@ -19,6 +19,8 @@ import { spaceGroups } from '../../../../data/spaceGroups';
 import { pointGroups } from '../../../../data/pointGroups';
 import { Link } from '../../../navigation/Link';
 import classNames from 'classnames';
+import { useMediaQuery } from 'react-responsive';
+
 // import * as d3 from 'd3';
 
 /**
@@ -43,144 +45,6 @@ const defaultState: SearchState = {
   sortField: undefined,
   sortDirection: 'asc',
   topLevelSearchField: 'elements'
-};
-
-/**
- * Method for initializing and updating the search state's active filters.
- * Returns a full state object
- * Optionally accepts a filterValues argument which represents a new hash map
- * of values for building the activeFilters list.
- * The activeFilters list is recomputed whenever a filter is modified in the UI.
- */
-const getState = (
-  currentState: SearchState, 
-  filterValues = { ...currentState.filterValues }
-): SearchState => {
-  const activeFilters: ActiveFilter[] = [];
-  currentState.filterGroups.forEach(g => {
-    g.filters.forEach(f => {
-      switch (f.type) {
-        case FilterType.SLIDER:
-          if (
-            filterValues[f.id][0] !== f.props.domain[0] ||
-            filterValues[f.id][1] !== f.props.domain[1]
-          ) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: f.props.domain,
-              conversionFactor: f.conversionFactor,
-              searchParams: [
-                {
-                  field: f.id + '_min',
-                  value: filterValues[f.id][0]
-                },
-                {
-                  field: f.id + '_max',
-                  value: filterValues[f.id][1]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.MATERIALS_INPUT:
-          if (filterValues[f.id] !== '') {
-            /**
-             * If the input controls the elements param,
-             * parse the input's value into an array of valid elements.
-             * Otherwise, use the raw input value for the param.
-             */
-            let parsedValue = filterValues[f.id];
-            let filterDisplayName = f.props.field;
-            if (f.id === 'elements') {
-              const delimiter = getDelimiter(filterValues[f.id]);
-              parsedValue = parseElements(filterValues[f.id], delimiter);
-              filterDisplayName = 'contains elements';
-              /**
-               * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
-               * This will tell the API to return materials with this exact chemical system
-               */
-              // if (delimiter.toString() === new RegExp(/-/).toString()) {
-              if (f.props.isChemSys) {
-                parsedValue = arrayToDelimitedString(parsedValue, delimiter);
-                filterDisplayName = 'contains only elements';
-              }
-              f.props.enabledElements = parsedValue;
-            }
-            activeFilters.push({
-              id: f.id,
-              displayName: filterDisplayName,
-              value: parsedValue,
-              defaultValue: '',
-              searchParams: [
-                {
-                  field: f.props.field,
-                  value: parsedValue
-                }
-              ]
-            });
-            /**
-             * Expand the Material filter group by default if one of the
-             * main filters are active
-             */
-            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
-              g.expanded = true;
-            }
-          }
-          break;
-        case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (
-            filterValues[f.id] !== undefined && 
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
-            const spaceGroup = spaceGroups.find(d => d["symbol"] === filterValues[f.id]);
-            const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : filterValues[f.id];
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: formattedSymbol,
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id,
-                  value: filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        default:
-          if (
-            filterValues[f.id] !== undefined && 
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id,
-                  value: filterValues[f.id]
-                }
-              ]
-            });
-            /**
-             * Expand the Material filter group by default if one of the
-             * main filters are active
-             */
-            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
-              g.expanded = true;
-            }
-          }
-      }
-    });
-  });
-  return { ...currentState, filterValues, activeFilters };
 };
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
@@ -372,6 +236,144 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
   const { children, ...propsWithoutChildren } = props;
   const query = useQuery();
   const history = useHistory();
+  const isDesktop = useMediaQuery({ minWidth: 1024 });
+  /**
+   * Method for initializing and updating the search state's active filters.
+   * Returns a full state object
+   * Optionally accepts a filterValues argument which represents a new hash map
+   * of values for building the activeFilters list.
+   * The activeFilters list is recomputed whenever a filter is modified in the UI.
+   */
+  const getState = (
+    currentState: SearchState, 
+    filterValues = { ...currentState.filterValues }
+  ): SearchState => {
+    const activeFilters: ActiveFilter[] = [];
+    currentState.filterGroups.forEach(g => {
+      g.filters.forEach(f => {
+        switch (f.type) {
+          case FilterType.SLIDER:
+            if (
+              filterValues[f.id][0] !== f.props.domain[0] ||
+              filterValues[f.id][1] !== f.props.domain[1]
+            ) {
+              activeFilters.push({
+                id: f.id,
+                displayName: f.name ? f.name : f.id,
+                value: filterValues[f.id],
+                defaultValue: f.props.domain,
+                conversionFactor: f.conversionFactor,
+                searchParams: [
+                  {
+                    field: f.id + '_min',
+                    value: filterValues[f.id][0]
+                  },
+                  {
+                    field: f.id + '_max',
+                    value: filterValues[f.id][1]
+                  }
+                ]
+              });
+            }
+            break;
+          case FilterType.MATERIALS_INPUT:
+            if (filterValues[f.id] !== '') {
+              /**
+               * If the input controls the elements param,
+               * parse the input's value into an array of valid elements.
+               * Otherwise, use the raw input value for the param.
+               */
+              let parsedValue = filterValues[f.id];
+              let filterDisplayName = f.props.field;
+              if (f.id === 'elements') {
+                const delimiter = getDelimiter(filterValues[f.id]);
+                parsedValue = parseElements(filterValues[f.id], delimiter);
+                filterDisplayName = 'contains elements';
+                /**
+                 * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
+                 * This will tell the API to return materials with this exact chemical system
+                 */
+                // if (delimiter.toString() === new RegExp(/-/).toString()) {
+                if (f.props.isChemSys) {
+                  parsedValue = arrayToDelimitedString(parsedValue, delimiter);
+                  filterDisplayName = 'contains only elements';
+                }
+                f.props.enabledElements = parsedValue;
+              }
+              activeFilters.push({
+                id: f.id,
+                displayName: filterDisplayName,
+                value: parsedValue,
+                defaultValue: '',
+                searchParams: [
+                  {
+                    field: f.props.field,
+                    value: parsedValue
+                  }
+                ]
+              });
+              /**
+               * Expand the Material filter group by default if one of the
+               * main filters are active (desktop only)
+               */
+              if (isDesktop && (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids')) {
+                g.expanded = true;
+              }
+            }
+            break;
+          case FilterType.SELECT_SPACEGROUP_SYMBOL:
+            if (
+              filterValues[f.id] !== undefined && 
+              filterValues[f.id] !== null &&
+              filterValues[f.id] !== ''
+            ) {
+              const spaceGroup = spaceGroups.find(d => d["symbol"] === filterValues[f.id]);
+              const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : filterValues[f.id];
+              activeFilters.push({
+                id: f.id,
+                displayName: f.name ? f.name : f.id,
+                value: formattedSymbol,
+                defaultValue: undefined,
+                searchParams: [
+                  {
+                    field: f.id,
+                    value: filterValues[f.id]
+                  }
+                ]
+              });
+            }
+            break;
+          default:
+            if (
+              filterValues[f.id] !== undefined && 
+              filterValues[f.id] !== null &&
+              filterValues[f.id] !== ''
+            ) {
+              activeFilters.push({
+                id: f.id,
+                displayName: f.name ? f.name : f.id,
+                value: filterValues[f.id],
+                defaultValue: undefined,
+                searchParams: [
+                  {
+                    field: f.id,
+                    value: filterValues[f.id]
+                  }
+                ]
+              });
+              /**
+               * Expand the Material filter group by default if one of the
+               * main filters are active
+               */
+              if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
+                g.expanded = true;
+              }
+            }
+        }
+      });
+    });
+    return { ...currentState, filterValues, activeFilters };
+  };
   const [state, setState] = useState(() => {
     /**
      * Initial state is a combination of the defaultState values above
@@ -393,8 +395,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
     return getState(initialState);
   });
   const prevActiveFilters = usePrevious(state.activeFilters);
-  const debouncedActiveFilters = useDeepCompareDebounce(state.activeFilters, 500);
-
+  
   const actions = {
     setPage: (value: number) => {
       setState(currentState => ({ ...currentState, page: value }));
@@ -418,8 +419,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
         let newFilterGroups = currentState.filterGroups.slice();
-        newFilterGroups[0].expanded = true;
-        return getState({ ...currentState, filterGroups: newFilterGroups, page: 1 }, { ...currentState.filterValues, ...newFilterValues });
+        if(isDesktop) {
+          newFilterGroups[0].expanded = true;
+        }
+        return getState({ ...currentState, filterGroups: newFilterGroups, page: 1 }, { ...currentState.filterValues, ...newFilterValues }, isDesktop);
       });
     },
     resetAllFiltersExcept: (value: any, id: string) => {
