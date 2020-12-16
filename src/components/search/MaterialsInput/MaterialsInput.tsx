@@ -47,6 +47,7 @@ export interface MaterialsInputSharedProps {
   showFieldDropdown?: boolean;
   isChemSys?: boolean;
   allowSmiles?: boolean;
+  placeholder?: string;
   onFieldChange?: (value: string) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
 }
@@ -174,6 +175,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       onKeyDown={getOnKeyDownProp}
       liftInputRef={ref => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
+      placeholder={props.placeholder}
     />;
 
   const autocompleteMenu =
@@ -287,12 +289,16 @@ export const MaterialsInput: React.FC<Props> = props => {
   useEffect(() => {
     handleChemSysCheck();
     console.log(props.value);
+    console.log(props.field);
+    console.log(props.autocompleteApiKey?.length);
+    console.log(props.autocompleteFormulaUrl);
     if (
       props.field === 'formula' &&
       props.autocompleteApiKey &&
       props.autocompleteFormulaUrl && 
       props.value.length
     ) {
+      console.log('autocomplete request');
       requestCount++;
       const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {

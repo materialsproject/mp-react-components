@@ -43,7 +43,7 @@ const defaultState: SearchState = {
   page: 1,
   loading: false,
   sortField: undefined,
-  sortDirection: 'asc',
+  sortAscending: true,
   topLevelSearchField: 'elements'
 };
 
@@ -389,7 +389,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
     if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
     if (urlSkip) initialState.page = (parseInt(urlSkip) / initialState.resultsPerPage) + 1;
     if (urlSortField) initialState.sortField = urlSortField;
-    if (urlAscending) initialState.sortDirection = urlAscending === 'true' ? 'asc' : 'desc';
+    if (urlAscending) initialState.sortAscending = urlAscending === 'true' ? true : false;
     initialState.filterGroups = initializedGroups;
     initialState.filterValues = initializedValues;
     return getState(initialState);
@@ -403,8 +403,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
     setResultsPerPage: (value: number) => {
       setState(currentState => ({ ...currentState, resultsPerPage: value }));
     },
-    setSort: (field: string, direction: 'asc' | 'desc') => {
-      setState(currentState => ({ ...currentState, sortField: field, sortDirection: direction}));
+    setSort: (field: string, ascending: boolean) => {
+      setState(currentState => ({ ...currentState, sortField: field, sortAscending: ascending}));
     },
     setFilterValue: (value: any, id: string) => {
       setState(currentState =>
@@ -465,7 +465,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         query.set('skip', params.skip);
         if (currentState.sortField) {
           params.field = currentState.sortField;
-          params.ascending = currentState.sortDirection === 'desc' ? false : true;
+          params.ascending = currentState.sortAscending;
           query.set('field', params.field);
           query.set('ascending', params.ascending);
         }
@@ -563,7 +563,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
 
   useDeepCompareEffect(() => {
       actions.getData();
-  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortDirection]);
+  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   return (
     <SearchUIContext.Provider value={state}>

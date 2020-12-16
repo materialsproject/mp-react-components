@@ -224,7 +224,7 @@ export const MaterialsInputBox: React.FC<Props> = props => {
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        placeholder={props.onSubmit ? 'Search by elements, formula, or ID' : undefined}
+        placeholder={props.placeholder}
         ref={inputRef}
         onKeyDown={props.onKeyDown}
       />

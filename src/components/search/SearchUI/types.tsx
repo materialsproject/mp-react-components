@@ -73,7 +73,7 @@ export interface SearchState extends SearchUIProps {
   page: number;
   loading: boolean;
   sortField?: string;
-  sortDirection?: 'asc' | 'desc';
+  sortAscending?: boolean;
   topLevelSearchField: string;
 }
 

@@ -31,14 +31,14 @@ export const moleculesGroups: FilterGroup[] = [
           step: 1
         }
       },
-      // {
-      //   name: 'Formula',
-      //   id: 'formula',
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     field: MaterialsInputField.FORMULA
-      //   }
-      // },
+      {
+        name: 'Formula',
+        id: 'formula',
+        type: FilterType.MATERIALS_INPUT,
+        props: {
+          field: MaterialsInputField.FORMULA
+        }
+      },
       {
         name: 'SMILES',
         id: 'smiles',

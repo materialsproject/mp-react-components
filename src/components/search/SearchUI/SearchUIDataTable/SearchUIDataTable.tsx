@@ -43,7 +43,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   };
 
   const handleSort = (column, sortDirection) => {
-    actions.setSort(column.selector, sortDirection);
+    const sortAscending = sortDirection === 'asc' ? true : false;
+    actions.setSort(column.selector, sortAscending);
   };
 
   const toggleColumn = (columnIndex: number) => {
@@ -260,7 +261,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
             sortServer
             sortIcon={<FaCaretDown/>}
             defaultSortField={state.sortField}
-            defaultSortAsc={state.sortDirection === 'desc' ? false : true}
+            defaultSortAsc={state.sortAscending}
             onSort={handleSort}
             customStyles={customStyles}
           />

@@ -23,10 +23,10 @@
   box-shadow: none;
 }
 
-.materials-input [data-tooltip] {
+.materials-input .control [data-tooltip] {
   border-left: none;
 }
 
-.materials-input [data-tooltip]:hover {
+.materials-input .control [data-tooltip]:hover {
   border-left: 1px solid #b5b5b5;
 }

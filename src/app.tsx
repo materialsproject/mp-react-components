@@ -35,6 +35,7 @@ import { moleculesColumns, moleculesGroups } from './data/molecules';
 import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
 import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
+import { NavbarDropdown } from './components/navigation/NavbarDropdown/NavbarDropdown';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -690,7 +691,31 @@ ReactDOM.render(
           <a className="navbar-item">
             Documentation
           </a>
-          <MenuWrapper 
+          <NavbarDropdown
+            label="Test"
+            items={[
+              {
+                text: 'One',
+                href: '#one'
+              },
+              {
+                text: 'Two',
+                href: '#two'
+              },
+              {
+                isDivider: true
+              },
+              {
+                isMenuLabel: true,
+                text: 'Label'
+              },
+              {
+                text: 'Three',
+                href: '#three'
+              }
+            ]}
+          />
+          {/* <MenuWrapper 
             className='navbar-item has-dropdown is-hoverable'
           >
             <MenuButton className='navbar-link'>
@@ -715,7 +740,7 @@ ReactDOM.render(
                 </a>
               </MenuItem>
             </Menu>
-          </MenuWrapper>
+          </MenuWrapper> */}
           <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">
               More
@@ -759,6 +784,10 @@ ReactDOM.render(
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''}
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
+        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        searchBarPlaceholder="Search by elements, formula, or mp-id"
+        sortField="IE"
+        sortAscending={false}
       /> */}
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
@@ -769,6 +798,9 @@ ReactDOM.render(
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
           apiKey={process.env.REACT_APP_API_KEY}
           searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+          searchBarPlaceholder="Search by elements, formula, or mp-id"
+          sortField="e_above_hull"
+          sortAscending={true}
         />
     </div>
   </>,
@@ -783,6 +815,7 @@ console.log('RUNNING in', process.env.NODE_ENV, 'DEBUGGING IS', process.env.DEBU
     apiKey={process.env.REACT_APP_API_KEY}
     autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
     tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+    placeholder="Search by elements, SMILES, or mp-id"
   />
 */
 /**
