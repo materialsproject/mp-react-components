@@ -117,7 +117,7 @@ export const moleculesColumns: Column[] = [
   },
   {
     name: 'Formula',
-    selector: 'pretty_formula',
+    selector: 'formula_pretty',
     format: ColumnFormat.FORMULA
   },
   {

@@ -751,7 +751,7 @@ ReactDOM.render(
       </div>
     </nav>
     <div className="p-4">
-      {/* <h1 className="title">Molecules Explorer</h1>
+      <h1 className="title">Molecules Explorer</h1>
       <SearchUI
         resultLabel="molecule"
         columns={moleculesColumns}
@@ -759,7 +759,7 @@ ReactDOM.render(
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''}
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         apiKey={process.env.REACT_APP_API_KEY}
-      /> */}
+      />
       <GlobalSearchBar
         redirectRoute="/materials"
         hidePeriodicTable={true}
@@ -767,7 +767,7 @@ ReactDOM.render(
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
         tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
       />
-      <h1 className="title">Materials Explorer</h1>
+      {/* <h1 className="title">Materials Explorer</h1>
       <SearchUI
           resultLabel="material"
           columns={materialsColumns}
@@ -776,7 +776,7 @@ ReactDOM.render(
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
           apiKey={process.env.REACT_APP_API_KEY}
           searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        />
+        /> */}
     </div>
   </>,
 
