@@ -112,7 +112,7 @@ const initColumns = (columns: Column[]) => {
         return c;
       case ColumnFormat.LINK:
         c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const rowValue = getRowValueFromSelectorString(c.selector, row) + '/';
           const path = c.formatArg ? c.formatArg + rowValue : rowValue;
           return (
             <Link href={path}>{row[c.selector]}</Link>
