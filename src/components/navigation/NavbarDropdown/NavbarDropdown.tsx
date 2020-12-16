@@ -10,6 +10,7 @@ interface NavbarItem {
 }
 
 interface Props {
+  className?: string;
   label: string;
   items: NavbarItem[];
 }
@@ -19,7 +20,7 @@ export const NavbarDropdown: React.FC<Props> = props => {
 
   return (
     <div
-      className={classNames("navbar-item has-dropdown", {
+      className={classNames("navbar-item has-dropdown", props.className, {
         'is-active': isActive
       })}
       onMouseOver={() => setIsActive(true)}
@@ -53,6 +54,6 @@ export const NavbarDropdown: React.FC<Props> = props => {
 };
 
 NavbarDropdown.defaultProps = {
-  navbarLink: '',
-  navbarItems: []
+  label: '',
+  items: []
 };
