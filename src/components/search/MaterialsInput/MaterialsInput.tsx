@@ -157,9 +157,7 @@ export const MaterialsInput: React.FC<Props> = props => {
   let tooltipControl: JSX.Element | null = null;
   let formulaButtons: JSX.Element | null = null;
   let chemSysCheckbox: JSX.Element | null = null;
-  // let autocompleteMenu: JSX.Element | null = null;
   const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
-  // const hasAutocompleteMenu = props.field === 'formula' && props.autocompleteFormulaUrl && props.autocompleteApiKey;
 
   const materialsInputControl = 
     <MaterialsInputBox
@@ -288,31 +286,20 @@ export const MaterialsInput: React.FC<Props> = props => {
    */
   useEffect(() => {
     handleChemSysCheck();
-    console.log(props.value);
-    console.log(props.field);
-    console.log(props.autocompleteApiKey?.length);
-    console.log(props.autocompleteFormulaUrl);
     if (
       props.field === 'formula' &&
       props.autocompleteApiKey &&
       props.autocompleteFormulaUrl && 
       props.value.length
     ) {
-      console.log('autocomplete request');
       requestCount++;
       const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {
         params: {text: props.value},
         headers: {'X-Api-Key': props.autocompleteApiKey}
       }).then(result => {
-        console.log(result.data.data);
         if (requestIndex === requestCount) {
           setFormulaSuggestions(result.data.data);
-          console.log('in order: ' + props.value);
-          console.log('index: ' + requestIndex);
-          console.log('count: ' + requestCount);
-        } else {
-          console.log('out of order: ' + props.value);
         }
       }).catch(error => {
         console.log(error);

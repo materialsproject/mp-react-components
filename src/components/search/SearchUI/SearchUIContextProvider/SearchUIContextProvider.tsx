@@ -499,7 +499,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
               : null
           })
           .then(result => {
-            console.log(result);
             history.push({search: query.toString()});
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;

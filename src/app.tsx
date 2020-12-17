@@ -746,14 +746,16 @@ ReactDOM.render(
           sortField="e_above_hull"
           sortAscending={true}
         />
-      <GlobalSearchBar
-        redirectRoute="/materials"
-        hidePeriodicTable={true}
-        apiKey={process.env.REACT_APP_API_KEY}
-        autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
-        tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        placeholder="Search by elements, SMILES, or mp-id"
-      />
+      <div className="mp-home">
+        <GlobalSearchBar
+          redirectRoute="/materials"
+          hidePeriodicTable={true}
+          apiKey={process.env.REACT_APP_API_KEY}
+          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+          tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+          placeholder="Search by elements, SMILES, or mp-id"
+        />
+      </div>
     </div>
   </>,
 

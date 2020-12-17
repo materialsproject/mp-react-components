@@ -126,7 +126,6 @@ export interface SearchUIProps {
 }
 
 export const SearchUI: React.FC<SearchUIProps> = props => {
-  console.log(props);
   return (
     <div className="search-ui">
       <Router>

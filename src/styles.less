@@ -192,3 +192,36 @@ Destined for app.scss in mp-web
     font-size: 1rem;
   }
 }
+
+/*******************************************************
+
+Destined for home.scss in mp-web
+
+*******************************************************/
+
+.mp-home .materials-input {
+  color: #000;
+  .autocomplete-right {
+    top: 45px;
+    left: 0;
+    margin-left: 0;
+    .autocomplete-label {
+      color: #4a4a4a;
+    }
+  }
+}
+
+.mp-home .mat-element {
+  .mat-symbol {
+    font-weight: 300;
+  }
+}
+
+@media screen and (max-width: 769px - 1px) {
+  .mp-home .materials-input .field > .control:first-child:not(.is-expanded) {
+    display: none;
+  }
+  .mp-home .materials-input .field > .control.is-expanded .input {
+    border-radius: 4px 0 0 4px;
+  }
+}
