@@ -491,12 +491,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
             paramsSerializer: p => {
               return qs.stringify(p, { arrayFormat: 'comma' });
             },
-            headers: props.apiKey
-              ? {
-                  'X-Api-Key': props.apiKey,
-                  'Access-Control-Allow-Origin': '*'
-                }
-              : null
+            headers: props.apiKey ? {'X-Api-Key': props.apiKey} : null
           })
           .then(result => {
             history.push({search: query.toString()});

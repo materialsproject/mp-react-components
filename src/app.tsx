@@ -727,7 +727,7 @@ ReactDOM.render(
         filterGroups={moleculesGroups}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''}
         autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
-        apiKey={process.env.REACT_APP_API_KEY}
+        apiKey={undefined}
         searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="IE"
@@ -740,7 +740,7 @@ ReactDOM.render(
           filterGroups={materialsGroups}
           baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
-          apiKey={process.env.REACT_APP_API_KEY}
+          apiKey={undefined}
           searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
           searchBarPlaceholder="Search by elements, formula, or mp-id"
           sortField="e_above_hull"

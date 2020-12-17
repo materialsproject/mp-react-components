@@ -288,7 +288,6 @@ export const MaterialsInput: React.FC<Props> = props => {
     handleChemSysCheck();
     if (
       props.field === 'formula' &&
-      props.autocompleteApiKey &&
       props.autocompleteFormulaUrl && 
       props.value.length
     ) {
@@ -296,7 +295,7 @@ export const MaterialsInput: React.FC<Props> = props => {
       const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {
         params: {text: props.value},
-        headers: {'X-Api-Key': props.autocompleteApiKey}
+        headers: props.autocompleteApiKey ? {'X-Api-Key': props.autocompleteApiKey} : null
       }).then(result => {
         if (requestIndex === requestCount) {
           setFormulaSuggestions(result.data.data);
