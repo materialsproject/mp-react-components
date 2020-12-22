@@ -218,6 +218,7 @@ export const MaterialsInputBox: React.FC<Props> = props => {
   const inputControl = 
     <Control className="is-expanded">
       <input
+        data-testid="search-input"
         className="input"
         type="search"
         value={props.value}

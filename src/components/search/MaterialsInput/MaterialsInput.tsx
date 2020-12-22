@@ -204,6 +204,7 @@ export const MaterialsInput: React.FC<Props> = props => {
     tooltipControl = 
       <Control>
         <button
+          data-testid="tooltip"
           type="button"
           className="button has-tooltip-multiline has-tooltip-bottom has-text-grey-light" 
           data-tooltip={props.tooltip}
@@ -234,7 +235,11 @@ export const MaterialsInput: React.FC<Props> = props => {
           {materialsInputControl}
           {tooltipControl}
           <Control>
-            <Button color="primary" type="submit">
+            <Button
+              data-testid="search-button"
+              color="primary" 
+              type="submit"
+            >
               Search
             </Button>
           </Control>
@@ -349,6 +354,7 @@ export const MaterialsInput: React.FC<Props> = props => {
         {chemSysCheckbox}
         {autocompleteMenu}
         <div
+          data-testid="periodic-table"
           className={classNames('table-transition-wrapper-small','can-hide-by-height', {
             'is-hidden-by-height': !showPeriodicTable,
             'mt-3': showPeriodicTable
