@@ -36,6 +36,7 @@ import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
 import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown/NavbarDropdown';
+import { DualRangeSlider } from './components/search/DualRangeSlider';
 
 const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
@@ -755,6 +756,11 @@ ReactDOM.render(
           tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
           placeholder="Search by elements, SMILES, or mp-id"
         />
+        <DualRangeSlider
+          domain={[-97, 88]} 
+          initialValues={[0, 50]}
+          step={1}
+        /> 
       </div>
     </div>
   </>,

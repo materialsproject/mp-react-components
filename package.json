@@ -98,6 +98,8 @@
     "@storybook/core": "5.3.18",
     "@storybook/react": "5.3.18",
     "@storybook/storybook-deployer": "^2.8.3",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
     "@types/enzyme": "^3.10.4",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^25.1.3",

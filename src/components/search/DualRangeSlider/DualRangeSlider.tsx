@@ -40,7 +40,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   domain = [0, 100],
   step = 1,
   initialValues = domain.slice(),
-  debounce = 1000,
+  debounce,
   onChange = () => undefined,
   onPropsChange = () => undefined
 }) => {
@@ -54,8 +54,8 @@ export const DualRangeSlider: React.FC<Props> = ({
   const [upperBound, setUpperBound] = useState(values[1]);
   const [lowerBoundToDebounce, setLowerBoundToDebounce] = useState(lowerBound);
   const [upperBoundToDebounce, setUpperBoundToDebounce] = useState(upperBound);
-  const debouncedLowerBound = useDebounce(lowerBoundToDebounce, debounce);
-  const debouncedUpperBound = useDebounce(upperBoundToDebounce, debounce);
+  const debouncedLowerBound = debounce ? useDebounce(lowerBoundToDebounce, debounce) : lowerBoundToDebounce;
+  const debouncedUpperBound = debounce ? useDebounce(upperBoundToDebounce, debounce) : upperBoundToDebounce;
 
   const handleSliderFinalChange = (vals) => {
     if (onChange) {
@@ -175,10 +175,11 @@ export const DualRangeSlider: React.FC<Props> = ({
   }, [debouncedUpperBound]);
 
   return (
-    <div className="slider-container">
+    <div className="slider-container" data-testid="dual-range-slider">
       <div className="level is-mobile mb-1">
         <div className="level-left">
           <input
+            data-testid="lower-bound-input"
             className="input is-small"
             type="number"
             value={lowerBound}
@@ -190,6 +191,7 @@ export const DualRangeSlider: React.FC<Props> = ({
         </div>
         <div className="level-right">
           <input
+            data-testid="upper-bound-input"
             className="input is-small"
             type="number"
             value={upperBound}
@@ -234,6 +236,7 @@ export const DualRangeSlider: React.FC<Props> = ({
           renderThumb={({ props, isDragged }) => (
             <div
               {...props}
+              data-testid="slider-button"
               className={classNames('button', 'is-slider', {'is-dragged': isDragged})}
             >
               <div className="inner-slider-button"/>
@@ -253,6 +256,7 @@ export const DualRangeSlider: React.FC<Props> = ({
                     }}
                   />
                   <span
+                    data-testid="tick-value"
                     className="slider-tick-value"
                     style={{...props.style}}
                   >
