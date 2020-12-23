@@ -237,6 +237,8 @@ export const parseFormula = (str: string) => {
   const capitalLettersMatch = str.match(/[A-Z]/g);
   const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
   const formula = capitalLetters > 1 || str.match(/[0-9]/gi) ? str : null;
+  console.log(capitalLettersMatch);
+  console.log(formula);
   return formula;
 }
 

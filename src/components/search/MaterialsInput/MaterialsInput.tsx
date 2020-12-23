@@ -52,7 +52,7 @@ export interface MaterialsInputSharedProps {
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
 }
 
-interface Props extends MaterialsInputSharedProps {
+export interface MaterialsInputProps extends MaterialsInputSharedProps {
   debounce?: number;
   periodicTableMode?: string;
   hidePeriodicTable?: boolean;
@@ -70,8 +70,9 @@ interface FormulaSuggestion {
 
 let requestCount = 0;
 
-export const MaterialsInput: React.FC<Props> = props => {
+export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
   const [inputValue, setInputValue] = useState(props.value);
+  const [field, setField] = useState(props.field);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [isChemSys, setIsChemSys] = useState<boolean>(() => props.isChemSys ? props.isChemSys : false);
@@ -154,6 +155,7 @@ export const MaterialsInput: React.FC<Props> = props => {
   };
 
   let materialsInputField: JSX.Element | null = null;
+  let toggleControl: JSX.Element | null = null;
   let tooltipControl: JSX.Element | null = null;
   let formulaButtons: JSX.Element | null = null;
   let chemSysCheckbox: JSX.Element | null = null;
@@ -162,11 +164,11 @@ export const MaterialsInput: React.FC<Props> = props => {
   const materialsInputControl = 
     <MaterialsInputBox
       value={inputValue}
-      field={props.field}
+      field={field}
       isChemSys={props.isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
-      onFieldChange={props.onFieldChange}
+      onFieldChange={setField}
       onSubmit={props.onSubmit ? handleSubmit : undefined}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
@@ -178,6 +180,7 @@ export const MaterialsInput: React.FC<Props> = props => {
 
   const autocompleteMenu =
     <div
+      data-testid="autocomplete-menu"
       className={classNames('dropdown-menu', 'autocomplete-right', {
         'is-hidden': !showAutocomplete
       })}
@@ -200,11 +203,30 @@ export const MaterialsInput: React.FC<Props> = props => {
       </div>
     </div>;
 
+  if (props.periodicTableMode === 'toggle') {
+    toggleControl = 
+      <Control>
+        <button
+          data-testid="toggle-button"
+          type="button"
+          className="button has-oversized-icon is-size-2"
+          onClick={() => setShowPeriodicTable(!showPeriodicTable)}
+        >
+            <i
+              className={classNames(
+                'icon-fontastic-periodic-table-squares',
+                {'is-active': showPeriodicTable}
+              )}
+            />
+        </button>            
+      </Control>
+  }
+
   if (props.tooltip) {
     tooltipControl = 
       <Control>
         <button
-          data-testid="tooltip"
+          data-testid="tooltip-button"
           type="button"
           className="button has-tooltip-multiline has-tooltip-bottom has-text-grey-light" 
           data-tooltip={props.tooltip}
@@ -218,20 +240,7 @@ export const MaterialsInput: React.FC<Props> = props => {
     materialsInputField =
       <form onSubmit={handleSubmit}>
         <Field className="has-addons">
-          <Control>
-            <button
-              type="button"
-              className="button has-oversized-icon is-size-2"
-              onClick={() => setShowPeriodicTable(!showPeriodicTable)}
-            >
-                <i
-                  className={classNames(
-                    'icon-fontastic-periodic-table-squares',
-                    {'is-active': showPeriodicTable}
-                  )}
-                />
-            </button>            
-          </Control>
+          {toggleControl}
           {materialsInputControl}
           {tooltipControl}
           <Control>
@@ -248,7 +257,9 @@ export const MaterialsInput: React.FC<Props> = props => {
   } else {
     materialsInputField =
       <Field className="has-addons">
+        {toggleControl}
         {materialsInputControl}
+        {tooltipControl}
       </Field>;
   }
 
@@ -291,15 +302,17 @@ export const MaterialsInput: React.FC<Props> = props => {
    */
   useEffect(() => {
     handleChemSysCheck();
+    console.log(field);
     if (
-      props.field === 'formula' &&
       props.autocompleteFormulaUrl && 
-      props.value.length
+      field === 'formula' &&
+      inputValue.length
     ) {
+      console.log('autocomplete');
       requestCount++;
       const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {
-        params: {text: props.value},
+        params: {text: inputValue},
         headers: props.autocompleteApiKey ? {'X-Api-Key': props.autocompleteApiKey} : null
       }).then(result => {
         if (requestIndex === requestCount) {
@@ -314,7 +327,7 @@ export const MaterialsInput: React.FC<Props> = props => {
     } else {
       setFormulaSuggestions([]);
     }
-  }, [props.value]);
+  }, [inputValue, field]);
 
   /**
    * This effect ensures that the visibility
@@ -336,6 +349,14 @@ export const MaterialsInput: React.FC<Props> = props => {
   useEffect(() => {
     setInputValue(props.value);
   }, [props.value]);
+
+  useEffect(() => {
+    setField(props.field);
+  }, [props.field]);
+
+  useEffect(() => {
+    if (props.onFieldChange) props.onFieldChange(field);
+  }, [field]);
 
   /**
    * This effect is triggered after the debouncedInputValue is set
@@ -378,4 +399,10 @@ export const MaterialsInput: React.FC<Props> = props => {
       </PeriodicContext>
     </div>
   );
+};
+
+MaterialsInput.defaultProps = {
+  value: '',
+  field: MaterialsInputField.ELEMENTS,
+  onChange: (value) => null
 };
