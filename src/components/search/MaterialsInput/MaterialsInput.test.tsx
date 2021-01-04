@@ -107,8 +107,9 @@ describe('<MaterialsInput/>', () => {
     });
     fireEvent.change(screen.getByTestId('search-input'), { target: { value: 'GaN' } });
     screen.getByTestId('search-input').focus();
-    // await waitFor(() => {
-    //   expect(screen.getByTestId('autocomplete-menu')).not.toHaveClass('is-hidden');
-    // });
+    await waitFor(() => {
+      expect(screen.getByTestId('autocomplete-menu')).not.toHaveClass('is-hidden');
+      expect(screen.getByTestId('autocomplete-menu-items').childNodes.length).toBeGreaterThan(1);
+    });
   });
 });

@@ -189,7 +189,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
        */
       aria-hidden={true}
     >
-      <div className="dropdown-content">
+      <div 
+        data-testid="autocomplete-menu-items"
+        className="dropdown-content"
+      >
         <p className="autocomplete-label">Suggested formulas</p>
         {formulaSuggestions.map((d, i) => (
           <a 
