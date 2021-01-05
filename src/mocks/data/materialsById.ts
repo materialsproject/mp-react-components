@@ -1,5 +1,5 @@
-export const materialIdParam = "mp-24230";
-export const materialIdResponse = {
+export const materialsByIdQuery = "mp-24230";
+export const materialsByIdResponse = {
   "data": [
     {
       "task_id": "mp-24230",

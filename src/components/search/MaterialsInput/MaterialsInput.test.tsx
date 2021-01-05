@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react'
 import { MaterialsInput, MaterialsInputProps } from '.';
-import { autocompleteParam } from '../../../mocks/data/autocomplete';
+import { autocompleteQuery } from '../../../mocks/data/autocomplete';
 
 jest.mock('./MaterialsInput.css', () => {});
 jest.mock('./MaterialsInputFormulaButtons/MaterialsInputFormulaButtons.css', () => {});
@@ -103,7 +103,7 @@ describe('<MaterialsInput/>', () => {
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
       autocompleteApiKey: process.env.REACT_APP_API_KEY
     });
-    fireEvent.change(screen.getByTestId('materials-input-search-input'), { target: { value: autocompleteParam } });
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), { target: { value: autocompleteQuery } });
     screen.getByTestId('materials-input-search-input').focus();
     await waitFor(() => {
       expect(screen.getByTestId('materials-input-autocomplete-menu')).not.toHaveClass('is-hidden');

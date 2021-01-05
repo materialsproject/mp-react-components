@@ -1,4 +1,4 @@
-export const unfilteredMaterialsResponse = {
+export const materialsUnfilteredResponse = {
   "data": [
   {
     "task_id": "mp-1006278",

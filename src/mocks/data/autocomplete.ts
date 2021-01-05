@@ -1,4 +1,4 @@
-export const autocompleteParam = "GaN";
+export const autocompleteQuery = "GaN";
 export const autocompleteResponse = {
   "data": [
       {

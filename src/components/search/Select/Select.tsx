@@ -6,7 +6,10 @@ import classNames from 'classnames';
 export const Select: React.FC<any> = props => {
   const [open, setOpen] = useState(false);
   return (
-    <div className={classNames('select-outer-container', {'is-open': open})}>
+    <div
+      data-testid="select"
+      className={classNames('select-outer-container', {'is-open': open})}
+    >
       <ReactSelect
         {...props}
         onMenuOpen={() => setOpen(true)}

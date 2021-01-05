@@ -197,7 +197,8 @@ export const SearchUIFilters: React.FC<Props> = props => {
         <div className="panel-heading">
           <div className="level is-mobile">
             <span>Filters</span>
-            <button 
+            <button
+              data-testid="search-ui-reset-button"
               className="button"
               onClick={e => actions.resetFilters()}
             >

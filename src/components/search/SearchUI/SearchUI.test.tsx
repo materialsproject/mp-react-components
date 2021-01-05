@@ -2,7 +2,8 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react'
 import { SearchUI, SearchUIProps } from '.';
 import { materialsColumns, materialsGroups } from '../../../data/materials';
-import { materialIdParam } from '../../../mocks/data/materialId';
+import { materialsByIdQuery } from '../../../mocks/data/materialsById';
+import { materialsByVolumeQuery } from '../../../mocks/data/materialsByVolume';
 
 jest.mock('./SearchUI.css', () => {});
 jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
@@ -12,8 +13,6 @@ jest.mock('../Select/Select.css', () => {});
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
-
-afterEach(() => cleanup());
 
 const defaultProps = {
   resultLabel: "material",
@@ -34,6 +33,11 @@ const renderElement = (props: SearchUIProps) => {
       {...props}
     />
   );
+  /**
+   * Reset the search ui on each render
+   * This ensures the context is reset for each test
+   */
+  fireEvent.click(screen.getByTestId('search-ui-reset-button'));
 };
 
 describe('<SearchUI/>', () => {
@@ -56,16 +60,39 @@ describe('<SearchUI/>', () => {
     expect(screen.getByTestId('results-per-page-menu')).toBeInTheDocument();
     expect(screen.getByTestId('react-data-table-container')).toBeInTheDocument();
     await waitFor(() => {
+      expect(screen.getByTestId('active-filter-buttons').childNodes.length).toBe(0);
       expect(screen.getAllByRole('row').length).toBe(16);
     });
   });
 
-  it('should return one filtered result', async () => {
+  it('should return results filtered by mp-id', async () => {
     renderElement({...defaultProps});
-    fireEvent.change(screen.getAllByTestId('materials-input-search-input')[0], { target: { value: materialIdParam } });
+    fireEvent.change(screen.getAllByTestId('materials-input-search-input')[0], { target: { value: materialsByIdQuery } });
     fireEvent.submit(screen.getByTestId('materials-input-form'));
     await waitFor(() => {
       expect(screen.getAllByRole('row').length).toBe(2);
     });
+    expect(screen.getByTestId('active-filter-buttons').childNodes.length).toBe(1);
+
+  });
+
+  it('should filter results with slider', async () => {
+    renderElement({...defaultProps});
+    fireEvent.change(screen.getAllByTestId('upper-bound-input')[0], { target: { value: materialsByVolumeQuery[1] } });
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBe(10);
+    });
+    expect(screen.getByTestId('active-filter-buttons').childNodes.length).toBe(1);
+  });
+
+  it('should filter results with dropdown', async () => {
+    renderElement({...defaultProps});
+    fireEvent.mouseDown(screen.getAllByText('Any')[0]);
+    fireEvent.click(screen.getAllByText('Is stable')[0]);
+    await waitFor(() => {
+      expect(screen.getByText('32,804')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('active-filter-buttons').childNodes.length).toBe(1);
+    expect(screen.getAllByRole('row').length).toBe(16);
   });
 });
