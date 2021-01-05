@@ -69,7 +69,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
-        <div>
+        <div data-testid="data-table-title">
           <a 
             href={'#' + componentHtmlId} 
             className="title is-5"
@@ -85,7 +85,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       );
     } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
       return (
-        <div>
+        <div data-testid="data-table-title">
           <a 
             className="title is-5"
             href={'#' + componentHtmlId}
@@ -115,7 +115,12 @@ export const SearchUIDataTable: React.FC<Props> = props => {
       );
     } else {
       return (
-        <p className="title is-5 has-text-weight-normal">Loading {pluralize(state.resultLabel)}...</p>
+        <p
+          data-testid="data-table-title"
+          className="title is-5 has-text-weight-normal"
+        >
+          Loading {pluralize(state.resultLabel)}...
+        </p>
       );
     }
   };
@@ -129,7 +134,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   };
 
   const columnsMenu =
-    <MenuWrapper 
+    <MenuWrapper
+      data-testid="columns-menu"
       className='dropdown is-right is-active has-text-left'
       closeOnSelection={false}
     >
@@ -193,7 +199,8 @@ export const SearchUIDataTable: React.FC<Props> = props => {
 
   const resultsPerPageOptions = [10, 15, 30, 50, 75];
   const resultsPerPageMenu =
-    <MenuWrapper 
+    <MenuWrapper
+      data-testid="results-per-page-menu"
       className='dropdown is-right is-active has-text-left mr-1'
       onSelection={handlePerRowsChange}
     >
@@ -256,7 +263,10 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         </div>
       </div>
       <div className="columns">
-        <div className="column react-data-table-container">
+        <div
+          data-testid="react-data-table-container"
+          className="column react-data-table-container"
+        >
           <DataTable
             className="react-data-table"
             noHeader

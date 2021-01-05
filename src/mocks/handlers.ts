@@ -1,9 +1,29 @@
 import { rest } from 'msw';
-import { autocompleteResponse } from './data/autocomplete'
+import { autocompleteParam, autocompleteResponse } from './data/autocomplete'
+import { materialIdParam, materialIdResponse } from './data/materialId';
+import { unfilteredMaterialsResponse } from './data/unfilteredMaterials';
 
 export const handlers = [
-  rest.get('https://api.materialsproject.org/materials/formula_autocomplete/?text=GaN', (req, res, ctx) => {
-    // respond using a mocked JSON body
-    return res(ctx.json(autocompleteResponse));
+  /**
+   * Formula autocomplete mock request
+   */
+  rest.get(process.env.REACT_APP_AUTOCOMPLETE_URL || '', (req, res, ctx) => {
+    const autocompleteText = req.url.searchParams.get('text');
+    if (autocompleteText === autocompleteParam) {
+      return res(ctx.json(autocompleteResponse));
+    } else {
+      return res(ctx.json({message: 'The supplied query param does not have a mocked response'}));
+    }
+  }),
+  /**
+   * Material search mock request
+   */
+  rest.get(process.env.REACT_APP_BASE_URL + 'search', (req, res, ctx) => {
+    const materialId = req.url.searchParams.get('task_ids');
+    if (materialId === materialIdParam) {
+      return res(ctx.json(materialIdResponse));
+    } else {
+      return res(ctx.json(unfilteredMaterialsResponse));
+    }
   })
 ];

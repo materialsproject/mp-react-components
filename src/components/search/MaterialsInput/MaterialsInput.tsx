@@ -49,7 +49,6 @@ export interface MaterialsInputSharedProps {
   allowSmiles?: boolean;
   placeholder?: string;
   onFieldChange?: (value: string) => void;
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
 }
 
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
@@ -60,6 +59,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   autocompleteApiKey?: string;
   tooltip?: string;
   onChange: (value: string) => void;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -169,7 +169,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
       onFieldChange={setField}
-      onSubmit={props.onSubmit ? handleSubmit : undefined}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       onKeyDown={getOnKeyDownProp}
@@ -180,7 +179,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
 
   const autocompleteMenu =
     <div
-      data-testid="autocomplete-menu"
+      data-testid="materials-input-autocomplete-menu"
       className={classNames('dropdown-menu', 'autocomplete-right', {
         'is-hidden': !showAutocomplete
       })}
@@ -190,7 +189,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
       aria-hidden={true}
     >
       <div 
-        data-testid="autocomplete-menu-items"
+        data-testid="materials-input-autocomplete-menu-items"
         className="dropdown-content"
       >
         <p className="autocomplete-label">Suggested formulas</p>
@@ -210,7 +209,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     toggleControl = 
       <Control>
         <button
-          data-testid="toggle-button"
+          data-testid="materials-input-toggle-button"
           type="button"
           className="button has-oversized-icon is-size-2"
           onClick={() => setShowPeriodicTable(!showPeriodicTable)}
@@ -229,7 +228,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
     tooltipControl = 
       <Control>
         <button
-          data-testid="tooltip-button"
+          data-testid="materials-input-tooltip-button"
           type="button"
           className="button has-tooltip-multiline has-tooltip-bottom has-text-grey-light" 
           data-tooltip={props.tooltip}
@@ -241,14 +240,16 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
 
   if (props.onSubmit) {
     materialsInputField =
-      <form onSubmit={handleSubmit}>
+      <form
+        data-testid="materials-input-form"
+        onSubmit={handleSubmit}
+      >
         <Field className="has-addons">
           {toggleControl}
           {materialsInputControl}
           {tooltipControl}
           <Control>
             <Button
-              data-testid="search-button"
               color="primary" 
               type="submit"
             >
@@ -305,13 +306,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
    */
   useEffect(() => {
     handleChemSysCheck();
-    console.log(field);
     if (
       props.autocompleteFormulaUrl && 
       field === 'formula' &&
       inputValue.length
     ) {
-      console.log('autocomplete');
       requestCount++;
       const requestIndex = requestCount;
       axios.get(props.autocompleteFormulaUrl, {
@@ -378,7 +377,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = props => {
         {chemSysCheckbox}
         {autocompleteMenu}
         <div
-          data-testid="periodic-table"
+          data-testid="materials-input-periodic-table"
           className={classNames('table-transition-wrapper-small','can-hide-by-height', {
             'is-hidden-by-height': !showPeriodicTable,
             'mt-3': showPeriodicTable

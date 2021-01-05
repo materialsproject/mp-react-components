@@ -205,7 +205,10 @@ export const SearchUIFilters: React.FC<Props> = props => {
             </button>
           </div>
         </div>
-        <div className="panel-block-container">
+        <div 
+          data-testid="panel-block-container"
+          className="panel-block-container"
+        >
           {state.filterGroups.map((g, i) => (
             <div 
               className={classNames('panel-block', {'is-active' : groupsByName[g.name].expanded})} 

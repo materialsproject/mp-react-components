@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CheckBox from 'rc-checkbox';
-import './checkbox-list.less';
 
 interface Option {
   value: any;

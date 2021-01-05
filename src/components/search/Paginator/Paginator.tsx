@@ -99,7 +99,12 @@ export const Paginator: React.FC<Props> = ({
   }, [rowsPerPage]);
 
   return (
-    <nav className="pagination is-small is-centered pt-3" role="navigation" aria-label="pagination">
+    <nav
+      data-testid="paginator"
+      className="pagination is-small is-centered pt-3" 
+      role="navigation" 
+      aria-label="pagination"
+    >
       <a
         className={classNames('pagination-previous', {'is-hidden-by-opacity': currentPage === 1})} 
         aria-hidden={currentPage === 1}

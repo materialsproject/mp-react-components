@@ -23,7 +23,10 @@ const formatValue = (filter: ActiveFilter) => {
 
 export const ActiveFilterButtons: React.FC<Props> = props => {
   return (
-    <div className={props.filters.length > 0 ? 'columns is-multiline column m-0 p-0' : ''}>
+    <div
+      data-testid="active-filter-buttons"
+      className={props.filters.length > 0 ? 'columns is-multiline column m-0 p-0' : ''}
+    >
       {props.filters.map((f, i) => (
         <div className="column is-narrow p-0 mr-2 mb-2" key={i}>
           <Button
