@@ -1,9 +1,12 @@
 import { rest } from 'msw';
-import { autocompleteQuery, autocompleteResponse } from './data/autocomplete'
-import { materialsByIdQuery, materialsByIdResponse } from './data/materialsById';
-import { materialsByStabilityQuery, materialsByStabilityResponse } from './data/materialsByStability';
-import { materialsByVolumeQuery, materialsByVolumeResponse } from './data/materialsByVolume';
-import { materialsUnfilteredResponse } from './data/materialsUnfiltered';
+import { autocompleteQuery, autocompleteResponse } from './data/autocomplete';
+import { materialsByIdQuery, materialsByIdResponse } from './constants/materialsById';
+import {
+  materialsByStabilityQuery,
+  materialsByStabilityResponse,
+} from './constants/materialsByStability';
+import { materialsByVolumeQuery, materialsByVolumeResponse } from './constants/materialsByVolume';
+import { materialsUnfilteredResponse } from './constants/materialsUnfiltered';
 
 export const handlers = [
   /**
@@ -14,7 +17,7 @@ export const handlers = [
     if (autocompleteText === autocompleteQuery) {
       return res(ctx.json(autocompleteResponse));
     } else {
-      return res(ctx.json({message: 'The supplied query Query does not have a mocked response'}));
+      return res(ctx.json({ message: 'The supplied query Query does not have a mocked response' }));
     }
   }),
   /**
@@ -33,5 +36,5 @@ export const handlers = [
     } else {
       return res(ctx.json(materialsUnfilteredResponse));
     }
-  })
+  }),
 ];

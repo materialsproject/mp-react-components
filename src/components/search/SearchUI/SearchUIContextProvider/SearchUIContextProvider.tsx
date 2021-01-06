@@ -9,14 +9,25 @@ import {
   ActiveFilter,
   SearchState,
   Column,
-  ColumnFormat
+  ColumnFormat,
 } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
-import { arrayToDelimitedString, crystalSystemOptions, getDelimiter, parseElements, spaceGroupNumberOptions, spaceGroupSymbolOptions, pointGroupOptions, formatPointGroup, formatFormula, getPageCount } from '../../utils';
+import {
+  arrayToDelimitedString,
+  crystalSystemOptions,
+  getDelimiter,
+  parseElements,
+  spaceGroupNumberOptions,
+  spaceGroupSymbolOptions,
+  pointGroupOptions,
+  formatPointGroup,
+  formatFormula,
+  getPageCount,
+} from '../../utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { spaceGroups } from '../../../../data/spaceGroups';
-import { pointGroups } from '../../../../data/pointGroups';
+import { spaceGroups } from '../../../../constants/spaceGroups';
+import { pointGroups } from '../../../../constants/pointGroups';
 import { Link } from '../../../navigation/Link';
 import classNames from 'classnames';
 import { useMediaQuery } from 'react-responsive';
@@ -44,7 +55,7 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  topLevelSearchField: 'elements'
+  topLevelSearchField: 'elements',
 };
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
@@ -60,27 +71,28 @@ const getRowValueFromSelectorString = (selector: string, row: any) => {
  * that will specify how many decimals or figures to apply to the format.
  */
 const initColumns = (columns: Column[]) => {
-  return columns.map(c => {
+  return columns.map((c) => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
     c.nameString = c.name.toString();
-    c.name = 
-      <div className={classNames({
-        'column-header-right': c.right,
-        'column-header-center': c.center,
-        'column-header-left': !c.right && !c.center
-      })}>
+    c.name = (
+      <div
+        className={classNames({
+          'column-header-right': c.right,
+          'column-header-center': c.center,
+          'column-header-left': !c.right && !c.center,
+        })}
+      >
         <div>{c.name}</div>
-        {c.units && (
-          <div className="column-units">({c.units})</div>
-        )}
-      </div>;
+        {c.units && <div className="column-units">({c.units})</div>}
+      </div>
+    );
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
-          const min = Math.pow(10, -(decimalPlaces));
+          const min = Math.pow(10, -decimalPlaces);
           if (c.abbreviateNearZero) {
             if (value === 0 || value >= min) {
               return value.toFixed(decimalPlaces);
@@ -92,7 +104,7 @@ const initColumns = (columns: Column[]) => {
           } else {
             return isNaN(value) ? '' : value.toFixed(decimalPlaces);
           }
-        }
+        };
         c.right = true;
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
@@ -114,10 +126,8 @@ const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row) + '/';
           const path = c.formatArg ? c.formatArg + rowValue : rowValue;
-          return (
-            <Link href={path}>{row[c.selector]}</Link>
-          );
-        }
+          return <Link href={path}>{row[c.selector]}</Link>;
+        };
         return c;
       case ColumnFormat.BOOLEAN:
         const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
@@ -126,15 +136,15 @@ const initColumns = (columns: Column[]) => {
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return rowValue ? truthyLabel : falsyLabel;
-        }
+        };
         return c;
       case ColumnFormat.SPACEGROUP_SYMBOL:
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const spaceGroup = spaceGroups.find(d => d["symbol"] === rowValue);
-          const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : rowValue;
+          const spaceGroup = spaceGroups.find((d) => d['symbol'] === rowValue);
+          const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : rowValue;
           return formattedSymbol;
-        }
+        };
         return c;
       case ColumnFormat.POINTGROUP:
         c.cell = (row: any) => {
@@ -156,8 +166,8 @@ const initColumns = (columns: Column[]) => {
 
 const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
   const initializedValues = {};
-  const initializedGroups = filterGroups.map(g => {
-    g.filters = g.filters.map(f => {
+  const initializedGroups = filterGroups.map((g) => {
+    g.filters = g.filters.map((f) => {
       let queryParamValue: any = query.get(f.id);
       switch (f.type) {
         case FilterType.SLIDER:
@@ -177,15 +187,15 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           return f;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = {options: spaceGroupSymbolOptions()};
+          f.props = { options: spaceGroupSymbolOptions() };
           return f;
         case FilterType.SELECT_SPACEGROUP_NUMBER:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = {options: spaceGroupNumberOptions()};
+          f.props = { options: spaceGroupNumberOptions() };
           return f;
         case FilterType.SELECT_CRYSTAL_SYSTEM:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = {options: crystalSystemOptions()};
+          f.props = { options: crystalSystemOptions() };
           return f;
         case FilterType.SELECT_POINTGROUP:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
@@ -193,7 +203,7 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
             options: pointGroupOptions(),
             formatOptionLabel: ({ value, label, customAbbreviation }) => {
               return formatPointGroup(label);
-            }
+            },
           };
           return f;
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
@@ -212,19 +222,19 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
     });
     return g;
   });
-  return { initializedGroups, initializedValues}
-}
+  return { initializedGroups, initializedValues };
+};
 
 const getResetFiltersAndValues = (state: SearchState) => {
   const filterValues = state.filterValues;
   let activeFilters = state.activeFilters;
-  activeFilters.forEach(a => {
+  activeFilters.forEach((a) => {
     filterValues[a.id] = a.defaultValue;
   });
   activeFilters = [];
   return {
     filterValues,
-    activeFilters
+    activeFilters,
   };
 };
 
@@ -232,7 +242,7 @@ const getResetFiltersAndValues = (state: SearchState) => {
  * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
  * Accepts the same props as SearchUI and uses them to build the context state
  */
-export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
+export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
   const { children, ...propsWithoutChildren } = props;
   const query = useQuery();
   const history = useHistory();
@@ -245,12 +255,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
    * The activeFilters list is recomputed whenever a filter is modified in the UI.
    */
   const getState = (
-    currentState: SearchState, 
+    currentState: SearchState,
     filterValues = { ...currentState.filterValues }
   ): SearchState => {
     const activeFilters: ActiveFilter[] = [];
-    currentState.filterGroups.forEach(g => {
-      g.filters.forEach(f => {
+    currentState.filterGroups.forEach((g) => {
+      g.filters.forEach((f) => {
         switch (f.type) {
           case FilterType.SLIDER:
             if (
@@ -266,13 +276,13 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
                 searchParams: [
                   {
                     field: f.id + '_min',
-                    value: filterValues[f.id][0]
+                    value: filterValues[f.id][0],
                   },
                   {
                     field: f.id + '_max',
-                    value: filterValues[f.id][1]
-                  }
-                ]
+                    value: filterValues[f.id][1],
+                  },
+                ],
               });
             }
             break;
@@ -308,9 +318,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
                 searchParams: [
                   {
                     field: f.props.field,
-                    value: parsedValue
-                  }
-                ]
+                    value: parsedValue,
+                  },
+                ],
               });
               /**
                * Expand the Material filter group by default if one of the
@@ -323,12 +333,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
             break;
           case FilterType.SELECT_SPACEGROUP_SYMBOL:
             if (
-              filterValues[f.id] !== undefined && 
+              filterValues[f.id] !== undefined &&
               filterValues[f.id] !== null &&
               filterValues[f.id] !== ''
             ) {
-              const spaceGroup = spaceGroups.find(d => d["symbol"] === filterValues[f.id]);
-              const formattedSymbol = spaceGroup ? spaceGroup["symbol_unicode"] : filterValues[f.id];
+              const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
+              const formattedSymbol = spaceGroup
+                ? spaceGroup['symbol_unicode']
+                : filterValues[f.id];
               activeFilters.push({
                 id: f.id,
                 displayName: f.name ? f.name : f.id,
@@ -337,15 +349,15 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
                 searchParams: [
                   {
                     field: f.id,
-                    value: filterValues[f.id]
-                  }
-                ]
+                    value: filterValues[f.id],
+                  },
+                ],
               });
             }
             break;
           default:
             if (
-              filterValues[f.id] !== undefined && 
+              filterValues[f.id] !== undefined &&
               filterValues[f.id] !== null &&
               filterValues[f.id] !== ''
             ) {
@@ -357,9 +369,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
                 searchParams: [
                   {
                     field: f.id,
-                    value: filterValues[f.id]
-                  }
-                ]
+                    value: filterValues[f.id],
+                  },
+                ],
               });
               /**
                * Expand the Material filter group by default if one of the
@@ -379,7 +391,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
      * Initial state is a combination of the defaultState values above
      * and all the values provided in props (except props.children)
      */
-    const initialState: SearchState = {...defaultState, ...propsWithoutChildren};
+    const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
     initialState.columns = initColumns(props.columns);
     const { initializedGroups, initializedValues } = initFilterGroups(props.filterGroups, query);
     const urlLimit = query.get('limit');
@@ -387,7 +399,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
     const urlSortField = query.get('field');
     const urlAscending = query.get('ascending');
     if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
-    if (urlSkip) initialState.page = (parseInt(urlSkip) / initialState.resultsPerPage) + 1;
+    if (urlSkip) initialState.page = parseInt(urlSkip) / initialState.resultsPerPage + 1;
     if (urlSortField) initialState.sortField = urlSortField;
     if (urlAscending) initialState.sortAscending = urlAscending === 'true' ? true : false;
     initialState.filterGroups = initializedGroups;
@@ -395,59 +407,64 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
     return getState(initialState);
   });
   const prevActiveFilters = usePrevious(state.activeFilters);
-  
+
   const actions = {
     setPage: (value: number) => {
-      setState(currentState => ({ ...currentState, page: value }));
+      setState((currentState) => ({ ...currentState, page: value }));
     },
     setResultsPerPage: (value: number) => {
-      setState(currentState => ({ ...currentState, resultsPerPage: value }));
+      setState((currentState) => ({ ...currentState, resultsPerPage: value }));
     },
     setSort: (field: string, ascending: boolean) => {
-      setState(currentState => ({ ...currentState, sortField: field, sortAscending: ascending}));
+      setState((currentState) => ({ ...currentState, sortField: field, sortAscending: ascending }));
     },
     setFilterValue: (value: any, id: string) => {
-      setState(currentState =>
+      setState((currentState) =>
         getState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
-      setState(currentState => {
-        let newFilterValues = {[id]: value};
+      setState((currentState) => {
+        let newFilterValues = { [id]: value };
         overrideFields.forEach((field) => {
           const activeFilter = currentState.activeFilters.find((a) => a.id === field);
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
         let newFilterGroups = currentState.filterGroups.slice();
-        if(isDesktop) {
+        if (isDesktop) {
           newFilterGroups[0].expanded = true;
         }
-        return getState({ ...currentState, filterGroups: newFilterGroups, page: 1 }, { ...currentState.filterValues, ...newFilterValues });
+        return getState(
+          { ...currentState, filterGroups: newFilterGroups, page: 1 },
+          { ...currentState.filterValues, ...newFilterValues }
+        );
       });
     },
     resetAllFiltersExcept: (value: any, id: string) => {
-      setState(currentState => {
+      setState((currentState) => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
         return getState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
       });
     },
     setFilterProps: (props: any, filterId: string, groupId: string) => {
-      setState(currentState => {
+      setState((currentState) => {
         const filterGroups = currentState.filterGroups;
-        const group = filterGroups.find(g => g.name === groupId);
-        const filter = group?.filters.find(f => f.id === filterId);
+        const group = filterGroups.find((g) => g.name === groupId);
+        const filter = group?.filters.find((f) => f.id === filterId);
         if (filter) filter.props = { ...filter.props, ...props };
         const stateWithNewFilterProps = { ...currentState, filterGroups: filterGroups };
         // const newState =
         //   filter && filter.props.hasOwnProperty('parsedValue')
         //     ? getState(stateWithNewFilterProps)
         //     : stateWithNewFilterProps;
-        const newFilterValues = props.hasOwnProperty('initialValues') ? { ...currentState.filterValues, [filterId]: props.initialValues } : undefined;
+        const newFilterValues = props.hasOwnProperty('initialValues')
+          ? { ...currentState.filterValues, [filterId]: props.initialValues }
+          : undefined;
         return getState({ ...stateWithNewFilterProps }, newFilterValues);
       });
     },
     getData: () => {
-      setState(currentState => {
+      setState((currentState) => {
         /**
          * Only show the loading icon if this is a filter change
          * not on simple page change
@@ -458,7 +475,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         let minLoadTimeReached = !showLoading;
         let params: any = {};
         let query = new URLSearchParams();
-        params.fields = currentState.columns.map(d => d.selector);
+        params.fields = currentState.columns.map((d) => d.selector);
         params.limit = currentState.resultsPerPage;
         params.skip = (currentState.page - 1) * currentState.resultsPerPage;
         query.set('limit', params.limit);
@@ -469,8 +486,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
           query.set('field', params.field);
           query.set('ascending', params.ascending);
         }
-        currentState.activeFilters.forEach(a => {
-          a.searchParams?.forEach(s => {
+        currentState.activeFilters.forEach((a) => {
+          a.searchParams?.forEach((s) => {
             let field = s.field;
             let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
             /**
@@ -487,16 +504,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         axios
           .get(props.baseURL, {
             params: params,
-            paramsSerializer: p => {
+            paramsSerializer: (p) => {
               return qs.stringify(p, { arrayFormat: 'comma' });
             },
-            headers: props.apiKey ? {'X-Api-Key': props.apiKey} : null
+            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null,
           })
-          .then(result => {
-            history.push({search: query.toString()});
+          .then((result) => {
+            history.push({ search: query.toString() });
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
-            setState(currentState => {
+            setState((currentState) => {
               const totalResults = result.data.meta.total;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
@@ -505,20 +522,20 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
                 results: result.data.data,
                 totalResults: totalResults,
                 page: page,
-                loading: loadingValue
+                loading: loadingValue,
               };
             });
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
-            setState(currentState => {
+            setState((currentState) => {
               return {
                 ...currentState,
                 results: [],
                 totalResults: 0,
-                loading: loadingValue
+                loading: loadingValue,
               };
             });
           });
@@ -526,7 +543,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
         if (showLoading) {
           setTimeout(() => {
             if (!isLoading) {
-              setState(currentState => {
+              setState((currentState) => {
                 return { ...currentState, loading: false };
               });
             } else {
@@ -537,25 +554,25 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = props => {
 
         return {
           ...currentState,
-          loading: showLoading
+          loading: showLoading,
         };
       });
     },
     resetFilters: () => {
-      setState(currentState => {
+      setState((currentState) => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
         return {
           ...currentState,
           page: 1,
           filterValues,
-          activeFilters
+          activeFilters,
         };
       });
-    }
+    },
   };
 
   useDeepCompareEffect(() => {
-      actions.getData();
+    actions.getData();
   }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   return (

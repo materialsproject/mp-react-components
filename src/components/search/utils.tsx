@@ -2,8 +2,8 @@ import React from 'react';
 import * as XLSX from 'xlsx';
 import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
 import * as d3 from 'd3';
-import { spaceGroups } from '../../data/spaceGroups'; 
-import { pointGroups } from '../../data/pointGroups'; 
+import { spaceGroups } from '../../constants/spaceGroups';
+import { pointGroups } from '../../constants/pointGroups';
 
 export function convertArrayOfObjectsToCSV(array) {
   let result;
@@ -13,9 +13,9 @@ export function convertArrayOfObjectsToCSV(array) {
   result = '';
   result += keys.join(columnDelimiter);
   result += lineDelimiter;
-  array.forEach(item => {
+  array.forEach((item) => {
     let ctr = 0;
-    keys.forEach(key => {
+    keys.forEach((key) => {
       if (ctr > 0) result += columnDelimiter;
       result += item[key];
       ctr++;
@@ -76,17 +76,23 @@ export const getDelimiter = (input: string): RegExp => {
   const comma = input.match(/,/);
   const hyphen = input.match(/-/);
   const space = input.match(/\s/);
-  if (comma && comma.index &&
+  if (
+    comma &&
+    comma.index &&
     (!hyphen || (hyphen.index && hyphen.index > comma.index)) &&
     (!space || (space.index && space.index > comma.index))
   ) {
     return new RegExp(',');
-  } else if (hyphen && hyphen.index &&
+  } else if (
+    hyphen &&
+    hyphen.index &&
     (!comma || (comma.index && comma.index > hyphen.index)) &&
     (!space || (space.index && space.index > hyphen.index))
   ) {
     return new RegExp('-');
-  } else if (space && space.index &&
+  } else if (
+    space &&
+    space.index &&
     (!comma || (comma.index && comma.index > space.index)) &&
     (!hyphen || (hyphen.index && space.index > space.index))
   ) {
@@ -94,7 +100,7 @@ export const getDelimiter = (input: string): RegExp => {
   } else {
     return new RegExp(',');
   }
-}
+};
 
 export function elementsArrayToElementState(elements: string[]) {
   const elementState = {};
@@ -107,18 +113,18 @@ export function elementsArrayToElementState(elements: string[]) {
 export function formulaStringToArrays(str: string) {
   var formulaSplitWithNumbers = str.match(/[A-Z][a-z][0-9]|[A-Z][0-9]|[A-Z][a-z]|[A-Z]/g);
   var formulaSplitElementsOnly = formulaSplitWithNumbers
-    ? formulaSplitWithNumbers.map(d => d.replace(/[0-9]/, ''))
+    ? formulaSplitWithNumbers.map((d) => d.replace(/[0-9]/, ''))
     : [];
   return { formulaSplitWithNumbers, formulaSplitElementsOnly };
 }
 
 export function getTruthyKeys(obj: any) {
-  return obj ? Object.keys(obj).filter(key => obj[key]) : [];
+  return obj ? Object.keys(obj).filter((key) => obj[key]) : [];
 }
 
 export function arrayToDelimitedString(arr: any[], delimiter: string | RegExp = ',') {
   delimiter = delimiter.toString();
-  if (delimiter.indexOf('\s')  > -1) {
+  if (delimiter.indexOf('s') > -1) {
     delimiter = ' ';
   } else if (delimiter.indexOf('/') === 0) {
     delimiter = delimiter.replace(/\//g, '');
@@ -127,7 +133,7 @@ export function arrayToDelimitedString(arr: any[], delimiter: string | RegExp = 
 }
 
 export const countDecimals = (value: number) => {
-  let text = value.toString()
+  let text = value.toString();
   // verify if number 0.000005 is represented as "5e-6"
   if (text.indexOf('e-') > -1) {
     let [base, trail] = text.split('e-');
@@ -136,20 +142,20 @@ export const countDecimals = (value: number) => {
   }
   // count decimals for number in representation like "0.123456"
   if (Math.floor(value) !== value) {
-    return value.toString().split(".")[1].length || 0;
+    return value.toString().split('.')[1].length || 0;
   }
   return 0;
-}
+};
 
 export const initArray = (length: number, value: any) => {
   let arr: any[] = [];
-  while(length--) arr[length] = value;
+  while (length--) arr[length] = value;
   return arr;
-}
+};
 
 /**
  * Parses an array of valid elements from a string of elements separated by a delimiter
- * Returns an array of valid element symbols (e.g. ['Na', 'Cl']) 
+ * Returns an array of valid element symbols (e.g. ['Na', 'Cl'])
  */
 export const parseElements = (str: string, delimiter: RegExp, context: any = null) => {
   let cleanedInput = '';
@@ -163,59 +169,60 @@ export const parseElements = (str: string, delimiter: RegExp, context: any = nul
   }
   const unparsedElements = cleanedInput.split(delimiter);
   const parsedElements: string[] = [];
-  unparsedElements.forEach(el => {
+  unparsedElements.forEach((el) => {
     if (TABLE_DICO_V2[el]) {
       parsedElements.push(el);
     }
   });
   return parsedElements;
-}
+};
 
 export const spaceGroupNumberOptions = () => {
-  return spaceGroups.map(g => {
+  return spaceGroups.map((g) => {
     return {
-      value: g["int_number"],
-      label: g["int_number"]
-    }
+      value: g['int_number'],
+      label: g['int_number'],
+    };
   });
 };
 
 export const spaceGroupSymbolOptions = () => {
-  return spaceGroups.map(g => {
+  return spaceGroups.map((g) => {
     return {
-      value: g["symbol"],
-      label: g["symbol_unicode"]
-    }
+      value: g['symbol'],
+      label: g['symbol_unicode'],
+    };
   });
 };
 
 export const crystalSystemOptions = () => {
-  var spaceGroupsByCrystalSystem = d3.nest()
+  var spaceGroupsByCrystalSystem = d3
+    .nest()
     .key((d: any) => d.crystal_system)
     .entries(spaceGroups);
 
-  return spaceGroupsByCrystalSystem.map(d => {
+  return spaceGroupsByCrystalSystem.map((d) => {
     return {
       value: d.key,
-      label: d.key
-    }
-  }); 
+      label: d.key,
+    };
+  });
 };
 
 export const pointGroupOptions = () => {
-  return pointGroups.map(val => {
+  return pointGroups.map((val) => {
     return {
       value: val,
-      label: val
-    }
+      label: val,
+    };
   });
 };
 
 export const pluralize = (noun) => {
   let plural = noun + 's';
   const specialNouns = {
-    battery: 'batteries'
-  }
+    battery: 'batteries',
+  };
   if (specialNouns[noun]) plural = specialNouns[noun];
   return plural;
 };
@@ -224,7 +231,7 @@ export const pluralize = (noun) => {
  * Validate whether a string is a simplified molecular-input line-entry system (SMILES)
  */
 export const parseSmiles = (str: string) => {
-  const result = str.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$]{6,})$/ig);
+  const result = str.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$]{6,})$/gi);
   const smiles = Array.isArray(result) ? result[0] : null;
   return smiles;
 };
@@ -240,11 +247,11 @@ export const parseFormula = (str: string) => {
   console.log(capitalLettersMatch);
   console.log(formula);
   return formula;
-}
+};
 
 export const formatPointGroup = (pointGroup: string): JSX.Element => {
   if (pointGroup && typeof pointGroup === 'string') {
-    const firstCharacter = pointGroup.substring(0,1);
+    const firstCharacter = pointGroup.substring(0, 1);
     const subCharacters = pointGroup.substring(1);
     const unicodeSubCharacters = subCharacters.replace('*', '\u221E');
     return (
