@@ -1,5 +1,5 @@
-import { MaterialsInputField } from "../components/search/MaterialsInput";
-import { Column, ColumnFormat, FilterGroup, FilterType } from "../components/search/SearchUI/types";
+import { MaterialsInputField } from '../components/search/MaterialsInput';
+import { Column, ColumnFormat, FilterGroup, FilterType } from '../components/search/SearchUI/types';
 
 /**
  * Molecules Explorer Test Configuration
@@ -12,15 +12,15 @@ export const moleculesGroups: FilterGroup[] = [
       {
         name: 'ID',
         id: 'task_ids',
-        type: FilterType.TEXT_INPUT
+        type: FilterType.TEXT_INPUT,
       },
       {
         name: 'Elements',
         id: 'elements',
         type: FilterType.MATERIALS_INPUT,
         props: {
-          field: MaterialsInputField.ELEMENTS
-        }
+          field: MaterialsInputField.ELEMENTS,
+        },
       },
       {
         name: 'Number of Elements',
@@ -28,23 +28,23 @@ export const moleculesGroups: FilterGroup[] = [
         type: FilterType.SLIDER,
         props: {
           domain: [0, 20],
-          step: 1
-        }
+          step: 1,
+        },
       },
       {
         name: 'Formula',
         id: 'formula',
         type: FilterType.MATERIALS_INPUT,
         props: {
-          field: MaterialsInputField.FORMULA
-        }
+          field: MaterialsInputField.FORMULA,
+        },
       },
       {
         name: 'SMILES',
         id: 'smiles',
-        type: FilterType.TEXT_INPUT
-      }
-    ]
+        type: FilterType.TEXT_INPUT,
+      },
+    ],
   },
   {
     name: 'Basic Properties',
@@ -56,8 +56,8 @@ export const moleculesGroups: FilterGroup[] = [
         type: FilterType.SLIDER,
         props: {
           domain: [-6098, 4858],
-          step: 0.1
-        }
+          step: 0.1,
+        },
       },
       {
         name: 'Ionization Energy',
@@ -65,8 +65,8 @@ export const moleculesGroups: FilterGroup[] = [
         type: FilterType.SLIDER,
         props: {
           domain: [-8000, 6886],
-          step: 0.1
-        }
+          step: 0.1,
+        },
       },
       {
         name: 'Charge',
@@ -74,14 +74,14 @@ export const moleculesGroups: FilterGroup[] = [
         type: FilterType.SLIDER,
         props: {
           domain: [-1, 1],
-          step: 1
-        }
+          step: 1,
+        },
       },
       {
         name: 'Point Group',
         id: 'pointgroup',
-        type: FilterType.SELECT_POINTGROUP
-      }
+        type: FilterType.SELECT_POINTGROUP,
+      },
       // {
       //   name: 'Charge',
       //   id: 'charge',
@@ -103,8 +103,8 @@ export const moleculesGroups: FilterGroup[] = [
       //     ]
       //   }
       // }
-    ]
-  }
+    ],
+  },
 ];
 
 export const moleculesColumns: Column[] = [
@@ -113,16 +113,16 @@ export const moleculesColumns: Column[] = [
     selector: 'task_id',
     format: ColumnFormat.LINK,
     formatArg: '/molecules/',
-    minWidth: '130px'
+    minWidth: '130px',
   },
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    format: ColumnFormat.FORMULA
+    format: ColumnFormat.FORMULA,
   },
   {
     name: 'SMILES',
-    selector: 'smiles'
+    selector: 'smiles',
   },
   {
     name: 'Electron Affinity',
@@ -143,6 +143,6 @@ export const moleculesColumns: Column[] = [
   {
     name: 'Point Group',
     selector: 'pointgroup',
-    format: ColumnFormat.POINTGROUP
-  }
+    format: ColumnFormat.POINTGROUP,
+  },
 ];

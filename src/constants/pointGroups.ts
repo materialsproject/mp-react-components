@@ -29,5 +29,5 @@ export const pointGroups = [
   'Td',
   'Th',
   'Oh',
-  'Ih'
+  'Ih',
 ];
