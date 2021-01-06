@@ -8,7 +8,7 @@ import {
   defaults,
   ExportType,
   Renderer,
-  ThreePosition
+  ThreePosition,
 } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
@@ -20,7 +20,7 @@ import {
   getScreenCoordinate,
   getThreeScreenCoordinate,
   moveAndUnprojectPoint,
-  ObjectRegistry
+  ObjectRegistry,
 } from './utils';
 // @ts-ignore
 //import img from './glass.png';
@@ -78,7 +78,7 @@ export default class Simple3DScene {
       case Renderer.WEBGL: {
         const renderer = new THREE.WebGLRenderer({
           antialias: this.settings.antialias,
-          alpha: this.settings.transparentBackground
+          alpha: this.settings.transparentBackground,
         });
         renderer.autoClear = false;
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -119,7 +119,7 @@ export default class Simple3DScene {
     mountNode.appendChild(labelRenderer.domElement);
   }
 
-  mouseMoveListener = e => {
+  mouseMoveListener = (e) => {
     if (this.renderer instanceof WebGLRenderer || true) {
       // tooltips
       let p = this.getClickedReference(e.offsetX, e.offsetY, this.tooltipObjects);
@@ -141,7 +141,7 @@ export default class Simple3DScene {
       console.warn('No mousemove implementation for SVG');
     }
   };
-  clickListener = e => {
+  clickListener = (e) => {
     if (this.renderer instanceof WebGLRenderer || true) {
       const p = this.getClickedReference(e.offsetX, e.offsetY, this.clickableObjects);
       this.onClickImplementation(p, e);
@@ -429,7 +429,7 @@ export default class Simple3DScene {
       this.registry.clear();
       this.removeObjectByName(sceneJson.name!);
       if (this.outlineScene.children.length > 0) {
-        outlinedObject = this.selectedJsonObjects.map(o => o.id);
+        outlinedObject = this.selectedJsonObjects.map((o) => o.id);
         console.log(outlinedObject);
         this.outlineScene.remove(...this.outlineScene.children);
       }
@@ -489,7 +489,7 @@ export default class Simple3DScene {
     // object is not there, we'll remove the outline
     if (outlinedObject.length > 0) {
       this.outlineScene.remove(...this.outlineScene.children);
-      outlinedObject.forEach(id => {
+      outlinedObject.forEach((id) => {
         const three = this.computeIdToThree[id];
         if (three) {
           this.addClonedObject(three);
@@ -678,7 +678,7 @@ export default class Simple3DScene {
 
   toggleVisibility(namesToVisibility: { [objectName: string]: boolean }) {
     if (!!namesToVisibility && Object.keys(namesToVisibility).length > 0) {
-      Object.keys(namesToVisibility).forEach(objName => {
+      Object.keys(namesToVisibility).forEach((objName) => {
         const obj = this.scene.getObjectByName(objName);
         if (obj) {
           obj.visible = !!namesToVisibility[objName];
@@ -688,7 +688,7 @@ export default class Simple3DScene {
       // if it's the case, we'll need to remove the outlined object
       // note that we consider that the selection is lost
       const idsToRemove: string[] = [];
-      this.selectedJsonObjects = this.selectedJsonObjects.filter(o => {
+      this.selectedJsonObjects = this.selectedJsonObjects.filter((o) => {
         let threeobject = this.computeIdToThree[o.id];
         let visible = true;
         if (!threeobject.visible) {
@@ -706,7 +706,7 @@ export default class Simple3DScene {
         }
         return visible;
       });
-      idsToRemove.forEach(id => {
+      idsToRemove.forEach((id) => {
         const outlineObject = this.registry.getObjectFromRegistry(id);
         this.outlineScene.remove(outlineObject);
         // remove from inlet too
@@ -731,11 +731,11 @@ export default class Simple3DScene {
       const screenPoint = getScreenCoordinate(this.cachedMountNodeSize, point, this.camera);
       const finalPoint = moveAndUnprojectPoint(this.cachedMountNodeSize, screenPoint, this.camera, {
         x: 0,
-        y: -30
+        y: -30,
       });
       const info = {
         point: finalPoint,
-        object: this.getParentObject(intersects[0].object)
+        object: this.getParentObject(intersects[0].object),
       };
       return info;
     }
@@ -788,7 +788,7 @@ export default class Simple3DScene {
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
-    this.scene.dispose();
+    // this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
@@ -824,19 +824,19 @@ export default class Simple3DScene {
       case ScenePosition.SE: {
         return [
           this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
-          this.inset.getPadding()
+          this.inset.getPadding(),
         ];
       }
       case ScenePosition.NW: {
         return [
           0 + this.inset.getPadding(),
-          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize(),
         ];
       }
       case ScenePosition.NE: {
         return [
           this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
-          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize(),
         ];
       }
       default:
@@ -854,7 +854,7 @@ export default class Simple3DScene {
       defaultThickness: 0.01,
       defaultColor: [0, 0, 0],
       defaultAlpha: 1.0,
-      defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
+      defaultKeepAlive: true, // keeps outline material in cache even if material is removed from scene
     });
     this.outline = outline;
   }
@@ -864,7 +864,7 @@ export default class Simple3DScene {
     const jsonObject = this.threeUUIDTojsonObject[uuid];
     return {
       threeObject,
-      jsonObject
+      jsonObject,
     };
   }
 
@@ -876,7 +876,7 @@ export default class Simple3DScene {
     }
     if (outlinedObject.length > 0) {
       this.outlineScene.remove(...this.outlineScene.children);
-      outlinedObject.forEach(id => {
+      outlinedObject.forEach((id) => {
         const three = this.computeIdToThree[id];
         this.addClonedObject(three);
         this.outlineScene.add(this.registry.getObjectFromRegistry(three.uuid));
