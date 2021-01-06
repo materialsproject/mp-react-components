@@ -17,14 +17,13 @@ interface Props {
   placeholder?: string;
 }
 
-export const GlobalSearchBar: React.FC<Props> = props => {
+export const GlobalSearchBar: React.FC<Props> = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [searchField, setSearchField] = useState('elements');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     let query = new URLSearchParams();
     query.set(searchField, searchValue);
-    console.log(query.toString());
     const href = props.redirectRoute + '?' + query.toString();
     linkOnClick(e, href);
   };
@@ -33,8 +32,8 @@ export const GlobalSearchBar: React.FC<Props> = props => {
     <MaterialsInput
       value={searchValue}
       field={searchField}
-      onChange={v => setSearchValue(v)}
-      onFieldChange={field => setSearchField(field)}
+      onChange={(v) => setSearchValue(v)}
+      onFieldChange={(field) => setSearchField(field)}
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
       hidePeriodicTable={props.hidePeriodicTable}

@@ -23,7 +23,7 @@ export const SearchUISearchBar: React.FC = () => {
     } else {
       return false;
     }
-  }
+  };
 
   const getFieldsToOverride = (selectedField: string) => {
     let fields: string[] = [];
@@ -34,7 +34,6 @@ export const SearchUISearchBar: React.FC = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log('SUBMITTING SEARCH');
     actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
   };
 
@@ -52,8 +51,8 @@ export const SearchUISearchBar: React.FC = () => {
     <MaterialsInput
       value={searchValue}
       field={searchField}
-      onChange={v => setSearchValue(v)}
-      onFieldChange={field => setSearchField(field)}
+      onChange={(v) => setSearchValue(v)}
+      onFieldChange={(field) => setSearchField(field)}
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
       hidePeriodicTable={shouldHidePeriodicTable()}
