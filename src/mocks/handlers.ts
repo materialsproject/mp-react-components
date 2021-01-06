@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { autocompleteQuery, autocompleteResponse } from './data/autocomplete';
+import { autocompleteQuery, autocompleteResponse } from './constants/autocomplete';
 import { materialsByIdQuery, materialsByIdResponse } from './constants/materialsById';
 import {
   materialsByStabilityQuery,

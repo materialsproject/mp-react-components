@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { MaterialsInput, MaterialsInputProps } from '.';
-import { autocompleteQuery } from '../../../mocks/data/autocomplete';
+import { autocompleteQuery } from '../../../mocks/constants/autocomplete';
 
 jest.mock('./MaterialsInput.css', () => {});
 jest.mock('./MaterialsInputFormulaButtons/MaterialsInputFormulaButtons.css', () => {});
@@ -14,24 +14,20 @@ afterEach(() => cleanup());
 const defaultProps = {
   value: '',
   field: 'elements',
-  periodicTableMode: "toggle",
-  onChange: (value: string) => null
+  periodicTableMode: 'toggle',
+  onChange: (value: string) => null,
 };
 
 const renderElement = (props: MaterialsInputProps) => {
-  render(
-    <MaterialsInput
-      {...props}
-    />
-  );
+  render(<MaterialsInput {...props} />);
 };
 
 describe('<MaterialsInput/>', () => {
   it('should render periodic table, tooltip control, and search button', () => {
     renderElement({
-        ...defaultProps,
-        tooltip: "Test tooltip",
-        onSubmit: (value) => null
+      ...defaultProps,
+      tooltip: 'Test tooltip',
+      onSubmit: (value) => null,
     });
     expect(screen.getByTestId('materials-input-search-input')).toBeInTheDocument();
     expect(screen.getByTestId('materials-input-tooltip-button')).toBeInTheDocument();
@@ -41,7 +37,9 @@ describe('<MaterialsInput/>', () => {
 
   it('should enable elements', () => {
     renderElement({ ...defaultProps });
-    fireEvent.change(screen.getByTestId('materials-input-search-input'), { target: { value: 'Ga, N' } });
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: 'Ga, N' },
+    });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
   });
@@ -49,9 +47,11 @@ describe('<MaterialsInput/>', () => {
   it('should switch to formula mode', () => {
     renderElement({
       ...defaultProps,
-      onFieldChange: (field) => field
+      onFieldChange: (field) => field,
     });
-    fireEvent.change(screen.getByTestId('materials-input-search-input'), { target: { value: 'GaN' } });
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: 'GaN' },
+    });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
     expect(screen.getByText('1')).toBeDefined();
@@ -60,10 +60,18 @@ describe('<MaterialsInput/>', () => {
   it('should toggle periodic table', () => {
     renderElement({ ...defaultProps });
     expect(screen.getByTestId('materials-input-toggle-button').firstChild).toHaveClass('is-active');
-    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute('aria-hidden', 'false');
+    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
+      'aria-hidden',
+      'false'
+    );
     fireEvent.click(screen.getByTestId('materials-input-toggle-button'));
-    expect(screen.getByTestId('materials-input-toggle-button').firstChild).not.toHaveClass('is-active');
-    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByTestId('materials-input-toggle-button').firstChild).not.toHaveClass(
+      'is-active'
+    );
+    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
   });
 
   it('should update input on element click', () => {
@@ -77,19 +85,25 @@ describe('<MaterialsInput/>', () => {
   });
 
   it('should show periodic table on focus', () => {
-    renderElement({ 
+    renderElement({
       ...defaultProps,
-      periodicTableMode: 'onFocus'
+      periodicTableMode: 'onFocus',
     });
-    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
     screen.getByTestId('materials-input-search-input').focus();
-    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute('aria-hidden', 'false');
+    expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
+      'aria-hidden',
+      'false'
+    );
   });
 
   it('should stay focused on element click', () => {
-    renderElement({ 
+    renderElement({
       ...defaultProps,
-      periodicTableMode: 'onFocus'
+      periodicTableMode: 'onFocus',
     });
     screen.getByTestId('materials-input-search-input').focus();
     fireEvent.click(screen.getByText('Fe'));
@@ -97,17 +111,21 @@ describe('<MaterialsInput/>', () => {
   });
 
   it('should show autocomplete results', async () => {
-    renderElement({ 
+    renderElement({
       ...defaultProps,
       field: 'formula',
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
-      autocompleteApiKey: process.env.REACT_APP_API_KEY
+      autocompleteApiKey: process.env.REACT_APP_API_KEY,
     });
-    fireEvent.change(screen.getByTestId('materials-input-search-input'), { target: { value: autocompleteQuery } });
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: autocompleteQuery },
+    });
     screen.getByTestId('materials-input-search-input').focus();
     await waitFor(() => {
       expect(screen.getByTestId('materials-input-autocomplete-menu')).not.toHaveClass('is-hidden');
-      expect(screen.getByTestId('materials-input-autocomplete-menu-items').childNodes.length).toBeGreaterThan(1);
+      expect(
+        screen.getByTestId('materials-input-autocomplete-menu-items').childNodes.length
+      ).toBeGreaterThan(1);
     });
   });
 });
