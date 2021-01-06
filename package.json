@@ -68,7 +68,7 @@
     "react-select": "^3.1.0",
     "react-svg-morph": "^0.2.1",
     "react-switch": "^5.0.1",
-    "react-toastify": "^5.5.0",
+    "react-toastify": "^6.2.0",
     "react-tooltip": "^4.2.3",
     "react-window": "^1.8.5",
     "rxjs": "^6.5.4",
