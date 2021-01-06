@@ -34,7 +34,12 @@ import { materialsColumns, materialsGroups } from './data/materials';
 import { moleculesColumns, moleculesGroups } from './data/molecules';
 import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
-import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
+import {
+  Wrapper as MenuWrapper,
+  Button as MenuButton,
+  Menu,
+  MenuItem,
+} from 'react-aria-menubutton';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown/NavbarDropdown';
 import { DualRangeSlider } from './components/search/DualRangeSlider';
 import { MaterialsInput } from './components/search/MaterialsInput';
@@ -43,12 +48,12 @@ const latexify = (string, options) => {
   const regularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$[\s\S]+?\$/g;
   const blockRegularExpression = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]/g;
 
-  const stripDollars = stringToStrip =>
+  const stripDollars = (stringToStrip) =>
     stringToStrip[0] === '$' && stringToStrip[1] !== '$'
       ? stringToStrip.slice(1, -1)
       : stringToStrip.slice(2, -2);
 
-  const getDisplay = stringToDisplay =>
+  const getDisplay = (stringToDisplay) =>
     stringToDisplay.match(blockRegularExpression) ? 'block' : 'inline';
 
   const renderLatexString = (s, t) => {
@@ -75,24 +80,24 @@ const latexify = (string, options) => {
     stringWithoutLatex.forEach((s, index) => {
       result.push({
         string: s,
-        type: 'text'
+        type: 'text',
       });
       if (latexMatch[index]) {
         result.push({
           string: stripDollars(latexMatch[index]),
-          type: getDisplay(latexMatch[index])
+          type: getDisplay(latexMatch[index]),
         });
       }
     });
   } else {
     result.push({
       string,
-      type: 'text'
+      type: 'text',
     });
   }
 
-  const processResult = resultToProcess => {
-    const newResult = resultToProcess.map(r => {
+  const processResult = (resultToProcess) => {
+    const newResult = resultToProcess.map((r) => {
       if (r.type === 'text') {
         return r.string;
       }
@@ -119,7 +124,7 @@ class Latex extends React.Component<any, any> {
     minRuleThickness: 0,
     colorIsTextColor: false,
     strict: 'warn',
-    trust: false
+    trust: false,
   };
 
   render() {
@@ -136,7 +141,7 @@ class Latex extends React.Component<any, any> {
       maxSize,
       maxExpand,
       strict,
-      trust
+      trust,
     } = this.props;
     const output = 'html';
 
@@ -153,7 +158,7 @@ class Latex extends React.Component<any, any> {
       maxSize,
       maxExpand,
       strict,
-      trust
+      trust,
     });
     renderUs.unshift(null);
     renderUs.unshift('span'); //put everything in a span
@@ -167,7 +172,7 @@ let elements: any[] = [];
 function SelectedComponent() {
   const { enabledElements } = useElements();
   // try to delete the key in the store instead
-  const getElementsList = () => Object.keys(enabledElements).filter(el => enabledElements[el]);
+  const getElementsList = () => Object.keys(enabledElements).filter((el) => enabledElements[el]);
 
   return (
     <div className="cmp-list" style={{ margin: '10px', display: 'flex' }}>
@@ -221,7 +226,7 @@ function SceneSwitcher() {
           renderer: Renderer.WEBGL,
           extractAxis: false,
           isMultiSelectionEnabled: true,
-          secondaryObjectView: true
+          secondaryObjectView: true,
         }}
         data={_scene}
         debug={true}
@@ -234,10 +239,10 @@ function SceneSwitcher() {
 function SelectedComponentSimple() {
   const { enabledElements } = useElements();
   // try to delete the key in the store instead
-  const getElementsList = () => Object.keys(enabledElements).filter(el => enabledElements[el]);
+  const getElementsList = () => Object.keys(enabledElements).filter((el) => enabledElements[el]);
   return (
     <ul>
-      {getElementsList().map(el => (
+      {getElementsList().map((el) => (
         <li key={el}>{el}</li>
       ))}
     </ul>
@@ -264,7 +269,7 @@ function TestComponent(props: any) {
           <SelectableTable
             forwardOuterChange={true}
             maxElementSelectable={sel}
-            onStateChange={a => {
+            onStateChange={(a) => {
               console.log('new elements', a);
             }}
           />
@@ -291,7 +296,7 @@ export default class MpPeriodicContextTable extends Component {
         <SelectableTable
           forceTableLayout={this.props.forceTableLayout}
           maxElementSelectable={this.props.maxElementSelectable}
-          onStateChange={v => console.log(v)}
+          onStateChange={(v) => console.log(v)}
         />
       </PeriodicContext>
     );
@@ -318,7 +323,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.7977000000000007,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['K4CdCl6']
+    tags: ['K4CdCl6'],
   },
   {
     material_id: 'mp-1206226',
@@ -330,7 +335,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.0,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['AgBiTe2 rhom', 'NaFeO2']
+    tags: ['AgBiTe2 rhom', 'NaFeO2'],
   },
   {
     material_id: 'mp-1080365',
@@ -342,7 +347,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 1.0405000000000002,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-684034',
@@ -354,7 +359,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.7315,
     theoretical: false,
     has_bandstructure: false,
-    tags: ['Barium cadmium antimonide (21/4/18)']
+    tags: ['Barium cadmium antimonide (21/4/18)'],
   },
   {
     material_id: 'mp-1247881',
@@ -366,7 +371,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.03909999999999991,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-685503',
@@ -378,7 +383,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.04220000000000024,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1206888',
@@ -390,7 +395,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.037799999999999834,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['CdCl2', 'DyI2']
+    tags: ['CdCl2', 'DyI2'],
   },
   {
     material_id: 'mp-680178',
@@ -402,7 +407,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 2.0373,
     theoretical: false,
     has_bandstructure: false,
-    tags: ['Bromotriindium(I) hexabromodiindate(II)']
+    tags: ['Bromotriindium(I) hexabromodiindate(II)'],
   },
   {
     material_id: 'mp-684055',
@@ -414,7 +419,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 2.2653999999999996,
     theoretical: false,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1212550',
@@ -426,7 +431,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.12919999999999998,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['DEPRECATED', 'Sc2Sb', 'Cu2Sb']
+    tags: ['DEPRECATED', 'Sc2Sb', 'Cu2Sb'],
   },
   {
     material_id: 'mp-1206751',
@@ -438,7 +443,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.0658000000000003,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['DySeI', 'FeClO']
+    tags: ['DySeI', 'FeClO'],
   },
   {
     material_id: 'mp-1080638',
@@ -450,7 +455,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.9861999999999997,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1250639',
@@ -462,7 +467,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 5.6677,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1197560',
@@ -474,7 +479,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 1.4760999999999997,
     theoretical: false,
     has_bandstructure: false,
-    tags: [' Heptaantimony-octatellurium - bis(heptachloridodigallate)-tris(tetrachloridogallate)']
+    tags: [' Heptaantimony-octatellurium - bis(heptachloridodigallate)-tris(tetrachloridogallate)'],
   },
   {
     material_id: 'mp-1207336',
@@ -486,7 +491,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.09729999999999972,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['CdCl2', 'PbI2 6R']
+    tags: ['CdCl2', 'PbI2 6R'],
   },
   {
     material_id: 'mp-1212042',
@@ -498,7 +503,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.03639999999999999,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1215155',
@@ -510,7 +515,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.32220000000000004,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['Ba21Cd4Sb18', 'Ba21Cd4Bi18']
+    tags: ['Ba21Cd4Sb18', 'Ba21Cd4Bi18'],
   },
   {
     material_id: 'mp-1207362',
@@ -522,7 +527,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.1936,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['CuTbSb2', 'CuHfSi2']
+    tags: ['CuTbSb2', 'CuHfSi2'],
   },
   {
     material_id: 'mp-1215073',
@@ -534,7 +539,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.4024000000000001,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['Ag3SI rt', 'Ag3SI']
+    tags: ['Ag3SI rt', 'Ag3SI'],
   },
   {
     material_id: 'mp-1207319',
@@ -546,7 +551,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.0,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['NaFeO2', 'TlBiSe2']
+    tags: ['NaFeO2', 'TlBiSe2'],
   },
   {
     material_id: 'mp-1212183',
@@ -558,7 +563,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.06420000000000003,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['Li3Al2 rt', 'b.c.c. atom arrangement', 'Li3Al2']
+    tags: ['Li3Al2 rt', 'b.c.c. atom arrangement', 'Li3Al2'],
   },
   {
     material_id: 'mp-1215080',
@@ -570,7 +575,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.39449999999999985,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['Ag3SI', 'Ag3SBr rt']
+    tags: ['Ag3SI', 'Ag3SBr rt'],
   },
   {
     material_id: 'mp-1207329',
@@ -582,7 +587,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.16930000000000023,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['CuHoAs2', 'CuHfSi2']
+    tags: ['CuHoAs2', 'CuHfSi2'],
   },
   {
     material_id: 'mp-1080628',
@@ -594,7 +599,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.9944999999999999,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1213171',
@@ -606,7 +611,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.06840000000000002,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-1207323',
@@ -618,7 +623,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.0,
     theoretical: true,
     has_bandstructure: false,
-    tags: ['NaFeO2', 'TlNdTe2']
+    tags: ['NaFeO2', 'TlNdTe2'],
   },
   {
     material_id: 'mp-1080371',
@@ -630,7 +635,7 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.9910000000000001,
     theoretical: true,
     has_bandstructure: false,
-    tags: []
+    tags: [],
   },
   {
     material_id: 'mp-623782',
@@ -642,8 +647,8 @@ const dmr = [
     'band_gap.search_gap.band_gap': 0.2822,
     theoretical: false,
     has_bandstructure: false,
-    tags: ['Silver europium (1/1)']
-  }
+    tags: ['Silver europium (1/1)'],
+  },
 ];
 
 const menuContent = [
@@ -652,7 +657,7 @@ const menuContent = [
     items: [
       {
         label: 'Crystal Structure',
-        targetId: 'one'
+        targetId: 'one',
       },
       {
         label: 'Properties',
@@ -660,12 +665,12 @@ const menuContent = [
         items: [
           {
             label: 'Prop One',
-            targetId: 'three'
-          }
-        ]
-      }
-    ]
-  }
+            targetId: 'three',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 //    <Latex output={'html'}>{'What is $\\epsilon_{poly}^\\infty $'}</Latex>
@@ -674,10 +679,15 @@ ReactDOM.render(
   <>
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <a className="navbar-item" href="https://bulma.io">
-        </a>
+        <a className="navbar-item" href="https://bulma.io"></a>
 
-        <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <a
+          role="button"
+          className="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -686,36 +696,32 @@ ReactDOM.render(
 
       <div id="navbarBasicExample" className="navbar-menu">
         <div className="navbar-start">
-          <a className="navbar-item">
-            Home
-          </a>
+          <a className="navbar-item">Home</a>
 
-          <a className="navbar-item">
-            Documentation
-          </a>
+          <a className="navbar-item">Documentation</a>
           <NavbarDropdown
             className="has-background-danger-light	"
             label="Test"
             items={[
               {
                 text: 'One',
-                href: '/one'
+                href: '/one',
               },
               {
                 text: 'Two',
-                href: '#two'
+                href: '#two',
               },
               {
-                isDivider: true
+                isDivider: true,
               },
               {
                 isMenuLabel: true,
-                text: 'Label'
+                text: 'Label',
               },
               {
                 text: 'Three',
-                href: '#three'
-              }
+                href: '#three',
+              },
             ]}
           />
         </div>
@@ -737,27 +743,35 @@ ReactDOM.render(
       /> */}
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
-          resultLabel="material"
-          columns={materialsColumns}
-          filterGroups={materialsGroups}
-          baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
-          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
-          apiKey={undefined}
-          searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-          searchBarPlaceholder="Search by elements, formula, or mp-id"
-          sortField="e_above_hull"
-          sortAscending={true}
-        />
+        resultLabel="material"
+        columns={materialsColumns}
+        filterGroups={materialsGroups}
+        baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
+        autocompleteFormulaUrl={
+          process.env.REACT_APP_AUTOCOMPLETE_URL
+            ? process.env.REACT_APP_AUTOCOMPLETE_URL
+            : undefined
+        }
+        apiKey={undefined}
+        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        searchBarPlaceholder="Search by elements, formula, or mp-id"
+        sortField="e_above_hull"
+        sortAscending={true}
+      />
       <div className="mp-home">
         {/* <GlobalSearchBar
           redirectRoute="/materials"
           hidePeriodicTable={true}
           apiKey={process.env.REACT_APP_API_KEY}
-          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL ? process.env.REACT_APP_AUTOCOMPLETE_URL  : undefined}
+          autocompleteFormulaUrl={
+            process.env.REACT_APP_AUTOCOMPLETE_URL
+              ? process.env.REACT_APP_AUTOCOMPLETE_URL
+              : undefined
+          }
           tooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
           placeholder="Search by elements, SMILES, or mp-id"
         /> */}
-        <MaterialsInput 
+        <MaterialsInput
           value=""
           field="formula"
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL}
@@ -765,10 +779,20 @@ ReactDOM.render(
           periodicTableMode="onFocus"
           onChange={(value) => null}
         />
-        <DualRangeSlider
-          domain={[-97, 88]} 
-          initialValues={[0, 50]}
-          step={1}
+        <DualRangeSlider domain={[-97, 88]} initialValues={[0, 50]} step={1} />
+      </div>
+      <div>
+        <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
+          data={scene}
+          debug={false}
+          toggleVisibility={{}}
+        />
+        <Simple3DSceneComponent
+          settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
+          data={scene2}
+          debug={false}
+          toggleVisibility={{}}
         />
       </div>
     </div>

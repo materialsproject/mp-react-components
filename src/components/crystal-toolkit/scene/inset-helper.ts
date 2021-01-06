@@ -8,7 +8,7 @@ export enum ScenePosition {
   NE = 'NE',
   SE = 'SE',
   SW = 'SW',
-  HIDDEN = 'HIDDEN'
+  HIDDEN = 'HIDDEN',
 }
 
 const AXIS_RADIUS = 0.07;
@@ -112,7 +112,7 @@ export class InsetHelper {
   public showObject(selection: THREE.Object3D[]) {
     const object = new THREE.Object3D();
     object.add(
-      ...selection.map(a => {
+      ...selection.map((a) => {
         const b = a.clone();
         b.matrixAutoUpdate = false;
         return b;
@@ -176,7 +176,7 @@ export class InsetHelper {
 
   public onDestroy() {
     disposeSceneHierarchy(this.scene);
-    this.scene.dispose();
+    // this.scene.dispose();
     // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
     this.cameraToFollow = (null as unknown) as THREE.Camera;
     this.insetCamera = (null as unknown) as THREE.OrthographicCamera;
@@ -226,7 +226,7 @@ export class InsetHelper {
     const targetHeadLength = HEAD_AXIS_LENGTH * (scale / 1.5);
     const targetWidth = HEAD_WIDTH * (scale / 1.5);
     // we assume an axis is made of three arrows and one sphere
-    this.axisJson.contents = this.axisJson.contents.map(a => {
+    this.axisJson.contents = this.axisJson.contents.map((a) => {
       return { ...a, radius: targetRadius, headLength: targetHeadLength, headWidth: targetWidth };
     });
     this.detailedObject.remove(
