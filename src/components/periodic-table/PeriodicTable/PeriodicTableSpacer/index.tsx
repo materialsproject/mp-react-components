@@ -1,0 +1,1 @@
+export { PeriodicTableSpacer } from './PeriodicTableSpacer';

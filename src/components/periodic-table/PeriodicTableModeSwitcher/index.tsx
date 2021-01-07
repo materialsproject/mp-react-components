@@ -1,0 +1,1 @@
+export { PeriodicTableModeSwitcher } from './PeriodicTableModeSwitcher';
