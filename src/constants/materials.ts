@@ -15,13 +15,21 @@ export const materialsGroups: FilterGroup[] = [
         type: FilterType.TEXT_INPUT,
       },
       {
-        name: 'Elements',
+        name: 'Included Elements',
         id: 'elements',
         type: FilterType.MATERIALS_INPUT,
         props: {
           field: MaterialsInputField.ELEMENTS,
         },
       },
+      // {
+      //   name: 'Excluded Elements',
+      //   id: 'elements',
+      //   type: FilterType.MATERIALS_INPUT,
+      //   props: {
+      //     field: MaterialsInputField.ELEMENTS,
+      //   },
+      // },
       {
         name: 'Formula',
         id: 'formula',

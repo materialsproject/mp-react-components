@@ -4,7 +4,10 @@ import { MaterialsInput, MaterialsInputProps } from '.';
 import { autocompleteQuery } from '../../../mocks/constants/autocomplete';
 
 jest.mock('./MaterialsInput.css', () => {});
-jest.mock('./MaterialsInputFormulaButtons/MaterialsInputFormulaButtons.css', () => {});
+jest.mock(
+  '../../periodic-table/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
+  () => {}
+);
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});

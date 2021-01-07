@@ -8,7 +8,7 @@ import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolu
 jest.mock('./SearchUI.css', () => {});
 jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
 jest.mock(
-  '../MaterialsInput/MaterialsInputFormulaButtons/MaterialsInputFormulaButtons.css',
+  '../MaterialsInput/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
   () => {}
 );
 jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});

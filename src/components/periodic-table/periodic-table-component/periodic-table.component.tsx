@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 import { extent, range, max, min } from 'd3-array';
 import { scaleLinear, scaleSequential } from 'd3-scale';
 import * as d3Scale from 'd3-scale-chromatic';
+import { PeriodicTableSpacer } from '../PeriodicTable/PeriodicTableSpacer';
 
 export const DEFAULT_HEATMAP_COLOR = '#EDEEED';
 
@@ -21,7 +22,7 @@ export const COLORSCHEME = {
   Oranges: d3Scale.interpolateOranges,
   Greens: d3Scale.interpolateGreens,
   Reds: d3Scale.interpolateReds,
-  Purples: d3Scale.interpolatePurples
+  Purples: d3Scale.interpolatePurples,
 };
 Object.freeze(COLORSCHEME);
 
@@ -53,7 +54,7 @@ export interface TableProps {
   /** Color used for the lowest value*/
   heatmapMin?: string;
   showSwitcher?: boolean;
-  plugin?: any;
+  plugin?: JSX.Element;
   children?: any;
   selectorWidget?: any;
   /** toggle disabling all table components */
@@ -64,7 +65,7 @@ export enum TableLayout {
   SPACED = 'spaced',
   COMPACT = 'compact',
   MINI = 'small',
-  MAP = 'map'
+  MAP = 'map',
 }
 
 const N_LEGEND_ITEMS = 10;
@@ -78,65 +79,22 @@ function computeHeatmap(
   if (!h) return { linearScale: null, legendScale: null };
 
   const heatmapExtent = extent(Object.values(h));
-  const legendPosition = scaleLinear()
-    .domain(heatmapExtent)
-    .range([0, 100]);
+  const legendPosition = scaleLinear().domain(heatmapExtent).range([0, 100]);
 
   if (COLORSCHEME[scheme]) {
     return {
       linearScale: scaleSequential(COLORSCHEME[scheme]).domain(heatmapExtent),
       legendScale: scaleSequential(COLORSCHEME[scheme]).domain([0, N_LEGEND_ITEMS]),
-      legendPosition
+      legendPosition,
     };
   }
 
   const linearScale = scaleLinear().range([min, max]);
   linearScale.domain(heatmapExtent);
 
-  const legendScale = scaleLinear()
-    .range([min, max])
-    .domain([0, N_LEGEND_ITEMS]);
+  const legendScale = scaleLinear().range([min, max]).domain([0, N_LEGEND_ITEMS]);
 
   return { linearScale, legendScale, legendPosition };
-}
-
-// Ultimately, we'll allow people to pass a specific component by using render props
-// the goal is to allow people to insert whatever you want there
-export function TableSpacer({
-  onTableSwitcherClicked,
-  showSwitcher,
-  plugin,
-  selectorWidget,
-  disabled
-}: any) {
-  const detailedElement = useDetailedElement();
-
-  return (
-    <React.Fragment>
-      <div className="first-span">
-        {showSwitcher && <div className="table-switcher" onClick={onTableSwitcherClicked}></div>}
-        <div className="input-container"></div>
-      </div>
-      <div className="second-span">
-        {!disabled && (selectorWidget)}
-      </div>
-      <div className="element-description">
-        {detailedElement && (
-          <PeriodicElement
-            displayMode={DISPLAY_MODE.DETAILED}
-            disabled={false}
-            enabled={false}
-            hidden={false}
-            color={undefined}
-            element={TABLE_DICO_V2[detailedElement]}
-          />
-        )}
-      </div>
-      <div className="separator-span"></div>
-      <div className="first-lower-span"></div>
-      <div className="second-lower-span"></div>
-    </React.Fragment>
-  );
 }
 
 export function Table({
@@ -154,7 +112,7 @@ export function Table({
   showSwitcher,
   selectorWidget,
   plugin,
-  disabled
+  disabled,
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
@@ -173,12 +131,12 @@ export function Table({
   const {
     linearScale: heatmapscale,
     legendScale,
-    legendPosition: legendPositionScale
+    legendPosition: legendPositionScale,
   } = useMemo(() => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!, colorScheme!), [
     heatmapMax,
     heatmapMin,
     heatmap,
-    colorScheme
+    colorScheme,
   ]);
 
   // TODO(chab) allow people to pass the number of subdivisions OR to have a continuous legend
@@ -209,20 +167,14 @@ export function Table({
           forceTableLayout
         )} ${isShown ? '' : 'elements-hidden'}`}
       >
-        <TableSpacer
-          plugin={plugin}
-          selectorWidget={selectorWidget}
-          showSwitcher={showSwitcher}
-          onTableSwitcherClicked={() => setIsShown(!isShown)}
-          disabled={disabled}
-        />
+        <PeriodicTableSpacer plugin={plugin} disabled={disabled} />
         {TABLE_V2.map((element: MatElement) => (
           <PeriodicElement
-            onElementMouseOver={element => onHover(element)}
-            onElementMouseLeave={element => {
-              onElementMouseLeave(element)
+            onElementMouseOver={(element) => onHover(element)}
+            onElementMouseLeave={(element) => {
+              onElementMouseLeave(element);
             }}
-            onElementClicked={element =>
+            onElementClicked={(element) =>
               !DEFAULT_DISABLED_ELEMENTS[element.symbol] && onElementClicked(element)
             }
             color={
@@ -234,7 +186,11 @@ export function Table({
             }
             key={`${element.symbol}--${element.number}`}
             hidden={hiddenElement[element.symbol]}
-            disabled={disabled || disabledElement[element.symbol] || DEFAULT_DISABLED_ELEMENTS[element.symbol]}
+            disabled={
+              disabled ||
+              disabledElement[element.symbol] ||
+              DEFAULT_DISABLED_ELEMENTS[element.symbol]
+            }
             enabled={enabledElement[element.symbol]}
             element={element}
           />
@@ -243,14 +199,14 @@ export function Table({
       {hasHeatmap(heatmap) && (
         <div className={'legend-container'}>
           <div className={'table-legend'}>
-            {legendItems.map(n => (
+            {legendItems.map((n) => (
               <div
                 key={`legend${n}`}
                 className={'legend-division'}
                 style={{
                   background: legendScale(n),
                   width: '10px',
-                  height: `${100 / legendItems.length}%`
+                  height: `${100 / legendItems.length}%`,
                 }}
               >
                 {' '}
@@ -264,7 +220,7 @@ export function Table({
                 height: '2px',
                 right: '-1px',
                 top: `${legendPosition}%`,
-                background: 'black'
+                background: 'black',
               }}
             />
           </div>
@@ -330,5 +286,5 @@ const DEFAULT_DISABLED_ELEMENTS = {
   Fm: true,
   Md: true,
   No: true,
-  Lr: true
+  Lr: true,
 };
