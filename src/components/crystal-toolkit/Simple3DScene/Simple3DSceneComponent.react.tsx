@@ -38,7 +38,7 @@ export default function Simple3DSceneComponent({
   inletPadding,
   settings,
   animation,
-  downloadRequest = {},
+  imageRequest = {},
   imageData,
   onObjectClicked,
   toggleVisibility,
@@ -54,7 +54,7 @@ export default function Simple3DSceneComponent({
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
 
-  const downloadScreenshot = (filename: string, sceneComponent) => {
+  const setPngData = (filename: string, sceneComponent) => {
     if (sceneComponent.renderer instanceof WebGLRenderer) {
       const oldRatio = sceneComponent.renderer.getPixelRatio();
       sceneComponent.renderer.setPixelRatio(8);
@@ -75,7 +75,7 @@ export default function Simple3DSceneComponent({
     }
   };
 
-  const downloadCollada = (filename: string, sceneComponent: Simple3DScene) => {
+  const setColladaData = (filename: string, sceneComponent: Simple3DScene) => {
     // Note(chab) i think it's better to use callback, so we can manage failure
     const files = new ColladaExporter().parse(
       sceneComponent.scene,
@@ -87,14 +87,14 @@ export default function Simple3DSceneComponent({
     imageData = 'data:text/plain;base64,' + btoa(files.data);
   };
 
-  const download = (filename: string, filetype: ExportType, sceneComponent: Simple3DScene) => {
+  const requestImage = (filename: string, filetype: ExportType, sceneComponent: Simple3DScene) => {
     // force a render (in case buffer has been cleared)
     switch (filetype) {
       case ExportType.png:
-        downloadScreenshot(filename, sceneComponent);
+        setPngData(filename, sceneComponent);
         break;
       case ExportType.dae:
-        downloadCollada(filename, sceneComponent);
+        setColladaData(filename, sceneComponent);
         break;
       default:
         throw new Error('Unknown filetype.');
@@ -163,11 +163,11 @@ export default function Simple3DSceneComponent({
   }, [sceneSize]);
 
   useEffect(() => {
-    const { filename, filetype, n_requests } = downloadRequest as any;
+    const { filename, filetype, n_requests } = imageRequest as any;
     if (n_requests > 0 && filename && filename.length > 0) {
-      download(filename, filetype, scene.current!);
+      requestImage(filename, filetype, scene.current!);
     }
-  }, [(downloadRequest as any).n_requests]);
+  }, [(imageRequest as any).n_requests]);
 
   // use to dispatch camera changes, and react to them
   // not this is not the  implementation, as react will re-render
@@ -273,12 +273,12 @@ Simple3DSceneComponent.propTypes = {
    * Set to trigger a screenshot or scene download. Should be an object with
    * the structure:
    * {
-   *    "n_requests": n_requests, // increment to trigger a new download request
-   *    "filename": request_filename, // the download filename
-   *    "filetype": "png", // the download format
+   *    "n_requests": n_requests, // increment to trigger a new image request
+   *    "filename": request_filename, // the image filename
+   *    "filetype": "png", // the image format
    * }
    */
-  downloadRequest: PropTypes.object,
+  imageRequest: PropTypes.object,
   imageData: PropTypes.string,
   onObjectClicked: PropTypes.func,
   /**
