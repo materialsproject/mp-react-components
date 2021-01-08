@@ -16,8 +16,14 @@ import { MaterialsInput } from './components/search/MaterialsInput/MaterialsInpu
 import { SearchUI } from './components/search/SearchUI';
 import DataTable from 'react-data-table-component';
 import { GlobalSearchBar } from './components/search/GlobalSearchBar';
-import { Wrapper as MenuWrapper, Button as MenuButton, Menu, MenuItem } from 'react-aria-menubutton';
+import {
+  Wrapper as MenuWrapper,
+  Button as MenuButton,
+  Menu,
+  MenuItem,
+} from 'react-aria-menubutton';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
+import { Select } from './components/search/Select';
 
 export {
   SelectableTable,
@@ -37,5 +43,6 @@ export {
   SearchUI,
   DataTable,
   GlobalSearchBar,
-  NavbarDropdown
+  NavbarDropdown,
+  Select,
 };
