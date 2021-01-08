@@ -7,7 +7,7 @@ import { FilterType, Filter, FilterGroup, ActiveFilter } from '../types';
 import classNames from 'classnames';
 import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
-import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect'
+import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect';
 import { TextInput } from '../../TextInput';
 
 /**
@@ -19,12 +19,12 @@ interface Props {
 }
 
 const getActiveFilterById = (id: string, activeFilters: ActiveFilter[]) => {
-  return activeFilters.find(af => af.id === id);
+  return activeFilters.find((af) => af.id === id);
 };
 
 const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[]) => {
   let count = 0;
-  const activeIds = activeFilters.map(f => f.id);
+  const activeIds = activeFilters.map((f) => f.id);
   group.filters.forEach((f) => {
     if (activeIds.indexOf(f.id) > -1) {
       f.active = true;
@@ -36,24 +36,25 @@ const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[])
   return count;
 };
 
-
 const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) => {
   let groupsByName = {};
   groups.forEach((g) => {
     groupsByName[g.name] = {
       expanded: g.expanded === true ? true : false,
       activeFilterCount: getActiveFilterCount(g, activeFilters),
-      filters: g.filters
+      filters: g.filters,
     };
   });
   return groupsByName;
-}
+};
 
-export const SearchUIFilters: React.FC<Props> = props => {
+export const SearchUIFilters: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
-  const [groupsByName, setGroupsByName] = useState(getGroupsByName(state.filterGroups, state.activeFilters));
+  const [groupsByName, setGroupsByName] = useState(
+    getGroupsByName(state.filterGroups, state.activeFilters)
+  );
 
   /**
    * Render filter component based on the filter's "type" property
@@ -69,7 +70,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
             debounce={1000}
             type="text"
             value={state.filterValues[f.id]}
-            onChange={v => actions.setFilterValue(v, f.id)}
+            onChange={(v) => actions.setFilterValue(v, f.id)}
             {...f.props}
           />
         );
@@ -78,9 +79,9 @@ export const SearchUIFilters: React.FC<Props> = props => {
           <MaterialsInput
             debounce={1000}
             value={state.filterValues[f.id]}
-            onChange={v => actions.setFilterValue(v, f.id)}
+            onChange={(v) => actions.setFilterValue(v, f.id)}
             periodicTableMode="onFocus"
-            onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
+            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}
             // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
@@ -93,49 +94,37 @@ export const SearchUIFilters: React.FC<Props> = props => {
           <DualRangeSlider
             {...f.props}
             initialValues={state.filterValues[f.id]}
-            onChange={v => actions.setFilterValue(v, f.id)}
-            onPropsChange={propsObject => actions.setFilterProps(propsObject, f.id, groupId)}
+            onChange={(v) => actions.setFilterValue(v, f.id)}
+            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
           />
         );
-        case FilterType.SELECT_SPACEGROUP_SYMBOL:
-        case FilterType.SELECT_SPACEGROUP_NUMBER:
-        case FilterType.SELECT_CRYSTAL_SYSTEM:
-        case FilterType.SELECT_POINTGROUP:
-        case FilterType.SELECT:
-          /**
-           * Find the selected option based on the filter value and render the select dropdown
-           * If this filter is not activated, pass in null to the value prop
-           * The react-select component does not recognize undefined as a null value
-           */
-          let selected = f.props.options.find(option => option.value === state.filterValues[f.id]);
-          selected = selected ? selected : null;
-          return (
-            <Select
-              {...f.props}
-              menuPosition="fixed"
-              isClearable
-              value={selected}
-              onChange={item => {
-                const value = item && item.value ? item.value : null;
-                actions.setFilterValue(value, f.id)
-              }}
-            />
-          );
-        case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          return (
-            <ThreeStateBooleanSelect
-              {...f.props}
-              value={state.filterValues[f.id]}
-              onChange={item => actions.setFilterValue(item.value, f.id)}
-            />
-          );
-        case FilterType.CHECKBOX_LIST:
-          return (
-            <CheckboxList
-              {...f.props}
-              onChange={v => actions.setFilterValue(v, f.id)}
-            />
-          );
+      case FilterType.SELECT_SPACEGROUP_SYMBOL:
+      case FilterType.SELECT_SPACEGROUP_NUMBER:
+      case FilterType.SELECT_CRYSTAL_SYSTEM:
+      case FilterType.SELECT_POINTGROUP:
+      case FilterType.SELECT:
+        return (
+          <Select
+            {...f.props}
+            menuPosition="fixed"
+            isClearable
+            value={state.filterValues[f.id]}
+            onChange={(item) => {
+              const value = item && item.value ? item.value : null;
+              actions.setFilterValue(value, f.id);
+            }}
+          />
+        );
+      case FilterType.THREE_STATE_BOOLEAN_SELECT:
+        return (
+          <ThreeStateBooleanSelect
+            {...f.props}
+            value={state.filterValues[f.id]}
+            onChange={(item) => actions.setFilterValue(item.value, f.id)}
+          />
+        );
+      case FilterType.CHECKBOX_LIST:
+        return <CheckboxList {...f.props} onChange={(v) => actions.setFilterValue(v, f.id)} />;
       default:
         null;
     }
@@ -144,7 +133,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
 
   const renderActiveFilterCount = (count: number) => {
     if (count > 0) {
-      return <span className="badge ml-2">{count} active</span>
+      return <span className="badge ml-2">{count} active</span>;
     } else {
       return null;
     }
@@ -160,7 +149,7 @@ export const SearchUIFilters: React.FC<Props> = props => {
   const toggleGroup = (groupName: string) => {
     let newGroupsByName = { ...groupsByName };
     for (const name in newGroupsByName) {
-      newGroupsByName[name].expanded = groupName === name ? ! newGroupsByName[name].expanded : false;
+      newGroupsByName[name].expanded = groupName === name ? !newGroupsByName[name].expanded : false;
     }
     setGroupsByName(newGroupsByName);
   };
@@ -171,14 +160,14 @@ export const SearchUIFilters: React.FC<Props> = props => {
     } else {
       return null;
     }
-  }
+  };
 
   useEffect(() => {
     let newGroupsByName = { ...groupsByName };
     for (const name in newGroupsByName) {
       const g = newGroupsByName[name];
       g.activeFilterCount = getActiveFilterCount(g, state.activeFilters);
-    };
+    }
     setGroupsByName(newGroupsByName);
   }, [state.activeFilters]);
 
@@ -200,19 +189,16 @@ export const SearchUIFilters: React.FC<Props> = props => {
             <button
               data-testid="search-ui-reset-button"
               className="button"
-              onClick={e => actions.resetFilters()}
+              onClick={(e) => actions.resetFilters()}
             >
               Reset
             </button>
           </div>
         </div>
-        <div 
-          data-testid="panel-block-container"
-          className="panel-block-container"
-        >
+        <div data-testid="panel-block-container" className="panel-block-container">
           {state.filterGroups.map((g, i) => (
-            <div 
-              className={classNames('panel-block', {'is-active' : groupsByName[g.name].expanded})} 
+            <div
+              className={classNames('panel-block', { 'is-active': groupsByName[g.name].expanded })}
               key={i}
             >
               <div className="control">
@@ -223,10 +209,12 @@ export const SearchUIFilters: React.FC<Props> = props => {
                      * Using keydown event for accessibility
                      * Avoiding click event due to performance issues and collisions with mousedown
                      */
-                    onKeyDown={(e) => { if (e.key === 'Enter') toggleGroup(g.name); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') toggleGroup(g.name);
+                    }}
                     /**
                      * Using mousedown event to prevent event order issues
-                     * Periodic tables close on blur which fires before click events, 
+                     * Periodic tables close on blur which fires before click events,
                      * causing click event to be skipped because button position changes when table is hidden
                      */
                     onMouseDown={(e) => toggleGroup(g.name)}
@@ -235,12 +223,13 @@ export const SearchUIFilters: React.FC<Props> = props => {
                     id={'filter-group-button-' + i}
                     type="button"
                   >
-                    <span 
+                    <span
                       className={classNames('is-size-5', {
-                        'has-opacity-70': !groupsByName[g.name].expanded
+                        'has-opacity-70': !groupsByName[g.name].expanded,
                       })}
                     >
-                      {g.name}{renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
+                      {g.name}
+                      {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
                     </span>
                     <div className="is-pulled-right">
                       {!groupsByName[g.name].expanded ? <FaCaretRight /> : <FaCaretDown />}
@@ -251,8 +240,10 @@ export const SearchUIFilters: React.FC<Props> = props => {
                   id={'filter-group-region-' + i}
                   role="region"
                   aria-labelledby={'filter-group-button-' + i}
-                  ref={el => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', {'is-hidden' : !groupsByName[g.name].expanded})}
+                  ref={(el) => (groupRefs.current[i] = el)}
+                  className={classNames('panel-block-children', {
+                    'is-hidden': !groupsByName[g.name].expanded,
+                  })}
                 >
                   <div aria-hidden={!groupsByName[g.name].expanded}>
                     {g.filters.map((f, j) => (
@@ -260,13 +251,15 @@ export const SearchUIFilters: React.FC<Props> = props => {
                         <div>
                           <p className="has-text-weight-bold mb-2">
                             {!f.active && (
-                              <span>{f.name}{getUnitsComponent(f.units)}</span>
+                              <span>
+                                {f.name}
+                                {getUnitsComponent(f.units)}
+                              </span>
                             )}
                             {f.active && (
-                              <a 
-                                onClick={() => resetFilter(f.id)}
-                              >
-                                {f.name}{getUnitsComponent(f.units)}
+                              <a onClick={() => resetFilter(f.id)}>
+                                {f.name}
+                                {getUnitsComponent(f.units)}
                               </a>
                             )}
                           </p>
