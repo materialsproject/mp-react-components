@@ -5,6 +5,7 @@ import { CameraContextWrapper } from '../components/crystal-toolkit/Simple3DScen
 import { AnimationStyle, Renderer } from '../components/crystal-toolkit/Simple3DScene/constants';
 import Simple3DSceneComponent from '../components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
 import { Scrollspy } from '../components/navigation/Scrollspy';
+import { Select } from '../components/search/Select';
 
 /**
  * Component for testing parts of the Materials Detail view
@@ -88,6 +89,15 @@ export const MaterialsDetail: React.FC = () => {
       <div className="content">
         <div id="one">
           <h1>Crystal Structure</h1>
+          <Select
+            className="react-select-container"
+            classNamePrefix="react-select"
+            options={[
+              { value: 1, label: 'one' },
+              { value: 2, label: 'two' },
+            ]}
+            defaultValue={{ value: 1, label: 'one' }}
+          />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi beatae dicta dolores
             praesentium voluptatem earum, facere doloremque corporis numquam nemo molestiae ipsam
@@ -128,9 +138,13 @@ export const MaterialsDetail: React.FC = () => {
           </>
         </CameraContextWrapper> */}
         <Simple3DSceneComponent
-          settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
+          settings={{
+            renderer: Renderer.WEBGL,
+            extractAxis: false,
+            zoomToFit2D: true,
+          }}
           data={scene}
-          debug={true}
+          debug={false}
           toggleVisibility={{}}
         />
         <Simple3DSceneComponent
