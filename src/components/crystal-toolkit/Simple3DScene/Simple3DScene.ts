@@ -16,7 +16,6 @@ import { getSceneWithBackground, ThreeBuilder } from './three_builder';
 import { DebugHelper } from '../scene/debug-helper';
 import {
   disposeSceneHierarchy,
-  download,
   getScreenCoordinate,
   getThreeScreenCoordinate,
   moveAndUnprojectPoint,
