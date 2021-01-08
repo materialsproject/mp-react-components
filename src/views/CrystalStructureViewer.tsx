@@ -65,11 +65,11 @@ export const CrystalStructureViewer: React.FC = () => {
         data={scene}
         debug={false}
         toggleVisibility={{}}
-        downloadRequest={{
-          n_requests: 1,
-          filename: 'test',
-          filetype: ExportType.png,
-        }}
+        // downloadRequest={{
+        //   n_requests: 1,
+        //   filename: 'test',
+        //   filetype: ExportType.png,
+        // }}
       />
       {/* <CameraContextWrapper>
         <SceneSwitcher />

@@ -7,75 +7,6 @@ import toDataUrl from 'svgtodatauri';
 
 const EXPORT_PIXEL_RATIO = 8;
 
-export function downloadScreenshot(filename: string, sceneComponent) {
-  //TODO(chab) extract as a general utility method
-  // throw if svg render is used
-
-  // using method from Three.js editor
-  // create a link and hide it from end-user
-  const link = document.createElement('a');
-  link.style.display = 'none';
-  document.body.appendChild(link);
-
-  // and set link href to renderer contents
-  if (sceneComponent.renderer instanceof WebGLRenderer) {
-    const oldRatio = sceneComponent.renderer.getPixelRatio();
-    sceneComponent.renderer.setPixelRatio(EXPORT_PIXEL_RATIO);
-    sceneComponent.renderScene();
-    link.href = (<HTMLCanvasElement>sceneComponent.renderer.domElement).toDataURL('image/png');
-    triggerDownload(link, filename);
-    // wait for next event loop before rendering
-    setTimeout(() => {
-      sceneComponent.renderer.setPixelRatio(oldRatio);
-      sceneComponent.renderScene();
-    });
-  } else {
-    sceneComponent.renderScene();
-    toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
-      callback: function(data) {
-        link.href = data;
-        triggerDownload(link, filename);
-      }
-    });
-  }
-}
-
-function triggerDownload(link: HTMLAnchorElement, filename: string) {
-  link.download = filename || 'screenshot.png';
-  link.click();
-}
-
-export function downloadCollada(filename: string, sceneComponent: Simple3DScene) {
-  // Note(chab) i think it's better to use callback, so we can manage failure
-  const files = new ColladaExporter().parse(
-    sceneComponent.scene,
-    r => {
-      console.log('result', r);
-    },
-    {}
-  )!;
-  const link = document.createElement('a');
-  link.style.display = 'none';
-  document.body.appendChild(link);
-  link.href = 'data:text/plain;base64,' + btoa(files.data);
-  link.download = filename || 'scene.dae';
-  link.click();
-}
-
-export function download(filename: string, filetype: ExportType, sceneComponent: Simple3DScene) {
-  // force a render (in case buffer has been cleared)
-  switch (filetype) {
-    case ExportType.png:
-      downloadScreenshot(filename, sceneComponent);
-      break;
-    case ExportType.dae:
-      downloadCollada(filename, sceneComponent);
-      break;
-    default:
-      throw new Error('Unknown filetype.');
-  }
-}
-
 function disposeNode(node) {
   if (node instanceof THREE.Mesh) {
     if (node.geometry) {
@@ -104,7 +35,7 @@ function disposeNode(node) {
 } // disposeNode
 
 export function disposeSceneHierarchy(scene) {
-  scene.children.forEach(childNode => {
+  scene.children.forEach((childNode) => {
     disposeSceneHierarchy(childNode);
     disposeNode(childNode);
   });
@@ -193,9 +124,9 @@ export function mapArrayToBooleanObject(array: any, value: boolean = true) {
  */
 export function mergeInnerArrays(arr: Array<any>): Array<any> {
   const result: any[] = [];
-  arr.forEach(p => {
+  arr.forEach((p) => {
     if (Array.isArray(p)) {
-      p.forEach(d => result.push(d));
+      p.forEach((d) => result.push(d));
     } else {
       result.push(p);
     }

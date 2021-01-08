@@ -79,7 +79,6 @@ export default class Simple3DScene {
         const renderer = new THREE.WebGLRenderer({
           antialias: this.settings.antialias,
           alpha: this.settings.transparentBackground,
-          preserveDrawingBuffer: true,
         });
         renderer.autoClear = false;
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -789,7 +788,7 @@ export default class Simple3DScene {
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
-    // this.scene.dispose();
+    this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
@@ -889,10 +888,5 @@ export default class Simple3DScene {
     this.animationHelper.updateTime(time);
     this.refreshOutline();
     this.renderScene();
-  }
-
-  // for testing purposes
-  public download() {
-    download('rr', ExportType.png, this);
   }
 }

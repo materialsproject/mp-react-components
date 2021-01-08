@@ -3,11 +3,11 @@ import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
 import Simple3DScene from './Simple3DScene';
 import { subscribe } from './Simple3DSceneDownloadEvent';
 import './Simple3DScene.less';
-import { download } from './utils';
 import {
   AnimationStyle,
   DEBUG_STYLE,
   DEFAULT_SCENE_SIZE,
+  ExportType,
   MOUNT_DEBUG_NODE_CLASS,
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE,
@@ -16,6 +16,9 @@ import { CameraContext } from './camera-context';
 import { CameraReducerAction } from './camera-reducer';
 import SimpleSlider from './animation-slider';
 import { usePrevious } from '../../../utils/hooks';
+import toDataUrl from 'svgtodatauri';
+import { WebGLRenderer } from 'three';
+import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -36,6 +39,7 @@ export default function Simple3DSceneComponent({
   settings,
   animation,
   downloadRequest = {},
+  imageData,
   onObjectClicked,
   toggleVisibility,
   axisView,
@@ -49,6 +53,53 @@ export default function Simple3DSceneComponent({
   const previousAnimationSetting = usePrevious(animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
+
+  const downloadScreenshot = (filename: string, sceneComponent) => {
+    if (sceneComponent.renderer instanceof WebGLRenderer) {
+      const oldRatio = sceneComponent.renderer.getPixelRatio();
+      sceneComponent.renderer.setPixelRatio(8);
+      sceneComponent.renderScene();
+      imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
+      // wait for next event loop before rendering
+      setTimeout(() => {
+        sceneComponent.renderer.setPixelRatio(oldRatio);
+        sceneComponent.renderScene();
+      });
+    } else {
+      sceneComponent.renderScene();
+      toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
+        callback: function (data) {
+          imageData = data;
+        },
+      });
+    }
+  };
+
+  const downloadCollada = (filename: string, sceneComponent: Simple3DScene) => {
+    // Note(chab) i think it's better to use callback, so we can manage failure
+    const files = new ColladaExporter().parse(
+      sceneComponent.scene,
+      (r) => {
+        console.log('result', r);
+      },
+      {}
+    )!;
+    imageData = 'data:text/plain;base64,' + btoa(files.data);
+  };
+
+  const download = (filename: string, filetype: ExportType, sceneComponent: Simple3DScene) => {
+    // force a render (in case buffer has been cleared)
+    switch (filetype) {
+      case ExportType.png:
+        downloadScreenshot(filename, sceneComponent);
+        break;
+      case ExportType.dae:
+        downloadCollada(filename, sceneComponent);
+        break;
+      default:
+        throw new Error('Unknown filetype.');
+    }
+  };
 
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
@@ -228,6 +279,7 @@ Simple3DSceneComponent.propTypes = {
    * }
    */
   downloadRequest: PropTypes.object,
+  imageData: PropTypes.string,
   onObjectClicked: PropTypes.func,
   /**
    * Size of axis inlet
