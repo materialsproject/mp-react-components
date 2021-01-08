@@ -10,14 +10,14 @@ import {
   DEFAULT_SCENE_SIZE,
   MOUNT_DEBUG_NODE_CLASS,
   MOUNT_NODE_CLASS,
-  MOUNT_NODE_STYLE
+  MOUNT_NODE_STYLE,
 } from './constants';
 import { CameraContext } from './camera-context';
 import { CameraReducerAction } from './camera-reducer';
 import SimpleSlider from './animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 
-const getSceneSize = sceneSize => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
+const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
 let ID_GENERATOR = 0;
 /**
@@ -39,7 +39,7 @@ export default function Simple3DSceneComponent({
   onObjectClicked,
   toggleVisibility,
   axisView,
-  sceneSize
+  sceneSize,
 }: InferProps<typeof Simple3DSceneComponent.propTypes>) {
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
@@ -58,7 +58,7 @@ export default function Simple3DSceneComponent({
       settings,
       inletSize,
       inletPadding,
-      objects => {
+      (objects) => {
         if (onObjectClicked) {
           onObjectClicked(objects);
         }
@@ -71,8 +71,8 @@ export default function Simple3DSceneComponent({
               componentId: _id.current,
               position,
               quaternion,
-              zoom
-            }
+              zoom,
+            },
           });
       },
       mountNodeDebugRef.current!
@@ -104,7 +104,7 @@ export default function Simple3DSceneComponent({
   useEffect(() => scene.current!.updateInsetSettings(inletSize!, inletPadding!, axisView), [
     inletSize,
     inletPadding,
-    axisView
+    axisView,
   ]);
 
   useEffect(() => {
@@ -112,9 +112,9 @@ export default function Simple3DSceneComponent({
   }, [sceneSize]);
 
   useEffect(() => {
-    const { filename, fileType, n_requests } = downloadRequest as any;
+    const { filename, filetype, n_requests } = downloadRequest as any;
     if (n_requests > 0 && filename && filename.length > 0) {
-      download(filename, fileType, scene.current!);
+      download(filename, filetype, scene.current!);
     }
   }, [(downloadRequest as any).n_requests]);
 
@@ -163,7 +163,7 @@ export default function Simple3DSceneComponent({
 
       {animation === AnimationStyle.SLIDER && (
         <SimpleSlider
-          onUpdate={a => {
+          onUpdate={(a) => {
             scene.current!.updateTime(a / 100);
           }}
         />
@@ -255,5 +255,5 @@ Simple3DSceneComponent.propTypes = {
    * 'none'
    * 'slider'
    */
-  animation: PropTypes.string
+  animation: PropTypes.string,
 };

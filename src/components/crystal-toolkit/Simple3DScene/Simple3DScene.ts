@@ -79,6 +79,7 @@ export default class Simple3DScene {
         const renderer = new THREE.WebGLRenderer({
           antialias: this.settings.antialias,
           alpha: this.settings.transparentBackground,
+          preserveDrawingBuffer: true,
         });
         renderer.autoClear = false;
         renderer.setPixelRatio(window.devicePixelRatio);
