@@ -54,22 +54,8 @@ function SceneSwitcher() {
 }
 
 export const CrystalStructureViewer: React.FC = () => {
-  const download = () => {
-    const canvas = document.getElementsByTagName('canvas')[0];
-    let link = document.createElement('a');
-    link.download = 'chart.png';
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.href = canvas.toDataURL();
-    link.click();
-    link.remove();
-  };
-
   return (
     <div>
-      <button className="button" onClick={() => download()}>
-        Download
-      </button>
       <Simple3DSceneComponent
         settings={{
           renderer: Renderer.WEBGL,
@@ -84,12 +70,6 @@ export const CrystalStructureViewer: React.FC = () => {
           filename: 'test',
           filetype: ExportType.png,
         }}
-      />
-      <Simple3DSceneComponent
-        settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
-        data={scene2}
-        debug={false}
-        toggleVisibility={{}}
       />
       {/* <CameraContextWrapper>
         <SceneSwitcher />
