@@ -8,6 +8,7 @@ jest.mock(
   '../../periodic-table/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
   () => {}
 );
+jest.mock('../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher.css', () => {});
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
@@ -57,7 +58,7 @@ describe('<MaterialsInput/>', () => {
     });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
-    expect(screen.getByText('1')).toBeDefined();
+    expect(screen.getByText('(')).toBeDefined();
   });
 
   it('should toggle periodic table', () => {

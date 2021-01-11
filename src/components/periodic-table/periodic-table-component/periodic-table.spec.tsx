@@ -18,66 +18,21 @@ describe('<Table/>', () => {
   });
   it('should have correct enabled state', () => {
     const wrapper = renderElement({}, enabled);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(0)
-        .hasClass('enabled')
-    ).toBe(true);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(1)
-        .hasClass('enabled')
-    ).toBe(false);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(2)
-        .hasClass('enabled')
-    ).toBe(true);
+    expect(wrapper.find('.mat-element').at(0).hasClass('enabled')).toBe(true);
+    expect(wrapper.find('.mat-element').at(1).hasClass('enabled')).toBe(false);
+    expect(wrapper.find('.mat-element').at(2).hasClass('enabled')).toBe(true);
   });
   it('should have correct disabled state', () => {
     const wrapper = renderElement({ ...enabled });
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(0)
-        .hasClass('disabled')
-    ).toBe(true);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(1)
-        .hasClass('enabled')
-    ).toBe(false);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(2)
-        .hasClass('disabled')
-    ).toBe(true);
+    expect(wrapper.find('.mat-element').at(0).hasClass('disabled')).toBe(true);
+    expect(wrapper.find('.mat-element').at(1).hasClass('enabled')).toBe(false);
+    expect(wrapper.find('.mat-element').at(2).hasClass('disabled')).toBe(true);
   });
   it('should have correct hidden state', () => {
     const wrapper = renderElement({}, {}, { ...enabled });
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(0)
-        .hasClass('hidden')
-    ).toBe(true);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(1)
-        .hasClass('hidden')
-    ).toBe(false);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(2)
-        .hasClass('hidden')
-    ).toBe(true);
+    expect(wrapper.find('.mat-element').at(0).hasClass('hidden')).toBe(true);
+    expect(wrapper.find('.mat-element').at(1).hasClass('hidden')).toBe(false);
+    expect(wrapper.find('.mat-element').at(2).hasClass('hidden')).toBe(true);
   });
 
   // it('click callback should be called', () => {
@@ -98,22 +53,9 @@ describe('<Table/>', () => {
     const click = jest.fn();
     const hover = jest.fn();
     const wrapper = renderElement({}, {}, { ...enabled }, click, hover);
-    expect(
-      wrapper
-        .find('.mat-element')
-        .at(0)
-        .simulate('mouseover')
-    );
+    expect(wrapper.find('.mat-element').at(0).simulate('mouseover'));
     expect(hover).toHaveBeenCalled();
     expect(click).toHaveBeenCalledTimes(0);
-  });
-
-  it('table spacer click should be called', () => {
-    const click = jest.fn();
-    const hover = jest.fn();
-    const wrapper = renderElement({}, {}, { ...enabled }, click, hover);
-    expect(wrapper.find('.table-switcher').simulate('mouseover'));
-    //TODO(chab) add some real assertions
   });
 });
 

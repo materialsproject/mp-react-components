@@ -7,15 +7,16 @@ import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolu
 
 jest.mock('./SearchUI.css', () => {});
 jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
-jest.mock(
-  '../MaterialsInput/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
-  () => {}
-);
 jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});
 jest.mock('../Select/Select.css', () => {});
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
+jest.mock(
+  '../../periodic-table/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
+  () => {}
+);
+jest.mock('../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher.css', () => {});
 
 const defaultProps = {
   resultLabel: 'material',
