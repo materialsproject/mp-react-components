@@ -222,7 +222,6 @@ export default class Scene {
 
   private readonly mouseTrackballUpdate = () => {
     this.controls.update();
-    console.log(this.camera.zoom);
   };
 
   public updateCamera(position: Vector3, rotation: Quaternion, zoom: number) {

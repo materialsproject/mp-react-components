@@ -54,6 +54,7 @@ function SceneSwitcher() {
 }
 
 export const CrystalStructureViewer: React.FC = () => {
+  const [state, setState] = useState({ imageData: 'test image data' });
   return (
     <div>
       <CrystalToolkitScene
@@ -65,11 +66,13 @@ export const CrystalStructureViewer: React.FC = () => {
         data={scene}
         debug={false}
         toggleVisibility={{}}
-        imageRequest={{
-          n_requests: 1,
-          filename: 'test',
-          filetype: ExportType.png,
-        }}
+        // imageRequest={{
+        //   n_requests: 1,
+        //   filename: 'test',
+        //   filetype: ExportType.png,
+        // }}
+        imageData={state.imageData}
+        setProps={setState}
       />
       {/* <CameraContextProvider>
         <SceneSwitcher />
