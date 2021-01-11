@@ -266,11 +266,6 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     }
   }, [(props.imageRequest as any).n_requests]);
 
-  useEffect(() => {
-    console.log('IMAGE DATA');
-    console.log(props.imageData);
-  }, [props.imageData]);
-
   // use to dispatch camera changes, and react to them
   // not this is not the  implementation, as react will re-render
   // when dispatch is called ( ideally, we could just use RxJS to react to the changes,
