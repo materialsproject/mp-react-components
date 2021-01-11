@@ -24,6 +24,7 @@ import {
 } from 'react-aria-menubutton';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { Select } from './components/search/Select';
+import { Download } from './components/crystal-toolkit/Download';
 
 export {
   SelectableTable,
@@ -45,4 +46,5 @@ export {
   GlobalSearchBar,
   NavbarDropdown,
   Select,
+  Download,
 };

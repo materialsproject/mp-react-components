@@ -147,6 +147,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       sceneComponent.renderer.setPixelRatio(8);
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
+      console.log(imageData);
       props.setProps({ ...props, imageData });
       // wait for next event loop before rendering
       setTimeout(() => {

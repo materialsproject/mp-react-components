@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { scene, scene2 } from '../components/crystal-toolkit/scene/mike';
 import { s2, s3, s4 } from '../components/crystal-toolkit/scene/simple-scene';
 import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
 import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
 import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
 import { ExportType } from '../components/crystal-toolkit/scene/constants';
+import { Download } from '../components/crystal-toolkit/Download';
 
 /**
  * Component for testing Scene
@@ -54,7 +55,24 @@ function SceneSwitcher() {
 }
 
 export const CrystalStructureViewer: React.FC = () => {
-  const [state, setState] = useState({ imageData: 'test image data' });
+  const [state, setState] = useState<any>({
+    imageData: undefined,
+  });
+
+  const [dataInput, setDataInput] = useState<any>();
+
+  useEffect(() => {
+    console.log(state.imageData);
+    if (state.imageData) {
+      setDataInput({
+        filename: 'crystal',
+        content: state.imageData,
+        mimeType: 'image/png',
+        isDataURL: true,
+      });
+    }
+  }, [state.imageData]);
+
   return (
     <div>
       <CrystalToolkitScene
@@ -66,14 +84,18 @@ export const CrystalStructureViewer: React.FC = () => {
         data={scene}
         debug={false}
         toggleVisibility={{}}
-        // imageRequest={{
-        //   n_requests: 1,
-        //   filename: 'test',
-        //   filetype: ExportType.png,
-        // }}
+        imageRequest={{
+          n_requests: 1,
+          filename: 'test',
+          filetype: ExportType.png,
+        }}
         imageData={state.imageData}
         setProps={setState}
       />
+      {/* <Download 
+        id="image-download"
+        data={dataInput}
+      /> */}
       {/* <CameraContextProvider>
         <SceneSwitcher />
         <>
