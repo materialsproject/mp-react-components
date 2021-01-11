@@ -4,7 +4,6 @@ import { Range, getTrackBackground } from 'react-range';
 import { countDecimals } from '../utils';
 import './DualRangeSlider.css';
 import * as d3 from 'd3';
-import { initialState } from '../../crystal-toolkit/Simple3DScene/camera-reducer';
 import { useDebounce } from '../../../utils/hooks';
 
 const STEPDEF = 0.1;
@@ -21,8 +20,10 @@ interface Props {
 }
 
 const niceInitialValues = (vals, domain, niceDomain) => {
-  const upperBoundIsValid = vals[1] <= niceDomain[1] && vals[1] >= vals[0] && vals[1] >= niceDomain[0];
-  const lowerBoundIsValid = vals[0] >= niceDomain[0] && vals[0] <= vals[1] && vals[0] <= niceDomain[1];
+  const upperBoundIsValid =
+    vals[1] <= niceDomain[1] && vals[1] >= vals[0] && vals[1] >= niceDomain[0];
+  const lowerBoundIsValid =
+    vals[0] >= niceDomain[0] && vals[0] <= vals[1] && vals[0] <= niceDomain[1];
   if (vals[0] === domain[0] && vals[1] === domain[1]) {
     return [niceDomain[0], niceDomain[1]];
   } else if (upperBoundIsValid && !lowerBoundIsValid) {
@@ -34,7 +35,7 @@ const niceInitialValues = (vals, domain, niceDomain) => {
   } else {
     return [niceDomain[0], niceDomain[1]];
   }
-}
+};
 
 export const DualRangeSlider: React.FC<Props> = ({
   domain = [0, 100],
@@ -42,7 +43,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   initialValues = domain.slice(),
   debounce,
   onChange = () => undefined,
-  onPropsChange = () => undefined
+  onPropsChange = () => undefined,
 }) => {
   const decimals = countDecimals(step);
   const tickCount = 5;
@@ -54,14 +55,20 @@ export const DualRangeSlider: React.FC<Props> = ({
   const [upperBound, setUpperBound] = useState(values[1]);
   const [lowerBoundToDebounce, setLowerBoundToDebounce] = useState(lowerBound);
   const [upperBoundToDebounce, setUpperBoundToDebounce] = useState(upperBound);
-  const debouncedLowerBound = debounce ? useDebounce(lowerBoundToDebounce, debounce) : lowerBoundToDebounce;
-  const debouncedUpperBound = debounce ? useDebounce(upperBoundToDebounce, debounce) : upperBoundToDebounce;
+  const debouncedLowerBound = debounce
+    ? useDebounce(lowerBoundToDebounce, debounce)
+    : lowerBoundToDebounce;
+  const debouncedUpperBound = debounce
+    ? useDebounce(upperBoundToDebounce, debounce)
+    : upperBoundToDebounce;
 
   const handleSliderFinalChange = (vals) => {
     if (onChange) {
-      onChange(vals.map((val) => {  
-        return parseFloat(val.toFixed(decimals));
-      }));
+      onChange(
+        vals.map((val) => {
+          return parseFloat(val.toFixed(decimals));
+        })
+      );
     }
   };
 
@@ -147,15 +154,15 @@ export const DualRangeSlider: React.FC<Props> = ({
    * This effect lifts the prop changes up to the parent
    */
   useEffect(() => {
-    onPropsChange({domain: niceDomain, initialValues: values});
+    onPropsChange({ domain: niceDomain, initialValues: values });
   }, []);
-  
+
   /**
    * If the initialValues prop is changed from outside this component
    * trigger a slider change
    */
   useEffect(() => {
-    handleSliderChange(niceInitialValues(initialValues, domain, niceDomain))
+    handleSliderChange(niceInitialValues(initialValues, domain, niceDomain));
   }, [initialValues]);
 
   /**
@@ -171,7 +178,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   }, [debouncedLowerBound]);
 
   useEffect(() => {
-    validateDebouncedUpperBound()
+    validateDebouncedUpperBound();
   }, [debouncedUpperBound]);
 
   return (
@@ -199,7 +206,7 @@ export const DualRangeSlider: React.FC<Props> = ({
             max={niceDomain[1]}
             step={step}
             onChange={handleUpperInputChange}
-          />          
+          />
         </div>
       </div>
       <div className="slider">
@@ -215,7 +222,7 @@ export const DualRangeSlider: React.FC<Props> = ({
               onMouseDown={props.onMouseDown}
               onTouchStart={props.onTouchStart}
               className="slider-track"
-              style={{...props.style}}
+              style={{ ...props.style }}
             >
               <div
                 ref={props.ref}
@@ -225,7 +232,7 @@ export const DualRangeSlider: React.FC<Props> = ({
                     values: values,
                     colors: ['#ccc', '#3273dc', '#ccc'],
                     min: niceDomain[0],
-                    max: niceDomain[1]
+                    max: niceDomain[1],
                   }),
                 }}
               >
@@ -237,13 +244,13 @@ export const DualRangeSlider: React.FC<Props> = ({
             <div
               {...props}
               data-testid="slider-button"
-              className={classNames('button', 'is-slider', {'is-dragged': isDragged})}
+              className={classNames('button', 'is-slider', { 'is-dragged': isDragged })}
             >
-              <div className="inner-slider-button"/>
+              <div className="inner-slider-button" />
             </div>
           )}
           renderMark={({ props, index }) => {
-            const tickValue = niceDomain[0] + (index * step);
+            const tickValue = niceDomain[0] + index * step;
             if (ticks.indexOf(tickValue) > -1) {
               return (
                 <div key={'tick-' + index}>
@@ -252,13 +259,14 @@ export const DualRangeSlider: React.FC<Props> = ({
                     className="slider-tick-mark"
                     style={{
                       ...props.style,
-                      backgroundColor: tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc'
+                      backgroundColor:
+                        tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc',
                     }}
                   />
                   <span
                     data-testid="tick-value"
                     className="slider-tick-value"
-                    style={{...props.style}}
+                    style={{ ...props.style }}
                   >
                     {tickValue}
                   </span>
@@ -266,7 +274,7 @@ export const DualRangeSlider: React.FC<Props> = ({
               );
             } else {
               return null;
-            } 
+            }
           }}
         />
       </div>

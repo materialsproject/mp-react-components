@@ -14,24 +14,24 @@ export const bezierScene = {
             [4.2, 4.2, 4.2],
             [0, 0, 0],
             [0, 0, 4.2],
-            [4.2, 0, 0]
+            [4.2, 0, 0],
           ],
           color: '#f9dc3c',
           radius: 0.5,
           tooltip: 'label',
           type: 'spheres',
-          clickable: true
+          clickable: true,
         },
         {
           positions: [[2.1, 2.1, 2.1]],
           color: '#4444ff',
           radius: 0.5,
           type: 'spheres',
-          clickable: true
-        }
+          clickable: true,
+        },
       ],
       origin: [-2.1, -2.1, -2.1],
-      visible: true
+      visible: true,
     },
     {
       name: 'bonds',
@@ -41,48 +41,48 @@ export const bezierScene = {
             [
               [4.2, 4.2, 0],
               [3.4, 4, 0],
-              [1.4, 1, 0]
+              [1.4, 1, 0],
             ],
             [
               [0, 4.2, 4.2],
               [3.2, 2.2, 8.1],
-              [1.4, 1, 1]
+              [1.4, 1, 1],
             ],
             [
               [0, 4.2, 0],
               [1, 4.2, -0.4],
-              [1.3, 2, 1.3]
+              [1.3, 2, 1.3],
             ],
             [
               [4.2, 0, 4.2],
               [3.2, 2, -2],
-              [1.2, 2.2, 1.2]
+              [1.2, 2.2, 1.2],
             ],
             [
               [4.2, 4.2, 4.2],
               [3.2, 2, 3.2],
-              [1.2, 3.2, 1.2]
+              [1.2, 3.2, 1.2],
             ],
             [
               [0, 0, 0],
               [3.2, -2, 3.2],
-              [1.2, 4.2, 1.2]
+              [1.2, 4.2, 1.2],
             ],
             [
               [0, 0, 4.2],
               [3.2, 2, -1.2],
-              [1.2, 5.2, 1.2]
+              [1.2, 5.2, 1.2],
             ],
             [
               [4.2, 0, 0],
               [3.2, 2, -2.2],
-              [1.2, 6.2, 1.2]
-            ]
+              [1.2, 6.2, 1.2],
+            ],
           ],
           color: ['#f9dc3c', '#a121f6'],
           radius: [0.08, 0.34, 0.13],
           type: 'bezier',
-          clickable: true
+          clickable: true,
         },
         {
           positionPairs: [],
@@ -90,11 +90,11 @@ export const bezierScene = {
           radius: 0.1,
           type: 'cylinders',
           tooltip: 'label',
-          clickable: true
-        }
+          clickable: true,
+        },
       ],
       origin: [-2.1, -2.1, -2.1],
-      visible: true
+      visible: true,
     },
     {
       name: 'polyhedra',
@@ -109,15 +109,15 @@ export const bezierScene = {
             [0, 4.2, 0],
             [4.2, 4.2, 0],
             [0, 0, 4.2],
-            [0, 4.2, 4.2]
+            [0, 4.2, 4.2],
           ],
           color: '#a121f6',
-          type: 'convex'
-        }
+          type: 'convex',
+        },
       ],
       origin: [-2.1, -2.1, -2.1],
       tooltip: 'label',
-      visible: true
+      visible: true,
     },
     {
       name: 'unit_cell',
@@ -150,16 +150,16 @@ export const bezierScene = {
                 [4.2, 0, 4.2],
                 [4.2, 4.2, 4.2],
                 [0, 4.2, 4.2],
-                [4.2, 4.2, 4.2]
+                [4.2, 4.2, 4.2],
               ],
-              type: 'lines'
-            }
+              type: 'lines',
+            },
           ],
-          visible: false
-        }
+          visible: false,
+        },
       ],
       origin: [-2.1, -2.1, -2.1],
-      visible: false
+      visible: false,
     },
     {
       name: 'axes',
@@ -168,55 +168,55 @@ export const bezierScene = {
           positionPairs: [
             [
               [-2.1, -2.1, -2.1],
-              [-1.4, -1.4, -3.1]
-            ]
+              [-1.4, -1.4, -3.1],
+            ],
           ],
           color: 'red',
           radius: 0.07, // / 0.37302772291498865) * 2,
           headLength: 0.24,
           headWidth: 0.14,
           type: 'arrows',
-          clickable: false
+          clickable: false,
         },
         {
           positionPairs: [
             [
               [-2.1, -2.1, -2.1],
-              [-0.1, -2.5, -1.1]
-            ]
+              [-0.1, -2.5, -1.1],
+            ],
           ],
           color: 'green',
           radius: 0.07, // / 0.37302772291498865) * 2,
           headLength: 0.24, // / 0.37302772291498865,
           headWidth: 0.14, // 0.37302772291498865,
           type: 'arrows',
-          clickable: false
+          clickable: false,
         },
         {
           positionPairs: [
             [
               [-2.1, -2.1, -2.1],
-              [-1.1, -1.1, -1.1]
-            ]
+              [-1.1, -1.1, -1.1],
+            ],
           ],
           color: 'blue',
           radius: 0.07, // 0.37302772291498865) * 2,
           headLength: 0.24, // / 0.37302772291498865) * 2,
           headWidth: 0.14, // / 0.37302772291498865) * 2,
           type: 'arrows',
-          clickable: false
+          clickable: false,
         },
         {
           positions: [[-2.1, -2.1, -2.1]],
           color: 'black',
           radius: 0.0175,
           type: 'spheres',
-          clickable: false
-        }
+          clickable: false,
+        },
       ],
-      visible: false
-    }
+      visible: false,
+    },
   ],
   origin: [-2.1, -2.1, -2.1],
-  visible: true
+  visible: true,
 };

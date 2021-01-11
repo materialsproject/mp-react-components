@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { scene, scene2 } from '../components/crystal-toolkit/scene/mike';
 import { s2, s3, s4 } from '../components/crystal-toolkit/scene/simple-scene';
-import { CameraContextWrapper } from '../components/crystal-toolkit/Simple3DScene/camera-context';
-import { AnimationStyle, Renderer } from '../components/crystal-toolkit/Simple3DScene/constants';
-import Simple3DSceneComponent from '../components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
-import { ExportType } from '../components/crystal-toolkit/Simple3DScene/constants';
+import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
+import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
+import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
+import { ExportType } from '../components/crystal-toolkit/scene/constants';
 
 /**
- * Component for testing Simple3DScene
+ * Component for testing Scene
  */
 
 const vis = { atoms: true };
@@ -35,7 +35,7 @@ function SceneSwitcher() {
         {' '}
         TOGGLE VIS{' '}
       </div>
-      <Simple3DSceneComponent
+      <CrystalToolkitScene
         sceneSize={'30vw'}
         animation={_anim}
         settings={{
@@ -56,7 +56,7 @@ function SceneSwitcher() {
 export const CrystalStructureViewer: React.FC = () => {
   return (
     <div>
-      <Simple3DSceneComponent
+      <CrystalToolkitScene
         settings={{
           renderer: Renderer.WEBGL,
           extractAxis: false,
@@ -71,23 +71,23 @@ export const CrystalStructureViewer: React.FC = () => {
           filetype: ExportType.png,
         }}
       />
-      {/* <CameraContextWrapper>
+      {/* <CameraContextProvider>
         <SceneSwitcher />
         <>
-          <Simple3DSceneComponent
+          <CrystalToolkitScene
             settings={{ renderer: Renderer.WEBGL, extractAxis: false }}
             data={scene}
             debug={true}
             toggleVisibility={{}}
           />
-          <Simple3DSceneComponent
+          <CrystalToolkitScene
             settings={{ renderer: Renderer.WEBGL, extractAxis: true }}
             data={scene2}
             debug={false}
             toggleVisibility={{}}
           />
         </>
-      </CameraContextWrapper> */}
+      </CameraContextProvider> */}
     </div>
   );
 };

@@ -1,18 +1,18 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
-import Simple3DSceneComponent from './Simple3DSceneComponent.react';
+import { CrystalToolkitScene } from './CrystalToolkitScene';
 import { s2 as scene } from '../scene/simple-scene';
-import { MOUNT_NODE_CLASS, Renderer } from './constants';
-import Simple3DScene from './Simple3DScene';
+import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
+import Scene from '../scene/Scene';
 
-jest.mock('./glass.png', () => {});
-jest.mock('./Simple3DScene.less', () => {});
-const spy = jest.spyOn(Simple3DScene.prototype, 'renderScene');
+jest.mock('../scene/glass.png', () => {});
+jest.mock('./CrystalToolkitScene.less', () => {});
+const spy = jest.spyOn(Scene.prototype, 'renderScene');
 const RENDERSCENE_CALLS_BY_REACT_RENDERING = 1; // goal is to reach 1 and stay there :)
 
 // When we run test, three.js is bundled differently, and we encounter again the bug
 // where we have 2 different instances of three
-describe('<Simple3DSceneComponent/>', () => {
+describe('<CrystalToolkitScene/>', () => {
   it('should be rendered', () => {
     const wrapper = renderElement();
     expect(wrapper.find(`.${MOUNT_NODE_CLASS}`).length).toBe(1);
@@ -36,10 +36,10 @@ describe('<Simple3DSceneComponent/>', () => {
 function renderElement() {
   // we use mount to test the rendering of the underlying elements
   return mount(
-    <Simple3DSceneComponent
+    <CrystalToolkitScene
       sceneSize={500}
       settings={{
-        renderer: Renderer.SVG
+        renderer: Renderer.SVG,
       }}
       data={scene}
       debug={false}

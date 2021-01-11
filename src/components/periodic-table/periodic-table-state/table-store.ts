@@ -4,11 +4,11 @@ import {
   distinctUntilKeyChanged,
   map,
   shareReplay,
-  tap
+  tap,
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
-import { mapArrayToBooleanObject } from '../../../components/crystal-toolkit/Simple3DScene/utils';
+import { mapArrayToBooleanObject } from '../../crystal-toolkit/utils';
 
 // TODO(chab) break that store into multiple pieces
 // 1) what is used for rendering, via RXJS
@@ -36,7 +36,7 @@ interface State {
 export enum TableSelectionStyle {
   ENABLE_DISABLE = 'enableDisable',
   SELECT = 'select',
-  MULTI_INPUTS_SELECT = 'mis'
+  MULTI_INPUTS_SELECT = 'mis',
 }
 
 const getDefaultState: () => Readonly<State> = () => ({
@@ -45,7 +45,7 @@ const getDefaultState: () => Readonly<State> = () => ({
   detailedElement: null,
   hiddenElements: {},
   forwardOuterChange: true,
-  lastAction: {} as any
+  lastAction: {} as any,
 });
 
 export function getPeriodicSelectionStore() {
@@ -57,7 +57,7 @@ export function getPeriodicSelectionStore() {
     !process.env.DEBUG && !(process.env.NODE_ENV === 'test')
       ? state$.pipe(shareReplay(1))
       : state$.pipe(
-          tap(s => {
+          tap((s) => {
             /*console.log(s)*/
           }),
           shareReplay(1)
@@ -84,7 +84,7 @@ export function getPeriodicSelectionStore() {
     currentElementIndex: 0,
     selectedElements: {} as any,
     //
-    setForwardChange: fwdChange => (state.forwardOuterChange = fwdChange),
+    setForwardChange: (fwdChange) => (state.forwardOuterChange = fwdChange),
     setEnabledElements: (enabledElements: any) =>
       (state = { ...state, enabledElements }) && state$.next(state),
     setDisabledElements: (disabledElements: any) =>
@@ -110,7 +110,7 @@ export function getPeriodicSelectionStore() {
       }
       state$.next({
         ...state,
-        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE
+        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE,
       });
     },
     addDisabledElement: (disabledElement: string) =>
@@ -171,12 +171,12 @@ export function getPeriodicSelectionStore() {
     },
     setMaxSelectionLimit: (maxItem: number) => {
       maxItemAllowed = maxItem;
-    }
+    },
   };
 
   return {
     observable,
-    actions
+    actions,
   };
 }
 
@@ -184,7 +184,7 @@ type Actions = ReturnType<typeof getPeriodicSelectionStore>;
 
 export const PeriodicSelectionContext = React.createContext({
   observable: {} as Observable<State>,
-  actions: {}
+  actions: {},
 } as Actions);
 
 /**
@@ -219,7 +219,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
         map(({ enabledElements, disabledElements, forwardOuterChange }: any) => ({
           enabledElements,
           disabledElements,
-          forwardOuterChange
+          forwardOuterChange,
         })),
         distinctUntilChanged((p, q) => {
           return (
@@ -232,7 +232,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
           onStateChange &&
           onStateChange({
             enabledElements: Object.keys(enabledElements),
-            disabledElements: Object.keys(disabledElements)
+            disabledElements: Object.keys(disabledElements),
           });
       });
 

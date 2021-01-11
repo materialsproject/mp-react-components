@@ -20,7 +20,7 @@ import {
   getThreeScreenCoordinate,
   moveAndUnprojectPoint,
   ObjectRegistry,
-} from './utils';
+} from '../utils';
 // @ts-ignore
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
@@ -28,11 +28,11 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { SceneJsonObject } from '../scene/simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { AnimationHelper } from '../scene/animation-helper';
-import './Simple3DScene.less';
+import '../CrystalToolkitScene/CrystalToolkitScene.less';
 
 const POINTER_CLASS = 'show-pointer';
 let D;
-export default class Simple3DScene {
+export default class Scene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
   private labelRenderer!: CSS2DRenderer;

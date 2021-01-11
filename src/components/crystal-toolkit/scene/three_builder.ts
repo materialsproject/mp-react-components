@@ -4,7 +4,7 @@ import {
   DirectionalLight,
   HemisphereLight,
   Object3D,
-  SphereBufferGeometry
+  SphereBufferGeometry,
 } from 'three';
 import {
   JSON3DObject,
@@ -13,7 +13,7 @@ import {
   RADIUS_SEGMENTS,
   Renderer,
   ThreePosition,
-  TUBE_SEGMENTS
+  TUBE_SEGMENTS,
 } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
@@ -22,7 +22,7 @@ import { RadiusTubeBufferGeometry } from './RadiusTubeBufferGeometry';
 export const DEFAULT_DASHED_LINE_COLOR = '#000000';
 export const DEFAULT_LINE_COLOR = '#2c3c54';
 export const DEFAULT_MATERIAL_COLOR = '#52afb0';
-import { mergeInnerArrays } from './utils';
+import { mergeInnerArrays } from '../utils';
 
 // i think it would be better to have a mixin or a decorator, so we do not need
 // to create a sub class for each kind of curve. we would store the original curve and
@@ -76,7 +76,7 @@ export class ThreeBuilder {
   public makeBezierTube(object_json, obj: THREE.Object3D) {
     object_json.controlPoints.forEach(
       (controlPoints: [ThreePosition, ThreePosition, ThreePosition]) => {
-        const cps = controlPoints.map(cp => new THREE.Vector3(...cp)) as [
+        const cps = controlPoints.map((cp) => new THREE.Vector3(...cp)) as [
           THREE.Vector3,
           THREE.Vector3,
           THREE.Vector3
@@ -151,12 +151,12 @@ export class ThreeBuilder {
         linewidth: object_json.line_width || 1,
         scale: object_json.scale || 1,
         dashSize: object_json.dashSize || 3,
-        gapSize: object_json.gapSize || 1
+        gapSize: object_json.gapSize || 1,
       });
     } else {
       mat = new THREE.LineBasicMaterial({
         color: object_json.color || DEFAULT_LINE_COLOR,
-        linewidth: object_json.line_width || 1
+        linewidth: object_json.line_width || 1,
       });
     }
 
@@ -212,7 +212,7 @@ export class ThreeBuilder {
   }
 
   public makeConvex(object_json, obj: THREE.Object3D) {
-    const points = object_json.positions.map(p => new THREE.Vector3(...p));
+    const points = object_json.positions.map((p) => new THREE.Vector3(...p));
     const geom = new ConvexBufferGeometry(points);
 
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
@@ -273,7 +273,7 @@ export class ThreeBuilder {
     // for each pairs, we have one cylinder and one head, so obj will have meshes as children
     // for 2 position pairs, 1cylinder, 1head, 2cylinder, 2head
 
-    object_json.positionPairs.forEach(positionPair => {
+    object_json.positionPairs.forEach((positionPair) => {
       // the following is technically correct but could be optimized?
       const mesh = new THREE.Mesh(geom_cyl, mat);
       const vec_a = new THREE.Vector3(...positionPair[0]);
@@ -306,7 +306,7 @@ export class ThreeBuilder {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
       opacity: opacity,
-      morphTargets: animated
+      morphTargets: animated,
     });
 
     if (this.settings.renderer === Renderer.SVG) {
@@ -377,7 +377,7 @@ export class ThreeBuilder {
         meshes[index].setRotationFromQuaternion(quaternion);
       });
     }
-    meshes.forEach(mesh => obj.add(mesh));
+    meshes.forEach((mesh) => obj.add(mesh));
     return obj;
   }
 
@@ -440,7 +440,7 @@ export class ThreeBuilder {
   public makeLights(light_json): Object3D {
     const lightGroup = new THREE.Object3D();
     lightGroup.name = 'lights';
-    light_json.forEach(light => {
+    light_json.forEach((light) => {
       let lightObj;
       switch (light.type) {
         case Light.DirectionalLight:
@@ -497,20 +497,20 @@ export class ThreeBuilder {
 
   public updateSphereColor(obj: THREE.Object3D, baseJsonObject, newColor) {
     // get uuid from json object
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
       material.color = new THREE.Color(newColor);
     });
   }
 
   public updateConvexColor(obj, objjson, color) {
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       o.material.color = new THREE.Color(color);
     });
   }
 
   public updateConvexEdges(obj, objjson, positions) {
-    const points = positions.map(p => new THREE.Vector3(...p));
+    const points = positions.map((p) => new THREE.Vector3(...p));
     const geom = new ConvexBufferGeometry(points);
     const edges = new THREE.EdgesGeometry(geom);
     obj.children[0].geometry.dispose();
@@ -524,7 +524,7 @@ export class ThreeBuilder {
     const phiStart = geometry.parameters.phiStart;
     const phiEnd = geometry.parameters.phiLength;
     const newGeometry = this.getSphereGeometry(newRadius, phiStart, phiEnd);
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       (o as THREE.Mesh).geometry.dispose();
       (o as THREE.Mesh).geometry = newGeometry;
     });
@@ -554,7 +554,7 @@ export class ThreeBuilder {
   }
 
   public updateArrowColor(obj: THREE.Object3D, baseJsonObject, color) {
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       ((o as THREE.Mesh).material as THREE.MeshStandardMaterial).color = new THREE.Color(color);
     });
   }
@@ -573,7 +573,7 @@ export class ThreeBuilder {
   // OR let pass the index so we know what to update
   public updateArrowpositionPair(baseJsonObject, newScale) {
     //but reuse material if possible
-    baseJsonObject.positionPairs.forEach(a => {});
+    baseJsonObject.positionPairs.forEach((a) => {});
   }
 
   public updateLineSegments(obj: THREE.Object3D, object_json, positions) {
@@ -610,12 +610,12 @@ export class ThreeBuilder {
         linewidth: lineWidth || object_json.line_width || 1,
         scale: scale || object_json.scale || 1,
         dashSize: dashSize || object_json.dashSize || 3,
-        gapSize: gapSize || object_json.gapSize || 1
+        gapSize: gapSize || object_json.gapSize || 1,
       });
     } else {
       mat = new THREE.LineBasicMaterial({
         color: color || object_json.color || DEFAULT_LINE_COLOR,
-        linewidth: lineWidth || object_json.line_width || 1
+        linewidth: lineWidth || object_json.line_width || 1,
       });
     }
     mesh.material = mat;
@@ -655,7 +655,7 @@ export class ThreeBuilder {
     return {
       scale: length,
       position: [vec_midpoint.x, vec_midpoint.y, vec_midpoint.z],
-      quaternion
+      quaternion,
     };
   }
 
@@ -663,14 +663,14 @@ export class ThreeBuilder {
   public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
     //CylinderBufferGeometry
     const newGeometry = this.getCylinderGeometry(newRadius);
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       (o as THREE.Mesh).geometry.dispose();
       (o as THREE.Mesh).geometry = newGeometry;
     });
   }
 
   public updateCylinderColor(obj: THREE.Object3D, baseJsonObject, newColor) {
-    obj.children.forEach(o => {
+    obj.children.forEach((o) => {
       const material = (o as THREE.Mesh).material as THREE.MeshStandardMaterial;
       material.color = new THREE.Color(newColor);
     });

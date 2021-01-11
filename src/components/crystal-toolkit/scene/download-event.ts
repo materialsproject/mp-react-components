@@ -18,5 +18,5 @@ export function triggerDownloadRequest(downloadRequest: DownloadRequestEvent) {
 }
 
 export function subscribe(cb: (event: DownloadRequestEvent) => void): Subscription {
-  return eventBus.asObservable().subscribe(event => cb(event));
+  return eventBus.asObservable().subscribe((event) => cb(event));
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Simple3DSceneComponent from './Simple3DSceneComponent.react';
+import { CrystalToolkitScene } from '../CrystalToolkitScene';
 import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
-import { AnimationStyle, Renderer } from './constants';
+import { AnimationStyle, Renderer } from '../scene/constants';
 
-export const Dynamic3DScene: React.FC = () => {
+export const DynamicCrystalToolkitScene: React.FC = () => {
   const [sceneData, setSceneData] = useState<Object | null>(null);
   const [showScene, setShowScene] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -34,7 +34,7 @@ export const Dynamic3DScene: React.FC = () => {
       <button onClick={show}>show</button>
       <button onClick={remove}>remove</button>
       {showScene && sceneData ? (
-        <Simple3DSceneComponent
+        <CrystalToolkitScene
           debug={boolean('DEBUG', false)}
           animation={select(
             'Animation',

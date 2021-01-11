@@ -1,6 +1,6 @@
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import { ExportType } from './constants';
-import Simple3DScene from './Simple3DScene';
+import { ExportType } from './scene/constants';
+import Scene from './scene/Scene';
 import * as THREE from 'three';
 import { WebGLRenderer } from 'three';
 import toDataUrl from 'svgtodatauri';

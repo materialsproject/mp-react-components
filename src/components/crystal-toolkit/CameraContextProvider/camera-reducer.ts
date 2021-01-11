@@ -1,5 +1,5 @@
 import { Quaternion, Vector3 } from 'three';
-import { Action } from './utils';
+import { Action } from '../utils';
 
 export interface CameraState {
   quaternion?: Quaternion;
@@ -10,13 +10,13 @@ export interface CameraState {
 }
 
 export const initialState = {
-  following: true
+  following: true,
 };
 
 export enum CameraReducerAction {
   NEW_POSITION = 'follow_camera',
   STOP_FOLLOWING = 'stop_following',
-  START_FOLLOWING = 'start_following'
+  START_FOLLOWING = 'start_following',
 }
 
 // use conditional type to map actions
@@ -41,7 +41,7 @@ export function cameraReducer(
         position: payload.position!.clone(),
         zoom: payload.zoom,
         fromComponent: payload.componentId,
-        following: state.following
+        following: state.following,
       };
     case CameraReducerAction.STOP_FOLLOWING:
       return { ...state, following: false };

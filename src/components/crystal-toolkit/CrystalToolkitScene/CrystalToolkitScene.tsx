@@ -1,8 +1,8 @@
 import PropTypes, { InferProps } from 'prop-types';
 import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
-import Simple3DScene from './Simple3DScene';
-import { subscribe } from './Simple3DSceneDownloadEvent';
-import './Simple3DScene.less';
+import Scene from '../scene/Scene';
+import { subscribe } from '../scene/download-event';
+import './CrystalToolkitScene.less';
 import {
   AnimationStyle,
   DEBUG_STYLE,
@@ -11,10 +11,10 @@ import {
   MOUNT_DEBUG_NODE_CLASS,
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE,
-} from './constants';
-import { CameraContext } from './camera-context';
-import { CameraReducerAction } from './camera-reducer';
-import SimpleSlider from './animation-slider';
+} from '../scene/constants';
+import { CameraContext } from '../CameraContextProvider';
+import { CameraReducerAction } from '../CameraContextProvider/camera-reducer';
+import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
 import { WebGLRenderer } from 'three';
@@ -24,13 +24,13 @@ const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE)
 
 let ID_GENERATOR = 0;
 /**
- * Simple3DSceneComponent is intended to draw simple 3D scenes using the popular
+ * CrystalToolkitScene is intended to draw simple 3D scenes using the popular
  * Three.js scene graph library. In particular, the JSON representing the 3D scene
  * is intended to be human-readable, and easily generated via Python. This is not
  * intended to be a replacement for a full scene graph library, but for rapid
  * prototyping by non-experts.
  */
-export default function Simple3DSceneComponent({
+export function CrystalToolkitScene({
   id,
   debug,
   data,
@@ -44,7 +44,7 @@ export default function Simple3DSceneComponent({
   toggleVisibility,
   axisView,
   sceneSize,
-}: InferProps<typeof Simple3DSceneComponent.propTypes>) {
+}: InferProps<typeof CrystalToolkitScene.propTypes>) {
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
   const mountNodeRef = useRef(null);
@@ -52,7 +52,7 @@ export default function Simple3DSceneComponent({
   const _id = useRef(++ID_GENERATOR + '');
   const previousAnimationSetting = usePrevious(animation);
   // we use a ref to keep a reference to the underlying scene
-  const scene: MutableRefObject<Simple3DScene | null> = useRef(null);
+  const scene: MutableRefObject<Scene | null> = useRef(null);
 
   const setPngData = (filename: string, sceneComponent) => {
     if (sceneComponent.renderer instanceof WebGLRenderer) {
@@ -75,7 +75,7 @@ export default function Simple3DSceneComponent({
     }
   };
 
-  const setColladaData = (filename: string, sceneComponent: Simple3DScene) => {
+  const setColladaData = (filename: string, sceneComponent: Scene) => {
     // Note(chab) i think it's better to use callback, so we can manage failure
     const files = new ColladaExporter().parse(
       sceneComponent.scene,
@@ -87,7 +87,7 @@ export default function Simple3DSceneComponent({
     imageData = 'data:text/plain;base64,' + btoa(files.data);
   };
 
-  const requestImage = (filename: string, filetype: ExportType, sceneComponent: Simple3DScene) => {
+  const requestImage = (filename: string, filetype: ExportType, sceneComponent: Scene) => {
     // force a render (in case buffer has been cleared)
     switch (filetype) {
       case ExportType.png:
@@ -103,7 +103,7 @@ export default function Simple3DSceneComponent({
 
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
-    const _s = (scene.current = new Simple3DScene(
+    const _s = (scene.current = new Scene(
       data,
       mountNodeRef.current!,
       settings,
@@ -228,7 +228,7 @@ export default function Simple3DSceneComponent({
 //TODO(chab) add isRequired stuff, so TS will not complain
 // or just use plain types, and use propTypes in dash
 
-Simple3DSceneComponent.propTypes = {
+CrystalToolkitScene.propTypes = {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -240,7 +240,7 @@ Simple3DSceneComponent.propTypes = {
   debug: PropTypes.bool,
 
   /**
-   * Simple3DScene JSON, the easiest way to generate this is to use the Scene class
+   * Scene JSON, the easiest way to generate this is to use the Scene class
    * in crystal_toolkit.core.scene and its to_json method.
    */
   data: PropTypes.object,

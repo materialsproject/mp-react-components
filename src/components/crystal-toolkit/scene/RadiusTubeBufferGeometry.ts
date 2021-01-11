@@ -5,7 +5,7 @@ import {
   Float32BufferAttribute,
   TubeBufferGeometry,
   Vector2,
-  Vector3
+  Vector3,
 } from 'three';
 
 export function RadiusTubeBufferGeometry(
@@ -25,7 +25,7 @@ export function RadiusTubeBufferGeometry(
     tubularSegments: tubularSegments,
     radius: radius,
     radialSegments: radialSegments,
-    closed: closed
+    closed: closed,
   };
 
   tubularSegments = tubularSegments || 64;
@@ -160,7 +160,7 @@ export function RadiusTubeBufferGeometry(
 RadiusTubeBufferGeometry.prototype = Object.create(BufferGeometry.prototype);
 RadiusTubeBufferGeometry.prototype.constructor = TubeBufferGeometry;
 
-RadiusTubeBufferGeometry.prototype.toJSON = function() {
+RadiusTubeBufferGeometry.prototype.toJSON = function () {
   var data = BufferGeometry.prototype.toJSON.call(this);
   data.path = this.parameters.path.toJSON();
   return data;

@@ -3,14 +3,14 @@ import { TableFilter } from './components/periodic-table/periodic-filter/table-f
 import { StandalonePeriodicComponent } from './components/periodic-table/periodic-element/standalone-periodic-component';
 import { PeriodicContext } from './components/periodic-table/periodic-table-state/periodic-selection-context';
 // import SearchFunnel from './components/search/exportable-grid';
-import Simple3DSceneComponent from './components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
-import { CameraContextWrapper } from './components/crystal-toolkit/Simple3DScene/camera-context';
+import { CrystalToolkitScene } from './components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
+import { CameraContextProvider } from './components/crystal-toolkit/CameraContextProvider';
 import JSONViewComponent from './components/crystal-toolkit/JSONViewComponent.react';
 import ReactGraphComponent from './components/crystal-toolkit/graph.component';
 import { Sidebar } from './components/navigation/Sidebar';
 // import { GridWithContext } from './components/search/search-grid/card-grid';
 // import { MtPrintViewContext, MTGrid, MtMaterialTable } from './components/search/exportable-grid-v2';
-import Simple3DScene from './components/crystal-toolkit/Simple3DScene/Simple3DScene';
+import Scene from './components/crystal-toolkit/scene/Scene';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/search/MaterialsInput/MaterialsInput';
 import { SearchUI } from './components/search/SearchUI';
@@ -27,12 +27,12 @@ import { Select } from './components/search/Select';
 
 export {
   SelectableTable,
-  Simple3DScene,
+  Scene,
   TableFilter,
   StandalonePeriodicComponent,
   PeriodicContext,
-  Simple3DSceneComponent,
-  CameraContextWrapper,
+  CrystalToolkitScene,
+  CameraContextProvider,
   JSONViewComponent,
   ReactGraphComponent,
   Sidebar,

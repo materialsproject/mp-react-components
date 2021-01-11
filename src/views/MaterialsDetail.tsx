@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { scene, scene2 } from '../components/crystal-toolkit/scene/mike';
 import { s2, s3, s4 } from '../components/crystal-toolkit/scene/simple-scene';
-import { CameraContextWrapper } from '../components/crystal-toolkit/Simple3DScene/camera-context';
-import { AnimationStyle, Renderer } from '../components/crystal-toolkit/Simple3DScene/constants';
-import Simple3DSceneComponent from '../components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
+import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
+import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
+import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
 import { Scrollspy } from '../components/navigation/Scrollspy';
 import { Select } from '../components/search/Select';
 
@@ -77,7 +77,7 @@ export const MaterialsDetail: React.FC = () => {
             voluptate nihil explicabo deleniti nostrum quisquam consequatur consectetur?
           </p>
         </div>
-        <Simple3DSceneComponent
+        <CrystalToolkitScene
           settings={{
             renderer: Renderer.WEBGL,
             extractAxis: false,

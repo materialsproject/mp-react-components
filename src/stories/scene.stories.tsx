@@ -3,23 +3,23 @@ import * as React from 'react';
 import {
   s2,
   s2 as sceneJson,
-  shperes as sceneJson2
+  shperes as sceneJson2,
 } from '../components/crystal-toolkit/scene/simple-scene';
 import JSONViewComponent from '../components/crystal-toolkit/JSONViewComponent.react';
-import Simple3DSceneComponent from '../components/crystal-toolkit/Simple3DScene/Simple3DSceneComponent.react';
+import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
 import ReactGraphComponent from '../components/crystal-toolkit/graph.component';
-import { CameraContextWrapper } from '../components/crystal-toolkit/Simple3DScene/camera-context';
+import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
 import { ScenePosition } from '../components/crystal-toolkit/scene/inset-helper';
-import { AnimationStyle, Renderer } from '../components/crystal-toolkit/Simple3DScene/constants';
+import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
 import { DEFAULT_OPTIONS, GRAPH } from './constants';
-import { bezierScene } from '../components/crystal-toolkit/Simple3DScene/bezier-scene';
+import { bezierScene } from '../components/crystal-toolkit/scene/bezier-scene';
 
 const emptyObject = {};
 export const scene3d = () => (
   <>
     This component renders a 3D scene by using the provided JSON.
     <div>
-      <Simple3DSceneComponent
+      <CrystalToolkitScene
         debug={boolean('DEBUG', false)}
         animation={select(
           'Animation',
@@ -35,20 +35,20 @@ export const scene3d = () => (
       />
     </div>
     You can link the camera of multiple scene together
-    <CameraContextWrapper>
+    <CameraContextProvider>
       <>
-        <Simple3DSceneComponent
+        <CrystalToolkitScene
           axisView={ScenePosition.HIDDEN}
           sceneSize={150}
           data={sceneJson2}
-        ></Simple3DSceneComponent>
-        <Simple3DSceneComponent
+        ></CrystalToolkitScene>
+        <CrystalToolkitScene
           axisView={ScenePosition.HIDDEN}
           sceneSize={150}
           data={sceneJson}
-        ></Simple3DSceneComponent>
+        ></CrystalToolkitScene>
       </>
-    </CameraContextWrapper>
+    </CameraContextProvider>
   </>
 );
 
@@ -70,7 +70,7 @@ export const graphVizView = () => (
 );
 
 export const animatedScene = () => (
-  <Simple3DSceneComponent
+  <CrystalToolkitScene
     sceneSize={'30vw'}
     animation={AnimationStyle.PLAY}
     settings={{
@@ -78,7 +78,7 @@ export const animatedScene = () => (
       renderer: Renderer.WEBGL,
       extractAxis: false,
       isMultiSelectionEnabled: false,
-      secondaryObjectView: true
+      secondaryObjectView: true,
     }}
     data={s2}
     debug={false}
@@ -93,7 +93,7 @@ export const tubeScene = () => (
     control points for a bezier tube. Similarly, each curve has its own start radius and end radius,
     but as the intermediate radius is shared, the radius only has three elements. Finally, each
     curve has its own color.
-    <Simple3DSceneComponent
+    <CrystalToolkitScene
       sceneSize={'30vw'}
       animation={AnimationStyle.NONE}
       settings={{
@@ -101,7 +101,7 @@ export const tubeScene = () => (
         renderer: Renderer.WEBGL,
         extractAxis: false,
         isMultiSelectionEnabled: false,
-        secondaryObjectView: true
+        secondaryObjectView: true,
       }}
       data={object('scene', bezierScene)}
       debug={false}
@@ -110,8 +110,8 @@ export const tubeScene = () => (
 );
 
 export default {
-  component: Simple3DSceneComponent,
+  component: CrystalToolkitScene,
   title: 'Crystal-toolkit',
   decorators: [withKnobs],
-  stories: []
+  stories: [],
 };

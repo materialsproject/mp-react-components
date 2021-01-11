@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry } from 'three';
-import { JSON3DObject } from '../Simple3DScene/constants';
+import { JSON3DObject } from './constants';
 import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { SceneJsonObject } from './simple-scene';
-import { ThreeBuilder } from '../Simple3DScene/three_builder';
+import { ThreeBuilder } from './three_builder';
 
 export class AnimationHelper {
   private mixers: THREE.AnimationMixer[] = [];
@@ -13,7 +13,7 @@ export class AnimationHelper {
   constructor(private objectBuilder: ThreeBuilder) {}
 
   public reset() {
-    this.mixers.forEach(m => m.stopAllAction());
+    this.mixers.forEach((m) => m.stopAllAction());
     this.mixers = [];
     this.lineGeometriesToUpdate = [];
   }
@@ -40,7 +40,7 @@ export class AnimationHelper {
         const end = positionPair[1];
         const targetPP = [
           [start[0] + animation[0][0], start[1] + animation[0][1], start[2] + animation[0][2]],
-          [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]]
+          [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]],
         ];
         const { scale: scaleStart, position: positionStart, quaternion: rotation } = three.children[
           idx
@@ -53,7 +53,7 @@ export class AnimationHelper {
         let valuesp = [...st, ...position];
         let valuesq = [
           ...qt,
-          ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w]
+          ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w],
         ];
         const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], valuesp);
         const scaleKF = new THREE.NumberKeyframeTrack(
@@ -98,7 +98,7 @@ export class AnimationHelper {
           ...[
             p[0] + animations[idx][0][0],
             p[1] + animations[idx][0][1],
-            p[2] + animations[idx][0][2]
+            p[2] + animations[idx][0][2],
           ]
         );
       });
@@ -143,10 +143,10 @@ export class AnimationHelper {
 
   private updateMixers(timeOrDelta, absolute = false) {
     this.mixers &&
-      this.mixers.forEach(m => (absolute ? m.setTime(timeOrDelta) : m.update(timeOrDelta)));
+      this.mixers.forEach((m) => (absolute ? m.setTime(timeOrDelta) : m.update(timeOrDelta)));
   }
   private updateLineGeometries() {
-    this.lineGeometriesToUpdate.forEach(l => {
+    this.lineGeometriesToUpdate.forEach((l) => {
       const geom = l.geometry as THREE.BufferGeometry;
       const values = (l as any).value;
       geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(values), 3));

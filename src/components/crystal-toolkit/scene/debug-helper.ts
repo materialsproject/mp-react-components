@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { CameraHelper } from 'three';
-import { disposeSceneHierarchy } from '../Simple3DScene/utils';
+import { disposeSceneHierarchy } from '../utils';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const DEBUG_SIZE = 500;
@@ -46,7 +46,7 @@ export class DebugHelper {
     }
     this.debugRenderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true
+      alpha: true,
     });
     (this.debugRenderer as any).gammaFactor = 2.2;
     this.debugRenderer.setSize(DEBUG_SIZE, DEBUG_SIZE);
