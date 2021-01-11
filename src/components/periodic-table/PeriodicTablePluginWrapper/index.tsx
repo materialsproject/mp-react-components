@@ -1,0 +1,1 @@
+export { PeriodicTablePluginWrapper } from './PeriodicTablePluginWrapper';

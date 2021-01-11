@@ -30,6 +30,7 @@ import axios from 'axios';
 import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableFormulaButtons';
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
+import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -168,7 +169,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   let materialsInputField: JSX.Element | null = null;
   let toggleControl: JSX.Element | null = null;
   let tooltipControl: JSX.Element | null = null;
-  let formulaButtons: JSX.Element | null = null;
+  let periodicTablePlugin: JSX.Element | undefined = undefined;
   let chemSysCheckbox: JSX.Element | null = null;
   const hasChemSysCheckbox = props.field === 'elements' && !props.onSubmit;
 
@@ -295,12 +296,28 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     );
   }
 
-  // if (hasAutocompleteMenu) {
-
-  // }
-
-  if (props.field === 'formula') {
-    formulaButtons = <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />;
+  /**
+   * Include periodic table mode switcher if component
+   * allows dynamic field switching.
+   *
+   * Include only formula buttons if component handles the formula field.
+   *
+   * Include no plugin if component only handles elements field.
+   */
+  if (props.onFieldChange) {
+    periodicTablePlugin = (
+      <PeriodicTableModeSwitcher
+        mode={field}
+        onSwitch={setField}
+        onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
+      />
+    );
+  } else if (props.field === 'formula') {
+    periodicTablePlugin = (
+      <PeriodicTablePluginWrapper>
+        <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />;
+      </PeriodicTablePluginWrapper>
+    );
   }
 
   /**
@@ -395,13 +412,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}
             hiddenElements={[]}
-            plugin={
-              <PeriodicTableModeSwitcher
-                mode={field}
-                onSwitch={setField}
-                onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
-              />
-            }
+            plugin={periodicTablePlugin}
             onStateChange={(enabledElements) => {
               Object.keys(enabledElements).filter((el) => enabledElements[el]);
             }}
