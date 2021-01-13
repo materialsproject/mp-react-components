@@ -9,7 +9,17 @@ import classNames from 'classnames';
  * and the class prefix "react-select-" to all the elements created by react-select
  */
 
-export const Select: React.FC<any> = (props) => {
+interface Props {
+  [id: string]: any;
+  onChange?: (value: any) => any;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (value: any) => any;
+}
+
+export const Select: React.FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
   /**
    * Set selected option based on value or defaultValue prop.
@@ -38,6 +48,15 @@ export const Select: React.FC<any> = (props) => {
         className="react-select-container"
         classNamePrefix="react-select"
         value={selected}
+        onChange={(selectedOption) => {
+          if (props.onChange) {
+            props.onChange(selectedOption);
+          }
+          if (props.setProps) {
+            const value = selectedOption && selectedOption.value ? selectedOption.value : null;
+            props.setProps({ value });
+          }
+        }}
         onMenuOpen={() => setOpen(true)}
         onMenuClose={() => setOpen(false)}
       />
