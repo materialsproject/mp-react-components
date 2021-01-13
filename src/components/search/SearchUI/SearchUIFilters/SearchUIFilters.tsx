@@ -113,6 +113,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
               const value = selectedOption && selectedOption.value ? selectedOption.value : null;
               actions.setFilterValue(value, f.id);
             }}
+            arbitraryProps={{ id: 'test' }}
           />
         );
       case FilterType.THREE_STATE_BOOLEAN_SELECT:

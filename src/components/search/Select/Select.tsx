@@ -13,6 +13,16 @@ interface Props {
   [id: string]: any;
   onChange?: (value: any) => any;
   /**
+   * Allow an object of arbitrary props to also
+   * be added to the react-select component.
+   *
+   * This is workaround to let the Dash component
+   * version of this component accept extra props
+   * supported by react-select without the need to explicitly
+   * define those props in the component's propTypes.
+   */
+  arbitraryProps?: object;
+  /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
    */
@@ -45,6 +55,7 @@ export const Select: React.FC<Props> = (props) => {
     >
       <ReactSelect
         {...props}
+        {...props.arbitraryProps}
         className="react-select-container"
         classNamePrefix="react-select"
         value={selected}
