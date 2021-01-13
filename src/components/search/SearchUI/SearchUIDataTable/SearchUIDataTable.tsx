@@ -22,7 +22,29 @@ interface Props {
 
 const componentHtmlId = uuidv4();
 
-export const SearchUIDataTable: React.FC<Props> = props => {
+const getLowerResultBound = (totalResults: number, resultsPerPage: number, page: number) => {
+  if (totalResults === 0) {
+    return 0;
+  } else if (totalResults < resultsPerPage) {
+    return 1;
+  } else {
+    return (page - 1) * resultsPerPage + 1;
+  }
+};
+
+const getUpperResultBound = (
+  totalResults: number,
+  resultsPerPage: number,
+  lowerResultBound: number
+) => {
+  if (totalResults < resultsPerPage) {
+    return totalResults;
+  } else {
+    return lowerResultBound - 1 + resultsPerPage;
+  }
+};
+
+export const SearchUIDataTable: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
@@ -31,8 +53,16 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
-  const lowerResultBound = ((state.page - 1) * state.resultsPerPage) + 1;
-  const upperResultBound = (lowerResultBound - 1) + state.resultsPerPage;
+  const lowerResultBound = getLowerResultBound(
+    state.totalResults,
+    state.resultsPerPage,
+    state.page
+  );
+  const upperResultBound = getUpperResultBound(
+    state.totalResults,
+    state.resultsPerPage,
+    lowerResultBound
+  );
 
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -64,61 +94,66 @@ export const SearchUIDataTable: React.FC<Props> = props => {
     });
     setAllCollumnsSelected(newAllColumnsSelected);
     setColumns(newColumns);
-  }
+  };
 
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
       return (
         <div data-testid="data-table-title">
-          <a 
-            href={'#' + componentHtmlId} 
+          <a
+            href={'#' + componentHtmlId}
             className="title is-5"
             onMouseOver={() => setTitleHover(true)}
             onMouseLeave={() => setTitleHover(false)}
             onClick={() => setTitleHover(false)}
           >
             <span className="has-text-weight-normal">All </span>
-            <span className="has-text-weight-bold"><NumberFormat value={state.totalResults} displayType={'text'} thousandSeparator={true} /> {pluralize(state.resultLabel)}</span>
-            {titleHover && <FaLink className="is-size-7 ml-1"/>}
+            <span className="has-text-weight-bold">
+              <NumberFormat
+                value={state.totalResults}
+                displayType={'text'}
+                thousandSeparator={true}
+              />{' '}
+              {pluralize(state.resultLabel)}
+            </span>
+            {titleHover && <FaLink className="is-size-7 ml-1" />}
           </a>
         </div>
       );
-    } else if (state.activeFilters.length > 1 || state.activeFilters.length === 1 && !state.loading) {
+    } else if (
+      state.activeFilters.length > 1 ||
+      (state.activeFilters.length === 1 && !state.loading)
+    ) {
       return (
         <div data-testid="data-table-title">
-          <a 
+          <a
             className="title is-5"
             href={'#' + componentHtmlId}
             onMouseOver={() => setTitleHover(true)}
             onMouseLeave={() => setTitleHover(false)}
             onClick={() => setTitleHover(false)}
           >
-              <span className="has-text-weight-bold">
-                {d3.format(',')(state.totalResults)}
+            <span className="has-text-weight-bold">{d3.format(',')(state.totalResults)}</span>
+            {state.totalResults === 1 && (
+              <span>
+                <span className="has-text-weight-bold"> {state.resultLabel}</span>
+                <span className="has-text-weight-normal"> matches</span>
               </span>
-              {state.totalResults === 1 && (
-                <span>
-                  <span className="has-text-weight-bold"> {state.resultLabel}</span>
-                  <span className="has-text-weight-normal"> matches</span>
-                </span>
-              )}
-              {state.totalResults !== 1 && (
-                <span>
-                  <span className="has-text-weight-bold"> {pluralize(state.resultLabel)}</span>
-                  <span className="has-text-weight-normal"> match</span>
-                </span>
-              )}
-              <span className="has-text-weight-normal"> your search</span>
-              {titleHover && <FaLink className="is-size-7 ml-1"/>}
+            )}
+            {state.totalResults !== 1 && (
+              <span>
+                <span className="has-text-weight-bold"> {pluralize(state.resultLabel)}</span>
+                <span className="has-text-weight-normal"> match</span>
+              </span>
+            )}
+            <span className="has-text-weight-normal"> your search</span>
+            {titleHover && <FaLink className="is-size-7 ml-1" />}
           </a>
         </div>
       );
     } else {
       return (
-        <p
-          data-testid="data-table-title"
-          className="title is-5 has-text-weight-normal"
-        >
+        <p data-testid="data-table-title" className="title is-5 has-text-weight-normal">
           Loading {pluralize(state.resultLabel)}...
         </p>
       );
@@ -128,24 +163,26 @@ export const SearchUIDataTable: React.FC<Props> = props => {
   const customStyles = {
     rows: {
       style: {
-        minHeight: '3em'
-      }
-    }
+        minHeight: '3em',
+      },
+    },
   };
 
-  const columnsMenu =
+  const columnsMenu = (
     <MenuWrapper
       data-testid="columns-menu"
-      className='dropdown is-right is-active has-text-left'
+      className="dropdown is-right is-active has-text-left"
       closeOnSelection={false}
     >
       <div className="dropdown-trigger">
-        <Button className='button'>
+        <Button className="button">
           <span>Columns</span>
-          <span className="icon"><FaAngleDown/></span>
+          <span className="icon">
+            <FaAngleDown />
+          </span>
         </Button>
       </div>
-      <Menu className='dropdown-menu'>
+      <Menu className="dropdown-menu">
         <ul className="dropdown-content">
           <MenuItem>
             <li className="dropdown-item">
@@ -165,7 +202,9 @@ export const SearchUIDataTable: React.FC<Props> = props => {
                   }}
                   onChange={(e) => toggleAllColumns()}
                 />
-                <span><strong>Select all</strong></span>
+                <span>
+                  <strong>Select all</strong>
+                </span>
               </label>
             </li>
           </MenuItem>
@@ -195,33 +234,39 @@ export const SearchUIDataTable: React.FC<Props> = props => {
           ))}
         </ul>
       </Menu>
-    </MenuWrapper>;
+    </MenuWrapper>
+  );
 
   const resultsPerPageOptions = [10, 15, 30, 50, 75];
-  const resultsPerPageMenu =
+  const resultsPerPageMenu = (
     <MenuWrapper
       data-testid="results-per-page-menu"
-      className='dropdown is-right is-active has-text-left mr-1'
+      className="dropdown is-right is-active has-text-left mr-1"
       onSelection={handlePerRowsChange}
     >
       <div className="dropdown-trigger">
-        <Button className='button'>
+        <Button className="button">
           <span>Results per page: {state.resultsPerPage}</span>
-          <span className="icon"><FaAngleDown/></span>
+          <span className="icon">
+            <FaAngleDown />
+          </span>
         </Button>
       </div>
-      <Menu className='dropdown-menu'>
+      <Menu className="dropdown-menu">
         <ul className="dropdown-content">
           {resultsPerPageOptions.map((d, i) => (
             <MenuItem key={i} value={d}>
-              <li className={classNames('dropdown-item', {'is-active': d === state.resultsPerPage})}>
+              <li
+                className={classNames('dropdown-item', { 'is-active': d === state.resultsPerPage })}
+              >
                 {d}
               </li>
             </MenuItem>
           ))}
         </ul>
       </Menu>
-    </MenuWrapper>;
+    </MenuWrapper>
+  );
 
   const CustomPaginator = () => (
     <Paginator
@@ -240,12 +285,14 @@ export const SearchUIDataTable: React.FC<Props> = props => {
           <div className="table-header">
             <div>
               <TableHeaderTitle />
-              <p className="subtitle is-7">Showing {d3.format(',')(lowerResultBound)} to {d3.format(',')(upperResultBound)}</p>
+              <p className="subtitle is-7">
+                Showing {d3.format(',')(lowerResultBound)}-{d3.format(',')(upperResultBound)}
+              </p>
             </div>
             <div className="progress-container">
-              {state.loading &&
+              {state.loading && (
                 <progress className="progress is-small is-primary" max="100"></progress>
-              }
+              )}
             </div>
             <div>
               {resultsPerPageMenu}
@@ -255,7 +302,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         </div>
       </div>
       <div className="columns mb-0">
-        <div  className="column pb-0">
+        <div className="column pb-0">
           <ActiveFilterButtons
             filters={state.activeFilters}
             onClick={(v, id) => actions.setFilterValue(v, id)}
@@ -263,10 +310,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
         </div>
       </div>
       <div className="columns">
-        <div
-          data-testid="react-data-table-container"
-          className="column react-data-table-container"
-        >
+        <div data-testid="react-data-table-container" className="column react-data-table-container">
           <DataTable
             className="react-data-table"
             noHeader
@@ -278,7 +322,7 @@ export const SearchUIDataTable: React.FC<Props> = props => {
             paginationServer
             paginationComponent={CustomPaginator}
             sortServer
-            sortIcon={<FaCaretDown/>}
+            sortIcon={<FaCaretDown />}
             defaultSortField={state.sortField}
             defaultSortAsc={state.sortAscending}
             onSort={handleSort}
