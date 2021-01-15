@@ -80,8 +80,7 @@ interface Props {
    * the structure:
    * {
    *    "n_requests": n_requests, // increment to trigger a new image request
-   *    "filename": request_filename, // the image filename
-   *    "filetype": "png", // the image format
+   *    "filetype": "png", // the image format ("png", "dae")
    * }
    */
   imageRequest?: any;
@@ -141,7 +140,12 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Scene | null> = useRef(null);
 
-  const setPngData = (filename: string, sceneComponent) => {
+  /**
+   * Handle saving image to png
+   * If using the SVG Renderer, convert svg to canvas image first
+   * Set imageData prop to data uri
+   */
+  const setPngData = (sceneComponent) => {
     if (sceneComponent.renderer instanceof WebGLRenderer) {
       const oldRatio = sceneComponent.renderer.getPixelRatio();
       sceneComponent.renderer.setPixelRatio(8);
@@ -164,7 +168,11 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     }
   };
 
-  const setColladaData = (filename: string, sceneComponent: Scene) => {
+  /**
+   * Handle saving image to collada file (.dae)
+   * Set imageData prop to data uri
+   */
+  const setColladaData = (sceneComponent: Scene) => {
     // Note(chab) i think it's better to use callback, so we can manage failure
     const files = new ColladaExporter().parse(
       sceneComponent.scene,
@@ -177,14 +185,14 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     props.setProps({ ...props, imageData });
   };
 
-  const requestImage = (filename: string, filetype: ExportType, sceneComponent: Scene) => {
+  const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
     // force a render (in case buffer has been cleared)
     switch (filetype) {
       case ExportType.png:
-        setPngData(filename, sceneComponent);
+        setPngData(sceneComponent);
         break;
       case ExportType.dae:
-        setColladaData(filename, sceneComponent);
+        setColladaData(sceneComponent);
         break;
       default:
         throw new Error('Unknown filetype.');
@@ -218,9 +226,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       },
       mountNodeDebugRef.current!
     ));
-    const subscription = subscribe(({ filename, filetype }) =>
-      requestImage(filename, filetype, _s)
-    );
+    const subscription = subscribe(({ filetype }) => requestImage(filetype, _s));
     return () => {
       // clean up code
       subscription.unsubscribe();
@@ -261,9 +267,9 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   }, [props.sceneSize]);
 
   useEffect(() => {
-    const { filename, filetype, n_requests } = props.imageRequest as any;
-    if (n_requests > 0 && filename && filename.length > 0) {
-      requestImage(filename, filetype, scene.current!);
+    const { filetype, n_requests } = props.imageRequest as any;
+    if (n_requests > 0) {
+      requestImage(filetype, scene.current!);
     }
   }, [(props.imageRequest as any).n_requests]);
 

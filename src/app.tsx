@@ -22,7 +22,7 @@ const mountNode = document.getElementById(mountNodeSelector);
 
 ReactDOM.render(
   <>
-    <MaterialsExplorer />
+    <CrystalStructureViewer />
   </>,
 
   mountNode
