@@ -57,12 +57,13 @@ function SceneSwitcher() {
 export const CrystalStructureViewer: React.FC = () => {
   const [state, setState] = useState<any>({
     imageData: undefined,
+    imageRequest: undefined,
+    imageDataTimestamp: undefined,
   });
 
   const [dataInput, setDataInput] = useState<any>();
 
   useEffect(() => {
-    console.log(state.imageData);
     if (state.imageData) {
       setDataInput({
         filename: 'crystal',
@@ -71,10 +72,22 @@ export const CrystalStructureViewer: React.FC = () => {
         isDataURL: true,
       });
     }
-  }, [state.imageData]);
+  }, [state.imageDataTimestamp]);
 
   return (
     <div>
+      <button
+        onClick={() => {
+          // const imageRequest = {
+          //   n_requests: 1,
+          //   filetype: ExportType.png
+          // };
+          const imageRequest = { filetype: 'png' };
+          setState({ ...state, imageRequest });
+        }}
+      >
+        Download
+      </button>
       <CrystalToolkitScene
         settings={{
           renderer: Renderer.WEBGL,
@@ -84,18 +97,12 @@ export const CrystalStructureViewer: React.FC = () => {
         data={scene}
         debug={false}
         toggleVisibility={{}}
-        imageRequest={{
-          n_requests: 1,
-          filename: 'test',
-          filetype: ExportType.png,
-        }}
+        imageRequest={state.imageRequest}
         imageData={state.imageData}
+        imageDataTimestamp={state.imageDataTimestamp}
         setProps={setState}
       />
-      {/* <Download 
-        id="image-download"
-        data={dataInput}
-      /> */}
+      <Download id="image-download" data={dataInput} />
       {/* <CameraContextProvider>
         <SceneSwitcher />
         <>

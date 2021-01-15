@@ -76,12 +76,14 @@ interface Props {
   toggleVisibility?: any;
 
   /**
-   * Set to trigger a screenshot or scene download. Should be an object with
-   * the structure:
+   * Set to trigger a screenshot or scene download.
+   * Must be an object with the following structure:
    * {
-   *    "n_requests": n_requests, // increment to trigger a new image request
-   *    "filetype": "png", // the image format ("png", "dae")
+   *    "filetype": "png" // the image format ("png", "dae")
    * }
+   * Passing this prop as an object ensures that
+   * new requests are triggered any time the prop
+   * is set.
    */
   imageRequest?: any;
   /**
@@ -90,6 +92,13 @@ interface Props {
    * This string can be downloaded as the filetype specified in your imageRequest object
    */
   imageData?: string;
+  /**
+   * THIS PROP IS SET AUTOMATICALLY
+   * Date string that represents the time imageData was set.
+   * This is to prevent race conditions between imageRequest and imageData
+   * when being used in dash callbacks.
+   */
+  imageDataTimestamp?: string;
   onObjectClicked?: (value: any) => any;
   /**
    * Size of axis inlet
@@ -151,8 +160,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       sceneComponent.renderer.setPixelRatio(8);
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
-      console.log(imageData);
-      props.setProps({ ...props, imageData });
+      const imageDataTimestamp = Date.now();
+      props.setProps({ ...props, imageData, imageDataTimestamp });
       // wait for next event loop before rendering
       setTimeout(() => {
         sceneComponent.renderer.setPixelRatio(oldRatio);
@@ -162,7 +171,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       sceneComponent.renderScene();
       toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
         callback: function (imageData: string) {
-          props.setProps({ ...props, imageData });
+          const imageDataTimestamp = Date.now();
+          props.setProps({ ...props, imageData, imageDataTimestamp });
         },
       });
     }
@@ -182,7 +192,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       {}
     )!;
     const imageData = 'data:text/plain;base64,' + btoa(files.data);
-    props.setProps({ ...props, imageData });
+    const imageDataTimestamp = Date.now();
+    props.setProps({ ...props, imageData, imageDataTimestamp });
   };
 
   const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
@@ -267,11 +278,11 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   }, [props.sceneSize]);
 
   useEffect(() => {
-    const { filetype, n_requests } = props.imageRequest as any;
-    if (n_requests > 0) {
+    const { filetype } = props.imageRequest;
+    if (filetype) {
       requestImage(filetype, scene.current!);
     }
-  }, [(props.imageRequest as any).n_requests]);
+  }, [props.imageRequest]);
 
   // use to dispatch camera changes, and react to them
   // not this is not the  implementation, as react will re-render
