@@ -84,8 +84,8 @@ export const materialsGroups: FilterGroup[] = [
         units: 'meV/atom',
         conversionFactor: 0.001,
         props: {
-          domain: [0, 7000],
-          step: 1,
+          domain: [0, 1000],
+          step: 0.01,
         },
       },
       {
@@ -170,6 +170,82 @@ export const materialsGroups: FilterGroup[] = [
       },
     ],
   },
+  // {
+  //   name: 'Elasticity',
+  //   expanded: false,
+  //   filters: [
+  //     {
+  //       name: 'Bulk Modulus (Reuss)',
+  //       id: 'k_reuss',
+  //       units: 'GPa',
+  //       type: FilterType.SLIDER,
+  //       props: {
+  //         domain: [0, 1000],
+  //         step: 1,
+  //       },
+  //     },
+  //     {
+  //       name: 'Bulk Modulus (Voigt-Reuss-Hill)',
+  //       id: 'k_vrh',
+  //       units: 'GPa',
+  //       type: FilterType.SLIDER,
+  //       props: {
+  //         domain: [0, 1000],
+  //         step: 1,
+  //       },
+  //     },
+  //   ],
+  // },
+  {
+    name: 'Surfaces',
+    expanded: false,
+    filters: [
+      {
+        name: 'Weighted Surface Energy',
+        id: 'weighted_surface_energy',
+        units: 'J/m²',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 5],
+          step: 0.01,
+        },
+      },
+      {
+        name: 'Surface Anisotropy',
+        id: 'surface_anisotropy',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 25],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shape Factor',
+        id: 'shape_factor',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Piezoelectric',
+    expanded: false,
+    filters: [
+      {
+        name: 'Piezo Modulus',
+        id: 'piezo_modulus',
+        units: 'Cm²',
+        type: FilterType.SLIDER,
+        props: {
+          domain: [0, 100],
+          step: 0.01,
+        },
+      },
+    ],
+  },
 ];
 
 export const materialsColumns: Column[] = [
@@ -247,5 +323,64 @@ export const materialsColumns: Column[] = [
     format: ColumnFormat.BOOLEAN,
     formatArg: ['yes', 'no'],
     omit: true,
+  },
+  {
+    name: 'k_reuss',
+    selector: 'k_reuss',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    units: 'GPa',
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'k_vrh',
+    selector: 'k_vrh',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    units: 'GPa',
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'weighted surface energy',
+    selector: 'weighted_surface_energy',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    units: 'J/m²',
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'surface anisotropy',
+    selector: 'surface_anisotropy',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'shape factor',
+    selector: 'shape_factor',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'work function',
+    selector: 'weighted_work_function',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    omit: false,
+    right: true,
+  },
+  {
+    name: 'piezo',
+    selector: 'e_ij_max',
+    format: ColumnFormat.FIXED_DECIMAL,
+    formatArg: 2,
+    omit: false,
+    right: true,
   },
 ];
