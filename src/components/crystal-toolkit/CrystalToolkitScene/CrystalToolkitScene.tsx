@@ -1,5 +1,5 @@
 import PropTypes, { InferProps } from 'prop-types';
-import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
+import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
 import Scene from '../scene/Scene';
 import { subscribe } from '../scene/download-event';
 import './CrystalToolkitScene.less';
@@ -13,11 +13,11 @@ import {
   MOUNT_NODE_STYLE,
 } from '../scene/constants';
 import { CameraContext } from '../CameraContextProvider';
-import { CameraReducerAction } from '../CameraContextProvider/camera-reducer';
+import { CameraReducerAction, CameraState } from '../CameraContextProvider/camera-reducer';
 import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
-import { WebGLRenderer } from 'three';
+import { Quaternion, Vector3, WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 
 /**
@@ -127,6 +127,7 @@ interface Props {
    * 'slider'
    */
   animation?: string;
+  cameraState?: CameraState;
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -139,7 +140,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   setProps = () => null,
   ...otherProps
 }) => {
-  const props = { imageRequest, setProps, ...otherProps };
+  let props = { imageRequest, setProps, ...otherProps };
   // mount nodes, those are passed in the template and are populated when
   // the component is mounted
   const mountNodeRef = useRef(null);
@@ -148,6 +149,13 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   const previousAnimationSetting = usePrevious(props.animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Scene | null> = useRef(null);
+  const [position, setPosition] = useState<any>();
+  // const [state, setState] = useState<any>({ image});
+  // const props.setProps = (newProps) => {
+  //   props = newProps;
+  //   props.setProps({...newProps});
+  // };
+  // const [cameraState, setCameraState] = useState<any>(props.cameraState);
 
   /**
    * Handle saving image to png
@@ -161,7 +169,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
       const imageDataTimestamp = Date.now();
-      props.setProps({ ...props, imageData, imageDataTimestamp });
+      props.setProps({ imageData, imageDataTimestamp });
       // wait for next event loop before rendering
       setTimeout(() => {
         sceneComponent.renderer.setPixelRatio(oldRatio);
@@ -172,7 +180,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
         callback: function (imageData: string) {
           const imageDataTimestamp = Date.now();
-          props.setProps({ ...props, imageData, imageDataTimestamp });
+          props.setProps({ imageData, imageDataTimestamp });
         },
       });
     }
@@ -193,7 +201,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     )!;
     const imageData = 'data:text/plain;base64,' + btoa(files.data);
     const imageDataTimestamp = Date.now();
-    props.setProps({ ...props, imageData, imageDataTimestamp });
+    props.setProps({ imageData, imageDataTimestamp });
   };
 
   const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
@@ -218,11 +226,13 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       props.settings,
       props.inletSize,
       props.inletPadding,
+      props.cameraState,
       (objects) => {
         if (props.onObjectClicked) {
           props.onObjectClicked(objects);
         }
       },
+      /** Sets dispatch function on the scene object */
       (position, quaternion, zoom) => {
         cameraContext.dispatch &&
           cameraContext.dispatch({
@@ -292,19 +302,31 @@ export const CrystalToolkitScene: React.FC<Props> = ({
 
   const cameraContext = useContext(CameraContext);
   if (cameraContext.state) {
-    const state = cameraContext.state;
+    const cameraState = cameraContext.state;
     useEffect(() => {
       if (
-        _id.current == state.fromComponent ||
-        !state.position ||
-        !state.quaternion ||
-        !state.zoom
+        _id.current == cameraState.fromComponent ||
+        !cameraState.position ||
+        !cameraState.quaternion ||
+        !cameraState.zoom
       ) {
       } else {
-        scene.current!.updateCamera(state.position, state.quaternion, state.zoom);
+        scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
+        setPosition(cameraState.position);
+        props.setProps({ cameraState });
       }
-    }, [state.position, state.quaternion]);
+    }, [cameraState.position, cameraState.quaternion]);
   }
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const cameraState = props.cameraState;
+  //     if (cameraState && cameraState.position && cameraState.quaternion && cameraState.zoom) {
+  //       scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
+  //     }
+  //   }, 2000);
+  // }, []);
+
   //
   useEffect(() => {
     props.animation && scene.current!.updateAnimationStyle(props.animation as AnimationStyle);
@@ -334,6 +356,9 @@ export const CrystalToolkitScene: React.FC<Props> = ({
           }}
         />
       )}
+      <h2>Position:</h2>
+      <p>{position?.x}</p>
+      <p>{props.cameraState?.position?.x}</p>
     </>
   );
 };
