@@ -40,7 +40,7 @@ export default class Scene {
   public scene!: THREE.Scene; // expose getter instead
   private cachedMountNodeSize!: { width: number; height: number };
   private camera!: THREE.OrthographicCamera;
-  private cameraState: CameraState;
+  private cameraState?: CameraState;
   private frameId?: number;
   private clickableObjects: THREE.Object3D[] = [];
   private tooltipObjects: THREE.Object3D[] = [];
@@ -231,8 +231,6 @@ export default class Scene {
     this.camera.zoom = zoom;
     this.camera.position.copy(position);
     this.camera.quaternion.copy(rotation);
-    // this.camera.position.copy(new THREE.Vector3(position.x, position.y, position.z));
-    // this.camera.quaternion.copy(new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
     this.camera.updateProjectionMatrix(); // needed for the zoom
     this.renderScene();
   }
@@ -358,10 +356,10 @@ export default class Scene {
     settings,
     size,
     padding,
-    cameraState,
     clickCallback,
     private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
-    private debugDOMElement?
+    private debugDOMElement?,
+    cameraState?: CameraState
   ) {
     this.settings = Object.assign(defaults, settings);
     this.objectBuilder = new ThreeBuilder(this.settings);
@@ -538,43 +536,43 @@ export default class Scene {
   }
 
   private setupCamera(rootObject: THREE.Object3D) {
-    if (this.cameraState) {
-      // auto-zoom to fit object
-      // TODO: maybe better to move this elsewhere (what if using perspective?)
-      const box = new THREE.Box3();
-      box.setFromObject(rootObject);
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-      const size = new THREE.Vector3();
-      box.getSize(size);
-      const extent = box.max.sub(box.min);
-      let length = extent.length() * 2;
+    // auto-zoom to fit object
+    // TODO: maybe better to move this elsewhere (what if using perspective?)
+    const box = new THREE.Box3();
+    box.setFromObject(rootObject);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const extent = box.max.sub(box.min);
+    let length = extent.length() * 2;
 
-      if (this.settings.zoomToFit2D) {
-        length = extent.x > extent.y ? extent.x * 2 : extent.y * 2;
-      }
+    if (this.settings.zoomToFit2D) {
+      length = extent.x > extent.y ? extent.x * 2 : extent.y * 2;
+    }
 
-      // we add a bit of padding, let's suppose we rotate, we want to avoid the
-      // object to go out of the camera while still on the screen
-      const Z_PADDING = 50;
-      if (this.camera) {
-        this.camera.left = (center.x - length) / this.settings.defaultZoom;
-        this.camera.right = (center.x + length) / this.settings.defaultZoom;
-        this.camera.top = (center.y + length) / this.settings.defaultZoom;
-        this.camera.bottom = (center.y - length) / this.settings.defaultZoom;
-        this.camera.near = center.z - length;
-        this.camera.far = center.z + length;
-      } else {
-        this.camera = new THREE.OrthographicCamera(
-          center.x - length,
-          center.x + length,
-          center.y + length,
-          center.y - length,
-          center.z - length - Z_PADDING,
-          center.z + length + Z_PADDING
-        );
-      }
+    // we add a bit of padding, let's suppose we rotate, we want to avoid the
+    // object to go out of the camera while still on the screen
+    const Z_PADDING = 50;
+    if (this.camera) {
+      this.camera.left = (center.x - length) / this.settings.defaultZoom;
+      this.camera.right = (center.x + length) / this.settings.defaultZoom;
+      this.camera.top = (center.y + length) / this.settings.defaultZoom;
+      this.camera.bottom = (center.y - length) / this.settings.defaultZoom;
+      this.camera.near = center.z - length;
+      this.camera.far = center.z + length;
+    } else {
+      this.camera = new THREE.OrthographicCamera(
+        center.x - length,
+        center.x + length,
+        center.y + length,
+        center.y - length,
+        center.z - length - Z_PADDING,
+        center.z + length + Z_PADDING
+      );
+    }
 
+    if (true) {
       // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
       this.camera.position.z = center.z;
       this.camera.position.y = center.y;
@@ -588,14 +586,22 @@ export default class Scene {
 
       this.camera.lookAt(this.scene.position);
       this.camera.zoom = 4;
-
-      this.camera.updateProjectionMatrix();
-      this.camera.updateMatrix();
-      if (this.controls) {
-        this.controls.update();
-      }
-      this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
+    } else {
+      /** Set camera position using custom cameraState */
+      this.camera.position.z = this.cameraState.position!.z;
+      this.camera.position.y = this.cameraState.position!.y;
+      this.camera.position.x = this.cameraState.position!.x;
+      this.camera.lookAt(this.scene.position);
+      this.camera.zoom = this.cameraState.zoom!;
     }
+
+    this.camera.updateProjectionMatrix();
+    this.camera.updateMatrix();
+    if (this.controls) {
+      this.controls.update();
+    }
+
+    this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
   }
 
   makeObject(object_json): THREE.Object3D {

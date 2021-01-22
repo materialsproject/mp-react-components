@@ -10,6 +10,7 @@ import { ScenePosition } from '../components/crystal-toolkit/scene/inset-helper'
 import { CameraState } from '../components/crystal-toolkit/CameraContextProvider/camera-reducer';
 import * as THREE from 'three';
 import { Camera } from 'three';
+import { TwoWayInput } from '../components/crystal-toolkit/CrystalToolkitScene/TwoWayInput';
 
 /**
  * Component for testing Scene
@@ -59,16 +60,9 @@ function SceneSwitcher() {
 }
 
 export const CrystalStructureViewer: React.FC = () => {
-  const [state, setState] = useState<any>({
-    imageData: undefined,
-    imageRequest: undefined,
-    imageDataTimestamp: undefined,
-    cameraState: undefined,
-  });
-
   const [dataInput, setDataInput] = useState<any>();
 
-  const testCameraState: CameraState = {
+  const cameraState1: CameraState = {
     quaternion: new THREE.Quaternion(
       -0.3824241795060149,
       -0.008442802938742472,
@@ -80,6 +74,29 @@ export const CrystalStructureViewer: React.FC = () => {
     fromComponent: '1',
     following: true,
   };
+
+  const cameraState2: CameraState = {
+    quaternion: new THREE.Quaternion(
+      0.024653779710988616,
+      -0.08400795009836932,
+      -0.18017488693493414,
+      0.9797305066109842
+    ),
+    position: new THREE.Vector3(-2.7956984323728205, -0.29063127398876126, 15.867032946487644),
+    zoom: 2.4640147374718713,
+    fromComponent: '1',
+    following: true,
+  };
+
+  const [state, setState] = useState<any>({
+    imageData: undefined,
+    imageRequest: undefined,
+    imageDataTimestamp: undefined,
+    currentCameraState: undefined,
+    initialCameraState: cameraState2,
+  });
+
+  const [value, setValue] = useState<any>('test');
 
   useEffect(() => {
     if (state.imageData) {
@@ -102,16 +119,35 @@ export const CrystalStructureViewer: React.FC = () => {
     <div>
       <button
         onClick={() => {
-          // const imageRequest = {
-          //   n_requests: 1,
-          //   filetype: ExportType.png
-          // };
           const imageRequest = { filetype: 'png' };
           setState({ ...state, imageRequest });
         }}
       >
         Download
       </button>
+      <button
+        onClick={() => {
+          setState({ ...state, initialCameraState: cameraState1 });
+        }}
+      >
+        Camera 1
+      </button>
+      <button
+        onClick={() => {
+          setState({ ...state, initialCameraState: cameraState2 });
+        }}
+      >
+        Camera 2
+      </button>
+      <button
+        onClick={() => {
+          setValue('tacos');
+        }}
+      >
+        Input 1
+      </button>
+      <TwoWayInput value={value} setValue={setValue} />
+      <p>{value}</p>
       <CameraContextProvider>
         <>
           <CrystalToolkitScene
@@ -126,7 +162,8 @@ export const CrystalStructureViewer: React.FC = () => {
             imageRequest={state.imageRequest}
             imageData={state.imageData}
             imageDataTimestamp={state.imageDataTimestamp}
-            cameraState={testCameraState}
+            currentCameraState={state.currentCameraState}
+            initialCameraState={state.initialCameraState}
             setProps={setState}
           />
           <CrystalToolkitScene
@@ -136,17 +173,12 @@ export const CrystalStructureViewer: React.FC = () => {
               zoomToFit2D: true,
             }}
             data={scene}
-            debug={false}
-            toggleVisibility={{}}
-            imageRequest={state.imageRequest}
-            imageData={state.imageData}
-            imageDataTimestamp={state.imageDataTimestamp}
-            cameraState={testCameraState}
             setProps={setState}
           />
         </>
       </CameraContextProvider>
-      <p>Camera State: {state.cameraState?.position?.x}</p>
+      <p>Parent Current Camera State:</p>
+      <p>{state.currentCameraState?.position?.x}</p>
       <Download id="image-download" data={dataInput} />
       <CameraContextProvider>
         <>

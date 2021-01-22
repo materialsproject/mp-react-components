@@ -127,7 +127,8 @@ interface Props {
    * 'slider'
    */
   animation?: string;
-  cameraState?: CameraState;
+  currentCameraState?: CameraState;
+  initialCameraState?: CameraState;
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -149,13 +150,6 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   const previousAnimationSetting = usePrevious(props.animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Scene | null> = useRef(null);
-  const [position, setPosition] = useState<any>();
-  // const [state, setState] = useState<any>({ image});
-  // const props.setProps = (newProps) => {
-  //   props = newProps;
-  //   props.setProps({...newProps});
-  // };
-  // const [cameraState, setCameraState] = useState<any>(props.cameraState);
 
   /**
    * Handle saving image to png
@@ -226,7 +220,6 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       props.settings,
       props.inletSize,
       props.inletPadding,
-      props.cameraState,
       (objects) => {
         if (props.onObjectClicked) {
           props.onObjectClicked(objects);
@@ -304,6 +297,9 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   if (cameraContext.state) {
     const cameraState = cameraContext.state;
     useEffect(() => {
+      if (cameraState.position && cameraState.quaternion && cameraState.zoom) {
+        props.setProps({ ...props, currentCameraState: cameraState });
+      }
       if (
         _id.current == cameraState.fromComponent ||
         !cameraState.position ||
@@ -312,20 +308,28 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       ) {
       } else {
         scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
-        setPosition(cameraState.position);
-        props.setProps({ cameraState });
       }
-    }, [cameraState.position, cameraState.quaternion]);
+    }, [cameraState.position]);
   }
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     const cameraState = props.cameraState;
-  //     if (cameraState && cameraState.position && cameraState.quaternion && cameraState.zoom) {
-  //       scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
-  //     }
-  //   }, 2000);
-  // }, []);
+  useEffect(() => {
+    if (props.initialCameraState) {
+      const { position, quaternion, zoom } = props.initialCameraState;
+      scene.current!.updateCamera(position!, quaternion!, zoom!);
+      if (cameraContext.dispatch) {
+        cameraContext.dispatch({
+          type: CameraReducerAction.NEW_POSITION,
+          payload: {
+            componentId: _id.current,
+            position,
+            quaternion,
+            zoom,
+          },
+        });
+      }
+    }
+    console.log('new props');
+  }, [props.initialCameraState]);
 
   //
   useEffect(() => {
@@ -356,9 +360,10 @@ export const CrystalToolkitScene: React.FC<Props> = ({
           }}
         />
       )}
-      <h2>Position:</h2>
-      <p>{position?.x}</p>
-      <p>{props.cameraState?.position?.x}</p>
+      <h2>Current Camera State:</h2>
+      <p>{props.currentCameraState?.position?.x}</p>
+      <h2>Initial Camera State:</h2>
+      <p>{props.initialCameraState?.position?.x}</p>
     </>
   );
 };
