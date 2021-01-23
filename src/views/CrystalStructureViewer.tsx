@@ -71,7 +71,7 @@ export const CrystalStructureViewer: React.FC = () => {
     ),
     position: new THREE.Vector3(-0.25682715953384966, 11.387372804441647, 11.398460914084055),
     zoom: 4,
-    fromComponent: '1',
+    setByComponentId: '1',
     following: true,
   };
 
@@ -84,11 +84,19 @@ export const CrystalStructureViewer: React.FC = () => {
     ),
     position: new THREE.Vector3(-2.7956984323728205, -0.29063127398876126, 15.867032946487644),
     zoom: 2.4640147374718713,
-    fromComponent: '1',
+    setByComponentId: '1',
     following: true,
   };
 
   const [state, setState] = useState<any>({
+    imageData: undefined,
+    imageRequest: undefined,
+    imageDataTimestamp: undefined,
+    currentCameraState: undefined,
+    initialCameraState: cameraState2,
+  });
+
+  const [stateTwo, setStateTwo] = useState<any>({
     imageData: undefined,
     imageRequest: undefined,
     imageDataTimestamp: undefined,
@@ -173,27 +181,29 @@ export const CrystalStructureViewer: React.FC = () => {
               zoomToFit2D: true,
             }}
             data={scene}
-            setProps={setState}
+            setProps={setStateTwo}
           />
         </>
       </CameraContextProvider>
       <p>Parent Current Camera State:</p>
       <p>{state.currentCameraState?.position?.x}</p>
       <Download id="image-download" data={dataInput} />
-      <CameraContextProvider>
+      {/* <CameraContextProvider>
         <>
           <CrystalToolkitScene
             // axisView={ScenePosition.HIDDEN}
             sceneSize={150}
             data={s2}
+            setProps={setState}
           ></CrystalToolkitScene>
           <CrystalToolkitScene
             // axisView={ScenePosition.HIDDEN}
             sceneSize={150}
             data={shperes}
+            setProps={setStateTwo}
           ></CrystalToolkitScene>
         </>
-      </CameraContextProvider>
+      </CameraContextProvider> */}
       {/* <CameraContextProvider>
         <SceneSwitcher />
       </CameraContextProvider> */}

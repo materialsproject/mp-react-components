@@ -1,5 +1,12 @@
 import PropTypes, { InferProps } from 'prop-types';
-import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import Scene from '../scene/Scene';
 import { subscribe } from '../scene/download-event';
 import './CrystalToolkitScene.less';
@@ -12,13 +19,20 @@ import {
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE,
 } from '../scene/constants';
-import { CameraContext } from '../CameraContextProvider';
-import { CameraReducerAction, CameraState } from '../CameraContextProvider/camera-reducer';
+import { CameraContext, useCameraContext } from '../CameraContextProvider';
+import {
+  CameraActionPayload,
+  cameraReducer,
+  CameraReducerAction,
+  CameraState,
+  initialState,
+} from '../CameraContextProvider/camera-reducer';
 import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
 import { Quaternion, Vector3, WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
+import { Action } from '../utils';
 
 /**
  * CrystalToolkitScene is intended to draw simple 3D scenes using the popular
@@ -146,7 +160,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   // the component is mounted
   const mountNodeRef = useRef(null);
   const mountNodeDebugRef = useRef(null);
-  const _id = useRef(++ID_GENERATOR + '');
+  const componentId = useRef((++ID_GENERATOR).toString());
   const previousAnimationSetting = usePrevious(props.animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Scene | null> = useRef(null);
@@ -227,11 +241,11 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       },
       /** Sets dispatch function on the scene object */
       (position, quaternion, zoom) => {
-        cameraContext.dispatch &&
-          cameraContext.dispatch({
+        cameraDispatch &&
+          cameraDispatch({
             type: CameraReducerAction.NEW_POSITION,
             payload: {
-              componentId: _id.current,
+              componentId: componentId.current,
               position,
               quaternion,
               zoom,
@@ -287,26 +301,25 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     }
   }, [props.imageRequest]);
 
-  // use to dispatch camera changes, and react to them
-  // not this is not the  implementation, as react will re-render
-  // when dispatch is called ( ideally, we could just use RxJS to react to the changes,
-  // in that case we will just update the camera position... instead of re-rendering the component )
-  // but the perf impact is like 0.20
-
+  /**
+   * Manage camera state with context if component is wrapped in CameraContextProvider
+   * otherwise use a reducer to manage camera state locally
+   */
   const cameraContext = useContext(CameraContext);
-  if (cameraContext.state) {
-    const cameraState = cameraContext.state;
+  const [cameraReducerState, cameraReducerDispatch] = useReducer(cameraReducer, initialState);
+  const cameraState = cameraContext ? cameraContext.state : cameraReducerState;
+  const cameraDispatch = cameraContext ? cameraContext.dispatch : cameraReducerDispatch;
+  if (cameraState) {
     useEffect(() => {
-      if (cameraState.position && cameraState.quaternion && cameraState.zoom) {
-        props.setProps({ ...props, currentCameraState: cameraState });
-      }
+      props.setProps({ ...props, currentCameraState: cameraState });
+
       if (
-        _id.current == cameraState.fromComponent ||
-        !cameraState.position ||
-        !cameraState.quaternion ||
-        !cameraState.zoom
+        cameraState &&
+        cameraState.setByComponentId !== componentId.current &&
+        cameraState.position &&
+        cameraState.quaternion &&
+        cameraState.zoom
       ) {
-      } else {
         scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
       }
     }, [cameraState.position]);
@@ -316,11 +329,11 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     if (props.initialCameraState) {
       const { position, quaternion, zoom } = props.initialCameraState;
       scene.current!.updateCamera(position!, quaternion!, zoom!);
-      if (cameraContext.dispatch) {
-        cameraContext.dispatch({
+      if (cameraDispatch) {
+        cameraDispatch({
           type: CameraReducerAction.NEW_POSITION,
           payload: {
-            componentId: _id.current,
+            componentId: componentId.current,
             position,
             quaternion,
             zoom,

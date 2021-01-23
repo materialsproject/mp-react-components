@@ -601,7 +601,7 @@ export default class Scene {
       this.controls.update();
     }
 
-    this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
+    // this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
   }
 
   makeObject(object_json): THREE.Object3D {

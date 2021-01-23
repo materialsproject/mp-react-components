@@ -5,13 +5,31 @@ export interface CameraState {
   quaternion?: Quaternion;
   position?: Vector3;
   zoom?: number;
-  fromComponent?: string;
+  /**
+   * The id of the scene component that most recently set
+   * the camera state values.
+   * e.g. "1"
+   */
+  setByComponentId?: string;
+  /**
+   * whether to follow the camera
+   * (what does this mean?)
+   */
   following: boolean;
 }
 
-export const initialState = {
-  following: true,
-};
+export interface CameraActionPayload {
+  quaternion?: Quaternion;
+  position?: Vector3;
+  zoom?: number;
+  /**
+   * The id of the component that is initiating
+   * the camera change. Sets the state value for setByComponentId.
+   * e.g. "1"
+   */
+  componentId?: string;
+  following?: boolean;
+}
 
 export enum CameraReducerAction {
   NEW_POSITION = 'follow_camera',
@@ -19,14 +37,9 @@ export enum CameraReducerAction {
   START_FOLLOWING = 'start_following',
 }
 
-// use conditional type to map actions
-export interface CameraActionPayload {
-  quaternion?: Quaternion;
-  position?: Vector3;
-  zoom?: number;
-  componentId?: string; // id of component whose component moved
-  following?: boolean; // whether to follow the camera
-}
+export const initialState = {
+  following: true,
+};
 
 export function cameraReducer(
   state: CameraState,
@@ -40,7 +53,7 @@ export function cameraReducer(
         quaternion: payload.quaternion!.clone(),
         position: payload.position!.clone(),
         zoom: payload.zoom,
-        fromComponent: payload.componentId,
+        setByComponentId: payload.componentId,
         following: state.following,
       };
     case CameraReducerAction.STOP_FOLLOWING:

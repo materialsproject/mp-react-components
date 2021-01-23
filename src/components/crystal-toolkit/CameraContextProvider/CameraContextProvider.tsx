@@ -13,10 +13,7 @@ export interface ICameraContext {
   state: CameraState | null;
   dispatch: Dispatch<Action<CameraReducerAction, CameraActionPayload>> | null;
 }
-export const CameraContext = React.createContext<ICameraContext>({
-  state: null,
-  dispatch: null,
-});
+export const CameraContext = React.createContext<ICameraContext | null>(null);
 
 /**
  *
