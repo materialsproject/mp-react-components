@@ -61,18 +61,22 @@ function SceneSwitcher() {
 export const CrystalStructureViewer: React.FC = () => {
   const [dataInput, setDataInput] = useState<any>();
 
-  const cameraState1: CameraState = {
-    quaternion: new THREE.Quaternion(
-      -0.3824241795060149,
-      -0.008442802938742472,
-      0.0004401494693141228,
-      0.9239481978315308
-    ),
-    position: new THREE.Vector3(-0.25682715953384966, 11.387372804441647, 11.398460914084055),
+  const cameraState1 = {
+    quaternion: {
+      x: -0.3824241795060149,
+      y: -0.008442802938742472,
+      z: 0.0004401494693141228,
+      w: 0.9239481978315308,
+    },
+    position: {
+      x: -0.25682715953384966,
+      y: 11.387372804441647,
+      z: 11.398460914084055,
+    },
     zoom: 4,
   };
 
-  const cameraState2: CameraState = {
+  const cameraState2 = {
     quaternion: new THREE.Quaternion(
       0.024653779710988616,
       -0.08400795009836932,

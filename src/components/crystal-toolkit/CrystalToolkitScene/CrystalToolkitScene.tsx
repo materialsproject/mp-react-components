@@ -30,6 +30,7 @@ import {
 import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
+import * as THREE from 'three';
 import { Quaternion, Vector3, WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { Action } from '../utils';
@@ -354,7 +355,14 @@ export const CrystalToolkitScene: React.FC<Props> = ({
    */
   useEffect(() => {
     if (props.customCameraState) {
-      const { position, quaternion, zoom } = props.customCameraState;
+      const { position: p, quaternion: q, zoom } = props.customCameraState;
+      /**
+       * Explicitly convert to Quaternion/Vector3 objects so that you
+       * can pass simple objects to customCameraState prop.
+       * (i.e. no need to use THREE.js constructors)
+       */
+      const quaternion = new THREE.Quaternion(q?.x, q?.y, q?.z, q?.w);
+      const position = new THREE.Vector3(p?.x, p?.y, p?.z);
       scene.current!.updateCamera(position!, quaternion!, zoom!);
       if (cameraDispatch) {
         cameraDispatch({
