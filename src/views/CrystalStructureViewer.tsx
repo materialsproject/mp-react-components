@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { scene, scene2 } from '../components/crystal-toolkit/scene/mike';
-import { s2, s3, s4, shperes } from '../components/crystal-toolkit/scene/simple-scene';
+import { s2, s3, s4, s5, shperes } from '../components/crystal-toolkit/scene/simple-scene';
 import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
 import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
 import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
