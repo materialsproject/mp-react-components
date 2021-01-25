@@ -19,7 +19,7 @@ import {
   MOUNT_NODE_CLASS,
   MOUNT_NODE_STYLE,
 } from '../scene/constants';
-import { CameraContext, useCameraContext } from '../CameraContextProvider';
+import { CameraContext } from '../CameraContextProvider';
 import {
   CameraActionPayload,
   cameraReducer,
@@ -141,8 +141,30 @@ interface Props {
    * 'slider'
    */
   animation?: string;
+  /**
+   * THIS PROP IS SET AUTOMATICALLY
+   * Object that maintains the current state of the camera.
+   * e.g.
+   * {
+   *   position: {x: 0, y: 0, z: 0},
+   *   quarternion: {x: 0, y: 0, z: 0, w: 0},
+   *   zoom: 1,
+   *   setByComponentId: "1",
+   *   following: true
+   * }
+   */
   currentCameraState?: CameraState;
-  initialCameraState?: CameraState;
+  /**
+   * Object for setting the scene to a custom camera state.
+   * When modified, the camera will update to new custom state.
+   * e.g.
+   * {
+   *   position: {x: 0, y: 0, z: 0},
+   *   quarternion: {x: 0, y: 0, z: 0, w: 0},
+   *   zoom: 1
+   * }
+   */
+  customCameraState?: CameraState;
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -325,9 +347,14 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     }, [cameraState.position]);
   }
 
+  /**
+   * When customCameraState prop changes,
+   * update the camera to the new state
+   * and save the new state into the cameraState
+   */
   useEffect(() => {
-    if (props.initialCameraState) {
-      const { position, quaternion, zoom } = props.initialCameraState;
+    if (props.customCameraState) {
+      const { position, quaternion, zoom } = props.customCameraState;
       scene.current!.updateCamera(position!, quaternion!, zoom!);
       if (cameraDispatch) {
         cameraDispatch({
@@ -342,9 +369,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       }
     }
     console.log('new props');
-  }, [props.initialCameraState]);
+  }, [props.customCameraState]);
 
-  //
   useEffect(() => {
     props.animation && scene.current!.updateAnimationStyle(props.animation as AnimationStyle);
   }, [props.animation]);
@@ -373,10 +399,6 @@ export const CrystalToolkitScene: React.FC<Props> = ({
           }}
         />
       )}
-      <h2>Current Camera State:</h2>
-      <p>{props.currentCameraState?.position?.x}</p>
-      <h2>Initial Camera State:</h2>
-      <p>{props.initialCameraState?.position?.x}</p>
     </>
   );
 };

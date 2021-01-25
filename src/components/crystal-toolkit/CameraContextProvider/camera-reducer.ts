@@ -15,7 +15,7 @@ export interface CameraState {
    * whether to follow the camera
    * (what does this mean?)
    */
-  following: boolean;
+  following?: boolean;
 }
 
 export interface CameraActionPayload {

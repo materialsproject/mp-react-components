@@ -572,36 +572,25 @@ export default class Scene {
       );
     }
 
-    if (true) {
-      // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
-      this.camera.position.z = center.z;
-      this.camera.position.y = center.y;
-      this.camera.position.x = center.x;
+    // we put the camera behind the object, object should be in the middle of the view, closer to the far plane
+    this.camera.position.z = center.z;
+    this.camera.position.y = center.y;
+    this.camera.position.x = center.x;
 
-      const axis = this.settings.cameraAxis;
-      this.camera.position[axis] =
-        this.settings.cameraPosition === 'back'
-          ? this.camera.position[axis] + length / 2
-          : this.camera.position[axis] - length / 2;
+    const axis = this.settings.cameraAxis;
+    this.camera.position[axis] =
+      this.settings.cameraPosition === 'back'
+        ? this.camera.position[axis] + length / 2
+        : this.camera.position[axis] - length / 2;
 
-      this.camera.lookAt(this.scene.position);
-      this.camera.zoom = 4;
-    } else {
-      /** Set camera position using custom cameraState */
-      this.camera.position.z = this.cameraState.position!.z;
-      this.camera.position.y = this.cameraState.position!.y;
-      this.camera.position.x = this.cameraState.position!.x;
-      this.camera.lookAt(this.scene.position);
-      this.camera.zoom = this.cameraState.zoom!;
-    }
+    this.camera.lookAt(this.scene.position);
+    this.camera.zoom = 4;
 
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrix();
     if (this.controls) {
       this.controls.update();
     }
-
-    // this.dispatch(this.camera.position, this.camera.quaternion, this.camera.zoom);
   }
 
   makeObject(object_json): THREE.Object3D {

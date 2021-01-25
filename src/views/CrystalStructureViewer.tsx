@@ -10,7 +10,6 @@ import { ScenePosition } from '../components/crystal-toolkit/scene/inset-helper'
 import { CameraState } from '../components/crystal-toolkit/CameraContextProvider/camera-reducer';
 import * as THREE from 'three';
 import { Camera } from 'three';
-import { TwoWayInput } from '../components/crystal-toolkit/CrystalToolkitScene/TwoWayInput';
 
 /**
  * Component for testing Scene
@@ -71,8 +70,6 @@ export const CrystalStructureViewer: React.FC = () => {
     ),
     position: new THREE.Vector3(-0.25682715953384966, 11.387372804441647, 11.398460914084055),
     zoom: 4,
-    setByComponentId: '1',
-    following: true,
   };
 
   const cameraState2: CameraState = {
@@ -84,8 +81,6 @@ export const CrystalStructureViewer: React.FC = () => {
     ),
     position: new THREE.Vector3(-2.7956984323728205, -0.29063127398876126, 15.867032946487644),
     zoom: 2.4640147374718713,
-    setByComponentId: '1',
-    following: true,
   };
 
   const [state, setState] = useState<any>({
@@ -93,7 +88,7 @@ export const CrystalStructureViewer: React.FC = () => {
     imageRequest: undefined,
     imageDataTimestamp: undefined,
     currentCameraState: undefined,
-    initialCameraState: cameraState2,
+    customCameraState: cameraState2,
   });
 
   const [stateTwo, setStateTwo] = useState<any>({
@@ -101,7 +96,7 @@ export const CrystalStructureViewer: React.FC = () => {
     imageRequest: undefined,
     imageDataTimestamp: undefined,
     currentCameraState: undefined,
-    initialCameraState: cameraState2,
+    customCameraState: cameraState2,
   });
 
   const [value, setValue] = useState<any>('test');
@@ -135,27 +130,18 @@ export const CrystalStructureViewer: React.FC = () => {
       </button>
       <button
         onClick={() => {
-          setState({ ...state, initialCameraState: cameraState1 });
+          setState({ ...state, customCameraState: cameraState1 });
         }}
       >
         Camera 1
       </button>
       <button
         onClick={() => {
-          setState({ ...state, initialCameraState: cameraState2 });
+          setState({ ...state, customCameraState: cameraState2 });
         }}
       >
         Camera 2
       </button>
-      <button
-        onClick={() => {
-          setValue('tacos');
-        }}
-      >
-        Input 1
-      </button>
-      <TwoWayInput value={value} setValue={setValue} />
-      <p>{value}</p>
       <CameraContextProvider>
         <>
           <CrystalToolkitScene
@@ -171,7 +157,7 @@ export const CrystalStructureViewer: React.FC = () => {
             imageData={state.imageData}
             imageDataTimestamp={state.imageDataTimestamp}
             currentCameraState={state.currentCameraState}
-            initialCameraState={state.initialCameraState}
+            customCameraState={state.customCameraState}
             setProps={setState}
           />
           <CrystalToolkitScene
