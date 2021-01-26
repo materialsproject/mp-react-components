@@ -19,7 +19,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'elements',
         type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: 'ELEMENTS' as MaterialsInputField,
+          field: 'elements' as MaterialsInputField,
         },
       },
       {
@@ -27,7 +27,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'exclude_elements',
         type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: 'EXCLUDE_ELEMENTS' as MaterialsInputField,
+          field: 'exclude_elements' as MaterialsInputField,
         },
       },
       {
@@ -35,7 +35,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'formula',
         type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: 'FORMULA' as MaterialsInputField,
+          field: 'formula' as MaterialsInputField,
         },
       },
     ],
@@ -171,6 +171,67 @@ export const materialsGroups: FilterGroup[] = [
     ],
   },
   {
+    name: 'Magnetism',
+    expanded: false,
+    filters: [
+      {
+        name: 'Magnetic Ordering',
+        id: 'ordering',
+        type: 'SELECT' as FilterType,
+        props: {
+          options: [
+            {
+              label: 'FM',
+              value: 'FM',
+            },
+            {
+              label: 'NM',
+              value: 'NM',
+            },
+            {
+              label: 'FiM',
+              value: 'FiM',
+            },
+            {
+              label: 'AFM',
+              value: 'AFM',
+            },
+            {
+              label: 'Unknown',
+              value: 'Unknown',
+            },
+          ],
+        },
+      },
+      {
+        name: 'Max Magnetic Moment',
+        id: 'total_magnetization',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 325],
+          step: 1,
+        },
+      },
+      // {
+      //   name: 'Type of Normalization',
+      //   id: 'sc_band_gap',
+      //   type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
+      //   props: {
+      //     options: [
+      //       {
+      //         label: 'Is direct',
+      //         value: true,
+      //       },
+      //       {
+      //         label: 'Is not direct',
+      //         value: false,
+      //       },
+      //     ],
+      //   },
+      // },
+    ],
+  },
+  {
     name: 'Elasticity',
     expanded: false,
     filters: [
@@ -239,7 +300,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'elastic_anisotropy',
         type: 'SLIDER' as FilterType,
         props: {
-          domain: [0, 25],
+          domain: [-2000, 25],
           step: 1,
         },
       },
@@ -407,6 +468,18 @@ export const materialsColumns: Column[] = [
     selector: 'is_stable',
     format: 'BOOLEAN' as ColumnFormat,
     formatArg: ['yes', 'no'],
+    omit: true,
+  },
+  {
+    name: 'Magnetic Ordering',
+    selector: 'ordering',
+    omit: true,
+  },
+  {
+    name: 'Max Magnetic Moment',
+    selector: 'total_magnetization',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
     omit: true,
   },
   {
