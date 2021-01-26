@@ -161,8 +161,8 @@ interface Props {
    * e.g.
    * {
    *   position: {x: 0, y: 0, z: 0},
-   *   quarternion: {x: 0, y: 0, z: 0, w: 0},
-   *   zoom: 1
+   *   quarternion: {x: 0, y: 0, z: 0, w: 0}, (optional)
+   *   zoom: 1 (optional)
    * }
    */
   customCameraState?: CameraState;

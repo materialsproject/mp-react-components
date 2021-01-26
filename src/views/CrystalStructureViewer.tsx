@@ -170,6 +170,7 @@ export const CrystalStructureViewer: React.FC = () => {
               extractAxis: false,
               zoomToFit2D: true,
             }}
+            debug
             data={scene}
             setProps={setStateTwo}
           />

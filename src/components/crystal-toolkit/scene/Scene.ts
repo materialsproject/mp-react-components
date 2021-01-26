@@ -226,11 +226,16 @@ export default class Scene {
     this.controls.update();
   };
 
-  public updateCamera(position: Vector3, rotation: Quaternion, zoom: number) {
-    // zoom seems to be updated, be not rendered
-    this.camera.zoom = zoom;
+  public updateCamera(position: Vector3, rotation?: Quaternion, zoom?: number) {
     this.camera.position.copy(position);
-    this.camera.quaternion.copy(rotation);
+    if (zoom) {
+      this.camera.zoom = zoom;
+    }
+    if (rotation) {
+      this.camera.quaternion.copy(rotation);
+    } else {
+      this.camera.lookAt(this.scene.position);
+    }
     this.camera.updateProjectionMatrix(); // needed for the zoom
     this.renderScene();
   }
