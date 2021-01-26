@@ -559,8 +559,8 @@ export default class Scene {
       this.camera.right = (center.x + length) / this.settings.defaultZoom;
       this.camera.top = (center.y + length) / this.settings.defaultZoom;
       this.camera.bottom = (center.y - length) / this.settings.defaultZoom;
-      this.camera.near = center.z - length;
-      this.camera.far = center.z + length;
+      this.camera.near = center.z - length - Z_PADDING;
+      this.camera.far = center.z + length + Z_PADDING;
     } else {
       this.camera = new THREE.OrthographicCamera(
         center.x - length,

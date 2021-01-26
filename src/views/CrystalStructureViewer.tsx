@@ -176,7 +176,7 @@ export const CrystalStructureViewer: React.FC = () => {
         </>
       </CameraContextProvider>
       <p>Parent Current Camera State:</p>
-      <p>{state.currentCameraState?.position?.x}</p>
+      <p>{JSON.stringify(state.currentCameraState)}</p>
       <Download id="image-download" data={dataInput} />
       {/* <CameraContextProvider>
         <>
