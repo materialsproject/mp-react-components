@@ -120,6 +120,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             action: ptActions.clear,
           });
           break;
+        case MaterialsInputField.EXCLUDE_ELEMENTS:
         case MaterialsInputField.ELEMENTS:
           newDelimiter = getDelimiter(newValue);
           const parsedElements = parseElements(newValue, newDelimiter);
