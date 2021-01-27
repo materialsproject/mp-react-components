@@ -26,6 +26,7 @@ export const MaterialsExplorer: React.FC = () => {
         sortField="e_above_hull"
         sortAscending={true}
       />
+      <footer>Footer</footer>
     </div>
   );
 };
