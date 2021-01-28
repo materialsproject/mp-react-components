@@ -5,6 +5,9 @@ import { materialsColumns, materialsGroups } from '../../../constants/materials'
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
 import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolume';
 
+/** Extend the jest timeout to allow time for async mock api requests */
+jest.setTimeout(30000);
+
 jest.mock('./SearchUI.css', () => {});
 jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
 jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});
@@ -53,7 +56,7 @@ describe('<SearchUI/>', () => {
 
   it('should render filters', () => {
     renderElement({ ...defaultProps });
-    expect(screen.getByTestId('panel-block-container').childNodes.length).toBe(5);
+    expect(screen.getByTestId('panel-block-container').childNodes.length).toBeGreaterThanOrEqual(5);
   });
 
   it('should render data table components', async () => {

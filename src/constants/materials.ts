@@ -181,19 +181,19 @@ export const materialsGroups: FilterGroup[] = [
         props: {
           options: [
             {
-              label: 'FM',
+              label: 'Ferromagnetic',
               value: 'FM',
             },
             {
-              label: 'NM',
+              label: 'Non-magnetic',
               value: 'NM',
             },
             {
-              label: 'FiM',
+              label: 'Ferrimagnetic',
               value: 'FiM',
             },
             {
-              label: 'AFM',
+              label: 'Antiferromagnetic',
               value: 'AFM',
             },
             {
