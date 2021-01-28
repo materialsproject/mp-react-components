@@ -22,7 +22,7 @@
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
     "lint:yaml": "yamllint ./.github/workflows/*.yml",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push --tags"
   },
   "dependencies": {
     "@s-ui/react-molecule-button-group": "^2.3.0",
