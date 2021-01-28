@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 // hooks are run on every render, when the prop change, we return the non-update value,
 // and update it
-export function usePrevious(value) {
+export const usePrevious = (value) => {
   const ref = useRef();
   // Store current value in ref
   useEffect(() => {
@@ -12,13 +12,13 @@ export function usePrevious(value) {
   }, [value]);
   // Return previous value (happens before update in useEffect above)
   return ref.current;
-}
+};
 
 /**
  * A useEffect hook that debounces the value by a given delay
  * Values are only checked once per delay interval
  */
-export function useDebounce(value, delay) {
+export const useDebounce = (value, delay) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -48,13 +48,13 @@ export function useDebounce(value, delay) {
   );
 
   return debouncedValue;
-}
+};
 
 /**
  * Same as useDebounce except the the value is deep compared to its previous
  * The value supplied to this hook must be an object or array of objects
  */
-export function useDeepCompareDebounce(value, delay) {
+export const useDeepCompareDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useDeepCompareEffect(() => {
@@ -68,7 +68,7 @@ export function useDeepCompareDebounce(value, delay) {
   }, [value]);
 
   return debouncedValue;
-}
+};
 
 /**
  * A custom hook that builds on useLocation to parse
@@ -76,4 +76,4 @@ export function useDeepCompareDebounce(value, delay) {
  */
 export const useQuery = () => {
   return new URLSearchParams(useLocation().search);
-}
+};

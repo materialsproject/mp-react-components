@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MaterialsInput } from '../../../search/MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { DualRangeSlider } from '../../../search/DualRangeSlider';
-import { FaCaretDown, FaCaretRight, FaEllipsisV } from 'react-icons/fa';
+import { FaCaretDown, FaCaretRight, FaRegTimesCircle } from 'react-icons/fa';
 import { FilterType, Filter, FilterGroup, ActiveFilter } from '../types';
 import classNames from 'classnames';
 import { Select } from '../../Select';
@@ -233,7 +233,11 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                       {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
                     </span>
                     <div className="is-pulled-right">
-                      {!groupsByName[g.name].expanded ? <FaCaretRight /> : <FaCaretDown />}
+                      {!groupsByName[g.name].expanded ? (
+                        <FaCaretRight className="is-vertical-align-middle" />
+                      ) : (
+                        <FaCaretDown className="is-vertical-align-middle" />
+                      )}
                     </div>
                   </button>
                 </h3>
@@ -261,6 +265,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                               <a onClick={() => resetFilter(f.id)}>
                                 {f.name}
                                 {getUnitsComponent(f.units)}
+                                <FaRegTimesCircle className="ml-2 is-vertical-align-middle" />
                               </a>
                             )}
                           </p>

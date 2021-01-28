@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
@@ -49,6 +49,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns);
+  const tableRef = useRef<HTMLDivElement>(null);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
@@ -65,6 +66,10 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   );
 
   const handlePageChange = (page: number) => {
+    /** Scroll table back to top when page changes */
+    if (tableRef.current) {
+      tableRef.current.children[0].scrollTop = 0;
+    }
     actions.setPage(page);
   };
 
@@ -279,7 +284,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   );
 
   return (
-    <div id={componentHtmlId}>
+    <div id={componentHtmlId} className="search-ui-data-table">
       <div className="columns mb-1">
         <div className="column pb-2">
           <div className="table-header">
@@ -309,8 +314,12 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
           />
         </div>
       </div>
-      <div className="columns">
-        <div data-testid="react-data-table-container" className="column react-data-table-container">
+      <div className="columns react-data-table-outer-container">
+        <div
+          data-testid="react-data-table-container"
+          className="column react-data-table-container"
+          ref={tableRef}
+        >
           <DataTable
             className="react-data-table"
             noHeader

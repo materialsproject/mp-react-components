@@ -12,30 +12,30 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'ID',
         id: 'task_ids',
-        type: FilterType.TEXT_INPUT,
+        type: 'TEXT_INPUT' as FilterType,
       },
       {
-        name: 'Included Elements',
+        name: 'Include Elements',
         id: 'elements',
-        type: FilterType.MATERIALS_INPUT,
+        type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: MaterialsInputField.ELEMENTS,
+          field: 'elements' as MaterialsInputField,
         },
       },
-      // {
-      //   name: 'Excluded Elements',
-      //   id: 'elements',
-      //   type: FilterType.MATERIALS_INPUT,
-      //   props: {
-      //     field: MaterialsInputField.ELEMENTS,
-      //   },
-      // },
+      {
+        name: 'Exclude Elements',
+        id: 'exclude_elements',
+        type: 'MATERIALS_INPUT' as FilterType,
+        props: {
+          field: 'exclude_elements' as MaterialsInputField,
+        },
+      },
       {
         name: 'Formula',
         id: 'formula',
-        type: FilterType.MATERIALS_INPUT,
+        type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: MaterialsInputField.FORMULA,
+          field: 'formula' as MaterialsInputField,
         },
       },
     ],
@@ -47,7 +47,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Volume',
         id: 'volume',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         props: {
           domain: [5, 19407],
           step: 1,
@@ -56,7 +56,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Density',
         id: 'density',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         props: {
           domain: [0, 25],
           step: 0.1,
@@ -65,7 +65,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Number of Sites',
         id: 'nsites',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         props: {
           domain: [1, 360],
           step: 1,
@@ -80,18 +80,18 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Energy Above Hull',
         id: 'e_above_hull',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         units: 'meV/atom',
         conversionFactor: 0.001,
         props: {
-          domain: [0, 7000],
-          step: 1,
+          domain: [0, 1000],
+          step: 0.01,
         },
       },
       {
         name: 'Formation Energy',
         id: 'formation_energy_per_atom',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         units: 'eV/atom',
         props: {
           domain: [-10, 6],
@@ -101,7 +101,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Stability',
         id: 'is_stable',
-        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
+        type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
         props: {
           options: [
             {
@@ -124,17 +124,17 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Spacegroup Symbol',
         id: 'spacegroup_symbol',
-        type: FilterType.SELECT_SPACEGROUP_SYMBOL,
+        type: 'SELECT_SPACEGROUP_SYMBOL' as FilterType,
       },
       {
         name: 'Spacegroup Number',
         id: 'spacegroup_number',
-        type: FilterType.SELECT_SPACEGROUP_NUMBER,
+        type: 'SELECT_SPACEGROUP_NUMBER' as FilterType,
       },
       {
         name: 'Crystal System',
         id: 'crystal_system',
-        type: FilterType.SELECT_CRYSTAL_SYSTEM,
+        type: 'SELECT_CRYSTAL_SYSTEM' as FilterType,
       },
     ],
   },
@@ -145,7 +145,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Band Gap',
         id: 'sc_band_gap',
-        type: FilterType.SLIDER,
+        type: 'SLIDER' as FilterType,
         props: {
           domain: [0, 100],
           step: 1,
@@ -154,7 +154,7 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'Direct Band Gap',
         id: 'sc_direct',
-        type: FilterType.THREE_STATE_BOOLEAN_SELECT,
+        type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
         props: {
           options: [
             {
@@ -170,26 +170,248 @@ export const materialsGroups: FilterGroup[] = [
       },
     ],
   },
+  {
+    name: 'Magnetism',
+    expanded: false,
+    filters: [
+      {
+        name: 'Magnetic Ordering',
+        id: 'ordering',
+        type: 'SELECT' as FilterType,
+        props: {
+          options: [
+            {
+              label: 'Ferromagnetic',
+              value: 'FM',
+            },
+            {
+              label: 'Non-magnetic',
+              value: 'NM',
+            },
+            {
+              label: 'Ferrimagnetic',
+              value: 'FiM',
+            },
+            {
+              label: 'Antiferromagnetic',
+              value: 'AFM',
+            },
+            {
+              label: 'Unknown',
+              value: 'Unknown',
+            },
+          ],
+        },
+      },
+      {
+        name: 'Max Magnetic Moment',
+        id: 'total_magnetization',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 325],
+          step: 1,
+        },
+      },
+      // {
+      //   name: 'Type of Normalization',
+      //   id: 'sc_band_gap',
+      //   type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
+      //   props: {
+      //     options: [
+      //       {
+      //         label: 'Is direct',
+      //         value: true,
+      //       },
+      //       {
+      //         label: 'Is not direct',
+      //         value: false,
+      //       },
+      //     ],
+      //   },
+      // },
+    ],
+  },
+  {
+    name: 'Elasticity',
+    expanded: false,
+    filters: [
+      {
+        name: 'Bulk Modulus, Voigt',
+        id: 'k_voigt',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Bulk Modulus, Reuss',
+        id: 'k_reuss',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Bulk Modulus, Voigt-Reuss-Hill',
+        id: 'k_vrh',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Voigt',
+        id: 'g_voigt',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Reuss',
+        id: 'g_reuss',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Voigt-Reuss-Hill',
+        id: 'g_vrh',
+        units: 'GPa',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Elastic Anisotropy',
+        id: 'elastic_anisotropy',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [-2000, 25],
+          step: 1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Surfaces',
+    expanded: false,
+    filters: [
+      {
+        name: 'Weighted Surface Energy',
+        id: 'weighted_surface_energy',
+        units: 'J/m²',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 5],
+          step: 0.01,
+        },
+      },
+      {
+        name: 'Surface Anisotropy',
+        id: 'surface_anisotropy',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 25],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shape Factor',
+        id: 'shape_factor',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Piezoelectric',
+    expanded: false,
+    filters: [
+      {
+        name: 'Piezo Modulus',
+        id: 'piezo_modulus',
+        units: 'Cm²',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 100],
+          step: 0.01,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Dielectric',
+    expanded: false,
+    filters: [
+      {
+        name: 'Total Dielectric Constant',
+        id: 'e_total',
+        units: '',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 100],
+          step: 0.01,
+        },
+      },
+      {
+        name: 'Ionic Dielectric Constant',
+        id: 'e_ionic',
+        units: '',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 100],
+          step: 0.01,
+        },
+      },
+      {
+        name: 'Static Dielectric Constant',
+        id: 'e_static',
+        units: '',
+        type: 'SLIDER' as FilterType,
+        props: {
+          domain: [0, 100],
+          step: 0.01,
+        },
+      },
+    ],
+  },
 ];
 
 export const materialsColumns: Column[] = [
   {
     name: 'Material Id',
     selector: 'task_id',
-    format: ColumnFormat.LINK,
+    format: 'LINK' as ColumnFormat,
     formatArg: '/materials/',
     minWidth: '110px',
   },
   {
     name: 'Formula',
     selector: 'formula_pretty',
-    format: ColumnFormat.FORMULA,
+    format: 'FORMULA' as ColumnFormat,
     minWidth: '130px',
   },
   {
     name: 'Space Group Symbol',
     selector: 'symmetry.symbol',
-    format: ColumnFormat.SPACEGROUP_SYMBOL,
+    format: 'SPACEGROUP_SYMBOL' as ColumnFormat,
   },
   {
     name: 'Space Group Number',
@@ -203,7 +425,7 @@ export const materialsColumns: Column[] = [
   {
     name: 'Volume',
     selector: 'volume',
-    format: ColumnFormat.FIXED_DECIMAL,
+    format: 'FIXED_DECIMAL' as ColumnFormat,
     formatArg: 3,
     omit: true,
     right: true,
@@ -211,7 +433,7 @@ export const materialsColumns: Column[] = [
   {
     name: 'Density',
     selector: 'density',
-    format: ColumnFormat.SIGNIFICANT_FIGURES,
+    format: 'SIGNIFICANT_FIGURES' as ColumnFormat,
     formatArg: 4,
     omit: true,
     right: true,
@@ -224,7 +446,7 @@ export const materialsColumns: Column[] = [
   {
     name: 'Energy Above Hull',
     selector: 'e_above_hull',
-    format: ColumnFormat.FIXED_DECIMAL,
+    format: 'FIXED_DECIMAL' as ColumnFormat,
     formatArg: 2,
     units: 'meV/atom',
     conversionFactor: 1000,
@@ -235,7 +457,7 @@ export const materialsColumns: Column[] = [
   {
     name: 'Formation Energy',
     selector: 'formation_energy_per_atom',
-    format: ColumnFormat.FIXED_DECIMAL,
+    format: 'FIXED_DECIMAL' as ColumnFormat,
     formatArg: 2,
     units: 'eV/atom',
     omit: true,
@@ -244,8 +466,148 @@ export const materialsColumns: Column[] = [
   {
     name: 'Is Stable',
     selector: 'is_stable',
-    format: ColumnFormat.BOOLEAN,
+    format: 'BOOLEAN' as ColumnFormat,
     formatArg: ['yes', 'no'],
     omit: true,
+  },
+  {
+    name: 'Magnetic Ordering',
+    selector: 'ordering',
+    omit: true,
+  },
+  {
+    name: 'Max Magnetic Moment',
+    selector: 'total_magnetization',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+  },
+  {
+    name: 'Bulk Modulus, Voigt',
+    selector: 'k_voigt',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Bulk Modulus, Reuss',
+    selector: 'k_reuss',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Bulk Modulus, VRH',
+    selector: 'k_vrh',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Shear Modulus, Voigt',
+    selector: 'g_voigt',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Shear Modulus, Reuss',
+    selector: 'g_reuss',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Shear Modulus, VRH',
+    selector: 'g_vrh',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'GPa',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Elastic Anisotropy',
+    selector: 'universal_anisotropy',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Weighted Surface Energy',
+    selector: 'weighted_surface_energy',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'J/m²',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Surface Anisotropy',
+    selector: 'surface_anisotropy',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Shape Factor',
+    selector: 'shape_factor',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Work Function',
+    selector: 'weighted_work_function',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Piezoelectric Modulus',
+    selector: 'e_ij_max',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    units: 'C/m²',
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Total Dielectric Constant',
+    selector: 'e_total',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Ionic Dielectric Constant',
+    selector: 'e_ionic',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
+  },
+  {
+    name: 'Static Dielectric Constant',
+    selector: 'e_static',
+    format: 'FIXED_DECIMAL' as ColumnFormat,
+    formatArg: 2,
+    omit: true,
+    right: true,
   },
 ];

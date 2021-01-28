@@ -46,6 +46,7 @@ import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePl
  */
 export enum MaterialsInputField {
   ELEMENTS = 'elements',
+  EXCLUDE_ELEMENTS = 'exclude_elements',
   FORMULA = 'formula',
   MP_ID = 'task_ids',
   SMILES = 'smiles',
