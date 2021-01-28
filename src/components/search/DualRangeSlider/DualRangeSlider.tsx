@@ -250,6 +250,11 @@ export const DualRangeSlider: React.FC<Props> = ({
             </div>
           )}
           renderMark={({ props, index }) => {
+            /**
+             * Only render the number of ticks specificed in the ticks var (currently 5).
+             * Otherwise, react-range will try to render a tick at each step
+             * which is way too many.
+             */
             const tickValue = niceDomain[0] + index * step;
             if (ticks.indexOf(tickValue) > -1) {
               return (
@@ -259,8 +264,8 @@ export const DualRangeSlider: React.FC<Props> = ({
                     className="slider-tick-mark"
                     style={{
                       ...props.style,
-                      backgroundColor:
-                        tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc',
+                      backgroundColor: '#ccc',
+                      // tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc',
                     }}
                   />
                   <span
@@ -269,6 +274,7 @@ export const DualRangeSlider: React.FC<Props> = ({
                     style={{ ...props.style }}
                   >
                     {tickValue}
+                    {tickValue === ticks[ticks.length - 1] && '+'}
                   </span>
                 </div>
               );

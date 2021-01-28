@@ -233,7 +233,11 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                       {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
                     </span>
                     <div className="is-pulled-right">
-                      {!groupsByName[g.name].expanded ? <FaCaretRight /> : <FaCaretDown />}
+                      {!groupsByName[g.name].expanded ? (
+                        <FaCaretRight className="is-vertical-align-middle" />
+                      ) : (
+                        <FaCaretDown className="is-vertical-align-middle" />
+                      )}
                     </div>
                   </button>
                 </h3>
