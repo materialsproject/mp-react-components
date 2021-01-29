@@ -183,7 +183,7 @@ export const DualRangeSlider: React.FC<Props> = ({
 
   return (
     <div className="slider-container" data-testid="dual-range-slider">
-      <div className="level is-mobile mb-1">
+      {/* <div className="level is-mobile mb-1">
         <div className="level-left">
           <input
             data-testid="lower-bound-input"
@@ -208,7 +208,7 @@ export const DualRangeSlider: React.FC<Props> = ({
             onChange={handleUpperInputChange}
           />
         </div>
-      </div>
+      </div> */}
       <div className="slider">
         <Range
           values={values}

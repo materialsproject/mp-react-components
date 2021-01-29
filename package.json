@@ -25,6 +25,7 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
+    "@data-ui/histogram": "0.0.84",
     "@s-ui/react-molecule-button-group": "^2.3.0",
     "@storybook/client-api": "^5.3.21",
     "@trendmicro/react-dropdown": "^1.4.0",

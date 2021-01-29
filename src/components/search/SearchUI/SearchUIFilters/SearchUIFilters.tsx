@@ -9,6 +9,14 @@ import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
 import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect';
 import { TextInput } from '../../TextInput';
+import {
+  Histogram,
+  DensitySeries,
+  BarSeries,
+  withParentSize,
+  XAxis,
+  YAxis,
+} from '@data-ui/histogram';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -48,6 +56,20 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
   return groupsByName;
 };
 
+const rawData = Array(100)
+  .fill(0)
+  .map(
+    () =>
+      (Math.random() +
+        Math.random() +
+        Math.random() +
+        Math.random() +
+        Math.random() +
+        Math.random() -
+        3) /
+      3
+  );
+
 export const SearchUIFilters: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
@@ -55,6 +77,10 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   const [groupsByName, setGroupsByName] = useState(
     getGroupsByName(state.filterGroups, state.activeFilters)
   );
+
+  const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest }) => (
+    <Histogram width={parentWidth} height={parentHeight} {...rest} />
+  ));
 
   /**
    * Render filter component based on the filter's "type" property
@@ -91,12 +117,43 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
         );
       case FilterType.SLIDER:
         return (
-          <DualRangeSlider
-            {...f.props}
-            initialValues={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
-            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
-          />
+          <>
+            <div style={{ height: '70px', width: '100%', position: 'absolute' }}>
+              <ResponsiveHistogram
+                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                ariaLabel="My histogram of ..."
+                orientation="vertical"
+                cumulative={false}
+                normalized={true}
+                binCount={50}
+                valueAccessor={(datum) => datum}
+                binType="numeric"
+              >
+                {/* <BarSeries
+                  animated
+                  stroke="#3273dc"
+                  fill="#3273dc"
+                  rawData={rawData}
+                /> */}
+                <DensitySeries
+                  animated
+                  stroke="#3273dc"
+                  fill="#96B8ED"
+                  smoothing={0.005}
+                  kernel="parabolic"
+                  rawData={rawData}
+                />
+              </ResponsiveHistogram>
+            </div>
+            <div style={{ marginTop: '68px' }}>
+              <DualRangeSlider
+                {...f.props}
+                initialValues={state.filterValues[f.id]}
+                onChange={(v) => actions.setFilterValue(v, f.id)}
+                onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
+              />
+            </div>
+          </>
         );
       case FilterType.SELECT_SPACEGROUP_SYMBOL:
       case FilterType.SELECT_SPACEGROUP_NUMBER:
@@ -253,7 +310,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                   <div aria-hidden={!groupsByName[g.name].expanded}>
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
-                        <div>
+                        <div style={{ position: 'relative' }}>
                           <p className="has-text-weight-bold mb-2">
                             {!f.active && (
                               <span>
