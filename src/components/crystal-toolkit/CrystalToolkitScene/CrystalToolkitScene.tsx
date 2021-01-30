@@ -242,7 +242,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
    */
   const setUsdzData = (sceneComponent: Scene) => {
     const files = new USDZExporter().parse(sceneComponent.scene, { binary: true });
-    const imageData = 'data:application/octet-stream;base64,' + btoa(files.data);
+    const imageData = 'data:application/octet-stream;base64,' + btoa(files);
     const imageDataTimestamp = Date.now();
     props.setProps({ imageData, imageDataTimestamp });
   };
