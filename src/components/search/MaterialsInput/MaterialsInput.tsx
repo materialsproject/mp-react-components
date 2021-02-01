@@ -75,8 +75,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
 }
 
 interface FormulaSuggestion {
-  _id: string;
-  score: number;
+  formula_pretty: string;
 }
 
 let requestCount = 0;
@@ -205,8 +204,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       <div data-testid="materials-input-autocomplete-menu-items" className="dropdown-content">
         <p className="autocomplete-label">Suggested formulas</p>
         {formulaSuggestions.map((d, i) => (
-          <a key={i} className="dropdown-item" onMouseDown={() => props.onChange(d._id)}>
-            {formatFormula(d._id)}
+          <a key={i} className="dropdown-item" onMouseDown={() => props.onChange(d.formula_pretty)}>
+            {formatFormula(d.formula_pretty)}
           </a>
         ))}
       </div>
@@ -337,6 +336,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
           headers: props.autocompleteApiKey ? { 'X-Api-Key': props.autocompleteApiKey } : null,
         })
         .then((result) => {
+          console.log(result);
           if (requestIndex === requestCount) {
             setFormulaSuggestions(result.data.data);
           }
