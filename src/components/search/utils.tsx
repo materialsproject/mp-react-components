@@ -71,7 +71,7 @@ export function downloadExcel(array) {
  * Return the delimiter as a regular expression object
  * If multiple delimiters are present, the delimiter with the lowest index is used
  */
-export const getDelimiter = (input: string): RegExp => {
+export const getDelimiter = (input: string): RegExp | null => {
   const comma = input.match(/,/);
   const hyphen = input.match(/-/);
   const space = input.match(/\s/);
@@ -97,7 +97,7 @@ export const getDelimiter = (input: string): RegExp => {
   ) {
     return new RegExp(/\s/);
   } else {
-    return new RegExp(',');
+    return null;
   }
 };
 

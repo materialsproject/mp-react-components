@@ -122,7 +122,10 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           break;
         case MaterialsInputField.EXCLUDE_ELEMENTS:
         case MaterialsInputField.ELEMENTS:
-          newDelimiter = getDelimiter(newValue);
+          /** Parse the input for a delimiter */
+          const parsedDelimiter = getDelimiter(newValue);
+          /** If no delimiter present, don't change the delimiter value */
+          newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
           const parsedElements = parseElements(newValue, newDelimiter);
           parsedElements.forEach((el) => {
             if (!enabledElements[el]) {

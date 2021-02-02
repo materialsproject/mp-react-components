@@ -167,9 +167,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
 
   const handleChemSysCheck = () => {
     let newIsChemSys = isChemSys;
-    if (props.value.match(/-/gi) || (props.value.length < 3 && !props.value.match(/,|\s/gi))) {
+    if (inputValue.match(/-/gi)) {
       newIsChemSys = true;
-    } else if (props.value.match(/,|\s/gi)) {
+    } else if (inputValue.match(/,|\s/gi)) {
       newIsChemSys = false;
     }
     if (props.onPropsChange) props.onPropsChange({ isChemSys: newIsChemSys });
