@@ -89,6 +89,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     props.isChemSys ? props.isChemSys : false
   );
   // const prevChemSys = usePrevious(isChemSys);
+  const periodicTableClicked = useRef(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
   );
@@ -126,11 +127,20 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
    */
   const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
-    if (!relatedTarget || relatedTarget.className.indexOf('mat-element') === -1) {
+    const target = e.target;
+    if (!periodicTableClicked.current) {
       hideAutoCompleteAndPeriodicTable();
     } else {
-      e.target.focus();
+      /** Chrome can make use of relatedTarget to avoid using a timeout */
+      if (relatedTarget && relatedTarget.className.indexOf('mat-element') > -1) {
+        target.focus();
+      } else {
+        setTimeout(() => {
+          target.focus();
+        });
+      }
     }
+    periodicTableClicked.current = false;
   };
 
   /**
@@ -405,7 +415,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
           })}
           aria-hidden={!showPeriodicTable}
           onMouseDown={(event) => {
-            if (inputRef && inputRef.current) inputRef.current.focus();
+            periodicTableClicked.current = true;
+            // if (inputRef && inputRef.current) {
+            //   const target = inputRef.current;
+            //   setTimeout(() => {
+            //     target.focus();
+            //   }, 500);
+            // }
           }}
         >
           <SelectableTable
