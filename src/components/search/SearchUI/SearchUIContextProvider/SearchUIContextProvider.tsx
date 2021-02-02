@@ -304,7 +304,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                   parsedValue = arrayToDelimitedString(parsedValue, new RegExp('-'));
                   filterDisplayName = 'contains only elements';
                 } else {
-                  parsedValue = parseElements(filterValues[f.id], new RegExp(','));
+                  const parsedDelimiter = getDelimiter(parsedValue);
+                  /** If no delimiter present, default to comma */
+                  const delimiter = parsedDelimiter ? parsedDelimiter : new RegExp(',');
+                  parsedValue = parseElements(filterValues[f.id], delimiter);
                   filterDisplayName = 'contains elements';
                 }
                 f.props.enabledElements = parsedValue;
