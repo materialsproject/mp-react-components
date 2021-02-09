@@ -138,38 +138,38 @@ export const materialsGroups: FilterGroup[] = [
       },
     ],
   },
-  {
-    name: 'Electronic Structure',
-    expanded: false,
-    filters: [
-      {
-        name: 'Band Gap',
-        id: 'sc_band_gap',
-        type: 'SLIDER' as FilterType,
-        props: {
-          domain: [0, 100],
-          step: 1,
-        },
-      },
-      {
-        name: 'Direct Band Gap',
-        id: 'sc_direct',
-        type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
-        props: {
-          options: [
-            {
-              label: 'Is direct',
-              value: true,
-            },
-            {
-              label: 'Is not direct',
-              value: false,
-            },
-          ],
-        },
-      },
-    ],
-  },
+  // {
+  //   name: 'Electronic Structure',
+  //   expanded: false,
+  //   filters: [
+  //     {
+  //       name: 'Band Gap',
+  //       id: 'sc_band_gap',
+  //       type: 'SLIDER' as FilterType,
+  //       props: {
+  //         domain: [0, 100],
+  //         step: 1,
+  //       },
+  //     },
+  //     {
+  //       name: 'Direct Band Gap',
+  //       id: 'sc_direct',
+  //       type: 'THREE_STATE_BOOLEAN_SELECT' as FilterType,
+  //       props: {
+  //         options: [
+  //           {
+  //             label: 'Is direct',
+  //             value: true,
+  //           },
+  //           {
+  //             label: 'Is not direct',
+  //             value: false,
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   ],
+  // },
   {
     name: 'Magnetism',
     expanded: false,

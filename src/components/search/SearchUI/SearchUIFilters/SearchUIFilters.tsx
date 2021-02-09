@@ -116,36 +116,54 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           />
         );
       case FilterType.SLIDER:
+        // console.log(state.distributions);
+        // const dist = state.distributions && state.distributions.length > 0 ? state.distributions![1] : {};
+        let dist = state.distributions?.find((d) => d.field === f.id);
+        let binnedData = [];
+        if (dist !== undefined) {
+          const step = (dist.max - dist.min) / dist.distribution.length;
+          binnedData = dist.distribution.map((d, i) => {
+            return {
+              id: i.toString(),
+              bin0: dist.min + step * i,
+              bin1: dist.min + step * (i + 1),
+              count: d,
+            };
+          });
+        }
+
         return (
           <>
-            <div style={{ height: '70px', width: '100%', position: 'absolute' }}>
-              <ResponsiveHistogram
-                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                ariaLabel="My histogram of ..."
-                orientation="vertical"
-                cumulative={false}
-                normalized={true}
-                binCount={50}
-                valueAccessor={(datum) => datum}
-                binType="numeric"
-              >
-                {/* <BarSeries
-                  animated
-                  stroke="#3273dc"
-                  fill="#3273dc"
-                  rawData={rawData}
-                /> */}
-                <DensitySeries
-                  animated
-                  stroke="#3273dc"
-                  fill="#96B8ED"
-                  smoothing={0.005}
-                  kernel="parabolic"
-                  rawData={rawData}
-                />
-              </ResponsiveHistogram>
-            </div>
-            <div style={{ marginTop: '68px' }}>
+            {dist !== undefined && (
+              <div style={{ height: '70px', width: '100%', position: 'absolute' }}>
+                <ResponsiveHistogram
+                  margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                  ariaLabel="My histogram of ..."
+                  orientation="vertical"
+                  cumulative={false}
+                  normalized={true}
+                  binCount={50}
+                  valueAccessor={(datum) => datum}
+                  binType="numeric"
+                >
+                  {/* <BarSeries
+                    animated
+                    stroke="#3273dc"
+                    fill="#3273dc"
+                    rawData={rawData}
+                  /> */}
+                  <DensitySeries
+                    animated
+                    stroke="#3273dc"
+                    fill="#96B8ED"
+                    smoothing={0.005}
+                    kernel="parabolic"
+                    binnedData={binnedData}
+                  />
+                </ResponsiveHistogram>
+              </div>
+            )}
+            <div style={{ marginTop: dist !== undefined ? '68px' : '0' }}>
               <DualRangeSlider
                 {...f.props}
                 initialValues={state.filterValues[f.id]}

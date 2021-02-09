@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchUI } from '../components/search/SearchUI';
 import { materialsColumns, materialsGroups } from '../constants/materials';
 import {
@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from '@data-ui/histogram';
+import axios from 'axios';
 
 /**
  * Component for testing the Materials Explorer view
@@ -33,30 +34,49 @@ export const MaterialsExplorer: React.FC = () => {
         3
     );
 
+  const [distributions, setDistributions] = useState<any[]>([]);
+
+  useEffect(() => {
+    let requests: any = [];
+    materialsColumns.forEach((col, i) => {
+      if (i === 0) {
+        const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+          params: {
+            field: 'density',
+            min_val: 1,
+            max_val: 10,
+            num_points: 100,
+          },
+        });
+        requests.push(request);
+      } else if (i === 1) {
+        const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+          params: {
+            field: 'volume',
+            min_val: 1,
+            max_val: 10000,
+            num_points: 100,
+          },
+        });
+        requests.push(request);
+      }
+    });
+    console.log(requests);
+    axios
+      .all(requests)
+      .then(
+        axios.spread((...responses) => {
+          console.log(responses);
+          setDistributions(responses.map((d: any) => d.data));
+        })
+      )
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div className="p-4">
-      {/* <div style={{height: '500px'}}>
-        <ResponsiveHistogram
-          ariaLabel="My histogram of ..."
-          orientation="vertical"
-          cumulative={false}
-          normalized={true}
-          binCount={50}
-          valueAccessor={datum => datum}
-          binType="numeric"
-        >
-          <BarSeries
-            animated
-            rawData={rawData}
-          />
-          <DensitySeries
-            animated
-            smoothing={0.005}
-            kernel="parabolic"
-            rawData={rawData}
-          />
-        </ResponsiveHistogram>
-      </div> */}
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
         resultLabel="material"
@@ -73,6 +93,7 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="e_above_hull"
         sortAscending={true}
+        distributions={distributions}
       />
     </div>
   );

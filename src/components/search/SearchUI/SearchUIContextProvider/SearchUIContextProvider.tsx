@@ -392,6 +392,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
      * and all the values provided in props (except props.children)
      */
     const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
+    console.log(initialState);
     initialState.columns = initColumns(props.columns);
     const { initializedGroups, initializedValues } = initFilterGroups(props.filterGroups, query);
     const urlLimit = query.get('limit');
@@ -558,6 +559,104 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
         };
       });
     },
+    getDistributions: () => {
+      let requests: any = [];
+      // state.columns.forEach((col, i) => {
+      //   if (i === 0) {
+      //     const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+      //       params: {
+      //         field: 'density',
+      //         min_val: 1,
+      //         max_val: 10,
+      //         num_points: 100
+      //       }
+      //     });
+      //     requests.push(request);
+      //   } else if (i === 1) {
+      //     const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+      //       params: {
+      //         field: 'volume',
+      //         min_val: 1,
+      //         max_val: 10000,
+      //         num_points: 100
+      //       }
+      //     });
+      //     requests.push(request);
+      //   }
+      // });
+      const allowedFields = [
+        'composition',
+        'composition_reduced',
+        'corrected_energy',
+        'density',
+        'dos_energy_down',
+        'dos_energy_up',
+        'e_above_hull',
+        'e_ij_max',
+        'e_ionic',
+        'e_static',
+        'e_total',
+        'energy',
+        'energy_per_atom',
+        'eq_reaction_e',
+        'formation_energy_per_atom',
+        'g_reuss',
+        'g_voigt',
+        'g_vrh',
+        'hin_direct',
+        'hin_energy',
+        'homogeneous_poisson',
+        'k_reuss',
+        'k_voigt',
+        'k_vrh',
+        'lm_direct',
+        'lm_energy',
+        'n',
+        'sc_direct',
+        'sc_energy',
+        'shape_factor',
+        'surface_anisotropy',
+        'total_magnetization',
+        'total_magnetization_normalized_formula_units',
+        'total_magnetization_normalized_vol',
+        'universal_anisotropy',
+        'volume',
+        'weighted_surface_energy',
+        'weighted_surface_energy_EV_PER_ANG2',
+        'weighted_work_function',
+      ];
+      state.filterGroups.forEach((group) => {
+        group.filters.forEach((filter, i) => {
+          if (filter.type === FilterType.SLIDER && allowedFields.indexOf(filter.id) > -1) {
+            const request = axios.get(
+              'https://api.materialsproject.org/search/generate_statistics/',
+              {
+                params: {
+                  field: filter.id,
+                  min_val: filter.props.domain[0],
+                  max_val: filter.props.domain[1],
+                  num_points: 100,
+                },
+              }
+            );
+            requests.push(request);
+          }
+        });
+      });
+
+      axios
+        .all(requests)
+        .then(
+          axios.spread((...responses) => {
+            const distributions = responses.map((d: any) => d.data);
+            console.log(distributions);
+            setState((currentState) => ({ ...currentState, distributions }));
+          })
+        )
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     resetFilters: () => {
       setState((currentState) => {
         const { activeFilters, filterValues } = getResetFiltersAndValues(currentState);
@@ -573,6 +672,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
 
   useDeepCompareEffect(() => {
     actions.getData();
+    actions.getDistributions();
   }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   return (

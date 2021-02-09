@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from 'react-router-dom';
+import propertySearch from '../GroupSpaceSearch/property-search';
+import axios from 'axios';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -103,9 +105,9 @@ export interface SearchUIProps {
   /**
    * Optionally add a help icon with a tooltip in the search bar
    * This should be used to provide instructions on how to use the search bar
-   * e.g. 
-   *  "Type in a comma-separated list of element symbols (e.g. Ga, N), 
-   *  a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). 
+   * e.g.
+   *  "Type in a comma-separated list of element symbols (e.g. Ga, N),
+   *  a chemical formula (e.g. C3N), or a material id (e.g. mp-10152).
    *  You can also click elements on the periodic table to add them to your search."
    */
   searchBarTooltip?: string;
@@ -123,15 +125,56 @@ export interface SearchUIProps {
    * True for ascending, False for descending
    */
   sortAscending?: boolean;
+  distributions?: any[];
 }
 
-export const SearchUI: React.FC<SearchUIProps> = props => {
+export const SearchUI: React.FC<SearchUIProps> = (props) => {
+  const [distributions, setDistributions] = useState<any[]>([]);
+  console.log(props);
+  console.log(distributions);
+  // useEffect(() => {
+  //   let requests: any = [];
+  //   console.log(props.columns);
+  //   props.columns.forEach((col, i) => {
+  //     if (i === 0) {
+  //       const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+  //         params: {
+  //           field: 'density',
+  //           min_val: 1,
+  //           max_val: 10,
+  //           num_points: 100
+  //         }
+  //       });
+  //       requests.push(request);
+  //     } else if (i === 1) {
+  //       const request = axios.get('https://api.materialsproject.org/search/generate_statistics/', {
+  //         params: {
+  //           field: 'volume',
+  //           min_val: 1,
+  //           max_val: 10000,
+  //           num_points: 100
+  //         }
+  //       });
+  //       requests.push(request);
+  //     }
+  //   });
+
+  //   axios.all(requests)
+  //   .then(axios.spread((...responses) => {
+  //     // console.log(responses);
+  //     const data = responses.map((d: any) => d.data);
+  //     console.log(data);
+  //     setDistributions(data);
+  //   }))
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+  // }, []);
+
   return (
     <div className="search-ui">
       <Router>
-        <SearchUIContextProvider
-          {...props}
-        >
+        <SearchUIContextProvider {...props}>
           <div className="columns">
             <div className="column is-narrow">
               <div className="columns mb-1">
@@ -156,5 +199,5 @@ export const SearchUI: React.FC<SearchUIProps> = props => {
 };
 
 SearchUI.defaultProps = {
-  resultLabel: 'results'
+  resultLabel: 'results',
 };
