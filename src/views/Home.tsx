@@ -3,6 +3,7 @@ import { GlobalSearchBar } from '../components/search/GlobalSearchBar';
 import { NavbarDropdown } from '../components/navigation/NavbarDropdown';
 import { SearchUI } from '../components/search/SearchUI';
 import { materialsColumns, materialsGroups } from '../constants/materials';
+import { FaTrain } from 'react-icons/fa';
 
 /**
  * Component for testing the parts of the Home view
@@ -35,8 +36,9 @@ export const Home: React.FC = () => {
 
             <a className="navbar-item">Documentation</a>
             <NavbarDropdown
-              className="has-background-danger-light	"
-              label="Test"
+              className="has-background-danger-light"
+              isArrowless
+              label={<FaTrain />}
               items={[
                 {
                   text: 'One',
@@ -54,8 +56,9 @@ export const Home: React.FC = () => {
                   text: 'Label',
                 },
                 {
-                  text: 'Three',
-                  href: '#three',
+                  text: 'Materials Project',
+                  href: 'https://materialsproject.org',
+                  openInNewTab: true,
                 },
               ]}
             />
