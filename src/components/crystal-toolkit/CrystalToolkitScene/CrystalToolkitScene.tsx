@@ -33,6 +33,7 @@ import toDataUrl from 'svgtodatauri';
 import * as THREE from 'three';
 import { Quaternion, Vector3, WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
+import { USDZExporter } from 'three/examples/jsm/exporters/USDZExporter.js';
 import { Action } from '../utils';
 
 /**
@@ -218,7 +219,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   };
 
   /**
-   * Handle saving image to collada file (.dae)
+   * Handle saving image to Collada file (.dae)
    * Set imageData prop to data uri
    */
   const setColladaData = (sceneComponent: Scene) => {
@@ -235,6 +236,17 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     props.setProps({ imageData, imageDataTimestamp });
   };
 
+  /**
+   * Handle saving scene to a Universal Scene Description
+   * (.usdz) file
+   */
+  const setUsdzData = (sceneComponent: Scene) => {
+    const files = new USDZExporter().parse(sceneComponent.scene, { binary: true });
+    const imageData = 'data:application/octet-stream;base64,' + btoa(files);
+    const imageDataTimestamp = Date.now();
+    props.setProps({ imageData, imageDataTimestamp });
+  };
+
   const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
     // force a render (in case buffer has been cleared)
     switch (filetype) {
@@ -243,6 +255,9 @@ export const CrystalToolkitScene: React.FC<Props> = ({
         break;
       case ExportType.dae:
         setColladaData(sceneComponent);
+        break;
+      case ExportType.usdz:
+        setUsdzData(sceneComponent);
         break;
       default:
         throw new Error('Unknown filetype.');
