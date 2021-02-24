@@ -6,7 +6,6 @@ export enum Renderer {
 export enum ExportType {
   png = 'png',
   dae = 'dae',
-  usdz = 'usdz',
 }
 
 export enum Material {
