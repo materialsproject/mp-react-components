@@ -13,7 +13,6 @@ interface NavbarItem {
 
 interface Props {
   className?: string;
-  label: React.ReactNode;
   items: NavbarItem[];
   isArrowless?: boolean;
 }
@@ -34,7 +33,11 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
           'is-arrowless': props.isArrowless,
         })}
       >
-        {props.label}
+        {/**
+         * Link content is populated by children prop
+         * This is the only way a dash component can take a component as a prop
+         */}
+        {props.children}
       </a>
       <div className="navbar-dropdown">
         {props.items.map((item, i) => {
@@ -81,6 +84,5 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
 };
 
 NavbarDropdown.defaultProps = {
-  label: '',
   items: [],
 };

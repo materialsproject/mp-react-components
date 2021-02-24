@@ -38,7 +38,6 @@ export const Home: React.FC = () => {
             <NavbarDropdown
               className="has-background-danger-light"
               isArrowless
-              label={<FaTrain />}
               items={[
                 {
                   text: 'One',
@@ -61,7 +60,9 @@ export const Home: React.FC = () => {
                   openInNewTab: true,
                 },
               ]}
-            />
+            >
+              <FaTrain />
+            </NavbarDropdown>
           </div>
         </div>
       </nav>
