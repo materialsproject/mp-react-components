@@ -15,6 +15,7 @@ interface Props {
   className?: string;
   items: NavbarItem[];
   isArrowless?: boolean;
+  isRight?: boolean;
 }
 
 export const NavbarDropdown: React.FC<Props> = (props) => {
@@ -39,7 +40,11 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
          */}
         {props.children}
       </a>
-      <div className="navbar-dropdown">
+      <div
+        className={classNames('navbar-dropdown', {
+          'is-right': props.isRight,
+        })}
+      >
         {props.items.map((item, i) => {
           if (item.isDivider) {
             /** Use an <hr> for dividers */

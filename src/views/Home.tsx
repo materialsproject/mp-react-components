@@ -38,6 +38,7 @@ export const Home: React.FC = () => {
             <NavbarDropdown
               className="has-background-danger-light"
               isArrowless
+              isRight
               items={[
                 {
                   text: 'One',
