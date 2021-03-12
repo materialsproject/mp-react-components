@@ -510,6 +510,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
             query.set(field, s.value);
           });
         });
+        console.log(params);
         axios
           .get(props.baseURL, {
             params: params,
