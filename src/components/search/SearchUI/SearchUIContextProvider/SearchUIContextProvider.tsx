@@ -63,6 +63,8 @@ const getRowValueFromSelectorString = (selector: string, row: any) => {
   return selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
 };
 
+const emptyCellPlaceholder = '-';
+
 /**
  * Initialize columns with their proper format function
  * The "format" prop should initially be one of the ColumnFormat strings
@@ -102,7 +104,7 @@ const initColumns = (columns: Column[]) => {
               return '';
             }
           } else {
-            return isNaN(value) ? '' : value.toFixed(decimalPlaces);
+            return isNaN(value) ? emptyCellPlaceholder : value.toFixed(decimalPlaces);
           }
         };
         c.right = true;
@@ -112,7 +114,7 @@ const initColumns = (columns: Column[]) => {
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
-          return isNaN(value) ? '' : value.toPrecision(sigFigs);
+          return isNaN(value) ? emptyCellPlaceholder : value.toPrecision(sigFigs);
         };
         c.right = true;
         return c;
@@ -157,7 +159,7 @@ const initColumns = (columns: Column[]) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const isNumber = !isNaN(rowValue);
           const value = c.conversionFactor && isNumber ? rowValue * c.conversionFactor : rowValue;
-          return value;
+          return value && value !== '' ? value : emptyCellPlaceholder;
         };
         return c;
     }
