@@ -291,26 +291,27 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
           case FilterType.MATERIALS_INPUT:
             if (filterValues[f.id] !== '') {
               /**
-               * If the input controls the elements param,
+               * If the input controls the elements or exclude_elements param,
                * parse the input's value into an array of valid elements.
                * Otherwise, use the raw input value for the param.
                */
               let parsedValue = filterValues[f.id];
               let filterDisplayName = f.props.field;
-              if (f.id === 'elements') {
+              if (f.id === 'elements' || f.id === 'exclude_elements') {
                 /**
                  * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
                  * This will tell the API to return materials with this exact chemical system
                  */
                 if (f.props.isChemSys) {
                   parsedValue = arrayToDelimitedString(parsedValue, new RegExp('-'));
-                  filterDisplayName = 'contains only elements';
+                  filterDisplayName = 'includes only elements';
                 } else {
                   const parsedDelimiter = getDelimiter(parsedValue);
                   /** If no delimiter present, default to comma */
                   const delimiter = parsedDelimiter ? parsedDelimiter : new RegExp(',');
                   parsedValue = parseElements(filterValues[f.id], delimiter);
-                  filterDisplayName = 'contains elements';
+                  filterDisplayName =
+                    f.id === 'exclude_elements' ? 'excludes elements' : 'includes elements';
                 }
                 f.props.enabledElements = parsedValue;
               }
