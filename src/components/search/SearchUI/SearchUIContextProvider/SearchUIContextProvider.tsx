@@ -420,7 +420,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
       setState((currentState) => ({ ...currentState, resultsPerPage: value }));
     },
     setSort: (field: string, ascending: boolean) => {
-      setState((currentState) => ({ ...currentState, sortField: field, sortAscending: ascending }));
+      setState((currentState) => ({
+        ...currentState,
+        sortField: field,
+        sortAscending: ascending,
+        page: 1,
+      }));
     },
     setFilterValue: (value: any, id: string) => {
       setState((currentState) =>
