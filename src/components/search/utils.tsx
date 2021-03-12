@@ -237,12 +237,13 @@ export const parseSmiles = (str: string) => {
 
 /**
  * Perform a naive validation of a string as a formula
- * Returns the string if it has more than one capital letter or a number
+ * Returns the string if it has more than one capital letter, a number, or wildcard character ("*")
+ * Returns null if the string is not a "parsable" formula
  */
 export const parseFormula = (str: string) => {
   const capitalLettersMatch = str.match(/[A-Z]/g);
   const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
-  const formula = capitalLetters > 1 || str.match(/[0-9]/gi) ? str : null;
+  const formula = capitalLetters > 1 || str.match(/[0-9]/gi) || str.match(/\*/gi) ? str : null;
   return formula;
 };
 

@@ -99,7 +99,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           newValue.indexOf('mol') === 0)
       ) {
         newMaterialsInputField = MaterialsInputField.MP_ID;
-      } else if (shouldCheckField && newValue.match(/,|-|\s/gi)) {
+      } else if (shouldCheckField && newValue.match(/,|-|\s/gi) && !newValue.match(/\*/gi)) {
         newMaterialsInputField = MaterialsInputField.ELEMENTS;
       } else if (shouldCheckField && props.allowSmiles && parseSmiles(newValue)) {
         newMaterialsInputField = MaterialsInputField.SMILES;
