@@ -6,7 +6,7 @@ export enum FilterId {
   DENSITY = 'density',
   MP_ID = 'task_ids',
   FORMULA = 'formula',
-  NELEMENTS = 'nelements'
+  NELEMENTS = 'nelements',
 }
 
 export enum FilterType {
@@ -19,7 +19,7 @@ export enum FilterType {
   SELECT_SPACEGROUP_NUMBER = 'SELECT_SPACEGROUP_NUMBER',
   SELECT_CRYSTAL_SYSTEM = 'SELECT_CRYSTAL_SYSTEM',
   SELECT_POINTGROUP = 'SELECT_POINTGROUP',
-  CHECKBOX_LIST = 'CHECKBOX_LIST'
+  CHECKBOX_LIST = 'CHECKBOX_LIST',
 }
 
 export interface Filter {
@@ -75,6 +75,7 @@ export interface SearchState extends SearchUIProps {
   sortField?: string;
   sortAscending?: boolean;
   topLevelSearchField: string;
+  error: boolean;
 }
 
 export enum ColumnFormat {
@@ -84,5 +85,5 @@ export enum ColumnFormat {
   LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
   BOOLEAN = 'BOOLEAN',
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
-  POINTGROUP = 'POINTGROUP'
+  POINTGROUP = 'POINTGROUP',
 }

@@ -56,6 +56,7 @@ const defaultState: SearchState = {
   sortField: undefined,
   sortAscending: true,
   topLevelSearchField: 'elements',
+  error: false,
 };
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
@@ -534,6 +535,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                 totalResults: totalResults,
                 page: page,
                 loading: loadingValue,
+                error: false,
               };
             });
           })
@@ -547,6 +549,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                 results: [],
                 totalResults: 0,
                 loading: loadingValue,
+                error: true,
               };
             });
           });

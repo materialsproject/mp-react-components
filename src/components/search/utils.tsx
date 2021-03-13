@@ -285,6 +285,14 @@ export const formatFormula = (formula: string): JSX.Element => {
   }
 };
 
+/**
+ * Get number of pages based on total results and page limit
+ * If no results, return 1 to prevent errors with query
+ */
 export const getPageCount = (totalResults: number, resultsPerPage: number) => {
-  return Math.ceil(totalResults / resultsPerPage);
+  if (totalResults === 0) {
+    return 1;
+  } else {
+    return Math.ceil(totalResults / resultsPerPage);
+  }
 };
