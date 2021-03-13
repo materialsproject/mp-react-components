@@ -3,7 +3,7 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaCaretDown, FaLink } from 'react-icons/fa';
+import { FaAngleDown, FaCaretDown, FaExclamationTriangle, FaLink } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
@@ -283,6 +283,28 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     />
   );
 
+  const NoDataMessage = () => {
+    if (state.error) {
+      return (
+        <div className="react-data-table-message">
+          <p>
+            <FaExclamationTriangle /> There was an error with your search.
+          </p>
+          <p>
+            You may have entered an invalid search value. Otherwise, the API may be temporarily
+            unavailable.
+          </p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="react-data-table-message">
+          <p>No records match your search criteria</p>
+        </div>
+      );
+    }
+  };
+
   return (
     <div id={componentHtmlId} className="search-ui-data-table">
       <div className="columns mb-1">
@@ -336,6 +358,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
             defaultSortAsc={state.sortAscending}
             onSort={handleSort}
             customStyles={customStyles}
+            noDataComponent={<NoDataMessage />}
           />
         </div>
       </div>
