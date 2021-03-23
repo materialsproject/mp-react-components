@@ -1,12 +1,12 @@
 ![](https://github.com/chabb/material-react/workflows/jest_tests/badge.svg)
 ![publish-npm](https://github.com/materialsproject/mp-react-components/workflows/publish-npm/badge.svg)
-[![codecov](https://codecov.io/gh/materialsproject/mp-react-components/branch/master/graph/badge.svg)](https://codecov.io/gh/materialsproject/mp-react-components)
+[![codecov](https://codecov.io/gh/materialsproject/mp-react-components/branch/main/graph/badge.svg)](https://codecov.io/gh/materialsproject/mp-react-components)
 ![](https://img.shields.io/npm/v/mat-periodic-table?style=plastic)
 ![Test New React components](https://github.com/materialsproject/dash-mp-components/workflows/Test%20New%20React%20components/badge.svg)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg)](https://materialsproject.github.io/mp-react-components/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-This repo contains a set of components. 
+This repo contains a set of components.
 
 ## Exported components
 
