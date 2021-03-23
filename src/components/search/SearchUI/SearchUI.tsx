@@ -124,8 +124,8 @@ export interface SearchUIProps {
    */
   sortAscending?: boolean;
   /**
-   * If including a sortField, set whether it should ascend by default
-   * True for ascending, False for descending
+   * Optionally include/exclude the top search bar
+   * Defaults to true
    */
   hasSearchBar?: boolean;
 }
