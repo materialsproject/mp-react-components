@@ -5,7 +5,7 @@ import { SearchUIDataTable } from './SearchUIDataTable';
 import { Column, FilterGroup } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from 'react-router-dom';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -103,9 +103,9 @@ export interface SearchUIProps {
   /**
    * Optionally add a help icon with a tooltip in the search bar
    * This should be used to provide instructions on how to use the search bar
-   * e.g. 
-   *  "Type in a comma-separated list of element symbols (e.g. Ga, N), 
-   *  a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). 
+   * e.g.
+   *  "Type in a comma-separated list of element symbols (e.g. Ga, N),
+   *  a chemical formula (e.g. C3N), or a material id (e.g. mp-10152).
    *  You can also click elements on the periodic table to add them to your search."
    */
   searchBarTooltip?: string;
@@ -123,22 +123,27 @@ export interface SearchUIProps {
    * True for ascending, False for descending
    */
   sortAscending?: boolean;
+  /**
+   * If including a sortField, set whether it should ascend by default
+   * True for ascending, False for descending
+   */
+  hasSearchBar?: boolean;
 }
 
-export const SearchUI: React.FC<SearchUIProps> = props => {
+export const SearchUI: React.FC<SearchUIProps> = (props) => {
   return (
     <div className="search-ui">
       <Router>
-        <SearchUIContextProvider
-          {...props}
-        >
+        <SearchUIContextProvider {...props}>
           <div className="columns">
             <div className="column is-narrow">
-              <div className="columns mb-1">
-                <div className="column pb-2">
-                  <SearchUISearchBar />
+              {props.hasSearchBar && (
+                <div className="columns mb-1">
+                  <div className="column pb-2">
+                    <SearchUISearchBar />
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="columns">
                 <div className="column">
                   <SearchUIFilters />
@@ -156,5 +161,6 @@ export const SearchUI: React.FC<SearchUIProps> = props => {
 };
 
 SearchUI.defaultProps = {
-  resultLabel: 'results'
+  resultLabel: 'results',
+  hasSearchBar: true,
 };

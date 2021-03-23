@@ -33,7 +33,7 @@ export const batteriesGroups: FilterGroup[] = [
     ],
   },
   {
-    name: 'Basic Properties',
+    name: 'Battery Properties',
     expanded: false,
     filters: [
       {
