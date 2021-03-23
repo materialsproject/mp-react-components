@@ -16,13 +16,14 @@ import { MaterialsDetail } from './views/MaterialsDetail';
 import { MoleculesExplorer } from './views/MoleculesExplorer';
 import { Home } from './views/Home';
 import { CrystalStructureViewer } from './views/CrystalStructureViewer';
+import { BatteriesExplorer } from './views/BatteriesExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
 
 ReactDOM.render(
   <>
-    <MaterialsExplorer />
+    <BatteriesExplorer />
   </>,
 
   mountNode

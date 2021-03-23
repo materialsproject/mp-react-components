@@ -94,7 +94,8 @@ const initColumns = (columns: Column[]) => {
         const decimalPlaces = c.formatArg ? c.formatArg : 2;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
+          const numValue = parseFloat(rowValue);
+          const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
           const min = Math.pow(10, -decimalPlaces);
           if (c.abbreviateNearZero) {
             if (value === 0 || value >= min) {
@@ -102,7 +103,7 @@ const initColumns = (columns: Column[]) => {
             } else if (value < min) {
               return '< ' + min.toString();
             } else {
-              return '';
+              return emptyCellPlaceholder;
             }
           } else {
             return isNaN(value) ? emptyCellPlaceholder : value.toFixed(decimalPlaces);
@@ -114,7 +115,8 @@ const initColumns = (columns: Column[]) => {
         const sigFigs = c.formatArg ? c.formatArg : 5;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const value = c.conversionFactor ? rowValue * c.conversionFactor : rowValue;
+          const numValue = parseFloat(rowValue);
+          const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
           return isNaN(value) ? emptyCellPlaceholder : value.toPrecision(sigFigs);
         };
         c.right = true;
