@@ -26,8 +26,7 @@ export const BatteriesExplorer: React.FC = () => {
             : undefined
         }
         apiKey={process.env.REACT_APP_API_KEY}
-        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        searchBarPlaceholder="Search by elements, formula, or mp-id"
+        hasSearchBar={false}
         sortField="e_above_hull"
         sortAscending={true}
       />
