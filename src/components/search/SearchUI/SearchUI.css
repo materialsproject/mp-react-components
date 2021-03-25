@@ -5,7 +5,6 @@
 .search-ui .panel {
   height: auto;
   max-height: 100%;
-  min-width: 532px;
   position: relative;
 }
 
@@ -23,7 +22,6 @@
 
 .search-ui .panel-block-title {
   margin: -0.5em -0.75em;
-  min-width: 528px;
 }
 
 .search-ui .panel-block-title * {
@@ -68,7 +66,6 @@
 }
 
 .search-ui .react-data-table-container {
-  position: absolute;
   width: 100%;
 }
 

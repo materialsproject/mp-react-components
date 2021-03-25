@@ -23,7 +23,7 @@ const mountNode = document.getElementById(mountNodeSelector);
 
 ReactDOM.render(
   <>
-    <BatteriesExplorer />
+    <MaterialsExplorer />
   </>,
 
   mountNode

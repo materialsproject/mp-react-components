@@ -12,7 +12,7 @@ export const BatteriesExplorer: React.FC = () => {
     <div className="p-4">
       <h1 className="title">Batteries Explorer</h1>
       <SearchUI
-        resultLabel="material"
+        resultLabel="battery"
         columns={batteriesColumns}
         filterGroups={batteriesGroups}
         baseURL={
