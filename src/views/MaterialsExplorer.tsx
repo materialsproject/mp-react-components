@@ -8,7 +8,7 @@ import { materialsColumns, materialsGroups } from '../constants/materials';
 
 export const MaterialsExplorer: React.FC = () => {
   return (
-    <div className="p-4">
+    <>
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
         resultLabel="material"
@@ -26,6 +26,6 @@ export const MaterialsExplorer: React.FC = () => {
         sortField="e_above_hull"
         sortAscending={true}
       />
-    </div>
+    </>
   );
 };

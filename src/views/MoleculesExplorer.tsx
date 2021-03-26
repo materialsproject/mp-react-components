@@ -8,7 +8,7 @@ import { moleculesColumns, moleculesGroups } from '../constants/molecules';
 
 export const MoleculesExplorer: React.FC = () => {
   return (
-    <div className="p-4">
+    <>
       <h1 className="title">Molecules Explorer</h1>
       <SearchUI
         resultLabel="molecule"
@@ -28,6 +28,6 @@ export const MoleculesExplorer: React.FC = () => {
         sortField="IE"
         sortAscending={false}
       />
-    </div>
+    </>
   );
 };

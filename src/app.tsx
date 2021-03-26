@@ -17,13 +17,51 @@ import { MoleculesExplorer } from './views/MoleculesExplorer';
 import { Home } from './views/Home';
 import { CrystalStructureViewer } from './views/CrystalStructureViewer';
 import { BatteriesExplorer } from './views/BatteriesExplorer';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { NavbarDropdown } from './components/navigation/NavbarDropdown';
+import { FaTrain } from 'react-icons/fa';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
 
 ReactDOM.render(
   <>
-    <MaterialsExplorer />
+    <Router>
+      <nav className="navbar" role="navigation" aria-label="main navigation">
+        <div id="navbarBasicExample" className="navbar-menu">
+          <div className="navbar-start">
+            <a className="navbar-item">
+              <Link to="/materials">Materials</Link>
+            </a>
+            <a className="navbar-item">
+              <Link to="/molecules">Molecules</Link>
+            </a>
+            <a className="navbar-item">
+              <Link to="/batteries">Batteries</Link>
+            </a>
+            <a className="navbar-item">
+              <Link to="/crystal">Crystal Structure</Link>
+            </a>
+          </div>
+        </div>
+      </nav>
+      <section className="p-3">
+        <Switch>
+          <Route path="/materials">
+            <MaterialsExplorer />
+          </Route>
+          <Route path="/molecules">
+            <MoleculesExplorer />
+          </Route>
+          <Route path="/batteries">
+            <BatteriesExplorer />
+          </Route>
+          <Route path="/crystal">
+            <CrystalStructureViewer />
+          </Route>
+        </Switch>
+      </section>
+    </Router>
   </>,
 
   mountNode
