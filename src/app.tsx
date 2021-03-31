@@ -30,18 +30,18 @@ ReactDOM.render(
       <nav className="navbar" role="navigation" aria-label="main navigation">
         <div id="navbarBasicExample" className="navbar-menu">
           <div className="navbar-start">
-            <a className="navbar-item">
+            <span className="navbar-item">
               <Link to="/materials">Materials</Link>
-            </a>
-            <a className="navbar-item">
+            </span>
+            <span className="navbar-item">
               <Link to="/molecules">Molecules</Link>
-            </a>
-            <a className="navbar-item">
+            </span>
+            <span className="navbar-item">
               <Link to="/batteries">Batteries</Link>
-            </a>
-            <a className="navbar-item">
+            </span>
+            <span className="navbar-item">
               <Link to="/crystal">Crystal Structure</Link>
-            </a>
+            </span>
           </div>
         </div>
       </nav>
@@ -58,6 +58,9 @@ ReactDOM.render(
           </Route>
           <Route path="/crystal">
             <CrystalStructureViewer />
+          </Route>
+          <Route path="/">
+            <MaterialsExplorer />
           </Route>
         </Switch>
       </section>

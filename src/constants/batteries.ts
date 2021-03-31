@@ -30,6 +30,30 @@ export const batteriesGroups: FilterGroup[] = [
           ],
         },
       },
+      {
+        name: 'Include Elements',
+        id: 'elements',
+        type: 'MATERIALS_INPUT' as FilterType,
+        props: {
+          field: 'elements' as MaterialsInputField,
+        },
+      },
+      {
+        name: 'Exclude Elements',
+        id: 'exclude_elements',
+        type: 'MATERIALS_INPUT' as FilterType,
+        props: {
+          field: 'exclude_elements' as MaterialsInputField,
+        },
+      },
+      {
+        name: 'Formula',
+        id: 'formula',
+        type: 'MATERIALS_INPUT' as FilterType,
+        props: {
+          field: 'formula' as MaterialsInputField,
+        },
+      },
     ],
   },
   {
@@ -159,6 +183,14 @@ export const batteriesColumns: Column[] = [
   {
     name: 'Working Ion',
     selector: 'working_ion',
+  },
+  {
+    name: 'Formula Charge',
+    selector: 'formula_charge',
+  },
+  {
+    name: 'Formula Discharge',
+    selector: 'formula_discharge',
   },
   {
     name: 'Last Updated',

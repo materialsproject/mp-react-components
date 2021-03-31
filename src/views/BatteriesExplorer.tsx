@@ -26,7 +26,7 @@ export const BatteriesExplorer: React.FC = () => {
             : undefined
         }
         apiKey={process.env.REACT_APP_API_KEY}
-        hasSearchBar={false}
+        hasSearchBar={true}
         sortField="e_above_hull"
         sortAscending={true}
       />
