@@ -396,9 +396,16 @@ export const materialsGroups: FilterGroup[] = [
 
 export const materialsColumns: Column[] = [
   {
+    name: 'Is Stable',
+    selector: 'is_stable',
+    format: 'BOOLEAN_CLASS',
+    formatArg: 'is-stable',
+    width: '50px',
+  },
+  {
     name: 'Material Id',
     selector: 'task_id',
-    format: 'LINK' as ColumnFormat,
+    format: 'LINK',
     formatArg: '/materials/',
     minWidth: '110px',
   },

@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { pluralize } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
+import { ConditionalRowStyle } from '../types';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -305,6 +306,11 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     }
   };
 
+  const conditionalRowStyles: ConditionalRowStyle[] = state.conditionalRowStyles.map((c) => {
+    c.when = (row) => row[c.selector] === c.value;
+    return c;
+  });
+
   return (
     <div id={componentHtmlId} className="search-ui-data-table">
       <div className="columns mb-1">
@@ -358,6 +364,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
             defaultSortAsc={state.sortAscending}
             onSort={handleSort}
             customStyles={customStyles}
+            conditionalRowStyles={conditionalRowStyles}
             noDataComponent={<NoDataMessage />}
           />
         </div>

@@ -64,6 +64,13 @@ export interface Column {
   [id: string]: any;
 }
 
+export interface ConditionalRowStyle {
+  selector: string;
+  value: any;
+  style: any;
+  when?: (row: any) => any;
+}
+
 export interface SearchState extends SearchUIProps {
   filterValues: FilterValues;
   activeFilters: ActiveFilter[];
@@ -83,7 +90,8 @@ export enum ColumnFormat {
   SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
   FORMULA = 'FORMULA', // formatArg: none
   LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
-  BOOLEAN = 'BOOLEAN',
+  BOOLEAN = 'BOOLEAN', // formatArg: array with two items for display values, first item is for truthy, second item is for falsy (e.g. ['yes', 'no'])
+  BOOLEAN_CLASS = 'BOOLEAN_CLASS', // formatArg: class name string to add to element within cell
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
 }

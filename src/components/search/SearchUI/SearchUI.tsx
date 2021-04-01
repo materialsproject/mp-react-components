@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
-import { Column, FilterGroup } from './types';
+import { Column, FilterGroup, ConditionalRowStyle } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -128,6 +128,26 @@ export interface SearchUIProps {
    * Defaults to true
    */
   hasSearchBar?: boolean;
+  /**
+   * List of conditions for styling rows based on a property (selector) and a value
+   * Accepts a list of "condition" objects which must specify a...
+   *  selector: the name of the data property to use for the condition
+   *  value: the value that meets the condition
+   *  style: object of styles supplied in "CSS-in-JS" format
+   * Note that this prop currently only supports checking for 
+   * value equivalence (i.e. row[selector] === value)
+   * example:
+    [
+      {
+        selector: "myProperty",
+        value: true,
+        style: {
+          backgroundColor: "#ddd"
+        }
+      }
+    ]
+   */
+  conditionalRowStyles: ConditionalRowStyle[];
 }
 
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
@@ -163,4 +183,5 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 SearchUI.defaultProps = {
   resultLabel: 'results',
   hasSearchBar: true,
+  conditionalRowStyles: [],
 };
