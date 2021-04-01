@@ -143,6 +143,12 @@ const initColumns = (columns: Column[]) => {
           return rowValue ? truthyLabel : falsyLabel;
         };
         return c;
+      case ColumnFormat.BOOLEAN_CLASS:
+        c.cell = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          return <i className={rowValue ? c.formatArg : ''}></i>;
+        };
+        return c;
       case ColumnFormat.SPACEGROUP_SYMBOL:
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
