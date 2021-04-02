@@ -306,7 +306,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     }
   };
 
-  const conditionalRowStyles: ConditionalRowStyle[] = state.conditionalRowStyles!.map((c) => {
+  const conditionalRowStyles: any[] = state.conditionalRowStyles!.map((c) => {
     c.when = (row) => row[c.selector] === c.value;
     return c;
   });
