@@ -147,7 +147,7 @@ export interface SearchUIProps {
       }
     ]
    */
-  conditionalRowStyles: ConditionalRowStyle[];
+  conditionalRowStyles?: ConditionalRowStyle[];
 }
 
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
