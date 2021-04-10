@@ -7,13 +7,14 @@ import {
   formulaStringToArrays,
   getTruthyKeys,
   arrayToDelimitedString,
-  parseElements,
-  parseSmiles,
   parseFormula,
 } from '../../utils';
+import { getMaterialsInputType, parseElements } from '../utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputSharedProps } from '../MaterialsInput';
+import { MatgenUtilities } from '../../../../utils/matgen';
 import { useDebounce } from '../../../../utils/hooks';
+import { errors } from 'msw/lib/types/context';
 const { Input, Field, Control } = Form;
 
 /**
@@ -24,6 +25,8 @@ const { Input, Field, Control } = Form;
 interface Props extends MaterialsInputSharedProps {
   value: string;
   setValue: (value: string) => void;
+  error: string | null;
+  setError: (error: string | null) => void;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onFocus?: (value?: any) => any;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => any;
@@ -81,8 +84,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       const newValue = props.value;
-      const shouldCheckField = props.onFieldChange && newValue;
-      let newMaterialsInputField = props.field;
+      const dynamicInputType = props.onFieldChange && newValue;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
 
@@ -92,22 +94,18 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
        * Field name switches to FORMULA if the input doesn't contain a delimiter
        * and does contain multiple capital letters or a number.
        */
-      if (
-        shouldCheckField &&
-        (newValue.indexOf('mp') === 0 ||
-          newValue.indexOf('mvc') === 0 ||
-          newValue.indexOf('mol') === 0)
-      ) {
-        newMaterialsInputField = MaterialsInputField.MP_ID;
-      } else if (shouldCheckField && newValue.match(/,|-|\s/gi) && !newValue.match(/\*/gi)) {
-        newMaterialsInputField = MaterialsInputField.ELEMENTS;
-      } else if (shouldCheckField && props.allowSmiles && parseSmiles(newValue)) {
-        newMaterialsInputField = MaterialsInputField.SMILES;
-      } else if (shouldCheckField && parseFormula(newValue)) {
-        newMaterialsInputField = MaterialsInputField.FORMULA;
-      } else if (shouldCheckField) {
-        newMaterialsInputField = MaterialsInputField.ELEMENTS;
+
+      const validatedInputType = getMaterialsInputType(newValue);
+
+      if (validatedInputType == null) {
+        props.setError(
+          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce,Zn or Ce-Zn), or material ID (e.g. mp-394)'
+        );
+      } else {
+        props.setError(null);
       }
+
+      let newMaterialsInputField = dynamicInputType ? validatedInputType : props.field;
 
       switch (newMaterialsInputField) {
         case MaterialsInputField.MP_ID:
@@ -127,22 +125,26 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           /** If no delimiter present, don't change the delimiter value */
           newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
           const parsedElements = parseElements(newValue, newDelimiter);
-          parsedElements.forEach((el) => {
-            if (!enabledElements[el]) {
-              newPtActionsToDispatch.push({
-                action: ptActions.addEnabledElement,
-                payload: el,
-              });
-            }
-          });
-          enabledElementsList.forEach((el) => {
-            if (parsedElements.indexOf(el) === -1) {
-              newPtActionsToDispatch.push({
-                action: ptActions.removeEnabledElement,
-                payload: el,
-              });
-            }
-          });
+          if (parsedElements) {
+            /** Enable new elements if they aren't already enabled */
+            parsedElements.forEach((el) => {
+              if (!enabledElements[el]) {
+                newPtActionsToDispatch.push({
+                  action: ptActions.addEnabledElement,
+                  payload: el,
+                });
+              }
+            });
+            /** Remove enabled element if it is not part of the new list of parsed elements */
+            enabledElementsList.forEach((el) => {
+              if (parsedElements.indexOf(el) === -1) {
+                newPtActionsToDispatch.push({
+                  action: ptActions.removeEnabledElement,
+                  payload: el,
+                });
+              }
+            });
+          }
           break;
         case MaterialsInputField.FORMULA:
           var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
@@ -168,7 +170,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           });
           break;
         default:
-          throw 'invalid field in materials input';
+          newMaterialsInputField = MaterialsInputField.ELEMENTS;
       }
 
       setPtActionsToDispatch(newPtActionsToDispatch);
@@ -243,6 +245,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         data-testid="materials-input-search-input"
         className="input"
         type="search"
+        name="search"
         value={props.value}
         onChange={handleRawValueChange}
         onFocus={handleFocus}
