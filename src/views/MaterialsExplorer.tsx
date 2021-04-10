@@ -25,16 +25,16 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="e_above_hull"
         sortAscending={true}
-        conditionalRowStyles={[
-          {
-            selector: 'is_stable',
-            value: true,
-            style: {
-              backgroundColor: '#DBE2FA',
-              boxShadow: '4px 0px 0px 0px #000 inset',
-            },
-          },
-        ]}
+        // conditionalRowStyles={[
+        //   {
+        //     selector: 'is_stable',
+        //     value: true,
+        //     style: {
+        //       backgroundColor: '#DBE2FA',
+        //       boxShadow: '4px 0px 0px 0px #000 inset',
+        //     },
+        //   },
+        // ]}
       />
     </>
   );

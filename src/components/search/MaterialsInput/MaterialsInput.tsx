@@ -17,6 +17,7 @@ import {
   FaBlender,
   FaCaretDown,
   FaCaretUp,
+  FaExclamationTriangle,
   FaQuestionCircle,
   FaTimes,
 } from 'react-icons/fa';
@@ -31,6 +32,7 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
+import { errors } from 'msw/lib/types/context';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -85,6 +87,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   const [field, setField] = useState(props.field);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
+  const [error, setError] = useState<string | null>(null);
+  const [errorTipStayActive, setErrorTipStayActive] = useState(false);
   const [isChemSys, setIsChemSys] = useState<boolean>(() =>
     props.isChemSys ? props.isChemSys : false
   );
@@ -104,6 +108,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     }
   };
   const getOnFocusProp = () => {
+    setErrorTipStayActive(false);
     shouldShowAutocomplete();
     if (props.periodicTableMode === 'onFocus') {
       return setShowPeriodicTable(true);
@@ -157,11 +162,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   };
 
   const handleSubmit = (e) => {
-    if (props.onSubmit) {
-      e.preventDefault();
-      e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (props.onSubmit && !error) {
       setShowPeriodicTable(false);
       props.onSubmit(e);
+    } else {
+      setErrorTipStayActive(true);
     }
   };
 
@@ -197,6 +205,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       liftInputRef={(ref) => setInputRef(ref)}
       showFieldDropdown={props.showFieldDropdown}
       placeholder={props.placeholder}
+      error={error}
+      setError={setError}
     />
   );
 
@@ -256,12 +266,32 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     );
   }
 
+  const errorControl = (
+    <Control>
+      <button
+        data-testid="materials-input-tooltip-button"
+        type="button"
+        className={classNames(
+          'button has-tooltip-multiline has-tooltip-bottom has-text-grey-light',
+          {
+            'has-tooltip-active': errorTipStayActive,
+          }
+        )}
+        onMouseOver={(e) => setErrorTipStayActive(false)}
+        data-tooltip={error}
+      >
+        <FaExclamationTriangle />
+      </button>
+    </Control>
+  );
+
   if (props.onSubmit) {
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={handleSubmit}>
         <Field className="has-addons">
           {toggleControl}
           {materialsInputControl}
+          {error && errorControl}
           {tooltipControl}
           <Control>
             <Button color="primary" type="submit">
@@ -276,6 +306,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       <Field className="has-addons">
         {toggleControl}
         {materialsInputControl}
+        {error && errorControl}
         {tooltipControl}
       </Field>
     );

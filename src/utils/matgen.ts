@@ -10,7 +10,7 @@ const ELEMENTS_X_ASC = 'Ar Eu He Lr Ne Pm Rn Tb Yb Fr Cs K Rb Ba Ra Na Sr Li Ca 
   ' '
 );
 export const MatgenUtilities = {
-  orderByElectronegativity: function(elements: any[], data) {
+  orderByElectronegativity: function (elements: any[], data) {
     if (data == undefined) data = ELEMENTS_X_ASC;
     return elements;
     /*return _.sortBy(elements, function(e) {
@@ -18,19 +18,19 @@ export const MatgenUtilities = {
     }); not sure it would have work*/
   },
 
-  isNumber: function(tok) {
+  isNumber: function (tok) {
     if (tok == null) return false;
 
     if (tok.search(/\d+\.?\d*/) >= 0) return true;
     else return false;
   },
 
-  isCloseParens: function(tok) {
+  isCloseParens: function (tok) {
     if (tok == ')') return true;
     else return false;
   },
 
-  isElement: function(elm, data = VALID_ELEMENTS) {
+  isElement: function (elm, data = VALID_ELEMENTS) {
     if (data.indexOf(elm) !== -1) {
       return true;
     } else {
@@ -42,7 +42,7 @@ export const MatgenUtilities = {
   // eg.
   // 'Fe2+ Fe3+ O2-' => { Fe: [2, 3], O: [-2]}
   //
-  parseElNumList: function(states) {
+  parseElNumList: function (states) {
     // > states='Fe2+ Fe3+ O2-'
     // > states.match(/[A-Z][a-z]?\d+[+-]?/g)
     // [ 'Fe2+', 'Fe3+', 'O2-' ]
@@ -64,7 +64,7 @@ export const MatgenUtilities = {
   },
 
   // Explicitly add 1s to array
-  insertOnes: function(tokens) {
+  insertOnes: function (tokens) {
     let i;
     let new_toks: any = [];
     for (i = 0; i < tokens.length; i++) {
@@ -82,11 +82,11 @@ export const MatgenUtilities = {
   },
 
   // Return Formula tokens: elements, numbers, (, )
-  tokenize: function(formula) {
+  tokenize: function (formula) {
     return formula.match(/([A-Z][a-z]?|\d+\.?\d*|[()])/g);
   },
 
-  parseUnitcellFormula: function(formulaString: string) {
+  parseUnitcellFormula: function (formulaString: string) {
     let formula;
     formula = formulaString.replace(/[*]/g, '').trim();
     formula = formulaString.replace(/-/g, '').trim(); // ??????
@@ -117,10 +117,10 @@ export const MatgenUtilities = {
     }
   },
 
-  isValidWildcard: function(string) {
+  isValidWildcard: function (string) {
     let elements = string.split(/-/g);
     if (elements.indexOf('*') > -1) {
-      return elements.every(function(el) {
+      return elements.every(function (el) {
         return MatgenUtilities.isElement(el) || el == '*';
       });
     } else {
@@ -139,7 +139,7 @@ export const MatgenUtilities = {
    * @return {hash} A hash containing [ elements, sanitized_formula ]. For
    *    example, Li4Fe4P4O16 will return [ ['Li', 'Fe', 'O'], 'LiFePO4']
    */
-  parseFormula: function(formula) {
+  parseFormula: function (formula) {
     const cleanformula = formula.replace(/\s/g, '');
     let m = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\.\w(),]+/g);
     if (m != null && !MatgenUtilities.isValidWildcard(cleanformula)) {
@@ -151,7 +151,9 @@ export const MatgenUtilities = {
     let elements: string[] = [];
     let amounts = {};
     let i;
+    console.log('checking formula...');
     if (m != null) {
+      console.log('still checking...');
       for (i = 0; i < m.length; i++) {
         const m2 = re.exec(m[i]);
         if (VALID_ELEMENTS.indexOf(m2![1]) === -1) {
@@ -184,7 +186,7 @@ export const MatgenUtilities = {
       for (i = 0; i < elements.length; i++) {
         form_santized.push(elements[i] + amounts[elements[i]] / gcd);
       }
-
+      console.log('valid formula');
       return [elements.sort().join('&'), form_santized.sort().join(' ')];
     }
     return null;
@@ -198,7 +200,7 @@ export const MatgenUtilities = {
    *
    * @return {integer} Greatest common denominator.
    */
-  gcd: function(a, b) {
+  gcd: function (a, b) {
     let w, x, y;
     x = a;
     y = b;
@@ -217,7 +219,7 @@ export const MatgenUtilities = {
    *
    * @return {integer} Greatest common denominator.
    */
-  getGCD: function(numbers) {
+  getGCD: function (numbers) {
     let GCD = numbers[0];
     for (let i = 1; i < numbers.length; i++) {
       GCD = MatgenUtilities.gcd(GCD, numbers[i]);
@@ -228,7 +230,7 @@ export const MatgenUtilities = {
   /**
    * Returns a HTML version of a formula, with proper subscripts.
    */
-  htmlFormula: function(formula): string {
+  htmlFormula: function (formula): string {
     let htmlFormula = formula.replace('PCO7', 'PO4CO3');
     const oxidNumRegex = /([A-Z][a-z]*)([\d\.]+(?=-|\+).)/g;
     const oxidRegex = /([A-Z][a-z]*)(-|\+)/g;
@@ -242,7 +244,7 @@ export const MatgenUtilities = {
     return '<span class="chemform">' + htmlFormula + '</span>';
   },
 
-  validateInput: function(text, type) {
+  validateInput: function (text, type) {
     let re;
     if (type == 'text') {
       re = /^[A-Za-z0-9\s\&\|\-\(\)]*$/;
@@ -255,7 +257,7 @@ export const MatgenUtilities = {
     return re.test(text);
   },
 
-  cleanDecimals: function(num, decimalPlaces, fixed) {
+  cleanDecimals: function (num, decimalPlaces, fixed) {
     const numStr = new Number(num).toFixed(decimalPlaces);
     if (fixed) {
       return numStr;
@@ -268,7 +270,7 @@ export const MatgenUtilities = {
     }
   },
 
-  stripSpace: function(text) {
+  stripSpace: function (text) {
     return text.replace(/^\s+|\s+$/g, '');
-  }
+  },
 };

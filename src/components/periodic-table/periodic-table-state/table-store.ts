@@ -89,7 +89,10 @@ export function getPeriodicSelectionStore() {
       (state = { ...state, enabledElements }) && state$.next(state),
     setDisabledElements: (disabledElements: any) =>
       (state = { ...state, disabledElements }) && state$.next(state),
-    clear: () => state$.next(getDefaultState()),
+    clear: () => {
+      state = getDefaultState();
+      state$.next(state);
+    },
     setDetailedElement: (el: string | null) =>
       (state = { ...state, detailedElement: el }) && state$.next(state),
     setHiddenElements: (hiddenElements: any) =>

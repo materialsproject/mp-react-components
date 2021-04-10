@@ -17,7 +17,6 @@ import {
   arrayToDelimitedString,
   crystalSystemOptions,
   getDelimiter,
-  parseElements,
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions,
   pointGroupOptions,
@@ -25,6 +24,7 @@ import {
   formatFormula,
   getPageCount,
 } from '../../utils';
+import { parseElements } from '../../MaterialsInput/utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../../../constants/spaceGroups';
 import { pointGroups } from '../../../../constants/pointGroups';

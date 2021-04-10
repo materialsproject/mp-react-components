@@ -71,7 +71,7 @@ export function downloadExcel(array) {
  * Return the delimiter as a regular expression object
  * If multiple delimiters are present, the delimiter with the lowest index is used
  */
-export const getDelimiter = (input: string): RegExp | null => {
+export const getDelimiter = (input: string): RegExp | undefined => {
   const comma = input.match(/,/);
   const hyphen = input.match(/-/);
   const space = input.match(/\s/);
@@ -97,7 +97,7 @@ export const getDelimiter = (input: string): RegExp | null => {
   ) {
     return new RegExp(/\s/);
   } else {
-    return null;
+    return;
   }
 };
 
@@ -152,30 +152,6 @@ export const initArray = (length: number, value: any) => {
   return arr;
 };
 
-/**
- * Parses an array of valid elements from a string of elements separated by a delimiter
- * Returns an array of valid element symbols (e.g. ['Na', 'Cl'])
- */
-export const parseElements = (str: string, delimiter: RegExp, context: any = null) => {
-  let cleanedInput = '';
-  const delimiterString = delimiter.toString();
-  if (delimiterString === new RegExp(/,/).toString()) {
-    cleanedInput = str.replace(/and|\s|-|[0-9]/gi, '');
-  } else if (delimiterString === new RegExp(/-/).toString()) {
-    cleanedInput = str.replace(/and|\s|,|[0-9]/gi, '');
-  } else if (delimiterString === new RegExp(/\s/).toString()) {
-    cleanedInput = str.replace(/and|,|-|[0-9]/gi, '');
-  }
-  const unparsedElements = cleanedInput.split(delimiter);
-  const parsedElements: string[] = [];
-  unparsedElements.forEach((el) => {
-    if (TABLE_DICO_V2[el]) {
-      parsedElements.push(el);
-    }
-  });
-  return parsedElements;
-};
-
 export const spaceGroupNumberOptions = () => {
   return spaceGroups.map((g) => {
     return {
@@ -224,15 +200,6 @@ export const pluralize = (noun) => {
   };
   if (specialNouns[noun]) plural = specialNouns[noun];
   return plural;
-};
-
-/**
- * Validate whether a string is a simplified molecular-input line-entry system (SMILES)
- */
-export const parseSmiles = (str: string) => {
-  const result = str.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$]{6,})$/gi);
-  const smiles = Array.isArray(result) ? result[0] : null;
-  return smiles;
 };
 
 /**
