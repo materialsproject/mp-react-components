@@ -56,17 +56,17 @@ export enum MaterialsInputField {
 
 export interface MaterialsInputSharedProps {
   value: string;
-  field: string;
+  field: MaterialsInputField;
   showFieldDropdown?: boolean;
   isChemSys?: boolean;
   allowSmiles?: boolean;
   placeholder?: string;
-  onFieldChange?: (value: string) => void;
+  onFieldChange?: (field: MaterialsInputField) => void;
 }
 
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
   debounce?: number;
-  periodicTableMode?: string;
+  periodicTableMode?: 'onFocus' | 'toggle';
   hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
@@ -92,7 +92,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   const [isChemSys, setIsChemSys] = useState<boolean>(() =>
     props.isChemSys ? props.isChemSys : false
   );
-  // const prevChemSys = usePrevious(isChemSys);
   const periodicTableClicked = useRef(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
     props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
@@ -198,7 +197,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       isChemSys={props.isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
-      onFieldChange={setField}
+      onFieldChange={props.onFieldChange ? setField : undefined}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       onKeyDown={getOnKeyDownProp}
@@ -429,7 +428,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
    * Triggers the onChange event prop for the value prop
    */
   useEffect(() => {
-    props.onChange(debouncedInputValue);
+    if (!error) {
+      props.onChange(debouncedInputValue);
+    }
   }, [debouncedInputValue]);
 
   return (

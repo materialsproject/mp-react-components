@@ -12,14 +12,18 @@ export const materialsGroups: FilterGroup[] = [
       {
         name: 'ID',
         id: 'task_ids',
-        type: 'TEXT_INPUT' as FilterType,
+        type: 'MATERIALS_INPUT' as FilterType,
+        props: {
+          field: 'task_ids' as MaterialsInputField,
+          periodicTableMode: null,
+        },
       },
       {
         name: 'Include Elements',
         id: 'elements',
         type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: 'elements' as MaterialsInputField,
+          field: 'elements',
         },
       },
       {

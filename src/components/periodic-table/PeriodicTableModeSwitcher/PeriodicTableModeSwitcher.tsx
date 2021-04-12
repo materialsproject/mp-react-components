@@ -3,11 +3,12 @@ import { PeriodicTableFormulaButtons } from '../PeriodicTableFormulaButtons';
 import './PeriodicTableModeSwitcher.css';
 import { Form } from 'react-bulma-components';
 import classNames from 'classnames';
+import { MaterialsInputField } from '../../search/MaterialsInput';
 const { Input, Field, Control } = Form;
 
 interface Props {
   mode: string;
-  onSwitch: (value: string) => any;
+  onSwitch: (field: MaterialsInputField) => any;
   onFormulaButtonClick: (value: string) => any;
 }
 
@@ -24,13 +25,13 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = (props) => {
         <div className="toggle-buttons">
           <button
             className={classNames('button', { 'is-active': props.mode !== 'formula' })}
-            onClick={() => props.onSwitch('elements')}
+            onClick={() => props.onSwitch(MaterialsInputField.ELEMENTS)}
           >
             Elements
           </button>
           <button
             className={classNames('button', { 'is-active': props.mode === 'formula' })}
-            onClick={() => props.onSwitch('formula')}
+            onClick={() => props.onSwitch(MaterialsInputField.FORMULA)}
           >
             Formula
           </button>
