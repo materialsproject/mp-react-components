@@ -84,7 +84,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       const newValue = props.value;
-      const dynamicInputType = props.onFieldChange && newValue;
+      const dynamicInputType = props.onFieldChange && newValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
 
@@ -97,10 +97,34 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
 
       const validatedInputType = getMaterialsInputType(newValue);
 
-      if (validatedInputType == null) {
+      if (validatedInputType == null && dynamicInputType) {
         props.setError(
-          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce,Zn or Ce-Zn), or material ID (e.g. mp-394)'
+          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or material ID (e.g. mp-394).'
         );
+      } else if (validatedInputType == null && !dynamicInputType) {
+        switch (props.field) {
+          case MaterialsInputField.MP_ID:
+            props.setError('Please enter a valid material ID (e.g. mp-394).');
+            break;
+          case MaterialsInputField.SMILES:
+            props.setError('Please enter a valid SMILES value.');
+            break;
+          case MaterialsInputField.ELEMENTS:
+            props.setError(
+              'Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).'
+            );
+            break;
+          case MaterialsInputField.EXCLUDE_ELEMENTS:
+            props.setError(
+              'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).'
+            );
+            break;
+          case MaterialsInputField.FORMULA:
+            props.setError('Please enter a valid chemical formula (e.g. CeZn5).');
+            break;
+          default:
+            props.setError('Invalid search value');
+        }
       } else {
         props.setError(null);
       }
@@ -245,7 +269,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         data-testid="materials-input-search-input"
         className="input"
         type="search"
-        name="search"
+        autoComplete="off"
         value={props.value}
         onChange={handleRawValueChange}
         onFocus={handleFocus}

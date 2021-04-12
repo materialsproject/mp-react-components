@@ -1,3 +1,4 @@
+import { MaterialsInputField } from '../MaterialsInput';
 import { SearchUIProps } from './SearchUI';
 
 export enum FilterId {
@@ -81,7 +82,7 @@ export interface SearchState extends SearchUIProps {
   loading: boolean;
   sortField?: string;
   sortAscending?: boolean;
-  topLevelSearchField: string;
+  topLevelSearchField: MaterialsInputField;
   error: boolean;
 }
 

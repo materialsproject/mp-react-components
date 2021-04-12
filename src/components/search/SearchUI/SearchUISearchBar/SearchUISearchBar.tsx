@@ -14,7 +14,7 @@ export const SearchUISearchBar: React.FC = () => {
   const state = useSearchUIContext();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchField, setSearchField] = useState<string>(state.topLevelSearchField);
+  const [searchField, setSearchField] = useState<MaterialsInputField>(state.topLevelSearchField);
   const allowSmiles = state.resultLabel === 'molecule';
 
   const shouldHidePeriodicTable = () => {
