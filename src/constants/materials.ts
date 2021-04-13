@@ -407,7 +407,7 @@ export const materialsColumns: Column[] = [
     width: '50px',
   },
   {
-    name: 'Material Id',
+    name: 'Material ID',
     selector: 'task_id',
     format: 'LINK',
     formatArg: '/materials/',

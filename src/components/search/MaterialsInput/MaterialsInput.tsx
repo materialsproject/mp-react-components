@@ -1,26 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useElements } from '../../periodic-table/periodic-table-state/table-store';
-import { TABLE_DICO_V2 } from '../../periodic-table/periodic-table-data/table-v2';
-import {
-  getDelimiter,
-  elementsArrayToElementState,
-  formulaStringToArrays,
-  getTruthyKeys,
-  arrayToDelimitedString,
-  formatFormula,
-} from '../utils';
+import { formatFormula } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import {
-  FaBalanceScale,
-  FaBandAid,
-  FaBlender,
-  FaCaretDown,
-  FaCaretUp,
-  FaExclamationTriangle,
-  FaQuestionCircle,
-  FaTimes,
-} from 'react-icons/fa';
+import { FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
@@ -32,7 +14,6 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
-import { errors } from 'msw/lib/types/context';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.

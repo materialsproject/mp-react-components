@@ -16,7 +16,6 @@ import { useHistory } from 'react-router-dom';
 import {
   arrayToDelimitedString,
   crystalSystemOptions,
-  getDelimiter,
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions,
   pointGroupOptions,
@@ -300,28 +299,35 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
             break;
           case FilterType.MATERIALS_INPUT:
             if (filterValues[f.id] !== '') {
-              /**
-               * If the input controls the elements or exclude_elements param,
-               * parse the input's value into an array of valid elements.
-               * Otherwise, use the raw input value for the param.
-               */
-              let parsedValue = filterValues[f.id];
-              let filterDisplayName = f.props.field;
-              if (f.id === 'elements' || f.id === 'exclude_elements') {
-                /**
-                 * If the input is a chemical system, merge elements to a dash-delimited string (e.g. Fe-Co-Si)
-                 * This will tell the API to return materials with this exact chemical system
-                 */
-                if (f.props.isChemSys) {
-                  parsedValue = arrayToDelimitedString(parsedValue, new RegExp('-'));
-                  filterDisplayName = 'includes only elements';
-                } else {
+              let parsedValue: any;
+              let filterDisplayName: string;
+
+              switch (f.props.field) {
+                case MaterialsInputField.MP_ID:
+                  parsedValue = filterValues[f.id];
+                  filterDisplayName = currentState.resultLabel + ' ID';
+                  break;
+                case MaterialsInputField.ELEMENTS:
+                  if (f.props.isChemSys) {
+                    /** Chemical system values need to be parsed as a chemsys string (e.g. "Fe-Co-Si") so the API can recognize them */
+                    parsedValue = arrayToDelimitedString(filterValues[f.id], new RegExp('-'));
+                    filterDisplayName = 'includes only elements';
+                  } else {
+                    /** Parse elements back into array so that they're in a normalized format for the query */
+                    parsedValue = validateElements(filterValues[f.id]);
+                    filterDisplayName = 'includes elements';
+                  }
+                  break;
+                case MaterialsInputField.EXCLUDE_ELEMENTS:
+                  /** Parse elements back into array so that they're in a normalized format for the query */
                   parsedValue = validateElements(filterValues[f.id]);
-                  filterDisplayName =
-                    f.id === 'exclude_elements' ? 'excludes elements' : 'includes elements';
-                }
-                f.props.enabledElements = parsedValue;
+                  filterDisplayName = 'excludes elements';
+                  break;
+                default:
+                  parsedValue = filterValues[f.id];
+                  filterDisplayName = f.props.field;
               }
+
               activeFilters.push({
                 id: f.id,
                 displayName: filterDisplayName,
@@ -334,10 +340,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                   },
                 ],
               });
-              /**
-               * Expand the Material filter group by default if one of the
-               * main filters are active (desktop only)
-               */
+
+              /** Expand the Material filter group by default if one of the main filters are active (desktop only) */
               if (isDesktop && (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids')) {
                 g.expanded = true;
               }
@@ -385,10 +389,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                   },
                 ],
               });
-              /**
-               * Expand the Material filter group by default if one of the
-               * main filters are active
-               */
+
+              /** Expand the Material filter group by default if one of the main filters are active (desktop only) */
               if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
                 g.expanded = true;
               }
