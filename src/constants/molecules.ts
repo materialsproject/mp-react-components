@@ -12,7 +12,11 @@ export const moleculesGroups: FilterGroup[] = [
       {
         name: 'ID',
         id: 'task_ids',
-        type: FilterType.TEXT_INPUT,
+        type: FilterType.MATERIALS_INPUT,
+        props: {
+          field: 'task_ids',
+          periodicTableMode: null,
+        },
       },
       {
         name: 'Elements',
@@ -109,7 +113,7 @@ export const moleculesGroups: FilterGroup[] = [
 
 export const moleculesColumns: Column[] = [
   {
-    name: 'Molecule Id',
+    name: 'Molecule ID',
     selector: 'task_id',
     format: ColumnFormat.LINK,
     formatArg: '/molecules/',
