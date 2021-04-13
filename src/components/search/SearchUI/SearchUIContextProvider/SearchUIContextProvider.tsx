@@ -8,13 +8,7 @@ import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
 import { MaterialsInputField } from '../../MaterialsInput';
-import {
-  getDefaultFiltersAndValues,
-  getState,
-  initColumns,
-  initFilterGroups,
-  initSearchState,
-} from '../utils';
+import { getDefaultFiltersAndValues, getSearchState, initSearchState } from '../utils';
 import { getPageCount } from '../../utils';
 
 /**
@@ -73,7 +67,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
     },
     setFilterValue: (value: any, id: string) => {
       setState((currentState) =>
-        getState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
+        getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
       );
     },
     setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
@@ -87,7 +81,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
         if (isDesktop) {
           newFilterGroups[0].expanded = true;
         }
-        return getState(
+        return getSearchState(
           { ...currentState, filterGroups: newFilterGroups, page: 1 },
           { ...currentState.filterValues, ...newFilterValues }
         );
@@ -96,7 +90,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
     resetAllFiltersExcept: (value: any, id: string) => {
       setState((currentState) => {
         const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-        return getState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
+        return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
       });
     },
     setFilterProps: (props: any, filterId: string, groupId: string) => {
@@ -108,12 +102,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
         const stateWithNewFilterProps = { ...currentState, filterGroups: filterGroups };
         // const newState =
         //   filter && filter.props.hasOwnProperty('parsedValue')
-        //     ? getState(stateWithNewFilterProps)
+        //     ? getSearchState(stateWithNewFilterProps)
         //     : stateWithNewFilterProps;
         const newFilterValues = props.hasOwnProperty('initialValues')
           ? { ...currentState.filterValues, [filterId]: props.initialValues }
           : undefined;
-        return getState({ ...stateWithNewFilterProps }, newFilterValues);
+        return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
       });
     },
     getData: () => {

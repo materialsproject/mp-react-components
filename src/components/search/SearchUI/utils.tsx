@@ -201,7 +201,7 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
  * of values for building the activeFilters list.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-export const getState = (
+export const getSearchState = (
   currentState: SearchState,
   filterValues = { ...currentState.filterValues }
 ): SearchState => {
@@ -245,7 +245,7 @@ export const getState = (
                 filterDisplayName = currentState.resultLabel + ' ID';
                 break;
               case MaterialsInputField.ELEMENTS:
-                if (f.props.isChemSys) {
+                if (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1) {
                   /** Chemical system values need to be parsed as a chemsys string (e.g. "Fe-Co-Si") so the API can recognize them */
                   parsedValue = arrayToDelimitedString(filterValues[f.id], new RegExp('-'));
                   filterDisplayName = 'includes only elements';
@@ -373,7 +373,7 @@ export const initSearchState = (
   if (urlSortField) initialState.sortField = urlSortField;
   if (urlAscending) initialState.sortAscending = urlAscending === 'true' ? true : false;
 
-  return getState(initialState);
+  return getSearchState(initialState);
 };
 
 export const getDefaultFiltersAndValues = (state: SearchState) => {
