@@ -19,7 +19,7 @@
   padding: 0 0 0.5em 1em;
 }
 
-.materials-input .input[type=search] {
+.materials-input .input[type='search'] {
   box-shadow: none;
 }
 
@@ -29,4 +29,8 @@
 
 .materials-input .control [data-tooltip]:hover {
   border-left: 1px solid #b5b5b5;
+}
+
+.materials-input .materials-input-error {
+  color: #d72638;
 }

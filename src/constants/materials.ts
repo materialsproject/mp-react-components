@@ -14,7 +14,7 @@ export const materialsGroups: FilterGroup[] = [
         id: 'task_ids',
         type: 'MATERIALS_INPUT' as FilterType,
         props: {
-          field: 'task_ids' as MaterialsInputField,
+          field: 'task_ids',
           periodicTableMode: null,
         },
       },

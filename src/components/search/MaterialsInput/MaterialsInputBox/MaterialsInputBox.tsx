@@ -9,7 +9,7 @@ import {
   arrayToDelimitedString,
   parseFormula,
 } from '../../utils';
-import { getMaterialsInputType, parseElements } from '../utils';
+import { validateInputType, validateElements, materialsInputFields } from '../utils';
 import { Dropdown, Form, Button } from 'react-bulma-components';
 import { MaterialsInputField, MaterialsInputSharedProps } from '../MaterialsInput';
 import { MatgenUtilities } from '../../../../utils/matgen';
@@ -84,122 +84,67 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       const newValue = props.value;
-      const dynamicInputType = props.onFieldChange && newValue ? true : false;
+      const staticInputField = !props.onFieldChange ? props.field : undefined;
+      let [newMaterialsInputField, parsedValue] = validateInputType(newValue, staticInputField);
+      let isValid = parsedValue !== null || !newValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
 
-      /**
-       * Field name switches to MP_ID if the input starts with 'mp' or 'mvc'.
-       * Field name switches to ELEMENTS if the input contains one of the accepted delimiters (comma, hyphen, or space).
-       * Field name switches to FORMULA if the input doesn't contain a delimiter
-       * and does contain multiple capital letters or a number.
-       */
+      if (isValid) {
+        props.setError(null);
+        switch (newMaterialsInputField) {
+          case MaterialsInputField.MP_ID:
+            newPtActionsToDispatch.push({
+              action: ptActions.clear,
+            });
+            break;
+          case MaterialsInputField.SMILES:
+            newPtActionsToDispatch.push({
+              action: ptActions.clear,
+            });
+            break;
+          case MaterialsInputField.EXCLUDE_ELEMENTS:
+          case MaterialsInputField.ELEMENTS:
+          case MaterialsInputField.FORMULA:
+            /** Parse the input for a delimiter */
+            const parsedDelimiter = getDelimiter(newValue);
+            /** If no delimiter present, don't change the delimiter value */
+            newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
+            if (parsedValue) {
+              /** Enable new elements if they aren't already enabled */
+              parsedValue.forEach((el) => {
+                if (!enabledElements[el]) {
+                  newPtActionsToDispatch.push({
+                    action: ptActions.addEnabledElement,
+                    payload: el,
+                  });
+                }
+              });
+              /** Remove enabled element if it is not part of the new list of parsed elements */
+              enabledElementsList.forEach((el) => {
+                if (parsedValue.indexOf(el) === -1) {
+                  newPtActionsToDispatch.push({
+                    action: ptActions.removeEnabledElement,
+                    payload: el,
+                  });
+                }
+              });
+            }
+            break;
+          default:
+            newMaterialsInputField = MaterialsInputField.ELEMENTS;
+        }
 
-      const validatedInputType = getMaterialsInputType(newValue);
-
-      if (validatedInputType == null && dynamicInputType) {
+        setPtActionsToDispatch(newPtActionsToDispatch);
+        setDelimiter(newDelimiter);
+        if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
+      } else if (staticInputField) {
+        props.setError(materialsInputFields[staticInputField].error);
+      } else {
         props.setError(
           'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or material ID (e.g. mp-394).'
         );
-      } else if (validatedInputType == null && !dynamicInputType) {
-        switch (props.field) {
-          case MaterialsInputField.MP_ID:
-            props.setError('Please enter a valid material ID (e.g. mp-394).');
-            break;
-          case MaterialsInputField.SMILES:
-            props.setError('Please enter a valid SMILES value.');
-            break;
-          case MaterialsInputField.ELEMENTS:
-            props.setError(
-              'Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).'
-            );
-            break;
-          case MaterialsInputField.EXCLUDE_ELEMENTS:
-            props.setError(
-              'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).'
-            );
-            break;
-          case MaterialsInputField.FORMULA:
-            props.setError('Please enter a valid chemical formula (e.g. CeZn5).');
-            break;
-          default:
-            props.setError('Invalid search value');
-        }
-      } else {
-        props.setError(null);
       }
-
-      let newMaterialsInputField = dynamicInputType ? validatedInputType : props.field;
-
-      switch (newMaterialsInputField) {
-        case MaterialsInputField.MP_ID:
-          newPtActionsToDispatch.push({
-            action: ptActions.clear,
-          });
-          break;
-        case MaterialsInputField.SMILES:
-          newPtActionsToDispatch.push({
-            action: ptActions.clear,
-          });
-          break;
-        case MaterialsInputField.EXCLUDE_ELEMENTS:
-        case MaterialsInputField.ELEMENTS:
-          /** Parse the input for a delimiter */
-          const parsedDelimiter = getDelimiter(newValue);
-          /** If no delimiter present, don't change the delimiter value */
-          newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
-          const parsedElements = parseElements(newValue, newDelimiter);
-          if (parsedElements) {
-            /** Enable new elements if they aren't already enabled */
-            parsedElements.forEach((el) => {
-              if (!enabledElements[el]) {
-                newPtActionsToDispatch.push({
-                  action: ptActions.addEnabledElement,
-                  payload: el,
-                });
-              }
-            });
-            /** Remove enabled element if it is not part of the new list of parsed elements */
-            enabledElementsList.forEach((el) => {
-              if (parsedElements.indexOf(el) === -1) {
-                newPtActionsToDispatch.push({
-                  action: ptActions.removeEnabledElement,
-                  payload: el,
-                });
-              }
-            });
-          }
-          break;
-        case MaterialsInputField.FORMULA:
-          var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
-            newValue
-          );
-          formulaSplitElementsOnly.forEach((el) => {
-            if (TABLE_DICO_V2[el]) {
-              if (!enabledElements[el]) {
-                newPtActionsToDispatch.push({
-                  action: ptActions.addEnabledElement,
-                  payload: el,
-                });
-              }
-            }
-          });
-          enabledElementsList.forEach((el) => {
-            if (formulaSplitElementsOnly.indexOf(el) === -1) {
-              newPtActionsToDispatch.push({
-                action: ptActions.removeEnabledElement,
-                payload: el,
-              });
-            }
-          });
-          break;
-        default:
-          newMaterialsInputField = MaterialsInputField.ELEMENTS;
-      }
-
-      setPtActionsToDispatch(newPtActionsToDispatch);
-      setDelimiter(newDelimiter);
-      if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
     }
     valueChangedByPT.current = false;
   }, [props.value]);

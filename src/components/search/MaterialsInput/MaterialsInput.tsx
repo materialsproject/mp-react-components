@@ -268,10 +268,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   const errorControl = (
     <Control>
       <button
-        data-testid="materials-input-tooltip-button"
+        data-testid="materials-input-error"
         type="button"
         className={classNames(
-          'button has-tooltip-multiline has-tooltip-bottom has-text-grey-light',
+          'materials-input-error button has-tooltip-multiline has-tooltip-bottom',
           {
             'has-tooltip-active': errorTipStayActive,
           }
@@ -313,7 +313,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
 
   if (hasChemSysCheckbox) {
     chemSysCheckbox = (
-      <label className="checkbox is-block">
+      <label className="checkbox">
         <input
           type="checkbox"
           role="checkbox"
