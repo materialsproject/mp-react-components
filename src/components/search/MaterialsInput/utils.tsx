@@ -4,29 +4,12 @@ const VALID_ELEMENTS = 'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar Kr K Ca Sc
   ' '
 );
 
-export const isMpIdInput = (value: string): boolean => {
-  return value.indexOf('mp-') === 0 || value.indexOf('mvc-') === 0 || value.indexOf('mol-') === 0;
-};
-
-export const isElementsInput = (value: string): boolean => {
-  const hasDelimeter = !!value.match(/,|-|\s/gi);
-  const hasWildcard = !!value.match(/\*/gi);
-  return hasDelimeter && !hasWildcard;
-};
-
 /**
- * Perform a naive validation of a string as a formula
- * Returns the string if it has more than one capital letter, a number, or wildcard character ("*")
- * Returns null if the string is not a "parsable" formula
+ * Check if a string is a valid element symbol
+ *
+ * @param {string} elementStr String to check if element symbol
+ * @param data [optional] String of valid elements to check against
  */
-export const isFormulaInput = (value: string): boolean => {
-  const capitalLettersMatch = value.match(/[A-Z]/g);
-  const capitalLetters = capitalLettersMatch ? capitalLettersMatch.length : 0;
-  const hasNumber = !!value.match(/[0-9]/gi);
-  const hasWildcard = !!value.match(/\*/gi);
-  return capitalLetters > 1 || hasNumber || hasWildcard;
-};
-
 const isElement = (elementStr: string, data = VALID_ELEMENTS) => {
   if (data.indexOf(elementStr) !== -1) {
     return true;
@@ -54,8 +37,7 @@ const isValidWildcard = (string) => {
  *
  * @param {integer} a First number.
  * @param {integer} b Second number.
- *
- * @return {integer} Greatest common denominator.
+ * @returns {integer} Greatest common denominator.
  */
 const gcd = (a, b) => {
   let w, x, y;
@@ -73,8 +55,7 @@ const gcd = (a, b) => {
  * Returns the greatest common denominator of a sequence of numbers.
  *
  * @param {array} numbers An array of numbers.
- *
- * @return {integer} Greatest common denominator.
+ * @returns {integer} Greatest common denominator.
  */
 const getGCD = (numbers) => {
   let GCD = numbers[0];
@@ -96,9 +77,7 @@ export const parseFormula = (formula) => {
   let elements: string[] = [];
   let amounts = {};
   let i;
-  console.log('checking formula...');
   if (m != null) {
-    console.log('still checking...');
     for (i = 0; i < m.length; i++) {
       const m2 = re.exec(m[i]);
       if (VALID_ELEMENTS.indexOf(m2![1]) === -1) {
@@ -131,69 +110,49 @@ export const parseFormula = (formula) => {
     for (i = 0; i < elements.length; i++) {
       form_santized.push(elements[i] + amounts[elements[i]] / gcd);
     }
-    console.log('valid formula');
-    return [elements.sort().join('&'), form_santized.sort().join(' ')];
-  }
-  return null;
-};
-
-export const validateFormula = (formula: string) => {
-  const cleanformula = formula.replace(/\s/g, '');
-  let m = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*]+/g);
-  if (m != null) {
-    return null;
-  }
-
-  const re = /([A-Z][a-z]*)([\d\.]*)/;
-  m = cleanformula.match(/([A-Z][a-z]*)([\d\.]*)/g);
-  let elements: string[] = [];
-  let amounts = {};
-  let i;
-  console.log('checking formula...');
-  if (m != null) {
-    console.log('still checking...');
-    for (i = 0; i < m.length; i++) {
-      const m2 = re.exec(m[i]);
-      if (VALID_ELEMENTS.indexOf(m2![1]) === -1) {
-        return null;
-      }
-      if (elements.indexOf(m2![1]) === -1) {
-        elements.push(m2![1]);
-        if (m2![2] == '') {
-          amounts[m2![1]] = 1;
-        } else {
-          amounts[m2![1]] = m2![2];
-        }
-      } else {
-        if (m2![2] == '') {
-          amounts[m2![1]] += 1;
-        } else {
-          amounts[m2![1]] += m2![2];
-        }
-      }
-    }
-
-    const amtnum: any[] = [];
-
-    for (const el in amounts) {
-      amtnum.push(amounts[el]);
-    }
-
-    const gcd = getGCD(amtnum);
-    const form_santized: any[] = [];
-    for (i = 0; i < elements.length; i++) {
-      form_santized.push(elements[i] + amounts[elements[i]] / gcd);
-    }
-    console.log('valid formula');
     return [elements.sort().join('&'), form_santized.sort().join(' ')];
   }
   return null;
 };
 
 /**
- * Determine if a string is delimited by commas, hyphens, or spaces
- * Return the delimiter as a regular expression object
+ * Validates a string as a checmical formula and returns
+ * a parsed array of valid elements if successful.
+ *
+ * @param {string} formula An unparsed chemical formula string
+ * @returns {string[] or null} Array of valid element symbols or null
+ */
+export const validateFormula = (formula: string): string[] | null => {
+  const cleanformula = formula.replace(/\s/g, '');
+  const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-]+/g);
+  if (illegalChars != null) {
+    return null;
+  }
+
+  /** Finds occurrences of an element symbol and numbers */
+  const re = /([A-Z][a-z]*)([\d\.]*)/g;
+  let elements: string[] = [];
+  let match: RegExpExecArray | null = null;
+  /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
+  while ((match = re.exec(cleanformula))) {
+    if (!isElement(match[1])) {
+      return null;
+    }
+    if (elements.indexOf(match[1]) === -1) {
+      elements.push(match[1]);
+    }
+  }
+
+  return elements.length > 0 ? elements : null;
+};
+
+/**
+ * Determines if a string is delimited by commas, hyphens, or spaces
  * If multiple delimiters are present, the delimiter with the lowest index is used
+ * If none is present, defaults to comma
+ *
+ * @param {string} input String to parse for a delimiter
+ * @returns Delimiter as a regular expression object
  */
 export const getDelimiter = (input: string): RegExp => {
   const comma = input.match(/,/);
@@ -226,12 +185,15 @@ export const getDelimiter = (input: string): RegExp => {
 };
 
 /**
- * Parses an array of valid elements from a string of elements separated by a delimiter
- * Returns an array of valid element symbols (e.g. ['Na', 'Cl'])
+ * Validates a string as a valid list of element symbols or wildcards.
+ * Elements can be delimited by a comma, space, or hyphen
+ *
+ * @param {string} elementStr String of element symbols to be validated
+ * @returns Array of valid element symbols
  */
-export const parseElements = (elementStr: string, delimiter?: RegExp) => {
+export const validateElements = (elementStr: string): string[] | null => {
   let cleanElementsStr = '';
-  if (!delimiter) delimiter = getDelimiter(elementStr);
+  const delimiter = getDelimiter(elementStr);
   const delimiterString = delimiter.toString();
   if (delimiterString === new RegExp(/,/).toString()) {
     cleanElementsStr = elementStr.replace(/and|\s|-|[0-9]/gi, '');
@@ -257,21 +219,108 @@ export const parseElements = (elementStr: string, delimiter?: RegExp) => {
   }
 };
 
-export const isSmilesInput = (value: string): boolean => {
+/**
+ * Validates a string as a possible Simplified Molecular-Input Line-Entry System (SMILES)
+ *
+ * @param {string} value String value to be validated
+ * @returns Validated SMILES string or null
+ */
+export const validateSmiles = (value: string): string | null => {
   const result = value.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$]{6,})$/gi);
-  return Array.isArray(result);
-};
-
-export const getMaterialsInputType = (value: string) => {
-  if (isMpIdInput(value)) {
-    return MaterialsInputField.MP_ID;
-  } else if (parseElements(value)) {
-    return MaterialsInputField.ELEMENTS;
-  } else if (isSmilesInput(value)) {
-    return MaterialsInputField.SMILES;
-  } else if (validateFormula(value)) {
-    return MaterialsInputField.FORMULA;
+  if (Array.isArray(result)) {
+    return value;
   } else {
     return null;
+  }
+};
+
+/**
+ * Validates a string as a possible material, molecule, or battery id
+ * Note: this only validates the string's format, not its existence in the database.
+ *
+ * @param {string} value String value to be validated
+ * @returns Validated id string or null
+ */
+export const validateMaterialID = (value: string): string | null => {
+  if (
+    value.match(/mp\-\d/) !== null ||
+    value.match(/mvc\-\d/) !== null ||
+    value.match(/mol\-\d/) !== null
+  ) {
+    return value;
+  } else {
+    return null;
+  }
+};
+
+type MaterialsInputFieldsObject = Partial<Record<MaterialsInputField, any>>;
+/**
+ * Object to map MaterialsInputField values to validation functions and error messages
+ * Object keys must be one of the values defined in the MaterialsInputField enum
+ */
+export const materialsInputFields: MaterialsInputFieldsObject = {
+  task_ids: {
+    validate: validateMaterialID,
+    error: 'Please enter a valid material ID (e.g. mp-394).',
+  },
+  elements: {
+    validate: validateElements,
+    error:
+      'Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).',
+  },
+  exclude_elements: {
+    validate: validateElements,
+    error: 'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).',
+  },
+  formula: {
+    validate: validateFormula,
+    error: 'Please enter a valid chemical formula (e.g. CeZn5).',
+  },
+  smiles: {
+    validate: validateSmiles,
+    error: 'Please enter a valid SMILES value.',
+  },
+};
+
+/**
+ * Detects and validates a MaterialsInputField type from
+ * a raw input string.
+ *
+ * @param {string} value Input value string for a MaterialsInput
+ * @returns Array with two values:
+ *   1. The detected MaterialsInputField or null none detected
+ *   2. The parsed value returned from the detcted field's validation method
+ */
+const detectInputType = (value: string): [MaterialsInputField | null, any] => {
+  for (const field in materialsInputFields) {
+    const parsedValue = materialsInputFields[field].validate(value);
+    if (parsedValue) {
+      return [field as MaterialsInputField, parsedValue];
+    }
+  }
+  return [null, null];
+};
+
+/**
+ * Validate a MaterialsInput value.
+ * This method will always return an array with two values.
+ * Failed validations will return null in the second value in the returned array.
+ *
+ * @param {string} value Input value string for a MaterialsInput
+ * @param {string} field [optional] MaterialsInputField type to use to validate the input value (will detect field type if not included)
+ * @returns Array with two values:
+ *   1. The MaterialsInputField (only null if no field is supplied or detected)
+ *   2. The validated parsed value returned from the field's validation method (null if validation failed)
+ */
+export const validateInputType = (
+  value: string,
+  field?: MaterialsInputField
+): [MaterialsInputField | null, any] => {
+  if (field) {
+    const parsedValue = materialsInputFields[field].validate(value);
+    return [field, parsedValue];
+  } else {
+    const [detectedField, parsedValue] = detectInputType(value);
+    return [detectedField, parsedValue];
   }
 };

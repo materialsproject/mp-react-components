@@ -24,13 +24,14 @@ import {
   formatFormula,
   getPageCount,
 } from '../../utils';
-import { parseElements } from '../../MaterialsInput/utils';
+import { validateElements } from '../../MaterialsInput/utils';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { spaceGroups } from '../../../../constants/spaceGroups';
 import { pointGroups } from '../../../../constants/pointGroups';
 import { Link } from '../../../navigation/Link';
 import classNames from 'classnames';
 import { useMediaQuery } from 'react-responsive';
+import { MaterialsInputField } from '../../MaterialsInput';
 
 // import * as d3 from 'd3';
 
@@ -55,7 +56,7 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  topLevelSearchField: 'elements',
+  topLevelSearchField: 'elements' as MaterialsInputField,
   error: false,
 };
 
@@ -315,10 +316,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
                   parsedValue = arrayToDelimitedString(parsedValue, new RegExp('-'));
                   filterDisplayName = 'includes only elements';
                 } else {
-                  const parsedDelimiter = getDelimiter(parsedValue);
-                  /** If no delimiter present, default to comma */
-                  const delimiter = parsedDelimiter ? parsedDelimiter : new RegExp(',');
-                  parsedValue = parseElements(filterValues[f.id], delimiter);
+                  parsedValue = validateElements(filterValues[f.id]);
                   filterDisplayName =
                     f.id === 'exclude_elements' ? 'excludes elements' : 'includes elements';
                 }
