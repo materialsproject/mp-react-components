@@ -412,7 +412,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     if (!error) {
       props.onChange(debouncedInputValue);
     }
-  }, [debouncedInputValue]);
+  }, [debouncedInputValue, error]);
 
   return (
     <div className="materials-input">
