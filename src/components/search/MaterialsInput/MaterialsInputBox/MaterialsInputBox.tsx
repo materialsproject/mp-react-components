@@ -44,6 +44,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     props.isChemSys ? new RegExp('-') : new RegExp(',')
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
+  const [inputValue, setInputValue] = useState(props.value);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -57,7 +58,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
    * All side effects to this change are handled in an effect hook
    */
   const handleRawValueChange = (e) => {
-    props.setValue(e.target.value);
+    setInputValue(e.target.value);
   };
 
   const handleFocus = () => {
@@ -83,10 +84,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      const newValue = props.value;
       const staticInputField = !props.onFieldChange ? props.field : undefined;
-      let [newMaterialsInputField, parsedValue] = validateInputType(newValue, staticInputField);
-      let isValid = parsedValue !== null || !newValue ? true : false;
+      let [newMaterialsInputField, parsedValue] = validateInputType(inputValue, staticInputField);
+      let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
 
@@ -107,7 +107,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           case MaterialsInputField.ELEMENTS:
           case MaterialsInputField.FORMULA:
             /** Parse the input for a delimiter */
-            const parsedDelimiter = getDelimiter(newValue);
+            const parsedDelimiter = getDelimiter(inputValue);
             /** If no delimiter present, don't change the delimiter value */
             newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
             if (parsedValue) {
@@ -137,6 +137,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
 
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
+        props.setValue(inputValue);
         if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
       } else if (staticInputField) {
         props.setError(materialsInputFields[staticInputField].error);
@@ -147,7 +148,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       }
     }
     valueChangedByPT.current = false;
-  }, [props.value]);
+  }, [inputValue]);
 
   /**
    * This effect executes the periodic table context actions collected by the value effect (above)
@@ -194,10 +195,14 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           newValue = arrayToDelimitedString(enabledElementsList, delimiter);
           if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
       }
-      props.setValue(newValue);
       valueChangedByPT.current = true;
+      props.setValue(newValue);
     }
   }, [enabledElements]);
+
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value]);
 
   /**
    * This effect lifts the ref placed in the input element
@@ -215,7 +220,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         className="input"
         type="search"
         autoComplete="off"
-        value={props.value}
+        value={inputValue}
         onChange={handleRawValueChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
