@@ -142,7 +142,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         props.setError(materialsInputFields[staticInputField].error);
       } else {
         props.setError(
-          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or material ID (e.g. mp-394).'
+          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330).'
         );
       }
     }
