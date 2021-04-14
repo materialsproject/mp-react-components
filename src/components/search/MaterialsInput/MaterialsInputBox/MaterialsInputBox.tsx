@@ -110,26 +110,25 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             const parsedDelimiter = getDelimiter(inputValue);
             /** If no delimiter present, don't change the delimiter value */
             newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
-            if (parsedValue) {
-              /** Enable new elements if they aren't already enabled */
-              parsedValue.forEach((el) => {
-                if (!enabledElements[el]) {
-                  newPtActionsToDispatch.push({
-                    action: ptActions.addEnabledElement,
-                    payload: el,
-                  });
-                }
-              });
-              /** Remove enabled element if it is not part of the new list of parsed elements */
-              enabledElementsList.forEach((el) => {
-                if (parsedValue.indexOf(el) === -1) {
-                  newPtActionsToDispatch.push({
-                    action: ptActions.removeEnabledElement,
-                    payload: el,
-                  });
-                }
-              });
-            }
+            const parsedElements = parsedValue || [];
+            /** Enable new elements if they aren't already enabled */
+            parsedElements.forEach((el) => {
+              if (!enabledElements[el]) {
+                newPtActionsToDispatch.push({
+                  action: ptActions.addEnabledElement,
+                  payload: el,
+                });
+              }
+            });
+            /** Remove enabled element if it is not part of the new list of parsed elements */
+            enabledElementsList.forEach((el) => {
+              if (parsedElements.indexOf(el) === -1) {
+                newPtActionsToDispatch.push({
+                  action: ptActions.removeEnabledElement,
+                  payload: el,
+                });
+              }
+            });
             break;
           default:
             newMaterialsInputField = MaterialsInputField.ELEMENTS;
@@ -196,6 +195,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
       }
       valueChangedByPT.current = true;
+      props.setError(null);
       props.setValue(newValue);
     }
   }, [enabledElements]);
