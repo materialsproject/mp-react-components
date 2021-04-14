@@ -260,6 +260,15 @@ export const getSearchState = (
                 parsedValue = validateElements(filterValues[f.id]);
                 filterDisplayName = 'excludes elements';
                 break;
+              case MaterialsInputField.FORMULA:
+                if (filterValues[f.id].indexOf('-') > -1) {
+                  parsedValue = filterValues[f.id].replace(/\-$/, '');
+                  filterDisplayName = 'includes only elements';
+                } else {
+                  parsedValue = filterValues[f.id];
+                  filterDisplayName = f.props.field;
+                }
+                break;
               default:
                 parsedValue = filterValues[f.id];
                 filterDisplayName = f.props.field;
