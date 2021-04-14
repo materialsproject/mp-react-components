@@ -204,7 +204,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       <div data-testid="materials-input-autocomplete-menu-items" className="dropdown-content">
         <p className="autocomplete-label">Suggested formulas</p>
         {formulaSuggestions.map((d, i) => (
-          <a key={i} className="dropdown-item" onMouseDown={() => props.onChange(d.formula_pretty)}>
+          <a
+            key={i}
+            className="dropdown-item"
+            onMouseDown={() => {
+              setError(null);
+              props.onChange(d.formula_pretty);
+            }}
+          >
             {formatFormula(d.formula_pretty)}
           </a>
         ))}
@@ -412,7 +419,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     if (!error) {
       props.onChange(debouncedInputValue);
     }
-  }, [debouncedInputValue, error]);
+  }, [debouncedInputValue]);
 
   return (
     <div className="materials-input">

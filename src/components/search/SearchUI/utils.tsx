@@ -246,8 +246,8 @@ export const getSearchState = (
                 break;
               case MaterialsInputField.ELEMENTS:
                 if (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1) {
-                  /** Chemical system values need to be parsed as a chemsys string (e.g. "Fe-Co-Si") so the API can recognize them */
-                  parsedValue = arrayToDelimitedString(filterValues[f.id], new RegExp('-'));
+                  /** Remove trailing '-' from chemical system string */
+                  parsedValue = filterValues[f.id].replace(/\-$/, '');
                   filterDisplayName = 'includes only elements';
                 } else {
                   /** Parse elements back into array so that they're in a normalized format for the query */
