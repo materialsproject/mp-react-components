@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { linkOnClick } from '../../../utils/utils';
-import { MaterialsInput } from '../MaterialsInput';
+import { MaterialsInput, MaterialsInputField } from '../MaterialsInput';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -19,7 +19,7 @@ interface Props {
 
 export const GlobalSearchBar: React.FC<Props> = (props) => {
   const [searchValue, setSearchValue] = useState('');
-  const [searchField, setSearchField] = useState('elements');
+  const [searchField, setSearchField] = useState(MaterialsInputField.ELEMENTS);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     let query = new URLSearchParams();
