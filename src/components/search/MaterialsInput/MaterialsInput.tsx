@@ -463,5 +463,5 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
 MaterialsInput.defaultProps = {
   value: '',
   field: MaterialsInputField.ELEMENTS,
-  onChange: (value) => null,
+  onChange: (value) => undefined,
 };
