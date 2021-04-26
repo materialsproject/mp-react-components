@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SearchUI } from '../components/search/SearchUI';
 import { xasColumns, xasGroups } from '../constants/xas';
 
@@ -7,9 +7,11 @@ import { xasColumns, xasGroups } from '../constants/xas';
  */
 
 export const XasApp: React.FC = () => {
+  const [state, setState] = useState<any>();
   return (
     <>
       <h1 className="title">X-Ray Absorption Spectra</h1>
+      <div>Selected Rows: {state?.selectedRows.length}</div>
       <SearchUI
         resultLabel="spectra"
         columns={xasColumns}
@@ -18,12 +20,7 @@ export const XasApp: React.FC = () => {
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={false}
         selectableRows={true}
-        plotSelectedRows={true}
-        plot={{
-          title: 'Spectra',
-          xKey: 'spectrum.x',
-          yKey: 'spectrum.y',
-        }}
+        setProps={setState}
       />
     </>
   );

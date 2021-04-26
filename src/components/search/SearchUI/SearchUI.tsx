@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
@@ -13,6 +13,17 @@ import { BrowserRouter as Router } from 'react-router-dom';
  */
 
 export interface SearchUIProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
+  id?: string;
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (value: any) => any;
+
   /**
    * An array of column definitions for the results in the SearchUIDataTable
    * Column properties are based on the react-data-table column settings (https://github.com/jbetancur/react-data-table-component#columns)
@@ -33,6 +44,7 @@ export interface SearchUIProps {
     ]
    */
   columns: Column[];
+
   /**
    * An array of filter groups and their respective array of filters.
    * A filter group is a collapsible section of the filters panel that contains one or more filters.
@@ -81,18 +93,22 @@ export interface SearchUIProps {
     ]
    */
   filterGroups: FilterGroup[];
+
   /**
    * The base URL to the API that this search UI should query
    */
   baseURL: string;
+
   /**
    * The URL endpoint for fetching autocompletion results
    */
   autocompleteFormulaUrl?: string;
+
   /**
    * API key (if needed) that will be used when making queries
    */
   apiKey?: string;
+
   /**
    * A noun in singular form to describe what a result represents (default: "result")
    * e.g. "material"
@@ -100,6 +116,7 @@ export interface SearchUIProps {
    * In all other cases, an "s" is appended to resultLabel
    */
   resultLabel?: string;
+
   /**
    * Optionally add a help icon with a tooltip in the search bar
    * This should be used to provide instructions on how to use the search bar
@@ -109,25 +126,30 @@ export interface SearchUIProps {
    *  You can also click elements on the periodic table to add them to your search."
    */
   searchBarTooltip?: string;
+
   /**
    * Optionally add a string of text to show up in the top-level search bar
    */
   searchBarPlaceholder?: string;
+
   /**
    * Optionally include a field to sort by on initial load
    * Must be a valid field and included in your list of columns
    */
   sortField?: string;
+
   /**
    * If including a sortField, set whether it should ascend by default
    * True for ascending, False for descending
    */
   sortAscending?: boolean;
+
   /**
    * Optionally include/exclude the top search bar
    * Defaults to true
    */
   hasSearchBar?: boolean;
+
   /**
    * List of conditions for styling rows based on a property (selector) and a value
    * Accepts a list of "condition" objects which must specify a...
@@ -148,34 +170,20 @@ export interface SearchUIProps {
     ]
    */
   conditionalRowStyles?: ConditionalRowStyle[];
+
   selectableRows?: boolean;
-  plotSelectedRows?: boolean;
-  /**
-    {
-      title: '',
-      xKey: 'spectra.x',
-      yKey: 'spectra.y'
-    }
-   */
-  plot?: any;
+
+  selectedRows?: any[];
 }
 
-export const SearchUI: React.FC<SearchUIProps> = (props) => {
-  // var trace1 = {
-  //   x: [1, 2, 3, 4],
-  //   y: [10, 15, 13, 17],
-  //   type: 'scatter'
-  // };
-
-  // var trace2 = {
-  //   x: [1, 2, 3, 4],
-  //   y: [16, 5, 11, 9],
-  //   type: 'scatter'
-  // };
-
-  // var data = [trace1, trace2];
-
-  // Plotly.newPlot('myDiv', data);
+export const SearchUI: React.FC<SearchUIProps> = ({
+  resultLabel = 'results',
+  hasSearchBar = true,
+  conditionalRowStyles = [],
+  setProps = () => null,
+  ...otherProps
+}) => {
+  let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
   return (
     <div className="search-ui">
       <Router>
@@ -203,10 +211,4 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
       </Router>
     </div>
   );
-};
-
-SearchUI.defaultProps = {
-  resultLabel: 'results',
-  hasSearchBar: true,
-  conditionalRowStyles: [],
 };

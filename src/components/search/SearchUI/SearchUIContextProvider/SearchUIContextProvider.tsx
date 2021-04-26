@@ -40,7 +40,14 @@ const defaultState: SearchState = {
  * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
  * Accepts the same props as SearchUI and uses them to build the context state
  */
-export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
+export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
+  resultLabel = 'results',
+  hasSearchBar = true,
+  conditionalRowStyles = [],
+  setProps = () => null,
+  ...otherProps
+}) => {
+  let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
   const { children, ...propsWithoutChildren } = props;
   const query = useQuery();
   const history = useHistory();
@@ -111,6 +118,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
       });
     },
     setSelectedRows: (selectedRows: any[]) => {
+      props.setProps({ ...props, selectedRows });
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
     getData: () => {
