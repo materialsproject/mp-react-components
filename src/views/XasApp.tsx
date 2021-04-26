@@ -11,9 +11,14 @@ export const XasApp: React.FC = () => {
   return (
     <>
       <h1 className="title">X-Ray Absorption Spectra</h1>
-      <div>Selected Rows: {state?.selectedRows.length}</div>
+      <div>
+        <span>Selected Rows: </span>
+        {state?.selectedRows.map((r) => (
+          <span>{r.task_id}, </span>
+        ))}
+      </div>
       <SearchUI
-        resultLabel="spectra"
+        resultLabel="spectrum"
         columns={xasColumns}
         filterGroups={xasGroups}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}

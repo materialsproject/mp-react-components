@@ -197,6 +197,7 @@ export const pluralize = (noun) => {
   let plural = noun + 's';
   const specialNouns = {
     battery: 'batteries',
+    spectrum: 'spectra',
   };
   if (specialNouns[noun]) plural = specialNouns[noun];
   return plural;
