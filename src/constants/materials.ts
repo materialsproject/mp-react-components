@@ -7,7 +7,6 @@ import { Column, ColumnFormat, FilterGroup, FilterType } from '../components/sea
 export const materialsGroups: FilterGroup[] = [
   {
     name: 'Composition',
-    expanded: false,
     filters: [
       {
         name: 'ID',

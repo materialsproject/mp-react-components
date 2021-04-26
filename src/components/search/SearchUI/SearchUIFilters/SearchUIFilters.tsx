@@ -40,9 +40,9 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
   let groupsByName = {};
   groups.forEach((g) => {
     groupsByName[g.name] = {
-      expanded: g.expanded === true ? true : false,
+      ...g,
+      expanded: g.expanded === true || g.alwaysExpanded === true ? true : false,
       activeFilterCount: getActiveFilterCount(g, activeFilters),
-      filters: g.filters,
     };
   });
   return groupsByName;
@@ -140,6 +140,16 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     }
   };
 
+  const renderCaret = (group: FilterGroup) => {
+    if (group.alwaysExpanded) {
+      return null;
+    } else if (group.expanded) {
+      return <FaCaretDown className="is-vertical-align-middle" />;
+    } else {
+      return <FaCaretRight className="is-vertical-align-middle" />;
+    }
+  };
+
   const resetFilter = (id: string) => {
     const activeFilter = getActiveFilterById(id, state.activeFilters);
     if (activeFilter) {
@@ -150,7 +160,13 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   const toggleGroup = (groupName: string) => {
     let newGroupsByName = { ...groupsByName };
     for (const name in newGroupsByName) {
-      newGroupsByName[name].expanded = groupName === name ? !newGroupsByName[name].expanded : false;
+      if (newGroupsByName[name].alwaysExpanded) {
+        newGroupsByName[name].expanded = true;
+      } else if (groupName === name) {
+        newGroupsByName[name].expanded = !newGroupsByName[name].expanded;
+      } else {
+        newGroupsByName[name].expanded = false;
+      }
     }
     setGroupsByName(newGroupsByName);
   };
@@ -232,13 +248,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                       {g.name}
                       {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
                     </span>
-                    <div className="is-pulled-right">
-                      {!groupsByName[g.name].expanded ? (
-                        <FaCaretRight className="is-vertical-align-middle" />
-                      ) : (
-                        <FaCaretDown className="is-vertical-align-middle" />
-                      )}
-                    </div>
+                    <div className="is-pulled-right">{renderCaret(groupsByName[g.name])}</div>
                   </button>
                 </h3>
                 <div

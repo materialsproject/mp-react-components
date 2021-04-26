@@ -7,7 +7,7 @@ import { Column, ColumnFormat, FilterGroup, FilterType } from '../components/sea
 export const xasGroups: FilterGroup[] = [
   {
     name: 'XAS Composition',
-    expanded: false,
+    alwaysExpanded: true,
     filters: [
       {
         name: 'Edge',

@@ -35,7 +35,8 @@ export interface Filter {
 
 export interface FilterGroup {
   name: string;
-  expanded: boolean;
+  expanded?: boolean;
+  alwaysExpanded?: boolean;
   filters: Filter[];
 }
 
