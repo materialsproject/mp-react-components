@@ -272,6 +272,10 @@ export const materialsInputFields: MaterialsInputFieldsObject = {
     validate: validateElements,
     error: 'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).',
   },
+  absorbing_element: {
+    validate: validateElements,
+    error: 'Please enter a element symbol',
+  },
   formula: {
     validate: validateFormula,
     error: 'Please enter a valid chemical formula (e.g. CeZn5).',

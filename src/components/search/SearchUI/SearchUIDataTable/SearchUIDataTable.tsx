@@ -83,6 +83,11 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     actions.setSort(column.selector, sortAscending);
   };
 
+  const handleSelectedRowsChange = (rowState) => {
+    console.log(rowState);
+    actions.setSelectedRows(rowState.selectedRows);
+  };
+
   const toggleColumn = (columnIndex: number) => {
     const newColumns = [...columns];
     const changedColumn = newColumns[columnIndex];
@@ -366,6 +371,8 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
             customStyles={customStyles}
             conditionalRowStyles={conditionalRowStyles}
             noDataComponent={<NoDataMessage />}
+            selectableRows={state.selectableRows}
+            onSelectedRowsChange={handleSelectedRowsChange}
           />
         </div>
       </div>

@@ -184,6 +184,17 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
             initializedValues[f.id] = undefined;
           }
           return f;
+        case FilterType.SELECT:
+          if (queryParamValue) {
+            initializedValues[f.id] = queryParamValue;
+          } else if (f.props.defaultValue) {
+            initializedValues[f.id] = f.props.defaultValue;
+          } else if (f.props.value) {
+            initializedValues[f.id] = f.props.value;
+          } else {
+            initializedValues[f.id] = undefined;
+          }
+          return f;
         default:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
@@ -259,6 +270,11 @@ export const getSearchState = (
                 /** Parse elements back into array so that they're in a normalized format for the query */
                 parsedValue = validateElements(filterValues[f.id]);
                 filterDisplayName = 'excludes elements';
+                break;
+              case MaterialsInputField.ABSORBING_ELEMENT:
+                /** Parse elements back into array so that they're in a normalized format for the query */
+                parsedValue = validateElements(filterValues[f.id]);
+                filterDisplayName = 'absorbing element';
                 break;
               case MaterialsInputField.FORMULA:
                 if (filterValues[f.id].indexOf('-') > -1) {

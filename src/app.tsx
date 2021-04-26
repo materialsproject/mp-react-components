@@ -14,6 +14,7 @@ import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { MaterialsExplorer } from './views/MaterialsExplorer';
 import { MaterialsDetail } from './views/MaterialsDetail';
 import { MoleculesExplorer } from './views/MoleculesExplorer';
+import { XasApp } from './views/XasApp';
 import { Home } from './views/Home';
 import { CrystalStructureViewer } from './views/CrystalStructureViewer';
 import { BatteriesExplorer } from './views/BatteriesExplorer';
@@ -40,6 +41,9 @@ ReactDOM.render(
               <Link to="/batteries">Batteries</Link>
             </span>
             <span className="navbar-item">
+              <Link to="/xas">X-Ray Absorption Spectra</Link>
+            </span>
+            <span className="navbar-item">
               <Link to="/crystal">Crystal Structure</Link>
             </span>
           </div>
@@ -58,6 +62,9 @@ ReactDOM.render(
           </Route>
           <Route path="/crystal">
             <CrystalStructureViewer />
+          </Route>
+          <Route path="/xas">
+            <XasApp />
           </Route>
           <Route path="/">
             <MaterialsExplorer />

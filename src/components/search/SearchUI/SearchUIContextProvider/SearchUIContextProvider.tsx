@@ -110,6 +110,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = (props) => {
         return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
       });
     },
+    setSelectedRows: (selectedRows: any[]) => {
+      setState((currentState) => ({ ...currentState, selectedRows }));
+    },
     getData: () => {
       setState((currentState) => {
         /**

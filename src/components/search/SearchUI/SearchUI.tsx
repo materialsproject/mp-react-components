@@ -148,9 +148,34 @@ export interface SearchUIProps {
     ]
    */
   conditionalRowStyles?: ConditionalRowStyle[];
+  selectableRows?: boolean;
+  plotSelectedRows?: boolean;
+  /**
+    {
+      title: '',
+      xKey: 'spectra.x',
+      yKey: 'spectra.y'
+    }
+   */
+  plot?: any;
 }
 
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
+  // var trace1 = {
+  //   x: [1, 2, 3, 4],
+  //   y: [10, 15, 13, 17],
+  //   type: 'scatter'
+  // };
+
+  // var trace2 = {
+  //   x: [1, 2, 3, 4],
+  //   y: [16, 5, 11, 9],
+  //   type: 'scatter'
+  // };
+
+  // var data = [trace1, trace2];
+
+  // Plotly.newPlot('myDiv', data);
   return (
     <div className="search-ui">
       <Router>

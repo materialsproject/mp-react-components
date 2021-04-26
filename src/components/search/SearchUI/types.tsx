@@ -84,6 +84,7 @@ export interface SearchState extends SearchUIProps {
   sortAscending?: boolean;
   topLevelSearchField: MaterialsInputField;
   error: boolean;
+  selectedRows?: any[];
 }
 
 export enum ColumnFormat {
