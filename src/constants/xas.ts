@@ -100,6 +100,6 @@ export const xasColumns: Column[] = [
   {
     name: 'spectrum',
     selector: 'spectrum',
-    omit: true,
+    hidden: true,
   },
 ];

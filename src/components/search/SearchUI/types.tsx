@@ -63,6 +63,8 @@ export interface Column {
   conversionFactor?: number;
   nameString?: string;
   abbreviateNearZero?: boolean;
+  /** Hides column from table AND column selector but includes in data */
+  hidden?: boolean;
   [id: string]: any;
 }
 

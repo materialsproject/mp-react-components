@@ -49,7 +49,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
-  const [columns, setColumns] = useState(state.columns);
+  const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const tableRef = useRef<HTMLDivElement>(null);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);

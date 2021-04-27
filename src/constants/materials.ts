@@ -619,5 +619,6 @@ export const materialsColumns: Column[] = [
     formatArg: 2,
     omit: true,
     right: true,
+    hidden: true,
   },
 ];
