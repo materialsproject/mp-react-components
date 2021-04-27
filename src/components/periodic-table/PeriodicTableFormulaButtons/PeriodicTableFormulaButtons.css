@@ -1,7 +1,7 @@
 .pt-formula-buttons {
   display: grid;
-  grid-template-columns: repeat(10, 25px);
-  grid-template-rows: repeat(2, 25px);
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 1fr;
   grid-gap: 2px;
 }
 

@@ -124,7 +124,7 @@
   }
 }
 
-.small.table-container .mat-element:not(.detailed)  {
+.small.table-container .mat-element:not(.detailed) {
   .mat-number,
   .mat-name {
     display: none;
@@ -134,8 +134,8 @@
   }
 }
 
-.small.table-container .mat-element.detailed  {
-  overflow: visible;
+.small.table-container .mat-element.detailed {
+  overflow: hidden;
   .mat-weight,
   .mat-side-panel {
     display: none;
@@ -144,7 +144,7 @@
     width: 100%;
     font-size: 0.8em;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden;
   }
   .mat-number {
     font-size: 1em;
@@ -156,19 +156,32 @@
   .mat-name {
     font-size: 0.8em;
     align-self: center;
+    text-overflow: ellipsis;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    position: absolute;
+    bottom: 0;
   }
 }
 
-.map.table-container {
-  .mat-element {
-  }
+.table-container {
   .mat-number,
   .detailed,
-  .mat-name,
-  .mat-symbol {
+  .mat-name {
     display: none;
   }
 }
 .mat-group .main-panel .mat-symbol {
   font-size: 2em;
+}
+
+/** Ensures a constant 1:1 aspect ratio for mat-elements */
+.mat-element:before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  padding-bottom: 100%;
 }

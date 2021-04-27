@@ -27,6 +27,7 @@
 .table-container {
   display: grid;
   width: 100%;
+  overflow: visible;
   &.spaced {
     grid-template-columns: repeat(18, 1fr);
     grid-template-rows: repeat(7, @element-height-spaced) @spacer-spaced repeat(
@@ -45,10 +46,11 @@
   }
   &.small {
     grid-template-columns: repeat(18, 1fr);
-    grid-template-rows: repeat(7, @element-height-small) @spacer-small repeat(
-        2,
-        @element-height-small
-      );
+    // grid-template-rows: repeat(7, @element-height-small) @spacer-small repeat(
+    //     2,
+    //     @element-height-small
+    //   );
+    grid-template-rows: 1fr;
     grid-gap: @grid-gap-small;
   }
   &.map {
@@ -125,11 +127,19 @@
 }
 
 .table-transition-wrapper-small {
-  max-height: (9 * @element-height-small) + @spacer-small + (9 * @grid-gap-small);
+  // max-height: (9 * @element-height-small) + @spacer-small + (9 * @grid-gap-small);
+  max-height: 500px;
 }
 
 .mat-element.simple.element-lanthanoid-transitional-metal.disabled .mat-symbol,
 .mat-element.simple.element-actinoid-transitional-metal.disabled .mat-symbol {
   font-size: 0.5rem !important;
   white-space: nowrap;
+}
+
+.mat-element[data-tooltip]:not(.is-disabled).has-tooltip-bottom::before,
+.mat-element[data-tooltip]:not(.is-loading).has-tooltip-bottom::before,
+.mat-element[data-tooltip]:not([disabled]).has-tooltip-bottom::before {
+  width: auto;
+  height: auto;
 }
