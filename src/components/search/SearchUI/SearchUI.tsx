@@ -185,7 +185,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
 }) => {
   let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
   return (
-    <div className="search-ui">
+    <div id={props.id} className="search-ui">
       <Router>
         <SearchUIContextProvider {...props}>
           <div className="columns">
