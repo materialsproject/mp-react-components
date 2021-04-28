@@ -43,7 +43,7 @@ const initColumns = (columns: Column[]) => {
           'column-header-left': !c.right && !c.center,
         })}
       >
-        <div>{c.name}</div>
+        <div>{c.hideName ? '' : c.name}</div>
         {c.units && <div className="column-units">({c.units})</div>}
       </div>
     );
@@ -93,18 +93,30 @@ const initColumns = (columns: Column[]) => {
         };
         return c;
       case ColumnFormat.BOOLEAN:
-        const hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
-        const truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
-        const falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
+        var hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
+        var truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
+        var falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return rowValue ? truthyLabel : falsyLabel;
         };
         return c;
       case ColumnFormat.BOOLEAN_CLASS:
+        var hasCustomClasses = c.formatArg && Array.isArray(c.formatArg);
+        var truthyClass = hasCustomClasses && c.formatArg[0] ? c.formatArg[0] : '';
+        var falsyClass = hasCustomClasses && c.formatArg[1] ? c.formatArg[1] : '';
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return <i className={rowValue ? c.formatArg : ''}></i>;
+          return (
+            <i
+              className={classNames({
+                [truthyClass]: rowValue,
+                [falsyClass]: !rowValue,
+                'has-tooltip-right': c.cellTooltip,
+              })}
+              data-tooltip={c.cellTooltip}
+            ></i>
+          );
         };
         return c;
       case ColumnFormat.SPACEGROUP_SYMBOL:
