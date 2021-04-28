@@ -1,10 +1,12 @@
 export const columns = [
   {
-    name: 'Experimental',
+    name: 'Synthesizable',
     selector: 'theoretical',
-    omit: true,
     format: 'BOOLEAN_CLASS',
-    formatArg: 'fa fa-asterisk',
+    formatArg: ['', 'fa fa-asterisk'],
+    cellTooltip: 'Synthesizable',
+    hideName: true,
+    width: '50px',
   },
   {
     name: 'Material ID',
