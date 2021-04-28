@@ -11,13 +11,12 @@ import './styles.less';
 import './assets/styles.css';
 import '../node_modules/bulma/css/bulma.min.css';
 import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
-import { MaterialsExplorer } from './views/MaterialsExplorer';
-import { MaterialsDetail } from './views/MaterialsDetail';
-import { MoleculesExplorer } from './views/MoleculesExplorer';
-import { XasApp } from './views/XasApp';
-import { Home } from './views/Home';
-import { CrystalStructureViewer } from './views/CrystalStructureViewer';
-import { BatteriesExplorer } from './views/BatteriesExplorer';
+import { MaterialsExplorer } from './views/MaterialsExplorer/MaterialsExplorer';
+import { MaterialsDetail } from './views/MaterialsDetail/MaterialsDetail';
+import { MoleculesExplorer } from './views/MoleculesExplorer/MoleculesExplorer';
+import { XasApp } from './views/XasApp/XasApp';
+import { CrystalStructureViewer } from './views/CrystalStructureViewer/CrystalStructureViewer';
+import { BatteryExplorer } from './views/BatteryExplorer/BatteryExplorer';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { FaTrain } from 'react-icons/fa';
@@ -58,7 +57,7 @@ ReactDOM.render(
             <MoleculesExplorer />
           </Route>
           <Route path="/batteries">
-            <BatteriesExplorer />
+            <BatteryExplorer />
           </Route>
           <Route path="/crystal">
             <CrystalStructureViewer />

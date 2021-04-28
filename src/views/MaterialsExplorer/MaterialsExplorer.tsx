@@ -1,6 +1,8 @@
 import React from 'react';
-import { SearchUI } from '../components/search/SearchUI';
-import { materialsColumns, materialsGroups } from '../constants/materials';
+import { SearchUI } from '../../components/search/SearchUI';
+import { FilterGroup } from '../../components/search/SearchUI/types';
+import { filterGroups } from './filterGroups';
+import { columns } from './columns';
 
 /**
  * Component for testing the Materials Explorer view
@@ -12,8 +14,8 @@ export const MaterialsExplorer: React.FC = () => {
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
         resultLabel="material"
-        columns={materialsColumns}
-        filterGroups={materialsGroups}
+        columns={columns}
+        filterGroups={filterGroups as FilterGroup[]}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/search/' : ''}
         autocompleteFormulaUrl={
           process.env.REACT_APP_AUTOCOMPLETE_URL

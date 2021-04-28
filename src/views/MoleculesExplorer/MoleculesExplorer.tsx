@@ -1,6 +1,8 @@
 import React from 'react';
-import { SearchUI } from '../components/search/SearchUI';
-import { moleculesColumns, moleculesGroups } from '../constants/molecules';
+import { SearchUI } from '../../components/search/SearchUI';
+import { filterGroups } from './filterGroups';
+import { columns } from './columns';
+import { FilterGroup } from '../../components/search/SearchUI/types';
 
 /**
  * Component for testing the Molecules Explorer view
@@ -12,8 +14,8 @@ export const MoleculesExplorer: React.FC = () => {
       <h1 className="title">Molecules Explorer</h1>
       <SearchUI
         resultLabel="molecule"
-        columns={moleculesColumns}
-        filterGroups={moleculesGroups}
+        columns={columns}
+        filterGroups={filterGroups as FilterGroup[]}
         baseURL={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''
         }
