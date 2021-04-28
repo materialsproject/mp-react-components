@@ -1,0 +1,1 @@
+export { MaterialsDetail } from './MaterialsDetail';

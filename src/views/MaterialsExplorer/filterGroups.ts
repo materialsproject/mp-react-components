@@ -1,0 +1,346 @@
+export const filterGroups = [
+  {
+    name: 'Composition',
+    expanded: false,
+    filters: [
+      {
+        name: 'ID',
+        id: 'task_ids',
+        type: 'MATERIALS_INPUT',
+        props: {
+          field: 'task_ids',
+          periodicTableMode: null,
+        },
+      },
+      {
+        name: 'Include Elements',
+        id: 'elements',
+        type: 'MATERIALS_INPUT',
+        props: {
+          field: 'elements',
+        },
+      },
+      {
+        name: 'Exclude Elements',
+        id: 'exclude_elements',
+        type: 'MATERIALS_INPUT',
+        props: {
+          field: 'exclude_elements',
+        },
+      },
+      {
+        name: 'Formula',
+        id: 'formula',
+        type: 'MATERIALS_INPUT',
+        props: {
+          field: 'formula',
+        },
+      },
+    ],
+  },
+  {
+    name: 'Structural Properties',
+    expanded: false,
+    filters: [
+      {
+        name: 'Volume',
+        id: 'volume',
+        units: '\u00c5\u00b3',
+        type: 'SLIDER',
+        props: {
+          domain: [5, 19407],
+          step: 1,
+        },
+      },
+      {
+        name: 'Density',
+        id: 'density',
+        units: 'cm\u00b3',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 25],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Number of Sites',
+        id: 'nsites',
+        type: 'SLIDER',
+        props: {
+          domain: [1, 360],
+          step: 1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Thermodynamics',
+    expanded: false,
+    filters: [
+      {
+        name: 'Energy Above Hull',
+        id: 'e_above_hull',
+        type: 'SLIDER',
+        units: 'meV/atom',
+        conversionFactor: 0.001,
+        props: {
+          domain: [0, 1000],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Formation Energy',
+        id: 'formation_energy_per_atom',
+        type: 'SLIDER',
+        units: 'eV/atom',
+        props: {
+          domain: [-10, 6],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Stability',
+        id: 'is_stable',
+        type: 'THREE_STATE_BOOLEAN_SELECT',
+        props: {
+          options: [
+            {
+              label: 'Is stable',
+              value: true,
+            },
+            {
+              label: 'Is not stable',
+              value: false,
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    name: 'Symmetry',
+    expanded: false,
+    filters: [
+      {
+        name: 'Spacegroup Symbol',
+        id: 'spacegroup_symbol',
+        type: 'SELECT_SPACEGROUP_SYMBOL',
+      },
+      {
+        name: 'Spacegroup Number',
+        id: 'spacegroup_number',
+        type: 'SELECT_SPACEGROUP_NUMBER',
+      },
+      {
+        name: 'Crystal System',
+        id: 'crystal_system',
+        type: 'SELECT_CRYSTAL_SYSTEM',
+      },
+    ],
+  },
+  {
+    name: 'Magnetism',
+    expanded: false,
+    filters: [
+      {
+        name: 'Magnetic Ordering',
+        id: 'ordering',
+        type: 'SELECT',
+        props: {
+          options: [
+            {
+              label: 'Ferromagnetic',
+              value: 'FM',
+            },
+            {
+              label: 'Non-magnetic',
+              value: 'NM',
+            },
+            {
+              label: 'Ferrimagnetic',
+              value: 'FiM',
+            },
+            {
+              label: 'Antiferromagnetic',
+              value: 'AFM',
+            },
+            {
+              label: 'Unknown',
+              value: 'Unknown',
+            },
+          ],
+        },
+      },
+      {
+        name: 'Max Magnetic Moment',
+        id: 'total_magnetization',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 325],
+          step: 1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Elasticity',
+    expanded: false,
+    filters: [
+      {
+        name: 'Bulk Modulus, Voigt',
+        id: 'k_voigt',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Bulk Modulus, Reuss',
+        id: 'k_reuss',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Bulk Modulus, Voigt-Reuss-Hill',
+        id: 'k_vrh',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Voigt',
+        id: 'g_voigt',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Reuss',
+        id: 'g_reuss',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shear Modulus, Voigt-Reuss-Hill',
+        id: 'g_vrh',
+        units: 'GPa',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 1000],
+          step: 1,
+        },
+      },
+      {
+        name: 'Elastic Anisotropy',
+        id: 'elastic_anisotropy',
+        type: 'SLIDER',
+        props: {
+          domain: [-2000, 25],
+          step: 1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Surfaces',
+    expanded: false,
+    filters: [
+      {
+        name: 'Weighted Surface Energy',
+        id: 'weighted_surface_energy',
+        units: 'J/m\u00b2',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 5],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Surface Anisotropy',
+        id: 'surface_anisotropy',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 25],
+          step: 1,
+        },
+      },
+      {
+        name: 'Shape Factor',
+        id: 'shape_factor',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Piezoelectric',
+    expanded: false,
+    filters: [
+      {
+        name: 'Piezo Modulus',
+        id: 'piezo_modulus',
+        units: 'Cm\u00b2',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+    ],
+  },
+  {
+    name: 'Dielectric',
+    expanded: false,
+    filters: [
+      {
+        name: 'Total Dielectric Constant',
+        id: 'e_total',
+        units: '',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Ionic Dielectric Constant',
+        id: 'e_ionic',
+        units: '',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+      {
+        name: 'Static Dielectric Constant',
+        id: 'e_static',
+        units: '',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 100],
+          step: 0.1,
+        },
+      },
+    ],
+  },
+];

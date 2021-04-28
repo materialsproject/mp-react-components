@@ -1,20 +1,22 @@
 import React from 'react';
-import { SearchUI } from '../components/search/SearchUI';
-import { batteriesColumns, batteriesGroups } from '../constants/batteries';
+import { SearchUI } from '../../components/search/SearchUI';
+import { filterGroups } from './filterGroups';
+import { columns } from './columns';
+import { FilterGroup } from '../../components/search/SearchUI/types';
 
 /**
  * Component for testing the Batteries Explorer view
  */
 
-export const BatteriesExplorer: React.FC = () => {
+export const BatteryExplorer: React.FC = () => {
   console.log(process.env.REACT_APP_API_KEY);
   return (
     <>
       <h1 className="title">Batteries Explorer</h1>
       <SearchUI
         resultLabel="battery"
-        columns={batteriesColumns}
-        filterGroups={batteriesGroups}
+        columns={columns}
+        filterGroups={filterGroups as FilterGroup[]}
         baseURL={
           process.env.REACT_APP_BASE_URL
             ? process.env.REACT_APP_BASE_URL + '/insertion_electrodes/'

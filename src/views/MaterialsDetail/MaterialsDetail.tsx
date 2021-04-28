@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { scene, scene2 } from '../components/crystal-toolkit/scene/mike';
-import { s2, s3, s4 } from '../components/crystal-toolkit/scene/simple-scene';
-import { CameraContextProvider } from '../components/crystal-toolkit/CameraContextProvider';
-import { AnimationStyle, Renderer } from '../components/crystal-toolkit/scene/constants';
-import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
-import { Scrollspy } from '../components/navigation/Scrollspy';
-import { Select } from '../components/search/Select';
+import { scene, scene2 } from '../../components/crystal-toolkit/scene/mike';
+import { s2, s3, s4 } from '../../components/crystal-toolkit/scene/simple-scene';
+import { CameraContextProvider } from '../../components/crystal-toolkit/CameraContextProvider';
+import { AnimationStyle, Renderer } from '../../components/crystal-toolkit/scene/constants';
+import { CrystalToolkitScene } from '../../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
+import { Scrollspy } from '../../components/navigation/Scrollspy';
+import { Select } from '../../components/search/Select';
 
 /**
  * Component for testing parts of the Materials Detail view

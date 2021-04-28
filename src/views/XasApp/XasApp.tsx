@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { SearchUI } from '../components/search/SearchUI';
-import { xasColumns, xasGroups } from '../constants/xas';
+import { SearchUI } from '../../components/search/SearchUI';
+import { filterGroups } from './filterGroups';
+import { columns } from './columns';
+import { FilterGroup } from '../../components/search/SearchUI/types';
 
 /**
  * Component for testing the XAS App view
@@ -19,8 +21,8 @@ export const XasApp: React.FC = () => {
       </div>
       <SearchUI
         resultLabel="spectrum"
-        columns={xasColumns}
-        filterGroups={xasGroups}
+        columns={columns}
+        filterGroups={filterGroups as FilterGroup[]}
         baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={false}
