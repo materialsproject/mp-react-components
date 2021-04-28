@@ -344,7 +344,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   } else if (props.field === 'formula') {
     periodicTablePlugin = (
       <PeriodicTablePluginWrapper>
-        <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />;
+        <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />
       </PeriodicTablePluginWrapper>
     );
   }
