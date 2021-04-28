@@ -134,3 +134,13 @@
 .search-ui .react-data-table-message p:not(:first-child) {
   margin-top: 1rem;
 }
+
+.search-ui .has-tooltip-underline {
+  border-bottom: 1px dotted;
+  padding-bottom: 0.25rem;
+}
+
+.search-ui .filter-group-caret,
+.search-ui .filter-cancel-button {
+  vertical-align: text-bottom;
+}

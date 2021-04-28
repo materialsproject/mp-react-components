@@ -144,9 +144,41 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     if (group.alwaysExpanded) {
       return null;
     } else if (group.expanded) {
-      return <FaCaretDown className="is-vertical-align-middle" />;
+      return <FaCaretDown className="filter-group-caret" />;
     } else {
-      return <FaCaretRight className="is-vertical-align-middle" />;
+      return <FaCaretRight className="filter-group-caret" />;
+    }
+  };
+
+  const renderUnitsComponent = (units?: string) => {
+    if (units) {
+      return <span className="has-text-weight-normal is-size-7"> ({units})</span>;
+    } else {
+      return null;
+    }
+  };
+
+  const renderFilterLabel = (filter: Filter) => {
+    const cancelButton = filter.active ? (
+      <FaRegTimesCircle className="ml-2 filter-cancel-button" />
+    ) : null;
+    const innerLabel = (
+      <span
+        className={classNames('has-text-weight-bold', 'mb-2', {
+          'has-tooltip-right has-tooltip-multiline has-tooltip-underline': filter.tooltip,
+        })}
+        data-tooltip={filter.tooltip}
+      >
+        {filter.name}
+        {renderUnitsComponent(filter.units)}
+        {cancelButton}
+      </span>
+    );
+
+    if (filter.active) {
+      return <a onClick={() => resetFilter(filter.id)}>{innerLabel}</a>;
+    } else {
+      return innerLabel;
     }
   };
 
@@ -169,14 +201,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
       }
     }
     setGroupsByName(newGroupsByName);
-  };
-
-  const getUnitsComponent = (units?: string) => {
-    if (units) {
-      return <span className="has-text-weight-normal is-size-7"> ({units})</span>;
-    } else {
-      return null;
-    }
   };
 
   useEffect(() => {
@@ -264,21 +288,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
                         <div>
-                          <p className="has-text-weight-bold mb-2">
-                            {!f.active && (
-                              <span>
-                                {f.name}
-                                {getUnitsComponent(f.units)}
-                              </span>
-                            )}
-                            {f.active && (
-                              <a onClick={() => resetFilter(f.id)}>
-                                {f.name}
-                                {getUnitsComponent(f.units)}
-                                <FaRegTimesCircle className="ml-2 is-vertical-align-middle" />
-                              </a>
-                            )}
-                          </p>
+                          <p className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</p>
                           {renderFilter(f, g.name)}
                         </div>
                       </div>
