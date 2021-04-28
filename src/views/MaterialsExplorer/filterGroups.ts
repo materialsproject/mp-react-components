@@ -15,6 +15,8 @@ export const filterGroups = [
       {
         name: 'Include Elements',
         id: 'elements',
+        tooltip:
+          'Find materials that contain certain elements in their formula. Select the checkbox to find materials that contain only the selected elements.',
         type: 'MATERIALS_INPUT',
         props: {
           field: 'elements',
@@ -46,6 +48,7 @@ export const filterGroups = [
         name: 'Volume',
         id: 'volume',
         units: '\u00c5\u00b3',
+        tooltip: 'Sunt ad ipsum ea non do deserunt Lorem eiusmod laborum eiusmod deserunt.',
         type: 'SLIDER',
         props: {
           domain: [5, 19407],
@@ -145,6 +148,7 @@ export const filterGroups = [
       {
         name: 'Magnetic Ordering',
         id: 'ordering',
+        tooltip: 'Nisi id culpa nulla in nulla qui duis esse est.',
         type: 'SELECT',
         props: {
           options: [
