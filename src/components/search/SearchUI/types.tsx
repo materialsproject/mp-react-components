@@ -31,6 +31,7 @@ export interface Filter {
   conversionFactor?: number;
   units?: string;
   props?: any;
+  tooltip?: string;
 }
 
 export interface FilterGroup {
