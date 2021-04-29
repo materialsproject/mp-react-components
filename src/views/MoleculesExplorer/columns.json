@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Molecule Id",
+    "selector": "task_id",
+    "format": "LINK",
+    "formatArg": "/molecules/"
+  },
+  {
+    "name": "Formula",
+    "selector": "formula_pretty",
+    "format": "FORMULA"
+  },
+  {
+    "name": "SMILES",
+    "selector": "smiles"
+  },
+  {
+    "name": "Point Group",
+    "selector": "pointgroup",
+    "format": "POINTGROUP"
+  },
+  {
+    "name": "Electron Affinity",
+    "selector": "EA",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 2,
+    "units": "eV",
+    "right": true
+  },
+  {
+    "name": "Ionization Energy",
+    "selector": "IE",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 2,
+    "units": "eV",
+    "right": true
+  },
+  {
+    "name": "Charge",
+    "selector": "charge",
+    "units": "+e",
+    "right": true
+  }
+]

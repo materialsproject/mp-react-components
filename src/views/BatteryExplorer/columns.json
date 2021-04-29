@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Battery Id",
+    "selector": "battery_id",
+    "format": "LINK",
+    "formatArg": "/batteries/",
+    "minWidth": "150px"
+  },
+  {
+    "name": "Working Ion",
+    "selector": "working_ion"
+  },
+  {
+    "name": "Formula Charge",
+    "selector": "formula_charge"
+  },
+  {
+    "name": "Formula Discharge",
+    "selector": "formula_discharge"
+  },
+  {
+    "name": "Max Delta Volume",
+    "selector": "max_delta_volume",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "right": true
+  },
+  {
+    "name": "Average Voltage",
+    "selector": "average_voltage",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "units": "V",
+    "right": true
+  },
+  {
+    "name": "Gravimetric Capacity",
+    "selector": "capacity_grav",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "units": "mAh/g",
+    "right": true
+  },
+  {
+    "name": "Volumetric Capacity",
+    "selector": "capacity_vol",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "units": "mAh/cc",
+    "right": true
+  },
+  {
+    "name": "Gravimetric Energy",
+    "selector": "energy_grav",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "units": "Wh/kg",
+    "right": true
+  },
+  {
+    "name": "Volumetric Energy",
+    "selector": "energy_vol",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "units": "Wh/l",
+    "right": true
+  },
+  {
+    "name": "Atomic Fraction Charge",
+    "selector": "fracA_charge",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "right": true,
+    "omit": true
+  },
+  {
+    "name": "Atomic Fraction Discharge",
+    "selector": "fracA_discharge",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "right": true,
+    "omit": true
+  },
+  {
+    "name": "Stability Charge",
+    "selector": "stability_charge",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 2,
+    "units": "meV/atom",
+    "conversionFactor": 1000,
+    "abbreviateNearZero": true,
+    "right": true
+  },
+  {
+    "name": "Stability Discharge",
+    "selector": "stability_discharge",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 2,
+    "units": "meV/atom",
+    "conversionFactor": 1000,
+    "abbreviateNearZero": true,
+    "right": true
+  },
+  {
+    "name": "Steps",
+    "selector": "num_steps",
+    "right": true,
+    "omit": true
+  },
+  {
+    "name": "Max Voltage Step",
+    "selector": "max_voltage_step",
+    "format": "FIXED_DECIMAL",
+    "formatArg": 3,
+    "right": true,
+    "omit": true
+  }
+]

@@ -1,8 +1,8 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
 import { FilterGroup } from '../../components/search/SearchUI/types';
-import { filterGroups } from './filterGroups';
-import { columns } from './columns';
+import filterGroups from './filterGroups.json';
+import columns from './columns.json';
 
 /**
  * Component for testing the Materials Explorer view

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
-import { filterGroups } from './filterGroups';
-import { columns } from './columns';
+import filterGroups from './filterGroups.json';
+import columns from './columns.json';
 import { FilterGroup } from '../../components/search/SearchUI/types';
 
 /**
