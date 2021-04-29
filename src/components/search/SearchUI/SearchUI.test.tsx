@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { SearchUI, SearchUIProps } from '.';
-import { materialsColumns, materialsGroups } from '../../../constants/materials';
+import { FilterGroup } from './types';
+import { filterGroups } from '../../../views/MaterialsExplorer/filterGroups';
+import { columns } from '../../../views/MaterialsExplorer/columns';
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
 import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolume';
 
@@ -23,8 +25,8 @@ jest.mock('../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitc
 
 const defaultProps = {
   resultLabel: 'material',
-  columns: materialsColumns,
-  filterGroups: materialsGroups,
+  columns: columns,
+  filterGroups: filterGroups as FilterGroup[],
   baseURL: process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + 'search/' : '',
   autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL
     ? process.env.REACT_APP_AUTOCOMPLETE_URL
