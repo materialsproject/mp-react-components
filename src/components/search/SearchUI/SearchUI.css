@@ -144,3 +144,7 @@
 .search-ui .filter-cancel-button {
   vertical-align: text-bottom;
 }
+
+.search-ui .boolean-cell-wrapper {
+  line-height: 1;
+}

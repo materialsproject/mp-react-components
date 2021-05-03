@@ -108,14 +108,19 @@ const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return (
-            <i
-              className={classNames({
-                [truthyClass]: rowValue,
-                [falsyClass]: !rowValue,
+            <span
+              className={classNames('boolean-cell-wrapper', {
                 'has-tooltip-right': c.cellTooltip,
               })}
               data-tooltip={c.cellTooltip}
-            ></i>
+            >
+              <i
+                className={classNames({
+                  [truthyClass]: rowValue,
+                  [falsyClass]: !rowValue,
+                })}
+              ></i>
+            </span>
           );
         };
         return c;
