@@ -17,7 +17,7 @@ afterEach(() => cleanup());
 
 const defaultProps = {
   value: '',
-  field: 'elements' as MaterialsInputType,
+  inputType: 'elements' as MaterialsInputType,
   periodicTableMode: 'toggle' as 'toggle' | 'onFocus' | undefined,
   onChange: (value: string) => null,
 };
@@ -51,7 +51,7 @@ describe('<MaterialsInput/>', () => {
   it('should switch to formula mode', () => {
     renderElement({
       ...defaultProps,
-      onFieldChange: (field) => field,
+      onInputTypeChange: (field) => field,
     });
     fireEvent.change(screen.getByTestId('materials-input-search-input'), {
       target: { value: 'GaN' },
@@ -117,7 +117,7 @@ describe('<MaterialsInput/>', () => {
   it('should show autocomplete results', async () => {
     renderElement({
       ...defaultProps,
-      field: 'formula' as MaterialsInputType,
+      inputType: 'formula' as MaterialsInputType,
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
       autocompleteApiKey: process.env.REACT_APP_API_KEY,
     });
