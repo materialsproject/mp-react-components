@@ -1,4 +1,4 @@
-import { MaterialsInputField } from '../MaterialsInput';
+import { MaterialsInputType } from '../MaterialsInput';
 import { SearchUIProps } from './SearchUI';
 
 export enum FilterId {
@@ -24,7 +24,7 @@ export enum FilterType {
 }
 
 export interface Filter {
-  name?: string;
+  name: string;
   id: string;
   type: FilterType;
   active?: boolean;
@@ -86,7 +86,7 @@ export interface SearchState extends SearchUIProps {
   loading: boolean;
   sortField?: string;
   sortAscending?: boolean;
-  topLevelSearchField: MaterialsInputField;
+  topLevelSearchField: MaterialsInputType;
   error: boolean;
   selectedRows?: any[];
 }

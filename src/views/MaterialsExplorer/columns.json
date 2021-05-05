@@ -3,14 +3,16 @@
     "name": "Synthesizable",
     "selector": "theoretical",
     "format": "BOOLEAN_CLASS",
-    "formatArg": ["", "fa fa-asterisk"],
+    "formatArg": ["", "fas fa-star"],
     "cellTooltip": "Synthesizable",
     "hideName": true,
-    "width": "50px"
+    "width": "30px",
+    "center": true,
+    "style": { "borderRight": "1px solid #DBDBDB" }
   },
   {
     "name": "Material ID",
-    "selector": "task_id",
+    "selector": "material_id",
     "format": "LINK",
     "formatArg": "/materials/",
     "minWidth": "130px"
@@ -60,7 +62,7 @@
   },
   {
     "name": "Energy Above Hull",
-    "selector": "e_above_hull",
+    "selector": "energy_above_hull",
     "format": "FIXED_DECIMAL",
     "formatArg": 2,
     "units": "meV/atom",

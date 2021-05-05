@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { linkOnClick } from '../../../utils/utils';
-import { MaterialsInput, MaterialsInputField } from '../MaterialsInput';
+import { MaterialsInput, MaterialsInputType } from '../MaterialsInput';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
  * for performing top level searches by mp-id, formula, or elements.
- * The input value is parsed into its appropriate search field upon submission.
+ * The input value is parsed into its appropriate search inputType upon submission.
  */
 
 interface Props {
@@ -19,11 +19,11 @@ interface Props {
 
 export const GlobalSearchBar: React.FC<Props> = (props) => {
   const [searchValue, setSearchValue] = useState('');
-  const [searchField, setSearchField] = useState(MaterialsInputField.ELEMENTS);
+  const [searchInputType, setSearchInputType] = useState(MaterialsInputType.ELEMENTS);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     let query = new URLSearchParams();
-    query.set(searchField, searchValue);
+    query.set(searchInputType, searchValue);
     const href = props.redirectRoute + '?' + query.toString();
     linkOnClick(e, href);
   };
@@ -31,9 +31,9 @@ export const GlobalSearchBar: React.FC<Props> = (props) => {
   return (
     <MaterialsInput
       value={searchValue}
-      field={searchField}
+      inputType={searchInputType}
       onChange={(v) => setSearchValue(v)}
-      onFieldChange={(field) => setSearchField(field)}
+      onInputTypeChange={(inputType) => setSearchInputType(inputType)}
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
       hidePeriodicTable={props.hidePeriodicTable}

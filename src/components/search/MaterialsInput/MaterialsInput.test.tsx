@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
-import { MaterialsInput, MaterialsInputField, MaterialsInputProps } from '.';
+import { MaterialsInput, MaterialsInputType, MaterialsInputProps } from '.';
 import { autocompleteQuery } from '../../../mocks/constants/autocomplete';
 
 jest.mock('./MaterialsInput.css', () => {});
@@ -17,7 +17,7 @@ afterEach(() => cleanup());
 
 const defaultProps = {
   value: '',
-  field: 'elements' as MaterialsInputField,
+  field: 'elements' as MaterialsInputType,
   periodicTableMode: 'toggle' as 'toggle' | 'onFocus' | undefined,
   onChange: (value: string) => null,
 };
@@ -117,7 +117,7 @@ describe('<MaterialsInput/>', () => {
   it('should show autocomplete results', async () => {
     renderElement({
       ...defaultProps,
-      field: 'formula' as MaterialsInputField,
+      field: 'formula' as MaterialsInputType,
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
       autocompleteApiKey: process.env.REACT_APP_API_KEY,
     });

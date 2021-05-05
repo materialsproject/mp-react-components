@@ -29,7 +29,7 @@ export const BatteryExplorer: React.FC = () => {
         }
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={true}
-        sortField="e_above_hull"
+        sortField="energy_above_hull"
         sortAscending={true}
       />
     </>

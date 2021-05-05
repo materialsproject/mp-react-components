@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MaterialsInput } from '../../MaterialsInput';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
-import { MaterialsInputField } from '../../MaterialsInput';
+import { MaterialsInputType } from '../../MaterialsInput';
+import { Filter } from '../types';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -14,7 +15,9 @@ export const SearchUISearchBar: React.FC = () => {
   const state = useSearchUIContext();
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchField, setSearchField] = useState<MaterialsInputField>(state.topLevelSearchField);
+  const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(
+    state.topLevelSearchField
+  );
   const allowSmiles = state.resultLabel === 'molecule';
 
   const shouldHidePeriodicTable = () => {
@@ -27,14 +30,33 @@ export const SearchUISearchBar: React.FC = () => {
 
   const getFieldsToOverride = (selectedField: string) => {
     let fields: string[] = [];
-    Object.values(MaterialsInputField).forEach((field) => {
-      if (field !== selectedField) fields.push(field);
+    state.filterGroups.forEach((g) => {
+      g.filters.forEach((f) => {
+        if (f.type === 'MATERIALS_INPUT' || f.id === 'smiles') {
+          fields.push(f.id);
+        }
+      });
     });
+    // Object.values(MaterialsInputType).forEach((field) => {
+    //   if (field !== selectedField) fields.push(field);
+    // });
     return fields;
   };
 
   const handleSubmit = (e) => {
-    actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchField));
+    let searchField = searchInputType as string;
+    if (searchInputType === MaterialsInputType.MP_ID) {
+      let mpIdFilter: Filter | undefined;
+      state.filterGroups.forEach((g) => {
+        if (!mpIdFilter) {
+          mpIdFilter = g.filters.find((f) => {
+            return f.type === 'MATERIALS_INPUT' && f.props.inputType === 'mp_id';
+          });
+        }
+      });
+      searchField = mpIdFilter ? mpIdFilter.id : 'task_ids';
+    }
+    actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchInputType));
   };
 
   /**
@@ -42,7 +64,7 @@ export const SearchUISearchBar: React.FC = () => {
    * This ensures the search value is not contradicted by the filter value.
    */
   useEffect(() => {
-    if (state.filterValues[searchField] !== searchValue) {
+    if (state.filterValues[searchInputType] !== searchValue) {
       setSearchValue('');
     }
   }, [state.filterValues]);
@@ -50,9 +72,9 @@ export const SearchUISearchBar: React.FC = () => {
   return (
     <MaterialsInput
       value={searchValue}
-      field={searchField}
+      inputType={searchInputType}
       onChange={(v) => setSearchValue(v)}
-      onFieldChange={(field) => setSearchField(field)}
+      onInputTypeChange={(field) => setSearchInputType(field)}
       onSubmit={handleSubmit}
       periodicTableMode="toggle"
       hidePeriodicTable={shouldHidePeriodicTable()}

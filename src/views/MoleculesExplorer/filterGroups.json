@@ -8,7 +8,7 @@
         "id": "task_ids",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "task_ids",
+          "inputType": "mp_id",
           "periodicTableMode": null
         }
       },
@@ -17,7 +17,7 @@
         "id": "elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "elements"
+          "inputType": "elements"
         }
       },
       {
@@ -34,7 +34,7 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "formula"
+          "inputType": "formula"
         }
       },
       {

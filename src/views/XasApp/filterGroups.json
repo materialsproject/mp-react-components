@@ -35,7 +35,7 @@
         "id": "absorbing_element",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "absorbing_element"
+          "inputType": "absorbing_element"
         }
       },
       {
@@ -43,7 +43,7 @@
         "id": "elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "elements"
+          "inputType": "elements"
         }
       },
       {
@@ -51,7 +51,7 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "formula"
+          "inputType": "formula"
         }
       }
     ]

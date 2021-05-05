@@ -1,1 +1,1 @@
-export { MaterialsInput, MaterialsInputField, MaterialsInputProps } from './MaterialsInput';
+export { MaterialsInput, MaterialsInputType, MaterialsInputProps } from './MaterialsInput';

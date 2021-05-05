@@ -12,10 +12,11 @@ import {
 import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchState } from './types';
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
-import { MaterialsInputField } from '../MaterialsInput';
+import { MaterialsInputType } from '../MaterialsInput';
 import { validateElements } from '../MaterialsInput/utils';
 import { useMediaQuery } from 'react-responsive';
 import { SearchUIProps } from '.';
+import { MaterialsInputBox } from '../MaterialsInput/MaterialsInputBox';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -264,47 +265,27 @@ export const getSearchState = (
           break;
         case FilterType.MATERIALS_INPUT:
           if (filterValues[f.id] !== '') {
-            let parsedValue: any;
-            let filterDisplayName: string;
+            let parsedValue = filterValues[f.id];
+            let filterDisplayName = f.name.toLowerCase();
 
-            switch (f.props.field) {
-              case MaterialsInputField.MP_ID:
-                parsedValue = filterValues[f.id];
-                filterDisplayName = currentState.resultLabel + ' ID';
-                break;
-              case MaterialsInputField.ELEMENTS:
-                if (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1) {
-                  /** Remove trailing '-' from chemical system string */
-                  parsedValue = filterValues[f.id].replace(/\-$/, '');
-                  filterDisplayName = 'includes only elements';
-                } else {
-                  /** Parse elements back into array so that they're in a normalized format for the query */
-                  parsedValue = validateElements(filterValues[f.id]);
-                  filterDisplayName = 'includes elements';
-                }
-                break;
-              case MaterialsInputField.EXCLUDE_ELEMENTS:
-                /** Parse elements back into array so that they're in a normalized format for the query */
-                parsedValue = validateElements(filterValues[f.id]);
-                filterDisplayName = 'excludes elements';
-                break;
-              case MaterialsInputField.ABSORBING_ELEMENT:
-                /** Parse elements back into array so that they're in a normalized format for the query */
-                parsedValue = validateElements(filterValues[f.id]);
-                filterDisplayName = 'absorbing element';
-                break;
-              case MaterialsInputField.FORMULA:
-                if (filterValues[f.id].indexOf('-') > -1) {
-                  parsedValue = filterValues[f.id].replace(/\-$/, '');
-                  filterDisplayName = 'includes only elements';
-                } else {
-                  parsedValue = filterValues[f.id];
-                  filterDisplayName = f.props.field;
-                }
-                break;
-              default:
-                parsedValue = filterValues[f.id];
-                filterDisplayName = f.props.field;
+            if (
+              (f.props.inputType === MaterialsInputType.ELEMENTS &&
+                f.id === 'elements' &&
+                (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
+              (f.props.inputType === MaterialsInputType.FORMULA &&
+                filterValues[f.id].indexOf('-') > -1)
+            ) {
+              /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
+              filterDisplayName = 'include only elements';
+              /** Remove trailing '-' from chemical system string */
+              parsedValue = filterValues[f.id].replace(/\-$/, '');
+            } else if (
+              f.props.inputType === MaterialsInputType.ELEMENTS ||
+              f.props.inputType === MaterialsInputType.EXCLUDE_ELEMENTS ||
+              f.props.inputType === MaterialsInputType.ABSORBING_ELEMENT
+            ) {
+              /** Parse elements back into array so that they're in a normalized format for the query */
+              parsedValue = validateElements(filterValues[f.id]);
             }
 
             activeFilters.push({
@@ -314,16 +295,11 @@ export const getSearchState = (
               defaultValue: '',
               searchParams: [
                 {
-                  field: f.props.field,
+                  field: f.id,
                   value: parsedValue,
                 },
               ],
             });
-
-            /** Expand the Material filter group by default if one of the main filters are active (desktop only) */
-            // if (isDesktop && (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids')) {
-            //   g.expanded = true;
-            // }
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
@@ -366,11 +342,6 @@ export const getSearchState = (
                 },
               ],
             });
-
-            /** Expand the Material filter group by default if one of the main filters are active (desktop only) */
-            if (f.id === 'elements' || f.id === 'formula' || f.id === 'task_ids') {
-              g.expanded = true;
-            }
           }
       }
     });
@@ -397,7 +368,10 @@ export const initSearchState = (
 
   if (
     isDesktop &&
-    (initializedValues['elements'] || initializedValues['formula'] || initializedValues['task_ids'])
+    (initializedValues['elements'] ||
+      initializedValues['formula'] ||
+      initializedValues['task_ids'] ||
+      initializedValues['material_ids'])
   ) {
     initializedGroups[0].expanded = true;
   }

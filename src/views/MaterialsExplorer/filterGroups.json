@@ -4,11 +4,11 @@
     "expanded": false,
     "filters": [
       {
-        "name": "ID",
-        "id": "task_ids",
+        "name": "Material ID",
+        "id": "material_ids",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "task_ids",
+          "inputType": "mp_id",
           "periodicTableMode": null
         }
       },
@@ -18,7 +18,8 @@
         "tooltip": "Find materials that contain certain elements in their formula. Select the checkbox to find materials that contain only the selected elements.",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "elements"
+          "inputType": "elements",
+          "displayName": "include elements"
         }
       },
       {
@@ -26,7 +27,7 @@
         "id": "exclude_elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "exclude_elements"
+          "inputType": "exclude_elements"
         }
       },
       {
@@ -34,7 +35,7 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "formula"
+          "inputType": "formula"
         }
       }
     ]

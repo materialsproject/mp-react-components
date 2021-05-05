@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useElements } from '../../../periodic-table/periodic-table-state/table-store';
-import { TABLE_DICO_V2 } from '../../../periodic-table/periodic-table-data/table-v2';
 import {
   getDelimiter,
-  elementsArrayToElementState,
   formulaStringToArrays,
   getTruthyKeys,
   arrayToDelimitedString,
-  parseFormula,
 } from '../../utils';
-import { validateInputType, validateElements, materialsInputFields } from '../utils';
-import { Dropdown, Form, Button } from 'react-bulma-components';
-import { MaterialsInputField, MaterialsInputSharedProps } from '../MaterialsInput';
-import { MatgenUtilities } from '../../../../utils/matgen';
-import { useDebounce } from '../../../../utils/hooks';
-import { errors } from 'msw/lib/types/context';
+import { validateInputType, materialsInputTypes } from '../utils';
+import { Dropdown, Form } from 'react-bulma-components';
+import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 const { Input, Field, Control } = Form;
 
 /**
@@ -48,9 +42,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
-    { label: 'By elements', value: MaterialsInputField.ELEMENTS },
-    { label: 'By formula', value: MaterialsInputField.FORMULA },
-    { label: 'By mp-id', value: MaterialsInputField.MP_ID },
+    { label: 'By elements', value: MaterialsInputType.ELEMENTS },
+    { label: 'By formula', value: MaterialsInputType.FORMULA },
+    { label: 'By mp-id', value: MaterialsInputType.MP_ID },
   ];
 
   /**
@@ -75,7 +69,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
    * The effect is skipped if the value change came from a direct interaction
    * with the periodic table. This prevents unexpected field changes.
    *
-   * If onFieldChange prop is included, dynamically determine if the input
+   * If onInputTypeChange prop is included, dynamically determine if the input
    * is an mp-id, list of elements, or formula.
    *
    * Detects elements to add/remove from the periodic table and collects them in ptActionsToDispatch.
@@ -84,29 +78,29 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      const staticInputField = !props.onFieldChange ? props.field : undefined;
-      let [newMaterialsInputField, parsedValue] = validateInputType(inputValue, staticInputField);
+      const staticInputField = !props.onInputTypeChange ? props.inputType : undefined;
+      let [newMaterialsInputType, parsedValue] = validateInputType(inputValue, staticInputField);
       let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
 
       if (isValid) {
         props.setError(null);
-        switch (newMaterialsInputField) {
-          case MaterialsInputField.MP_ID:
+        switch (newMaterialsInputType) {
+          case MaterialsInputType.MP_ID:
             newPtActionsToDispatch.push({
               action: ptActions.clear,
             });
             break;
-          case MaterialsInputField.SMILES:
+          case MaterialsInputType.SMILES:
             newPtActionsToDispatch.push({
               action: ptActions.clear,
             });
             break;
-          case MaterialsInputField.EXCLUDE_ELEMENTS:
-          case MaterialsInputField.ELEMENTS:
-          case MaterialsInputField.ABSORBING_ELEMENT:
-          case MaterialsInputField.FORMULA:
+          case MaterialsInputType.EXCLUDE_ELEMENTS:
+          case MaterialsInputType.ELEMENTS:
+          case MaterialsInputType.ABSORBING_ELEMENT:
+          case MaterialsInputType.FORMULA:
             /** Parse the input for a delimiter */
             const parsedDelimiter = getDelimiter(inputValue);
             /** If no delimiter present, don't change the delimiter value */
@@ -132,15 +126,15 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             });
             break;
           default:
-            newMaterialsInputField = MaterialsInputField.ELEMENTS;
+            newMaterialsInputType = MaterialsInputType.ELEMENTS;
         }
 
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
         props.setValue(inputValue);
-        if (props.onFieldChange) props.onFieldChange(newMaterialsInputField);
+        if (props.onInputTypeChange) props.onInputTypeChange(newMaterialsInputType);
       } else if (staticInputField) {
-        props.setError(materialsInputFields[staticInputField].error);
+        props.setError(materialsInputTypes[staticInputField].error);
       } else {
         props.setError(
           'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330).'
@@ -172,11 +166,11 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (lastAction && lastAction.hasOwnProperty('type')) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newValue = '';
-      switch (props.field) {
-        case MaterialsInputField.ELEMENTS:
+      switch (props.inputType) {
+        case MaterialsInputType.ELEMENTS:
           newValue = arrayToDelimitedString(enabledElementsList, delimiter);
           break;
-        case MaterialsInputField.FORMULA:
+        case MaterialsInputType.FORMULA:
           if (lastAction.type === 'select') {
             newValue = props.value + enabledElementsList[enabledElementsList.length - 1];
           } else {
@@ -193,7 +187,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           break;
         default:
           newValue = arrayToDelimitedString(enabledElementsList, delimiter);
-          if (props.onFieldChange) props.onFieldChange(MaterialsInputField.ELEMENTS);
+          if (props.onInputTypeChange) props.onInputTypeChange(MaterialsInputType.ELEMENTS);
       }
       valueChangedByPT.current = true;
       props.setError(null);
@@ -234,12 +228,12 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
 
   return (
     <>
-      {props.showFieldDropdown && (
+      {props.showInputTypeDropdown && (
         <Control>
           <Dropdown
-            value={props.field}
-            onChange={(item: MaterialsInputField) => {
-              if (props.onFieldChange) props.onFieldChange(item);
+            value={props.inputType}
+            onChange={(item: MaterialsInputType) => {
+              if (props.onInputTypeChange) props.onInputTypeChange(item);
             }}
             color="primary"
           >

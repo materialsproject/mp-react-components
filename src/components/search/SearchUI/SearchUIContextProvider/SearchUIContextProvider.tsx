@@ -7,7 +7,7 @@ import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
-import { MaterialsInputField } from '../../MaterialsInput';
+import { MaterialsInputType } from '../../MaterialsInput';
 import { getDefaultFiltersAndValues, getSearchState, initSearchState } from '../utils';
 import { getPageCount } from '../../utils';
 
@@ -32,7 +32,7 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  topLevelSearchField: 'elements' as MaterialsInputField,
+  topLevelSearchField: 'elements' as MaterialsInputType,
   error: false,
 };
 

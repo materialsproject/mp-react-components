@@ -29,7 +29,7 @@
         "id": "elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "elements"
+          "inputType": "elements"
         }
       },
       {
@@ -37,7 +37,7 @@
         "id": "exclude_elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "exclude_elements"
+          "inputType": "exclude_elements"
         }
       },
       {
@@ -45,7 +45,7 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "field": "formula"
+          "inputType": "formula"
         }
       }
     ]

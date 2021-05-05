@@ -1,4 +1,4 @@
-import { MaterialsInputField } from '../MaterialsInput';
+import { MaterialsInputType } from '../MaterialsInput';
 
 const VALID_ELEMENTS = 'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar Kr K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Ar Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La-Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac-Lr Rf Db Sg Bh Hs Mt Ds Rg Cn La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr'.split(
   ' '
@@ -241,7 +241,7 @@ export const validateSmiles = (value: string): string | null => {
  * @param {string} value String value to be validated
  * @returns Validated id string or null
  */
-export const validateMaterialID = (value: string): string | null => {
+export const validateMPID = (value: string): string | null => {
   if (
     value.match(/mp\-\d/) !== null ||
     value.match(/mvc\-\d/) !== null ||
@@ -253,14 +253,14 @@ export const validateMaterialID = (value: string): string | null => {
   }
 };
 
-type MaterialsInputFieldsObject = Partial<Record<MaterialsInputField, any>>;
+type MaterialsInputTypesObject = Partial<Record<MaterialsInputType, any>>;
 /**
- * Object to map MaterialsInputField values to validation functions and error messages
- * Object keys must be one of the values defined in the MaterialsInputField enum
+ * Object to map MaterialsInputType values to validation functions and error messages
+ * Object keys must be one of the values defined in the MaterialsInputType enum
  */
-export const materialsInputFields: MaterialsInputFieldsObject = {
-  task_ids: {
-    validate: validateMaterialID,
+export const materialsInputTypes: MaterialsInputTypesObject = {
+  mp_id: {
+    validate: validateMPID,
     error: 'Please enter a valid material ID (e.g. mp-394).',
   },
   elements: {
@@ -274,7 +274,7 @@ export const materialsInputFields: MaterialsInputFieldsObject = {
   },
   absorbing_element: {
     validate: validateElements,
-    error: 'Please enter a element symbol',
+    error: 'Please enter a valid element symbol',
   },
   formula: {
     validate: validateFormula,
@@ -287,19 +287,19 @@ export const materialsInputFields: MaterialsInputFieldsObject = {
 };
 
 /**
- * Detects and validates a MaterialsInputField type from
+ * Detects and validates a MaterialsInputType type from
  * a raw input string.
  *
  * @param {string} value Input value string for a MaterialsInput
  * @returns Array with two values:
- *   1. The detected MaterialsInputField or null none detected
- *   2. The parsed value returned from the detcted field's validation method
+ *   1. The detected MaterialsInputType or null none detected
+ *   2. The parsed value returned from the detcted inputType's validation method
  */
-const detectInputType = (value: string): [MaterialsInputField | null, any] => {
-  for (const field in materialsInputFields) {
-    const parsedValue = materialsInputFields[field].validate(value);
+const detectInputType = (value: string): [MaterialsInputType | null, any] => {
+  for (const inputType in materialsInputTypes) {
+    const parsedValue = materialsInputTypes[inputType].validate(value);
     if (parsedValue) {
-      return [field as MaterialsInputField, parsedValue];
+      return [inputType as MaterialsInputType, parsedValue];
     }
   }
   return [null, null];
@@ -311,18 +311,18 @@ const detectInputType = (value: string): [MaterialsInputField | null, any] => {
  * Failed validations will return null in the second value in the returned array.
  *
  * @param {string} value Input value string for a MaterialsInput
- * @param {string} field [optional] MaterialsInputField type to use to validate the input value (will detect field type if not included)
+ * @param {string} field [optional] MaterialsInputType type to use to validate the input value (will detect field type if not included)
  * @returns Array with two values:
- *   1. The MaterialsInputField (only null if no field is supplied or detected)
+ *   1. The MaterialsInputType (only null if no field is supplied or detected)
  *   2. The validated parsed value returned from the field's validation method (null if validation failed)
  */
 export const validateInputType = (
   value: string,
-  field?: MaterialsInputField
-): [MaterialsInputField | null, any] => {
-  if (field) {
-    const parsedValue = materialsInputFields[field].validate(value);
-    return [field, parsedValue];
+  inputType?: MaterialsInputType
+): [MaterialsInputType | null, any] => {
+  if (inputType) {
+    const parsedValue = materialsInputTypes[inputType].validate(value);
+    return [inputType, parsedValue];
   } else {
     const [detectedField, parsedValue] = detectInputType(value);
     return [detectedField, parsedValue];
