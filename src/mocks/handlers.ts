@@ -24,7 +24,7 @@ export const handlers = [
    * Material search mock request
    */
   rest.get(process.env.REACT_APP_BASE_URL + 'search', (req, res, ctx) => {
-    const materialId = req.url.searchParams.get('task_ids');
+    const materialId = req.url.searchParams.get('material_ids');
     const volumeMax = req.url.searchParams.get('volume_max');
     const isStable = req.url.searchParams.get('is_stable');
     if (materialId === materialsByIdQuery) {
