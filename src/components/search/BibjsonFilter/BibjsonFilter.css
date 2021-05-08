@@ -1,0 +1,17 @@
+.mpc-bibjson-filter-controls {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.mpc-bibjson-filter-input {
+  margin-right: 1rem;
+}
+
+.mpc-bibjson-filter-sort-menu {
+  margin-right: 1rem;
+}
+
+.mpc-bibjson-filter-sort-icon-bg {
+  position: absolute;
+  opacity: 0.3;
+}
