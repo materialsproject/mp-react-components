@@ -1,0 +1,1 @@
+export { BibjsonCard } from './BibjsonCard';

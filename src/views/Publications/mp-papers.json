@@ -1,0 +1,3539 @@
+[
+  {
+    "journal": "Physical Review X",
+    "year": "2015",
+    "issn": "21603308",
+    "isbn": "2160-3308",
+    "doi": "10.1103/PhysRevX.5.011006",
+    "author": ["Agapito, Luis A.", "Curtarolo, Stefano", "Nardelli, Marco Buongiorno"],
+    "title": "Reformulation of DFT + U as a Pseudohybrid Hubbard Density Functional for Accelerated Materials Discovery",
+    "ENTRYTYPE": "article",
+    "ID": "agapito2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevX.5.011006",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "MRS Communications",
+    "year": "2016",
+    "issn": "2159-6859",
+    "doi": "10.1557/mrc.2016.29",
+    "author": [
+      "Agar, Joshua C.",
+      "Pandya, Shishir",
+      "Xu, Ruijuan",
+      "Yadav, Ajay K.",
+      "Liu, Zhiqi",
+      "Angsten, Thomas",
+      "Saremi, Sahar",
+      "Asta, Mark",
+      "Ramesh, R.",
+      "Martin, Lane W."
+    ],
+    "title": "Frontiers in Strain-Engineered Multifunctional Ferroic Materials",
+    "ENTRYTYPE": "article",
+    "ID": "agar2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1557/mrc.2016.29",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of the Electrochemical Society",
+    "year": "2013",
+    "issn": "0013-4651",
+    "isbn": "0013-46511\u030a945-7111",
+    "doi": "10.1149/2.115309jes",
+    "author": [
+      "Al-Maghrabi, M. A.",
+      "Suzuki, J.",
+      "Sanderson, R. J.",
+      "Chevrier, V. L.",
+      "Dunlap, R. A.",
+      "Dahn, J. R."
+    ],
+    "title": "Combinatorial Studies of Si1-Xox as a Potential Negative Electrode Material for Li-Ion Battery Applications",
+    "ENTRYTYPE": "article",
+    "ID": "al-maghrabi2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1149/2.115309jes",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "year": "2017",
+    "issn": "24699969",
+    "doi": "10.1103/PhysRevB.95.174110",
+    "author": ["Angsten, Thomas", "Martin, Lane W.", "Asta, Mark"],
+    "title": "Orientation-Dependent Properties of Epitaxially Strained Perovskite Oxide Thin Films: Insights from First-Principles Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "angsten2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.95.174110",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2014",
+    "issn": "1550235X",
+    "isbn": "1098-01211\u030a550-235X",
+    "doi": "10.1103/PhysRevB.89.134103",
+    "author": ["Armiento, R.", "Kozinsky, B.", "Hautier, G.", "Fornari, M.", "Ceder, G."],
+    "title": "High-Throughput Screening of Perovskite Alloys for Piezoelectric Performance and Thermodynamic Stability",
+    "ENTRYTYPE": "article",
+    "ID": "armiento2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.89.134103",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Materials Chemistry A",
+    "title": "YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure",
+    "author": [
+      "Aydemir, Umut",
+      "P\u00f6hls, Jan-Hendrik",
+      "Zhu, Hong",
+      "Hautier, Geoffroy",
+      "Bajaj, Saurabh",
+      "Gibbs, Zachary M.",
+      "Chen, Wei",
+      "Li, Guodong",
+      "Ohno, Saneyuki",
+      "Broberg, Danny",
+      "Kang, Stephen Dongmin",
+      "Asta, Mark",
+      "Ceder, Gerbrand",
+      "White, Mary Anne",
+      "Persson, Kristin",
+      "Jain, Anubhav",
+      "Snyder, G. Jeffrey"
+    ],
+    "pages": "2461--2472",
+    "number": "7",
+    "volume": "4",
+    "publisher": "Royal Society of Chemistry (RSC)",
+    "year": "2016",
+    "url": "https://doi.org/10.1039/c5ta10330d",
+    "doi": "10.1039/c5ta10330d",
+    "ENTRYTYPE": "article",
+    "ID": "Aydemir2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/c5ta10330d",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "publisher": "IOP Publishing",
+    "year": "2014",
+    "pages": "275502",
+    "number": "27",
+    "volume": "26",
+    "journal": "Journal of Physics: Condensed Matter",
+    "author": [
+      "Devidas, TR",
+      "Shekar, NV Chandra",
+      "Sundar, CS",
+      "Chithaiah, P",
+      "Sorb, YA",
+      "Bhadram, VS",
+      "Chandrabhas, Narayana",
+      "Pal, K",
+      "Waghmare, Umesh V",
+      "Rao, CNR"
+    ],
+    "title": "Pressure-induced structural changes and insulator-metal transition in layered bismuth triiodide, BiI3: a combined experimental and theoretical study",
+    "ENTRYTYPE": "article",
+    "ID": "devidas2014pressure"
+  },
+  {
+    "journal": "Monthly Notices of the Royal Astronomical Society",
+    "year": "2014",
+    "issn": "13652966",
+    "isbn": "0035-8711",
+    "doi": "10.1093/mnras/stu869",
+    "author": ["Bilalbegovi\u0107, G.", "Maksimovi\u0107, A.", "Moha\u010dek-Gro\u0161ev, V."],
+    "title": "Do Cement Nanoparticles Exist in Space?",
+    "ENTRYTYPE": "article",
+    "ID": "bilalbegovic2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1093/mnras/stu869",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "MRS Communications",
+    "year": "2015",
+    "issn": "2159-6859",
+    "doi": "10.1557/mrc.2015.26",
+    "author": [
+      "Brandt, Riley E.",
+      "Stevanovi\u0107, Vladan",
+      "Ginley, David S.",
+      "Buonassisi, Tonio"
+    ],
+    "title": "Identifying Defect-Tolerant Semiconductors with High Minority-Carrier Lifetimes: Beyond Hybrid Lead Halide Perovskites",
+    "ENTRYTYPE": "article",
+    "ID": "brandt2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1557/mrc.2015.26",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "doi": "10.1016/j.commatsci.2015.07.019",
+    "author": [
+      "Calderon, Camilo E.",
+      "Plata, Jose J.",
+      "Toher, Cormac",
+      "Oses, Corey",
+      "Levy, Ohad",
+      "Fornari, Marco",
+      "Natan, Amir",
+      "Mehl, Michael J.",
+      "Hart, Gus",
+      "Nardelli, Marco Buongiorno",
+      "Curtarolo, Stefano"
+    ],
+    "title": "The AFLOW Standard for High-Throughput Materials Science Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "calderon2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2015.07.019",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Applied Physics Letters",
+    "title": "Low thermal conductivity and triaxial phononic anisotropy of SnSe",
+    "author": ["Carrete, Jes\u00fas", "Mingo, Natalio", "Curtarolo, Stefano"],
+    "pages": "101907",
+    "number": "10",
+    "volume": "105",
+    "publisher": "AIP Publishing",
+    "month": "sep",
+    "year": "2014",
+    "doi": "10.1063/1.4895770",
+    "ENTRYTYPE": "article",
+    "ID": "Carrete2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4895770",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "\\pubmed\\",
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2012",
+    "issn": "1754-5692",
+    "isbn": "1754-5692",
+    "doi": "10.1039/C1EE02717D",
+    "author": [
+      "Castelli, Ivano E.",
+      "Olsen, Thomas",
+      "Datta, Soumendu",
+      "Landis, David D.",
+      "Dahl, S\u00f8ren",
+      "Thygesen, Kristian S.",
+      "Jacobsen, Karsten W."
+    ],
+    "title": "Computational Screening of Perovskite Metal Oxides for Optimal Solar Light Capture",
+    "ENTRYTYPE": "article",
+    "ID": "castelli2012",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C1EE02717D",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Advanced Energy Materials",
+    "year": "2015",
+    "issn": "16146840",
+    "isbn": "1614-6832",
+    "doi": "10.1002/aenm.201400915",
+    "author": [
+      "Castelli, Ivano E.",
+      "H\u00fcser, Falco",
+      "Pandey, Mohnish",
+      "Li, Hong",
+      "Thygesen, Kristian S.",
+      "Seger, Brian",
+      "Jain, Anubhav",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand",
+      "Jacobsen, Karsten W."
+    ],
+    "title": "New Light-Harvesting Materials Using Accurate and Efficient Bandgap Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "castelli2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/aenm.201400915",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "publisher": "Springer",
+    "year": "2010",
+    "pages": "693--701",
+    "number": "9",
+    "volume": "35",
+    "journal": "MRS bulletin",
+    "author": ["Ceder, Gerbrand"],
+    "title": "Opportunities and challenges for first-principles materials design and applications to Li battery materials",
+    "ENTRYTYPE": "article",
+    "ID": "ceder2010opportunities"
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "21231189",
+    "journal": "Physical Review Letters",
+    "year": "2010",
+    "issn": "00319007",
+    "isbn": "0031-9007",
+    "doi": "10.1103/PhysRevLett.105.196403",
+    "author": ["Chan, M. K Y", "Ceder, G."],
+    "title": "Efficient Band Gap Prediction for Solids",
+    "ENTRYTYPE": "article",
+    "ID": "chan2010",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevLett.105.196403",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "title": "First-principles study of luminescence in Eu2$\\mathplus$-doped inorganic scintillators",
+    "author": [
+      "Chaudhry, A.",
+      "Boutchko, R.",
+      "Chourou, S.",
+      "Zhang, G.",
+      "Gr\u00f8nbech-Jensen, N.",
+      "Canning, A."
+    ],
+    "number": "15",
+    "volume": "89",
+    "publisher": "American Physical Society (APS)",
+    "month": "April",
+    "year": "2014",
+    "url": "https://doi.org/10.1103/physrevb.89.155105",
+    "doi": "10.1103/physrevb.89.155105",
+    "ENTRYTYPE": "article",
+    "ID": "Chaudhry2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/physrevb.89.155105",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Nature Physics",
+    "title": "Topological materials discovery using electron filling constraints",
+    "author": ["Chen, Ru", "Po, Hoi Chun", "Neaton, Jeffrey B.", "Vishwanath, Ashvin"],
+    "pages": "55--61",
+    "number": "1",
+    "volume": "14",
+    "publisher": "Springer Science and Business Media LLC",
+    "month": "oct",
+    "year": "2017",
+    "doi": "10.1038/nphys4277",
+    "ENTRYTYPE": "article",
+    "ID": "Chen2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/nphys4277",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "J. Mater. Chem. C",
+    "journal": "Journal of Materials Chemistry C: Materials for Optical and Electronic Devices",
+    "year": "2016",
+    "issn": "2050-7526",
+    "doi": "10.1039/C5TC04339E",
+    "author": [
+      "Chen, Wei",
+      "P\u00f6hls, Jan-Hendrik",
+      "Hautier, Geoffroy",
+      "Broberg, Danny",
+      "Bajaj, Saurabh",
+      "Aydemir, Umut",
+      "Gibbs, Zachary M.",
+      "Zhu, Hong",
+      "Asta, Mark",
+      "Snyder, G. Jeffrey",
+      "Meredig, Bryce",
+      "White, Mary Anne",
+      "Persson, Kristin",
+      "Jain, Anubhav"
+    ],
+    "title": "Understanding Thermoelectric Properties from High-Throughput Calculations: Trends, Insights, and Comparisons with Experiment",
+    "ENTRYTYPE": "article",
+    "ID": "chen2016a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C5TC04339E",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25057850",
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2014",
+    "issn": "1463-9076",
+    "isbn": "1463-9084 (Electronic) 1463-9076 (Linking)",
+    "doi": "10.1039/C4CP02921F",
+    "author": [
+      "Cheng, Lei",
+      "Crumlin, Ethan J.",
+      "Chen, Wei",
+      "Qiao, Ruimin",
+      "Hou, Huaming",
+      "Lux, Simon Franz",
+      "Zorba, Vassilia",
+      "Russo, Richard",
+      "Kostecki, Robert",
+      "Liu, Zhi",
+      "Persson, Kristin",
+      "Yang, Wanli",
+      "Cabana, Jordi",
+      "Richardson, Thomas",
+      "Chen, Guoying",
+      "Doeff, Marca"
+    ],
+    "title": "The Origin of High Electrolyte\u2013Electrode Interfacial Resistances in Lithium Cells Containing Garnet Type Solid Electrolytes",
+    "ENTRYTYPE": "article",
+    "ID": "cheng2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4CP02921F",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26263464",
+    "journal": "Journal of Physical Chemistry Letters",
+    "year": "2015",
+    "issn": "19487185",
+    "isbn": "1948-7185",
+    "doi": "10.1021/jz502319n",
+    "author": [
+      "Cheng, Lei",
+      "Assary, Rajeev S.",
+      "Qu, Xiaohui",
+      "Jain, Anubhav",
+      "Ong, Shyue Ping",
+      "Rajput, Nav Nidhi",
+      "Persson, Kristin",
+      "Curtiss, Larry A."
+    ],
+    "title": "Accelerating Electrolyte Discovery for Energy Storage with High-Throughput Screening",
+    "ENTRYTYPE": "article",
+    "ID": "cheng2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/jz502319n",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26263464",
+    "journal": "Journal of Physical Chemistry Letters",
+    "year": "2015",
+    "issn": "19487185",
+    "isbn": "1948-7185",
+    "doi": "10.1021/jz502319n",
+    "author": [
+      "Cheng, Lei",
+      "Assary, Rajeev S.",
+      "Qu, Xiaohui",
+      "Jain, Anubhav",
+      "Ong, Shyue Ping",
+      "Rajput, Nav Nidhi",
+      "Persson, Kristin",
+      "Curtiss, Larry A."
+    ],
+    "title": "Accelerating Electrolyte Discovery for Energy Storage with High-Throughput Screening",
+    "ENTRYTYPE": "article",
+    "ID": "cheng2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/jz502319n",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25563572",
+    "journal": "ACS Applied Materials and Interfaces",
+    "year": "2015",
+    "issn": "19448252",
+    "isbn": "1944-8252 (Electronic)1\u030a944-8244 (Linking)",
+    "doi": "10.1021/am508111r",
+    "author": [
+      "Cheng, Lei",
+      "Chen, Wei",
+      "Kunz, Martin",
+      "Persson, Kristin",
+      "Tamura, Nobumichi",
+      "Chen, Guoying",
+      "Doeff, Marca"
+    ],
+    "title": "Effect of Surface Microstructure on Electrochemical Performance of Garnet Solid Electrolytes",
+    "ENTRYTYPE": "article",
+    "ID": "cheng2015b",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/am508111r",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25563572",
+    "journal": "ACS Applied Materials and Interfaces",
+    "year": "2015",
+    "issn": "19448252",
+    "isbn": "1944-8252 (Electronic)1\u030a944-8244 (Linking)",
+    "doi": "10.1021/am508111r",
+    "author": [
+      "Cheng, Lei",
+      "Chen, Wei",
+      "Kunz, Martin",
+      "Persson, Kristin",
+      "Tamura, Nobumichi",
+      "Chen, Guoying",
+      "Doeff, Marca"
+    ],
+    "title": "Effect of Surface Microstructure on Electrochemical Performance of Garnet Solid Electrolytes",
+    "ENTRYTYPE": "article",
+    "ID": "cheng2015c",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/am508111r",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Calphad",
+    "journal": "Calphad-computer Coupling of Phase Diagrams and Thermochemistry",
+    "year": "2014",
+    "doi": "10.1016/j.calphad.2013.12.008",
+    "pages": "188--193",
+    "volume": "45",
+    "author": ["Chinnappan, Ravi"],
+    "title": "Thermodynamic Stability of Oxide Phases of Fe\u2013Cr Based ODS Steels via Quantum Mechanical Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "chinnappan2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.calphad.2013.12.008",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Nature Communications",
+    "year": "2017",
+    "issn": "20411723",
+    "doi": "10.1038/s41467-017-00399-6",
+    "author": ["Dagdelen, John", "Montoya, Joseph", "Jong, Maarten De", "Persson, Kristin"],
+    "title": "Computational Prediction of New Auxetic Materials",
+    "ENTRYTYPE": "article",
+    "ID": "dagdelen2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/s41467-017-00399-6",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computer Physics Communications",
+    "year": "2015",
+    "issn": "00104655",
+    "doi": "10.1016/j.cpc.2015.03.015",
+    "author": [
+      "Ding, Hong",
+      "Medasani, Bharat",
+      "Chen, Wei",
+      "Persson, Kristin A.",
+      "Haranczyk, MacIej",
+      "Asta, Mark"
+    ],
+    "title": "PyDII: A Python Framework for Computing Equilibrium Intrinsic Point Defect Concentrations and Extrinsic Solute Site Preferences in Intermetallic Compounds",
+    "ENTRYTYPE": "article",
+    "ID": "ding2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.cpc.2015.03.015",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "27145398",
+    "journal": "ACS Applied Materials and Interfaces",
+    "year": "2016",
+    "issn": "19448252",
+    "isbn": "1944-8244",
+    "doi": "10.1021/acsami.6b01630",
+    "author": [
+      "Ding, Hong",
+      "Dwaraknath, Shyam S.",
+      "Garten, Lauren",
+      "Ndione, Paul",
+      "Ginley, David",
+      "Persson, Kristin A."
+    ],
+    "title": "Computational Approach for Epitaxial Polymorph Stabilization through Substrate Selection",
+    "ENTRYTYPE": "article",
+    "ID": "ding2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acsami.6b01630",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Inorganic and Organometallic Polymers and Materials",
+    "year": "2014",
+    "issn": "15741451",
+    "isbn": "1574-1443",
+    "doi": "10.1007/s10904-013-9977-8",
+    "author": ["Doeff, Marca M.", "Cabana, Jordi", "Shirpour, Mona"],
+    "title": "Titanate Anodes for Sodium Ion Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "doeff2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1007/s10904-013-9977-8",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Inorganic and Organometallic Polymers and Materials",
+    "year": "2014",
+    "issn": "15741451",
+    "isbn": "1574-1443",
+    "doi": "10.1007/s10904-013-9977-8",
+    "author": ["Doeff, Marca M.", "Cabana, Jordi", "Shirpour, Mona"],
+    "title": "Titanate Anodes for Sodium Ion Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "doeff2014a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1007/s10904-013-9977-8",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2016",
+    "issn": "1754-5692",
+    "doi": "10.1039/C5EE03253A",
+    "author": [
+      "Dunstan, Matthew T.",
+      "Jain, Anubhav",
+      "Liu, Wen",
+      "Ong, Shyue Ping",
+      "Liu, Tao",
+      "Lee, Jeongjae",
+      "Persson, Kristin A.",
+      "Scott, Stuart A.",
+      "Dennis, John S.",
+      "Grey, Clare P."
+    ],
+    "title": "Large Scale Computational Screening and Experimental Discovery of Novel Materials for High Temperature CO \u00a1sub\u00bf2\u00a1/Sub\u00bf Capture",
+    "ENTRYTYPE": "article",
+    "ID": "dunstan2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C5EE03253A",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Inorganic Chemistry",
+    "year": "2014",
+    "issn": "1520510X",
+    "doi": "10.1021/ic500570u",
+    "author": ["Ellis, Jason K.", "Wen, Xiao Dong", "Martin, Richard L."],
+    "title": "Investigation of Thorium Salts as Candidate Materials for Direct Observation of the 229mTh Nuclear Transition",
+    "ENTRYTYPE": "article",
+    "ID": "ellis2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/ic500570u",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2017",
+    "issn": "1463-9076",
+    "doi": "10.1039/C7CP00437K",
+    "author": [
+      "Faghaninia, Alireza",
+      "Yu, Guodong",
+      "Aydemir, Umut",
+      "Wood, Max",
+      "Chen, Wei",
+      "Rignanese, Gian-Marco",
+      "Snyder, G. Jeffrey",
+      "Hautier, Geoffroy",
+      "Jain, Anubhav"
+    ],
+    "title": "A Computational Assessment of the Electronic, Thermoelectric, and Defect Properties of Bournonite (CuPbSbS \u00a1sub\u00bf3\u00a1/Sub\u00bf ) and Related Substitutions",
+    "ENTRYTYPE": "article",
+    "ID": "faghaninia2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C7CP00437K",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "publisher": "Royal Society of Chemistry",
+    "year": "2014",
+    "pages": "3352--3363",
+    "number": "10",
+    "volume": "2",
+    "journal": "Journal of Materials Chemistry A",
+    "author": ["Fondell, Mattis", "Jacobsson, T Jesper", "Boman, Mats", "Edvinsson, Tomas"],
+    "title": "Optical quantum confinement in low dimensional hematite",
+    "ENTRYTYPE": "article",
+    "ID": "fondell2014optical"
+  },
+  {
+    "journal": "Applied Physics Letters",
+    "title": "Band gap estimation from temperature dependent Seebeck measurement\u2014Deviations from the 2e$|$S$|$maxTmax relation",
+    "author": ["Gibbs, Zachary M.", "Kim, Hyun-Sik", "Wang, Heng", "Snyder, G. Jeffrey"],
+    "pages": "022112",
+    "number": "2",
+    "volume": "106",
+    "publisher": "AIP Publishing",
+    "month": "jan",
+    "year": "2015",
+    "doi": "10.1063/1.4905922",
+    "ENTRYTYPE": "article",
+    "ID": "Gibbs2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4905922",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "npj Computational Materials",
+    "year": "2017",
+    "issn": "2057-3960",
+    "isbn": "2057-3960",
+    "doi": "10.1038/s41524-017-0013-3",
+    "author": [
+      "Gibbs, Zachary M.",
+      "Ricci, Francesco",
+      "Li, Guodong",
+      "Zhu, Hong",
+      "Persson, Kristin",
+      "Ceder, Gerbrand",
+      "Hautier, Geoffroy",
+      "Jain, Anubhav",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Effective Mass and Fermi Surface Complexity Factor from Ab Initio Band Structure Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "gibbs2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/s41524-017-0013-3",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26765789",
+    "journal": "ACS Applied Materials and Interfaces",
+    "year": "2016",
+    "issn": "19448252",
+    "isbn": "1944-8244",
+    "doi": "10.1021/acsami.5b10024",
+    "author": [
+      "Han, Sang Don",
+      "Rajput, Nav Nidhi",
+      "Qu, Xiaohui",
+      "Pan, Baofei",
+      "He, Meinan",
+      "Ferrandon, Magali S.",
+      "Liao, Chen",
+      "Persson, Kristin A.",
+      "Burrell, Anthony K."
+    ],
+    "title": "Origin of Electrochemical, Structural, and Transport Properties in Nonaqueous Zinc Electrolytes",
+    "ENTRYTYPE": "article",
+    "ID": "han2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acsami.5b10024",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2010",
+    "issn": "08974756",
+    "isbn": "0897-4756",
+    "doi": "10.1021/cm100795d",
+    "author": [
+      "Hautier, Geoffroy",
+      "Fischer, Christopher C.",
+      "Jain, Anubhav",
+      "Mueller, Tim",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Finding Natures Missing Ternary Oxide Compounds Using Machine Learning and Density Functional Theory",
+    "ENTRYTYPE": "article",
+    "ID": "hautier2010",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm100795d",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "21142147",
+    "journal": "Inorganic Chemistry",
+    "year": "2011",
+    "issn": "00201669",
+    "isbn": "0020-1669",
+    "doi": "10.1021/ic102031h",
+    "author": [
+      "Hautier, Geoffroy",
+      "Fischer, Chris",
+      "Ehrlacher, Virginie",
+      "Jain, Anubhav",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Data Mined Ionic Substitutions for the Discovery of New Compounds",
+    "ENTRYTYPE": "article",
+    "ID": "hautier2011",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/ic102031h",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2014",
+    "issn": "15205002",
+    "isbn": "0897-47561\u030a520-5002",
+    "doi": "10.1021/cm404079a",
+    "author": [
+      "Hautier, Geoffroy",
+      "Miglio, Anna",
+      "Waroquiers, David",
+      "Rignanese, Gian Marco",
+      "Gonze, Xavier"
+    ],
+    "title": "How Does Chemistry Influence Electron Effective Mass in Oxides? A High-Throughput Computational Analysis",
+    "ENTRYTYPE": "article",
+    "ID": "hautier2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm404079a",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "ACS Nano",
+    "title": "SodiationviaHeterogeneous Disproportionation in FeF2Electrodes for Sodium-Ion Batteries",
+    "author": [
+      "He, Kai",
+      "Zhou, Yongning",
+      "Gao, Peng",
+      "Wang, Liping",
+      "Pereira, Nathalie",
+      "Amatucci, Glenn G.",
+      "Nam, Kyung-Wan",
+      "Yang, Xiao-Qing",
+      "Zhu, Yimei",
+      "Wang, Feng",
+      "Su, Dong"
+    ],
+    "pages": "7251--7259",
+    "number": "7",
+    "volume": "8",
+    "publisher": "American Chemical Society (ACS)",
+    "month": "jun",
+    "year": "2014",
+    "doi": "10.1021/nn502284y",
+    "ENTRYTYPE": "article",
+    "ID": "He2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/nn502284y",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "MRS Bulletin",
+    "year": "2016",
+    "issn": "0883-7694",
+    "doi": "10.1557/mrs.2016.93",
+    "author": [
+      "Hill, Joanne",
+      "Mulholland, Gregory",
+      "Persson, Kristin",
+      "Seshadri, Ram",
+      "Wolverton, Chris",
+      "Meredig, Bryce"
+    ],
+    "title": "Materials Science with Large-Scale Data and Informatics: Unlocking New Opportunities",
+    "ENTRYTYPE": "article",
+    "ID": "hill2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1557/mrs.2016.93",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "J. Mater. Chem. A",
+    "journal": "Journal of Materials Chemistry A: Materials for Energy and Sustainability",
+    "year": "2014",
+    "issn": "2050-7488",
+    "doi": "10.1039/C4TA00673A",
+    "author": ["Hoang, Khang", "Johannes, Michelle D."],
+    "title": "Defect Chemistry in Layered Transition-Metal Oxides from Screened Hybrid Density Functional Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "hoang2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4TA00673A",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24224826",
+    "journal": "ACS Applied Materials and Interfaces",
+    "year": "2013",
+    "issn": "19448244",
+    "isbn": "1944-8244",
+    "doi": "10.1021/am404365r",
+    "author": ["Hoz, Julibeth M. Martinez De La", "Leung, Kevin", "Balbuena, Perla B."],
+    "title": "Reduction Mechanisms of Ethylene Carbonate on Si Anodes of Lithium-Ion Batteries: Effects of Degree of Lithiation and Nature of Exposed Surface",
+    "ENTRYTYPE": "article",
+    "ID": "hoz2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/am404365r",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Crystal Growth and Design",
+    "year": "2014",
+    "issn": "15287505",
+    "doi": "10.1021/cg401647f",
+    "author": [
+      "Huang, Jian",
+      "Valenzano, Loredana",
+      "Singh, Tajendra Vir",
+      "Pandey, Ravindra",
+      "Sant, Gaurav"
+    ],
+    "title": "Influence of (al, Fe, Mg) Impurities on Triclinic Ca3SiO 5: Interpretations from DFT Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "huang2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cg401647f",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "booktitle": "2015 IEEE 11th International Conference on e-Science",
+    "title": "A Community Contribution Framework for Sharing Materials Data with Materials Project",
+    "author": [
+      "Huck, Patrick",
+      "Jain, Anubhav",
+      "Gunter, Dan",
+      "Winston, Donald",
+      "Persson, Kristin"
+    ],
+    "publisher": "IEEE",
+    "month": "aug",
+    "year": "2015",
+    "doi": "10.1109/escience.2015.75",
+    "ENTRYTYPE": "inproceedings",
+    "ID": "Huck2015Framework",
+    "link": [
+      {
+        "url": "https://doi.org/10.1109/escience.2015.75",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Concurrency and Computation: Practice and Experience",
+    "title": "User applications driven by the community contribution framework MPContribs in the Materials Project",
+    "author": [
+      "Huck, P.",
+      "Gunter, D.",
+      "Cholia, S.",
+      "Winston, D.",
+      "N\u2032Diaye, A. T.",
+      "Persson, K."
+    ],
+    "pages": "1982--1993",
+    "number": "7",
+    "volume": "28",
+    "publisher": "Wiley",
+    "month": "oct",
+    "year": "2015",
+    "doi": "10.1002/cpe.3698",
+    "ENTRYTYPE": "article",
+    "ID": "Huck2015UserApplications",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/cpe.3698",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2015",
+    "issn": "15205002",
+    "doi": "10.1021/cm503507h",
+    "author": [
+      "Isayev, Olexandr",
+      "Fourches, Denis",
+      "Muratov, Eugene N.",
+      "Oses, Corey",
+      "Rasch, Kevin",
+      "Tropsha, Alexander",
+      "Curtarolo, Stefano"
+    ],
+    "title": "Materials Cartography: Representing and Mining Materials Space Using Structural and Electronic Fingerprints",
+    "ENTRYTYPE": "article",
+    "ID": "isayev2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm503507h",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2015",
+    "issn": "15205002",
+    "doi": "10.1021/cm503507h",
+    "author": [
+      "Isayev, Olexandr",
+      "Fourches, Denis",
+      "Muratov, Eugene N.",
+      "Oses, Corey",
+      "Rasch, Kevin",
+      "Tropsha, Alexander",
+      "Curtarolo, Stefano"
+    ],
+    "title": "Materials Cartography: Representing and Mining Materials Space Using Structural and Electronic Fingerprints",
+    "ENTRYTYPE": "article",
+    "ID": "isayev2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm503507h",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Concurrency and Computation: Practice and Experience",
+    "title": "FireWorks: a dynamic workflow system designed for high-throughput applications",
+    "author": [
+      "Jain, Anubhav",
+      "Ong, Shyue Ping",
+      "Chen, Wei",
+      "Medasani, Bharat",
+      "Qu, Xiaohui",
+      "Kocher, Michael",
+      "Brafman, Miriam",
+      "Petretto, Guido",
+      "Rignanese, Gian-Marco",
+      "Hautier, Geoffroy",
+      "Gunter, Daniel",
+      "Persson, Kristin A."
+    ],
+    "pages": "5037--5059",
+    "number": "17",
+    "volume": "27",
+    "publisher": "Wiley",
+    "month": "may",
+    "year": "2015",
+    "doi": "10.1002/cpe.3505",
+    "ENTRYTYPE": "article",
+    "ID": "Jain2015Fireworks",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/cpe.3505",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2011",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2011.02.023",
+    "author": [
+      "Jain, Anubhav",
+      "Hautier, Geoffroy",
+      "Moore, Charles J.",
+      "Ong, Shyue Ping",
+      "Fischer, Christopher C.",
+      "Mueller, Tim",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand"
+    ],
+    "title": "A High-Throughput Infrastructure for Density Functional Theory Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "jain2011",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2011.02.023",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2011",
+    "issn": "10980121",
+    "isbn": "1098-0121",
+    "doi": "10.1103/PhysRevB.84.045115",
+    "author": [
+      "Jain, Anubhav",
+      "Hautier, Geoffroy",
+      "Ong, Shyue Ping",
+      "Moore, Charles J.",
+      "Fischer, Christopher C.",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Formation Enthalpies by Mixing GGA and GGA + U Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "jain2011a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.84.045115",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "\\pubmed\\",
+    "journal": "APL Materials",
+    "year": "2013",
+    "issn": "2166532X",
+    "isbn": "2166532X",
+    "doi": "10.1063/1.4812323",
+    "author": [
+      "Jain, Anubhav",
+      "Ong, Shyue Ping",
+      "Hautier, Geoffroy",
+      "Chen, Wei",
+      "Richards, William Davidson",
+      "Dacek, Stephen",
+      "Cholia, Shreyas",
+      "Gunter, Dan",
+      "Skinner, David",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "Commentary: The Materials Project: A Materials Genome Approach to Accelerating Materials Innovation",
+    "ENTRYTYPE": "article",
+    "ID": "jain2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4812323",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25636088",
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2015",
+    "issn": "1463-9076",
+    "isbn": "1463-9076",
+    "doi": "10.1039/C5CP00250H",
+    "author": [
+      "Jain, Anubhav",
+      "Hautier, Geoffroy",
+      "Ong, Shyue Ping",
+      "Dacek, Stephen",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Relating Voltage and Thermal Safety in Li-Ion Battery Cathodes: A High-Throughput Computational Study",
+    "ENTRYTYPE": "article",
+    "ID": "jain2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C5CP00250H",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24357390",
+    "journal": "Nature Reviews Materials",
+    "year": "2016",
+    "issn": "20588437",
+    "isbn": "2058-8437",
+    "doi": "10.1038/natrevmats.2015.4",
+    "author": ["Jain, Anubhav", "Shin, Yongwoo", "Persson, Kristin A."],
+    "title": "Computational Predictions of Energy Materials Using Density Functional Theory",
+    "ENTRYTYPE": "article",
+    "ID": "jain2016Predictions",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/natrevmats.2015.4",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Materials Research",
+    "year": "2016",
+    "issn": "0884-2914",
+    "isbn": "0884-2914, 2044-5326",
+    "doi": "10.1557/jmr.2016.80",
+    "author": ["Jain, Anubhav", "Hautier, Geoffroy", "Ong, Shyue Ping", "Persson, Kristin"],
+    "title": "New Opportunities for Materials Informatics: Resources and Data Mining Techniques for Uncovering Hidden Relationships",
+    "ENTRYTYPE": "article",
+    "ID": "jain2016a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1557/jmr.2016.80",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "APL Materials",
+    "title": "Research Update: The materials genome initiative: Data sharing and the impact of collaborative ab initio databases",
+    "author": ["Jain, Anubhav", "Persson, Kristin A.", "Ceder, Gerbrand"],
+    "pages": "053102",
+    "number": "5",
+    "volume": "4",
+    "publisher": "AIP Publishing",
+    "month": "mar",
+    "year": "2016",
+    "doi": "10.1063/1.4944683",
+    "ENTRYTYPE": "article",
+    "ID": "Jain2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4944683",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26451252",
+    "journal": "Scientific Data",
+    "year": "2015",
+    "issn": "20524463",
+    "doi": "10.1038/sdata.2015.53",
+    "author": [
+      "Jong, Maarten De",
+      "Chen, Wei",
+      "Geerlings, Henry",
+      "Asta, Mark",
+      "Persson, Kristin Aslaug"
+    ],
+    "title": "A Database to Enable Discovery and Design of Piezoelectric Materials",
+    "ENTRYTYPE": "article",
+    "ID": "jong2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2015.53",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25984348",
+    "journal": "Scientific Data",
+    "year": "2015",
+    "issn": "20524463",
+    "doi": "10.1038/sdata.2015.9",
+    "author": [
+      "Jong, Maarten De",
+      "Chen, Wei",
+      "Angsten, Thomas",
+      "Jain, Anubhav",
+      "Notestine, Randy",
+      "Gamst, Anthony",
+      "Sluiter, Marcel",
+      "Ande, Chaitanya Krishna",
+      "Zwaag, Sybrand Van Der",
+      "Plata, Jose J.",
+      "Toher, Cormac",
+      "Curtarolo, Stefano",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A.",
+      "Asta, Mark"
+    ],
+    "title": "Charting the Complete Elastic Properties of Inorganic Crystalline Compounds",
+    "ENTRYTYPE": "article",
+    "ID": "jong2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2015.9",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25984348",
+    "journal": "Scientific Data",
+    "year": "2015",
+    "issn": "20524463",
+    "doi": "10.1038/sdata.2015.9",
+    "author": [
+      "Jong, Maarten De",
+      "Chen, Wei",
+      "Angsten, Thomas",
+      "Jain, Anubhav",
+      "Notestine, Randy",
+      "Gamst, Anthony",
+      "Sluiter, Marcel",
+      "Ande, Chaitanya Krishna",
+      "Zwaag, Sybrand Van Der",
+      "Plata, Jose J.",
+      "Toher, Cormac",
+      "Curtarolo, Stefano",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A.",
+      "Asta, Mark"
+    ],
+    "title": "Charting the Complete Elastic Properties of Inorganic Crystalline Compounds",
+    "ENTRYTYPE": "article",
+    "ID": "jong2015b",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2015.9",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "27694824",
+    "journal": "Scientific Reports",
+    "year": "2016",
+    "issn": "20452322",
+    "isbn": "2045-2322",
+    "doi": "10.1038/srep34256",
+    "author": [
+      "Jong, Maarten De",
+      "Chen, Wei",
+      "Notestine, Randy",
+      "Persson, Kristin",
+      "Ceder, Gerbrand",
+      "Jain, Anubhav",
+      "Asta, Mark",
+      "Gamst, Anthony"
+    ],
+    "title": "A Statistical Learning Framework for Materials Science: Application to Elastic Moduli of k-Nary Inorganic Polycrystalline Compounds",
+    "ENTRYTYPE": "article",
+    "ID": "jong2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/srep34256",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "PHYSICAL REVIEW B",
+    "year": "2017",
+    "doi": "10.1103/PhysRevB.96.014105",
+    "volume": "96",
+    "author": ["Jong, Maarten De", "Winter, Ian", "Chrzan, D C", "Asta, Mark"],
+    "title": "Ideal Strength and Ductility in Metals from Second-and Third-Order Elastic Constants",
+    "ENTRYTYPE": "article",
+    "ID": "jong2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.96.014105",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Modelling Simul. Mater. Sci. Eng",
+    "year": "2014",
+    "doi": "10.1088/0965-0393/22/3/034003",
+    "pages": "34003--14",
+    "volume": "22",
+    "author": [
+      "Kamachali, Reza Darvishi",
+      "Borukhovich, Efim",
+      "Hatcher, Nicholas",
+      "Steinbach, Ingo"
+    ],
+    "title": "DFT-Supported Phase-Field Study on the Effect of Mechanically Driven Fluxes in Ni 4 Ti 3 Precipitation",
+    "ENTRYTYPE": "article",
+    "ID": "kamachali2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1088/0965-0393/22/3/034003",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Physical Chemistry Letters",
+    "year": "2013",
+    "issn": "19487185",
+    "isbn": "1948-7185",
+    "doi": "10.1021/jz4017848",
+    "author": ["Kan, M.", "Zhou, J.", "Sun, Q.", "Kawazoe, Y.", "Jena, P."],
+    "title": "The Intrinsic Ferromagnetism in a MnO2 Monolayer",
+    "ENTRYTYPE": "article",
+    "ID": "kan2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/jz4017848",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24477572",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2014",
+    "issn": "1463-9076",
+    "isbn": "1463-9076",
+    "doi": "10.1039/c3cp55146f",
+    "author": ["Kan, Min", "Adhikari, Subash", "Sun, Qiang"],
+    "title": "Ferromagnetism in MnX2 (x = s, Se) Monolayers",
+    "ENTRYTYPE": "article",
+    "ID": "kan2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/c3cp55146f",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24417743",
+    "journal": "Nano Letters",
+    "year": "2014",
+    "issn": "15306984",
+    "isbn": "1530-6992 (Electronic)1\u030a530-6984 (Linking)",
+    "doi": "10.1021/nl404557w",
+    "author": ["Kang, Shinyoung", "Mo, Yifei", "Ong, Shyue Ping", "Ceder, Gerbrand"],
+    "title": "Nanoscale Stabilization of Sodium Oxides: Implications for Na-O2 Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "kang2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/nl404557w",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Solid State Ionics",
+    "year": "2014",
+    "issn": "01672738",
+    "isbn": "0167-2738",
+    "doi": "10.1016/j.ssi.2014.04.021",
+    "author": ["KC, Santosh", "Longo, Roberto C.", "Xiong, Ka", "Cho, Kyeongjae"],
+    "title": "Point Defects in Garnet-Type Solid Electrolyte (c-Li7La3Zr2O12) for Li-Ion Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "kc2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.ssi.2014.04.021",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Electronic Materials",
+    "year": "2014",
+    "issn": "03615235",
+    "isbn": "1166401432761",
+    "doi": "10.1007/s11664-014-3276-1",
+    "author": ["Khabibullin, A. R.", "Woods, L. M."],
+    "title": "Ab Initio Investigation of Bi-Rich Bi1-x Sb x Alloys",
+    "ENTRYTYPE": "article",
+    "ID": "khabibullin2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1007/s11664-014-3276-1",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2014",
+    "issn": "15205002",
+    "doi": "10.1021/cm5014174",
+    "author": [
+      "Kim, Jae Chul",
+      "Li, Xin",
+      "Moore, Charles J.",
+      "Bo, Shou Hang",
+      "Khalifah, Peter G.",
+      "Grey, Clare P.",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Analysis of Charged State Stability for Monoclinic LiMnBO3Cathode",
+    "ENTRYTYPE": "article",
+    "ID": "kim2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm5014174",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2015",
+    "issn": "1754-5692",
+    "doi": "10.1039/C5EE00930H",
+    "author": ["Kim, Jae Chul", "Seo, Dong-Hwa", "Ceder, Gerbrand"],
+    "title": "Theoretical Capacity Achieved in a LiMn \u00a1sub\u00bf0.5\u00a1/Sub\u00bf Fe \u00a1sub\u00bf0.4\u00a1/Sub\u00bf Mg \u00a1sub\u00bf0.1\u00a1/Sub\u00bf BO \u00a1sub\u00bf3\u00a1/Sub\u00bf Cathode by Using Topological Disorder",
+    "ENTRYTYPE": "article",
+    "ID": "kim2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C5EE00930H",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of the American Chemical Society",
+    "title": "Thermodynamics of Phase Selection in MnO2 Framework Structures through Alkali Intercalation and Hydration",
+    "author": ["Kitchaev, Daniil A.", "Dacek, Stephen T.", "Sun, Wenhao", "Ceder, Gerbrand"],
+    "pages": "2672--2681",
+    "number": "7",
+    "volume": "139",
+    "publisher": "American Chemical Society (ACS)",
+    "month": "feb",
+    "year": "2017",
+    "doi": "10.1021/jacs.6b11301",
+    "ENTRYTYPE": "article",
+    "ID": "Kitchaev2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/jacs.6b11301",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Chemical Physics",
+    "year": "2016",
+    "issn": "00219606",
+    "isbn": "0941040941",
+    "doi": "10.1063/1.4961868",
+    "author": ["Kolsbjerg, Esben L.", "Groves, Michael N.", "Hammer, Bj\u00f8rk"],
+    "title": "An Automated Nudged Elastic Band Method",
+    "ENTRYTYPE": "article",
+    "ID": "kolsbjerg2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4961868",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25212785",
+    "journal": "Advanced Materials",
+    "year": "2014",
+    "issn": "15214095",
+    "isbn": "0935-9648",
+    "doi": "10.1002/adma.201401991",
+    "author": [
+      "Kumar, Mulmudi Hemant",
+      "Dharani, Sabba",
+      "Leong, Wei Lin",
+      "Boix, Pablo P.",
+      "Prabhakar, Rajiv Ramanujam",
+      "Baikie, Tom",
+      "Shi, Chen",
+      "Ding, Hong",
+      "Ramesh, Ramamoorthy",
+      "Asta, Mark",
+      "Graetzel, Michael",
+      "Mhaisalkar, Subodh G.",
+      "Mathews, Nripan"
+    ],
+    "title": "Lead-Free Halide Perovskite Solar Cells with High Photocurrents Realized through Vacancy Modulation",
+    "ENTRYTYPE": "article",
+    "ID": "kumar2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/adma.201401991",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Power Sources",
+    "year": "2015",
+    "issn": "03787753",
+    "isbn": "0378-7753",
+    "doi": "10.1016/j.jpowsour.2014.10.037",
+    "author": ["Legrain, Fleur", "Manzhos, Sergei"],
+    "title": "Aluminum Doping Improves the Energetics of Lithium, Sodium, and Magnesium Storage in Silicon: A First-Principles Study",
+    "ENTRYTYPE": "article",
+    "ID": "legrain2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.jpowsour.2014.10.037",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "J. Mater. Chem. A",
+    "journal": "Journal of Materials Chemistry A: Materials for Energy and Sustainability",
+    "year": "2016",
+    "issn": "2050-7488",
+    "isbn": "2050-7488",
+    "doi": "10.1039/C6TA04123J",
+    "author": [
+      "Li, Guodong",
+      "An, Qi",
+      "Aydemir, Umut",
+      "III, William A. Goddard",
+      "Wood, Max",
+      "Zhai, Pengcheng",
+      "Zhang, Qingjie",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Enhanced Ideal Strength of Thermoelectric Half-Heusler TiNiSn by Sub-Structure Engineering",
+    "ENTRYTYPE": "article",
+    "ID": "li2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C6TA04123J",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2016",
+    "issn": "15205002",
+    "doi": "10.1021/acs.chemmater.6b00112",
+    "author": [
+      "Li, Guodong",
+      "Bajaj, Saurabh",
+      "Aydemir, Umut",
+      "Hao, Shiqiang",
+      "Xiao, Hai",
+      "Goddard, William A.",
+      "Zhai, Pengcheng",
+      "Zhang, Qingjie",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "P-Type Co Interstitial Defects in Thermoelectric Skutterudite CoSb3 Due to the Breakage of Sb4-Rings",
+    "ENTRYTYPE": "article",
+    "ID": "li2016a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.chemmater.6b00112",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2017",
+    "issn": "0897-4756",
+    "doi": "10.1021/acs.chemmater.7b00559",
+    "author": [
+      "Li, Guodong",
+      "Aydemir, Umut",
+      "Wood, Max",
+      "Goddard, William A.",
+      "Zhai, Pengcheng",
+      "Zhang, Qingjie",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Defect-Controlled Electronic Structure and Phase Stability in Thermoelectric Skutterudite CoSb \u00a1sub\u00bf3\u00a1/Sub\u00bf",
+    "ENTRYTYPE": "article",
+    "ID": "li2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.chemmater.7b00559",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2017",
+    "issn": "15205002",
+    "doi": "10.1021/acs.chemmater.7b00279",
+    "author": [
+      "Li, Guodong",
+      "Aydemir, Umut",
+      "Wood, Max",
+      "Goddard, William A.",
+      "Zhai, Pengcheng",
+      "Zhang, Qingjie",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Ideal Strength and Deformation Mechanism in High-Efficiency Thermoelectric SnSe",
+    "ENTRYTYPE": "article",
+    "ID": "li2017a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.chemmater.7b00279",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25120033",
+    "journal": "Nano Letters",
+    "year": "2014",
+    "issn": "15306992",
+    "isbn": "1530-6984, 1530-6992",
+    "doi": "10.1021/nl501793a",
+    "author": [
+      "Liu, Kai",
+      "Yan, Qimin",
+      "Chen, Michelle",
+      "Fan, Wen",
+      "Sun, Yinghui",
+      "Suh, Joonki",
+      "Fu, Deyi",
+      "Lee, Sangwook",
+      "Zhou, Jian",
+      "Tongay, Sefaattin",
+      "Ji, Jie",
+      "Neaton, Jeffrey B.",
+      "Wu, Junqiao"
+    ],
+    "title": "Elastic Properties of Chemical-Vapor-Deposited Monolayer MoS2, WS2, and Their Bilayer Heterostructures",
+    "ENTRYTYPE": "article",
+    "ID": "liu2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/nl501793a",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2015",
+    "issn": "1754-5692",
+    "isbn": "1754-5692",
+    "doi": "10.1039/C4EE03389B",
+    "author": [
+      "Liu, Miao",
+      "Rong, Ziqin",
+      "Malik, Rahul",
+      "Canepa, Pieremanuele",
+      "Jain, Anubhav",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "Spinel Compounds as Multivalent Battery Cathodes: A Systematic Evaluation Based on \u00a1i\u00bfab Initio\u00a1/I\u00bf Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "liu2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4EE03389B",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2015",
+    "issn": "1754-5692",
+    "isbn": "1754-5692",
+    "doi": "10.1039/C4EE03389B",
+    "author": [
+      "Liu, Miao",
+      "Rong, Ziqin",
+      "Malik, Rahul",
+      "Canepa, Pieremanuele",
+      "Jain, Anubhav",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "Spinel Compounds as Multivalent Battery Cathodes: A Systematic Evaluation Based on \u00a1i\u00bfab Initio\u00a1/I\u00bf Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "liu2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4EE03389B",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26599063",
+    "journal": "Nano Letters",
+    "year": "2016",
+    "issn": "15306992",
+    "isbn": "1530-6984",
+    "doi": "10.1021/acs.nanolett.5b04140",
+    "author": [
+      "Liu, Yanping",
+      "Tom, Kyle",
+      "Wang, Xi",
+      "Huang, Chunming",
+      "Yuan, Hongtao",
+      "Ding, Hong",
+      "Ko, Changhyun",
+      "Suh, Joonki",
+      "Pan, Lawrence",
+      "Persson, Kristin A.",
+      "Yao, Jie"
+    ],
+    "title": "Dynamic Control of Optical Response in Layered Metal Chalcogenide Nanoplates",
+    "ENTRYTYPE": "article",
+    "ID": "liu2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.nanolett.5b04140",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Energy Environ. Sci.",
+    "journal": "Energy & Environmental Science",
+    "year": "2016",
+    "issn": "1754-5692",
+    "isbn": "1754-5692",
+    "doi": "10.1039/C6EE01731B",
+    "author": [
+      "Liu, Miao",
+      "Jain, Anubhav",
+      "Rong, Ziqin",
+      "Qu, Xiaohui",
+      "Canepa, Pieremanuele",
+      "Malik, Rahul",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "Evaluation of Sulfur Spinel Compounds for Multivalent Battery Cathode Applications",
+    "ENTRYTYPE": "article",
+    "ID": "liu2016a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C6EE01731B",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24776820",
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2014",
+    "issn": "1463-9076",
+    "isbn": "1463-9076",
+    "doi": "10.1039/C4CP00937A",
+    "author": [
+      "Longo, R. C.",
+      "Kong, F. T.",
+      "KC, Santosh",
+      "Park, M. S.",
+      "Yoon, J.",
+      "Yeon, D.-H.",
+      "Park, J.-H.",
+      "Doo, S.-G.",
+      "Cho, K."
+    ],
+    "title": "Phase Stability of Li\u2013Mn\u2013O Oxides as Cathode Materials for Li-Ion Batteries: Insights from Ab Initio Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "longo2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4CP00937A",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2017",
+    "issn": "09270256",
+    "doi": "10.1016/j.commatsci.2017.07.030",
+    "author": [
+      "Mathew, Kiran",
+      "Montoya, Joseph H.",
+      "Faghaninia, Alireza",
+      "Dwarakanath, Shyam",
+      "Aykol, Muratahan",
+      "Tang, Hanmei",
+      "heng Chu, Iek",
+      "Smidt, Tess",
+      "Bocklund, Brandon",
+      "Horton, Matthew",
+      "Dagdelen, John",
+      "Wood, Brandon",
+      "Liu, Zi Kui",
+      "Neaton, Jeffrey",
+      "Ong, Shyue Ping",
+      "Persson, Kristin",
+      "Jain, Anubhav"
+    ],
+    "title": "Atomate: A High-Level Interface to Generate, Execute, and Analyze Computational Materials Science Workflows",
+    "ENTRYTYPE": "article",
+    "ID": "mathew2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2017.07.030",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2015.01.018",
+    "author": ["Medasani, Bharat", "Haranczyk, Maciej", "Canning, Andrew", "Asta, Mark"],
+    "title": "Vacancy Formation Energies in Metals: A Comparison of MetaGGA with LDA and GGA Exchange-Correlation Functionals",
+    "ENTRYTYPE": "article",
+    "ID": "medasani2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2015.01.018",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2015.01.018",
+    "author": ["Medasani, Bharat", "Haranczyk, Maciej", "Canning, Andrew", "Asta, Mark"],
+    "title": "Vacancy Formation Energies in Metals: A Comparison of MetaGGA with LDA and GGA Exchange-Correlation Functionals",
+    "ENTRYTYPE": "article",
+    "ID": "medasani2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2015.01.018",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Applied Physics",
+    "year": "2013",
+    "issn": "00218979",
+    "doi": "10.1063/1.4821972",
+    "author": [
+      "Meinert, Markus",
+      "H\u00fcbner, Torsten",
+      "Schmalhorst, Jan",
+      "Reiss, G\u00fcnter",
+      "Arenholz, Elke"
+    ],
+    "title": "Phase Separation in Fe2CrSi Thin Films",
+    "ENTRYTYPE": "article",
+    "ID": "meinert2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4821972",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Magnetism and Magnetic Materials",
+    "year": "2013",
+    "issn": "03048853",
+    "doi": "10.1016/j.jmmm.2013.04.025",
+    "author": ["Meinert, Markus", "Geisler, Manuel P."],
+    "title": "Phase Stability of Chromium Based Compensated Ferrimagnets with Inverse Heusler Structure",
+    "ENTRYTYPE": "article",
+    "ID": "meinert2013a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.jmmm.2013.04.025",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "npj Computational Materials",
+    "year": "2017",
+    "issn": "2057-3960",
+    "isbn": "2057-3960",
+    "doi": "10.1038/s41524-017-0017-z",
+    "author": ["Montoya, Joseph H.", "Persson, Kristin A."],
+    "title": "A High-Throughput Framework for Determining Adsorption Energies on Solid Surfaces",
+    "ENTRYTYPE": "article",
+    "ID": "montoya2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/s41524-017-0017-z",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Alloys and Compounds",
+    "year": "2015",
+    "issn": "09258388",
+    "isbn": "8166879794",
+    "doi": "10.1016/j.jallcom.2014.08.212",
+    "author": ["Nagase, Takeshi", "Suzuki, Masanori", "Tanaka, Toshihiko"],
+    "title": "Amorphous Phase Formation in Fe-Ag-Based Immiscible Alloys",
+    "ENTRYTYPE": "article",
+    "ID": "nagase2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.jallcom.2014.08.212",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Alloys and Compounds",
+    "year": "2015",
+    "issn": "09258388",
+    "isbn": "8166879794",
+    "doi": "10.1016/j.jallcom.2014.08.229",
+    "author": ["Nagase, Takeshi", "Suzuki, Masanori", "Tanaka, Toshihiro"],
+    "title": "Formation of Amorphous Phase with Crystalline Globules in Fe-Cu-Nb-B Immiscible Alloys",
+    "ENTRYTYPE": "article",
+    "ID": "nagase2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.jallcom.2014.08.229",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2016",
+    "issn": "09270256",
+    "doi": "10.1016/j.commatsci.2016.07.043",
+    "author": [
+      "Nath, Pinku",
+      "Plata, Jose J.",
+      "Usanmaz, Demet",
+      "Orabi, Rabih Al Rahal Al",
+      "Fornari, Marco",
+      "Nardelli, Marco Buongiorno",
+      "Toher, Cormac",
+      "Curtarolo, Stefano"
+    ],
+    "title": "High-Throughput Prediction of Finite-Temperature Properties Using the Quasi-Harmonic Approximation",
+    "ENTRYTYPE": "article",
+    "ID": "nath2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2016.07.043",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "27214625",
+    "journal": "ACS Nano",
+    "year": "2016",
+    "issn": "1936086X",
+    "isbn": "1936-0851",
+    "doi": "10.1021/acsnano.6b02331",
+    "author": ["Niu, Kai Yang", "Liu, Miao", "Persson, Kristin A.", "Han, Yu", "Zheng, Haimei"],
+    "title": "Strain-Mediated Interfacial Dynamics during Au-Pbs Core-Shell Nanostructure Formation",
+    "ENTRYTYPE": "article",
+    "ID": "niu2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acsnano.6b02331",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "17362112",
+    "journal": "Chemistry of Materials",
+    "year": "2008",
+    "issn": "08974756",
+    "isbn": "0897-4756",
+    "doi": "10.1021/cm702327g",
+    "author": ["Ong, Shyue Ping", "Wang, Lei", "Kang, Byoungwoo", "Ceder, Gerbrand"],
+    "title": "Li - Fe - P - O2 Phase Diagram from First Principles Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "ong2008",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/cm702327g",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Electrochemistry Communications",
+    "year": "2010",
+    "doi": "10.1016/j.elecom.2010.01.010",
+    "pages": "427--430",
+    "volume": "12",
+    "author": [
+      "Ong, Shyue Ping",
+      "Jain, Anubhav",
+      "Hautier, Geoffroy",
+      "Kang, Byoungwoo",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Thermal Stabilities of Delithiated Olivine MPO 4 (M = Fe, Mn) Cathodes Investigated Using First Principles Calculations LiFePO 4 MnPO 4 FePO 4 Density Functional Theory Phase Diagrams",
+    "ENTRYTYPE": "article",
+    "ID": "ong2010",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.elecom.2010.01.010",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2013",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2012.10.028",
+    "author": [
+      "Ong, Shyue Ping",
+      "Richards, William Davidson",
+      "Jain, Anubhav",
+      "Hautier, Geoffroy",
+      "Kocher, Michael",
+      "Cholia, Shreyas",
+      "Gunter, Dan",
+      "Chevrier, Vincent L.",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Python Materials Genomics (Pymatgen): A Robust, Open-Source Python Library for Materials Analysis",
+    "ENTRYTYPE": "article",
+    "ID": "ong2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2012.10.028",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "doi": "10.1016/j.commatsci.2014.10.037",
+    "author": [
+      "Ong, Shyue Ping",
+      "Cholia, Shreyas",
+      "Jain, Anubhav",
+      "Brafman, Miriam",
+      "Gunter, Dan",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "The Materials Application Programming Interface (API): A Simple, Flexible and Efficient API for Materials Data Based on REpresentational State Transfer (REST) Principles",
+    "ENTRYTYPE": "article",
+    "ID": "ong2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2014.10.037",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "doi": "10.1016/j.commatsci.2014.10.037",
+    "author": [
+      "Ong, Shyue Ping",
+      "Cholia, Shreyas",
+      "Jain, Anubhav",
+      "Brafman, Miriam",
+      "Gunter, Dan",
+      "Ceder, Gerbrand",
+      "Persson, Kristin A."
+    ],
+    "title": "The Materials Application Programming Interface (API): A Simple, Flexible and Efficient API for Materials Data Based on REpresentational State Transfer (REST) Principles",
+    "ENTRYTYPE": "article",
+    "ID": "ong2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2014.10.037",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "year": "2016",
+    "issn": "24699969",
+    "isbn": "2469-9950",
+    "doi": "10.1103/PhysRevB.93.115151",
+    "author": [
+      "Petousis, Ioannis",
+      "Chen, Wei",
+      "Hautier, Geoffroy",
+      "Graf, Tanja",
+      "Schladt, Thomas D.",
+      "Persson, Kristin A.",
+      "Prinz, Fritz B."
+    ],
+    "title": "Benchmarking Density Functional Perturbation Theory to Enable High-Throughput Screening of Materials for Dielectric Constant and Refractive Index",
+    "ENTRYTYPE": "article",
+    "ID": "petousis2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.93.115151",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Scientific Data",
+    "year": "2017",
+    "issn": "2052-4463",
+    "doi": "10.1038/sdata.2016.134",
+    "author": [
+      "Petousis, Ioannis",
+      "Mrdjenovich, David",
+      "Ballouz, Eric",
+      "Liu, Miao",
+      "Winston, Donald",
+      "Chen, Wei",
+      "Graf, Tanja",
+      "Schladt, Thomas D.",
+      "Persson, Kristin A.",
+      "Prinz, Fritz B."
+    ],
+    "title": "High-Throughput Screening of Inorganic Compounds for the Discovery of Novel Dielectric and Optical Materials",
+    "ENTRYTYPE": "article",
+    "ID": "petousis2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2016.134",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "CrystEngComm",
+    "year": "2013",
+    "issn": "1466-8033",
+    "isbn": "1466-8033",
+    "doi": "10.1039/c3ce41057a",
+    "author": [
+      "Pinheiro, Marielle",
+      "Martin, Richard L.",
+      "Rycroft, Chris H.",
+      "Haranczyk, Maciej"
+    ],
+    "title": "High Accuracy Geometric Analysis of Crystalline Porous Materials",
+    "ENTRYTYPE": "article",
+    "ID": "pinheiro2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/c3ce41057a",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Advanced Materials Interfaces",
+    "year": "2014",
+    "issn": "21967350",
+    "doi": "10.1002/admi.201300115",
+    "author": [
+      "Qiao, Ruimin",
+      "Lucas, Ivan T.",
+      "Karim, Altaf",
+      "Syzdek, Jaroslaw",
+      "Liu, Xiaosong",
+      "Chen, Wei",
+      "Persson, Kristin",
+      "Kostecki, Robert",
+      "Yang, Wanli"
+    ],
+    "title": "Distinct Solid-Electrolyte-Interphases on Sn (100) and (001) Electrodes Studied by Soft x-Ray Spectroscopy",
+    "ENTRYTYPE": "article",
+    "ID": "qiao2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/admi.201300115",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Advanced Materials Interfaces",
+    "year": "2014",
+    "issn": "21967350",
+    "doi": "10.1002/admi.201300115",
+    "author": [
+      "Qiao, Ruimin",
+      "Lucas, Ivan T.",
+      "Karim, Altaf",
+      "Syzdek, Jaroslaw",
+      "Liu, Xiaosong",
+      "Chen, Wei",
+      "Persson, Kristin",
+      "Kostecki, Robert",
+      "Yang, Wanli"
+    ],
+    "title": "Distinct Solid-Electrolyte-Interphases on Sn (100) and (001) Electrodes Studied by Soft x-Ray Spectroscopy",
+    "ENTRYTYPE": "article",
+    "ID": "qiao2014a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/admi.201300115",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2015",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2015.02.050",
+    "author": [
+      "Qu, Xiaohui",
+      "Jain, Anubhav",
+      "Rajput, Nav Nidhi",
+      "Cheng, Lei",
+      "Zhang, Yong",
+      "Ong, Shyue Ping",
+      "Brafman, Miriam",
+      "Maginn, Edward",
+      "Curtiss, Larry A.",
+      "Persson, Kristin A."
+    ],
+    "title": "The Electrolyte Genome Project: A Big Data Approach in Battery Materials Discovery",
+    "ENTRYTYPE": "article",
+    "ID": "qu2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2015.02.050",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Chemical Theory and Computation",
+    "year": "2016",
+    "issn": "15499626",
+    "doi": "10.1021/acs.jctc.6b00289",
+    "author": ["Qu, Xiaohui", "Persson, Kristin A."],
+    "title": "Toward Accurate Modeling of the Effect of Ion-Pair Formation on Solute Redox Potential",
+    "ENTRYTYPE": "article",
+    "ID": "qu2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.jctc.6b00289",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Physical Chemistry C",
+    "year": "2017",
+    "issn": "19327455",
+    "doi": "10.1021/acs.jpcc.7b04516",
+    "author": [
+      "Qu, Xiaohui",
+      "Zhang, Yong",
+      "Rajput, Nav Nidhi",
+      "Jain, Anubhav",
+      "Maginn, Edward",
+      "Persson, Kristin A."
+    ],
+    "title": "Computational Design of New Magnesium Electrolytes with Improved Properties",
+    "ENTRYTYPE": "article",
+    "ID": "qu2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.jpcc.7b04516",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25668289",
+    "journal": "Journal of the American Chemical Society",
+    "year": "2015",
+    "issn": "15205126",
+    "isbn": "0002-7863",
+    "doi": "10.1021/jacs.5b01004",
+    "author": [
+      "Rajput, Nav Nidhi",
+      "Qu, Xiaohui",
+      "Sa, Niya",
+      "Burrell, Anthony K.",
+      "Persson, Kristin A."
+    ],
+    "title": "The Coupling between Stability and Ion Pair Formation in Magnesium Electrolytes from First-Principles Quantum Mechanics and Classical Molecular Dynamics",
+    "ENTRYTYPE": "article",
+    "ID": "rajput2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/jacs.5b01004",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Scientific Data",
+    "year": "2017",
+    "issn": "2052-4463",
+    "doi": "10.1038/sdata.2017.85",
+    "author": [
+      "Ricci, Francesco",
+      "Chen, Wei",
+      "Aydemir, Umut",
+      "Snyder, G. Jeffrey",
+      "Rignanese, Gian-Marco",
+      "Jain, Anubhav",
+      "Hautier, Geoffroy"
+    ],
+    "title": "An Ab Initio Electronic Transport Database for Inorganic Materials",
+    "ENTRYTYPE": "article",
+    "ID": "ricci2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2017.85",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Statistical Science",
+    "year": "2014",
+    "issn": "0883-4237",
+    "doi": "10.1214/14-STS483",
+    "author": ["Ritov, Y.", "Bickel, P. J.", "Gamst, A. C.", "Kleijn, B. J. K."],
+    "title": "The Bayesian Analysis of Complex, High-Dimensional Models: Can It Be CODA?",
+    "ENTRYTYPE": "article",
+    "ID": "ritov2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1214/14-STS483",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Statistical Science",
+    "year": "2014",
+    "issn": "0883-4237",
+    "doi": "10.1214/14-STS483",
+    "author": ["Ritov, Y.", "Bickel, P. J.", "Gamst, A. C.", "Kleijn, B. J. K."],
+    "title": "The Bayesian Analysis of Complex, High-Dimensional Models: Can It Be CODA?",
+    "ENTRYTYPE": "article",
+    "ID": "ritov2014a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1214/14-STS483",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2015",
+    "issn": "15205002",
+    "isbn": "0897-4756",
+    "doi": "10.1021/acs.chemmater.5b02342",
+    "author": [
+      "Rong, Ziqin",
+      "Malik, Rahul",
+      "Canepa, Pieremanuele",
+      "Gautam, Gopalakrishnan Sai",
+      "Liu, Miao",
+      "Jain, Anubhav",
+      "Persson, Kristin",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Materials Design Rules for Multivalent Ion Mobility in Intercalation Structures",
+    "ENTRYTYPE": "article",
+    "ID": "rong2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.chemmater.5b02342",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26415623",
+    "journal": "Nature Communications",
+    "year": "2015",
+    "issn": "20411723",
+    "isbn": "1948-7185",
+    "doi": "10.1038/ncomms9485",
+    "author": [
+      "Rost, Christina M.",
+      "Sachet, Edward",
+      "Borman, Trent",
+      "Moballegh, Ali",
+      "Dickey, Elizabeth C.",
+      "Hou, Dong",
+      "Jones, Jacob L.",
+      "Curtarolo, Stefano",
+      "Maria, Jon Paul"
+    ],
+    "title": "Entropy-Stabilized Oxides",
+    "ENTRYTYPE": "article",
+    "ID": "rost2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/ncomms9485",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "9976227",
+    "journal": "American Mineralogist",
+    "year": "2012",
+    "issn": "0003004X",
+    "isbn": "0003-004X",
+    "doi": "10.2138/am.2012.3948",
+    "author": ["Rustad, James R."],
+    "title": "Density Functional Calculations of the Enthalpies of Formation of Rare-Earth Orthophosphates",
+    "ENTRYTYPE": "article",
+    "ID": "rustad2012",
+    "link": [
+      {
+        "url": "https://doi.org/10.2138/am.2012.3948",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemistry of Materials",
+    "year": "2016",
+    "issn": "15205002",
+    "doi": "10.1021/acs.chemmater.6b00026",
+    "author": [
+      "Sa, Niya",
+      "Kinnibrugh, Tiffany L.",
+      "Wang, Hao",
+      "Gautam, Gopalakrishnan Sai",
+      "Chapman, Karena W.",
+      "Vaughey, John T.",
+      "Key, Baris",
+      "Fister, Timothy T.",
+      "Freeland, John W.",
+      "Proffit, Danielle L.",
+      "Chupas, Peter J.",
+      "Ceder, Gerbrand",
+      "Bareno, Javier G.",
+      "Bloom, Ira D.",
+      "Burrell, Anthony K."
+    ],
+    "title": "Structural Evolution of Reversible Mg Insertion into a Bilayer Structure of V2O5\u00b7nH2O Xerogel Material",
+    "ENTRYTYPE": "article",
+    "ID": "sa2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acs.chemmater.6b00026",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Applied Physics",
+    "year": "2013",
+    "issn": "00218979",
+    "doi": "10.1063/1.4821429",
+    "author": ["Sarker, Pranab", "Prasher, Dixit", "Gaillard, Nicolas", "Huda, Muhammad N."],
+    "title": "Predicting a New Photocatalyst and Its Electronic Properties by Density Functional Theory",
+    "ENTRYTYPE": "article",
+    "ID": "sarker2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4821429",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Mater. Horiz.",
+    "journal": "Materials Horizons",
+    "year": "2015",
+    "issn": "2051-6347",
+    "isbn": "2051-63472\u030a051-6355",
+    "doi": "10.1039/C4MH00142G",
+    "author": ["Schmitt, Jennifer", "Gibbs, Zachary M.", "Snyder, G. Jeffrey", "Felser, Claudia"],
+    "title": "Resolving the True Band Gap of ZrNiSn Half-Heusler Thermoelectric Materials",
+    "ENTRYTYPE": "article",
+    "ID": "schmitt2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4MH00142G",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "Mater. Horiz.",
+    "journal": "Materials Horizons",
+    "year": "2015",
+    "issn": "2051-6347",
+    "isbn": "2051-63472\u030a051-6355",
+    "doi": "10.1039/C4MH00142G",
+    "author": ["Schmitt, Jennifer", "Gibbs, Zachary M.", "Snyder, G. Jeffrey", "Felser, Claudia"],
+    "title": "Resolving the True Band Gap of ZrNiSn Half-Heusler Thermoelectric Materials",
+    "ENTRYTYPE": "article",
+    "ID": "schmitt2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4MH00142G",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "PHYSICAL REVIEW B",
+    "year": "2013",
+    "doi": "10.1103/PhysRevB.87.134109",
+    "pages": "134109--71",
+    "volume": "8784",
+    "author": ["Sharma, V", "Pilania, G", "Rossetti, G A", "Slenes, K", "Ramprasad, R"],
+    "title": "Comprehensive Examination of Dopants and Defects in BaTiO 3 from First Principles",
+    "ENTRYTYPE": "article",
+    "ID": "sharma2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.87.134109",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "ACS Energy Letters",
+    "year": "2017",
+    "issn": "23808195",
+    "doi": "10.1021/acsenergylett.7b00607",
+    "author": [
+      "Shinde, Aniketa",
+      "Suram, Santosh K.",
+      "Yan, Qimin",
+      "Zhou, Lan",
+      "Singh, Arunima K.",
+      "Yu, Jie",
+      "Persson, Kristin A.",
+      "Neaton, Jeffrey B.",
+      "Gregoire, John M."
+    ],
+    "title": "Discovery of Manganese-Based Solar Fuel Photoanodes via Integration of Electronic Structure Calculations, Pourbaix Stability Modeling, and High-Throughput Experiments",
+    "ENTRYTYPE": "article",
+    "ID": "shinde2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/acsenergylett.7b00607",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25739963",
+    "journal": "Proceedings of the National Academy of Sciences",
+    "year": "2015",
+    "issn": "0027-8424",
+    "isbn": "1506100112",
+    "doi": "10.1073/pnas.1423898112",
+    "author": [
+      "Sun, Wenhao",
+      "Jayaraman, Saivenkataraman",
+      "Chen, Wei",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Nucleation of Metastable Aragonite CaCO \u00a1sub\u00bf3\u00a1/Sub\u00bf in Seawater",
+    "ENTRYTYPE": "article",
+    "ID": "sun2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1073/pnas.1423898112",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "28138514",
+    "journal": "Science Advances",
+    "year": "2016",
+    "issn": "2375-2548",
+    "isbn": "2375-2548 (Electronic)2\u030a375-2548 (Linking)",
+    "doi": "10.1126/sciadv.1600225",
+    "author": [
+      "Sun, W.",
+      "Dacek, S. T.",
+      "Ong, S. P.",
+      "Hautier, G.",
+      "Jain, A.",
+      "Richards, W. D.",
+      "Gamst, A. C.",
+      "Persson, K. A.",
+      "Ceder, G."
+    ],
+    "title": "The Thermodynamic Scale of Inorganic Crystalline Metastability",
+    "ENTRYTYPE": "article",
+    "ID": "sun2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1126/sciadv.1600225",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of Power Sources",
+    "year": "2014",
+    "issn": "03787753",
+    "isbn": "0378-7753",
+    "doi": "10.1016/j.jpowsour.2014.01.107",
+    "author": [
+      "Tang, Xiaosheng",
+      "Yao, Xiayin",
+      "Chen, Yu",
+      "Song, Bohang",
+      "Zhou, Dan",
+      "Kong, Junhua",
+      "Zhao, Chenyang",
+      "Lu, Xuehong"
+    ],
+    "title": "CuInZnS-Decorated Graphene as a High-Rate Durable Anode for Lithium-Ion Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "tang2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.jpowsour.2014.01.107",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Computational Materials Science",
+    "year": "2014",
+    "issn": "09270256",
+    "isbn": "0927-0256",
+    "doi": "10.1016/j.commatsci.2014.05.014",
+    "author": [
+      "Taylor, Richard H.",
+      "Rose, Frisco",
+      "Toher, Cormac",
+      "Levy, Ohad",
+      "Yang, Kesong",
+      "Nardelli, Marco Buongiorno",
+      "Curtarolo, Stefano"
+    ],
+    "title": "A RESTful API for Exchanging Materials Data in the AFLOWLIB.Org Consortium",
+    "ENTRYTYPE": "article",
+    "ID": "taylor2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.commatsci.2014.05.014",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "21386315",
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2014",
+    "issn": "1550235X",
+    "isbn": "0953-8984",
+    "doi": "10.1103/PhysRevB.90.174107",
+    "author": [
+      "Toher, Cormac",
+      "Plata, Jose J.",
+      "Levy, Ohad",
+      "Jong, Maarten De",
+      "Asta, Mark",
+      "Nardelli, Marco Buongiorno",
+      "Curtarolo, Stefano"
+    ],
+    "title": "High-Throughput Computational Screening of Thermal Conductivity, Debye Temperature, and Gr\u00fcneisen Parameter Using a Quasiharmonic Debye Model",
+    "ENTRYTYPE": "article",
+    "ID": "toher2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.90.174107",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "21386315",
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2014",
+    "issn": "1550235X",
+    "isbn": "0953-8984",
+    "doi": "10.1103/PhysRevB.90.174107",
+    "author": [
+      "Toher, Cormac",
+      "Plata, Jose J.",
+      "Levy, Ohad",
+      "Jong, Maarten De",
+      "Asta, Mark",
+      "Nardelli, Marco Buongiorno",
+      "Curtarolo, Stefano"
+    ],
+    "title": "High-Throughput Computational Screening of Thermal Conductivity, Debye Temperature, and Gr\u00fcneisen Parameter Using a Quasiharmonic Debye Model",
+    "ENTRYTYPE": "article",
+    "ID": "toher2014a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.90.174107",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "options": "useprefix=true",
+    "journal": "Physical Review Materials",
+    "year": "2017",
+    "issn": "2475-9953",
+    "doi": "10.1103/PhysRevMaterials.1.015401",
+    "author": [
+      "Toher, Cormac",
+      "Oses, Corey",
+      "Plata, Jose J.",
+      "Hicks, David",
+      "Rose, Frisco",
+      "Levy, Ohad",
+      "de Jong, Maarten",
+      "Asta, Mark",
+      "Fornari, Marco",
+      "Nardelli, Marco Buongiorno",
+      "Curtarolo, Stefano"
+    ],
+    "title": "Combining the AFLOW GIBBS and Elastic Libraries to Efficiently and Robustly Screen Thermomechanical Properties of Solids",
+    "ENTRYTYPE": "article",
+    "ID": "toher2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevMaterials.1.015401",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of The Electrochemical Society",
+    "year": "2011",
+    "issn": "00134651",
+    "isbn": "0013-4651",
+    "doi": "10.1149/2.083112jes",
+    "author": ["Tran, Tuan T.", "Obrovac, M. N."],
+    "title": "Alloy Negative Electrodes for High Energy Density Metal-Ion Cells",
+    "ENTRYTYPE": "article",
+    "ID": "tran2011",
+    "link": [
+      {
+        "url": "https://doi.org/10.1149/2.083112jes",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "27608774",
+    "journal": "Scientific data",
+    "year": "2016",
+    "issn": "20524463",
+    "doi": "10.1038/sdata.2016.80",
+    "author": [
+      "Tran, Richard",
+      "Xu, Zihan",
+      "Radhakrishnan, Balachandran",
+      "Winston, Donald",
+      "Sun, Wenhao",
+      "Persson, Kristin A.",
+      "Ong, Shyue Ping"
+    ],
+    "title": "Surface Energies of Elemental Crystals",
+    "ENTRYTYPE": "article",
+    "ID": "tran2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/sdata.2016.80",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Journal of the Electrochemical Society",
+    "year": "2014",
+    "issn": "0013-4651",
+    "isbn": "0013-4651",
+    "doi": "10.1149/2.095403jes",
+    "author": ["Tsai, P.-c.", "Hsu, W.-D.", "Lin, S.-k."],
+    "title": "Atomistic Structure and Ab Initio Electrochemical Properties of Li4Ti5O12 Defect Spinel for Li Ion Batteries",
+    "ENTRYTYPE": "article",
+    "ID": "tsai2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1149/2.095403jes",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "title": "Electronic structure and defect properties of B6O from hybrid functional and many-body perturbation theory calculations: A possible ambipolar transparent conductor",
+    "author": ["Varley, J. B.", "Lordi, V.", "Miglio, A.", "Hautier, G."],
+    "number": "4",
+    "volume": "90",
+    "publisher": "American Physical Society (APS)",
+    "month": "jul",
+    "year": "2014",
+    "doi": "10.1103/physrevb.90.045205",
+    "ENTRYTYPE": "article",
+    "ID": "Varley2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/physrevb.90.045205",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "24047133",
+    "journal": "ACS Nano",
+    "year": "2013",
+    "issn": "19360851",
+    "isbn": "1936-086X (Electronic)1936-0851 (Linking)",
+    "doi": "10.1021/nn4040876",
+    "author": [
+      "Wang, Yongcheng",
+      "Zhang, Yue Yu",
+      "Tang, Jing",
+      "Wu, Haoyu",
+      "Xu, Ming",
+      "Peng, Zheng",
+      "Gong, Xin Gao",
+      "Zheng, Gengfeng"
+    ],
+    "title": "Simultaneous Etching and Doping of TiO2 Nanowire Arrays for Enhanced Photoelectrochemical Performance",
+    "ENTRYTYPE": "article",
+    "ID": "wang2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1021/nn4040876",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "options": "useprefix=true",
+    "journal": "Physical Review Materials",
+    "year": "2017",
+    "issn": "2475-9953",
+    "doi": "10.1103/PhysRevMaterials.1.030601",
+    "author": ["Winter, I. S.", "de Jong, M.", "Asta, M.", "Chrzan, D. C."],
+    "title": "Computing Elastic Anisotropy to Discover Gum-Metal-like Structural Alloys",
+    "ENTRYTYPE": "article",
+    "ID": "winter2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevMaterials.1.030601",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "year": "2017",
+    "issn": "24699969",
+    "doi": "10.1103/PhysRevB.95.064107",
+    "author": ["Winter, I. S.", "Poschmann, M.", "Tsuru, T.", "Chrzan, D. C."],
+    "title": "Dislocations near Elastic Instability in High-Pressure Body-Centered-Cubic Magnesium",
+    "ENTRYTYPE": "article",
+    "ID": "winter2017a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.95.064107",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review Materials",
+    "year": "2017",
+    "issn": "2475-9953",
+    "doi": "10.1103/PhysRevMaterials.1.033606",
+    "author": ["Winter, I. S.", "Tsuru, T.", "Chrzan, D. C."],
+    "title": "Lattice Softening in Body-Centered-Cubic Lithium-Magnesium Alloys",
+    "ENTRYTYPE": "article",
+    "ID": "winter2017b",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevMaterials.1.033606",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "year": "2016",
+    "issn": "24699969",
+    "doi": "10.1103/PhysRevB.93.157101",
+    "author": ["Xie, Wei", "Marianetti, Chris A.", "Morgan, Dane"],
+    "title": "Reply to \"comment on 'Correlation and Relativistic Effects in U Metal and U-Zr Alloy: Validation of Ab Initio Approaches' \"",
+    "ENTRYTYPE": "article",
+    "ID": "xie2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.93.157101",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Acta Materialia",
+    "year": "2014",
+    "issn": "13596454",
+    "isbn": "1359-6454",
+    "doi": "10.1016/j.actamat.2014.06.065",
+    "author": [
+      "Yamini, Sima Aminorroaya",
+      "Wang, Heng",
+      "Gibbs, Zachary M.",
+      "Pei, Yanzhong",
+      "Mitchell, David R.G.",
+      "Dou, Shi Xue",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Thermoelectric Performance of Tellurium-Reduced Quaternary p-Type Lead-Chalcogenide Composites",
+    "ENTRYTYPE": "article",
+    "ID": "yamini2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1016/j.actamat.2014.06.065",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Advanced Energy Materials",
+    "year": "2015",
+    "issn": "16146840",
+    "isbn": "1614-6840",
+    "doi": "10.1002/aenm.201401840",
+    "author": [
+      "Yan, Qimin",
+      "Li, Guo",
+      "Newhouse, Paul F.",
+      "Yu, Jie",
+      "Persson, Kristin A.",
+      "Gregoire, John M.",
+      "Neaton, Jeffrey B."
+    ],
+    "title": "Mn2V2O7: An Earth Abundant Light Absorber for Solar Water Splitting",
+    "ENTRYTYPE": "article",
+    "ID": "yan2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/aenm.201401840",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Advanced Energy Materials",
+    "year": "2015",
+    "isbn": "1614-6840",
+    "doi": "10.1002/aenm.201401840",
+    "author": [
+      "Yan, Qimin",
+      "Li, Guo",
+      "Newhouse, Paul F.",
+      "Yu, Jie",
+      "Persson, Kristin A.",
+      "Gregoire, John M.",
+      "Neaton, Jeffrey B."
+    ],
+    "title": "Mn\u2082V2O7: An Earth Abundant Light Absorber for Solar Water Splitting",
+    "ENTRYTYPE": "article",
+    "ID": "yan2015a",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/aenm.201401840",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B",
+    "year": "2016",
+    "issn": "24699969",
+    "isbn": "2469-9950",
+    "doi": "10.1103/PhysRevB.93.041420",
+    "author": [
+      "Yan, Aiming",
+      "Chen, Wei",
+      "Ophus, Colin",
+      "Ciston, Jim",
+      "Lin, Yuyuan",
+      "Persson, Kristin",
+      "Zettl, Alex"
+    ],
+    "title": "Identifying Different Stacking Sequences in Few-Layer CVD-Grown Mo S2 by Low-Energy Atomic-Resolution Scanning Transmission Electron Microscopy",
+    "ENTRYTYPE": "article",
+    "ID": "yan2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.93.041420",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "28265095",
+    "journal": "Proceedings of the National Academy of Sciences",
+    "year": "2017",
+    "issn": "0027-8424",
+    "isbn": "1091-6490 (Electronic)0\u030a027-8424 (Linking)",
+    "doi": "10.1073/pnas.1619940114",
+    "author": [
+      "Yan, Qimin",
+      "Yu, Jie",
+      "Suram, Santosh K.",
+      "Zhou, Lan",
+      "Shinde, Aniketa",
+      "Newhouse, Paul F.",
+      "Chen, Wei",
+      "Li, Guo",
+      "Persson, Kristin A.",
+      "Gregoire, John M.",
+      "Neaton, Jeffrey B."
+    ],
+    "title": "Solar Fuels Photoanode Materials Discovery by Integrating High-Throughput Theory and Experiment",
+    "ENTRYTYPE": "article",
+    "ID": "yan2017",
+    "link": [
+      {
+        "url": "https://doi.org/10.1073/pnas.1619940114",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2014",
+    "issn": "1550235X",
+    "doi": "10.1103/PhysRevB.90.054102",
+    "author": ["Yang, Lusann", "Dacek, Stephen", "Ceder, Gerbrand"],
+    "title": "Proposed Definition of Crystal Substructure and Substructural Similarity",
+    "ENTRYTYPE": "article",
+    "ID": "yang2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.90.054102",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Chemical Communications",
+    "title": "First-principles study of electronic structure and photocatalytic properties of MnNiO3 as an alkaline oxygen-evolution photocatalyst",
+    "author": [
+      "Yu, Jie",
+      "Yan, Qimin",
+      "Chen, Wei",
+      "Jain, Anubhav",
+      "Neaton, Jeffrey B.",
+      "Persson, Kristin A."
+    ],
+    "pages": "2867--2870",
+    "number": "14",
+    "volume": "51",
+    "publisher": "Royal Society of Chemistry (RSC)",
+    "year": "2015",
+    "url": "https://doi.org/10.1039/c4cc08111k",
+    "doi": "10.1039/c4cc08111k",
+    "ENTRYTYPE": "article",
+    "ID": "Yu2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/c4cc08111k",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "J. Mater. Chem. C",
+    "title": "Band convergence in the non-cubic chalcopyrite compounds Cu2MGeSe4",
+    "author": [
+      "Zeier, Wolfgang G.",
+      "Zhu, Hong",
+      "Gibbs, Zachary M.",
+      "Ceder, Gerbrand",
+      "Tremel, Wolfgang",
+      "Snyder, G. Jeffrey"
+    ],
+    "pages": "10189--10194",
+    "number": "47",
+    "volume": "2",
+    "publisher": "Royal Society of Chemistry (RSC)",
+    "month": "October",
+    "year": "2014",
+    "url": "https://doi.org/10.1039/c4tc02218a",
+    "doi": "10.1039/c4tc02218a",
+    "ENTRYTYPE": "article",
+    "ID": "Zeier2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/c4tc02218a",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Nature Reviews Materials",
+    "year": "2016",
+    "issn": "20588437",
+    "isbn": "doi:10.1038/natrevmats.2016.32",
+    "doi": "10.1038/natrevmats.2016.32",
+    "author": [
+      "Zeier, Wolfgang G.",
+      "Schmitt, Jennifer",
+      "Hautier, Geoffroy",
+      "Aydemir, Umut",
+      "Gibbs, Zachary M.",
+      "Felser, Claudia",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Engineering Half-Heusler Thermoelectric Materials Using Zintl Chemistry",
+    "ENTRYTYPE": "article",
+    "ID": "zeier2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1038/natrevmats.2016.32",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Angew.C hem. Int. Ed",
+    "year": "2016",
+    "pages": "826--6841",
+    "volume": "556",
+    "author": [
+      "Zeier, Wolfgang G",
+      "Zevalkink, Alex",
+      "Gibbs, Zachary M",
+      "Eoffroyhautier, G",
+      "Kanatzidis, Mercouri G",
+      "Snyder, G Jeffrey"
+    ],
+    "title": "Solid-State Chemistry Thinking LikeaChemist:Intuition in Thermoelectric Materials",
+    "ENTRYTYPE": "article",
+    "ID": "zeier2016a"
+  },
+  {
+    "journal": "Physical Review B - Condensed Matter and Materials Physics",
+    "year": "2013",
+    "issn": "10980121",
+    "doi": "10.1103/PhysRevB.88.214107",
+    "author": [
+      "Zeng, Qingfeng",
+      "Peng, Junhui",
+      "Oganov, Artem R.",
+      "Zhu, Qiang",
+      "Xie, Congwei",
+      "Zhang, Xiaodong",
+      "Dong, Dong",
+      "Zhang, Litong",
+      "Cheng, Laifei"
+    ],
+    "title": "Prediction of Stable Hafnium Carbides: Stoichiometries, Mechanical Properties, and Electronic Structure",
+    "ENTRYTYPE": "article",
+    "ID": "zeng2013",
+    "link": [
+      {
+        "url": "https://doi.org/10.1103/PhysRevB.88.214107",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "25162449",
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2014",
+    "issn": "1463-9076",
+    "isbn": "1463-9084 (Electronic)1\u030a463-9076 (Linking)",
+    "doi": "10.1039/C4CP02091J",
+    "author": [
+      "Zhou, Min",
+      "Gibbs, Zachary M.",
+      "Wang, Heng",
+      "Han, Yemao",
+      "Xin, Caini",
+      "Li, Laifeng",
+      "Snyder, G. Jeffrey"
+    ],
+    "title": "Optimization of Thermoelectric Efficiency in SnTe: The Case for the Light Band",
+    "ENTRYTYPE": "article",
+    "ID": "zhou2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C4CP02091J",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "eprinttype": "pmid",
+    "eprint": "26997488",
+    "shortjournal": "Phys. Chem. Chem. Phys.",
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": "2016",
+    "issn": "1463-9076",
+    "doi": "10.1039/C6CP00473C",
+    "author": [
+      "Zhou, Lan",
+      "Yan, Qimin",
+      "Yu, Jie",
+      "Jones, Ryan J. R.",
+      "Becerra-Stasiewicz, Natalie",
+      "Suram, Santosh K.",
+      "Shinde, Aniketa",
+      "Guevarra, Dan",
+      "Neaton, Jeffrey B.",
+      "Persson, Kristin A.",
+      "Gregoire, John M."
+    ],
+    "title": "Stability and Self-Passivation of Copper Vanadate Photoanodes under Chemical, Electrochemical, and Photoelectrochemical Operation",
+    "ENTRYTYPE": "article",
+    "ID": "zhou2016",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C6CP00473C",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "journal": "Applied Physics Letters",
+    "title": "Band structure engineering through orbital interaction for enhanced thermoelectric power factor",
+    "author": [
+      "Zhu, Hong",
+      "Sun, Wenhao",
+      "Armiento, Rickard",
+      "Lazic, Predrag",
+      "Ceder, Gerbrand"
+    ],
+    "pages": "082107",
+    "number": "8",
+    "volume": "104",
+    "publisher": "AIP Publishing",
+    "month": "feb",
+    "year": "2014",
+    "doi": "10.1063/1.4866861",
+    "ENTRYTYPE": "article",
+    "ID": "Zhu2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1063/1.4866861",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "shortjournal": "J. Mater. Chem. C",
+    "journal": "Journal of Materials Chemistry C: Materials for Optical and Electronic Devices",
+    "year": "2015",
+    "issn": "2050-7526",
+    "doi": "10.1039/C5TC01440A",
+    "author": [
+      "Zhu, Hong",
+      "Hautier, Geoffroy",
+      "Aydemir, Umut",
+      "Gibbs, Zachary M.",
+      "Li, Guodong",
+      "Bajaj, Saurabh",
+      "P\u00f6hls, Jan-Hendrik",
+      "Broberg, Danny",
+      "Chen, Wei",
+      "Jain, Anubhav",
+      "White, Mary Anne",
+      "Asta, Mark",
+      "Snyder, G. Jeffrey",
+      "Persson, Kristin",
+      "Ceder, Gerbrand"
+    ],
+    "title": "Computational and Experimental Investigation of TmAgTe \u00a1sub\u00bf2\u00a1/Sub\u00bf and XYZ \u00a1sub\u00bf2\u00a1/Sub\u00bf Compounds, a New Group of Thermoelectric Materials Identified by First-Principles High-Throughput Screening",
+    "ENTRYTYPE": "article",
+    "ID": "zhu2015",
+    "link": [
+      {
+        "url": "https://doi.org/10.1039/C5TC01440A",
+        "anchor": "doi"
+      }
+    ]
+  },
+  {
+    "doi": "10.1002/aenm.201400915",
+    "pages": "1400915",
+    "number": "2",
+    "volume": "5",
+    "publisher": "Wiley",
+    "journal": "Advanced Energy Materials",
+    "month": "aug",
+    "year": "2014",
+    "author": [
+      "Castelli, Ivano E.",
+      "H\u00fcser, Falco",
+      "Pandey, Mohnish",
+      "Li, Hong",
+      "Thygesen, Kristian S.",
+      "Seger, Brian",
+      "Jain, Anubhav",
+      "Persson, Kristin A.",
+      "Ceder, Gerbrand",
+      "Jacobsen, Karsten W."
+    ],
+    "title": "New Light-Harvesting Materials Using Accurate and Efficient Bandgap Calculations",
+    "ENTRYTYPE": "article",
+    "ID": "castelli2014",
+    "link": [
+      {
+        "url": "https://doi.org/10.1002/aenm.201400915",
+        "anchor": "doi"
+      }
+    ]
+  }
+]

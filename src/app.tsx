@@ -20,6 +20,7 @@ import { BatteryExplorer } from './views/BatteryExplorer/BatteryExplorer';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { FaTrain } from 'react-icons/fa';
+import { Publications } from './views/Publications';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -45,6 +46,9 @@ ReactDOM.render(
             <span className="navbar-item">
               <Link to="/crystal">Crystal Structure</Link>
             </span>
+            <span className="navbar-item">
+              <Link to="/publications">Publications</Link>
+            </span>
           </div>
         </div>
       </nav>
@@ -64,6 +68,9 @@ ReactDOM.render(
           </Route>
           <Route path="/xas">
             <XasApp />
+          </Route>
+          <Route path="/publications">
+            <Publications />
           </Route>
           <Route path="/">
             <MaterialsExplorer />
