@@ -15,6 +15,7 @@ interface Props {
   bibjson: any[];
   sortField: string;
   ascending?: boolean;
+  resultClassName?: string;
 }
 
 const dynamicSort = (field, asc?) => {
@@ -118,9 +119,9 @@ export const BibjsonFilter: React.FC<Props> = ({
           {sortAsc ? <FaSortUp /> : <FaSortDown />}
         </button>
       </div>
-      <div>
+      <div className="mpc-bibjson-filter-results">
         {bibEntries.map((entry, i) => (
-          <BibjsonCard key={i} className="box" bibjsonEntry={entry} />
+          <BibjsonCard key={i} className={props.resultClassName} bibjsonEntry={entry} />
         ))}
       </div>
     </div>
