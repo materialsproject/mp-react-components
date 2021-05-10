@@ -48,6 +48,7 @@ export const Publications: React.FC = () => {
         },
       ],
     },
+    {},
   ];
 
   return (
