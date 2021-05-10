@@ -11,6 +11,8 @@ import './BibjsonFilter.css';
  */
 
 interface Props {
+  id?: string;
+  setProps?: (value: any) => any;
   className?: string;
   bibjson: any[];
   sortField: string;

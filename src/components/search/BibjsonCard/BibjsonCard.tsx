@@ -3,6 +3,8 @@ import React, { ReactNode, useState } from 'react';
 import './BibjsonCard.css';
 
 interface Props {
+  id?: string;
+  setProps?: (value: any) => any;
   className?: string;
   bibjsonEntry: any;
 }
