@@ -192,7 +192,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   const columnsMenu = (
     <MenuWrapper
       data-testid="columns-menu"
-      className="dropdown is-right is-active has-text-left"
+      className="dropdown is-right is-active"
       closeOnSelection={false}
     >
       <div className="dropdown-trigger">
@@ -262,7 +262,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   const resultsPerPageMenu = (
     <MenuWrapper
       data-testid="results-per-page-menu"
-      className="dropdown is-right is-active has-text-left mr-1"
+      className="dropdown is-right is-active"
       onSelection={handlePerRowsChange}
     >
       <div className="dropdown-trigger">
@@ -327,7 +327,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   });
 
   return (
-    <div id={componentHtmlId} className="search-ui-data-table">
+    <div id={componentHtmlId} className="mpc-search-ui-data-table">
       <div className="columns mb-1">
         <div className="column pb-2">
           <div className="table-header">
@@ -342,7 +342,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
                 <progress className="progress is-small is-primary" max="100"></progress>
               )}
             </div>
-            <div>
+            <div className="mpc-search-ui-data-table-controls">
               {downloadDropdown}
               {resultsPerPageMenu}
               {columnsMenu}

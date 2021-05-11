@@ -260,7 +260,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
         data-testid="materials-input-error"
         type="button"
         className={classNames(
-          'materials-input-error button has-tooltip-multiline has-tooltip-bottom',
+          'mpc-materials-input-error button has-tooltip-multiline has-tooltip-bottom',
           {
             'has-tooltip-active': errorTipStayActive,
           }
@@ -423,7 +423,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
   }, [debouncedInputValue]);
 
   return (
-    <div className="materials-input">
+    <div className="mpc-materials-input">
       <PeriodicContext>
         {MaterialsInputType}
         {chemSysCheckbox}

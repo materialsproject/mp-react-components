@@ -185,7 +185,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
 }) => {
   let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
   return (
-    <div id={props.id} className="search-ui">
+    <div id={props.id} className="mpc-search-ui">
       <Router>
         <SearchUIContextProvider {...props}>
           <div className="columns">
@@ -203,7 +203,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
                 </div>
               </div>
             </div>
-            <div className="column is-8-desktop is-half-tablet results-container">
+            <div className="column is-8-desktop is-half-tablet mpc-results-container">
               <SearchUIDataTable />
             </div>
           </div>
