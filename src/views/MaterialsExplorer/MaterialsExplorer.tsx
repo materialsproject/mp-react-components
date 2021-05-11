@@ -27,6 +27,7 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="energy_above_hull"
         sortAscending={true}
+        selectableRows={true}
         // conditionalRowStyles={[
         //   {
         //     selector: 'is_stable',
