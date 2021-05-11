@@ -4,7 +4,7 @@ import { BibjsonFilter } from '../../components/search/BibjsonFilter';
 import mpPapers from './mp-papers.json';
 
 /**
- * Component for testing the Molecules Explorer view
+ * Component for testing the Publications filter
  */
 
 export const Publications: React.FC = () => {

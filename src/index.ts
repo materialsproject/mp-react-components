@@ -18,6 +18,8 @@ import { Select } from './components/search/Select';
 import { Download } from './components/crystal-toolkit/Download';
 import { BibjsonFilter } from './components/search/BibjsonFilter';
 import { BibjsonCard } from './components/search/BibjsonCard';
+import { DownloadButton } from './components/search/DownloadButton';
+import { DownloadDropdown } from './components/search/DownloadDropdown';
 
 export {
   SelectableTable,
@@ -42,4 +44,6 @@ export {
   Download,
   BibjsonFilter,
   BibjsonCard,
+  DownloadButton,
+  DownloadDropdown,
 };

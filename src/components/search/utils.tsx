@@ -5,7 +5,15 @@ import * as d3 from 'd3';
 import { spaceGroups } from '../../constants/spaceGroups';
 import { pointGroups } from '../../constants/pointGroups';
 
-export function convertArrayOfObjectsToCSV(array) {
+export enum DownloadType {
+  JSON = 'json',
+  CSV = 'csv',
+  EXCEL = 'xlsx',
+}
+
+type DownloadTypeObject = Partial<Record<DownloadType, any>>;
+
+export const convertArrayOfObjectsToCSV = (array: any[]) => {
   let result;
   const columnDelimiter = ',';
   const lineDelimiter = '\n';
@@ -24,47 +32,57 @@ export function convertArrayOfObjectsToCSV(array) {
   });
 
   return result;
-}
+};
 
-export function downloadCSV(array) {
+export const downloadCSV = (array: any[], filename?: string) => {
   let csv = convertArrayOfObjectsToCSV(array);
   if (csv == null) return false;
-  const filename = 'export.csv';
+  const name = filename ? filename + '.csv' : 'export.csv';
   if (!csv.match(/^data:text\/csv/i)) {
     csv = `data:text/csv;charset=utf-8,${csv}`;
   }
-  createLink(csv, filename);
+  createLink(csv, name);
   return true;
-}
+};
 
-export function createLink(data, filename) {
+export const createLink = (dataStr: string, filename: string) => {
   const link = document.createElement('a');
-  link.setAttribute('href', encodeURI(data));
+  link.setAttribute('href', encodeURI(dataStr));
   link.setAttribute('download', filename);
+  document.body.appendChild(link);
   link.click();
-}
+  link.remove();
+};
 
-export function downloadJSON(array) {
-  const jsonDataStr = 'data:text/json;charset=utf-8,' + JSON.stringify(array);
-  if (array) {
-    createLink(jsonDataStr, 'export.json');
+export const downloadJSON = (data: any, filename?: string) => {
+  const jsonDataStr = 'data:text/json;charset=utf-8,' + JSON.stringify(data);
+  if (data) {
+    const name = filename ? filename + '.json' : 'export.json';
+    createLink(jsonDataStr, name);
     return true;
   }
   return false;
-}
+};
 
-export function downloadExcel(array) {
+export const downloadExcel = (array: any[], filename?: string) => {
   // export json to Worksheet of Excel only array possible
   const wks = XLSX.utils.json_to_sheet(array);
   // A workbook is the name given to an Excel file
   const wb = XLSX.utils.book_new(); // make Workbook of Excel
   // add Worksheet to Workbook
   // Workbook contains one or more worksheets
-  XLSX.utils.book_append_sheet(wb, wks, 'materials'); // sheetAName is name of Worksheet
+  const name = filename ? filename : 'export';
+  XLSX.utils.book_append_sheet(wb, wks, name); // sheetAName is name of Worksheet
   // export Excel file
-  XLSX.writeFile(wb, 'material.xlsx'); // name of the file is 'book.xlsx'
+  XLSX.writeFile(wb, name + '.xlsx'); // name of the file is 'book.xlsx'
   return true;
-}
+};
+
+export const downloadAs: DownloadTypeObject = {
+  json: downloadJSON,
+  csv: downloadCSV,
+  xlsx: downloadExcel,
+};
 
 /**
  * Determine if a string is delimited by commas, hyphens, or spaces
