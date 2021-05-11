@@ -4,11 +4,10 @@
     "selector": "theoretical",
     "format": "BOOLEAN_CLASS",
     "formatArg": ["", "fas fa-star"],
-    "cellTooltip": "Synthesizable",
+    "cellTooltip": "Is synthesizable",
     "hideName": true,
     "width": "30px",
-    "center": true,
-    "style": { "borderRight": "1px solid #DBDBDB" }
+    "center": true
   },
   {
     "name": "Material ID",

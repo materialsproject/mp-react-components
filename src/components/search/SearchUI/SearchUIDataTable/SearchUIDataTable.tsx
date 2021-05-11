@@ -50,6 +50,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
+  const [toggleClearRows, setToggleClearRows] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const tableRef = useRef<HTMLDivElement>(null);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
@@ -73,15 +74,18 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
       tableRef.current.children[0].scrollTop = 0;
     }
     actions.setPage(page);
+    setToggleClearRows(!toggleClearRows);
   };
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
+    setToggleClearRows(!toggleClearRows);
   };
 
   const handleSort = (column, sortDirection) => {
     const sortAscending = sortDirection === 'asc' ? true : false;
     actions.setSort(column.selector, sortAscending);
+    setToggleClearRows(!toggleClearRows);
   };
 
   const handleSelectedRowsChange = (rowState) => {
@@ -106,6 +110,40 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     });
     setAllCollumnsSelected(newAllColumnsSelected);
     setColumns(newColumns);
+  };
+
+  const getDataToDownload = () => {
+    if (state.selectedRows && state.selectedRows.length > 0) {
+      return state.selectedRows;
+    } else {
+      return state.results;
+    }
+  };
+
+  const getDownloadFilename = () => {
+    if (state.selectedRows && state.selectedRows.length > 0) {
+      return `selected-results-${state.selectedRows.length}`;
+    } else {
+      return `results-${lowerResultBound}-${upperResultBound}`;
+    }
+  };
+
+  const getDownloadTooltip = () => {
+    if (state.selectedRows && state.selectedRows.length > 0) {
+      return `Includes ${state.selectedRows.length} selected rows`;
+    } else if (state.totalResults > state.resultsPerPage) {
+      return 'Includes current page only';
+    } else {
+      return;
+    }
+  };
+
+  const getDownloadLabel = () => {
+    if (state.selectedRows && state.selectedRows.length > 0) {
+      return 'Download selected as';
+    } else {
+      return 'Download as';
+    }
   };
 
   const TableHeaderTitle = () => {
@@ -182,11 +220,11 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
 
   const downloadDropdown = (
     <DownloadDropdown
-      data={state.results}
-      filename={`results${lowerResultBound}-${upperResultBound}`}
-      tooltip={state.totalResults > state.resultsPerPage ? 'Includes current page only' : undefined}
+      data={getDataToDownload()}
+      filename={getDownloadFilename()}
+      tooltip={getDownloadTooltip()}
     >
-      Download as
+      {getDownloadLabel()}
     </DownloadDropdown>
   );
   const columnsMenu = (
@@ -384,6 +422,13 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
             noDataComponent={<NoDataMessage />}
             selectableRows={state.selectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}
+            clearSelectedRows={toggleClearRows}
+            // selectableRowSelected={(row) => {
+            //   const isSelected = state.selectedRows?.find(s => s.material_id === row.material_id);
+            //   console.log(state.selectedRows);
+            //   console.log(row);
+            //   return isSelected;
+            // }}
           />
         </div>
       </div>
