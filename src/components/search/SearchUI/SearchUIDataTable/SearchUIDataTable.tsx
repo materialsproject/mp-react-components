@@ -11,6 +11,7 @@ import { pluralize } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
 import { ConditionalRowStyle } from '../types';
+import { DownloadDropdown } from '../../DownloadDropdown';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -179,6 +180,15 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     },
   };
 
+  const downloadDropdown = (
+    <DownloadDropdown
+      data={state.results}
+      filename={`results${lowerResultBound}-${upperResultBound}`}
+      tooltip={state.totalResults > state.resultsPerPage ? 'Includes current page only' : undefined}
+    >
+      Download as
+    </DownloadDropdown>
+  );
   const columnsMenu = (
     <MenuWrapper
       data-testid="columns-menu"
@@ -333,6 +343,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
               )}
             </div>
             <div>
+              {downloadDropdown}
               {resultsPerPageMenu}
               {columnsMenu}
             </div>

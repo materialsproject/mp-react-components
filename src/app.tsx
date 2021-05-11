@@ -21,6 +21,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { FaTrain } from 'react-icons/fa';
 import { Publications } from './views/Publications';
+import { Sandbox } from './views/Sandbox';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -49,6 +50,9 @@ ReactDOM.render(
             <span className="navbar-item">
               <Link to="/publications">Publications</Link>
             </span>
+            <span className="navbar-item">
+              <Link to="/sandbox">Sandbox</Link>
+            </span>
           </div>
         </div>
       </nav>
@@ -71,6 +75,9 @@ ReactDOM.render(
           </Route>
           <Route path="/publications">
             <Publications />
+          </Route>
+          <Route path="/sandbox">
+            <Sandbox />
           </Route>
           <Route path="/">
             <MaterialsExplorer />
