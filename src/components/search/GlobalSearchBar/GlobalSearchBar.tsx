@@ -21,7 +21,7 @@ export const GlobalSearchBar: React.FC<Props> = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [searchInputType, setSearchInputType] = useState(MaterialsInputType.ELEMENTS);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     let query = new URLSearchParams();
     query.set(searchInputType, searchValue);
     const href = props.redirectRoute + '?' + query.toString();
