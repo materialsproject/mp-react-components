@@ -366,36 +366,29 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
 
   return (
     <div id={componentHtmlId} className="mpc-search-ui-data-table">
-      <div className="columns mb-1">
-        <div className="column pb-2">
-          <div className="table-header">
-            <div>
-              <TableHeaderTitle />
-              <p className="subtitle is-7">
-                Showing {d3.format(',')(lowerResultBound)}-{d3.format(',')(upperResultBound)}
-              </p>
-            </div>
-            <div className="progress-container">
-              {state.loading && (
-                <progress className="progress is-small is-primary" max="100"></progress>
-              )}
-            </div>
-            <div className="mpc-search-ui-data-table-controls">
-              {downloadDropdown}
-              {resultsPerPageMenu}
-              {columnsMenu}
-            </div>
-          </div>
+      <div className="mpc-table-header">
+        <div>
+          <TableHeaderTitle />
+          <p className="subtitle is-7">
+            Showing {d3.format(',')(lowerResultBound)}-{d3.format(',')(upperResultBound)}
+          </p>
+        </div>
+        <div className="progress-container">
+          {state.loading && (
+            <progress className="progress is-small is-primary" max="100"></progress>
+          )}
+        </div>
+        <div className="mpc-search-ui-data-table-controls">
+          {downloadDropdown}
+          {resultsPerPageMenu}
+          {columnsMenu}
         </div>
       </div>
-      <div className="columns mb-0">
-        <div className="column pb-0">
-          <ActiveFilterButtons
-            filters={state.activeFilters}
-            onClick={(v, id) => actions.setFilterValue(v, id)}
-          />
-        </div>
-      </div>
+      <ActiveFilterButtons
+        filters={state.activeFilters}
+        onClick={(v, id) => actions.setFilterValue(v, id)}
+      />
+      {state.resultsPerPage > 15 && <CustomPaginator />}
       <div className="columns react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"

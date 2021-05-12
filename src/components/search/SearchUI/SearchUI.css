@@ -71,8 +71,8 @@
 
 .mpc-search-ui .react-data-table {
   border-radius: 6px;
-  overflow: auto;
-  max-height: 700px;
+  /* overflow: auto;
+  max-height: 700px; */
 }
 
 .mpc-search-ui .rdt_TableHead {
@@ -94,13 +94,13 @@
   font-weight: normal;
 }
 
-.mpc-search-ui .table-header {
+.mpc-search-ui .mpc-table-header {
   display: flex;
   justify-content: space-between;
   flex-flow: wrap;
 }
 
-.mpc-search-ui .table-header .subtitle {
+.mpc-search-ui .mpc-table-header .subtitle {
   height: 0;
 }
 
@@ -155,4 +155,22 @@
 
 .mpc-search-ui-data-table-controls > *:not(:last-child) {
   margin-right: 0.25rem;
+}
+
+.mpc-search-ui .mpc-paginator,
+.mpc-search-ui .mpc-active-filter-buttons,
+.mpc-search-ui .react-data-table {
+  margin-top: 0.5rem;
+}
+
+.mpc-search-ui .pagination {
+  margin-bottom: 0;
+}
+
+.mpc-search-ui .pagination-ellipsis,
+.mpc-search-ui .pagination-link,
+.mpc-search-ui .pagination-next,
+.mpc-search-ui .pagination-previous {
+  margin-top: 0;
+  margin-bottom: 0;
 }

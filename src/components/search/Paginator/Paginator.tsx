@@ -18,7 +18,7 @@ export const Paginator: React.FC<Props> = ({
   rowCount,
   onChangePage,
   onChangeRowsPerPage,
-  currentPage
+  currentPage,
 }) => {
   const [pageCount, setPageCount] = useState(getPageCount(rowCount, rowsPerPage));
 
@@ -27,7 +27,7 @@ export const Paginator: React.FC<Props> = ({
     return (
       <li key={pageNumber}>
         <a
-          className={classNames('pagination-link', {'is-current': isCurrent})} 
+          className={classNames('pagination-link', { 'is-current': isCurrent })}
           aria-label={isCurrent ? `Go to page ${pageNumber}` : `Page ${pageNumber}`}
           onClick={() => onChangePage(pageNumber)}
         >
@@ -37,7 +37,7 @@ export const Paginator: React.FC<Props> = ({
     );
   };
 
-  const pageIsUnderFour = 
+  const pageIsUnderFour = (
     <ul className="pagination-list">
       {getPaginationItem(1)}
       {getPaginationItem(2)}
@@ -47,9 +47,10 @@ export const Paginator: React.FC<Props> = ({
         <span className="pagination-ellipsis">&hellip;</span>
       </li>
       {getPaginationItem(pageCount)}
-    </ul>;
+    </ul>
+  );
 
-  const pageIsFourOrMore = 
+  const pageIsFourOrMore = (
     <ul className="pagination-list">
       {getPaginationItem(1)}
       <li>
@@ -62,9 +63,10 @@ export const Paginator: React.FC<Props> = ({
         <span className="pagination-ellipsis">&hellip;</span>
       </li>
       {getPaginationItem(pageCount)}
-    </ul>;
+    </ul>
+  );
 
-  const pageIsWithinFourOfLast = 
+  const pageIsWithinFourOfLast = (
     <ul className="pagination-list">
       {getPaginationItem(1)}
       <li>
@@ -74,7 +76,8 @@ export const Paginator: React.FC<Props> = ({
       {getPaginationItem(pageCount - 2)}
       {getPaginationItem(pageCount - 1)}
       {getPaginationItem(pageCount)}
-    </ul>;
+    </ul>
+  );
 
   let paginationItems = pageIsFourOrMore;
 
@@ -83,7 +86,7 @@ export const Paginator: React.FC<Props> = ({
     for (let index = 0; index < pageCount; index++) {
       listItems.push(getPaginationItem(index + 1));
     }
-    paginationItems = <ul className="pagination-list">{listItems}</ul>
+    paginationItems = <ul className="pagination-list">{listItems}</ul>;
   } else if (currentPage < 4) {
     paginationItems = pageIsUnderFour;
   } else if (currentPage > pageCount - 3) {
@@ -101,23 +104,27 @@ export const Paginator: React.FC<Props> = ({
   return (
     <nav
       data-testid="paginator"
-      className="pagination is-small is-centered pt-3" 
-      role="navigation" 
+      className="mpc-paginator pagination is-small is-centered"
+      role="navigation"
       aria-label="pagination"
     >
       <a
-        className={classNames('pagination-previous', {'is-hidden-by-opacity': currentPage === 1})} 
+        className={classNames('pagination-previous', { 'is-hidden-by-opacity': currentPage === 1 })}
         aria-hidden={currentPage === 1}
         onClick={() => onChangePage(currentPage - 1)}
       >
-        <FaArrowLeft/><span className="ml-1 is-hidden-touch">Previous</span>
+        <FaArrowLeft />
+        <span className="ml-1 is-hidden-touch">Previous</span>
       </a>
-      <a 
-        className={classNames('pagination-next', {'is-hidden-by-opacity': currentPage === pageCount})}
+      <a
+        className={classNames('pagination-next', {
+          'is-hidden-by-opacity': currentPage === pageCount,
+        })}
         aria-hidden={currentPage === pageCount}
         onClick={() => onChangePage(currentPage + 1)}
       >
-        <span className="mr-1 is-hidden-touch">Next</span><FaArrowRight/>
+        <span className="mr-1 is-hidden-touch">Next</span>
+        <FaArrowRight />
       </a>
       {paginationItems}
     </nav>

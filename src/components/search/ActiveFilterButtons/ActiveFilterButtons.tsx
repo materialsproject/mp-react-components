@@ -1,9 +1,10 @@
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { Button } from 'react-bulma-components';
 import { FaTimes } from 'react-icons/fa';
-import { filter } from 'rxjs/operators';
 import { ActiveFilter } from '../SearchUI/types';
 import { formatPointGroup } from '../utils';
+import './ActiveFilterButtons.css';
 
 interface Props {
   className?: string;
@@ -21,14 +22,11 @@ const formatValue = (filter: ActiveFilter) => {
   }
 };
 
-export const ActiveFilterButtons: React.FC<Props> = props => {
+export const ActiveFilterButtons: React.FC<Props> = (props) => {
   return (
-    <div
-      data-testid="active-filter-buttons"
-      className={props.filters.length > 0 ? 'columns is-multiline column m-0 p-0' : ''}
-    >
+    <div data-testid="active-filter-buttons" className="mpc-active-filter-buttons">
       {props.filters.map((f, i) => (
-        <div className="column is-narrow p-0 mr-2 mb-2" key={i}>
+        <div className="mpc-active-filter-button" key={i}>
           <Button
             className="is-rounded is-small"
             onClick={() => props.onClick(f.defaultValue, f.id)}
