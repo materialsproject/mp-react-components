@@ -32,14 +32,11 @@ export const SearchUISearchBar: React.FC = () => {
     let fields: string[] = [];
     state.filterGroups.forEach((g) => {
       g.filters.forEach((f) => {
-        if (f.type === 'MATERIALS_INPUT' || f.id === 'smiles') {
+        if (f.id !== selectedField && (f.type === 'MATERIALS_INPUT' || f.id === 'smiles')) {
           fields.push(f.id);
         }
       });
     });
-    // Object.values(MaterialsInputType).forEach((field) => {
-    //   if (field !== selectedField) fields.push(field);
-    // });
     return fields;
   };
 
