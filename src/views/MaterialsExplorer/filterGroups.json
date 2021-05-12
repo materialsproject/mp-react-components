@@ -81,7 +81,7 @@
     "filters": [
       {
         "name": "Energy Above Hull",
-        "id": "e_above_hull",
+        "id": "energy_above_hull",
         "type": "SLIDER",
         "units": "meV/atom",
         "conversionFactor": 0.001,
