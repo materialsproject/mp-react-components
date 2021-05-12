@@ -40,7 +40,7 @@ export const SearchUISearchBar: React.FC = () => {
     return fields;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     let searchField = searchInputType as string;
     if (searchInputType === MaterialsInputType.MP_ID) {
       let mpIdFilter: Filter | undefined;
@@ -53,7 +53,8 @@ export const SearchUISearchBar: React.FC = () => {
       });
       searchField = mpIdFilter ? mpIdFilter.id : 'task_ids';
     }
-    actions.setFilterWithOverrides(searchValue, searchField, getFieldsToOverride(searchInputType));
+    const submitValue = value || searchValue;
+    actions.setFilterWithOverrides(submitValue, searchField, getFieldsToOverride(searchInputType));
   };
 
   /**

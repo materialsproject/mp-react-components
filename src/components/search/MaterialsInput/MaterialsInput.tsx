@@ -54,7 +54,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   autocompleteApiKey?: string;
   tooltip?: string;
   onChange: (value: string) => void;
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => any;
+  onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string) => any;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -142,13 +142,20 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  /**
+   * Trigger MaterialsInput submit event
+   * Optional value param allows clicking on autocomplete items
+   * to submit the input using a new value that doesn't necessarily
+   * match the current input value
+   */
+  const handleSubmit = (e: React.MouseEvent, value?: string) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (props.onSubmit && !error) {
       setShowPeriodicTable(false);
-      props.onSubmit(e);
+      setShowAutocomplete(false);
+      props.onSubmit(e, value);
     } else {
       setErrorTipStayActive(true);
     }
@@ -208,9 +215,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
           <a
             key={i}
             className="dropdown-item"
-            onMouseDown={() => {
+            onMouseDown={(e) => {
               setError(null);
-              props.onChange(d.formula_pretty);
+              if (props.onSubmit) {
+                handleSubmit(e, d.formula_pretty);
+              } else {
+                props.onChange(d.formula_pretty);
+              }
             }}
           >
             {formatFormula(d.formula_pretty)}
