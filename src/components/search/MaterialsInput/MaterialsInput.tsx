@@ -148,7 +148,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
    * to submit the input using a new value that doesn't necessarily
    * match the current input value
    */
-  const handleSubmit = (e: React.MouseEvent, value?: string) => {
+  const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -286,7 +286,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
 
   if (props.onSubmit) {
     MaterialsInputType = (
-      <form data-testid="materials-input-form" onSubmit={handleSubmit}>
+      <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
           {toggleControl}
           {materialsInputControl}
