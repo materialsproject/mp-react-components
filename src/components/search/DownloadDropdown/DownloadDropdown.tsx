@@ -17,6 +17,7 @@ interface Props {
 export const DownloadDropdown: React.FC<Props> = ({ filename = 'export', ...otherProps }) => {
   const props = { filename, ...otherProps };
   const [downloadType, setDownloadType] = useState<null | DownloadType>(null);
+  const [data, setData] = useState(props.data);
 
   const handleDownloadTypeChange = (type: DownloadType) => {
     setDownloadType(type);
@@ -31,10 +32,14 @@ export const DownloadDropdown: React.FC<Props> = ({ filename = 'export', ...othe
    */
   useEffect(() => {
     if (downloadType) {
-      downloadAs[downloadType](props.data, props.filename);
+      downloadAs[downloadType](data, props.filename);
       setDownloadType(null);
     }
   }, [downloadType]);
+
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
 
   return (
     <MenuWrapper

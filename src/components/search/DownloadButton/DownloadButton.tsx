@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { downloadAs, DownloadType } from '../utils';
 
 interface Props {
@@ -18,10 +18,16 @@ export const DownloadButton: React.FC<Props> = ({
   ...otherProps
 }) => {
   const props = { filename, filetype, ...otherProps };
+  const [data, setData] = useState(props.data);
+
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
+
   return (
     <button
       className={classNames('mpc-download-button', props.className)}
-      onClick={() => downloadAs[props.filetype](props.data, props.filename)}
+      onClick={() => downloadAs[props.filetype](data, props.filename)}
       data-tooltip={props.tooltip}
     >
       {props.children}
