@@ -1,6 +1,5 @@
-import classNames from 'classnames';
-import React, { ReactNode, useState } from 'react';
-import './BibjsonCard.css';
+import React from 'react';
+import { BibCard } from '../BibCard';
 
 interface Props {
   id?: string;
@@ -10,36 +9,31 @@ interface Props {
 }
 
 export const BibjsonCard: React.FC<Props> = (props) => {
-  let title: ReactNode;
-  if (props.bibjsonEntry.doi) {
-    title = <a href={'https://doi.org/' + props.bibjsonEntry.doi}>{props.bibjsonEntry.title}</a>;
-  } else {
-    title = <span>{props.bibjsonEntry.title}</span>;
-  }
-
-  let authors: ReactNode;
-  if (Array.isArray(props.bibjsonEntry.author)) {
-    let authorStr = '';
-    props.bibjsonEntry.author.forEach((a, i) => {
-      if (i !== props.bibjsonEntry.author.length - 1) {
-        authorStr += a.split(', ').reverse().join(' ') + ', ';
-      } else {
-        authorStr += 'and ' + a.split(', ').reverse().join(' ');
-      }
-    });
-    authors = <span>{authorStr}</span>;
-  } else {
-    authors = <span>{props.bibjsonEntry.author}</span>;
-  }
+  const getBibjsonAuthorString = (author: string | string[]): string => {
+    if (Array.isArray(author)) {
+      let authorStr = '';
+      author.forEach((a, i) => {
+        if (i !== author.length - 1) {
+          authorStr += a.split(', ').reverse().join(' ') + ', ';
+        } else {
+          authorStr += 'and ' + a.split(', ').reverse().join(' ');
+        }
+      });
+      return authorStr;
+    } else {
+      return author;
+    }
+  };
 
   return (
-    <div data-testid="bibjson-card" className={classNames('mpc-bibjson-card', props.className)}>
-      <div className="mpc-bibjson-card-year">{props.bibjsonEntry.year}</div>
-      <div>
-        <p className="mpc-bibjson-card-title">{title}</p>
-        <p className="mpc-bibjson-card-authors">{authors}</p>
-        <p className="mpc-bibjson-card-journal">{props.bibjsonEntry.journal}</p>
-      </div>
-    </div>
+    <BibCard
+      id={props.id}
+      className={props.className}
+      title={props.bibjsonEntry.title}
+      author={getBibjsonAuthorString(props.bibjsonEntry.author)}
+      year={props.bibjsonEntry.year}
+      journal={props.bibjsonEntry.journal}
+      doi={props.bibjsonEntry.doi}
+    />
   );
 };
