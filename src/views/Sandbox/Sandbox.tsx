@@ -1,4 +1,5 @@
 import React from 'react';
+import { CrossrefCard } from '../../components/search/CrossrefCard';
 import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
 
@@ -16,6 +17,7 @@ export const Sandbox: React.FC = () => {
       <DownloadDropdown data={[{ test: 1 }]} filename="test">
         Download as
       </DownloadDropdown>
+      <CrossrefCard className="box" />
     </>
   );
 };

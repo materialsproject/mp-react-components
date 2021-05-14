@@ -1,23 +1,23 @@
-.mpc-bibjson-card {
+.mpc-bib-card {
   display: flex;
 }
 
-.mpc-bibjson-card-year {
+.mpc-bib-card-year {
   font-size: 1.25rem;
   font-weight: 600;
   padding: 0 1rem;
   text-align: center;
 }
 
-.mpc-bibjson-card-title {
+.mpc-bib-card-title {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
-.mpc-bibjson-card-authors {
+.mpc-bib-card-authors {
   margin-bottom: 0.5rem;
 }
 
-.mpc-bibjson-card-journal {
+.mpc-bib-card-journal {
   font-style: italic;
 }

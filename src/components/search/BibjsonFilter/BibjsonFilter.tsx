@@ -78,7 +78,11 @@ export const BibjsonFilter: React.FC<Props> = ({
   }, [searchValue]);
 
   return (
-    <div data-testid="bibjson-filter" className={classNames('mpc-bibjson-filter', props.className)}>
+    <div
+      id={props.id}
+      data-testid="bibjson-filter"
+      className={classNames('mpc-bibjson-filter', props.className)}
+    >
       <div className="mpc-bibjson-filter-controls">
         <input
           className="mpc-bibjson-filter-input input"
