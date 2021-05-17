@@ -7,7 +7,8 @@ interface Props {
   id?: string;
   setProps?: (value: any) => any;
   className?: string;
-  bibjsonEntry?: any;
+  doi: string;
+  errorMessage?: string;
 }
 
 interface CrossrefAuthor {
@@ -18,7 +19,12 @@ interface CrossrefAuthor {
 }
 
 export const CrossrefCard: React.FC<Props> = (props) => {
+  props = {
+    errorMessage: 'Could not find reference',
+    ...props,
+  };
   const [crossref, setCrossref] = useState<any>(null);
+  const [failedRequest, setFailedRequest] = useState(false);
 
   const getCrossrefAuthorString = (authors: CrossrefAuthor[]): string => {
     let authorStr = '';
@@ -34,26 +40,34 @@ export const CrossrefCard: React.FC<Props> = (props) => {
 
   useEffect(() => {
     axios
-      .get('https://api.crossref.org/works/110.1039/c5ta10330d')
+      .get(`https://api.crossref.org/works/${props.doi}`)
       .then((result) => {
         if (result.data.hasOwnProperty('message')) {
           setCrossref(result.data.message);
         }
       })
       .catch((error) => {
-        console.log(error);
+        setFailedRequest(true);
       });
-  });
+  }, []);
 
   return (
-    <BibCard
-      id={props.id}
-      className={props.className}
-      title={crossref && crossref.title.join(' ')}
-      author={crossref && getCrossrefAuthorString(crossref.author)}
-      year={crossref && crossref.created['date-parts'][0][0]}
-      journal={crossref && crossref.publisher}
-      doi={crossref && crossref.DOI}
-    />
+    <>
+      {crossref ? (
+        <BibCard
+          id={props.id}
+          className={props.className}
+          title={crossref && crossref.title.join(' ')}
+          author={crossref && getCrossrefAuthorString(crossref.author)}
+          year={crossref && crossref.created['date-parts'][0][0]}
+          journal={crossref && crossref.publisher}
+          doi={crossref && crossref.DOI}
+        />
+      ) : (
+        <div id={props.id} className={props.className}>
+          {failedRequest ? props.errorMessage : 'Loading...'}
+        </div>
+      )}
+    </>
   );
 };
