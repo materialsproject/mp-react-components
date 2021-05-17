@@ -6,6 +6,7 @@ interface Props {
   setProps?: (value: any) => any;
   className?: string;
   bibjsonEntry: any;
+  fetchOpenAccessUrl?: boolean;
 }
 
 export const BibjsonCard: React.FC<Props> = (props) => {
@@ -34,6 +35,8 @@ export const BibjsonCard: React.FC<Props> = (props) => {
       year={props.bibjsonEntry.year}
       journal={props.bibjsonEntry.journal}
       doi={props.bibjsonEntry.doi}
+      openAccessUrl={props.bibjsonEntry.openAccessUrl}
+      fetchOpenAccessUrl={props.fetchOpenAccessUrl}
     />
   );
 };
