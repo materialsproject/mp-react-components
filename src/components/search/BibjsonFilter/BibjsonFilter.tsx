@@ -15,7 +15,7 @@ interface Props {
   setProps?: (value: any) => any;
   className?: string;
   bibjson: any[];
-  sortField: string;
+  sortField?: string;
   ascending?: boolean;
   resultClassName?: string;
 }
@@ -28,16 +28,18 @@ const dynamicSort = (field, asc?) => {
   };
 };
 
-export const BibjsonFilter: React.FC<Props> = ({
-  sortField = 'year',
-  ascending = false,
-  ...otherProps
-}) => {
-  const props = { sortField, ascending, ...otherProps };
+export const BibjsonFilter: React.FC<Props> = (props) => {
+  props = {
+    sortField: 'year',
+    ascending: false,
+    ...props,
+  };
   const [searchValue, setSearchValue] = useState('');
   const [sortFieldState, setSortFieldState] = useState(props.sortField);
   const [sortAsc, setSortAsc] = useState(props.ascending);
-  const [bibEntries, setBibEntries] = useState(props.bibjson.sort(dynamicSort(sortField, sortAsc)));
+  const [bibEntries, setBibEntries] = useState(
+    props.bibjson.sort(dynamicSort(props.sortField, sortAsc))
+  );
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);

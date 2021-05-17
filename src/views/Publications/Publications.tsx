@@ -54,7 +54,7 @@ export const Publications: React.FC = () => {
   return (
     <>
       <h1 className="title">Publications</h1>
-      <BibjsonFilter bibjson={mpPapers} sortField="year" resultClassName="box" />
+      <BibjsonFilter bibjson={mpPapers} resultClassName="box" />
     </>
   );
 };
