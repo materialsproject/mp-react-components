@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
+import { OpenAccessButton } from '../OpenAccessButton';
+import { OpenAccessLink } from '../OpenAccessLink';
 import './BibCard.css';
 
 interface Props {
@@ -11,6 +13,8 @@ interface Props {
   year?: string | number;
   journal?: string;
   doi?: string;
+  fetchOpenAccessUrl?: boolean;
+  openAccessUrl?: string;
 }
 
 export const BibCard: React.FC<Props> = (props) => {
@@ -27,12 +31,23 @@ export const BibCard: React.FC<Props> = (props) => {
       data-testid="bib-card"
       className={classNames('mpc-bib-card', props.className)}
     >
-      <div className="mpc-bib-card-year">{props.year}</div>
-      <div>
+      <div className="mpc-bib-card-top">
         <p className="mpc-bib-card-title">{title}</p>
-        <p className="mpc-bib-card-authors">{props.author}</p>
-        <p className="mpc-bib-card-journal">{props.journal}</p>
+        {props.doi && (
+          <div className="mpc-bib-card-buttons">
+            {(props.fetchOpenAccessUrl || props.openAccessUrl) && (
+              <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
+            )}
+            <button className="button is-small">Bibtex</button>
+          </div>
+        )}
       </div>
+      <p className="mpc-bib-card-authors">{props.author}</p>
+      <p>
+        <span className="mpc-bib-card-journal">{props.journal}</span>
+        <span>, </span>
+        <span className="mpc-bib-card-year">{props.year}</span>
+      </p>
     </div>
   );
 };

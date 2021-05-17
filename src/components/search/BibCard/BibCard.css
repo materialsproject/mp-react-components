@@ -1,17 +1,20 @@
-.mpc-bib-card {
+.mpc-bib-card-top {
   display: flex;
+  align-items: center;
 }
 
-.mpc-bib-card-year {
-  font-size: 1.25rem;
-  font-weight: 600;
-  padding: 0 1rem;
-  text-align: center;
+.mpc-bib-card-buttons {
+  padding-left: 0.5rem;
+}
+
+.mpc-bib-card-buttons > * {
+  margin-left: 0.5rem;
 }
 
 .mpc-bib-card-title {
   font-weight: 600;
   margin-bottom: 0.5rem;
+  flex: 1;
 }
 
 .mpc-bib-card-authors {

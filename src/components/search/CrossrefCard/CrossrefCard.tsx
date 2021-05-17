@@ -9,6 +9,7 @@ interface Props {
   className?: string;
   doi: string;
   errorMessage?: string;
+  fetchOpenAccessUrl?: boolean;
 }
 
 interface CrossrefAuthor {
@@ -62,6 +63,7 @@ export const CrossrefCard: React.FC<Props> = (props) => {
           year={crossref && crossref.created['date-parts'][0][0]}
           journal={crossref && crossref.publisher}
           doi={crossref && crossref.DOI}
+          fetchOpenAccessUrl={props.fetchOpenAccessUrl}
         />
       ) : (
         <div id={props.id} className={props.className}>
