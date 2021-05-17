@@ -38,7 +38,7 @@ export const BibCard: React.FC<Props> = (props) => {
             {(props.fetchOpenAccessUrl || props.openAccessUrl) && (
               <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
             )}
-            <button className="button is-small">Bibtex</button>
+            {/* <button className="button is-small">Bibtex</button> */}
           </div>
         )}
       </div>
