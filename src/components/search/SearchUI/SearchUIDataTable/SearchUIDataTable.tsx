@@ -112,39 +112,39 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     setColumns(newColumns);
   };
 
-  const getDataToDownload = () => {
-    if (state.selectedRows && state.selectedRows.length > 0) {
-      return state.selectedRows;
-    } else {
-      return state.results;
-    }
-  };
+  // const getDataToDownload = () => {
+  //   if (state.selectedRows && state.selectedRows.length > 0) {
+  //     return state.selectedRows;
+  //   } else {
+  //     return state.results;
+  //   }
+  // };
 
-  const getDownloadFilename = () => {
-    if (state.selectedRows && state.selectedRows.length > 0) {
-      return `selected-results-${state.selectedRows.length}`;
-    } else {
-      return `results-${lowerResultBound}-${upperResultBound}`;
-    }
-  };
+  // const getDownloadFilename = () => {
+  //   if (state.selectedRows && state.selectedRows.length > 0) {
+  //     return `selected-results-${state.selectedRows.length}`;
+  //   } else {
+  //     return `results-${lowerResultBound}-${upperResultBound}`;
+  //   }
+  // };
 
-  const getDownloadTooltip = () => {
-    if (state.selectedRows && state.selectedRows.length > 0) {
-      return `Includes ${state.selectedRows.length} selected rows`;
-    } else if (state.totalResults > state.resultsPerPage) {
-      return 'Includes current page only';
-    } else {
-      return;
-    }
-  };
+  // const getDownloadTooltip = () => {
+  //   if (state.selectedRows && state.selectedRows.length > 0) {
+  //     return `Includes ${state.selectedRows.length} selected rows`;
+  //   } else if (state.totalResults > state.resultsPerPage) {
+  //     return 'Includes current page only';
+  //   } else {
+  //     return;
+  //   }
+  // };
 
-  const getDownloadLabel = () => {
-    if (state.selectedRows && state.selectedRows.length > 0) {
-      return 'Download selected as';
-    } else {
-      return 'Download as';
-    }
-  };
+  // const getDownloadLabel = () => {
+  //   if (state.selectedRows && state.selectedRows.length > 0) {
+  //     return 'Download selected as';
+  //   } else {
+  //     return 'Download as';
+  //   }
+  // };
 
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
@@ -218,15 +218,16 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     },
   };
 
-  const downloadDropdown = (
-    <DownloadDropdown
-      data={getDataToDownload()}
-      filename={getDownloadFilename()}
-      tooltip={getDownloadTooltip()}
-    >
-      {getDownloadLabel()}
-    </DownloadDropdown>
-  );
+  // const downloadDropdown = (
+  //   <DownloadDropdown
+  //     data={getDataToDownload()}
+  //     filename={getDownloadFilename()}
+  //     tooltip={getDownloadTooltip()}
+  //   >
+  //     {getDownloadLabel()}
+  //   </DownloadDropdown>
+  // );
+
   const columnsMenu = (
     <MenuWrapper
       data-testid="columns-menu"
@@ -379,7 +380,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
           )}
         </div>
         <div className="mpc-search-ui-data-table-controls">
-          {downloadDropdown}
           {resultsPerPageMenu}
           {columnsMenu}
         </div>
