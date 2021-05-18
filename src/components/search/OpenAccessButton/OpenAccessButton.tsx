@@ -8,8 +8,9 @@ export const OpenAccessButton: React.FC<OpenAccessLinkProps> = (props) => {
   props = {
     className: 'button is-small',
     children: 'PDF',
+    target: '_blank',
     ...props,
   };
 
-  return <OpenAccessLink {...props} target="_blank" className={props.className} doi={props.doi} />;
+  return <OpenAccessLink {...props} />;
 };

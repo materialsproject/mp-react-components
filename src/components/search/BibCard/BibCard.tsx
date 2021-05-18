@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
+import { BibtexButton } from '../BibtexButton';
 import { OpenAccessButton } from '../OpenAccessButton';
 import { OpenAccessLink } from '../OpenAccessLink';
 import './BibCard.css';
@@ -38,7 +39,7 @@ export const BibCard: React.FC<Props> = (props) => {
             {(props.fetchOpenAccessUrl || props.openAccessUrl) && (
               <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
             )}
-            {/* <button className="button is-small">Bibtex</button> */}
+            <BibtexButton doi={props.doi} />
           </div>
         )}
       </div>

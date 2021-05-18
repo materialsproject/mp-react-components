@@ -20,6 +20,11 @@ import { BibjsonFilter } from './components/search/BibjsonFilter';
 import { BibjsonCard } from './components/search/BibjsonCard';
 import { DownloadButton } from './components/search/DownloadButton';
 import { DownloadDropdown } from './components/search/DownloadDropdown';
+import { BibCard } from './components/search/BibCard';
+import { BibtexButton } from './components/search/BibtexButton';
+import { CrossrefCard } from './components/search/CrossrefCard';
+import { OpenAccessButton } from './components/search/OpenAccessButton';
+import { OpenAccessLink } from './components/search/OpenAccessLink';
 
 export {
   SelectableTable,
@@ -44,6 +49,11 @@ export {
   Download,
   BibjsonFilter,
   BibjsonCard,
+  BibCard,
+  BibtexButton,
+  CrossrefCard,
+  OpenAccessButton,
+  OpenAccessLink,
   DownloadButton,
   DownloadDropdown,
 };

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 
 export interface OpenAccessLinkProps extends React.HTMLProps<HTMLAnchorElement> {
   id?: string;
-  setProps?: (value: any) => any;
   className?: string;
   doi?: string;
   url?: string;
