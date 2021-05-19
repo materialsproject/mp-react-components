@@ -46,7 +46,7 @@ export const BibCard: React.FC<Props> = (props) => {
       <p className="mpc-bib-card-authors">{props.author}</p>
       <p>
         <span className="mpc-bib-card-journal">{props.journal}</span>
-        <span>, </span>
+        {props.journal && <span>, </span>}
         <span className="mpc-bib-card-year">{props.year}</span>
       </p>
     </div>
