@@ -16,7 +16,7 @@ import { GlobalSearchBar } from './components/search/GlobalSearchBar';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { Select } from './components/search/Select';
 import { Download } from './components/crystal-toolkit/Download';
-import { BibjsonFilter } from './components/search/BibjsonFilter';
+import { BibFilter } from './components/search/BibFilter';
 import { BibjsonCard } from './components/search/BibjsonCard';
 import { DownloadButton } from './components/search/DownloadButton';
 import { DownloadDropdown } from './components/search/DownloadDropdown';
@@ -47,7 +47,7 @@ export {
   NavbarDropdown,
   Select,
   Download,
-  BibjsonFilter,
+  BibFilter,
   BibjsonCard,
   BibCard,
   BibtexButton,

@@ -1,0 +1,2107 @@
+{
+  "status": "ok",
+  "message-type": "work",
+  "message-version": "1.0.0",
+  "message": [
+    {
+      "indexed": {
+        "date-parts": [[2021, 4, 28]],
+        "date-time": "2021-04-28T20:07:11Z",
+        "timestamp": 1619640431062
+      },
+      "reference-count": 56,
+      "publisher": "Royal Society of Chemistry (RSC)",
+      "issue": "7",
+      "content-domain": {
+        "domain": ["rsc.org"],
+        "crossmark-restriction": true
+      },
+      "short-container-title": ["J. Mater. Chem. A"],
+      "abstract": "<p>Intrinsically doped YCu<sub>x</sub>Te<sub>2</sub> samples exhibit very low thermal conductivity (\u223c0.5 W m<sup>\u22121</sup> K<sup>\u22121</sup>) with high <italic>zT</italic> \u223c0.75 at 780 K.</p>",
+      "DOI": "10.1039/c5ta10330d",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [[2016, 2, 1]],
+        "date-time": "2016-02-01T10:00:37Z",
+        "timestamp": 1454320837000
+      },
+      "page": "2461-2472",
+      "update-policy": "http://dx.doi.org/10.1039/rsc_crossmark_policy",
+      "source": "Crossref",
+      "is-referenced-by-count": 37,
+      "title": [
+        "Lorem Ipsum YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure"
+      ],
+      "prefix": "10.1039",
+      "volume": "4",
+      "author": [
+        {
+          "given": "Umut",
+          "family": "Aydemir",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Jan-Hendrik",
+          "family": "P\u00f6hls",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Physics and Atmospheric Science"
+            },
+            {
+              "name": "Dalhousie University"
+            },
+            {
+              "name": "Halifax"
+            },
+            {
+              "name": "B3H 4R2 Canada"
+            }
+          ]
+        },
+        {
+          "given": "Hong",
+          "family": "Zhu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "Massachusetts Institute of Technology"
+            },
+            {
+              "name": "Massachusetts"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "University of Michigan \u2013 Shanghai Jiao Tong University Joint Institute"
+            }
+          ]
+        },
+        {
+          "given": "Geoffroy",
+          "family": "Hautier",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Condensed Matter and Nanosciences (IMCN)"
+            },
+            {
+              "name": "Universit\u00e9 catholique de Louvain"
+            },
+            {
+              "name": "Louvain-la-Neuve"
+            },
+            {
+              "name": "Belgium"
+            }
+          ]
+        },
+        {
+          "given": "Saurabh",
+          "family": "Bajaj",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Zachary M.",
+          "family": "Gibbs",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Wei",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Mechanical"
+            },
+            {
+              "name": "Materials and Aerospace Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Guodong",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Saneyuki",
+          "family": "Ohno",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Danny",
+          "family": "Broberg",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Stephen Dongmin",
+          "family": "Kang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Mark",
+          "family": "Asta",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Gerbrand",
+          "family": "Ceder",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "Massachusetts Institute of Technology"
+            },
+            {
+              "name": "Massachusetts"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Lawrence Berkeley National Lab"
+            }
+          ]
+        },
+        {
+          "given": "Mary Anne",
+          "family": "White",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Physics and Atmospheric Science"
+            },
+            {
+              "name": "Dalhousie University"
+            },
+            {
+              "name": "Halifax"
+            },
+            {
+              "name": "B3H 4R2 Canada"
+            }
+          ]
+        },
+        {
+          "given": "Kristin",
+          "family": "Persson",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            }
+          ]
+        },
+        {
+          "given": "Anubhav",
+          "family": "Jain",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "ORCID": "http://orcid.org/0000-0003-1414-8682",
+          "authenticated-orcid": false,
+          "given": "G. Jeffrey",
+          "family": "Snyder",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        }
+      ],
+      "member": "292",
+      "published-online": {
+        "date-parts": [[2016]]
+      },
+      "reference": [
+        {
+          "key": "C5TA10330D-(cit1)/*[position()=1]",
+          "unstructured": "Energy Flow Charts, available at:https://publicaffairs.llnl.gov/news/energy/energy.html"
+        },
+        {
+          "key": "C5TA10330D-(cit2)/*[position()=1]",
+          "author": "Tritt",
+          "volume": "41",
+          "first-page": "433",
+          "year": "2011",
+          "journal-title": "Annu. Rev. Mater. Res.",
+          "DOI": "10.1146/annurev-matsci-062910-100453",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit3)/*[position()=1]",
+          "author": "Rowe",
+          "year": "2006",
+          "unstructured": "D. M.\n            Rowe\n          , Thermoelectrics Handbook : Macro to Nano, CRC; London : Taylor & Francis [distributor], Boca Raton, Fla., 2006",
+          "volume-title": "Thermoelectrics Handbook : Macro to Nano"
+        },
+        {
+          "key": "C5TA10330D-(cit4)/*[position()=1]",
+          "author": "Aydemir",
+          "volume": "84",
+          "first-page": "043715",
+          "year": "2011",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.84.195137",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit5)/*[position()=1]",
+          "author": "Aydemir",
+          "volume": "132",
+          "first-page": "10984",
+          "year": "2010",
+          "journal-title": "J. Am. Chem. Soc.",
+          "DOI": "10.1021/ja104197c",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit6)/*[position()=1]",
+          "author": "Shi",
+          "volume": "133",
+          "first-page": "7837",
+          "year": "2011",
+          "journal-title": "J. Am. Chem. Soc.",
+          "DOI": "10.1021/ja111199y",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit7)/*[position()=1]",
+          "author": "Kauzlarich",
+          "first-page": "2099",
+          "year": "2007",
+          "journal-title": "Dalton Trans.",
+          "DOI": "10.1039/b702266b",
+          "doi-asserted-by": "publisher"
+        },
+        {
+          "key": "C5TA10330D-(cit8)/*[position()=1]",
+          "author": "Chanakian",
+          "volume": "3",
+          "first-page": "10518",
+          "year": "2015",
+          "journal-title": "J. Mater. Chem. C",
+          "DOI": "10.1039/C5TC01645B",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit9)/*[position()=1]",
+          "author": "Snyder",
+          "volume": "7",
+          "first-page": "105",
+          "year": "2008",
+          "journal-title": "Nat. Mater.",
+          "DOI": "10.1038/nmat2090",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit10)/*[position()=1]",
+          "author": "Jain",
+          "volume": "1",
+          "first-page": "011002",
+          "year": "2013",
+          "journal-title": "APL Mater.",
+          "DOI": "10.1063/1.4812323",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit11)/*[position()=1]",
+          "author": "Cahill",
+          "volume": "39",
+          "first-page": "93",
+          "year": "1988",
+          "journal-title": "Annu. Rev. Phys. Chem.",
+          "DOI": "10.1146/annurev.pc.39.100188.000521",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit12)/*[position()=1]",
+          "author": "Zhu",
+          "volume": "3",
+          "first-page": "10554",
+          "year": "2015",
+          "journal-title": "J. Mater. Chem. C",
+          "DOI": "10.1039/C5TC01440A",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit13)/*[position()=1]",
+          "author": "Gulay",
+          "volume": "186",
+          "first-page": "142",
+          "year": "2012",
+          "journal-title": "J. Solid State Chem.",
+          "DOI": "10.1016/j.jssc.2011.12.004",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit14)/*[position()=1]",
+          "author": "Marchuk",
+          "volume": "455",
+          "first-page": "186",
+          "year": "2008",
+          "journal-title": "J. Alloys Compd.",
+          "DOI": "10.1016/j.jallcom.2007.01.065",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit15)/*[position()=1]",
+          "author": "Lin",
+          "volume": "20",
+          "first-page": "15401",
+          "year": "2014",
+          "journal-title": "Chem.\u2013Eur. J.",
+          "DOI": "10.1002/chem.201404453",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit16)/*[position()=1]",
+          "author": "He",
+          "volume": "26",
+          "first-page": "3974",
+          "year": "2014",
+          "journal-title": "Adv. Mater.",
+          "DOI": "10.1002/adma.201400515",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit17)/*[position()=1]",
+          "author": "Liu",
+          "volume": "11",
+          "first-page": "422",
+          "year": "2012",
+          "journal-title": "Nat. Mater.",
+          "DOI": "10.1038/nmat3273",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit18)/*[position()=1]",
+          "author": "Ballikaya",
+          "volume": "1",
+          "first-page": "12478",
+          "year": "2013",
+          "journal-title": "J. Mater. Chem. A",
+          "DOI": "10.1039/c3ta12508d",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit19)/*[position()=1]",
+          "author": "Vouroutzis",
+          "volume": "115",
+          "first-page": "399",
+          "year": "1989",
+          "journal-title": "Phys. Status Solidi A",
+          "DOI": "10.1002/pssa.2211150206",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit20)/*[position()=1]",
+          "author": "Brown",
+          "volume": "1",
+          "first-page": "052107",
+          "year": "2013",
+          "journal-title": "APL Mater.",
+          "DOI": "10.1063/1.4827595",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit21)/*[position()=1]",
+          "author": "Dongmin Kang",
+          "volume": "18",
+          "first-page": "013024",
+          "year": "2016",
+          "journal-title": "New J. Phys.",
+          "DOI": "10.1088/1367-2630/18/1/013024",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit22)/*[position()=1]",
+          "author": "Ikeda",
+          "volume": "2",
+          "first-page": "204",
+          "year": "2014",
+          "journal-title": "J. Mater. Chem. A",
+          "DOI": "10.1039/C3TA13889E",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit23)/*[position()=1]",
+          "author": "Akselrud",
+          "volume": "47",
+          "first-page": "803",
+          "year": "2014",
+          "journal-title": "J. Appl. Crystallogr.",
+          "DOI": "10.1107/S1600576714001058",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit24)/*[position()=1]",
+          "author": "Mraw",
+          "volume": "11",
+          "first-page": "567",
+          "year": "1979",
+          "journal-title": "J. Chem. Thermodyn.",
+          "DOI": "10.1016/0021-9614(79)90097-1",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit25)/*[position()=1]",
+          "author": "Archer",
+          "volume": "22",
+          "first-page": "1441",
+          "year": "1993",
+          "journal-title": "J. Phys. Chem. Ref. Data",
+          "DOI": "10.1063/1.555931",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit26)/*[position()=1]",
+          "author": "Kennedy",
+          "volume": "47",
+          "first-page": "107",
+          "year": "2007",
+          "journal-title": "Cryogenics",
+          "DOI": "10.1016/j.cryogenics.2006.10.001",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit27)/*[position()=1]",
+          "author": "Gibbs",
+          "volume": "15",
+          "first-page": "075020",
+          "year": "2013",
+          "journal-title": "New J. Phys.",
+          "DOI": "10.1088/1367-2630/15/7/075020",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit28)/*[position()=1]",
+          "author": "Borup",
+          "volume": "83",
+          "first-page": "123902",
+          "year": "2012",
+          "journal-title": "Rev. Sci. Instrum.",
+          "DOI": "10.1063/1.4770124",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit29)/*[position()=1]",
+          "author": "Iwanaga",
+          "volume": "82",
+          "first-page": "063905",
+          "year": "2011",
+          "journal-title": "Rev. Sci. Instrum.",
+          "DOI": "10.1063/1.3601358",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit30)/*[position()=1]",
+          "author": "Borup",
+          "volume": "8",
+          "first-page": "423",
+          "year": "2015",
+          "journal-title": "Energy Environ. Sci.",
+          "DOI": "10.1039/C4EE01320D",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit31)/*[position()=1]",
+          "author": "Kresse",
+          "volume": "54",
+          "first-page": "11169",
+          "year": "1996",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.54.11169",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit32)/*[position()=1]",
+          "author": "Perdew",
+          "volume": "77",
+          "first-page": "3865",
+          "year": "1996",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.77.3865",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit33)/*[position()=1]",
+          "author": "Perdew",
+          "volume": "78",
+          "first-page": "1396",
+          "year": "1997",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.78.1396",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit34)/*[position()=1]",
+          "author": "Blochl",
+          "volume": "50",
+          "first-page": "17953",
+          "year": "1994",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.50.17953",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit35)/*[position()=1]",
+          "author": "Shemet",
+          "volume": "420",
+          "first-page": "58",
+          "year": "2006",
+          "journal-title": "J. Alloys Compd.",
+          "DOI": "10.1016/j.jallcom.2005.10.023",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit36)/*[position()=1]",
+          "author": "de Jong",
+          "volume": "2",
+          "first-page": "150009",
+          "year": "2015",
+          "journal-title": "Sci. Data",
+          "DOI": "10.1038/sdata.2015.9",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit37)/*[position()=1]",
+          "author": "Madsen",
+          "volume": "175",
+          "first-page": "67",
+          "year": "2006",
+          "journal-title": "Comput. Phys. Commun.",
+          "DOI": "10.1016/j.cpc.2006.03.007",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit38)/*[position()=1]",
+          "author": "Vocadlo",
+          "volume": "85",
+          "first-page": "390",
+          "year": "2000",
+          "journal-title": "Am. Mineral.",
+          "DOI": "10.2138/am-2000-2-319",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit39)/*[position()=1]",
+          "author": "Murnaghan",
+          "volume": "30",
+          "first-page": "244",
+          "year": "1944",
+          "journal-title": "Proc. Natl. Acad. Sci. U. S. A.",
+          "DOI": "10.1073/pnas.30.9.244",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit40)/*[position()=1]",
+          "author": "Hautier",
+          "volume": "26",
+          "first-page": "5447",
+          "year": "2014",
+          "journal-title": "Chem. Mater.",
+          "DOI": "10.1021/cm404079a",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit41)/*[position()=1]",
+          "author": "Ong",
+          "volume": "68",
+          "first-page": "314",
+          "year": "2013",
+          "journal-title": "Comput. Mater. Sci.",
+          "DOI": "10.1016/j.commatsci.2012.10.028",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit42)/*[position()=1]",
+          "author": "Jain",
+          "volume": "27",
+          "first-page": "5037",
+          "year": "2015",
+          "journal-title": "Concurrency Computat.: Pract. Exper.",
+          "DOI": "10.1002/cpe.3505",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit43)/*[position()=1]",
+          "author": "Pardo",
+          "first-page": "3658",
+          "year": "1967",
+          "journal-title": "Bull. Soc. Chim. Fr."
+        },
+        {
+          "key": "C5TA10330D-(cit44)/*[position()=1]",
+          "author": "Brown",
+          "volume": "42",
+          "first-page": "2014",
+          "year": "2013",
+          "journal-title": "J. Electron. Mater.",
+          "DOI": "10.1007/s11664-013-2506-2",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit45)/*[position()=1]",
+          "author": "Gascoin",
+          "volume": "15",
+          "first-page": "1860",
+          "year": "2005",
+          "journal-title": "Adv. Funct. Mater.",
+          "DOI": "10.1002/adfm.200500043",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit46)/*[position()=1]",
+          "author": "Wang",
+          "volume": "vol. 182",
+          "year": "2013",
+          "unstructured": "H.\n            Wang\n          , Y.Pei, A.LaLonde and G.Jeffery Snyder, in Thermoelectric Nanomaterials, ed. K. Koumoto and T. Mori, Springer, Berlin Heidelberg, 2013, vol. 182, ch. 1, pp. 3\u201332",
+          "volume-title": "Thermoelectric Nanomaterials",
+          "DOI": "10.1007/978-3-642-37537-8_1",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit47)/*[position()=1]",
+          "author": "Landau",
+          "year": "1980",
+          "unstructured": "L. D.\n            Landau\n          , E. M.Lifshits and L. P.Pitaevski\u012d, Statistical physics, Pergamon Press, Oxford, New York, 1980",
+          "volume-title": "Statistical physics"
+        },
+        {
+          "key": "C5TA10330D-(cit48)/*[position()=1]",
+          "author": "Khachaturyan",
+          "volume": "22",
+          "first-page": "1",
+          "year": "1978",
+          "journal-title": "Prog. Mater. Sci.",
+          "DOI": "10.1016/0079-6425(78)90003-8",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit49)/*[position()=1]",
+          "author": "Zhu",
+          "volume": "104",
+          "first-page": "082107",
+          "year": "2014",
+          "journal-title": "Appl. Phys. Lett.",
+          "DOI": "10.1063/1.4866861",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit50)/*[position()=1]",
+          "author": "Cahill",
+          "volume": "46",
+          "first-page": "6131",
+          "year": "1992",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.46.6131",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit51)/*[position()=1]",
+          "author": "May",
+          "volume": "80",
+          "first-page": "125205",
+          "year": "2009",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.80.125205",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit52)/*[position()=1]",
+          "author": "P\u00f6hls",
+          "volume": "18",
+          "first-page": "1185",
+          "year": "2016",
+          "journal-title": "Phys. Chem. Chem. Phys.",
+          "DOI": "10.1039/C5CP06575E",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit53)/*[position()=1]",
+          "author": "Slack",
+          "volume": "vol. 34",
+          "year": "1979",
+          "unstructured": "G. A.\n            Slack\n          , in Solid State Physics, ed. F. S. Henry Ehrenreich and T. David, Academic Press, 1979, vol. 34, pp. 1\u201371",
+          "volume-title": "Solid State Physics"
+        },
+        {
+          "key": "C5TA10330D-(cit54)/*[position()=1]",
+          "author": "Zhang",
+          "volume": "85",
+          "first-page": "054306",
+          "year": "2012",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.85.054306",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit55)/*[position()=1]",
+          "author": "Morelli",
+          "volume": "101",
+          "first-page": "035901",
+          "year": "2008",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.101.035901",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit56)/*[position()=1]",
+          "author": "Fultz",
+          "volume": "55",
+          "first-page": "247",
+          "year": "2010",
+          "journal-title": "Prog. Mater. Sci.",
+          "DOI": "10.1016/j.pmatsci.2009.05.002",
+          "doi-asserted-by": "crossref"
+        }
+      ],
+      "container-title": ["Journal of Materials Chemistry A"],
+      "original-title": [],
+      "language": "en",
+      "link": [
+        {
+          "URL": "http://pubs.rsc.org/en/content/articlepdf/2016/TA/C5TA10330D",
+          "content-type": "unspecified",
+          "content-version": "vor",
+          "intended-application": "similarity-checking"
+        }
+      ],
+      "deposited": {
+        "date-parts": [[2017, 11, 20]],
+        "date-time": "2017-11-20T06:09:54Z",
+        "timestamp": 1511158194000
+      },
+      "score": 1.0,
+      "subtitle": [],
+      "short-title": [],
+      "issued": {
+        "date-parts": [[2016]]
+      },
+      "references-count": 56,
+      "journal-issue": {
+        "published-print": {
+          "date-parts": [[2016]]
+        },
+        "issue": "7"
+      },
+      "URL": "http://dx.doi.org/10.1039/c5ta10330d",
+      "relation": {
+        "cites": []
+      },
+      "ISSN": ["2050-7488", "2050-7496"],
+      "issn-type": [
+        {
+          "value": "2050-7488",
+          "type": "print"
+        },
+        {
+          "value": "2050-7496",
+          "type": "electronic"
+        }
+      ],
+      "assertion": [
+        {
+          "value": "This document is Similarity Check deposited",
+          "name": "similarity_check",
+          "explanation": {
+            "URL": "https://www.crossref.org/services/similarity-check/"
+          },
+          "group": {
+            "name": "similarity_check",
+            "label": "SIMILARITY CHECK"
+          }
+        },
+        {
+          "value": "Supplementary Information",
+          "URL": "https://doi.org/10.1039/C5TA10330D",
+          "name": "related_data",
+          "group": {
+            "name": "related_data",
+            "label": "RELATED DATA"
+          }
+        },
+        {
+          "value": "Umut Aydemir (ResearcherID)",
+          "URL": "http://www.researcherid.com/rid/P-8424-2015",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "G. Jeffrey Snyder (ORCID)",
+          "URL": "http://orcid.org/0000-0003-1414-8682",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "G. Jeffrey Snyder (ResearcherID)",
+          "URL": "http://www.researcherid.com/rid/E-4453-2011",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "The Royal Society of Chemistry has an exclusive publication licence for this journal",
+          "name": "copyright_licence",
+          "group": {
+            "name": "copyright_licensing",
+            "label": "COPYRIGHT AND LICENSING"
+          }
+        },
+        {
+          "value": "Single-blind",
+          "order": 2,
+          "name": "peer_review_method",
+          "group": {
+            "name": "peer_review_method",
+            "label": "PEER REVIEW METHOD"
+          }
+        },
+        {
+          "value": "Received 16 December 2015; Accepted 22 January 2016;  Advance Article published 1 February 2016;  Version of Record published 9 February 2016",
+          "order": 1,
+          "name": "history",
+          "group": {
+            "name": "publication_history",
+            "label": "PUBLICATION HISTORY"
+          }
+        }
+      ]
+    },
+    {
+      "indexed": {
+        "date-parts": [[2021, 4, 28]],
+        "date-time": "2021-04-28T20:07:11Z",
+        "timestamp": 1619640431062
+      },
+      "reference-count": 56,
+      "publisher": "Royal Society of Chemistry (RSC)",
+      "issue": "7",
+      "content-domain": {
+        "domain": ["rsc.org"],
+        "crossmark-restriction": true
+      },
+      "short-container-title": ["J. Mater. Chem. A"],
+      "abstract": "<p>Intrinsically doped YCu<sub>x</sub>Te<sub>2</sub> samples exhibit very low thermal conductivity (\u223c0.5 W m<sup>\u22121</sup> K<sup>\u22121</sup>) with high <italic>zT</italic> \u223c0.75 at 780 K.</p>",
+      "DOI": "10.1039/c5ta10330d",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [[2016, 2, 1]],
+        "date-time": "2016-02-01T10:00:37Z",
+        "timestamp": 1454320837000
+      },
+      "page": "2461-2472",
+      "update-policy": "http://dx.doi.org/10.1039/rsc_crossmark_policy",
+      "source": "Crossref",
+      "is-referenced-by-count": 37,
+      "title": [
+        "YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure"
+      ],
+      "prefix": "10.1039",
+      "volume": "4",
+      "author": [
+        {
+          "given": "Umut",
+          "family": "Aydemir",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Jan-Hendrik",
+          "family": "P\u00f6hls",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Physics and Atmospheric Science"
+            },
+            {
+              "name": "Dalhousie University"
+            },
+            {
+              "name": "Halifax"
+            },
+            {
+              "name": "B3H 4R2 Canada"
+            }
+          ]
+        },
+        {
+          "given": "Hong",
+          "family": "Zhu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "Massachusetts Institute of Technology"
+            },
+            {
+              "name": "Massachusetts"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "University of Michigan \u2013 Shanghai Jiao Tong University Joint Institute"
+            }
+          ]
+        },
+        {
+          "given": "Geoffroy",
+          "family": "Hautier",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Condensed Matter and Nanosciences (IMCN)"
+            },
+            {
+              "name": "Universit\u00e9 catholique de Louvain"
+            },
+            {
+              "name": "Louvain-la-Neuve"
+            },
+            {
+              "name": "Belgium"
+            }
+          ]
+        },
+        {
+          "given": "Saurabh",
+          "family": "Bajaj",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Zachary M.",
+          "family": "Gibbs",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Wei",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Mechanical"
+            },
+            {
+              "name": "Materials and Aerospace Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Guodong",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Saneyuki",
+          "family": "Ohno",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Danny",
+          "family": "Broberg",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Stephen Dongmin",
+          "family": "Kang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        },
+        {
+          "given": "Mark",
+          "family": "Asta",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "given": "Gerbrand",
+          "family": "Ceder",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "Massachusetts Institute of Technology"
+            },
+            {
+              "name": "Massachusetts"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Lawrence Berkeley National Lab"
+            }
+          ]
+        },
+        {
+          "given": "Mary Anne",
+          "family": "White",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Physics and Atmospheric Science"
+            },
+            {
+              "name": "Dalhousie University"
+            },
+            {
+              "name": "Halifax"
+            },
+            {
+              "name": "B3H 4R2 Canada"
+            }
+          ]
+        },
+        {
+          "given": "Kristin",
+          "family": "Persson",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            },
+            {
+              "name": "University of California Berkeley"
+            }
+          ]
+        },
+        {
+          "given": "Anubhav",
+          "family": "Jain",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lawrence Berkeley National Lab"
+            },
+            {
+              "name": "Berkeley"
+            },
+            {
+              "name": "USA"
+            }
+          ]
+        },
+        {
+          "ORCID": "http://orcid.org/0000-0003-1414-8682",
+          "authenticated-orcid": false,
+          "given": "G. Jeffrey",
+          "family": "Snyder",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Applied Physics and Materials Science"
+            },
+            {
+              "name": "California Institute of Technology"
+            },
+            {
+              "name": "Pasadena"
+            },
+            {
+              "name": "USA"
+            },
+            {
+              "name": "Department of Materials Science and Engineering"
+            }
+          ]
+        }
+      ],
+      "member": "292",
+      "published-online": {
+        "date-parts": [[2016]]
+      },
+      "reference": [
+        {
+          "key": "C5TA10330D-(cit1)/*[position()=1]",
+          "unstructured": "Energy Flow Charts, available at:https://publicaffairs.llnl.gov/news/energy/energy.html"
+        },
+        {
+          "key": "C5TA10330D-(cit2)/*[position()=1]",
+          "author": "Tritt",
+          "volume": "41",
+          "first-page": "433",
+          "year": "2011",
+          "journal-title": "Annu. Rev. Mater. Res.",
+          "DOI": "10.1146/annurev-matsci-062910-100453",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit3)/*[position()=1]",
+          "author": "Rowe",
+          "year": "2006",
+          "unstructured": "D. M.\n            Rowe\n          , Thermoelectrics Handbook : Macro to Nano, CRC; London : Taylor & Francis [distributor], Boca Raton, Fla., 2006",
+          "volume-title": "Thermoelectrics Handbook : Macro to Nano"
+        },
+        {
+          "key": "C5TA10330D-(cit4)/*[position()=1]",
+          "author": "Aydemir",
+          "volume": "84",
+          "first-page": "043715",
+          "year": "2011",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.84.195137",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit5)/*[position()=1]",
+          "author": "Aydemir",
+          "volume": "132",
+          "first-page": "10984",
+          "year": "2010",
+          "journal-title": "J. Am. Chem. Soc.",
+          "DOI": "10.1021/ja104197c",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit6)/*[position()=1]",
+          "author": "Shi",
+          "volume": "133",
+          "first-page": "7837",
+          "year": "2011",
+          "journal-title": "J. Am. Chem. Soc.",
+          "DOI": "10.1021/ja111199y",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit7)/*[position()=1]",
+          "author": "Kauzlarich",
+          "first-page": "2099",
+          "year": "2007",
+          "journal-title": "Dalton Trans.",
+          "DOI": "10.1039/b702266b",
+          "doi-asserted-by": "publisher"
+        },
+        {
+          "key": "C5TA10330D-(cit8)/*[position()=1]",
+          "author": "Chanakian",
+          "volume": "3",
+          "first-page": "10518",
+          "year": "2015",
+          "journal-title": "J. Mater. Chem. C",
+          "DOI": "10.1039/C5TC01645B",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit9)/*[position()=1]",
+          "author": "Snyder",
+          "volume": "7",
+          "first-page": "105",
+          "year": "2008",
+          "journal-title": "Nat. Mater.",
+          "DOI": "10.1038/nmat2090",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit10)/*[position()=1]",
+          "author": "Jain",
+          "volume": "1",
+          "first-page": "011002",
+          "year": "2013",
+          "journal-title": "APL Mater.",
+          "DOI": "10.1063/1.4812323",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit11)/*[position()=1]",
+          "author": "Cahill",
+          "volume": "39",
+          "first-page": "93",
+          "year": "1988",
+          "journal-title": "Annu. Rev. Phys. Chem.",
+          "DOI": "10.1146/annurev.pc.39.100188.000521",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit12)/*[position()=1]",
+          "author": "Zhu",
+          "volume": "3",
+          "first-page": "10554",
+          "year": "2015",
+          "journal-title": "J. Mater. Chem. C",
+          "DOI": "10.1039/C5TC01440A",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit13)/*[position()=1]",
+          "author": "Gulay",
+          "volume": "186",
+          "first-page": "142",
+          "year": "2012",
+          "journal-title": "J. Solid State Chem.",
+          "DOI": "10.1016/j.jssc.2011.12.004",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit14)/*[position()=1]",
+          "author": "Marchuk",
+          "volume": "455",
+          "first-page": "186",
+          "year": "2008",
+          "journal-title": "J. Alloys Compd.",
+          "DOI": "10.1016/j.jallcom.2007.01.065",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit15)/*[position()=1]",
+          "author": "Lin",
+          "volume": "20",
+          "first-page": "15401",
+          "year": "2014",
+          "journal-title": "Chem.\u2013Eur. J.",
+          "DOI": "10.1002/chem.201404453",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit16)/*[position()=1]",
+          "author": "He",
+          "volume": "26",
+          "first-page": "3974",
+          "year": "2014",
+          "journal-title": "Adv. Mater.",
+          "DOI": "10.1002/adma.201400515",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit17)/*[position()=1]",
+          "author": "Liu",
+          "volume": "11",
+          "first-page": "422",
+          "year": "2012",
+          "journal-title": "Nat. Mater.",
+          "DOI": "10.1038/nmat3273",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit18)/*[position()=1]",
+          "author": "Ballikaya",
+          "volume": "1",
+          "first-page": "12478",
+          "year": "2013",
+          "journal-title": "J. Mater. Chem. A",
+          "DOI": "10.1039/c3ta12508d",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit19)/*[position()=1]",
+          "author": "Vouroutzis",
+          "volume": "115",
+          "first-page": "399",
+          "year": "1989",
+          "journal-title": "Phys. Status Solidi A",
+          "DOI": "10.1002/pssa.2211150206",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit20)/*[position()=1]",
+          "author": "Brown",
+          "volume": "1",
+          "first-page": "052107",
+          "year": "2013",
+          "journal-title": "APL Mater.",
+          "DOI": "10.1063/1.4827595",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit21)/*[position()=1]",
+          "author": "Dongmin Kang",
+          "volume": "18",
+          "first-page": "013024",
+          "year": "2016",
+          "journal-title": "New J. Phys.",
+          "DOI": "10.1088/1367-2630/18/1/013024",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit22)/*[position()=1]",
+          "author": "Ikeda",
+          "volume": "2",
+          "first-page": "204",
+          "year": "2014",
+          "journal-title": "J. Mater. Chem. A",
+          "DOI": "10.1039/C3TA13889E",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit23)/*[position()=1]",
+          "author": "Akselrud",
+          "volume": "47",
+          "first-page": "803",
+          "year": "2014",
+          "journal-title": "J. Appl. Crystallogr.",
+          "DOI": "10.1107/S1600576714001058",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit24)/*[position()=1]",
+          "author": "Mraw",
+          "volume": "11",
+          "first-page": "567",
+          "year": "1979",
+          "journal-title": "J. Chem. Thermodyn.",
+          "DOI": "10.1016/0021-9614(79)90097-1",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit25)/*[position()=1]",
+          "author": "Archer",
+          "volume": "22",
+          "first-page": "1441",
+          "year": "1993",
+          "journal-title": "J. Phys. Chem. Ref. Data",
+          "DOI": "10.1063/1.555931",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit26)/*[position()=1]",
+          "author": "Kennedy",
+          "volume": "47",
+          "first-page": "107",
+          "year": "2007",
+          "journal-title": "Cryogenics",
+          "DOI": "10.1016/j.cryogenics.2006.10.001",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit27)/*[position()=1]",
+          "author": "Gibbs",
+          "volume": "15",
+          "first-page": "075020",
+          "year": "2013",
+          "journal-title": "New J. Phys.",
+          "DOI": "10.1088/1367-2630/15/7/075020",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit28)/*[position()=1]",
+          "author": "Borup",
+          "volume": "83",
+          "first-page": "123902",
+          "year": "2012",
+          "journal-title": "Rev. Sci. Instrum.",
+          "DOI": "10.1063/1.4770124",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit29)/*[position()=1]",
+          "author": "Iwanaga",
+          "volume": "82",
+          "first-page": "063905",
+          "year": "2011",
+          "journal-title": "Rev. Sci. Instrum.",
+          "DOI": "10.1063/1.3601358",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit30)/*[position()=1]",
+          "author": "Borup",
+          "volume": "8",
+          "first-page": "423",
+          "year": "2015",
+          "journal-title": "Energy Environ. Sci.",
+          "DOI": "10.1039/C4EE01320D",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit31)/*[position()=1]",
+          "author": "Kresse",
+          "volume": "54",
+          "first-page": "11169",
+          "year": "1996",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.54.11169",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit32)/*[position()=1]",
+          "author": "Perdew",
+          "volume": "77",
+          "first-page": "3865",
+          "year": "1996",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.77.3865",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit33)/*[position()=1]",
+          "author": "Perdew",
+          "volume": "78",
+          "first-page": "1396",
+          "year": "1997",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.78.1396",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit34)/*[position()=1]",
+          "author": "Blochl",
+          "volume": "50",
+          "first-page": "17953",
+          "year": "1994",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.50.17953",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit35)/*[position()=1]",
+          "author": "Shemet",
+          "volume": "420",
+          "first-page": "58",
+          "year": "2006",
+          "journal-title": "J. Alloys Compd.",
+          "DOI": "10.1016/j.jallcom.2005.10.023",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit36)/*[position()=1]",
+          "author": "de Jong",
+          "volume": "2",
+          "first-page": "150009",
+          "year": "2015",
+          "journal-title": "Sci. Data",
+          "DOI": "10.1038/sdata.2015.9",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit37)/*[position()=1]",
+          "author": "Madsen",
+          "volume": "175",
+          "first-page": "67",
+          "year": "2006",
+          "journal-title": "Comput. Phys. Commun.",
+          "DOI": "10.1016/j.cpc.2006.03.007",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit38)/*[position()=1]",
+          "author": "Vocadlo",
+          "volume": "85",
+          "first-page": "390",
+          "year": "2000",
+          "journal-title": "Am. Mineral.",
+          "DOI": "10.2138/am-2000-2-319",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit39)/*[position()=1]",
+          "author": "Murnaghan",
+          "volume": "30",
+          "first-page": "244",
+          "year": "1944",
+          "journal-title": "Proc. Natl. Acad. Sci. U. S. A.",
+          "DOI": "10.1073/pnas.30.9.244",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit40)/*[position()=1]",
+          "author": "Hautier",
+          "volume": "26",
+          "first-page": "5447",
+          "year": "2014",
+          "journal-title": "Chem. Mater.",
+          "DOI": "10.1021/cm404079a",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit41)/*[position()=1]",
+          "author": "Ong",
+          "volume": "68",
+          "first-page": "314",
+          "year": "2013",
+          "journal-title": "Comput. Mater. Sci.",
+          "DOI": "10.1016/j.commatsci.2012.10.028",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit42)/*[position()=1]",
+          "author": "Jain",
+          "volume": "27",
+          "first-page": "5037",
+          "year": "2015",
+          "journal-title": "Concurrency Computat.: Pract. Exper.",
+          "DOI": "10.1002/cpe.3505",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit43)/*[position()=1]",
+          "author": "Pardo",
+          "first-page": "3658",
+          "year": "1967",
+          "journal-title": "Bull. Soc. Chim. Fr."
+        },
+        {
+          "key": "C5TA10330D-(cit44)/*[position()=1]",
+          "author": "Brown",
+          "volume": "42",
+          "first-page": "2014",
+          "year": "2013",
+          "journal-title": "J. Electron. Mater.",
+          "DOI": "10.1007/s11664-013-2506-2",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit45)/*[position()=1]",
+          "author": "Gascoin",
+          "volume": "15",
+          "first-page": "1860",
+          "year": "2005",
+          "journal-title": "Adv. Funct. Mater.",
+          "DOI": "10.1002/adfm.200500043",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit46)/*[position()=1]",
+          "author": "Wang",
+          "volume": "vol. 182",
+          "year": "2013",
+          "unstructured": "H.\n            Wang\n          , Y.Pei, A.LaLonde and G.Jeffery Snyder, in Thermoelectric Nanomaterials, ed. K. Koumoto and T. Mori, Springer, Berlin Heidelberg, 2013, vol. 182, ch. 1, pp. 3\u201332",
+          "volume-title": "Thermoelectric Nanomaterials",
+          "DOI": "10.1007/978-3-642-37537-8_1",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit47)/*[position()=1]",
+          "author": "Landau",
+          "year": "1980",
+          "unstructured": "L. D.\n            Landau\n          , E. M.Lifshits and L. P.Pitaevski\u012d, Statistical physics, Pergamon Press, Oxford, New York, 1980",
+          "volume-title": "Statistical physics"
+        },
+        {
+          "key": "C5TA10330D-(cit48)/*[position()=1]",
+          "author": "Khachaturyan",
+          "volume": "22",
+          "first-page": "1",
+          "year": "1978",
+          "journal-title": "Prog. Mater. Sci.",
+          "DOI": "10.1016/0079-6425(78)90003-8",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit49)/*[position()=1]",
+          "author": "Zhu",
+          "volume": "104",
+          "first-page": "082107",
+          "year": "2014",
+          "journal-title": "Appl. Phys. Lett.",
+          "DOI": "10.1063/1.4866861",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit50)/*[position()=1]",
+          "author": "Cahill",
+          "volume": "46",
+          "first-page": "6131",
+          "year": "1992",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.46.6131",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit51)/*[position()=1]",
+          "author": "May",
+          "volume": "80",
+          "first-page": "125205",
+          "year": "2009",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.80.125205",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit52)/*[position()=1]",
+          "author": "P\u00f6hls",
+          "volume": "18",
+          "first-page": "1185",
+          "year": "2016",
+          "journal-title": "Phys. Chem. Chem. Phys.",
+          "DOI": "10.1039/C5CP06575E",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit53)/*[position()=1]",
+          "author": "Slack",
+          "volume": "vol. 34",
+          "year": "1979",
+          "unstructured": "G. A.\n            Slack\n          , in Solid State Physics, ed. F. S. Henry Ehrenreich and T. David, Academic Press, 1979, vol. 34, pp. 1\u201371",
+          "volume-title": "Solid State Physics"
+        },
+        {
+          "key": "C5TA10330D-(cit54)/*[position()=1]",
+          "author": "Zhang",
+          "volume": "85",
+          "first-page": "054306",
+          "year": "2012",
+          "journal-title": "Phys. Rev. B: Condens. Matter Mater. Phys.",
+          "DOI": "10.1103/PhysRevB.85.054306",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit55)/*[position()=1]",
+          "author": "Morelli",
+          "volume": "101",
+          "first-page": "035901",
+          "year": "2008",
+          "journal-title": "Phys. Rev. Lett.",
+          "DOI": "10.1103/PhysRevLett.101.035901",
+          "doi-asserted-by": "crossref"
+        },
+        {
+          "key": "C5TA10330D-(cit56)/*[position()=1]",
+          "author": "Fultz",
+          "volume": "55",
+          "first-page": "247",
+          "year": "2010",
+          "journal-title": "Prog. Mater. Sci.",
+          "DOI": "10.1016/j.pmatsci.2009.05.002",
+          "doi-asserted-by": "crossref"
+        }
+      ],
+      "container-title": ["Journal of Materials Chemistry A"],
+      "original-title": [],
+      "language": "en",
+      "link": [
+        {
+          "URL": "http://pubs.rsc.org/en/content/articlepdf/2016/TA/C5TA10330D",
+          "content-type": "unspecified",
+          "content-version": "vor",
+          "intended-application": "similarity-checking"
+        }
+      ],
+      "deposited": {
+        "date-parts": [[2017, 11, 20]],
+        "date-time": "2017-11-20T06:09:54Z",
+        "timestamp": 1511158194000
+      },
+      "score": 1.0,
+      "subtitle": [],
+      "short-title": [],
+      "issued": {
+        "date-parts": [[2016]]
+      },
+      "references-count": 56,
+      "journal-issue": {
+        "published-print": {
+          "date-parts": [[2016]]
+        },
+        "issue": "7"
+      },
+      "URL": "http://dx.doi.org/10.1039/c5ta10330d",
+      "relation": {
+        "cites": []
+      },
+      "ISSN": ["2050-7488", "2050-7496"],
+      "issn-type": [
+        {
+          "value": "2050-7488",
+          "type": "print"
+        },
+        {
+          "value": "2050-7496",
+          "type": "electronic"
+        }
+      ],
+      "assertion": [
+        {
+          "value": "This document is Similarity Check deposited",
+          "name": "similarity_check",
+          "explanation": {
+            "URL": "https://www.crossref.org/services/similarity-check/"
+          },
+          "group": {
+            "name": "similarity_check",
+            "label": "SIMILARITY CHECK"
+          }
+        },
+        {
+          "value": "Supplementary Information",
+          "URL": "https://doi.org/10.1039/C5TA10330D",
+          "name": "related_data",
+          "group": {
+            "name": "related_data",
+            "label": "RELATED DATA"
+          }
+        },
+        {
+          "value": "Umut Aydemir (ResearcherID)",
+          "URL": "http://www.researcherid.com/rid/P-8424-2015",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "G. Jeffrey Snyder (ORCID)",
+          "URL": "http://orcid.org/0000-0003-1414-8682",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "G. Jeffrey Snyder (ResearcherID)",
+          "URL": "http://www.researcherid.com/rid/E-4453-2011",
+          "name": "identifier",
+          "group": {
+            "name": "author_identifiers",
+            "label": "IDENTIFIERS"
+          }
+        },
+        {
+          "value": "The Royal Society of Chemistry has an exclusive publication licence for this journal",
+          "name": "copyright_licence",
+          "group": {
+            "name": "copyright_licensing",
+            "label": "COPYRIGHT AND LICENSING"
+          }
+        },
+        {
+          "value": "Single-blind",
+          "order": 2,
+          "name": "peer_review_method",
+          "group": {
+            "name": "peer_review_method",
+            "label": "PEER REVIEW METHOD"
+          }
+        },
+        {
+          "value": "Received 16 December 2015; Accepted 22 January 2016;  Advance Article published 1 February 2016;  Version of Record published 9 February 2016",
+          "order": 1,
+          "name": "history",
+          "group": {
+            "name": "publication_history",
+            "label": "PUBLICATION HISTORY"
+          }
+        }
+      ]
+    }
+  ]
+}

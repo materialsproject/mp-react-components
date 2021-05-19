@@ -1,6 +1,6 @@
 import React from 'react';
 import { BibjsonCard } from '../../components/search/BibjsonCard';
-import { BibjsonFilter } from '../../components/search/BibjsonFilter';
+import { BibFilter } from '../../components/search/BibFilter';
 import mpPapers from './mp-papers.json';
 
 /**
@@ -54,7 +54,7 @@ export const Publications: React.FC = () => {
   return (
     <>
       <h1 className="title">Publications</h1>
-      <BibjsonFilter bibjson={mpPapers} resultClassName="box" />
+      <BibFilter bibEntries={mpPapers} resultClassName="box" />
     </>
   );
 };

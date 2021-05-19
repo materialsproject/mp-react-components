@@ -7,7 +7,8 @@ interface Props {
   id?: string;
   setProps?: (value: any) => any;
   className?: string;
-  doi: string;
+  crossrefEntry?: any;
+  doi?: string;
   errorMessage?: string;
   fetchOpenAccessUrl?: boolean;
 }
@@ -24,7 +25,7 @@ export const CrossrefCard: React.FC<Props> = (props) => {
     errorMessage: 'Could not find reference',
     ...props,
   };
-  const [crossref, setCrossref] = useState<any>(null);
+  const [crossref, setCrossref] = useState(props.crossrefEntry);
   const [failedRequest, setFailedRequest] = useState(false);
 
   const getCrossrefAuthorString = (authors: CrossrefAuthor[]): string => {
@@ -40,16 +41,18 @@ export const CrossrefCard: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`https://api.crossref.org/works/${props.doi}`)
-      .then((result) => {
-        if (result.data.hasOwnProperty('message')) {
-          setCrossref(result.data.message);
-        }
-      })
-      .catch((error) => {
-        setFailedRequest(true);
-      });
+    if (!crossref && props.doi) {
+      axios
+        .get(`https://api.crossref.org/works/${props.doi}`)
+        .then((result) => {
+          if (result.data.hasOwnProperty('message')) {
+            setCrossref(result.data.message);
+          }
+        })
+        .catch((error) => {
+          setFailedRequest(true);
+        });
+    }
   }, []);
 
   return (

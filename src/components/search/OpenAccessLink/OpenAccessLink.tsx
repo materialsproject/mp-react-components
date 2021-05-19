@@ -8,6 +8,7 @@ export interface OpenAccessLinkProps extends React.HTMLProps<HTMLAnchorElement> 
   doi?: string;
   url?: string;
   showLoadingText?: boolean;
+  target?: string;
 }
 
 export const OpenAccessLink: React.FC<OpenAccessLinkProps> = (props) => {
@@ -36,7 +37,8 @@ export const OpenAccessLink: React.FC<OpenAccessLinkProps> = (props) => {
     <>
       {!failedRequest ? (
         <a
-          {...props}
+          id={props.id}
+          target={props.target}
           href={openAccessUrl}
           className={classNames(props.className, {
             'is-loading': !openAccessUrl && !props.showLoadingText,
