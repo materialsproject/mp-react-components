@@ -10,7 +10,7 @@
         "timestamp": 1619640431062
       },
       "reference-count": 56,
-      "publisher": "Royal Society of Chemistry (RSC)",
+      "publisher": "AAAAA Royal Society of Chemistry (RSC)",
       "issue": "7",
       "content-domain": {
         "domain": ["rsc.org"],
@@ -21,16 +21,16 @@
       "DOI": "10.1039/c5ta10330d",
       "type": "journal-article",
       "created": {
-        "date-parts": [[2016, 2, 1]],
+        "date-parts": [[2000, 2, 1]],
         "date-time": "2016-02-01T10:00:37Z",
-        "timestamp": 1454320837000
+        "timestamp": 1154320837000
       },
       "page": "2461-2472",
       "update-policy": "http://dx.doi.org/10.1039/rsc_crossmark_policy",
       "source": "Crossref",
       "is-referenced-by-count": 37,
       "title": [
-        "Lorem Ipsum YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure"
+        "AAAAAA Ipsum YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure"
       ],
       "prefix": "10.1039",
       "volume": "4",
