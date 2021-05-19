@@ -55,6 +55,10 @@ export const CrossrefCard: React.FC<Props> = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    setCrossref(props.crossrefEntry);
+  }, [props.crossrefEntry]);
+
   return (
     <>
       {crossref ? (
