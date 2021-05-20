@@ -253,36 +253,27 @@ export const validateMPID = (value: string): string | null => {
   }
 };
 
-type MaterialsInputTypesObject = Partial<Record<MaterialsInputType, any>>;
+export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
+
 /**
- * Object to map MaterialsInputType values to validation functions and error messages
+ * Object to map MaterialsInputType values to validation functions
  * Object keys must be one of the values defined in the MaterialsInputType enum
  */
-export const materialsInputTypes: MaterialsInputTypesObject = {
-  mp_id: {
+export const materialsInputTypes: MaterialsInputTypesMap = {
+  mpid: {
     validate: validateMPID,
-    error: 'Please enter a valid material ID (e.g. mp-394).',
   },
   elements: {
     validate: validateElements,
-    error:
-      'Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).',
-  },
-  exclude_elements: {
-    validate: validateElements,
-    error: 'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).',
-  },
-  absorbing_element: {
-    validate: validateElements,
-    error: 'Please enter a valid element symbol',
   },
   formula: {
     validate: validateFormula,
-    error: 'Please enter a valid chemical formula (e.g. CeZn5).',
   },
   smiles: {
     validate: validateSmiles,
-    error: 'Please enter a valid SMILES value.',
+  },
+  text: {
+    validate: () => true,
   },
 };
 
@@ -311,7 +302,7 @@ const detectInputType = (value: string): [MaterialsInputType | null, any] => {
  * Failed validations will return null in the second value in the returned array.
  *
  * @param {string} value Input value string for a MaterialsInput
- * @param {string} field [optional] MaterialsInputType type to use to validate the input value (will detect field type if not included)
+ * @param {string} inputType [optional] MaterialsInputType type to use to validate the input value (will detect field type if not included)
  * @returns Array with two values:
  *   1. The MaterialsInputType (only null if no field is supplied or detected)
  *   2. The validated parsed value returned from the field's validation method (null if validation failed)
@@ -327,4 +318,35 @@ export const validateInputType = (
     const [detectedField, parsedValue] = detectInputType(value);
     return [detectedField, parsedValue];
   }
+};
+
+const sortInputTypes = (a, b) => {
+  const orderA = materialsInputTypes[a].order;
+  const orderB = materialsInputTypes[b].order;
+  return orderA < orderB ? -1 : orderA > orderB ? 1 : 0;
+};
+
+/**
+ * Validate a MaterialsInput value.
+ * This method will always return an array with two values.
+ * Failed validations will return null in the second value in the returned array.
+ *
+ * @param {string} value Input value string for a MaterialsInput
+ * @param {string} allowedInputTypes [optional] MaterialsInputType type to use to validate the input value (will detect field type if not included)
+ * @returns Array with two values:
+ *   1. The MaterialsInputType (only null if no field is supplied or detected)
+ *   2. The validated parsed value returned from the field's validation method (null if validation failed)
+ */
+export const detectAndValidateInputType = (
+  value: string,
+  allowedInputTypes: MaterialsInputType[]
+): [MaterialsInputType | null, any] => {
+  const sortedAllowedInputTypes = allowedInputTypes?.sort(sortInputTypes);
+  for (const inputType of sortedAllowedInputTypes) {
+    const parsedValue = materialsInputTypes[inputType].validate(value);
+    if (parsedValue) {
+      return [inputType as MaterialsInputType, parsedValue];
+    }
+  }
+  return [null, null];
 };

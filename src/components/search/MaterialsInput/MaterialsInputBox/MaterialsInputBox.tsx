@@ -6,7 +6,7 @@ import {
   getTruthyKeys,
   arrayToDelimitedString,
 } from '../../utils';
-import { validateInputType, materialsInputTypes } from '../utils';
+import { validateInputType, detectAndValidateInputType } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 const { Input, Field, Control } = Form;
@@ -19,7 +19,6 @@ const { Input, Field, Control } = Form;
 interface Props extends MaterialsInputSharedProps {
   value: string;
   setValue: (value: string) => void;
-  error: string | null;
   setError: (error: string | null) => void;
   liftInputRef?: (value: React.RefObject<HTMLInputElement>) => any;
   onFocus?: (value?: any) => any;
@@ -44,7 +43,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputType.ELEMENTS },
     { label: 'By formula', value: MaterialsInputType.FORMULA },
-    { label: 'By mp-id', value: MaterialsInputType.MP_ID },
+    { label: 'By mp-id', value: MaterialsInputType.MPID },
   ];
 
   /**
@@ -79,7 +78,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       const staticInputField = !props.onInputTypeChange ? props.inputType : undefined;
-      let [newMaterialsInputType, parsedValue] = validateInputType(inputValue, staticInputField);
+      let [newMaterialsInputType, parsedValue] = staticInputField
+        ? validateInputType(inputValue, staticInputField)
+        : detectAndValidateInputType(inputValue, props.allowedInputTypes!);
       let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
@@ -87,7 +88,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       if (isValid) {
         props.setError(null);
         switch (newMaterialsInputType) {
-          case MaterialsInputType.MP_ID:
+          case MaterialsInputType.MPID:
             newPtActionsToDispatch.push({
               action: ptActions.clear,
             });
@@ -133,12 +134,8 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         setDelimiter(newDelimiter);
         props.setValue(inputValue);
         if (props.onInputTypeChange) props.onInputTypeChange(newMaterialsInputType);
-      } else if (staticInputField) {
-        props.setError(materialsInputTypes[staticInputField].error);
       } else {
-        props.setError(
-          'Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330).'
-        );
+        props.setError(props.errorMessage!);
       }
     }
     valueChangedByPT.current = false;

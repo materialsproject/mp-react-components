@@ -79,11 +79,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
       setState((currentState) => {
-        let newFilterValues = { [id]: value };
+        let newFilterValues = {};
         overrideFields.forEach((field) => {
           const activeFilter = currentState.activeFilters.find((a) => a.id === field);
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
+        newFilterValues[id] = value;
         let newFilterGroups = currentState.filterGroups.slice();
         if (isDesktop) {
           newFilterGroups[0].expanded = true;

@@ -8,7 +8,8 @@
         "id": "task_ids",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "mp_id",
+          "inputType": "mpid",
+          "errorMessage": "Please enter a valid molecule ID (e.g. mol-25709).",
           "periodicTableMode": null
         }
       },
@@ -17,7 +18,8 @@
         "id": "elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "elements"
+          "inputType": "elements",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
         }
       },
       {
@@ -34,13 +36,19 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula"
+          "inputType": "formula",
+          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
         }
       },
       {
         "name": "SMILES",
         "id": "smiles",
-        "type": "TEXT_INPUT"
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "smiles",
+          "errorMessage": "Please enter a valid SMILES value.",
+          "periodicTableMode": null
+        }
       }
     ]
   },

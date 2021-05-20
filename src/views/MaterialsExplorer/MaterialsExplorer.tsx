@@ -23,21 +23,23 @@ export const MaterialsExplorer: React.FC = () => {
             : undefined
         }
         apiKey={undefined}
-        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="energy_above_hull"
         sortAscending={true}
         selectableRows={true}
-        // conditionalRowStyles={[
-        //   {
-        //     selector: 'is_stable',
-        //     value: true,
-        //     style: {
-        //       backgroundColor: '#DBE2FA',
-        //       boxShadow: '4px 0px 0px 0px #000 inset',
-        //     },
-        //   },
-        // ]}
+        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        searchBarPlaceholder="Search by elements, formula, or mp-id"
+        searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
+        searchBarAllowedInputTypesMap={{
+          formula: {
+            field: 'formula',
+          },
+          elements: {
+            field: 'elements',
+          },
+          mpid: {
+            field: 'material_ids',
+          },
+        }}
       />
     </>
   );
