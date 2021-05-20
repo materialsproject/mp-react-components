@@ -405,14 +405,17 @@ export const getDefaultFiltersAndValues = (state: SearchState) => {
   };
 };
 
-export const convertMaterialsInputTypesMapToArray = (map?: MaterialsInputTypesMap) => {
-  if (map) {
-    let arr: MaterialsInputType[] = [];
-    for (const inputType in map) {
-      arr.push(inputType as MaterialsInputType);
-    }
-    return arr;
-  } else {
-    return;
+export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap) => {
+  let arr: MaterialsInputType[] = [];
+  for (const inputType in map) {
+    arr.push(inputType as MaterialsInputType);
   }
+  return arr;
+};
+
+export const mapInputTypeToField = (
+  inputType: MaterialsInputType,
+  allowedInputTypesMap: MaterialsInputTypesMap
+) => {
+  return allowedInputTypesMap[inputType].field;
 };
