@@ -279,11 +279,7 @@ export const getSearchState = (
               filterDisplayName = 'include only elements';
               /** Remove trailing '-' from chemical system string */
               parsedValue = filterValues[f.id].replace(/\-$/, '');
-            } else if (
-              f.props.inputType === MaterialsInputType.ELEMENTS ||
-              f.props.inputType === MaterialsInputType.EXCLUDE_ELEMENTS ||
-              f.props.inputType === MaterialsInputType.ABSORBING_ELEMENT
-            ) {
+            } else if (f.props.inputType === MaterialsInputType.ELEMENTS) {
               /** Parse elements back into array so that they're in a normalized format for the query */
               parsedValue = validateElements(filterValues[f.id]);
             }

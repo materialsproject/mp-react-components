@@ -87,53 +87,44 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
 
       if (isValid) {
         props.setError(null);
-        switch (newMaterialsInputType) {
-          case MaterialsInputType.MPID:
-            newPtActionsToDispatch.push({
-              action: ptActions.clear,
-            });
-            break;
-          case MaterialsInputType.SMILES:
-            newPtActionsToDispatch.push({
-              action: ptActions.clear,
-            });
-            break;
-          case MaterialsInputType.EXCLUDE_ELEMENTS:
-          case MaterialsInputType.ELEMENTS:
-          case MaterialsInputType.ABSORBING_ELEMENT:
-          case MaterialsInputType.FORMULA:
-            /** Parse the input for a delimiter */
-            const parsedDelimiter = getDelimiter(inputValue);
-            /** If no delimiter present, don't change the delimiter value */
-            newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
-            const parsedElements = parsedValue || [];
-            /** Enable new elements if they aren't already enabled */
-            parsedElements.forEach((el) => {
-              if (!enabledElements[el]) {
-                newPtActionsToDispatch.push({
-                  action: ptActions.addEnabledElement,
-                  payload: el,
-                });
-              }
-            });
-            /** Remove enabled element if it is not part of the new list of parsed elements */
-            enabledElementsList.forEach((el) => {
-              if (parsedElements.indexOf(el) === -1) {
-                newPtActionsToDispatch.push({
-                  action: ptActions.removeEnabledElement,
-                  payload: el,
-                });
-              }
-            });
-            break;
-          default:
-            newMaterialsInputType = MaterialsInputType.ELEMENTS;
+        if (
+          newMaterialsInputType === MaterialsInputType.ELEMENTS ||
+          newMaterialsInputType === MaterialsInputType.FORMULA
+        ) {
+          /** Parse the input for a delimiter */
+          const parsedDelimiter = getDelimiter(inputValue);
+          /** If no delimiter present, don't change the delimiter value */
+          newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
+          const parsedElements = parsedValue || [];
+          /** Enable new elements if they aren't already enabled */
+          parsedElements.forEach((el) => {
+            if (!enabledElements[el]) {
+              newPtActionsToDispatch.push({
+                action: ptActions.addEnabledElement,
+                payload: el,
+              });
+            }
+          });
+          /** Remove enabled element if it is not part of the new list of parsed elements */
+          enabledElementsList.forEach((el) => {
+            if (parsedElements.indexOf(el) === -1) {
+              newPtActionsToDispatch.push({
+                action: ptActions.removeEnabledElement,
+                payload: el,
+              });
+            }
+          });
+        } else {
+          newPtActionsToDispatch.push({
+            action: ptActions.clear,
+          });
         }
 
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
         props.setValue(inputValue);
-        if (props.onInputTypeChange) props.onInputTypeChange(newMaterialsInputType);
+        if (props.onInputTypeChange && newMaterialsInputType)
+          props.onInputTypeChange(newMaterialsInputType);
       } else {
         props.setError(props.errorMessage!);
       }
