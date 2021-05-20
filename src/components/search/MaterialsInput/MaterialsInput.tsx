@@ -216,9 +216,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       className={classNames('dropdown-menu', 'autocomplete-right', {
         'is-hidden': !showAutocomplete,
       })}
-      /**
-       * Currently not accessible by keyboard so hiding it to screen readers
-       */
+      /** Currently not accessible by keyboard so hiding it to screen readers */
       aria-hidden={true}
     >
       <div data-testid="materials-input-autocomplete-menu-items" className="dropdown-content">
@@ -229,10 +227,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
             className="dropdown-item"
             onMouseDown={(e) => {
               setError(null);
+              props.onChange(d.formula_pretty);
               if (props.onSubmit) {
                 handleSubmit(e, d.formula_pretty);
-              } else {
-                props.onChange(d.formula_pretty);
               }
             }}
           >
