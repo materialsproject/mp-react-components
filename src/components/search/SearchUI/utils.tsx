@@ -13,7 +13,7 @@ import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchStat
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../MaterialsInput';
-import { validateElements } from '../MaterialsInput/utils';
+import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/utils';
 import { useMediaQuery } from 'react-responsive';
 import { SearchUIProps } from '.';
 import { MaterialsInputBox } from '../MaterialsInput/MaterialsInputBox';
@@ -403,4 +403,16 @@ export const getDefaultFiltersAndValues = (state: SearchState) => {
     filterValues,
     activeFilters,
   };
+};
+
+export const convertMaterialsInputTypesMapToArray = (map?: MaterialsInputTypesMap) => {
+  if (map) {
+    let arr: MaterialsInputType[] = [];
+    for (const inputType in map) {
+      arr.push(inputType as MaterialsInputType);
+    }
+    return arr;
+  } else {
+    return;
+  }
 };

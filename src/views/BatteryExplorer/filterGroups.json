@@ -29,7 +29,8 @@
         "id": "elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "elements"
+          "inputType": "elements",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
         }
       },
       {
@@ -37,7 +38,8 @@
         "id": "exclude_elements",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "exclude_elements"
+          "inputType": "elements",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
         }
       },
       {
@@ -45,7 +47,8 @@
         "id": "formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula"
+          "inputType": "formula",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
       }
     ]

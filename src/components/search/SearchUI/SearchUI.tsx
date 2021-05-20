@@ -6,6 +6,8 @@ import { Column, FilterGroup, ConditionalRowStyle } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { MaterialsInputType } from '../MaterialsInput';
+import { MaterialsInputTypesMap } from '../MaterialsInput/utils';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -133,6 +135,32 @@ export interface SearchUIProps {
   searchBarPlaceholder?: string;
 
   /**
+   * Custom error message to display with the top-level search bar
+   * if the user types an invalid value
+   */
+  searchBarErrorMessage?: string;
+
+  /**
+   * Object with keys of allowed input types for the top-level search bar.
+   * Keys must be one of these supported input types: "elements", "formula", "mpid", "smiles", "text"
+   * Each key object must have a "field" property which maps the input type
+   * to a valid data filter field in the API.
+   * e.g.
+    {
+      formula: {
+        field: 'formula'
+      },
+      elements: {
+        field: 'elements'
+      },
+      mpid: {
+        field: 'material_ids'
+      }
+    }
+   */
+  searchBarAllowedInputTypesMap?: MaterialsInputTypesMap;
+
+  /**
    * Optionally include a field to sort by on initial load
    * Must be a valid field and included in your list of columns
    */
@@ -180,10 +208,28 @@ export const SearchUI: React.FC<SearchUIProps> = ({
   resultLabel = 'results',
   hasSearchBar = true,
   conditionalRowStyles = [],
+  searchBarAllowedInputTypesMap = {
+    formula: {
+      field: 'formula',
+    },
+    elements: {
+      field: 'elements',
+    },
+    mpid: {
+      field: 'material_ids',
+    },
+  },
   setProps = () => null,
   ...otherProps
 }) => {
-  let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
+  let props = {
+    resultLabel,
+    hasSearchBar,
+    conditionalRowStyles,
+    searchBarAllowedInputTypesMap,
+    setProps,
+    ...otherProps,
+  };
   return (
     <div id={props.id} className="mpc-search-ui">
       <Router>
@@ -193,7 +239,10 @@ export const SearchUI: React.FC<SearchUIProps> = ({
               {props.hasSearchBar && (
                 <div className="columns mb-1">
                   <div className="column pb-2">
-                    <SearchUISearchBar />
+                    <SearchUISearchBar
+                      allowedInputTypesMap={props.searchBarAllowedInputTypesMap}
+                      errorMessage={props.searchBarErrorMessage}
+                    />
                   </div>
                 </div>
               )}

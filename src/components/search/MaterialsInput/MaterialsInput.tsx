@@ -14,6 +14,7 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
+import { MaterialsInputTypesMap } from './utils';
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -29,20 +30,21 @@ import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePl
  */
 export enum MaterialsInputType {
   ELEMENTS = 'elements',
-  EXCLUDE_ELEMENTS = 'exclude_elements',
-  ABSORBING_ELEMENT = 'absorbing_element',
   FORMULA = 'formula',
-  MP_ID = 'mp_id',
+  MPID = 'mpid',
   SMILES = 'smiles',
+  TEXT = 'text',
 }
 
 export interface MaterialsInputSharedProps {
   value: string;
   inputType: MaterialsInputType;
+  allowedInputTypes?: MaterialsInputType[];
   showInputTypeDropdown?: boolean;
   isChemSys?: boolean;
   allowSmiles?: boolean;
   placeholder?: string;
+  errorMessage?: string;
   onInputTypeChange?: (inputType: MaterialsInputType) => void;
 }
 
@@ -64,7 +66,16 @@ interface FormulaSuggestion {
 
 let requestCount = 0;
 
-export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
+export const MaterialsInput: React.FC<MaterialsInputProps> = ({
+  errorMessage = 'Invalid input value',
+  allowedInputTypes = [
+    'elements' as MaterialsInputType,
+    'formula' as MaterialsInputType,
+    'mpid' as MaterialsInputType,
+  ],
+  ...otherProps
+}) => {
+  const props = { errorMessage, allowedInputTypes, ...otherProps };
   const [inputValue, setInputValue] = useState(props.value);
   const [inputType, setInputType] = useState(props.inputType);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
@@ -183,6 +194,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
     <MaterialsInputBox
       value={inputValue}
       inputType={inputType}
+      allowedInputTypes={props.allowedInputTypes}
       isChemSys={props.isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
@@ -193,7 +205,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = (props) => {
       liftInputRef={(ref) => setInputRef(ref)}
       showInputTypeDropdown={props.showInputTypeDropdown}
       placeholder={props.placeholder}
-      error={error}
+      errorMessage={props.errorMessage}
       setError={setError}
     />
   );
