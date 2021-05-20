@@ -32,7 +32,6 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  topLevelSearchField: 'elements' as MaterialsInputType,
   error: false,
 };
 

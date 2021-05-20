@@ -86,7 +86,6 @@ export interface SearchState extends SearchUIProps {
   loading: boolean;
   sortField?: string;
   sortAscending?: boolean;
-  topLevelSearchField: MaterialsInputType;
   error: boolean;
   selectedRows?: any[];
 }

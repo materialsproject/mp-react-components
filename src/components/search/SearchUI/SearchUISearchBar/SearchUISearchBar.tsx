@@ -4,7 +4,7 @@ import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContex
 import { MaterialsInputType } from '../../MaterialsInput';
 import { Filter } from '../types';
 import { MaterialsInputTypesMap } from '../../MaterialsInput/utils';
-import { convertMaterialsInputTypesMapToArray } from '../utils';
+import { convertMaterialsInputTypesMapToArray, mapInputTypeToField } from '../utils';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -21,9 +21,10 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
   const actions = useSearchUIContextActions();
   const state = useSearchUIContext();
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchParsedValue, setSearchParsedValue] = useState<string | string[]>('');
-  const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(
-    state.topLevelSearchField
+  const initialInputType = convertMaterialsInputTypesMapToArray(props.allowedInputTypesMap)[0];
+  const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(initialInputType);
+  const [searchField, setSearchField] = useState(() =>
+    mapInputTypeToField(searchInputType, props.allowedInputTypesMap)
   );
   const allowSmiles = state.resultLabel === 'molecule';
 
@@ -37,7 +38,6 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
 
   const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     const submitValue = value || searchValue;
-    const searchField = props.allowedInputTypesMap[searchInputType].field;
     const allowedFields = Object.keys(props.allowedInputTypesMap).map((d) => {
       return props.allowedInputTypesMap[d].field;
     });
@@ -50,10 +50,17 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
    * This ensures the search value is not contradicted by the filter value.
    */
   useEffect(() => {
-    if (state.filterValues[searchInputType] !== searchValue) {
+    if (state.filterValues[searchField] !== searchValue) {
       setSearchValue('');
     }
   }, [state.filterValues]);
+
+  /**
+   * Map searchInputType to its corresponding data field
+   */
+  useEffect(() => {
+    setSearchField(mapInputTypeToField(searchInputType, props.allowedInputTypesMap));
+  }, [searchInputType]);
 
   return (
     <MaterialsInput
