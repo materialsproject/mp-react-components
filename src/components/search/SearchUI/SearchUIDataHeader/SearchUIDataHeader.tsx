@@ -14,8 +14,9 @@ import { ConditionalRowStyle } from '../types';
 import { DownloadDropdown } from '../../DownloadDropdown';
 
 /**
- * Component for rendering data returned within a SearchUI component
- * Table data and interactions are hooked up to the SearchUIContext state and actions
+ * Render information about SearchUI results as well as controls
+ * for modifying the data in the results view.
+ * Information and interactions are hooked up to the SearchUIContext state and actions.
  */
 
 interface Props {
@@ -46,7 +47,7 @@ const getUpperResultBound = (
   }
 };
 
-export const SearchUIDataTable: React.FC<Props> = (props) => {
+export const SearchUIDataHeader: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
@@ -67,31 +68,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     state.resultsPerPage,
     lowerResultBound
   );
-
-  const handlePageChange = (page: number) => {
-    /** Scroll table back to top when page changes */
-    if (tableRef.current) {
-      tableRef.current.children[0].scrollTop = 0;
-    }
-    actions.setPage(page);
-    setToggleClearRows(!toggleClearRows);
-  };
-
-  const handlePerRowsChange = (perPage: number) => {
-    actions.setResultsPerPage(perPage);
-    setToggleClearRows(!toggleClearRows);
-  };
-
-  const handleSort = (column, sortDirection) => {
-    const sortAscending = sortDirection === 'asc' ? true : false;
-    actions.setSort(column.selector, sortAscending);
-    setToggleClearRows(!toggleClearRows);
-  };
-
-  const handleSelectedRowsChange = (rowState) => {
-    console.log(rowState);
-    actions.setSelectedRows(rowState.selectedRows);
-  };
 
   const toggleColumn = (columnIndex: number) => {
     const newColumns = [...columns];
@@ -320,43 +296,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     </MenuWrapper>
   );
 
-  const CustomPaginator = () => (
-    <Paginator
-      rowCount={state.totalResults}
-      rowsPerPage={state.resultsPerPage}
-      currentPage={state.page}
-      onChangePage={handlePageChange}
-      onChangeRowsPerPage={handlePerRowsChange}
-    />
-  );
-
-  const NoDataMessage = () => {
-    if (state.error) {
-      return (
-        <div className="react-data-table-message">
-          <p>
-            <FaExclamationTriangle /> There was an error with your search.
-          </p>
-          <p>
-            You may have entered an invalid search value. Otherwise, the API may be temporarily
-            unavailable.
-          </p>
-        </div>
-      );
-    } else {
-      return (
-        <div className="react-data-table-message">
-          <p>No records match your search criteria</p>
-        </div>
-      );
-    }
-  };
-
-  const conditionalRowStyles: any[] = state.conditionalRowStyles!.map((c) => {
-    c.when = (row) => row[c.selector] === c.value;
-    return c;
-  });
-
   return (
     <div id={componentHtmlId} className="mpc-search-ui-data-table">
       <div className="mpc-table-header">
@@ -380,49 +319,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
         filters={state.activeFilters}
         onClick={(v, id) => actions.setFilterValue(v, id)}
       />
-      {state.resultsPerPage > 15 && <CustomPaginator />}
-      <div className="columns react-data-table-outer-container">
-        <div
-          data-testid="react-data-table-container"
-          className="column react-data-table-container"
-          ref={tableRef}
-        >
-          <DataTable
-            className="react-data-table"
-            noHeader
-            theme="material"
-            columns={columns}
-            data={state.results}
-            highlightOnHover
-            pagination
-            paginationServer
-            paginationComponent={CustomPaginator}
-            sortServer
-            sortIcon={<FaCaretDown />}
-            defaultSortField={state.sortField}
-            defaultSortAsc={state.sortAscending}
-            onSort={handleSort}
-            customStyles={{
-              rows: {
-                style: {
-                  minHeight: '3em',
-                },
-              },
-            }}
-            conditionalRowStyles={conditionalRowStyles}
-            noDataComponent={<NoDataMessage />}
-            selectableRows={state.selectableRows}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            clearSelectedRows={toggleClearRows}
-            // selectableRowSelected={(row) => {
-            //   const isSelected = state.selectedRows?.find(s => s.material_id === row.material_id);
-            //   console.log(state.selectedRows);
-            //   console.log(row);
-            //   return isSelected;
-            // }}
-          />
-        </div>
-      </div>
     </div>
   );
 };
