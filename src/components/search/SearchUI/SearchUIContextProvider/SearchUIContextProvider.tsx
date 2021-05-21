@@ -123,10 +123,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     getData: () => {
       setState((currentState) => {
-        /**
-         * Only show the loading icon if this is a filter change
-         * not on simple page change
-         */
+        /** Only show the loading icon if this is a filter change not on simple page change */
         const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
         let isLoading = showLoading;
         let minLoadTime = 1000;
