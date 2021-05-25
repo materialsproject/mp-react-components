@@ -13,6 +13,7 @@ export const MaterialsExplorer: React.FC = () => {
     <>
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
+        view="cards"
         resultLabel="material"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}

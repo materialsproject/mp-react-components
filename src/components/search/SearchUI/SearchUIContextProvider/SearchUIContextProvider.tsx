@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { SearchState } from '../types';
+import { Column, SearchState } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -57,11 +57,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
-    setPage: (value: number) => {
-      setState((currentState) => ({ ...currentState, page: value }));
+    setPage: (page: number) => {
+      setState((currentState) => ({ ...currentState, page }));
     },
-    setResultsPerPage: (value: number) => {
-      setState((currentState) => ({ ...currentState, resultsPerPage: value }));
+    setResultsPerPage: (resultsPerPage: number) => {
+      setState((currentState) => ({ ...currentState, resultsPerPage }));
     },
     setSort: (field: string, ascending: boolean) => {
       setState((currentState) => ({
@@ -70,6 +70,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         sortAscending: ascending,
         page: 1,
       }));
+    },
+    setColumns: (columns: Column[]) => {
+      setState((currentState) => ({ ...currentState, columns }));
     },
     setFilterValue: (value: any, id: string) => {
       setState((currentState) =>
