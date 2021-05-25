@@ -12,51 +12,50 @@ import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
 import { ConditionalRowStyle } from '../types';
 import { DownloadDropdown } from '../../DownloadDropdown';
+import { DataCard } from '../../DataCard';
+import { BibCard } from '../../BibCard';
 
 /**
  * Component for rendering data returned within a SearchUI component
  * Table data and interactions are hooked up to the SearchUIContext state and actions
  */
 
+const customCardsMap = {
+  synthesis: BibCard,
+};
+
+const getCustomCardComponent = (cardType?: string) => {
+  if (cardType && customCardsMap.hasOwnProperty(cardType)) {
+    return customCardsMap[cardType];
+  } else {
+    return null;
+  }
+};
+
 interface Props {
   className?: string;
 }
 
-export const SearchUIDataTable: React.FC<Props> = (props) => {
+export const SearchUIDataCards: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
-  const [titleHover, setTitleHover] = useState(false);
-  const [toggleClearRows, setToggleClearRows] = useState(false);
-  const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const tableRef = useRef<HTMLDivElement>(null);
-  const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
-    const anyNotSelected = columns.find((col) => col.omit);
-    return !anyNotSelected;
-  });
-
+  const CustomCardComponent = getCustomCardComponent(state.customCardType);
   const handlePageChange = (page: number) => {
     /** Scroll table back to top when page changes */
     if (tableRef.current) {
       tableRef.current.children[0].scrollTop = 0;
     }
     actions.setPage(page);
-    setToggleClearRows(!toggleClearRows);
   };
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
-    setToggleClearRows(!toggleClearRows);
   };
 
   const handleSort = (column, sortDirection) => {
     const sortAscending = sortDirection === 'asc' ? true : false;
     actions.setSort(column.selector, sortAscending);
-    setToggleClearRows(!toggleClearRows);
-  };
-
-  const handleSelectedRowsChange = (rowState) => {
-    console.log(rowState);
-    actions.setSelectedRows(rowState.selectedRows);
   };
 
   const CustomPaginator = () => (
@@ -91,11 +90,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
     }
   };
 
-  const conditionalRowStyles: any[] = state.conditionalRowStyles!.map((c) => {
-    c.when = (row) => row[c.selector] === c.value;
-    return c;
-  });
-
   return (
     <div className="mpc-search-ui-data-table">
       {state.resultsPerPage > 15 && <CustomPaginator />}
@@ -105,42 +99,34 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
           className="column react-data-table-container"
           ref={tableRef}
         >
-          <DataTable
-            className="react-data-table"
-            noHeader
-            theme="material"
-            columns={state.columns.filter((c) => !c.hidden)}
-            data={state.results}
-            highlightOnHover
-            pagination
-            paginationServer
-            paginationComponent={CustomPaginator}
-            sortServer
-            sortIcon={<FaCaretDown />}
-            defaultSortField={state.sortField}
-            defaultSortAsc={state.sortAscending}
-            onSort={handleSort}
-            customStyles={{
-              rows: {
-                style: {
-                  minHeight: '3em',
-                },
-              },
-            }}
-            conditionalRowStyles={conditionalRowStyles}
-            noDataComponent={<NoDataMessage />}
-            selectableRows={state.selectableRows}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            clearSelectedRows={toggleClearRows}
-            // selectableRowSelected={(row) => {
-            //   const isSelected = state.selectedRows?.find(s => s.material_id === row.material_id);
-            //   console.log(state.selectedRows);
-            //   console.log(row);
-            //   return isSelected;
-            // }}
-          />
+          {state.results.map((d, i) => {
+            if (CustomCardComponent) {
+              return (
+                <CustomCardComponent
+                  key={`mpc-data-card-${i}`}
+                  className="mpc-search-ui-custom-card"
+                  data={d}
+                />
+              );
+            } else {
+              return (
+                <DataCard
+                  key={`mpc-data-card-${i}`}
+                  className="box mpc-search-ui-data-card"
+                  data={d}
+                  levelOneKey="material_id"
+                  levelTwoKey="formula_pretty"
+                  levelThreeKeys={[
+                    { key: 'energy_above_hull', label: 'Energy Above Hull' },
+                    { key: 'nsites', label: 'n sites' },
+                  ]}
+                />
+              );
+            }
+          })}
         </div>
       </div>
+      <CustomPaginator />
     </div>
   );
 };

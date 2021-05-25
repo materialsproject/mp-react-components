@@ -8,6 +8,8 @@ import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { MaterialsInputType } from '../MaterialsInput';
 import { MaterialsInputTypesMap } from '../MaterialsInput/utils';
+import { SearchUIDataHeader } from './SearchUIDataHeader';
+import { SearchUIDataCards } from './SearchUIDataCards';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -202,9 +204,16 @@ export interface SearchUIProps {
   selectableRows?: boolean;
 
   selectedRows?: any[];
+
+  view?: 'table' | 'cards';
+
+  allowViewSwitching?: boolean;
+
+  customCardType?: string;
 }
 
 export const SearchUI: React.FC<SearchUIProps> = ({
+  view = 'table',
   resultLabel = 'results',
   hasSearchBar = true,
   conditionalRowStyles = [],
@@ -223,6 +232,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
   ...otherProps
 }) => {
   let props = {
+    view,
     resultLabel,
     hasSearchBar,
     conditionalRowStyles,
@@ -253,7 +263,12 @@ export const SearchUI: React.FC<SearchUIProps> = ({
               </div>
             </div>
             <div className="column is-8-desktop is-half-tablet mpc-results-container">
-              <SearchUIDataTable />
+              <SearchUIDataHeader />
+              {props.view === 'table' ? (
+                <SearchUIDataTable />
+              ) : props.view === 'cards' ? (
+                <SearchUIDataCards />
+              ) : null}
             </div>
           </div>
         </SearchUIContextProvider>

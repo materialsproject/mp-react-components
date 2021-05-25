@@ -1,17 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
-import DataTable from 'react-data-table-component';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaCaretDown, FaExclamationTriangle, FaLink } from 'react-icons/fa';
+import { FaAngleDown, FaLink } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
-import { Paginator } from '../../Paginator';
 import classNames from 'classnames';
 import { pluralize } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
-import { ConditionalRowStyle } from '../types';
-import { DownloadDropdown } from '../../DownloadDropdown';
 
 /**
  * Render information about SearchUI results as well as controls
@@ -51,9 +47,7 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);
-  const [toggleClearRows, setToggleClearRows] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
-  const tableRef = useRef<HTMLDivElement>(null);
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
@@ -75,7 +69,7 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
     if (changedColumn) changedColumn.omit = !changedColumn.omit;
     const anyNotSelected = newColumns.find((col) => col.omit);
     setAllCollumnsSelected(!anyNotSelected);
-    setColumns(newColumns);
+    actions.setColumns(newColumns);
   };
 
   const toggleAllColumns = () => {
@@ -85,42 +79,12 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
       return col;
     });
     setAllCollumnsSelected(newAllColumnsSelected);
-    setColumns(newColumns);
+    actions.setColumns(newColumns);
   };
 
-  // const getDataToDownload = () => {
-  //   if (state.selectedRows && state.selectedRows.length > 0) {
-  //     return state.selectedRows;
-  //   } else {
-  //     return state.results;
-  //   }
-  // };
-
-  // const getDownloadFilename = () => {
-  //   if (state.selectedRows && state.selectedRows.length > 0) {
-  //     return `selected-results-${state.selectedRows.length}`;
-  //   } else {
-  //     return `results-${lowerResultBound}-${upperResultBound}`;
-  //   }
-  // };
-
-  // const getDownloadTooltip = () => {
-  //   if (state.selectedRows && state.selectedRows.length > 0) {
-  //     return `Includes ${state.selectedRows.length} selected rows`;
-  //   } else if (state.totalResults > state.resultsPerPage) {
-  //     return 'Includes current page only';
-  //   } else {
-  //     return;
-  //   }
-  // };
-
-  // const getDownloadLabel = () => {
-  //   if (state.selectedRows && state.selectedRows.length > 0) {
-  //     return 'Download selected as';
-  //   } else {
-  //     return 'Download as';
-  //   }
-  // };
+  const handlePerRowsChange = (perPage: number) => {
+    actions.setResultsPerPage(perPage);
+  };
 
   const TableHeaderTitle = () => {
     if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
@@ -185,16 +149,6 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
       );
     }
   };
-
-  // const downloadDropdown = (
-  //   <DownloadDropdown
-  //     data={getDataToDownload()}
-  //     filename={getDownloadFilename()}
-  //     tooltip={getDownloadTooltip()}
-  //   >
-  //     {getDownloadLabel()}
-  //   </DownloadDropdown>
-  // );
 
   const columnsMenu = (
     <MenuWrapper
@@ -297,7 +251,7 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
   );
 
   return (
-    <div id={componentHtmlId} className="mpc-search-ui-data-table">
+    <div id={componentHtmlId} className="mpc-search-ui-data-header">
       <div className="mpc-table-header">
         <div>
           <TableHeaderTitle />
