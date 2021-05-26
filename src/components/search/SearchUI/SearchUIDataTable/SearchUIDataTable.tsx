@@ -5,15 +5,11 @@ import { Paginator } from '../../Paginator';
 import { FaCaretDown } from 'react-icons/fa';
 
 /**
- * Component for rendering data returned within a SearchUI component
- * Table data and interactions are hooked up to the SearchUIContext state and actions
+ * Component for rendering SearchUI results in the table view
+ * Uses react-data-table-component to render results based
+ * on the current state of the SearchUIContext
  */
-
-interface Props {
-  className?: string;
-}
-
-export const SearchUIDataTable: React.FC<Props> = (props) => {
+export const SearchUIDataTable: React.FC = () => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [toggleClearRows, setToggleClearRows] = useState(false);

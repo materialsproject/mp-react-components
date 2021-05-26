@@ -5,15 +5,13 @@ import { DataCard } from '../../DataCard';
 import { getCustomCardComponent } from '../utils';
 
 /**
- * Component for rendering data returned within a SearchUI component
- * Table data and interactions are hooked up to the SearchUIContext state and actions
+ * Component for rendering SearchUI results in the cards view
+ * Will use the DataCard component to render results as a grid
+ * of cards where each shows an image and a few select data properties.
+ * If a customCardType is supplied to the SearchUI, this component
+ * will use the customCardMap to find a different component to render the cards.
  */
-
-interface Props {
-  className?: string;
-}
-
-export const SearchUIDataCards: React.FC<Props> = (props) => {
+export const SearchUIDataCards: React.FC = () => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const tableRef = useRef<HTMLDivElement>(null);

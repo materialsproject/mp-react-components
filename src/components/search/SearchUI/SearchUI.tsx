@@ -11,11 +11,7 @@ import { MaterialsInputTypesMap } from '../MaterialsInput/utils';
 import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
-
-/**
- * Component for rendering advanced search interfaces for data in an API
- * Renders results in a data table alongside a set of filters that map to properties in the data.
- */
+import { CustomCardType } from './utils';
 
 export interface SearchUIProps {
   /**
@@ -202,47 +198,64 @@ export interface SearchUIProps {
    */
   conditionalRowStyles?: ConditionalRowStyle[];
 
+  /**
+   * Optionally include/exclude checkboxes next to rows for selecting
+   */
   selectableRows?: boolean;
 
+  /**
+   * Property to maintain the state of selected rows so that
+   * they are accessible via Dash callback
+   */
   selectedRows?: any[];
 
+  /**
+   * Set the initial results view to one of the preset
+   * SearchUI views: 'table' or 'cards'
+   */
   view?: SearchUIView;
 
+  /**
+   * Optionally enable/disable switching between SearchUI result views
+   */
   allowViewSwitching?: boolean;
 
-  customCardType?: string;
+  /**
+   * Change type of card displayed in the card results view
+   * Must be one of the values in the CustomCardType enum
+   *
+   * To add a custom card type, head to SearchUI/utils and add the name of the type to the
+   * CustomCardType enum, then add a property in customCardsMap using the same name
+   * you used for the type, then provide your custom component as the value.
+   *
+   * Note that custom card components must have these 3 (and only these 3) props: "data", "id", "className"
+   * The "data" prop will be the individual row of data in the results for populating the card's content.
+   */
+  customCardType?: CustomCardType;
 
+  /**
+   * Set of options for configuring what is displayed in the result cards
+   * when in the cards view.
+   * Must be an object with the following properties:
+    {
+      imageBaseURL: '', // Base of the URL to use to get images for the left side of the card
+      imageKey: 'material_id', // Data key to use to append value to the base URL (i.e. the name of the image file). The .png extension is added automatically.
+      levelOneKey: 'material_id', // Data key to use for the first line of text on the card
+      levelTwoKey: 'formula_pretty', // Data key to use for the second line of text on the card
+      levelThreeKeys: [ // List of data keys and labels to display under the first and second line of text
+        { key: 'energy_above_hull', label: 'Energy Above Hull' },
+        { key: 'formation_energy_per_atom', label: 'Formation Energy' },
+      ],
+    }
+   */
   cardOptions?: any;
 }
 
-export const SearchUI: React.FC<SearchUIProps> = ({
-  view = SearchUIView.TABLE,
-  resultLabel = 'results',
-  hasSearchBar = true,
-  conditionalRowStyles = [],
-  searchBarAllowedInputTypesMap = {
-    formula: {
-      field: 'formula',
-    },
-    elements: {
-      field: 'elements',
-    },
-    mpid: {
-      field: 'material_ids',
-    },
-  },
-  setProps = () => null,
-  ...otherProps
-}) => {
-  let props = {
-    view,
-    resultLabel,
-    hasSearchBar,
-    conditionalRowStyles,
-    searchBarAllowedInputTypesMap,
-    setProps,
-    ...otherProps,
-  };
+/**
+ * Component for rendering advanced search interfaces for data in an API
+ * Renders results alongside a set of filters that map to properties in the data.
+ */
+export const SearchUI: React.FC<SearchUIProps> = (props) => {
   return (
     <div id={props.id} className="mpc-search-ui">
       <Router>
@@ -253,7 +266,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
                 <div className="columns mb-1">
                   <div className="column pb-2">
                     <SearchUISearchBar
-                      allowedInputTypesMap={props.searchBarAllowedInputTypesMap}
+                      allowedInputTypesMap={props.searchBarAllowedInputTypesMap!}
                       errorMessage={props.searchBarErrorMessage}
                     />
                   </div>
@@ -274,4 +287,23 @@ export const SearchUI: React.FC<SearchUIProps> = ({
       </Router>
     </div>
   );
+};
+
+SearchUI.defaultProps = {
+  view: SearchUIView.TABLE,
+  resultLabel: 'results',
+  hasSearchBar: true,
+  conditionalRowStyles: [],
+  searchBarAllowedInputTypesMap: {
+    formula: {
+      field: 'formula',
+    },
+    elements: {
+      field: 'elements',
+    },
+    mpid: {
+      field: 'material_ids',
+    },
+  },
+  setProps: () => null,
 };

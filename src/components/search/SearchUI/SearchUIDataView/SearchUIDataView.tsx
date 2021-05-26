@@ -8,15 +8,11 @@ import { SearchUIDataCards } from '../SearchUIDataCards';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 /**
- * Component for rendering data returned within a SearchUI component
- * Table data and interactions are hooked up to the SearchUIContext state and actions
+ * Component for rendering SearchUI data in a certain view
+ * based on the current view state, error state, and number
+ * of results.
  */
-
-interface Props {
-  className?: string;
-}
-
-export const SearchUIDataView: React.FC<Props> = (props) => {
+export const SearchUIDataView: React.FC = () => {
   const state = useSearchUIContext();
 
   const getDataView = () => {
