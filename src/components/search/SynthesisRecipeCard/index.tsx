@@ -1,0 +1,1 @@
+export { SynthesisRecipeCard } from './SynthesisRecipeCard';

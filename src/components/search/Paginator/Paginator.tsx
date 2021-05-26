@@ -9,7 +9,7 @@ interface Props {
   rowsPerPage: number;
   rowCount: number;
   onChangePage: (page: number) => any;
-  onChangeRowsPerPage: (rowsPerPage: number) => any;
+  onChangeRowsPerPage?: (rowsPerPage: number) => any;
   currentPage: number;
 }
 

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaLink } from 'react-icons/fa';
+import { FaAngleDown, FaLink, FaTable, FaThLarge } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import classNames from 'classnames';
 import { pluralize } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
+import { SortDropdown } from '../../SortDropdown';
+import { DropdownItem } from '../../SortDropdown/SortDropdown';
 
 /**
  * Render information about SearchUI results as well as controls
@@ -250,9 +252,50 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
     </MenuWrapper>
   );
 
+  const sortMenu = (
+    <SortDropdown
+      sortValues={state.results}
+      sortOptions={state.columns
+        .filter((c) => !c.hidden)
+        .map((c) => {
+          return { label: c.nameString, value: c.selector } as DropdownItem;
+        })}
+      sortField={state.sortField}
+      setSortField={actions.setSortField}
+      sortAscending={state.sortAscending}
+      setSortAscending={actions.setSortAscending}
+      sortFn={actions.setSort}
+    />
+  );
+
+  const viewSwitcher = (
+    <div className="field has-addons">
+      <div className="control">
+        <button
+          onClick={() => actions.setView('table')}
+          className={classNames('button', {
+            'is-active': state.view === 'table',
+          })}
+        >
+          <FaTable />
+        </button>
+      </div>
+      <div className="control">
+        <button
+          onClick={() => actions.setView('cards')}
+          className={classNames('button', {
+            'is-active': state.view === 'cards',
+          })}
+        >
+          <FaThLarge />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div id={componentHtmlId} className="mpc-search-ui-data-header">
-      <div className="mpc-table-header">
+      <div className="mpc-search-ui-data-header-content">
         <div>
           <TableHeaderTitle />
           <p className="subtitle is-7">
@@ -264,15 +307,19 @@ export const SearchUIDataHeader: React.FC<Props> = (props) => {
             <progress className="progress is-small is-primary" max="100"></progress>
           )}
         </div>
-        <div className="mpc-search-ui-data-table-controls">
-          {resultsPerPageMenu}
+        <div className="mpc-search-ui-data-header-controls">
+          {state.allowViewSwitching && viewSwitcher}
+          {sortMenu}
           {columnsMenu}
+          {resultsPerPageMenu}
         </div>
       </div>
-      <ActiveFilterButtons
-        filters={state.activeFilters}
-        onClick={(v, id) => actions.setFilterValue(v, id)}
-      />
+      {state.activeFilters.length > 0 && (
+        <ActiveFilterButtons
+          filters={state.activeFilters}
+          onClick={(v, id) => actions.setFilterValue(v, id)}
+        />
+      )}
     </div>
   );
 };

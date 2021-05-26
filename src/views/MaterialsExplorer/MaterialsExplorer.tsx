@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup } from '../../components/search/SearchUI/types';
+import { FilterGroup, SearchUIView } from '../../components/search/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 
@@ -13,7 +13,19 @@ export const MaterialsExplorer: React.FC = () => {
     <>
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
-        view="cards"
+        view={SearchUIView.CARDS}
+        // customCardType="synthesis"
+        allowViewSwitching
+        cardOptions={{
+          imageBaseURL: 'https://next-gen.materialsproject.org/static/structures/',
+          imageKey: 'material_id',
+          levelOneKey: 'material_id',
+          levelTwoKey: 'formula_pretty',
+          levelThreeKeys: [
+            { key: 'energy_above_hull', label: 'Energy Above Hull' },
+            { key: 'formation_energy_per_atom', label: 'Formation Energy' },
+          ],
+        }}
         resultLabel="material"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
-import { Column, FilterGroup, ConditionalRowStyle } from './types';
+import { Column, FilterGroup, ConditionalRowStyle, SearchUIView } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { MaterialsInputType } from '../MaterialsInput';
 import { MaterialsInputTypesMap } from '../MaterialsInput/utils';
 import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
+import { SearchUIDataView } from './SearchUIDataView';
 
 /**
  * Component for rendering advanced search interfaces for data in an API
@@ -205,15 +206,17 @@ export interface SearchUIProps {
 
   selectedRows?: any[];
 
-  view?: 'table' | 'cards';
+  view?: SearchUIView;
 
   allowViewSwitching?: boolean;
 
   customCardType?: string;
+
+  cardOptions?: any;
 }
 
 export const SearchUI: React.FC<SearchUIProps> = ({
-  view = 'table',
+  view = SearchUIView.TABLE,
   resultLabel = 'results',
   hasSearchBar = true,
   conditionalRowStyles = [],
@@ -264,11 +267,7 @@ export const SearchUI: React.FC<SearchUIProps> = ({
             </div>
             <div className="column is-8-desktop is-half-tablet mpc-results-container">
               <SearchUIDataHeader />
-              {props.view === 'table' ? (
-                <SearchUIDataTable />
-              ) : props.view === 'cards' ? (
-                <SearchUIDataCards />
-              ) : null}
+              <SearchUIDataView />
             </div>
           </div>
         </SearchUIContextProvider>

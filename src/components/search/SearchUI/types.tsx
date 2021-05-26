@@ -100,3 +100,8 @@ export enum ColumnFormat {
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
 }
+
+export enum SearchUIView {
+  TABLE = 'table',
+  CARDS = 'cards',
+}
