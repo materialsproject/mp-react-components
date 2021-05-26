@@ -11,16 +11,6 @@ import * as d3 from 'd3';
 import { SortDropdown } from '../../SortDropdown';
 import { DropdownItem } from '../../SortDropdown/SortDropdown';
 
-/**
- * Render information about SearchUI results as well as controls
- * for modifying the data in the results view.
- * Information and interactions are hooked up to the SearchUIContext state and actions.
- */
-
-interface Props {
-  className?: string;
-}
-
 const componentHtmlId = uuidv4();
 
 const getLowerResultBound = (totalResults: number, resultsPerPage: number, page: number) => {
@@ -45,7 +35,11 @@ const getUpperResultBound = (
   }
 };
 
-export const SearchUIDataHeader: React.FC<Props> = (props) => {
+/**
+ * Render information about SearchUI results as well as controls
+ * for modifying the data in the results view.
+ */
+export const SearchUIDataHeader: React.FC = () => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [titleHover, setTitleHover] = useState(false);

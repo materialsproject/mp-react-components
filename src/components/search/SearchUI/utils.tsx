@@ -417,7 +417,13 @@ export const mapInputTypeToField = (
   return allowedInputTypesMap[inputType].field;
 };
 
-const customCardsMap = {
+export enum CustomCardType {
+  SYNTHESIS = 'synthesis',
+}
+
+export type CustomCardTypeMap = Partial<Record<CustomCardType, any>>;
+
+const customCardsMap: CustomCardTypeMap = {
   synthesis: SynthesisRecipeCard,
 };
 
