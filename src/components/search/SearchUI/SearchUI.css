@@ -196,3 +196,7 @@
   column-gap: 2em;
   row-gap: 2em;
 }
+
+.mpc-search-ui .mpc-search-ui-data-cards-container .box {
+  margin-bottom: 0;
+}
