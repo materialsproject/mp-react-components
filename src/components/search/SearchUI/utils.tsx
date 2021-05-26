@@ -17,6 +17,7 @@ import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/util
 import { useMediaQuery } from 'react-responsive';
 import { SearchUIProps } from '.';
 import { MaterialsInputBox } from '../MaterialsInput/MaterialsInputBox';
+import { SynthesisRecipeCard } from '../SynthesisRecipeCard';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -414,4 +415,16 @@ export const mapInputTypeToField = (
   allowedInputTypesMap: MaterialsInputTypesMap
 ) => {
   return allowedInputTypesMap[inputType].field;
+};
+
+const customCardsMap = {
+  synthesis: SynthesisRecipeCard,
+};
+
+export const getCustomCardComponent = (cardType?: string) => {
+  if (cardType && customCardsMap.hasOwnProperty(cardType)) {
+    return customCardsMap[cardType];
+  } else {
+    return null;
+  }
 };

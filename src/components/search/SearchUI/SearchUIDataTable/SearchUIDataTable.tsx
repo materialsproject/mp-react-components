@@ -1,17 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import DataTable from 'react-data-table-component';
-import { ActiveFilterButtons } from '../../../search/ActiveFilterButtons';
-import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaCaretDown, FaExclamationTriangle, FaLink } from 'react-icons/fa';
-import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { Paginator } from '../../Paginator';
-import classNames from 'classnames';
-import { pluralize } from '../../utils';
-import { v4 as uuidv4 } from 'uuid';
-import * as d3 from 'd3';
-import { ConditionalRowStyle } from '../types';
-import { DownloadDropdown } from '../../DownloadDropdown';
+import { FaCaretDown } from 'react-icons/fa';
 
 /**
  * Component for rendering data returned within a SearchUI component
@@ -25,14 +16,8 @@ interface Props {
 export const SearchUIDataTable: React.FC<Props> = (props) => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
-  const [titleHover, setTitleHover] = useState(false);
   const [toggleClearRows, setToggleClearRows] = useState(false);
-  const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const tableRef = useRef<HTMLDivElement>(null);
-  const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
-    const anyNotSelected = columns.find((col) => col.omit);
-    return !anyNotSelected;
-  });
 
   const handlePageChange = (page: number) => {
     /** Scroll table back to top when page changes */
@@ -40,11 +25,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
       tableRef.current.children[0].scrollTop = 0;
     }
     actions.setPage(page);
-    setToggleClearRows(!toggleClearRows);
-  };
-
-  const handlePerRowsChange = (perPage: number) => {
-    actions.setResultsPerPage(perPage);
     setToggleClearRows(!toggleClearRows);
   };
 
@@ -65,31 +45,8 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
       rowsPerPage={state.resultsPerPage}
       currentPage={state.page}
       onChangePage={handlePageChange}
-      onChangeRowsPerPage={handlePerRowsChange}
     />
   );
-
-  const NoDataMessage = () => {
-    if (state.error) {
-      return (
-        <div className="react-data-table-message">
-          <p>
-            <FaExclamationTriangle /> There was an error with your search.
-          </p>
-          <p>
-            You may have entered an invalid search value. Otherwise, the API may be temporarily
-            unavailable.
-          </p>
-        </div>
-      );
-    } else {
-      return (
-        <div className="react-data-table-message">
-          <p>No records match your search criteria</p>
-        </div>
-      );
-    }
-  };
 
   const conditionalRowStyles: any[] = state.conditionalRowStyles!.map((c) => {
     c.when = (row) => row[c.selector] === c.value;
@@ -98,7 +55,7 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
 
   return (
     <div className="mpc-search-ui-data-table">
-      {state.resultsPerPage > 15 && <CustomPaginator />}
+      {state.results.length > 15 && <CustomPaginator />}
       <div className="columns react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"
@@ -128,7 +85,6 @@ export const SearchUIDataTable: React.FC<Props> = (props) => {
               },
             }}
             conditionalRowStyles={conditionalRowStyles}
-            noDataComponent={<NoDataMessage />}
             selectableRows={state.selectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}
             clearSelectedRows={toggleClearRows}

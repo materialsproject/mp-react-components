@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { Column, SearchState } from '../types';
+import { Column, SearchState, SearchUIView } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -63,13 +63,30 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setResultsPerPage: (resultsPerPage: number) => {
       setState((currentState) => ({ ...currentState, resultsPerPage }));
     },
-    setSort: (field: string, ascending: boolean) => {
+    setSort: (sortField: string, sortAscending: boolean) => {
       setState((currentState) => ({
         ...currentState,
-        sortField: field,
-        sortAscending: ascending,
+        sortField,
+        sortAscending,
         page: 1,
       }));
+    },
+    setSortField: (sortField: string) => {
+      setState((currentState) => ({
+        ...currentState,
+        sortField,
+        page: 1,
+      }));
+    },
+    setSortAscending: (sortAscending: boolean) => {
+      setState((currentState) => ({
+        ...currentState,
+        sortAscending,
+        page: 1,
+      }));
+    },
+    setView: (view: SearchUIView) => {
+      setState((currentState) => ({ ...currentState, view }));
     },
     setColumns: (columns: Column[]) => {
       setState((currentState) => ({ ...currentState, columns }));

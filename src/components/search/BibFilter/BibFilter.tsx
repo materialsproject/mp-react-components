@@ -5,6 +5,8 @@ import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menub
 import { FaAngleDown, FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import './BibFilter.css';
 import { CrossrefCard } from '../CrossrefCard';
+import { SortDropdown } from '../SortDropdown';
+import { sortCrossref, sortDynamic } from '../utils';
 
 /**
  * Component for rendering and filtering a list of citations in bibjson or crossref format
@@ -23,45 +25,6 @@ interface Props {
   resultClassName?: string;
   fetchOpenAccessUrl?: boolean;
 }
-
-const sortDynamic = (field, asc?) => {
-  const sortDirection = asc ? 1 : -1;
-  return (a, b) => {
-    const result = a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0;
-    return result * sortDirection;
-  };
-};
-
-const sortCrossref = (field, asc?) => {
-  const sortDirection = asc ? 1 : -1;
-  return (a, b) => {
-    let result = 0;
-    switch (field) {
-      case 'year':
-        result =
-          a.created.timestamp < b.created.timestamp
-            ? -1
-            : a.created.timestamp > b.created.timestamp
-            ? 1
-            : 0;
-        break;
-      case 'author':
-        result =
-          a.author[0].family < b.author[0].family
-            ? -1
-            : a.author[0].family > b.author[0].family
-            ? 1
-            : 0;
-        break;
-      case 'title':
-        result = a.title[0] < b.title[0] ? -1 : a.title[0] > b.title[0] ? 1 : 0;
-        break;
-      default:
-        result = a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0;
-    }
-    return result * sortDirection;
-  };
-};
 
 const sortMap = {
   crossref: sortCrossref,
@@ -86,23 +49,6 @@ export const BibFilter: React.FC<Props> = ({
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
   };
-
-  const handleSortFieldChange = (field: string) => {
-    setSortFieldState(field);
-  };
-
-  const handleSort = () => {
-    const sortedEntries = bibEntries.sort(sortEntries(sortFieldState, sortAsc));
-    setBibEntries([...sortedEntries]);
-  };
-
-  const handleSortDirection = () => {
-    setSortAsc(!sortAsc);
-  };
-
-  useEffect(() => {
-    handleSort();
-  }, [sortAsc, sortFieldState]);
 
   useEffect(() => {
     const sortedEntries = props.bibEntries.sort(sortEntries(sortFieldState, sortAsc));
@@ -129,41 +75,20 @@ export const BibFilter: React.FC<Props> = ({
     >
       <div className="mpc-bib-filter-controls">
         <input className="mpc-bib-filter-input input" type="search" onChange={handleSearchChange} />
-        <MenuWrapper
-          data-testid="bibjson-filter-sort-menu"
-          className="mpc-bib-filter-sort-menu dropdown is-active"
-          onSelection={handleSortFieldChange}
-        >
-          <div className="dropdown-trigger">
-            <Button className="button">
-              <span>Sort by: {sortFieldState}</span>
-              <span className="icon">
-                <FaAngleDown />
-              </span>
-            </Button>
-          </div>
-          <Menu className="dropdown-menu">
-            <ul className="dropdown-content">
-              <MenuItem value="year">
-                <li className="dropdown-item">Year</li>
-              </MenuItem>
-              <MenuItem value="author">
-                <li className="dropdown-item">Author</li>
-              </MenuItem>
-              <MenuItem value="title">
-                <li className="dropdown-item">Title</li>
-              </MenuItem>
-            </ul>
-          </Menu>
-        </MenuWrapper>
-        <button
-          className="mpc-bib-filter-sort-button button"
-          onClick={handleSortDirection}
-          aria-label={sortAsc ? 'Sorted in ascending order' : 'Sorted in descending order'}
-        >
-          <FaSort className="mpc-bib-filter-sort-icon-bg" />
-          {sortAsc ? <FaSortUp /> : <FaSortDown />}
-        </button>
+        <SortDropdown
+          sortValues={bibEntries}
+          setSortValues={setBibEntries}
+          sortOptions={[
+            { label: 'Year', value: 'year' },
+            { label: 'Author', value: 'author' },
+            { label: 'Title', value: 'title' },
+          ]}
+          sortField={sortFieldState}
+          setSortField={setSortFieldState}
+          sortAscending={sortAsc}
+          setSortAscending={setSortAsc}
+          sortFn={sortMap[format]}
+        />
       </div>
       <div className="mpc-bib-filter-results">
         {bibEntries.map((entry, i) => {

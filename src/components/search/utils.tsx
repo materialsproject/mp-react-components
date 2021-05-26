@@ -282,3 +282,42 @@ export const getPageCount = (totalResults: number, resultsPerPage: number) => {
     return Math.ceil(totalResults / resultsPerPage);
   }
 };
+
+export const sortDynamic = (field, asc?) => {
+  const sortDirection = asc ? 1 : -1;
+  return (a, b) => {
+    const result = a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0;
+    return result * sortDirection;
+  };
+};
+
+export const sortCrossref = (field, asc?) => {
+  const sortDirection = asc ? 1 : -1;
+  return (a, b) => {
+    let result = 0;
+    switch (field) {
+      case 'year':
+        result =
+          a.created.timestamp < b.created.timestamp
+            ? -1
+            : a.created.timestamp > b.created.timestamp
+            ? 1
+            : 0;
+        break;
+      case 'author':
+        result =
+          a.author[0].family < b.author[0].family
+            ? -1
+            : a.author[0].family > b.author[0].family
+            ? 1
+            : 0;
+        break;
+      case 'title':
+        result = a.title[0] < b.title[0] ? -1 : a.title[0] > b.title[0] ? 1 : 0;
+        break;
+      default:
+        result = a[field] < b[field] ? -1 : a[field] > b[field] ? 1 : 0;
+    }
+    return result * sortDirection;
+  };
+};
