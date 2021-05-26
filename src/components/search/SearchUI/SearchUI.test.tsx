@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { SearchUI, SearchUIProps } from '.';
-import { FilterGroup } from './types';
+import { FilterGroup, SearchUIView } from './types';
 import filterGroups from '../../../views/MaterialsExplorer/filterGroups.json';
 import columns from '../../../views/MaterialsExplorer/columns.json';
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
@@ -15,6 +15,7 @@ jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
 jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});
 jest.mock('../Select/Select.css', () => {});
 jest.mock('../ActiveFilterButtons/ActiveFilterButtons.css', () => {});
+jest.mock('../DataCard/DataCard.css', () => {});
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
@@ -67,10 +68,9 @@ describe('<SearchUI/>', () => {
     expect(screen.getByTestId('data-table-title')).toBeInTheDocument();
     expect(screen.getByTestId('columns-menu')).toBeInTheDocument();
     expect(screen.getByTestId('results-per-page-menu')).toBeInTheDocument();
-    expect(screen.getByTestId('react-data-table-container')).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByTestId('active-filter-buttons').childNodes.length).toBe(0);
       expect(screen.getAllByRole('row').length).toBe(16);
+      expect(screen.getByTestId('react-data-table-container')).toBeInTheDocument();
     });
   });
 
