@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Synthesis reactions"
+  },
+  {
+    "name": "DOI",
+    "selector": "doi",
+    "omit": true
+  }
+]

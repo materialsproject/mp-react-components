@@ -52,6 +52,7 @@
     "react": "^16.14.0",
     "react-aria-menubutton": "^7.0.1",
     "react-bulma-components": "^3.4.0",
+    "react-collapsible": "^2.8.3",
     "react-compound-slider": "^2.5.0",
     "react-data-table-component": "^6.11.6",
     "react-dnd": "^10.0.2",
