@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import Collapsible from 'react-collapsible';
 import './SynthesisRecipeCard.css';
+import { Link } from '../../navigation/Link';
 
 interface Props {
   id?: string;
@@ -123,7 +124,38 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
         highlights={props.data.highlights}
       />
 
-      <Collapsible trigger="View experimental operations">
+      <div style={{ marginTop: '0.5rem' }}>
+        <p>
+          <span className="mpc-synthesis-card-material-label">Target material:&nbsp;</span>
+          <Link href={'/synthesis?formula=' + props.data.target.material_formula}>
+            {props.data.target.material_formula}
+          </Link>
+        </p>
+      </div>
+      <div>
+        <p>
+          <span className="mpc-synthesis-card-material-label">Precursor materials:&nbsp;</span>
+          {props.data.precursors.map((p, i) => (
+            <span key={i}>
+              <Link href={'/synthesis?formula=' + p.material_formula}>
+                {p.material_formula}
+                {i < props.data.precursors.length ? ', ' : ''}
+              </Link>
+            </span>
+          ))}
+        </p>
+      </div>
+
+      <Collapsible
+        trigger={
+          <div className="mpc-synthesis-card-collapse-operations">
+            <span className="icon">
+              <i className="icon-fontastic-toolkit" />
+            </span>{' '}
+            See experimental details
+          </div>
+        }
+      >
         <RenderOperations operations={props.data.operations} />
       </Collapsible>
     </div>
