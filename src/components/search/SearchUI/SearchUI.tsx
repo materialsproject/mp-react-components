@@ -12,6 +12,7 @@ import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
 import { CustomCardType } from './utils';
+import { PeriodicTableMode } from '../MaterialsInput/MaterialsInput';
 
 export interface SearchUIProps {
   /**
@@ -160,6 +161,14 @@ export interface SearchUIProps {
   searchBarAllowedInputTypesMap?: MaterialsInputTypesMap;
 
   /**
+   * Modes for showing the periodic table with the top search bar
+   * "toggle": render a button for toggling visibility of periodic table
+   * "focus": show periodic table when input is focuses, hide on blur
+   * "none": never show the periodic table for this input
+   */
+  searchBarPeriodicTableMode?: PeriodicTableMode;
+
+  /**
    * Optionally include a field to sort by on initial load
    * Must be a valid field and included in your list of columns
    */
@@ -265,10 +274,7 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
               {props.hasSearchBar && (
                 <div className="columns mb-1">
                   <div className="column pb-2">
-                    <SearchUISearchBar
-                      allowedInputTypesMap={props.searchBarAllowedInputTypesMap!}
-                      errorMessage={props.searchBarErrorMessage}
-                    />
+                    <SearchUISearchBar />
                   </div>
                 </div>
               )}
@@ -294,6 +300,7 @@ SearchUI.defaultProps = {
   resultLabel: 'results',
   hasSearchBar: true,
   conditionalRowStyles: [],
+  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
   searchBarAllowedInputTypesMap: {
     formula: {
       field: 'formula',

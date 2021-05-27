@@ -11,20 +11,15 @@ import { convertMaterialsInputTypesMapToArray, mapInputTypeToField } from '../ut
  * for performing top level searches by mp-id, formula, or elements.
  * The input value is parsed into its appropriate search field upon submission.
  */
-
-interface Props {
-  allowedInputTypesMap: MaterialsInputTypesMap;
-  errorMessage?: string;
-}
-
-export const SearchUISearchBar: React.FC<Props> = (props) => {
+export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();
   const state = useSearchUIContext();
+  const allowedInputTypesMap = state.searchBarAllowedInputTypesMap!;
   const [searchValue, setSearchValue] = useState<string>('');
-  const initialInputType = convertMaterialsInputTypesMapToArray(props.allowedInputTypesMap)[0];
+  const initialInputType = convertMaterialsInputTypesMapToArray(allowedInputTypesMap)[0];
   const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(initialInputType);
   const [searchField, setSearchField] = useState(() =>
-    mapInputTypeToField(searchInputType, props.allowedInputTypesMap)
+    mapInputTypeToField(searchInputType, allowedInputTypesMap)
   );
   const allowSmiles = state.resultLabel === 'molecule';
 
@@ -38,8 +33,8 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
 
   const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     const submitValue = value || searchValue;
-    const allowedFields = Object.keys(props.allowedInputTypesMap).map((d) => {
-      return props.allowedInputTypesMap[d].field;
+    const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
+      return allowedInputTypesMap[d].field;
     });
     const fieldsToOverride = allowedFields?.filter((d) => d !== searchField);
     actions.setFilterWithOverrides(submitValue, searchField, fieldsToOverride);
@@ -59,7 +54,7 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
    * Map searchInputType to its corresponding data field
    */
   useEffect(() => {
-    setSearchField(mapInputTypeToField(searchInputType, props.allowedInputTypesMap));
+    setSearchField(mapInputTypeToField(searchInputType, allowedInputTypesMap));
   }, [searchInputType]);
 
   return (
@@ -69,15 +64,15 @@ export const SearchUISearchBar: React.FC<Props> = (props) => {
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
       onSubmit={handleSubmit}
-      periodicTableMode="toggle"
+      periodicTableMode={state.searchBarPeriodicTableMode}
       hidePeriodicTable={shouldHidePeriodicTable()}
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
       allowSmiles={allowSmiles}
       tooltip={state.searchBarTooltip}
       placeholder={state.searchBarPlaceholder}
-      allowedInputTypes={convertMaterialsInputTypesMapToArray(props.allowedInputTypesMap)}
-      errorMessage={props.errorMessage}
+      allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
+      errorMessage={state.searchBarErrorMessage}
     />
   );
 };

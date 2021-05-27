@@ -20,6 +20,7 @@
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "elements",
+          "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
         }
       },

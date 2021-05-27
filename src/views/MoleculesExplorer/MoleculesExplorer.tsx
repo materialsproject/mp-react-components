@@ -29,6 +29,11 @@ export const MoleculesExplorer: React.FC = () => {
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         sortField="IE"
         sortAscending={false}
+        allowViewSwitching
+        cardOptions={{
+          levelOneKey: 'task_id',
+          levelTwoKey: 'formula_pretty',
+        }}
       />
     </>
   );

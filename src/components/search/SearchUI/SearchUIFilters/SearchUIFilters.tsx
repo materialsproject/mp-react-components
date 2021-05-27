@@ -80,7 +80,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             debounce={1000}
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
-            periodicTableMode="onFocus"
+            periodicTableMode="focus"
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}
