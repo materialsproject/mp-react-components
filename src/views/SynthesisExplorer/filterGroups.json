@@ -1,0 +1,127 @@
+[
+  {
+    "name": "Paragraph keywords",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Keywords",
+        "id": "keywords",
+        "type": "TEXT_INPUT",
+        "tooltip": "Allows you to search the synthesis paragraphs where recipes are extracted."
+      }
+    ]
+  },
+  {
+    "name": "Materials",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Target material formula",
+        "id": "target_formula",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula"
+        }
+      },
+      {
+        "name": "Precursor material formula",
+        "id": "precursor_formula",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Synthesis Procedures",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Synthesis type",
+        "id": "synthesis_type",
+        "type": "SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Solid state synthesis",
+              "value": "solid-state"
+            },
+            {
+              "label": "Sol-gel precursor synthesis",
+              "value": "sol-gel"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Performed operations",
+        "id": "operations",
+        "type": "SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Mixing",
+              "value": "MixingOperation"
+            },
+            {
+              "label": "Shaping",
+              "value": "ShapingOperation"
+            },
+            {
+              "label": "Drying",
+              "value": "DryingOperation"
+            },
+            {
+              "label": "Heating",
+              "value": "HeatingOperation"
+            },
+            {
+              "label": "Quenching",
+              "value": "QuenchingOperation"
+            }
+          ]
+        },
+        "tooltip": "Required experimental operations."
+      },
+      {
+        "name": "Heating temperature",
+        "id": "condition_heating_temperature",
+        "units": "°C",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 2000],
+          "step": 10
+        }
+      },
+      {
+        "name": "Heating time",
+        "id": "condition_heating_time",
+        "units": "hours",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.5
+        }
+      },
+      {
+        "name": "Heating atmosphere",
+        "id": "condition_heating_atmosphere",
+        "type": "TEXT_INPUT",
+        "tooltip": "Required atmosphere during the heating step, such as 'air', 'argon'."
+      },
+      {
+        "name": "Mixing device",
+        "id": "condition_mixing_device",
+        "type": "TEXT_INPUT",
+        "tooltip": "Required mixing device during the mixing step, such as 'zirconia', 'Al2O3'."
+      },
+      {
+        "name": "Mixing media",
+        "id": "condition_mixing_media",
+        "type": "TEXT_INPUT",
+        "tooltip": "Required mixing media during the mixing step, such as 'alcohol', 'water'."
+      }
+    ]
+  }
+]

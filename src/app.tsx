@@ -11,17 +11,15 @@ import './styles.less';
 import './assets/styles.css';
 import '../node_modules/bulma/css/bulma.min.css';
 import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
-import { MaterialsExplorer } from './views/MaterialsExplorer/MaterialsExplorer';
-import { MaterialsDetail } from './views/MaterialsDetail/MaterialsDetail';
-import { MoleculesExplorer } from './views/MoleculesExplorer/MoleculesExplorer';
-import { XasApp } from './views/XasApp/XasApp';
-import { CrystalStructureViewer } from './views/CrystalStructureViewer/CrystalStructureViewer';
-import { BatteryExplorer } from './views/BatteryExplorer/BatteryExplorer';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { NavbarDropdown } from './components/navigation/NavbarDropdown';
-import { FaTrain } from 'react-icons/fa';
+import { MaterialsExplorer } from './views/MaterialsExplorer';
+import { MoleculesExplorer } from './views/MoleculesExplorer';
+import { XasApp } from './views/XasApp';
+import { CrystalStructureViewer } from './views/CrystalStructureViewer';
+import { BatteryExplorer } from './views/BatteryExplorer';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { Publications } from './views/Publications';
 import { Sandbox } from './views/Sandbox';
+import { SynthesisExplorer } from './views/SynthesisExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -48,6 +46,9 @@ ReactDOM.render(
               <Link to="/crystal">Crystal Structure</Link>
             </span>
             <span className="navbar-item">
+              <Link to="/synthesis">Synthesis</Link>
+            </span>
+            <span className="navbar-item">
               <Link to="/publications">Publications</Link>
             </span>
             <span className="navbar-item">
@@ -69,6 +70,9 @@ ReactDOM.render(
           </Route>
           <Route path="/crystal">
             <CrystalStructureViewer />
+          </Route>
+          <Route path="/synthesis">
+            <SynthesisExplorer />
           </Route>
           <Route path="/xas">
             <XasApp />
