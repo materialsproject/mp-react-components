@@ -1,9 +1,9 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup, SearchUIView } from '../../components/search/SearchUI/types';
+import { FilterGroup } from '../../components/search/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { CustomCardType } from '../../components/search/SearchUI/utils';
+import { SearchUIViewType } from '../../components/search/SearchUI/types';
 import { PeriodicTableMode } from '../../components/search/MaterialsInput/MaterialsInput';
 
 /**
@@ -15,8 +15,7 @@ export const MaterialsExplorer: React.FC = () => {
     <>
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
-        view={SearchUIView.TABLE}
-        customCardType={CustomCardType.SYNTHESIS}
+        view={SearchUIViewType.TABLE}
         allowViewSwitching
         cardOptions={{
           imageBaseURL: 'https://next-gen.materialsproject.org/static/structures/',

@@ -9,7 +9,15 @@ import {
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions,
 } from '../utils';
-import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchState } from './types';
+import {
+  ActiveFilter,
+  Column,
+  ColumnFormat,
+  FilterGroup,
+  FilterType,
+  SearchState,
+  SearchUIViewTypeMap,
+} from './types';
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../MaterialsInput';
@@ -18,6 +26,9 @@ import { useMediaQuery } from 'react-responsive';
 import { SearchUIProps } from '.';
 import { MaterialsInputBox } from '../MaterialsInput/MaterialsInputBox';
 import { SynthesisRecipeCard } from '../SynthesisRecipeCard';
+import { SearchUIDataTable } from './SearchUIDataTable';
+import { SearchUIDataCards } from './SearchUIDataCards';
+import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -415,22 +426,4 @@ export const mapInputTypeToField = (
   allowedInputTypesMap: MaterialsInputTypesMap
 ) => {
   return allowedInputTypesMap[inputType].field;
-};
-
-export enum CustomCardType {
-  SYNTHESIS = 'synthesis',
-}
-
-export type CustomCardTypeMap = Partial<Record<CustomCardType, any>>;
-
-const customCardsMap: CustomCardTypeMap = {
-  synthesis: SynthesisRecipeCard,
-};
-
-export const getCustomCardComponent = (cardType?: string) => {
-  if (cardType && customCardsMap.hasOwnProperty(cardType)) {
-    return customCardsMap[cardType];
-  } else {
-    return null;
-  }
 };
