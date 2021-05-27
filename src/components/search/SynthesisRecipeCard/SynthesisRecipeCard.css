@@ -16,6 +16,11 @@
   font-size: smaller;
 }
 
+.mpc-synthesis-card-material-label {
+  font-weight: bold;
+  font-size: smaller;
+}
+
 .mpc-synthesis-card-highlight-hit {
   font-weight: bold;
   text-decoration: underline;
@@ -23,4 +28,14 @@
 
 .mpc-synthesis-card-operations {
   font-size: smaller;
+}
+
+.mpc-synthesis-card-collapse-operations {
+  cursor: pointer;
+  font-size: smaller;
+  color: #3960e3;
+}
+
+.mpc-synthesis-card-collapse-operations:hover {
+  text-decoration: underline;
 }
