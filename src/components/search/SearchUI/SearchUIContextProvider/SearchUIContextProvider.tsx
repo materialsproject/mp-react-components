@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { Column, SearchState, SearchUIView } from '../types';
+import { Column, SearchState, SearchUIViewType } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -85,7 +85,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         page: 1,
       }));
     },
-    setView: (view: SearchUIView) => {
+    setView: (view: SearchUIViewType) => {
       setState((currentState) => ({ ...currentState, view }));
     },
     setColumns: (columns: Column[]) => {
