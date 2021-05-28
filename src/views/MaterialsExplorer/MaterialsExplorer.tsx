@@ -1,8 +1,10 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup, SearchUIView } from '../../components/search/SearchUI/types';
+import { FilterGroup } from '../../components/search/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
+import { SearchUIViewType } from '../../components/search/SearchUI/types';
+import { PeriodicTableMode } from '../../components/search/MaterialsInput/MaterialsInput';
 
 /**
  * Component for testing the Materials Explorer view
@@ -13,8 +15,7 @@ export const MaterialsExplorer: React.FC = () => {
     <>
       <h1 className="title">Materials Explorer</h1>
       <SearchUI
-        view={SearchUIView.TABLE}
-        // customCardType="synthesis"
+        view={SearchUIViewType.TABLE}
         allowViewSwitching
         cardOptions={{
           imageBaseURL: 'https://next-gen.materialsproject.org/static/structures/',
@@ -41,6 +42,7 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
         searchBarPlaceholder="Search by elements, formula, or mp-id"
         searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
+        searchBarPeriodicTableMode={PeriodicTableMode.NONE}
         searchBarAllowedInputTypesMap={{
           formula: {
             field: 'formula',

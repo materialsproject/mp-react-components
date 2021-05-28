@@ -1,10 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
-import { Paginator } from '../../Paginator';
-import { DataCard } from '../../DataCard';
-import { getCustomCardComponent } from '../utils';
-import { SearchUIDataTable } from '../SearchUIDataTable';
-import { SearchUIDataCards } from '../SearchUIDataCards';
+import React from 'react';
+import { useSearchUIContext } from '../SearchUIContextProvider';
+import { searchUIViewsMap } from '../types';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 /**
@@ -34,12 +30,9 @@ export const SearchUIDataView: React.FC = () => {
           <p>No records match your search criteria</p>
         </div>
       );
-    } else if (state.view === 'table') {
-      return <SearchUIDataTable />;
-    } else if (state.view === 'cards') {
-      return <SearchUIDataCards />;
     } else {
-      return null;
+      const SearchUIViewComponent = searchUIViewsMap[state.view!];
+      return <SearchUIViewComponent />;
     }
   };
 

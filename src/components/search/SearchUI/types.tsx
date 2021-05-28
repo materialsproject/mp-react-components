@@ -1,5 +1,8 @@
 import { MaterialsInputType } from '../MaterialsInput';
 import { SearchUIProps } from './SearchUI';
+import { SearchUIDataCards } from './SearchUIDataCards';
+import { SearchUIDataTable } from './SearchUIDataTable';
+import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
 
 export enum FilterId {
   ELEMENTS = 'elements',
@@ -101,7 +104,16 @@ export enum ColumnFormat {
   POINTGROUP = 'POINTGROUP',
 }
 
-export enum SearchUIView {
+export enum SearchUIViewType {
   TABLE = 'table',
   CARDS = 'cards',
+  SYNTHESIS = 'synthesis',
 }
+
+export type SearchUIViewTypeMap = Partial<Record<SearchUIViewType, any>>;
+
+export const searchUIViewsMap: SearchUIViewTypeMap = {
+  table: SearchUIDataTable,
+  cards: SearchUIDataCards,
+  synthesis: SearchUISynthesisRecipeCards,
+};

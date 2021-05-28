@@ -26,7 +26,6 @@ import { MaterialsInputTypesMap } from './utils';
 
 /**
  * Search types supported by this field
- * Displayed to users in the dropdown
  */
 export enum MaterialsInputType {
   ELEMENTS = 'elements',
@@ -34,6 +33,18 @@ export enum MaterialsInputType {
   MPID = 'mpid',
   SMILES = 'smiles',
   TEXT = 'text',
+}
+
+/**
+ * Modes for showing the periodic table
+ * TOGGLE: render a button for toggling visibility of periodic table
+ * FOCUS: show periodic table when input is focuses, hide on blur
+ * NONE: never show the periodic table for this input
+ */
+export enum PeriodicTableMode {
+  TOGGLE = 'toggle',
+  FOCUS = 'focus',
+  NONE = 'none',
 }
 
 export interface MaterialsInputSharedProps {
@@ -50,7 +61,7 @@ export interface MaterialsInputSharedProps {
 
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
   debounce?: number;
-  periodicTableMode?: 'onFocus' | 'toggle';
+  periodicTableMode?: PeriodicTableMode;
   hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
@@ -87,7 +98,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   );
   const periodicTableClicked = useRef(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
-    props.periodicTableMode === 'toggle' && !props.hidePeriodicTable ? true : false
+    props.periodicTableMode === PeriodicTableMode.TOGGLE && !props.hidePeriodicTable ? true : false
   );
   const [showAutocomplete, setShowAutocomplete] = useState(true);
   const [formulaSuggestions, setFormulaSuggestions] = useState<FormulaSuggestion[]>([]);
@@ -102,7 +113,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const getOnFocusProp = () => {
     setErrorTipStayActive(false);
     shouldShowAutocomplete();
-    if (props.periodicTableMode === 'onFocus') {
+    if (props.periodicTableMode === PeriodicTableMode.FOCUS) {
       return setShowPeriodicTable(true);
     } else {
       return;
@@ -111,7 +122,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   const hideAutoCompleteAndPeriodicTable = () => {
     setShowAutocomplete(false);
-    if (props.periodicTableMode === 'onFocus') {
+    if (props.periodicTableMode === PeriodicTableMode.FOCUS) {
       return setShowPeriodicTable(false);
     }
   };
@@ -240,7 +251,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     </div>
   );
 
-  if (props.periodicTableMode === 'toggle') {
+  if (props.periodicTableMode === PeriodicTableMode.TOGGLE) {
     toggleControl = (
       <Control>
         <button

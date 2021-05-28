@@ -1,0 +1,1 @@
+export { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';

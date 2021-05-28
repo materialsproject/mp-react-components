@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
-import { Column, FilterGroup, ConditionalRowStyle, SearchUIView } from './types';
+import { Column, FilterGroup, ConditionalRowStyle, SearchUIViewType } from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { MaterialsInputTypesMap } from '../MaterialsInput/utils';
 import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
-import { CustomCardType } from './utils';
+import { PeriodicTableMode } from '../MaterialsInput/MaterialsInput';
 
 export interface SearchUIProps {
   /**
@@ -160,6 +160,14 @@ export interface SearchUIProps {
   searchBarAllowedInputTypesMap?: MaterialsInputTypesMap;
 
   /**
+   * Modes for showing the periodic table with the top search bar
+   * "toggle": render a button for toggling visibility of periodic table
+   * "focus": show periodic table when input is focuses, hide on blur
+   * "none": never show the periodic table for this input
+   */
+  searchBarPeriodicTableMode?: PeriodicTableMode;
+
+  /**
    * Optionally include a field to sort by on initial load
    * Must be a valid field and included in your list of columns
    */
@@ -211,27 +219,20 @@ export interface SearchUIProps {
 
   /**
    * Set the initial results view to one of the preset
-   * SearchUI views: 'table' or 'cards'
+   * SearchUI views: 'table', 'cards', or 'synthesis'
+   *
+   * To add a new view type, head to SearchUI/types and add the name of the type to the
+   * SearchUIViewType enum, then add a property in searchUIViewsMap using the same name
+   * you used for the type, then provide your custom view component as the value.
+   * The view component should consume the SearchUIContext state using the useSearchUIContext hook.
+   * See SearchUIDataTable or SearchUIDataCards for example view components.
    */
-  view?: SearchUIView;
+  view?: SearchUIViewType;
 
   /**
    * Optionally enable/disable switching between SearchUI result views
    */
   allowViewSwitching?: boolean;
-
-  /**
-   * Change type of card displayed in the card results view
-   * Must be one of the values in the CustomCardType enum
-   *
-   * To add a custom card type, head to SearchUI/utils and add the name of the type to the
-   * CustomCardType enum, then add a property in customCardsMap using the same name
-   * you used for the type, then provide your custom component as the value.
-   *
-   * Note that custom card components must have these 3 (and only these 3) props: "data", "id", "className"
-   * The "data" prop will be the individual row of data in the results for populating the card's content.
-   */
-  customCardType?: CustomCardType;
 
   /**
    * Set of options for configuring what is displayed in the result cards
@@ -265,10 +266,7 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
               {props.hasSearchBar && (
                 <div className="columns mb-1">
                   <div className="column pb-2">
-                    <SearchUISearchBar
-                      allowedInputTypesMap={props.searchBarAllowedInputTypesMap!}
-                      errorMessage={props.searchBarErrorMessage}
-                    />
+                    <SearchUISearchBar />
                   </div>
                 </div>
               )}
@@ -290,10 +288,11 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 };
 
 SearchUI.defaultProps = {
-  view: SearchUIView.TABLE,
+  view: SearchUIViewType.TABLE,
   resultLabel: 'results',
   hasSearchBar: true,
   conditionalRowStyles: [],
+  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
   searchBarAllowedInputTypesMap: {
     formula: {
       field: 'formula',
