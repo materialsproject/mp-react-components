@@ -31,7 +31,7 @@ export const SearchUIDataView: React.FC = () => {
         </div>
       );
     } else {
-      const SearchUIViewComponent = searchUIViewsMap[state.view!];
+      const SearchUIViewComponent = searchUIViewsMap[state.view];
       return <SearchUIViewComponent />;
     }
   };

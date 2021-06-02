@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
 import { SortDropdown } from '../../SortDropdown';
 import { DropdownItem } from '../../SortDropdown/SortDropdown';
+import { SearchUIViewType } from '../types';
 
 const componentHtmlId = uuidv4();
 
@@ -146,74 +147,75 @@ export const SearchUIDataHeader: React.FC = () => {
     }
   };
 
-  const columnsMenu = (
-    <MenuWrapper
-      data-testid="columns-menu"
-      className="dropdown is-right is-active"
-      closeOnSelection={false}
-    >
-      <div className="dropdown-trigger">
-        <Button className="button">
-          <span>Columns</span>
-          <span className="icon">
-            <FaAngleDown />
-          </span>
-        </Button>
-      </div>
-      <Menu className="dropdown-menu">
-        <ul className="dropdown-content">
-          <MenuItem>
-            <li className="dropdown-item">
-              <label className="checkbox is-block">
-                <input
-                  type="checkbox"
-                  role="checkbox"
-                  checked={allCollumnsSelected}
-                  aria-checked={allCollumnsSelected}
-                  /**
-                   * Use key-up event to allow toggling with the space bar
-                   * Must use key-up instead of key-down to prevent double-firing in Firefox
-                   */
-                  onKeyUp={(e) => {
-                    e.preventDefault();
-                    if (e.keyCode === 32) toggleAllColumns();
-                  }}
-                  onChange={(e) => toggleAllColumns()}
-                />
-                <span>
-                  <strong>Select all</strong>
-                </span>
-              </label>
-            </li>
-          </MenuItem>
-          {columns.map((col, i) => (
-            <MenuItem key={i}>
+  const columnsMenu =
+    state.view === SearchUIViewType.TABLE ? (
+      <MenuWrapper
+        data-testid="columns-menu"
+        className="dropdown is-right is-active"
+        closeOnSelection={false}
+      >
+        <div className="dropdown-trigger">
+          <Button className="button">
+            <span>Columns</span>
+            <span className="icon">
+              <FaAngleDown />
+            </span>
+          </Button>
+        </div>
+        <Menu className="dropdown-menu">
+          <ul className="dropdown-content">
+            <MenuItem>
               <li className="dropdown-item">
                 <label className="checkbox is-block">
                   <input
                     type="checkbox"
                     role="checkbox"
-                    checked={!col.omit}
-                    aria-checked={!col.omit}
+                    checked={allCollumnsSelected}
+                    aria-checked={allCollumnsSelected}
                     /**
                      * Use key-up event to allow toggling with the space bar
                      * Must use key-up instead of key-down to prevent double-firing in Firefox
                      */
                     onKeyUp={(e) => {
                       e.preventDefault();
-                      if (e.keyCode === 32) toggleColumn(i);
+                      if (e.keyCode === 32) toggleAllColumns();
                     }}
-                    onChange={(e) => toggleColumn(i)}
+                    onChange={(e) => toggleAllColumns()}
                   />
-                  <span>{col.nameString}</span>
+                  <span>
+                    <strong>Select all</strong>
+                  </span>
                 </label>
               </li>
             </MenuItem>
-          ))}
-        </ul>
-      </Menu>
-    </MenuWrapper>
-  );
+            {columns.map((col, i) => (
+              <MenuItem key={i}>
+                <li className="dropdown-item">
+                  <label className="checkbox is-block">
+                    <input
+                      type="checkbox"
+                      role="checkbox"
+                      checked={!col.omit}
+                      aria-checked={!col.omit}
+                      /**
+                       * Use key-up event to allow toggling with the space bar
+                       * Must use key-up instead of key-down to prevent double-firing in Firefox
+                       */
+                      onKeyUp={(e) => {
+                        e.preventDefault();
+                        if (e.keyCode === 32) toggleColumn(i);
+                      }}
+                      onChange={(e) => toggleColumn(i)}
+                    />
+                    <span>{col.nameString}</span>
+                  </label>
+                </li>
+              </MenuItem>
+            ))}
+          </ul>
+        </Menu>
+      </MenuWrapper>
+    ) : null;
 
   const resultsPerPageOptions = [10, 15, 30, 50, 75];
   const resultsPerPageMenu = (
@@ -246,7 +248,7 @@ export const SearchUIDataHeader: React.FC = () => {
     </MenuWrapper>
   );
 
-  const sortMenu = (
+  const sortMenu = state.hasSortMenu ? (
     <SortDropdown
       sortValues={state.results}
       sortOptions={state.columns
@@ -260,9 +262,9 @@ export const SearchUIDataHeader: React.FC = () => {
       setSortAscending={actions.setSortAscending}
       sortFn={actions.setSort}
     />
-  );
+  ) : null;
 
-  const viewSwitcher = (
+  const viewSwitcher = state.allowViewSwitching ? (
     <div className="field has-addons">
       <div className="control">
         <button
@@ -285,7 +287,7 @@ export const SearchUIDataHeader: React.FC = () => {
         </button>
       </div>
     </div>
-  );
+  ) : null;
 
   return (
     <div id={componentHtmlId} className="mpc-search-ui-data-header">
@@ -302,7 +304,7 @@ export const SearchUIDataHeader: React.FC = () => {
           )}
         </div>
         <div className="mpc-search-ui-data-header-controls">
-          {state.allowViewSwitching && viewSwitcher}
+          {viewSwitcher}
           {sortMenu}
           {columnsMenu}
           {resultsPerPageMenu}
