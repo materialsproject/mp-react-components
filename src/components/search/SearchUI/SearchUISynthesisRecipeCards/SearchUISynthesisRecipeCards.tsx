@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { Paginator } from '../../Paginator';
+import { SynthesisRecipeCard } from '../../SynthesisRecipeCard';
 
 /**
  *
@@ -27,7 +28,7 @@ export const SearchUISynthesisRecipeCards: React.FC = () => {
       <div className="mpc-synthesis-recipe-cards-container">
         {state.results.map((d, i) => (
           // Custom result cards
-          <div></div>
+          <SynthesisRecipeCard data={d} key={i} />
         ))}
       </div>
       <CustomPaginator />
