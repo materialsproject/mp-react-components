@@ -1,0 +1,1 @@
+export { OpenAccessButton } from './OpenAccessButton';
