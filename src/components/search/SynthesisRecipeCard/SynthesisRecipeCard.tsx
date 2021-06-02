@@ -3,6 +3,7 @@ import React from 'react';
 import Collapsible from 'react-collapsible';
 import './SynthesisRecipeCard.css';
 import { Link } from '../../navigation/Link';
+import { FaChevronDown } from 'react-icons/all';
 
 interface Props {
   id?: string;
@@ -138,12 +139,13 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
       </div>
 
       <Collapsible
+        transitionTime={400}
+        transitionCloseTime={400}
+        triggerOpenedClassName="mpc-synthesis-card-collapse-opened"
         trigger={
           <div className="mpc-synthesis-card-collapse-operations">
-            <span className="icon">
-              <i className="icon-fontastic-toolkit" />
-            </span>{' '}
-            Toggle experimental details
+            <FaChevronDown className="mpc-synthesis-card-collapse-chevron" /> Toggle experimental
+            details
           </div>
         }
       >
