@@ -7,7 +7,7 @@
         "name": "Keywords",
         "id": "keywords",
         "type": "TEXT_INPUT",
-        "tooltip": "Allows you to search the synthesis paragraphs where recipes are extracted."
+        "tooltip": "Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
       }
     ]
   },
