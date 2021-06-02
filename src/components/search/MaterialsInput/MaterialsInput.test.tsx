@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { MaterialsInput, MaterialsInputType, MaterialsInputProps } from '.';
 import { autocompleteQuery } from '../../../mocks/constants/autocomplete';
+import { PeriodicTableMode } from './MaterialsInput';
 
 jest.mock('./MaterialsInput.css', () => {});
 jest.mock(
@@ -18,7 +19,7 @@ afterEach(() => cleanup());
 const defaultProps = {
   value: '',
   inputType: 'elements' as MaterialsInputType,
-  periodicTableMode: 'toggle' as 'toggle' | 'onFocus' | undefined,
+  periodicTableMode: PeriodicTableMode.TOGGLE,
   onChange: (value: string) => null,
 };
 
@@ -91,7 +92,7 @@ describe('<MaterialsInput/>', () => {
   it('should show periodic table on focus', () => {
     renderElement({
       ...defaultProps,
-      periodicTableMode: 'onFocus',
+      periodicTableMode: PeriodicTableMode.FOCUS,
     });
     expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
       'aria-hidden',
@@ -107,7 +108,7 @@ describe('<MaterialsInput/>', () => {
   it('should stay focused on element click', () => {
     renderElement({
       ...defaultProps,
-      periodicTableMode: 'onFocus',
+      periodicTableMode: PeriodicTableMode.FOCUS,
     });
     screen.getByTestId('materials-input-search-input').focus();
     fireEvent.click(screen.getByText('Fe'));
