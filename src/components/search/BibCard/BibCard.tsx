@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import { BibtexButton } from '../BibtexButton';
 import { OpenAccessButton } from '../OpenAccessButton';
-import { OpenAccessLink } from '../OpenAccessLink';
 import './BibCard.css';
 
 interface Props {

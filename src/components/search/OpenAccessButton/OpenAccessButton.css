@@ -1,0 +1,12 @@
+.mpc-open-access-button > span {
+  height: 100%;
+}
+
+.mpc-open-access-button img {
+  height: 100%;
+  width: auto;
+}
+
+.mpc-open-access-button > span > span {
+  vertical-align: top;
+}
