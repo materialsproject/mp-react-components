@@ -78,35 +78,26 @@ function RenderOperations({ operations }) {
 }
 
 function RenderParagraphOrHighlight(props) {
-  if (props.highlights) {
-    return (
-      <div className={classNames('mpc-synthesis-card-paragraph', props.className)}>
-        <p>
-          <a target="_blank" href={'https://dx.doi.org/' + props.doi}>
-            {props.doi}
-          </a>
-        </p>
-        {props.highlights.map((hl, i) => (
-          <p key={i}>
-            {hl.texts.map((text, j) => (
-              <span key={j} className={'mpc-synthesis-card-highlight-' + text.type}>
-                {text.value}
-              </span>
-            ))}
-          </p>
-        ))}
-      </div>
-    );
-  } else {
-    return (
-      <div className={classNames('mpc-synthesis-card-paragraph', props.className)}>
-        <p>
-          <a href={'https://dx.doi.org/' + props.doi}>{props.doi}</a>
-        </p>
-        {props.paragraph_string}
-      </div>
-    );
-  }
+  return (
+    <div className={classNames('mpc-synthesis-card-paragraph', props.className)}>
+      <p>
+        <a target="_blank" href={'https://dx.doi.org/' + props.doi}>
+          DOI: {props.doi}
+        </a>
+      </p>
+      {props.highlights
+        ? props.highlights.map((hl, i) => (
+            <p key={i}>
+              {hl.texts.map((text, j) => (
+                <span key={j} className={'mpc-synthesis-card-highlight-' + text.type}>
+                  {text.value}
+                </span>
+              ))}
+            </p>
+          ))
+        : props.paragraph_string}
+    </div>
+  );
 }
 
 export const SynthesisRecipeCard: React.FC<Props> = (props) => {
@@ -139,7 +130,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
             <span key={i}>
               <Link href={'/synthesis?formula=' + p.material_formula}>
                 {p.material_formula}
-                {i < props.data.precursors.length ? ', ' : ''}
+                {i < props.data.precursors.length - 1 ? ', ' : ''}
               </Link>
             </span>
           ))}
@@ -152,7 +143,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
             <span className="icon">
               <i className="icon-fontastic-toolkit" />
             </span>{' '}
-            See experimental details
+            Toggle experimental details
           </div>
         }
       >

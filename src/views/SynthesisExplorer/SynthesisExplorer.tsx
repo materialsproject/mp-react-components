@@ -1,9 +1,9 @@
 import React from 'react';
 import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup, SearchUIView } from '../../components/search/SearchUI/types';
+import { FilterGroup, SearchUIViewType } from '../../components/search/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { CustomCardType } from '../../components/search/SearchUI/utils';
+import { PeriodicTableMode } from '../../components/search/MaterialsInput/MaterialsInput';
 
 /**
  * Component for testing the Synthesis Explorer view
@@ -28,15 +28,15 @@ export const SynthesisExplorer: React.FC = () => {
             : undefined
         }
         apiKey={undefined}
-        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
+        searchBarTooltip="Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
         searchBarAllowedInputTypesMap={{
           text: {
             field: 'keywords',
           },
         }}
+        searchBarPeriodicTableMode={PeriodicTableMode.NONE}
         searchBarPlaceholder="Query recipes by keywords"
-        view={SearchUIView.CARDS}
-        customCardType={CustomCardType.SYNTHESIS}
+        view={SearchUIViewType.SYNTHESIS}
       />
     </>
   );
