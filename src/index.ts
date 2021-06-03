@@ -41,6 +41,7 @@ export {
   // MtMaterialTable,
   Scrollspy,
   SearchUI,
+  MaterialsInput,
   DataTable,
   GlobalSearchBar,
   NavbarDropdown,
