@@ -4,12 +4,47 @@ import React, { useEffect, useState } from 'react';
 import { BibCard } from '../BibCard';
 
 interface Props {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
   setProps?: (value: any) => any;
+
+  /**
+   * Class name(s) to append to the component's default class
+   */
   className?: string;
+
+  /**
+   * A single bib object in crossref format.
+   * If a crossEntry is supplied, a request will not be made to the crossref API.
+   * The following bib values are parsed from a Crossref API response: title, authors, year, doi, journal.
+   */
   crossrefEntry?: any;
-  doi?: string;
+
+  /**
+   * Either a DOI or bibtex string to use to search against the Crossref /works endpoint.
+   * An identifier must be supplied if you are not supplying the crossrefEntry directly.
+   */
+  identifier?: string;
+
+  /**
+   * Error message to show inside the card if the crossref request fails
+   * @default 'Could not find reference'
+   */
   errorMessage?: string;
+
+  /**
+   * Set to true to dynamically fetch a link to a free PDF of
+   * the reference (using the bibjsonEntry doi field).
+   * NOTE: the open access URL can also be included in the bibjsonEntry
+   * in the "openAccessUrl" property. If set, the URL will not be fetched.
+   */
   fetchOpenAccessUrl?: boolean;
 }
 
@@ -20,6 +55,9 @@ interface CrossrefAuthor {
   [id: string]: any;
 }
 
+/**
+ * Parses a crossref entry or fetches a reference from the crossref API and renders a BibCard.
+ */
 export const CrossrefCard: React.FC<Props> = (props) => {
   props = {
     errorMessage: 'Could not find reference',
@@ -41,9 +79,9 @@ export const CrossrefCard: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    if (!crossref && props.doi) {
+    if (!crossref && props.identifier) {
       axios
-        .get(`https://api.crossref.org/works/${props.doi}`)
+        .get(`https://api.crossref.org/works/${props.identifier}`)
         .then((result) => {
           if (result.data.hasOwnProperty('message')) {
             setCrossref(result.data.message);

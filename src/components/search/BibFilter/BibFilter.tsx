@@ -8,21 +8,66 @@ import { CrossrefCard } from '../CrossrefCard';
 import { SortDropdown } from '../SortDropdown';
 import { sortCrossref, sortDynamic } from '../utils';
 
-/**
- * Component for rendering and filtering a list of citations in bibjson or crossref format
- * Expects bibjson in the format output by the bibtexparser library (https://bibtexparser.readthedocs.io/en/v1.1.0/tutorial.html#)
- * Expects crossref in the format returned by the Crossref API
- */
-
 interface Props {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
   setProps?: (value: any) => any;
+
+  /**
+   * Class name(s) to append to the component's default class (mpc-bib-filter)
+   */
   className?: string;
+
+  /**
+   * List of bib objects in bibjson or crossref format
+   * Only the following bib properties are used by this component:
+   *  - title
+   *  - author (as a list or string)
+   *  - year
+   *  - doi
+   *  - journal
+   * If any of those properties are missing, that property will be omitted from the bibjson result card.
+   * Any extra properties are simply ignored.
+   */
   bibEntries: any[];
+
+  /**
+   * Format of the bibliographoc objects supplied in bibEntries
+   * @default 'bibjson'
+   */
   format?: 'crossref' | 'bibjson';
+
+  /**
+   * Name of property to initially sort entries by
+   * @default 'year'
+   */
   sortField?: string;
+
+  /**
+   * Set to true to have the initial sorting direction be ascending
+   * @default false
+   */
   ascending?: boolean;
+
+  /**
+   * Class name(s) to append to individual result cards' default class (mpc-bib-card)
+   */
   resultClassName?: string;
+
+  /**
+   * Set to true to dynamically fetch a link to a free PDF of
+   * each reference (using the "doi" field for individual bib entry).
+   * NOTE: the open access URL can also be included in a bib entry
+   * in the "openAccessUrl" property. If set, the URL will not be fetched.
+   * @default false
+   */
   fetchOpenAccessUrl?: boolean;
 }
 
@@ -31,6 +76,11 @@ const sortMap = {
   bibjson: sortDynamic,
 };
 
+/**
+ * Component for rendering and filtering a list of citations in bibjson or crossref format.
+ * Expects bibjson in the format output by the bibtexparser library (https://bibtexparser.readthedocs.io/en/v1.1.0/tutorial.html#).
+ * Expects crossref in the format returned by the Crossref API.
+ */
 export const BibFilter: React.FC<Props> = ({
   format = 'bibjson',
   sortField = 'year',

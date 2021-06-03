@@ -115,7 +115,7 @@ export interface SearchUIProps {
    * e.g. "material"
    * Note that only some special plural mappings are handled automatically (e.g. battery -> batteries)
    * In all other cases, an "s" is appended to resultLabel
-   * @default "result"
+   * @default 'result'
    */
   resultLabel?: string;
 
@@ -171,7 +171,7 @@ export interface SearchUIProps {
    * "toggle": render a button for toggling visibility of periodic table
    * "focus": show periodic table when input is focuses, hide on blur
    * "none": never show the periodic table for this input
-   * @default "toggle"
+   * @default 'toggle'
    */
   searchBarPeriodicTableMode?: PeriodicTableMode;
 
@@ -234,7 +234,7 @@ export interface SearchUIProps {
    * you used for the type, then provide your custom view component as the value.
    * The view component should consume the SearchUIContext state using the useSearchUIContext hook.
    * See SearchUIDataTable or SearchUIDataCards for example view components.
-   * @default "table"
+   * @default 'table'
    */
   view?: SearchUIViewType;
 
