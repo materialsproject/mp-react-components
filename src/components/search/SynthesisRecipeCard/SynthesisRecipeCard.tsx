@@ -63,7 +63,10 @@ function RenderOperations({ operations }) {
         <ol>
           {operations.map((op, i) => (
             <li key={i}>
-              <span>{op.type}</span> <RenderConditions conditions={op.conditions} />
+              <span>
+                {op.type} ({op.token})
+              </span>{' '}
+              <RenderConditions conditions={op.conditions} />
             </li>
           ))}
         </ol>
@@ -119,7 +122,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
       <div style={{ marginTop: '0.5rem' }}>
         <p>
           <span className="mpc-synthesis-card-material-label">Target material:&nbsp;</span>
-          <Link href={'/synthesis?formula=' + props.data.target.material_formula}>
+          <Link href={'/materials?formula=' + props.data.target.material_formula}>
             {props.data.target.material_formula}
           </Link>
         </p>
