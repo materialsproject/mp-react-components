@@ -17,14 +17,6 @@ import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePl
 import { MaterialsInputTypesMap } from './utils';
 
 /**
- * An input field component for searching by mp-id, elements, or formula.
- * Renders a text input and a periodic table within a PeriodicContext to support
- * two-way binding between the input and periodic table.
- * i.e. when elements are typed into the field, they are selected in the table,
- * and when elements are selected in the table, they are appended to the field's input.
- */
-
-/**
  * Search types supported by this field
  */
 export enum MaterialsInputType {
@@ -68,7 +60,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
   tooltip?: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string) => any;
   onPropsChange?: (propsObject: any) => void;
 }
@@ -79,6 +71,13 @@ interface FormulaSuggestion {
 
 let requestCount = 0;
 
+/**
+ * An input field component for searching by mp-id, elements, or formula.
+ * Renders a text input and a periodic table within a PeriodicContext to support
+ * two-way binding between the input and periodic table.
+ * i.e. when elements are typed into the field, they are selected in the table,
+ * and when elements are selected in the table, they are appended to the field's input.
+ */
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   errorMessage = 'Invalid input value',
   allowedInputTypes = [
@@ -86,9 +85,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     'formula' as MaterialsInputType,
     'mpid' as MaterialsInputType,
   ],
+  onChange = (value) => value,
   ...otherProps
 }) => {
-  const props = { errorMessage, allowedInputTypes, ...otherProps };
+  const props = { errorMessage, allowedInputTypes, onChange, ...otherProps };
   const [inputValue, setInputValue] = useState(props.value);
   const [inputType, setInputType] = useState(props.inputType);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
