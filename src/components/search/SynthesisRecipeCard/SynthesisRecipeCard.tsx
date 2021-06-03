@@ -33,7 +33,7 @@ function RenderArray({ value }): string | null {
 }
 
 function RenderConditions({ conditions }) {
-  let strings = [];
+  let strings: Array<string> = [];
 
   if (typeof conditions === 'object') {
     const temperature_arrays = conditions.heating_temperature || [];
@@ -52,6 +52,9 @@ function RenderConditions({ conditions }) {
 
     const heating_atm = RenderArray({ value: conditions.heating_atmosphere });
     if (heating_atm !== null) strings.push('in ' + heating_atm);
+
+    if (conditions.mixing_device !== null) strings.push('using ' + conditions.mixing_device);
+    if (conditions.mixing_media !== null) strings.push('with ' + conditions.mixing_media);
   }
   return <span>{strings.join(', ')}</span>;
 }
