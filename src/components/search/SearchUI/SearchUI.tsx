@@ -111,12 +111,19 @@ export interface SearchUIProps {
   apiKey?: string;
 
   /**
-   * A noun in singular form to describe what a result represents (default: "result")
+   * A noun in singular form to describe what a result represents
    * e.g. "material"
    * Note that only some special plural mappings are handled automatically (e.g. battery -> batteries)
    * In all other cases, an "s" is appended to resultLabel
+   * @default "result"
    */
   resultLabel?: string;
+
+  /**
+   * Optionally include/exclude the top search bar
+   * @default true
+   */
+  hasSearchBar?: boolean;
 
   /**
    * Optionally add a help icon with a tooltip in the search bar
@@ -164,8 +171,15 @@ export interface SearchUIProps {
    * "toggle": render a button for toggling visibility of periodic table
    * "focus": show periodic table when input is focuses, hide on blur
    * "none": never show the periodic table for this input
+   * @default "toggle"
    */
   searchBarPeriodicTableMode?: PeriodicTableMode;
+
+  /**
+   * Optionally include/exclude the menu for dynamically controlling sort options
+   * @default true
+   */
+  hasSortMenu?: boolean;
 
   /**
    * Optionally include a field to sort by on initial load
@@ -178,12 +192,6 @@ export interface SearchUIProps {
    * True for ascending, False for descending
    */
   sortAscending?: boolean;
-
-  /**
-   * Optionally include/exclude the top search bar
-   * Defaults to true
-   */
-  hasSearchBar?: boolean;
 
   /**
    * List of conditions for styling rows based on a property (selector) and a value
@@ -226,6 +234,7 @@ export interface SearchUIProps {
    * you used for the type, then provide your custom view component as the value.
    * The view component should consume the SearchUIContext state using the useSearchUIContext hook.
    * See SearchUIDataTable or SearchUIDataCards for example view components.
+   * @default "table"
    */
   view?: SearchUIViewType;
 
@@ -290,6 +299,7 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 SearchUI.defaultProps = {
   view: SearchUIViewType.TABLE,
   resultLabel: 'results',
+  hasSortMenu: true,
   hasSearchBar: true,
   conditionalRowStyles: [],
   searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,

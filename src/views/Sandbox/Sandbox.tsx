@@ -4,7 +4,7 @@ import { BibFilter } from '../../components/search/BibFilter';
 import { CrossrefCard } from '../../components/search/CrossrefCard';
 import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
-import { OpenAccessLink } from '../../components/search/OpenAccessLink';
+import { OpenAccessButton } from '../../components/search/OpenAccessButton';
 import crossref from './crossref.json';
 
 /**
@@ -110,9 +110,9 @@ export const Sandbox: React.FC = () => {
         fetchOpenAccessUrl={true}
       />
       <BibjsonCard bibjsonEntry={bibjsonEntry} />
-      <OpenAccessLink doi="10.1103/PhysRevB.95.174110" showLoadingText>
+      <OpenAccessButton doi="10.1103/PhysRevB.95.174110" showLoadingText>
         PDF
-      </OpenAccessLink>
+      </OpenAccessButton>
       <BibFilter bibEntries={crossref.message} format="crossref" />
     </>
   );

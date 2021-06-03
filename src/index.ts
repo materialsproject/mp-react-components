@@ -24,7 +24,6 @@ import { BibCard } from './components/search/BibCard';
 import { BibtexButton } from './components/search/BibtexButton';
 import { CrossrefCard } from './components/search/CrossrefCard';
 import { OpenAccessButton } from './components/search/OpenAccessButton';
-import { OpenAccessLink } from './components/search/OpenAccessLink';
 
 export {
   SelectableTable,
@@ -42,6 +41,7 @@ export {
   // MtMaterialTable,
   Scrollspy,
   SearchUI,
+  MaterialsInput,
   DataTable,
   GlobalSearchBar,
   NavbarDropdown,
@@ -53,7 +53,6 @@ export {
   BibtexButton,
   CrossrefCard,
   OpenAccessButton,
-  OpenAccessLink,
   DownloadButton,
   DownloadDropdown,
 };

@@ -60,6 +60,8 @@ export interface MaterialsInputSharedProps {
 }
 
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
+  id?: string;
+  setProps?: (value: any) => any;
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
   hidePeriodicTable?: boolean;

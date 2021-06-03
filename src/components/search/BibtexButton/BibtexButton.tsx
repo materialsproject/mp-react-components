@@ -10,7 +10,7 @@ interface Props extends React.HTMLProps<HTMLAnchorElement> {
 export const BibtexButton: React.FC<Props> = (props) => {
   props = {
     className: 'button is-small',
-    children: 'Bibtex',
+    children: 'BibTeX',
     href: `https://www.doi2bib.org/bib/${props.doi}`,
     target: '_blank',
     ...props,

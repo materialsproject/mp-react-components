@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { linkOnClick } from '../../../utils/utils';
 import { MaterialsInput, MaterialsInputType } from '../MaterialsInput';
+import { PeriodicTableMode } from '../MaterialsInput/MaterialsInput';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -35,7 +36,7 @@ export const GlobalSearchBar: React.FC<Props> = (props) => {
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(inputType) => setSearchInputType(inputType)}
       onSubmit={handleSubmit}
-      periodicTableMode="toggle"
+      periodicTableMode={PeriodicTableMode.TOGGLE}
       hidePeriodicTable={props.hidePeriodicTable}
       autocompleteFormulaUrl={props.autocompleteFormulaUrl}
       autocompleteApiKey={props.apiKey}
