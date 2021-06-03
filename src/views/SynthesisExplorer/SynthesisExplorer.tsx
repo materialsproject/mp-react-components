@@ -28,6 +28,7 @@ export const SynthesisExplorer: React.FC = () => {
             : undefined
         }
         apiKey={undefined}
+        hasSortMenu={false}
         searchBarTooltip="Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
         searchBarAllowedInputTypesMap={{
           text: {

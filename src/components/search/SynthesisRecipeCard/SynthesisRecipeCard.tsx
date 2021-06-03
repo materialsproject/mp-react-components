@@ -129,7 +129,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
           <span className="mpc-synthesis-card-material-label">Precursor materials:&nbsp;</span>
           {props.data.precursors.map((p, i) => (
             <span key={i}>
-              <Link href={'/synthesis?formula=' + p.material_formula}>
+              <Link href={'/materials?formula=' + p.material_formula}>
                 {p.material_formula}
                 {i < props.data.precursors.length - 1 ? ', ' : ''}
               </Link>
@@ -139,6 +139,8 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
       </div>
 
       <Collapsible
+        className="mpc-synthesis-card-collapse"
+        openedClassName="mpc-synthesis-card-collapse"
         transitionTime={400}
         transitionCloseTime={400}
         triggerOpenedClassName="mpc-synthesis-card-collapse-opened"
