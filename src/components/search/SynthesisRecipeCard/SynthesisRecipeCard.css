@@ -37,6 +37,10 @@
   text-decoration: underline;
 }
 
+.mpc-synthesis-card-collapse {
+  margin-top: 0.5rem;
+}
+
 .mpc-synthesis-card-collapse-chevron {
   -moz-transition: all 400ms ease;
   -webkit-transition: all 400ms ease;
