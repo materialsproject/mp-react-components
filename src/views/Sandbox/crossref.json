@@ -4,6 +4,7 @@
   "message-version": "1.0.0",
   "message": [
     {
+      "openAccessUrl": "https://lbl.gov",
       "indexed": {
         "date-parts": [[2021, 4, 28]],
         "date-time": "2021-04-28T20:07:11Z",

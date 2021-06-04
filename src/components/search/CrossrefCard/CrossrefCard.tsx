@@ -109,6 +109,7 @@ export const CrossrefCard: React.FC<Props> = (props) => {
           journal={crossref && crossref.publisher}
           doi={crossref && crossref.DOI}
           fetchOpenAccessUrl={props.fetchOpenAccessUrl}
+          openAccessUrl={crossref && crossref.openAccessUrl}
         />
       ) : (
         <div id={props.id} className={props.className}>

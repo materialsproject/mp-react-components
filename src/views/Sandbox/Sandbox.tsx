@@ -93,6 +93,83 @@ export const Sandbox: React.FC = () => {
     },
   ];
 
+  const crossrefEntries = [
+    {
+      DOI: '10.1557/mrc.2016.29',
+      title: ['Frontiers in strain-engineered multifunctional ferroic materials'],
+      author: [
+        {
+          given: 'Joshua C.',
+          family: 'Agar',
+          sequence: 'first',
+          affiliation: [],
+        },
+        {
+          given: 'Shishir',
+          family: 'Pandya',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Ruijuan',
+          family: 'Xu',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Ajay K.',
+          family: 'Yadav',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Zhiqi',
+          family: 'Liu',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Thomas',
+          family: 'Angsten',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Sahar',
+          family: 'Saremi',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Mark',
+          family: 'Asta',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'R.',
+          family: 'Ramesh',
+          sequence: 'additional',
+          affiliation: [],
+        },
+        {
+          given: 'Lane W.',
+          family: 'Martin',
+          sequence: 'additional',
+          affiliation: [],
+        },
+      ],
+      created: {
+        'date-parts': [[2016, 8, 18]],
+        'date-time': '2016-08-18T10:25:31Z',
+        timestamp: 1471515931000,
+      },
+      publisher: 'Springer Science and Business Media LLC',
+      openAccessUrl:
+        'https://www.cambridge.org/core/services/aop-cambridge-core/content/view/95E71B1B18C06C02A60359A580051DA3/S215968591600029Xa.pdf/div-class-title-frontiers-in-strain-engineered-multifunctional-ferroic-materials-div.pdf',
+    },
+  ];
+
   return (
     <>
       <h1 className="title">Sandbox</h1>
@@ -113,7 +190,7 @@ export const Sandbox: React.FC = () => {
       <OpenAccessButton doi="10.1103/PhysRevB.95.174110" showLoadingText>
         PDF
       </OpenAccessButton>
-      <BibFilter bibEntries={crossref.message} format="crossref" />
+      <BibFilter bibEntries={crossrefEntries} format="crossref" />
     </>
   );
 };
