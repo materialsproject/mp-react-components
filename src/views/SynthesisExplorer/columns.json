@@ -6,7 +6,7 @@
     "unit": "",
     "conversionFactor": 0,
     "nameString": "DOI",
-    "abbreviateNearZero": "doi",
+    "abbreviateNearZero": false,
     "hidden": true
   }
 ]
