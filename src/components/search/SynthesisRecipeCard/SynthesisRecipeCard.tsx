@@ -4,6 +4,7 @@ import Collapsible from 'react-collapsible';
 import './SynthesisRecipeCard.css';
 import { Link } from '../../navigation/Link';
 import { FaChevronDown } from 'react-icons/all';
+import { validateFormula } from '../MaterialsInput/utils';
 
 interface Props {
   id?: string;
@@ -107,6 +108,30 @@ function RenderParagraphOrHighlight(props) {
   );
 }
 
+function RenderMaterialWithLink({ material, is_last }) {
+  let link;
+  if (validateFormula(material.material_formula) !== null) {
+    link = '/materials?formula=' + material.material_formula;
+  } else {
+    let elements: Array<string> = [];
+    material.composition.forEach((x) => {
+      Object.keys(x.elements).forEach((y) => {
+        elements.indexOf(y) === -1 && elements.push(y);
+      });
+    });
+    link = '/materials?formula=' + elements.join('-');
+  }
+
+  return (
+    <span>
+      <Link href={link}>
+        {material.material_formula}
+        {!is_last ? ', ' : ''}
+      </Link>
+    </span>
+  );
+}
+
 export const SynthesisRecipeCard: React.FC<Props> = (props) => {
   return (
     <div className={classNames('mpc-synthesis-card box', props.className)}>
@@ -125,21 +150,18 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
       <div style={{ marginTop: '0.5rem' }}>
         <p>
           <span className="mpc-synthesis-card-material-label">Target material:&nbsp;</span>
-          <Link href={'/materials?formula=' + props.data.target.material_formula}>
-            {props.data.target.material_formula}
-          </Link>
+          <RenderMaterialWithLink material={props.data.target} is_last={false} />
         </p>
       </div>
       <div>
         <p>
           <span className="mpc-synthesis-card-material-label">Precursor materials:&nbsp;</span>
           {props.data.precursors.map((p, i) => (
-            <span key={i}>
-              <Link href={'/materials?formula=' + p.material_formula}>
-                {p.material_formula}
-                {i < props.data.precursors.length - 1 ? ', ' : ''}
-              </Link>
-            </span>
+            <RenderMaterialWithLink
+              key={i}
+              material={p}
+              is_last={i >= props.data.precursors.length - 1}
+            />
           ))}
         </p>
       </div>
