@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import {
-  arrayToDelimitedString,
   crystalSystemOptions,
   formatFormula,
   formatPointGroup,
@@ -9,26 +8,14 @@ import {
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions,
 } from '../utils';
-import {
-  ActiveFilter,
-  Column,
-  ColumnFormat,
-  FilterGroup,
-  FilterType,
-  SearchState,
-  SearchUIViewTypeMap,
-} from './types';
+import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchState } from './types';
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../MaterialsInput';
 import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/utils';
-import { useMediaQuery } from 'react-responsive';
 import { SearchUIProps } from '.';
-import { MaterialsInputBox } from '../MaterialsInput/MaterialsInputBox';
-import { SynthesisRecipeCard } from '../SynthesisRecipeCard';
-import { SearchUIDataTable } from './SearchUIDataTable';
-import { SearchUIDataCards } from './SearchUIDataCards';
-import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
+import ReactTooltip from 'react-tooltip';
+import { v4 as uuidv4 } from 'uuid';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -44,7 +31,7 @@ const emptyCellPlaceholder = '-';
  * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
  * that will specify how many decimals or figures to apply to the format.
  */
-const initColumns = (columns: Column[]) => {
+export const initColumns = (columns: Column[]) => {
   return columns.map((c) => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
     c.nameString = c.name.toString();
@@ -149,6 +136,36 @@ const initColumns = (columns: Column[]) => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return formatPointGroup(rowValue);
+        };
+        return c;
+      case ColumnFormat.ARRAY:
+        c.cell = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          if (Array.isArray(rowValue)) {
+            return (
+              <div className="chip-container">
+                {rowValue.map((item, i) => {
+                  const tooltipId = uuidv4();
+                  return (
+                    <div key={i}>
+                      <div className="chip button is-rounded" data-tip data-for={tooltipId}>
+                        {item}
+                      </div>
+                      {c.hasOwnProperty('arrayTooltipsKey') &&
+                        row.hasOwnProperty(c.arrayTooltipsKey) &&
+                        row[c.arrayTooltipsKey][i] && (
+                          <ReactTooltip id={tooltipId} effect="solid">
+                            <span>{row[c.arrayTooltipsKey][i]}</span>
+                          </ReactTooltip>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          } else {
+            return rowValue;
+          }
         };
         return c;
       default:
