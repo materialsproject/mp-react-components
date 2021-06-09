@@ -102,6 +102,7 @@ export enum ColumnFormat {
   BOOLEAN_CLASS = 'BOOLEAN_CLASS', // formatArg: class name string to add to element within cell
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
+  ARRAY = 'ARRAY',
 }
 
 export enum SearchUIViewType {

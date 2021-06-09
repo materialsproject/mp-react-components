@@ -6,6 +6,7 @@ import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
 import { OpenAccessButton } from '../../components/search/OpenAccessButton';
 import crossref from './crossref.json';
+import { DataBlock } from '../../components/search/DataBlock';
 
 /**
  * View for testing out small new components
@@ -182,7 +183,7 @@ export const Sandbox: React.FC = () => {
       <CrossrefCard
         className="box"
         crossrefEntry={crossref.message[0]}
-        doi="110.1039/c5ta10330d"
+        identifier="110.1039/c5ta10330d"
         errorMessage="Error"
         fetchOpenAccessUrl={true}
       />
@@ -190,7 +191,49 @@ export const Sandbox: React.FC = () => {
       <OpenAccessButton doi="10.1103/PhysRevB.95.174110" showLoadingText>
         PDF
       </OpenAccessButton>
-      <BibFilter bibEntries={crossrefEntries} format="crossref" />
+      <DataBlock
+        className="box"
+        columns={[
+          {
+            name: 'Material ID',
+            selector: 'material_id',
+            format: 'LINK',
+            formatArg: '/materials/',
+          },
+          {
+            name: 'Formula',
+            selector: 'formula_pretty',
+            format: 'FORMULA',
+          },
+          {
+            name: 'Volume',
+            selector: 'volume',
+            format: 'FIXED_DECIMAL',
+            formatArg: 2,
+          },
+          {
+            name: 'Data',
+            selector: 'data',
+            format: 'ARRAY',
+            arrayTooltipsKey: 'dataTooltips',
+          },
+          {
+            name: 'Tables',
+            selector: 'tables',
+            format: 'ARRAY',
+            arrayTooltipsKey: 'tablesTooltips',
+          },
+        ]}
+        data={{
+          material_id: 'mp-777',
+          formula_pretty: 'MnO2',
+          volume: 34.88345346,
+          data: [1, 2, 3, 1, 2, 3, 1, 2, 3],
+          dataTooltips: ['test', 'test', 'test', 'test'],
+          tables: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
+          tablesTooltips: ['test', 'test'],
+        }}
+      />
     </>
   );
 };

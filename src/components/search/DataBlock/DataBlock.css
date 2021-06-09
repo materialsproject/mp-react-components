@@ -1,0 +1,49 @@
+.mpc-data-block-caret-container {
+  /* padding-bottom: 0.5rem; */
+  padding-top: 0.5rem;
+  margin-left: 1.25rem;
+}
+
+.mpc-data-block-caret {
+  height: 2rem;
+  width: 2rem;
+}
+
+.mpc-data-block-top {
+  display: flex;
+}
+
+.mpc-data-block-top .mpc-data-block-item-container {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.mpc-data-block-top .mpc-data-block-item:not(:first-child) {
+  padding-left: 2rem;
+}
+
+.chip-container {
+  display: flex;
+}
+
+.chip {
+  font-size: 0.75rem;
+}
+
+.chip-container > *:not(:first-child) {
+  margin-left: 0.25rem;
+}
+
+.mpc-data-block-top .chip-container {
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.mpc-data-block-bottom .mpc-data-block-item:not(:last-child) {
+  margin-bottom: 1rem;
+}
