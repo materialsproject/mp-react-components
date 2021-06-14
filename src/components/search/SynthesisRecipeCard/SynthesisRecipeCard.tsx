@@ -3,7 +3,7 @@ import React from 'react';
 import Collapsible from 'react-collapsible';
 import './SynthesisRecipeCard.css';
 import { Link } from '../../navigation/Link';
-import { FaChevronDown } from 'react-icons/all';
+import { FaChevronDown } from 'react-icons/fa';
 import { validateFormula } from '../MaterialsInput/utils';
 
 interface Props {

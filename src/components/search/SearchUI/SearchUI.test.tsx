@@ -16,6 +16,7 @@ jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});
 jest.mock('../Select/Select.css', () => {});
 jest.mock('../ActiveFilterButtons/ActiveFilterButtons.css', () => {});
 jest.mock('../DataCard/DataCard.css', () => {});
+jest.mock('../SynthesisRecipeCard/SynthesisRecipeCard.css', () => {});
 jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
 jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
