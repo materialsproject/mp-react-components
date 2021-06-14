@@ -16,6 +16,7 @@ import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/util
 import { SearchUIProps } from '.';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
+import { FaDownload } from 'react-icons/fa';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -31,7 +32,7 @@ const emptyCellPlaceholder = '-';
  * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
  * that will specify how many decimals or figures to apply to the format.
  */
-export const initColumns = (columns: Column[]) => {
+export const initColumns = (columns: Column[]): Column[] => {
   return columns.map((c) => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
     c.nameString = c.name.toString();
@@ -87,9 +88,20 @@ export const initColumns = (columns: Column[]) => {
         return c;
       case ColumnFormat.LINK:
         c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row) + '/';
-          const path = c.formatArg ? c.formatArg + rowValue : rowValue;
-          return <Link href={path}>{row[c.selector]}</Link>;
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const url =
+            c.formatOptions && c.formatOptions.baseUrl
+              ? new URL(rowValue, c.formatOptions.baseUrl).href
+              : rowValue;
+          return (
+            <Link
+              href={url}
+              onClick={(e) => e.stopPropagation()}
+              target={c.formatOptions && c.formatOptions.target}
+            >
+              {row[c.selector]}
+            </Link>
+          );
         };
         return c;
       case ColumnFormat.BOOLEAN:
@@ -143,19 +155,38 @@ export const initColumns = (columns: Column[]) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           if (Array.isArray(rowValue)) {
             return (
-              <div className="chip-container">
+              <div className="tags">
                 {rowValue.map((item, i) => {
                   const tooltipId = uuidv4();
                   return (
-                    <div key={i}>
-                      <div className="chip button is-rounded" data-tip data-for={tooltipId}>
-                        {item}
-                      </div>
-                      {c.hasOwnProperty('arrayTooltipsKey') &&
-                        row.hasOwnProperty(c.arrayTooltipsKey) &&
-                        row[c.arrayTooltipsKey][i] && (
+                    <div key={i} className="tag">
+                      {c.hasOwnProperty('formatOptions') &&
+                      c.formatOptions.hasOwnProperty('arrayLinksKey') &&
+                      row.hasOwnProperty(c.formatOptions.arrayLinksKey) &&
+                      row[c.formatOptions.arrayLinksKey][i] ? (
+                        <a
+                          href={row[c.formatOptions.arrayLinksKey][i]}
+                          target="_blank"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          data-tip
+                          data-for={tooltipId}
+                        >
+                          {c.formatOptions.arrayLinksDownload && <FaDownload className="mr-1" />}
+                          {item}
+                        </a>
+                      ) : (
+                        <div data-tip data-for={tooltipId}>
+                          {item}
+                        </div>
+                      )}
+                      {c.hasOwnProperty('formatOptions') &&
+                        c.formatOptions.hasOwnProperty('arrayTooltipsKey') &&
+                        row.hasOwnProperty(c.formatOptions.arrayTooltipsKey) &&
+                        row[c.formatOptions.arrayTooltipsKey][i] && (
                           <ReactTooltip id={tooltipId} effect="solid">
-                            <span>{row[c.arrayTooltipsKey][i]}</span>
+                            <span>{row[c.formatOptions.arrayTooltipsKey][i]}</span>
                           </ReactTooltip>
                         )}
                     </div>

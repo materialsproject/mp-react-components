@@ -13,12 +13,27 @@
   display: flex;
 }
 
+.mpc-data-block-top.expanded {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.mpc-data-block.box .mpc-data-block-top {
+  padding: 1.25rem;
+  margin: -1.25rem;
+}
+
+.mpc-data-block.box .mpc-data-block-top.expanded {
+  margin-bottom: 1.25rem;
+}
+
 .mpc-data-block-top .mpc-data-block-item-container {
   flex: 1;
   display: flex;
   justify-content: space-between;
   max-width: 100%;
-  overflow: auto;
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -26,22 +41,11 @@
   padding-left: 2rem;
 }
 
-.chip-container {
-  display: flex;
-}
-
-.chip {
-  font-size: 0.75rem;
-}
-
-.chip-container > *:not(:first-child) {
-  margin-left: 0.25rem;
-}
-
-.mpc-data-block-top .chip-container {
+.mpc-data-block-top .tags {
   max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
+  flex-wrap: nowrap;
 }
 
 .mpc-data-block-bottom .mpc-data-block-item:not(:last-child) {
