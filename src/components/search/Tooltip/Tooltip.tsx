@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
-import { default as ReactSelect } from 'react-select';
-import './Select.css';
-import classNames from 'classnames';
+import React from 'react';
 import ReactTooltip, { Effect, Place, Type } from 'react-tooltip';
 
 /**
- * Wrapper component for react-select
- * Automatically adds the wrapper class "react-select-container"
- * and the class prefix "react-select-" to all the elements created by react-select
+ * Wrapper component for react-tooltip
  */
 
 interface Props {
