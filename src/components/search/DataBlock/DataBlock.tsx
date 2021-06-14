@@ -24,10 +24,15 @@ const getColumnsFromKeys = (data: object): Column[] => {
 };
 
 export const DataBlock: React.FC<Props> = (props) => {
-  const [columns, setColumns] = useState(() =>
-    props.columns ? initColumns(props.columns) : getColumnsFromKeys(props.data)
+  const [columns, setColumns] = useState(() => {
+    return props.columns ? initColumns(props.columns) : getColumnsFromKeys(props.data);
+  });
+  const [topColumns, setTopColumns] = useState(() =>
+    columns.filter((c) => !c.hidden && !c.hiddenTop)
   );
-  const [bottomColumns, setBottomColumns] = useState(() => columns);
+  const [bottomColumns, setBottomColumns] = useState(() =>
+    columns.filter((c) => !c.hidden && !c.hiddenBottom)
+  );
   const [expanded, setExpanded] = useState(false);
 
   const columnItem = (c: Column) => (
@@ -45,8 +50,15 @@ export const DataBlock: React.FC<Props> = (props) => {
 
   return (
     <div className={classNames('mpc-data-block', props.className)}>
-      <div className="mpc-data-block-top" onClick={() => setExpanded(!expanded)}>
-        <div className="mpc-data-block-item-container">{columns.map((c, i) => columnItem(c))}</div>
+      <div
+        className={classNames('mpc-data-block-top', {
+          expanded: expanded,
+        })}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="mpc-data-block-item-container">
+          {topColumns.map((c, i) => columnItem(c))}
+        </div>
         <div className="mpc-data-block-caret-container">
           {!expanded && <FaCaretRight className="mpc-data-block-caret" />}
           {expanded && <FaCaretDown className="mpc-data-block-caret" />}

@@ -69,6 +69,10 @@ export interface Column {
   abbreviateNearZero?: boolean;
   /** Hides column from table AND column selector but includes in data */
   hidden?: boolean;
+  /** Hides column from table AND column selector but includes in data */
+  hiddenTop?: boolean;
+  /** Hides column from table AND column selector but includes in data */
+  hiddenBottom?: boolean;
   [id: string]: any;
 }
 
