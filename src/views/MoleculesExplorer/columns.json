@@ -1,9 +1,11 @@
 [
   {
-    "name": "Molecule Id",
+    "name": "Molecule ID",
     "selector": "task_id",
     "format": "LINK",
-    "formatArg": "/molecules/"
+    "formatOptions": {
+      "baseUrl": "/molecules/"
+    }
   },
   {
     "name": "Formula",
@@ -23,7 +25,9 @@
     "name": "Electron Affinity",
     "selector": "EA",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "eV",
     "right": true
   },
@@ -31,7 +35,9 @@
     "name": "Ionization Energy",
     "selector": "IE",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "eV",
     "right": true
   },

@@ -45,6 +45,7 @@
     "d3": "^5.15.0",
     "less-loader": "^6.2.0",
     "msw": "^0.25.0",
+    "path-browserify": "^1.0.1",
     "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "querystring": "^0.2.0",

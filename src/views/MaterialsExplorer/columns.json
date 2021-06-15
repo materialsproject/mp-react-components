@@ -3,17 +3,21 @@
     "name": "Synthesizable",
     "selector": "theoretical",
     "format": "BOOLEAN_CLASS",
-    "formatArg": ["", "fas fa-star"],
-    "cellTooltip": "Is synthesizable",
+    "formatOptions": {
+      "truthyClass": "",
+      "falsyClass": "fas fa-star"
+    },
+    "cellTooltip": "Experimentally observed",
     "hideName": true,
-    "width": "30px",
-    "center": true
+    "width": "30px"
   },
   {
     "name": "Material ID",
     "selector": "material_id",
     "format": "LINK",
-    "formatArg": "/materials/",
+    "formatOptions": {
+      "baseUrl": "/materials/"
+    },
     "minWidth": "130px"
   },
   {
@@ -40,7 +44,9 @@
     "name": "Volume",
     "selector": "volume",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "\u00c5\u00b3",
     "omit": true,
     "right": true
@@ -49,7 +55,9 @@
     "name": "Density",
     "selector": "density",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "cm\u00b3",
     "omit": true,
     "right": true
@@ -63,7 +71,9 @@
     "name": "Energy Above Hull",
     "selector": "energy_above_hull",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "meV/atom",
     "conversionFactor": 1000,
     "abbreviateNearZero": true,
@@ -73,7 +83,9 @@
     "name": "Formation Energy",
     "selector": "formation_energy_per_atom",
     "format": "SIGNIFICANT_FIGURES",
-    "formatArg": 3,
+    "formatOptions": {
+      "sigFigs": 3
+    },
     "units": "eV/atom",
     "omit": true,
     "right": true
@@ -82,7 +94,10 @@
     "name": "Predicted Stable",
     "selector": "is_stable",
     "format": "BOOLEAN",
-    "formatArg": ["yes", "no"],
+    "formatOptions": {
+      "truthyLabel": "yes",
+      "falsyLabel": "no"
+    },
     "omit": true,
     "right": false
   },
@@ -95,14 +110,18 @@
     "name": "Max Magnetic Moment",
     "selector": "total_magnetization",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true
   },
   {
     "name": "Bulk Modulus, Voigt",
     "selector": "k_voigt",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -111,7 +130,9 @@
     "name": "Bulk Modulus, Reuss",
     "selector": "k_reuss",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -120,7 +141,9 @@
     "name": "Bulk Modulus, VRH",
     "selector": "k_vrh",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -129,7 +152,9 @@
     "name": "Shear Modulus, Voigt",
     "selector": "g_voigt",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -138,7 +163,9 @@
     "name": "Shear Modulus, Reuss",
     "selector": "g_reuss",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -147,7 +174,9 @@
     "name": "Shear Modulus, VRH",
     "selector": "g_vrh",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "GPa",
     "omit": true,
     "right": true
@@ -156,7 +185,9 @@
     "name": "Elastic Anisotropy",
     "selector": "universal_anisotropy",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -164,7 +195,9 @@
     "name": "Weighted Surface Energy",
     "selector": "weighted_surface_energy",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "J/m\u00b2",
     "omit": true,
     "right": true
@@ -173,7 +206,9 @@
     "name": "Surface Anisotropy",
     "selector": "surface_anisotropy",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -181,7 +216,9 @@
     "name": "Shape Factor",
     "selector": "shape_factor",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -189,7 +226,9 @@
     "name": "Work Function",
     "selector": "weighted_work_function",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -197,7 +236,9 @@
     "name": "Piezoelectric Modulus",
     "selector": "e_ij_max",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "units": "C/m\u00b2",
     "omit": true,
     "right": true
@@ -206,7 +247,9 @@
     "name": "Total Dielectric Constant",
     "selector": "e_total",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -214,7 +257,9 @@
     "name": "Ionic Dielectric Constant",
     "selector": "e_ionic",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   },
@@ -222,7 +267,9 @@
     "name": "Static Dielectric Constant",
     "selector": "e_static",
     "format": "FIXED_DECIMAL",
-    "formatArg": 2,
+    "formatOptions": {
+      "decimals": 2
+    },
     "omit": true,
     "right": true
   }

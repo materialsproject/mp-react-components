@@ -17,6 +17,7 @@ import { SearchUIProps } from '.';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { FaDownload } from 'react-icons/fa';
+import { joinUrl } from '../../../utils/utils';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -48,15 +49,19 @@ export const initColumns = (columns: Column[]): Column[] => {
         {c.units && <div className="column-units">({c.units})</div>}
       </div>
     );
+
+    const hasFormatOptions = c.hasOwnProperty('formatOptions');
+
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
-        const decimalPlaces = c.formatArg ? c.formatArg : 2;
+        const decimalPlaces =
+          hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const numValue = parseFloat(rowValue);
           const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
           const min = Math.pow(10, -decimalPlaces);
-          if (c.abbreviateNearZero) {
+          if (hasFormatOptions && c.formatOptions.abbreviateNearZero) {
             if (value === 0 || value >= min) {
               return value.toFixed(decimalPlaces);
             } else if (value < min) {
@@ -71,7 +76,7 @@ export const initColumns = (columns: Column[]): Column[] => {
         c.right = true;
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
-        const sigFigs = c.formatArg ? c.formatArg : 5;
+        const sigFigs = hasFormatOptions && c.formatOptions.sigFigs ? c.formatOptions.sigFigs : 5;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const numValue = parseFloat(rowValue);
@@ -91,7 +96,7 @@ export const initColumns = (columns: Column[]): Column[] => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const url =
             c.formatOptions && c.formatOptions.baseUrl
-              ? new URL(rowValue, c.formatOptions.baseUrl).href
+              ? joinUrl(c.formatOptions.baseUrl, rowValue)
               : rowValue;
           return (
             <Link
@@ -105,18 +110,20 @@ export const initColumns = (columns: Column[]): Column[] => {
         };
         return c;
       case ColumnFormat.BOOLEAN:
-        var hasCustomLabels = c.formatArg && Array.isArray(c.formatArg);
-        var truthyLabel = hasCustomLabels ? c.formatArg[0] : 'true';
-        var falsyLabel = hasCustomLabels ? c.formatArg[1] : 'false';
+        var truthyLabel =
+          hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
+        var falsyLabel =
+          hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return rowValue ? truthyLabel : falsyLabel;
         };
         return c;
       case ColumnFormat.BOOLEAN_CLASS:
-        var hasCustomClasses = c.formatArg && Array.isArray(c.formatArg);
-        var truthyClass = hasCustomClasses && c.formatArg[0] ? c.formatArg[0] : '';
-        var falsyClass = hasCustomClasses && c.formatArg[1] ? c.formatArg[1] : '';
+        var truthyClass =
+          hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
+        var falsyClass =
+          hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return (

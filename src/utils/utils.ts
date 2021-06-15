@@ -1,10 +1,13 @@
-const arrayToDictionnary = (array: any[], dicoValue: any = true) =>
-  array.reduce((acc, el) => {
+import path from 'path-browserify';
+
+export const arrayToDictionnary = (array: any[], dicoValue: any = true) => {
+  return array.reduce((acc, el) => {
     acc[el] = dicoValue;
     return acc;
   }, {});
+};
 
-const lightenDarkenColor = (col: string, amt: number) => {
+export const lightenDarkenColor = (col: string, amt: number) => {
   let usePound = false;
 
   if (col[0] == '#') {
@@ -38,11 +41,24 @@ export const linkOnClick = (event, href) => {
   // prevent full page reload
   event.preventDefault();
   // update url
-  window.history.pushState({}, "", href);
+  window.history.pushState({}, '', href);
 
   // communicate to Routes that URL has changed
   const navEvent = new PopStateEvent('popstate');
   window.dispatchEvent(navEvent);
 };
 
-export { arrayToDictionnary, lightenDarkenColor };
+/**
+ * Join a base url or path with another url or path fragment.
+ * Can be used to generate relative or absolute href values for links.
+ * @param base the first part of the path string
+ * @param rest the second part of the path to join with the base
+ * @returns a single valid url or path
+ */
+export const joinUrl = (base, rest) => {
+  if (base.indexOf('http://') === 0 || base.indexOf('https://') === 0) {
+    return new URL(rest, base).href;
+  } else {
+    return path.join(base, rest);
+  }
+};

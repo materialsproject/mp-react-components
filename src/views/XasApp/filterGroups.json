@@ -6,6 +6,7 @@
       {
         "name": "Edge",
         "id": "edge",
+        "tooltip": "The interaction edge for the spectra",
         "type": "SELECT",
         "props": {
           "options": [
@@ -14,15 +15,15 @@
               "value": "K"
             },
             {
-              "label": "L2-edge",
+              "label": "L₂-edge",
               "value": "L2"
             },
             {
-              "label": "L3-edge",
+              "label": "L₃-edge",
               "value": "L3"
             },
             {
-              "label": "L23-edge",
+              "label": "L₂₃-edge",
               "value": "L2,3"
             }
           ],
@@ -31,29 +32,57 @@
         }
       },
       {
+        "name": "Spectrum Type",
+        "id": "spectrum_type",
+        "type": "SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "XANES",
+              "value": "XANES"
+            },
+            {
+              "label": "EXAFS",
+              "value": "EXAFS"
+            },
+            {
+              "label": "XAFS",
+              "value": "XAFS"
+            }
+          ],
+          "isClearable": false
+        }
+      },
+      {
         "name": "Absorbing Element",
         "id": "absorbing_element",
+        "tooltip": "Enter one element symbol to find spectra with that element as their absorbing element.",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "absorbing_element",
+          "inputType": "elements",
+          "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid element symbol"
         }
       },
       {
         "name": "Other Elements",
         "id": "elements",
+        "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find spectra for materials that contain certain elements in their formula. Select the checkbox to find materials that contain only the elements you have entered.",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "elements",
+          "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
         }
       },
       {
         "name": "Formula",
         "id": "formula",
+        "tooltip": "Enter a chemical formula to find spectra for materials with this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "formula",
+          "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
       }

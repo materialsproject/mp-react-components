@@ -1,9 +1,11 @@
 [
   {
     "name": "Material ID",
-    "selector": "task_id",
+    "selector": "material_id",
     "format": "LINK",
-    "formatArg": "/materials/",
+    "formatOptions": {
+      "baseUrl": "/materials/"
+    },
     "minWidth": "150px"
   },
   {
@@ -24,12 +26,8 @@
     "selector": "spectrum_type"
   },
   {
-    "name": "xas_id",
-    "selector": "xas_id"
-  },
-  {
-    "name": "xas_ids",
-    "selector": "xas_ids"
+    "name": "Spectrum ID",
+    "selector": "spectrum_id"
   },
   {
     "name": "spectrum",
