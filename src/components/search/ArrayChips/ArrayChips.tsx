@@ -12,7 +12,7 @@ interface Props {
   chips: string[] | number[];
   chipTooltips?: string[];
   chipLinks?: string[];
-  chipType?: 'normal' | 'publication';
+  chipType?: 'normal' | 'publications' | 'dynamic-publications';
   showDownloadIcon?: boolean;
 }
 
@@ -25,12 +25,30 @@ export const ArrayChips: React.FC<Props> = ({ chipType = 'normal', ...otherProps
         const tooltip = props.chipTooltips && props.chipTooltips[i] && (
           <Tooltip id={tooltipId}>{props.chipTooltips[i]}</Tooltip>
         );
-        if (props.chipLinks && props.chipLinks[i] && props.chipType === 'normal') {
+
+        const isLink = props.chipLinks && props.chipLinks[i];
+        let isPublicationButton = isLink && props.chipType === 'publications';
+        if (isLink && props.chipType === 'dynamic-publications') {
+          isPublicationButton = props.chipLinks![i].indexOf('https://doi.org/') === 0;
+        }
+
+        if (isPublicationButton) {
+          return (
+            <PublicationButton
+              key={`array-chip-${i}-${item}`}
+              className="tag"
+              url={props.chipLinks![i]}
+            >
+              {item}
+              {tooltip}
+            </PublicationButton>
+          );
+        } else if (isLink) {
           return (
             <a
               key={`array-chip-${i}-${item}`}
               className="tag"
-              href={props.chipLinks[i]}
+              href={props.chipLinks![i]}
               target="_blank"
               onClick={(e) => e.stopPropagation()}
               data-tip
@@ -40,17 +58,6 @@ export const ArrayChips: React.FC<Props> = ({ chipType = 'normal', ...otherProps
               {item}
               {tooltip}
             </a>
-          );
-        } else if (props.chipLinks && props.chipLinks[i] && props.chipType === 'publication') {
-          return (
-            <PublicationButton
-              key={`array-chip-${i}-${item}`}
-              className="tag"
-              url={props.chipLinks[i]}
-            >
-              {item}
-              {tooltip}
-            </PublicationButton>
           );
         } else {
           return (
