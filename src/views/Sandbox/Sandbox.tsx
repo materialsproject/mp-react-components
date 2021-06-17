@@ -4,7 +4,7 @@ import { BibFilter } from '../../components/search/BibFilter';
 import { CrossrefCard } from '../../components/search/CrossrefCard';
 import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
-import { OpenAccessButton } from '../../components/search/OpenAccessButton';
+import { PublicationButton } from '../../components/publications/PublicationButton';
 import crossref from './crossref.json';
 import { DataBlock } from '../../components/search/DataBlock';
 import { NavbarDropdown } from '../../components/navigation/NavbarDropdown';
@@ -186,10 +186,15 @@ export const Sandbox: React.FC = () => {
         errorMessage="Error"
         fetchOpenAccessUrl={true}
       />
+      <CrossrefCard
+        className="box"
+        crossrefEntry={crossref.message[0]}
+        identifier="110.1039/c5ta10330d"
+        errorMessage="Error"
+        fetchOpenAccessUrl={true}
+      />
       <BibjsonCard bibjsonEntry={bibjsonEntry} />
-      <OpenAccessButton doi="10.1103/PhysRevB.95.174110" showLoadingText>
-        PDF
-      </OpenAccessButton>
+      <PublicationButton doi="10.1103/PhysRevB.95.174110">PDF</PublicationButton>
       <DataBlock
         className="box"
         columns={[
@@ -244,44 +249,7 @@ export const Sandbox: React.FC = () => {
           material_id: 'mp-777',
           formula_pretty: 'MnO2 MnO2 MnO2 MnO2 MnO2 MnO2',
           volume: 34.88345346,
-          data: [
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3,
-            1,
-            2,
-            3
-          ],
+          data: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
           dataTooltips: ['test test test test test test test test test', 'test', 'test', 'test'],
           tables: [1, 2, 3],
           tablesTooltips: ['test', 'test'],

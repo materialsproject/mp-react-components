@@ -1,10 +1,13 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
+import { FaBook } from 'react-icons/fa';
+import { Tooltip } from '../../search/Tooltip';
 import openAccessButtonLogo from './oab_color.png';
-import './OpenAccessButton.css';
+import { v4 as uuidv4 } from 'uuid';
+import './PublicationButton.css';
 
-export interface OpenAccessButtonProps extends React.HTMLProps<HTMLAnchorElement> {
+interface Props {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -49,14 +52,11 @@ export interface OpenAccessButtonProps extends React.HTMLProps<HTMLAnchorElement
  * If no url prop is supplied, a PDF link will be fetched
  * from the Open Access Button API using the doi prop.
  */
-export const OpenAccessButton: React.FC<OpenAccessButtonProps> = ({
-  className = 'button is-small',
-  target = '_blank',
-  ...otherProps
-}) => {
-  const props = { className, target, ...otherProps };
+export const PublicationButton: React.FC<Props> = ({ target = '_blank', ...otherProps }) => {
+  const props = { target, ...otherProps };
   const [openAccessUrl, setOpenAccessUrl] = useState<string | undefined>(props.url);
   const [failedRequest, setFailedRequest] = useState(false);
+  const tooltipId = uuidv4();
 
   useEffect(() => {
     if (!openAccessUrl && props.doi) {
@@ -77,25 +77,30 @@ export const OpenAccessButton: React.FC<OpenAccessButtonProps> = ({
   }, []);
 
   return (
-    <>
+    <span className="mpc-publication-button tag tags has-addons">
+      <a className="tag" href={'https://doi.org/' + props.doi} target="_blank">
+        <FaBook />
+        &nbsp;Publication
+      </a>
       {!failedRequest ? (
         <a
           id={props.id}
           target={props.target}
           href={openAccessUrl}
-          className={classNames('mpc-open-access-button', props.className, {
-            'is-loading': !openAccessUrl && !props.showLoadingText,
+          className={classNames('tag mpc-open-access-button', {
+            'is-loading': !openAccessUrl && !props.showLoadingText
           })}
+          data-tip
+          data-for={tooltipId}
         >
           {openAccessUrl || !props.showLoadingText ? (
-            <span>
-              <img src={openAccessButtonLogo} alt="Open Access PDF" /> <span>Open Access</span>
-            </span>
+            <img src={openAccessButtonLogo} alt="Open Access PDF" />
           ) : (
             'Loading...'
           )}
+          <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
         </a>
       ) : null}
-    </>
+    </span>
   );
 };

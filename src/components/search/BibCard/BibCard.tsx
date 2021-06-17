@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
+import { PublicationButton } from '../../publications/PublicationButton';
 import { BibtexButton } from '../BibtexButton';
-import { OpenAccessButton } from '../OpenAccessButton';
 import './BibCard.css';
 
 interface Props {
@@ -38,18 +38,14 @@ export const BibCard: React.FC<Props> = (props) => {
   }
 
   return (
-    <div
-      id={props.id}
-      data-testid="bib-card"
-      className={classNames('mpc-bib-card', props.className)}
-    >
+    <div id={props.id} data-testid="bib-card" className={classNames('mpc-bib-card', props.className)}>
       <div className="mpc-bib-card-top">
         <p className="mpc-bib-card-title">{title}</p>
         {props.doi && (
           <div className="mpc-bib-card-buttons">
             {publicationButton}
             {(props.fetchOpenAccessUrl || props.openAccessUrl) && (
-              <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
+              <PublicationButton doi={props.doi} url={props.openAccessUrl} />
             )}
             <BibtexButton doi={props.doi} />
           </div>
