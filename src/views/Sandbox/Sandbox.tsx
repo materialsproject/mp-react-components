@@ -1,7 +1,7 @@
 import React from 'react';
-import { BibjsonCard } from '../../components/search/BibjsonCard';
-import { BibFilter } from '../../components/search/BibFilter';
-import { CrossrefCard } from '../../components/search/CrossrefCard';
+import { BibjsonCard } from '../../components/publications/BibjsonCard';
+import { BibFilter } from '../../components/publications/BibFilter';
+import { CrossrefCard } from '../../components/publications/CrossrefCard';
 import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
 import { PublicationButton } from '../../components/publications/PublicationButton';

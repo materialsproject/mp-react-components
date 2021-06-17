@@ -1,6 +1,6 @@
 import React from 'react';
-import { BibjsonCard } from '../../components/search/BibjsonCard';
-import { BibFilter } from '../../components/search/BibFilter';
+import { BibjsonCard } from '../../components/publications/BibjsonCard';
+import { BibFilter } from '../../components/publications/BibFilter';
 import mpPapers from './mp-papers.json';
 
 /**
