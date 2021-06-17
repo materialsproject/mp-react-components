@@ -34,28 +34,26 @@ export const BibCard: React.FC<Props> = (props) => {
 
   return (
     <div id={props.id} data-testid="bib-card" className={classNames('mpc-bib-card', props.className)}>
-      <div className="mpc-bib-card-top">
-        <p className="mpc-bib-card-title">{title}</p>
-        {props.doi && (
-          <div className="mpc-bib-card-buttons">
-            <PublicationButton
-              doi={props.doi}
-              url={url}
-              openAccessUrl={props.openAccessUrl}
-              preventOpenAccessFetch={props.preventOpenAccessFetch}
-            >
-              {props.shortName}
-            </PublicationButton>
-            <BibtexButton doi={props.doi} />
-          </div>
-        )}
-      </div>
+      <p className="mpc-bib-card-title">{title}</p>
       <p className="mpc-bib-card-authors">{props.author}</p>
       <p>
         <span className="mpc-bib-card-journal">{props.journal}</span>
         {props.journal && <span>, </span>}
         <span className="mpc-bib-card-year">{props.year}</span>
       </p>
+      {props.doi && (
+        <div className="mpc-bib-card-buttons tags">
+          <PublicationButton
+            doi={props.doi}
+            url={url}
+            openAccessUrl={props.openAccessUrl}
+            preventOpenAccessFetch={props.preventOpenAccessFetch}
+          >
+            {props.shortName}
+          </PublicationButton>
+          <BibtexButton doi={props.doi} />
+        </div>
+      )}
     </div>
   );
 };
