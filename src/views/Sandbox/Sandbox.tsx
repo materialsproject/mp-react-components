@@ -7,6 +7,7 @@ import { DownloadDropdown } from '../../components/search/DownloadDropdown';
 import { OpenAccessButton } from '../../components/search/OpenAccessButton';
 import crossref from './crossref.json';
 import { DataBlock } from '../../components/search/DataBlock';
+import { NavbarDropdown } from '../../components/navigation/NavbarDropdown';
 
 /**
  * View for testing out small new components
@@ -201,13 +202,18 @@ export const Sandbox: React.FC = () => {
             formatOptions: {
               baseUrl: 'https://lbl.gov',
               target: '_blank',
+              linkLabelKey: 'formula_pretty',
             },
+            minWidth: '300px',
+            maxWidth: '300px',
             hiddenBottom: true,
           },
           {
             name: 'Formula',
             selector: 'formula_pretty',
             format: 'FORMULA',
+            minWidth: '300px',
+            maxWidth: '300px',
             hiddenBottom: true,
           },
           {
@@ -217,6 +223,7 @@ export const Sandbox: React.FC = () => {
             formatOptions: {
               arrayTooltipsKey: 'dataTooltips',
             },
+            // maxWidth: '200px'
           },
           {
             name: 'Tables',
@@ -227,6 +234,7 @@ export const Sandbox: React.FC = () => {
               arrayLinksKey: 'tablesLinks',
               arrayLinksDownload: true,
             },
+            // maxWidth: '200px'
           },
           {
             name: 'Description',
@@ -236,13 +244,62 @@ export const Sandbox: React.FC = () => {
         ]}
         data={{
           material_id: 'mp-777',
-          formula_pretty: 'MnO2',
+          formula_pretty: 'MnO2 MnO2 MnO2 MnO2 MnO2 MnO2',
           volume: 34.88345346,
-          data: [1, 2, 3, 1, 2, 3, 1, 2, 3],
-          dataTooltips: ['test', 'test', 'test', 'test'],
-          tables: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
+          data: [
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+          ],
+          dataTooltips: ['test test test test test test test test test', 'test', 'test', 'test'],
+          tables: [1, 2, 3],
           tablesTooltips: ['test', 'test'],
           tablesLinks: ['https://lbl.gov', 'https://lbl.gov'],
+          description:
+            'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.',
+        }}
+      />
+      <DataBlock
+        className="box"
+        data={{
+          material_id: 'mp-777',
+          formula_pretty: 'MnO2',
+          volume: 34.88345346,
+          data: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
+          tables: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
           description:
             'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.',
         }}

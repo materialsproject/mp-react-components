@@ -94,6 +94,10 @@ export const initColumns = (columns: Column[]): Column[] => {
       case ColumnFormat.LINK:
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const linkLabel =
+            c.formatOptions && c.formatOptions.linkLabelKey
+              ? row[c.formatOptions.linkLabelKey]
+              : rowValue;
           const url =
             c.formatOptions && c.formatOptions.baseUrl
               ? joinUrl(c.formatOptions.baseUrl, rowValue)
@@ -104,7 +108,7 @@ export const initColumns = (columns: Column[]): Column[] => {
               onClick={(e) => e.stopPropagation()}
               target={c.formatOptions && c.formatOptions.target}
             >
-              {row[c.selector]}
+              {linkLabel}
             </Link>
           );
         };
@@ -162,11 +166,11 @@ export const initColumns = (columns: Column[]): Column[] => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           if (Array.isArray(rowValue)) {
             return (
-              <div className="tags">
+              <span className="tags">
                 {rowValue.map((item, i) => {
                   const tooltipId = uuidv4();
                   return (
-                    <div key={i} className="tag">
+                    <span key={i} className="tag" data-tip data-for={tooltipId}>
                       {c.hasOwnProperty('formatOptions') &&
                       c.formatOptions.hasOwnProperty('arrayLinksKey') &&
                       row.hasOwnProperty(c.formatOptions.arrayLinksKey) &&
@@ -177,29 +181,27 @@ export const initColumns = (columns: Column[]): Column[] => {
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
-                          data-tip
-                          data-for={tooltipId}
                         >
                           {c.formatOptions.arrayLinksDownload && <FaDownload className="mr-1" />}
                           {item}
                         </a>
                       ) : (
-                        <div data-tip data-for={tooltipId}>
-                          {item}
-                        </div>
+                        <span>{item}</span>
                       )}
                       {c.hasOwnProperty('formatOptions') &&
                         c.formatOptions.hasOwnProperty('arrayTooltipsKey') &&
                         row.hasOwnProperty(c.formatOptions.arrayTooltipsKey) &&
                         row[c.formatOptions.arrayTooltipsKey][i] && (
                           <ReactTooltip id={tooltipId} effect="solid">
-                            <span>{row[c.formatOptions.arrayTooltipsKey][i]}</span>
+                            <span style={{ maxWidth: '100px', whiteSpace: 'normal' }}>
+                              {row[c.formatOptions.arrayTooltipsKey][i]}
+                            </span>
                           </ReactTooltip>
                         )}
-                    </div>
+                    </span>
                   );
                 })}
-              </div>
+              </span>
             );
           } else {
             return rowValue;

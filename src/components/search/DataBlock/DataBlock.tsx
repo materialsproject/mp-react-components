@@ -10,7 +10,7 @@ interface Props {
   setProps?: (value: any) => any;
   className?: string;
   data: object;
-  columns: Column[];
+  columns?: Column[];
 }
 
 const getColumnsFromKeys = (data: object): Column[] => {
@@ -36,9 +36,17 @@ export const DataBlock: React.FC<Props> = (props) => {
   const [expanded, setExpanded] = useState(false);
 
   const columnItem = (c: Column) => (
-    <div key={c.selector} className="mpc-data-block-item">
+    <div
+      key={c.selector}
+      className="mpc-data-block-item"
+      style={{
+        width: c.width || 'auto',
+        minWidth: c.minWidth || 'auto',
+        maxWidth: c.maxWidth || 'auto',
+      }}
+    >
       <div className="heading">{c.name}</div>
-      <div>
+      <div className="value">
         {typeof c.cell === 'function'
           ? c.cell(props.data)
           : typeof c.format === 'function'
@@ -56,12 +64,12 @@ export const DataBlock: React.FC<Props> = (props) => {
         })}
         onClick={() => setExpanded(!expanded)}
       >
-        <div className="mpc-data-block-item-container">
-          {topColumns.map((c, i) => columnItem(c))}
-        </div>
         <div className="mpc-data-block-caret-container">
           {!expanded && <FaCaretRight className="mpc-data-block-caret" />}
           {expanded && <FaCaretDown className="mpc-data-block-caret" />}
+        </div>
+        <div className="mpc-data-block-item-container">
+          {topColumns.map((c, i) => columnItem(c))}
         </div>
       </div>
       {expanded && (
