@@ -1,25 +1,17 @@
-.mpc-bib-card-top {
-  display: flex;
+.mpc-bib-card > *:not(:last-child) {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.mpc-bib-card-buttons {
-  padding-left: 0.5rem;
-}
-
-.mpc-bib-card-buttons > * {
-  margin-left: 0.5rem;
-}
-
-.mpc-bib-card-title {
+.mpc-bib-card .mpc-bib-card-title {
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  flex: 1;
-}
-
-.mpc-bib-card-authors {
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
 .mpc-bib-card-journal {
   font-style: italic;
+}
+
+.mpc-bib-card-buttons {
+  margin-top: 0.75rem;
 }

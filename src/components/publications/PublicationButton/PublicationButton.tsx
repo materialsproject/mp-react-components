@@ -111,30 +111,32 @@ export const PublicationButton: React.FC<Props> = ({ target = '_blank', ...other
   }, []);
 
   return (
-    <span className="mpc-publication-button tag tags has-addons">
-      <a className="tag" href={url} target="_blank">
-        <FaBook />
-        &nbsp;{linkLabel || 'Publication'}
-      </a>
-      {!failedRequest && !props.preventOpenAccessFetch ? (
-        <a
-          id={props.id}
-          target={props.target}
-          href={openAccessUrl}
-          className={classNames('tag mpc-open-access-button', {
-            'is-loading': !openAccessUrl && !props.showLoadingText
-          })}
-          data-tip
-          data-for={tooltipId}
-        >
-          {openAccessUrl || !props.showLoadingText ? (
-            <img src={openAccessButtonLogo} alt="Open Access PDF" />
-          ) : (
-            'Loading...'
-          )}
-          <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
+    <span className="mpc-publication-button tag">
+      <span className="tags has-addons">
+        <a className="tag" href={url} target="_blank">
+          <FaBook />
+          &nbsp;{linkLabel || 'Publication'}
         </a>
-      ) : null}
+        {!failedRequest && !props.preventOpenAccessFetch ? (
+          <a
+            id={props.id}
+            target={props.target}
+            href={openAccessUrl}
+            className={classNames('tag mpc-open-access-button', {
+              'is-loading': !openAccessUrl && !props.showLoadingText
+            })}
+            data-tip
+            data-for={tooltipId}
+          >
+            {openAccessUrl || !props.showLoadingText ? (
+              <img src={openAccessButtonLogo} alt="Open Access PDF" />
+            ) : (
+              'Loading...'
+            )}
+            <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
+          </a>
+        ) : null}
+      </span>
     </span>
   );
 };
