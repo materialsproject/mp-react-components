@@ -1,7 +1,8 @@
 .mpc-data-block-caret-container {
   /* padding-bottom: 0.5rem; */
   padding-top: 0.5rem;
-  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+  cursor: pointer;
 }
 
 .mpc-data-block-caret {
@@ -31,21 +32,41 @@
 .mpc-data-block-top .mpc-data-block-item-container {
   flex: 1;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
 }
 
+.mpc-data-block-top .mpc-data-block-item {
+  overflow: hidden;
+  flex: 1;
+}
+
 .mpc-data-block-top .mpc-data-block-item:not(:first-child) {
-  padding-left: 2rem;
+  padding-left: 3rem;
+}
+
+.mpc-data-block-top .mpc-data-block-item .value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  position: relative;
 }
 
 .mpc-data-block-top .tags {
-  max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
   flex-wrap: nowrap;
+}
+
+.mpc-data-block-top .tags::after {
+  content: '...';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: #fff;
+  padding-left: 0.25rem;
 }
 
 .mpc-data-block-bottom .mpc-data-block-item:not(:last-child) {
