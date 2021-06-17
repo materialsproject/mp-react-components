@@ -252,7 +252,7 @@ export const Sandbox: React.FC = () => {
           material_id: 'mp-777',
           formula_pretty: 'MnO2 MnO2 MnO2 MnO2 MnO2 MnO2',
           volume: 34.88345346,
-          data: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2],
+          data: [1, 'LiAl(SiO3)2', 3, 1, 2, 3, 1, 2, 3, 1, 2],
           dataTooltips: ['test test test test test test test test test', 'test', 'test', 'test'],
           tables: [1, 2, 3],
           tablesTooltips: ['test', 'test'],

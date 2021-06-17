@@ -18,6 +18,7 @@ import { FaDownload } from 'react-icons/fa';
 import { joinUrl } from '../../../utils/utils';
 import { Tooltip } from '../Tooltip';
 import { ArrayChips } from '../ArrayChips';
+import { Formula } from '../Formula';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -88,7 +89,7 @@ export const initColumns = (columns: Column[]): Column[] => {
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return formatFormula(rowValue);
+          return <Formula>{rowValue}</Formula>;
         };
         return c;
       case ColumnFormat.LINK:
