@@ -17,8 +17,7 @@ export const Sandbox: React.FC = () => {
   const bibjsonEntry = [
     {
       journal: 'Journal of Materials Chemistry A',
-      title:
-        'AAAA YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
+      title: 'AAAA YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
       author: [
         'Aydemir, Umut',
         'P\u00f6hls, Jan-Hendrik',
@@ -36,7 +35,7 @@ export const Sandbox: React.FC = () => {
         'White, Mary Anne',
         'Persson, Kristin',
         'Jain, Anubhav',
-        'Snyder, G. Jeffrey',
+        'Snyder, G. Jeffrey'
       ],
       pages: '2461--2472',
       number: '7',
@@ -50,14 +49,13 @@ export const Sandbox: React.FC = () => {
       link: [
         {
           url: 'https://doi.org/10.1039/c5ta10330d',
-          anchor: 'doi',
-        },
-      ],
+          anchor: 'doi'
+        }
+      ]
     },
     {
       journal: 'Journal of Materials Chemistry A',
-      title:
-        'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
+      title: 'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
       author: [
         'Aydemir, Umut',
         'P\u00f6hls, Jan-Hendrik',
@@ -75,7 +73,7 @@ export const Sandbox: React.FC = () => {
         'White, Mary Anne',
         'Persson, Kristin',
         'Jain, Anubhav',
-        'Snyder, G. Jeffrey',
+        'Snyder, G. Jeffrey'
       ],
       pages: '2461--2472',
       number: '7',
@@ -89,10 +87,10 @@ export const Sandbox: React.FC = () => {
       link: [
         {
           url: 'https://doi.org/10.1039/c5ta10330d',
-          anchor: 'doi',
-        },
-      ],
-    },
+          anchor: 'doi'
+        }
+      ]
+    }
   ];
 
   const crossrefEntries = [
@@ -104,72 +102,72 @@ export const Sandbox: React.FC = () => {
           given: 'Joshua C.',
           family: 'Agar',
           sequence: 'first',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Shishir',
           family: 'Pandya',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Ruijuan',
           family: 'Xu',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Ajay K.',
           family: 'Yadav',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Zhiqi',
           family: 'Liu',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Thomas',
           family: 'Angsten',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Sahar',
           family: 'Saremi',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Mark',
           family: 'Asta',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'R.',
           family: 'Ramesh',
           sequence: 'additional',
-          affiliation: [],
+          affiliation: []
         },
         {
           given: 'Lane W.',
           family: 'Martin',
           sequence: 'additional',
-          affiliation: [],
-        },
+          affiliation: []
+        }
       ],
       created: {
         'date-parts': [[2016, 8, 18]],
         'date-time': '2016-08-18T10:25:31Z',
-        timestamp: 1471515931000,
+        timestamp: 1471515931000
       },
       publisher: 'Springer Science and Business Media LLC',
       openAccessUrl:
-        'https://www.cambridge.org/core/services/aop-cambridge-core/content/view/95E71B1B18C06C02A60359A580051DA3/S215968591600029Xa.pdf/div-class-title-frontiers-in-strain-engineered-multifunctional-ferroic-materials-div.pdf',
-    },
+        'https://www.cambridge.org/core/services/aop-cambridge-core/content/view/95E71B1B18C06C02A60359A580051DA3/S215968591600029Xa.pdf/div-class-title-frontiers-in-strain-engineered-multifunctional-ferroic-materials-div.pdf'
+    }
   ];
 
   return (
@@ -202,11 +200,11 @@ export const Sandbox: React.FC = () => {
             formatOptions: {
               baseUrl: 'https://lbl.gov',
               target: '_blank',
-              linkLabelKey: 'formula_pretty',
+              linkLabelKey: 'formula_pretty'
             },
             minWidth: '300px',
             maxWidth: '300px',
-            hiddenBottom: true,
+            hiddenBottom: true
           },
           {
             name: 'Formula',
@@ -214,15 +212,15 @@ export const Sandbox: React.FC = () => {
             format: 'FORMULA',
             minWidth: '300px',
             maxWidth: '300px',
-            hiddenBottom: true,
+            hiddenBottom: true
           },
           {
             name: 'Data',
             selector: 'data',
             format: 'ARRAY',
             formatOptions: {
-              arrayTooltipsKey: 'dataTooltips',
-            },
+              arrayTooltipsKey: 'dataTooltips'
+            }
             // maxWidth: '200px'
           },
           {
@@ -232,15 +230,15 @@ export const Sandbox: React.FC = () => {
             formatOptions: {
               arrayTooltipsKey: 'tablesTooltips',
               arrayLinksKey: 'tablesLinks',
-              arrayLinksDownload: true,
-            },
+              arrayLinksDownload: true
+            }
             // maxWidth: '200px'
           },
           {
             name: 'Description',
             selector: 'description',
-            hiddenTop: true,
-          },
+            hiddenTop: true
+          }
         ]}
         data={{
           material_id: 'mp-777',
@@ -282,14 +280,14 @@ export const Sandbox: React.FC = () => {
             3,
             1,
             2,
-            3,
+            3
           ],
           dataTooltips: ['test test test test test test test test test', 'test', 'test', 'test'],
           tables: [1, 2, 3],
           tablesTooltips: ['test', 'test'],
           tablesLinks: ['https://lbl.gov', 'https://lbl.gov'],
           description:
-            'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.',
+            'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.'
         }}
       />
       <DataBlock
@@ -301,7 +299,7 @@ export const Sandbox: React.FC = () => {
           data: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
           tables: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
           description:
-            'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.',
+            'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.'
         }}
       />
     </>
