@@ -11,8 +11,7 @@ export const Publications: React.FC = () => {
   const bibjson = [
     {
       journal: 'Journal of Materials Chemistry A',
-      title:
-        'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
+      title: 'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
       author: [
         'Aydemir, Umut',
         'P\u00f6hls, Jan-Hendrik',
@@ -30,7 +29,7 @@ export const Publications: React.FC = () => {
         'White, Mary Anne',
         'Persson, Kristin',
         'Jain, Anubhav',
-        'Snyder, G. Jeffrey',
+        'Snyder, G. Jeffrey'
       ],
       pages: '2461--2472',
       number: '7',
@@ -44,17 +43,17 @@ export const Publications: React.FC = () => {
       link: [
         {
           url: 'https://doi.org/10.1039/c5ta10330d',
-          anchor: 'doi',
-        },
-      ],
+          anchor: 'doi'
+        }
+      ]
     },
-    {},
+    {}
   ];
 
   return (
     <>
       <h1 className="title">Publications</h1>
-      <BibFilter bibEntries={mpPapers} resultClassName="box" />
+      <BibFilter bibEntries={mpPapers} resultClassName="box" preventOpenAccessFetch={true} />
     </>
   );
 };
