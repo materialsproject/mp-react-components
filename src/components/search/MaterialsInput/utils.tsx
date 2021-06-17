@@ -123,27 +123,35 @@ export const parseFormula = (formula) => {
  * @returns {string[] or null} Array of valid element symbols or null
  */
 export const validateFormula = (formula: string): string[] | null => {
-  const cleanformula = formula.replace(/\s/g, '');
-  const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-]+/g);
-  if (illegalChars != null) {
-    return null;
-  }
-
-  /** Finds occurrences of an element symbol and numbers */
-  const re = /([A-Z][a-z]*)([\d\.]*)/g;
-  let elements: string[] = [];
-  let match: RegExpExecArray | null = null;
-  /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
-  while ((match = re.exec(cleanformula))) {
-    if (!isElement(match[1])) {
+  try {
+    const cleanformula = formula.replace(/\s/g, '');
+    const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-]+/g);
+    if (illegalChars != null) {
       return null;
     }
-    if (elements.indexOf(match[1]) === -1) {
-      elements.push(match[1]);
-    }
-  }
 
-  return elements.length > 0 ? elements : null;
+    /** Finds occurrences of an element symbol and numbers */
+    const re = /([A-Z][a-z]*)([\d\.]*)/g;
+    let elements: string[] = [];
+    let match: RegExpExecArray | null = null;
+    /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
+    while ((match = re.exec(cleanformula))) {
+      if (!isElement(match[1])) {
+        return null;
+      }
+      if (elements.indexOf(match[1]) === -1) {
+        elements.push(match[1]);
+      }
+    }
+
+    if (elements.length > 0) {
+      return elements;
+    } else {
+      throw 'Not a valid formula';
+    }
+  } catch (e) {
+    return null;
+  }
 };
 
 /**
@@ -261,20 +269,20 @@ export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
  */
 export const materialsInputTypes: MaterialsInputTypesMap = {
   mpid: {
-    validate: validateMPID,
+    validate: validateMPID
   },
   elements: {
-    validate: validateElements,
+    validate: validateElements
   },
   formula: {
-    validate: validateFormula,
+    validate: validateFormula
   },
   smiles: {
-    validate: validateSmiles,
+    validate: validateSmiles
   },
   text: {
-    validate: () => true,
-  },
+    validate: () => true
+  }
 };
 
 /**
