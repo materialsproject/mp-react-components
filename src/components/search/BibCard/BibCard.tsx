@@ -13,24 +13,19 @@ interface Props {
   author?: string;
   year?: string | number;
   journal?: string;
+  shortName?: string;
   doi?: string;
-  fetchOpenAccessUrl?: boolean;
+  preventOpenAccessFetch?: boolean;
   openAccessUrl?: string;
 }
 
 export const BibCard: React.FC<Props> = (props) => {
+  const url = `https://doi.org/${props.doi}`;
   let title: ReactNode;
-  let publicationButton: ReactNode;
   if (props.doi) {
     title = (
-      <a href={'https://doi.org/' + props.doi} target="_blank">
+      <a href={url} target="_blank">
         {props.title}
-      </a>
-    );
-    publicationButton = (
-      <a className="button is-small" href={'https://doi.org/' + props.doi} target="_blank">
-        <FaBook />
-        &nbsp;Publication
       </a>
     );
   } else {
@@ -43,10 +38,14 @@ export const BibCard: React.FC<Props> = (props) => {
         <p className="mpc-bib-card-title">{title}</p>
         {props.doi && (
           <div className="mpc-bib-card-buttons">
-            {publicationButton}
-            {(props.fetchOpenAccessUrl || props.openAccessUrl) && (
-              <PublicationButton doi={props.doi} url={props.openAccessUrl} />
-            )}
+            <PublicationButton
+              doi={props.doi}
+              url={url}
+              openAccessUrl={props.openAccessUrl}
+              preventOpenAccessFetch={props.preventOpenAccessFetch}
+            >
+              {props.shortName}
+            </PublicationButton>
             <BibtexButton doi={props.doi} />
           </div>
         )}

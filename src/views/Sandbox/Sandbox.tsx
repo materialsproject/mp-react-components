@@ -184,14 +184,14 @@ export const Sandbox: React.FC = () => {
         crossrefEntry={crossref.message[0]}
         identifier="110.1039/c5ta10330d"
         errorMessage="Error"
-        fetchOpenAccessUrl={true}
+        preventOpenAccessFetch={false}
       />
       <CrossrefCard
         className="box"
         crossrefEntry={crossref.message[0]}
         identifier="110.1039/c5ta10330d"
         errorMessage="Error"
-        fetchOpenAccessUrl={true}
+        preventOpenAccessFetch={true}
       />
       <BibjsonCard bibjsonEntry={bibjsonEntry} />
       <PublicationButton doi="10.1103/PhysRevB.95.174110">PDF</PublicationButton>

@@ -45,7 +45,7 @@ interface Props {
    * NOTE: the open access URL can also be included in the bibjsonEntry
    * in the "openAccessUrl" property. If set, the URL will not be fetched.
    */
-  fetchOpenAccessUrl?: boolean;
+  preventOpenAccessFetch?: boolean;
 }
 
 interface CrossrefAuthor {
@@ -61,7 +61,7 @@ interface CrossrefAuthor {
 export const CrossrefCard: React.FC<Props> = (props) => {
   props = {
     errorMessage: 'Could not find reference',
-    ...props,
+    ...props
   };
   const [crossref, setCrossref] = useState(props.crossrefEntry);
   const [failedRequest, setFailedRequest] = useState(false);
@@ -107,8 +107,9 @@ export const CrossrefCard: React.FC<Props> = (props) => {
           author={crossref && getCrossrefAuthorString(crossref.author)}
           year={crossref && crossref.created['date-parts'][0][0]}
           journal={crossref && crossref.publisher}
+          shortName={crossref && crossref['short-container-title'][0]}
           doi={crossref && crossref.DOI}
-          fetchOpenAccessUrl={props.fetchOpenAccessUrl}
+          preventOpenAccessFetch={props.preventOpenAccessFetch}
           openAccessUrl={crossref && crossref.openAccessUrl}
         />
       ) : (

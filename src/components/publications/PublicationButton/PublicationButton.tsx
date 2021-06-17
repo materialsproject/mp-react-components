@@ -32,6 +32,14 @@ interface Props {
   url?: string;
 
   /**
+   * Directly supply the URL to an accessible PDF of the reference.
+   * If supplied, the component will not try to fetch an open access URL.
+   */
+  openAccessUrl?: string;
+
+  preventOpenAccessFetch?: boolean;
+
+  /**
    * Set to true to show the text "Loading..." inside the link
    * while the URL is being fetched.
    * If false, the 'is-loading' class is applied to the link while loading.
@@ -54,15 +62,41 @@ interface Props {
  */
 export const PublicationButton: React.FC<Props> = ({ target = '_blank', ...otherProps }) => {
   const props = { target, ...otherProps };
-  const [openAccessUrl, setOpenAccessUrl] = useState<string | undefined>(props.url);
+  const [linkLabel, setLinkLabel] = useState<any>(props.children);
+  const [openAccessUrl, setOpenAccessUrl] = useState<string | undefined>(props.openAccessUrl);
+  const [doi, setDoi] = useState<string | undefined>(() => {
+    if (props.doi) {
+      return props.doi;
+    } else if (props.url && props.url.indexOf('https://doi.org/') === 0) {
+      return props.url.split('https://doi.org/')[1];
+    } else {
+      return;
+    }
+  });
+  const [url, setUrl] = useState<string | undefined>(() => {
+    if (props.url) {
+      return props.url;
+    } else if (props.doi) {
+      return `https://doi.org/${props.doi}`;
+    } else {
+      return;
+    }
+  });
   const [failedRequest, setFailedRequest] = useState(false);
   const tooltipId = uuidv4();
 
   useEffect(() => {
-    if (!openAccessUrl && props.doi) {
+    if (!openAccessUrl && doi && !props.preventOpenAccessFetch) {
       axios
-        .get(`https://api.openaccessbutton.org/find?id=${props.doi}`)
+        .get(`https://api.openaccessbutton.org/find?id=${doi}`)
         .then((result) => {
+          if (
+            !linkLabel &&
+            result.data.hasOwnProperty('metadata') &&
+            result.data.metadata.hasOwnProperty('shortname')
+          ) {
+            setLinkLabel(result.data.metadata.shortname);
+          }
           if (result.data.hasOwnProperty('url')) {
             setOpenAccessUrl(result.data.url);
           } else {
@@ -78,11 +112,11 @@ export const PublicationButton: React.FC<Props> = ({ target = '_blank', ...other
 
   return (
     <span className="mpc-publication-button tag tags has-addons">
-      <a className="tag" href={'https://doi.org/' + props.doi} target="_blank">
+      <a className="tag" href={url} target="_blank">
         <FaBook />
-        &nbsp;Publication
+        &nbsp;{linkLabel || 'Publication'}
       </a>
-      {!failedRequest ? (
+      {!failedRequest && !props.preventOpenAccessFetch ? (
         <a
           id={props.id}
           target={props.target}

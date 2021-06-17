@@ -45,7 +45,7 @@ interface Props {
    * NOTE: the open access URL can also be included in the bibjsonEntry
    * in the "openAccessUrl" property. If set, the URL will not be fetched.
    */
-  fetchOpenAccessUrl?: boolean;
+  preventOpenAccessFetch?: boolean;
 }
 
 export const BibjsonCard: React.FC<Props> = (props) => {
@@ -75,7 +75,7 @@ export const BibjsonCard: React.FC<Props> = (props) => {
       journal={props.bibjsonEntry.journal}
       doi={props.bibjsonEntry.doi}
       openAccessUrl={props.bibjsonEntry.openAccessUrl}
-      fetchOpenAccessUrl={props.fetchOpenAccessUrl}
+      preventOpenAccessFetch={props.preventOpenAccessFetch}
     />
   );
 };

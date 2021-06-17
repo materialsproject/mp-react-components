@@ -68,12 +68,12 @@ interface Props {
    * in the "openAccessUrl" property. If set, the URL will not be fetched.
    * @default false
    */
-  fetchOpenAccessUrl?: boolean;
+  preventOpenAccessFetch?: boolean;
 }
 
 const sortMap = {
   crossref: sortCrossref,
-  bibjson: sortDynamic,
+  bibjson: sortDynamic
 };
 
 /**
@@ -92,9 +92,7 @@ export const BibFilter: React.FC<Props> = ({
   const [sortFieldState, setSortFieldState] = useState(props.sortField);
   const [sortAsc, setSortAsc] = useState(props.ascending);
   const sortEntries = sortMap[format];
-  const [bibEntries, setBibEntries] = useState(
-    props.bibEntries.sort(sortEntries(props.sortField, sortAsc))
-  );
+  const [bibEntries, setBibEntries] = useState(props.bibEntries.sort(sortEntries(props.sortField, sortAsc)));
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -118,11 +116,7 @@ export const BibFilter: React.FC<Props> = ({
   }, [searchValue]);
 
   return (
-    <div
-      id={props.id}
-      data-testid="bibjson-filter"
-      className={classNames('mpc-bib-filter', props.className)}
-    >
+    <div id={props.id} data-testid="bibjson-filter" className={classNames('mpc-bib-filter', props.className)}>
       <div className="mpc-bib-filter-controls">
         <input className="mpc-bib-filter-input input" type="search" onChange={handleSearchChange} />
         <SortDropdown
@@ -131,7 +125,7 @@ export const BibFilter: React.FC<Props> = ({
           sortOptions={[
             { label: 'Year', value: 'year' },
             { label: 'Author', value: 'author' },
-            { label: 'Title', value: 'title' },
+            { label: 'Title', value: 'title' }
           ]}
           sortField={sortFieldState}
           setSortField={setSortFieldState}
@@ -147,14 +141,14 @@ export const BibFilter: React.FC<Props> = ({
               key={i}
               className={props.resultClassName}
               bibjsonEntry={entry}
-              fetchOpenAccessUrl={props.fetchOpenAccessUrl}
+              preventOpenAccessFetch={props.preventOpenAccessFetch}
             />
           ) : (
             <CrossrefCard
               key={i}
               className={props.resultClassName}
               crossrefEntry={entry}
-              fetchOpenAccessUrl={props.fetchOpenAccessUrl}
+              preventOpenAccessFetch={props.preventOpenAccessFetch}
             />
           );
         })}
