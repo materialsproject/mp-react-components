@@ -6,7 +6,7 @@ import {
   formatPointGroup,
   pointGroupOptions,
   spaceGroupNumberOptions,
-  spaceGroupSymbolOptions,
+  spaceGroupSymbolOptions
 } from '../utils';
 import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchState } from './types';
 import { Link } from '../../navigation/Link';
@@ -14,10 +14,10 @@ import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../MaterialsInput';
 import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/utils';
 import { SearchUIProps } from '.';
-import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { FaDownload } from 'react-icons/fa';
 import { joinUrl } from '../../../utils/utils';
+import { Tooltip } from '../Tooltip';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -42,7 +42,7 @@ export const initColumns = (columns: Column[]): Column[] => {
         className={classNames({
           'column-header-right': c.right,
           'column-header-center': c.center,
-          'column-header-left': !c.right && !c.center,
+          'column-header-left': !c.right && !c.center
         })}
       >
         <div>{c.hideName ? '' : c.name}</div>
@@ -54,8 +54,7 @@ export const initColumns = (columns: Column[]): Column[] => {
 
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
-        const decimalPlaces =
-          hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
+        const decimalPlaces = hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const numValue = parseFloat(rowValue);
@@ -95,52 +94,40 @@ export const initColumns = (columns: Column[]): Column[] => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const linkLabel =
-            c.formatOptions && c.formatOptions.linkLabelKey
-              ? row[c.formatOptions.linkLabelKey]
-              : rowValue;
+            c.formatOptions && c.formatOptions.linkLabelKey ? row[c.formatOptions.linkLabelKey] : rowValue;
           const url =
-            c.formatOptions && c.formatOptions.baseUrl
-              ? joinUrl(c.formatOptions.baseUrl, rowValue)
-              : rowValue;
+            c.formatOptions && c.formatOptions.baseUrl ? joinUrl(c.formatOptions.baseUrl, rowValue) : rowValue;
           return (
-            <Link
-              href={url}
-              onClick={(e) => e.stopPropagation()}
-              target={c.formatOptions && c.formatOptions.target}
-            >
+            <Link href={url} onClick={(e) => e.stopPropagation()} target={c.formatOptions && c.formatOptions.target}>
               {linkLabel}
             </Link>
           );
         };
         return c;
       case ColumnFormat.BOOLEAN:
-        var truthyLabel =
-          hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
-        var falsyLabel =
-          hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
+        var truthyLabel = hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
+        var falsyLabel = hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return rowValue ? truthyLabel : falsyLabel;
         };
         return c;
       case ColumnFormat.BOOLEAN_CLASS:
-        var truthyClass =
-          hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
-        var falsyClass =
-          hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
+        var truthyClass = hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
+        var falsyClass = hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return (
             <span
               className={classNames('boolean-cell-wrapper', {
-                'has-tooltip-right': c.cellTooltip,
+                'has-tooltip-right': c.cellTooltip
               })}
               data-tooltip={c.cellTooltip}
             >
               <i
                 className={classNames({
                   [truthyClass]: rowValue,
-                  [falsyClass]: !rowValue,
+                  [falsyClass]: !rowValue
                 })}
               ></i>
             </span>
@@ -192,11 +179,11 @@ export const initColumns = (columns: Column[]): Column[] => {
                         c.formatOptions.hasOwnProperty('arrayTooltipsKey') &&
                         row.hasOwnProperty(c.formatOptions.arrayTooltipsKey) &&
                         row[c.formatOptions.arrayTooltipsKey][i] && (
-                          <ReactTooltip id={tooltipId} effect="solid">
+                          <Tooltip id={tooltipId}>
                             <span style={{ maxWidth: '100px', whiteSpace: 'normal' }}>
                               {row[c.formatOptions.arrayTooltipsKey][i]}
                             </span>
-                          </ReactTooltip>
+                          </Tooltip>
                         )}
                     </span>
                   );
@@ -259,7 +246,7 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
             options: pointGroupOptions(),
             formatOptionLabel: ({ value, label, customAbbreviation }) => {
               return formatPointGroup(label);
-            },
+            }
           };
           return f;
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
@@ -309,10 +296,7 @@ export const getSearchState = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.SLIDER:
-          if (
-            filterValues[f.id][0] !== f.props.domain[0] ||
-            filterValues[f.id][1] !== f.props.domain[1]
-          ) {
+          if (filterValues[f.id][0] !== f.props.domain[0] || filterValues[f.id][1] !== f.props.domain[1]) {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -322,13 +306,13 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + '_min',
-                  value: filterValues[f.id][0],
+                  value: filterValues[f.id][0]
                 },
                 {
                   field: f.id + '_max',
-                  value: filterValues[f.id][1],
-                },
-              ],
+                  value: filterValues[f.id][1]
+                }
+              ]
             });
           }
           break;
@@ -341,8 +325,7 @@ export const getSearchState = (
               (f.props.inputType === MaterialsInputType.ELEMENTS &&
                 f.id === 'elements' &&
                 (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
-              (f.props.inputType === MaterialsInputType.FORMULA &&
-                filterValues[f.id].indexOf('-') > -1)
+              (f.props.inputType === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
             ) {
               /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
               filterDisplayName = 'include only elements';
@@ -361,18 +344,14 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id,
-                  value: parsedValue,
-                },
-              ],
+                  value: parsedValue
+                }
+              ]
             });
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null && filterValues[f.id] !== '') {
             const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
             const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : filterValues[f.id];
             activeFilters.push({
@@ -383,18 +362,14 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id,
-                  value: filterValues[f.id],
-                },
-              ],
+                  value: filterValues[f.id]
+                }
+              ]
             });
           }
           break;
         default:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null && filterValues[f.id] !== '') {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -403,9 +378,9 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id,
-                  value: filterValues[f.id],
-                },
-              ],
+                  value: filterValues[f.id]
+                }
+              ]
             });
           }
       }
@@ -426,10 +401,7 @@ export const initSearchState = (
    */
   const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
   initialState.columns = initColumns(propsWithoutChildren.columns);
-  const { initializedGroups, initializedValues } = initFilterGroups(
-    propsWithoutChildren.filterGroups,
-    query
-  );
+  const { initializedGroups, initializedValues } = initFilterGroups(propsWithoutChildren.filterGroups, query);
 
   if (
     isDesktop &&
@@ -466,7 +438,7 @@ export const getDefaultFiltersAndValues = (state: SearchState) => {
   activeFilters = [];
   return {
     filterValues,
-    activeFilters,
+    activeFilters
   };
 };
 
@@ -478,9 +450,6 @@ export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap
   return arr;
 };
 
-export const mapInputTypeToField = (
-  inputType: MaterialsInputType,
-  allowedInputTypesMap: MaterialsInputTypesMap
-) => {
+export const mapInputTypeToField = (inputType: MaterialsInputType, allowedInputTypesMap: MaterialsInputTypesMap) => {
   return allowedInputTypesMap[inputType].field;
 };

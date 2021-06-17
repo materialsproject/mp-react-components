@@ -23,7 +23,7 @@ import { DownloadDropdown } from './components/search/DownloadDropdown';
 import { BibCard } from './components/search/BibCard';
 import { BibtexButton } from './components/search/BibtexButton';
 import { CrossrefCard } from './components/search/CrossrefCard';
-import { OpenAccessButton } from './components/search/OpenAccessButton';
+import { PublicationButton } from './components/publications/PublicationButton';
 import { Tooltip } from './components/search/Tooltip';
 import { DataBlock } from './components/search/DataBlock';
 
@@ -55,8 +55,8 @@ export {
   BibCard,
   BibtexButton,
   CrossrefCard,
-  OpenAccessButton,
+  PublicationButton,
   DownloadButton,
   DownloadDropdown,
-  Tooltip,
+  Tooltip
 };

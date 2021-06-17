@@ -57,3 +57,8 @@ interface Props {
 export const Tooltip: React.FC<Props> = (props) => {
   return <ReactTooltip {...props} />;
 };
+
+Tooltip.defaultProps = {
+  effect: 'solid',
+  delayShow: 500
+};
