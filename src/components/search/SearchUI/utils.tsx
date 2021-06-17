@@ -14,10 +14,10 @@ import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../MaterialsInput';
 import { MaterialsInputTypesMap, validateElements } from '../MaterialsInput/utils';
 import { SearchUIProps } from '.';
-import { v4 as uuidv4 } from 'uuid';
 import { FaDownload } from 'react-icons/fa';
 import { joinUrl } from '../../../utils/utils';
 import { Tooltip } from '../Tooltip';
+import { ArrayChips } from '../ArrayChips';
 
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
@@ -54,7 +54,8 @@ export const initColumns = (columns: Column[]): Column[] => {
 
     switch (c.format) {
       case ColumnFormat.FIXED_DECIMAL:
-        const decimalPlaces = hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
+        const decimalPlaces =
+          hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const numValue = parseFloat(rowValue);
@@ -94,27 +95,39 @@ export const initColumns = (columns: Column[]): Column[] => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const linkLabel =
-            c.formatOptions && c.formatOptions.linkLabelKey ? row[c.formatOptions.linkLabelKey] : rowValue;
+            c.formatOptions && c.formatOptions.linkLabelKey
+              ? row[c.formatOptions.linkLabelKey]
+              : rowValue;
           const url =
-            c.formatOptions && c.formatOptions.baseUrl ? joinUrl(c.formatOptions.baseUrl, rowValue) : rowValue;
+            c.formatOptions && c.formatOptions.baseUrl
+              ? joinUrl(c.formatOptions.baseUrl, rowValue)
+              : rowValue;
           return (
-            <Link href={url} onClick={(e) => e.stopPropagation()} target={c.formatOptions && c.formatOptions.target}>
+            <Link
+              href={url}
+              onClick={(e) => e.stopPropagation()}
+              target={c.formatOptions && c.formatOptions.target}
+            >
               {linkLabel}
             </Link>
           );
         };
         return c;
       case ColumnFormat.BOOLEAN:
-        var truthyLabel = hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
-        var falsyLabel = hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
+        var truthyLabel =
+          hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
+        var falsyLabel =
+          hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return rowValue ? truthyLabel : falsyLabel;
         };
         return c;
       case ColumnFormat.BOOLEAN_CLASS:
-        var truthyClass = hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
-        var falsyClass = hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
+        var truthyClass =
+          hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
+        var falsyClass =
+          hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return (
@@ -153,42 +166,13 @@ export const initColumns = (columns: Column[]): Column[] => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           if (Array.isArray(rowValue)) {
             return (
-              <span className="tags">
-                {rowValue.map((item, i) => {
-                  const tooltipId = uuidv4();
-                  return (
-                    <span key={i} className="tag" data-tip data-for={tooltipId}>
-                      {c.hasOwnProperty('formatOptions') &&
-                      c.formatOptions.hasOwnProperty('arrayLinksKey') &&
-                      row.hasOwnProperty(c.formatOptions.arrayLinksKey) &&
-                      row[c.formatOptions.arrayLinksKey][i] ? (
-                        <a
-                          href={row[c.formatOptions.arrayLinksKey][i]}
-                          target="_blank"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          {c.formatOptions.arrayLinksDownload && <FaDownload className="mr-1" />}
-                          {item}
-                        </a>
-                      ) : (
-                        <span>{item}</span>
-                      )}
-                      {c.hasOwnProperty('formatOptions') &&
-                        c.formatOptions.hasOwnProperty('arrayTooltipsKey') &&
-                        row.hasOwnProperty(c.formatOptions.arrayTooltipsKey) &&
-                        row[c.formatOptions.arrayTooltipsKey][i] && (
-                          <Tooltip id={tooltipId}>
-                            <span style={{ maxWidth: '100px', whiteSpace: 'normal' }}>
-                              {row[c.formatOptions.arrayTooltipsKey][i]}
-                            </span>
-                          </Tooltip>
-                        )}
-                    </span>
-                  );
-                })}
-              </span>
+              <ArrayChips
+                chips={rowValue}
+                chipTooltips={hasFormatOptions && row[c.formatOptions.arrayTooltipsKey]}
+                chipLinks={hasFormatOptions && row[c.formatOptions.arrayLinksKey]}
+                chipType={hasFormatOptions && c.formatOptions.arrayChipType}
+                showDownloadIcon={hasFormatOptions && c.formatOptions.arrayLinksShowDownload}
+              />
             );
           } else {
             return rowValue;
@@ -296,7 +280,10 @@ export const getSearchState = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.SLIDER:
-          if (filterValues[f.id][0] !== f.props.domain[0] || filterValues[f.id][1] !== f.props.domain[1]) {
+          if (
+            filterValues[f.id][0] !== f.props.domain[0] ||
+            filterValues[f.id][1] !== f.props.domain[1]
+          ) {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -325,7 +312,8 @@ export const getSearchState = (
               (f.props.inputType === MaterialsInputType.ELEMENTS &&
                 f.id === 'elements' &&
                 (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
-              (f.props.inputType === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
+              (f.props.inputType === MaterialsInputType.FORMULA &&
+                filterValues[f.id].indexOf('-') > -1)
             ) {
               /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
               filterDisplayName = 'include only elements';
@@ -351,7 +339,11 @@ export const getSearchState = (
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null && filterValues[f.id] !== '') {
+          if (
+            filterValues[f.id] !== undefined &&
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
             const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
             const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : filterValues[f.id];
             activeFilters.push({
@@ -369,7 +361,11 @@ export const getSearchState = (
           }
           break;
         default:
-          if (filterValues[f.id] !== undefined && filterValues[f.id] !== null && filterValues[f.id] !== '') {
+          if (
+            filterValues[f.id] !== undefined &&
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -401,7 +397,10 @@ export const initSearchState = (
    */
   const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
   initialState.columns = initColumns(propsWithoutChildren.columns);
-  const { initializedGroups, initializedValues } = initFilterGroups(propsWithoutChildren.filterGroups, query);
+  const { initializedGroups, initializedValues } = initFilterGroups(
+    propsWithoutChildren.filterGroups,
+    query
+  );
 
   if (
     isDesktop &&
@@ -450,6 +449,9 @@ export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap
   return arr;
 };
 
-export const mapInputTypeToField = (inputType: MaterialsInputType, allowedInputTypesMap: MaterialsInputTypesMap) => {
+export const mapInputTypeToField = (
+  inputType: MaterialsInputType,
+  allowedInputTypesMap: MaterialsInputTypesMap
+) => {
   return allowedInputTypesMap[inputType].field;
 };

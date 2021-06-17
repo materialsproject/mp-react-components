@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { BibCard } from '../BibCard';
 
 interface Props extends React.HTMLProps<HTMLAnchorElement> {
   /**
@@ -38,13 +37,21 @@ interface Props extends React.HTMLProps<HTMLAnchorElement> {
  * If no url prop is supplied, a link will be generated
  * using the doi prop and doi2bib.org.
  */
-export const BibtexButton: React.FC<Props> = ({ className = 'tag', target = '_blank', ...otherProps }) => {
+export const BibtexButton: React.FC<Props> = ({
+  className = 'tag',
+  target = '_blank',
+  ...otherProps
+}) => {
   const props = { className, target, ...otherProps };
   const [bibtexUrl, setBibtexUrl] = useState<string>(() => {
     return props.url || `https://www.doi2bib.org/bib/${props.doi}`;
   });
   return (
-    <a className={classNames('mpc-bibtex-button', props.className)} href={bibtexUrl} target={props.target}>
+    <a
+      className={classNames('mpc-bibtex-button', props.className)}
+      href={bibtexUrl}
+      target={props.target}
+    >
       BibTeX
     </a>
   );

@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { BibjsonCard } from '../BibjsonCard/BibjsonCard';
+import { BibjsonCard } from '../BibjsonCard';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { FaAngleDown, FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import './BibFilter.css';
 import { CrossrefCard } from '../CrossrefCard';
-import { SortDropdown } from '../SortDropdown';
-import { sortCrossref, sortDynamic } from '../utils';
+import { SortDropdown } from '../../search/SortDropdown';
+import { sortCrossref, sortDynamic } from '../../search/utils';
 
 interface Props {
   /**
@@ -62,7 +62,7 @@ interface Props {
   resultClassName?: string;
 
   /**
-   * Set to true to dynamically fetch a link to a free PDF of
+   * Set to true to prevent dynamically fetching a link to a free PDF of
    * each reference (using the "doi" field for individual bib entry).
    * NOTE: the open access URL can also be included in a bib entry
    * in the "openAccessUrl" property. If set, the URL will not be fetched.
@@ -92,7 +92,9 @@ export const BibFilter: React.FC<Props> = ({
   const [sortFieldState, setSortFieldState] = useState(props.sortField);
   const [sortAsc, setSortAsc] = useState(props.ascending);
   const sortEntries = sortMap[format];
-  const [bibEntries, setBibEntries] = useState(props.bibEntries.sort(sortEntries(props.sortField, sortAsc)));
+  const [bibEntries, setBibEntries] = useState(
+    props.bibEntries.sort(sortEntries(props.sortField, sortAsc))
+  );
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -116,7 +118,11 @@ export const BibFilter: React.FC<Props> = ({
   }, [searchValue]);
 
   return (
-    <div id={props.id} data-testid="bibjson-filter" className={classNames('mpc-bib-filter', props.className)}>
+    <div
+      id={props.id}
+      data-testid="bibjson-filter"
+      className={classNames('mpc-bib-filter', props.className)}
+    >
       <div className="mpc-bib-filter-controls">
         <input className="mpc-bib-filter-input input" type="search" onChange={handleSearchChange} />
         <SortDropdown

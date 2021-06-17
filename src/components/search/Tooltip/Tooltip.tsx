@@ -55,10 +55,20 @@ interface Props {
 }
 
 export const Tooltip: React.FC<Props> = (props) => {
-  return <ReactTooltip {...props} />;
+  const { children, ...propsWithoutChildren } = props;
+  return (
+    <ReactTooltip {...propsWithoutChildren}>
+      {props.multiline ? (
+        <div style={{ maxWidth: '200px', whiteSpace: 'normal' }}>{children}</div>
+      ) : (
+        { children }
+      )}
+    </ReactTooltip>
+  );
 };
 
 Tooltip.defaultProps = {
   effect: 'solid',
-  delayShow: 500
+  delayShow: 500,
+  multiline: true
 };
