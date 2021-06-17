@@ -40,8 +40,8 @@ interface Props {
   bibjsonEntry: any;
 
   /**
-   * Set to true to dynamically fetch a link to a free PDF of
-   * the reference (using the bibjsonEntry doi field).
+   * Set to true to prevent dynamically fetching a link to a free PDF of
+   * the reference (using the doi field).
    * NOTE: the open access URL can also be included in the bibjsonEntry
    * in the "openAccessUrl" property. If set, the URL will not be fetched.
    */
