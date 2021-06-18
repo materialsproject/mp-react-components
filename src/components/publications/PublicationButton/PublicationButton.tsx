@@ -52,9 +52,9 @@ interface Props {
 }
 
 /**
- * Standardized button for linking to an Open Access PDF.
- * If no url prop is supplied, a PDF link will be fetched
- * from the Open Access Button API using the doi prop.
+ * Standardized button for linking to a publication.
+ * If a doi prop or doi.org link is supplied, an open access link
+ * will also be generated next to the publication link.
  */
 export const PublicationButton: React.FC<Props> = ({
   className = 'tag',

@@ -26,6 +26,7 @@ import { CrossrefCard } from './components/publications/CrossrefCard';
 import { PublicationButton } from './components/publications/PublicationButton';
 import { Tooltip } from './components/search/Tooltip';
 import { DataBlock } from './components/search/DataBlock';
+import { Formula } from './components/search/Formula';
 
 export {
   SelectableTable,
@@ -58,5 +59,6 @@ export {
   PublicationButton,
   DownloadButton,
   DownloadDropdown,
-  Tooltip
+  Tooltip,
+  Formula
 };
