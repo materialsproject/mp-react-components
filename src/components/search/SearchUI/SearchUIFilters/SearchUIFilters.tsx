@@ -42,7 +42,7 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
     groupsByName[g.name] = {
       ...g,
       expanded: g.expanded === true || g.alwaysExpanded === true ? true : false,
-      activeFilterCount: getActiveFilterCount(g, activeFilters),
+      activeFilterCount: getActiveFilterCount(g, activeFilters)
     };
   });
   return groupsByName;
@@ -134,7 +134,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
 
   const renderActiveFilterCount = (count: number) => {
     if (count > 0) {
-      return <span className="badge ml-2">{count} active</span>;
+      return <span className="tag is-link is-rounded ml-2">{count} active</span>;
     } else {
       return null;
     }
@@ -165,7 +165,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     const innerLabel = (
       <span
         className={classNames('has-text-weight-bold', 'mb-2', {
-          'has-tooltip-right has-tooltip-multiline has-tooltip-underline': filter.tooltip,
+          'has-tooltip-right has-tooltip-multiline has-tooltip-underline': filter.tooltip
         })}
         data-tooltip={filter.tooltip}
       >
@@ -266,7 +266,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                   >
                     <span
                       className={classNames('is-size-5', {
-                        'has-opacity-70': !groupsByName[g.name].expanded,
+                        'has-opacity-70': !groupsByName[g.name].expanded
                       })}
                     >
                       {g.name}
@@ -281,7 +281,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                   aria-labelledby={'filter-group-button-' + i}
                   ref={(el) => (groupRefs.current[i] = el)}
                   className={classNames('panel-block-children', {
-                    'is-hidden': !groupsByName[g.name].expanded,
+                    'is-hidden': !groupsByName[g.name].expanded
                   })}
                 >
                   <div aria-hidden={!groupsByName[g.name].expanded}>
