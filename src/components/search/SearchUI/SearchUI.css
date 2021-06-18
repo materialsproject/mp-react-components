@@ -143,6 +143,7 @@
 .mpc-search-ui .filter-group-caret,
 .mpc-search-ui .filter-cancel-button {
   vertical-align: text-bottom;
+  height: 1.5rem;
 }
 
 .mpc-search-ui .boolean-cell-wrapper {

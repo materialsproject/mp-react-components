@@ -264,6 +264,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                     id={'filter-group-button-' + i}
                     type="button"
                   >
+                    <span className="mr-4">{renderCaret(groupsByName[g.name])}</span>
                     <span
                       className={classNames('is-size-5', {
                         'has-opacity-70': !groupsByName[g.name].expanded
@@ -272,7 +273,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                       {g.name}
                       {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
                     </span>
-                    <div className="is-pulled-right">{renderCaret(groupsByName[g.name])}</div>
                   </button>
                 </h3>
                 <div
