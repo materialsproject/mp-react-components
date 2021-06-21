@@ -1,10 +1,8 @@
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
-import { act } from "react-dom/test-utils";
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react'
+import { act } from 'react-dom/test-utils';
+import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { DualRangeSlider } from '.';
-
-jest.mock('./DualRangeSlider.css', () => {});
 
 afterEach(() => cleanup());
 
@@ -17,19 +15,19 @@ const renderElement = ({
 }) => {
   render(
     <DualRangeSlider
-      domain={domain} 
+      domain={domain}
       initialValues={values}
       step={step}
       onChange={onChange}
       onPropsChange={onPropsChange}
-    />  
+    />
   );
 };
 
 describe('<DualRangeSlider/>', () => {
   it('should render with correct values', () => {
     renderElement({
-      domain:[-100, 100],
+      domain: [-100, 100],
       values: [-20, 50]
     });
     expect(screen.getByTestId('lower-bound-input')).toHaveValue(-20);
@@ -40,7 +38,7 @@ describe('<DualRangeSlider/>', () => {
 
   it('should change slider values when input changes', async () => {
     renderElement({
-      domain:[-100, 100],
+      domain: [-100, 100],
       values: [-20, 50]
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: 9 } });
@@ -50,7 +48,7 @@ describe('<DualRangeSlider/>', () => {
 
   it('should prevent values outside of domain', async () => {
     renderElement({
-      domain:[-100, 100],
+      domain: [-100, 100],
       values: [-20, 50]
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: -111 } });
@@ -65,7 +63,7 @@ describe('<DualRangeSlider/>', () => {
 
   it('should use nice domain values', async () => {
     renderElement({
-      domain:[-97, 88]
+      domain: [-97, 88]
     });
     expect(screen.getAllByTestId('tick-value')[0]).toHaveTextContent('-100');
     expect(screen.getAllByTestId('tick-value')[4]).toHaveTextContent('100');

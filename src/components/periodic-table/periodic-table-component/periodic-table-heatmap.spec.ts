@@ -2,12 +2,6 @@ import { color } from 'd3-color';
 import { renderElement } from './periodic-table.spec';
 import { DEFAULT_HEATMAP_COLOR } from './periodic-table.component';
 
-// JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
-// If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
-jest.mock('./periodic-table.module.less', () => {});
-jest.mock('../periodic-element/periodic-element.module.less', () => {});
-jest.mock('../periodic-element/periodic-element.detailed.less', () => {});
-
 const heatmap = { H: 3, O: 1, F: 5 }; // 1 // 7 // 8ß
 const min = '#000000';
 const max = '#FFFFFF';
@@ -94,10 +88,7 @@ describe('<Table/>', () => {
 });
 
 function hoverAtElementIndex(elementIndex) {
-  wrapper
-    .find('.mat-element')
-    .at(elementIndex)
-    .simulate('mouseover');
+  wrapper.find('.mat-element').at(elementIndex).simulate('mouseover');
 }
 
 function checkLegendColor(legendItem, hexColorString) {

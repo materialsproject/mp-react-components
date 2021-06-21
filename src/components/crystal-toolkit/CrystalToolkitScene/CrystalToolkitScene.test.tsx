@@ -5,8 +5,6 @@ import { s2 as scene } from '../scene/simple-scene';
 import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
 import Scene from '../scene/Scene';
 
-jest.mock('../scene/glass.png', () => {});
-jest.mock('./CrystalToolkitScene.less', () => {});
 const spy = jest.spyOn(Scene.prototype, 'renderScene');
 const RENDERSCENE_CALLS_BY_REACT_RENDERING = 1; // goal is to reach 1 and stay there :)
 
@@ -39,7 +37,7 @@ function renderElement() {
     <CrystalToolkitScene
       sceneSize={500}
       settings={{
-        renderer: Renderer.SVG,
+        renderer: Renderer.SVG
       }}
       data={scene}
       debug={false}

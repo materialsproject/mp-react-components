@@ -2,12 +2,6 @@ import { mount } from 'enzyme';
 import { Table, TableLayout } from './periodic-table.component';
 import * as React from 'react';
 
-// JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
-// If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
-jest.mock('./periodic-table.module.less', () => {});
-jest.mock('../periodic-element/periodic-element.module.less', () => {});
-jest.mock('../periodic-element/periodic-element.detailed.less', () => {});
-
 const enabled = { H: true, Li: true };
 
 describe('<Table/>', () => {

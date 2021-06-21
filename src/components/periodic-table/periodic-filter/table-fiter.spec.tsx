@@ -2,8 +2,6 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { TableFilter } from './table-filter';
 
-jest.mock('./table-filter.less', () => {});
-
 describe('<TableFilter/>', () => {
   it('should be rendered', () => {
     const wrapper = renderElement();
@@ -18,16 +16,8 @@ describe('<TableFilter/>', () => {
 
   it('should display subselectors', () => {
     const wrapper = renderElement();
-    wrapper
-      .find('.current-filter-selector')
-      .at(1)
-      .simulate('click');
-    expect(
-      wrapper
-        .find('.current-filter-selector.selected')
-        .at(0)
-        .text()
-    ).toBe('Metals');
+    wrapper.find('.current-filter-selector').at(1).simulate('click');
+    expect(wrapper.find('.current-filter-selector.selected').at(0).text()).toBe('Metals');
     expect(wrapper.find('.sub-filter-selector .current-filter-selector').length).toBe(7);
     expect(wrapper.find('.sub-filter-selector .current-filter-selector.selected').length).toBe(7);
   });

@@ -4,23 +4,13 @@ import { MaterialsInput, MaterialsInputType, MaterialsInputProps } from '.';
 import { autocompleteQuery } from '../../../mocks/constants/autocomplete';
 import { PeriodicTableMode } from './MaterialsInput';
 
-jest.mock('./MaterialsInput.css', () => {});
-jest.mock(
-  '../../periodic-table/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
-  () => {}
-);
-jest.mock('../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher.css', () => {});
-jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
-jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
-jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
-
 afterEach(() => cleanup());
 
 const defaultProps = {
   value: '',
   inputType: 'elements' as MaterialsInputType,
   periodicTableMode: PeriodicTableMode.TOGGLE,
-  onChange: (value: string) => null,
+  onChange: (value: string) => null
 };
 
 const renderElement = (props: MaterialsInputProps) => {
@@ -32,7 +22,7 @@ describe('<MaterialsInput/>', () => {
     renderElement({
       ...defaultProps,
       tooltip: 'Test tooltip',
-      onSubmit: (value) => null,
+      onSubmit: (value) => null
     });
     expect(screen.getByTestId('materials-input-search-input')).toBeInTheDocument();
     expect(screen.getByTestId('materials-input-tooltip-button')).toBeInTheDocument();
@@ -43,7 +33,7 @@ describe('<MaterialsInput/>', () => {
   it('should enable elements', () => {
     renderElement({ ...defaultProps });
     fireEvent.change(screen.getByTestId('materials-input-search-input'), {
-      target: { value: 'Ga, N' },
+      target: { value: 'Ga, N' }
     });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
@@ -52,10 +42,10 @@ describe('<MaterialsInput/>', () => {
   it('should switch to formula mode', () => {
     renderElement({
       ...defaultProps,
-      onInputTypeChange: (field) => field,
+      onInputTypeChange: (field) => field
     });
     fireEvent.change(screen.getByTestId('materials-input-search-input'), {
-      target: { value: 'GaN' },
+      target: { value: 'GaN' }
     });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
@@ -92,7 +82,7 @@ describe('<MaterialsInput/>', () => {
   it('should show periodic table on focus', () => {
     renderElement({
       ...defaultProps,
-      periodicTableMode: PeriodicTableMode.FOCUS,
+      periodicTableMode: PeriodicTableMode.FOCUS
     });
     expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
       'aria-hidden',
@@ -108,7 +98,7 @@ describe('<MaterialsInput/>', () => {
   it('should stay focused on element click', () => {
     renderElement({
       ...defaultProps,
-      periodicTableMode: PeriodicTableMode.FOCUS,
+      periodicTableMode: PeriodicTableMode.FOCUS
     });
     screen.getByTestId('materials-input-search-input').focus();
     fireEvent.click(screen.getByText('Fe'));
@@ -120,10 +110,10 @@ describe('<MaterialsInput/>', () => {
       ...defaultProps,
       inputType: 'formula' as MaterialsInputType,
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
-      autocompleteApiKey: process.env.REACT_APP_API_KEY,
+      autocompleteApiKey: process.env.REACT_APP_API_KEY
     });
     fireEvent.change(screen.getByTestId('materials-input-search-input'), {
-      target: { value: autocompleteQuery },
+      target: { value: autocompleteQuery }
     });
     screen.getByTestId('materials-input-search-input').focus();
     await waitFor(() => {

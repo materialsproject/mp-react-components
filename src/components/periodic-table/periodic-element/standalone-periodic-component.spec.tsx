@@ -3,12 +3,6 @@ import * as React from 'react';
 import { TABLE_DICO_V2 } from '../periodic-table-data/table-v2';
 import { StandalonePeriodicComponent } from './standalone-periodic-component';
 
-// JEST does not know how to handle LESS, so we simply mock the CSS an empty file.
-// If we are going to use JSDOM, and check width/height/stuff, we'll need to find a way
-jest.mock('./periodic-element.module.less', () => {});
-jest.mock('./periodic-element.detailed.less', () => {});
-jest.mock('./standalone-periodic-element.less', () => {});
-
 describe('<StandalonePeriodicElement/>', () => {
   it('should be rendered', () => {
     const wrapper = renderElement();
