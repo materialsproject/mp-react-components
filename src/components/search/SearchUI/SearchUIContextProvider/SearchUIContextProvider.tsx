@@ -32,7 +32,7 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  error: false,
+  error: false
 };
 
 /**
@@ -68,21 +68,21 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         ...currentState,
         sortField,
         sortAscending,
-        page: 1,
+        page: 1
       }));
     },
     setSortField: (sortField: string) => {
       setState((currentState) => ({
         ...currentState,
         sortField,
-        page: 1,
+        page: 1
       }));
     },
     setSortAscending: (sortAscending: boolean) => {
       setState((currentState) => ({
         ...currentState,
         sortAscending,
-        page: 1,
+        page: 1
       }));
     },
     setView: (view: SearchUIViewType) => {
@@ -183,14 +183,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             paramsSerializer: (p) => {
               return qs.stringify(p, { arrayFormat: 'comma' });
             },
-            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null,
+            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
           })
           .then((result) => {
             history.push({ search: query.toString() });
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState((currentState) => {
-              const totalResults = result.data.meta.total;
+              const totalResults = result.data.meta.max_limit;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
               return {
@@ -199,7 +199,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
                 totalResults: totalResults,
                 page: page,
                 loading: loadingValue,
-                error: false,
+                error: false
               };
             });
           })
@@ -213,7 +213,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
                 results: [],
                 totalResults: 0,
                 loading: loadingValue,
-                error: true,
+                error: true
               };
             });
           });
@@ -232,7 +232,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
         return {
           ...currentState,
-          loading: showLoading,
+          loading: showLoading
         };
       });
     },
@@ -243,10 +243,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           ...currentState,
           page: 1,
           filterValues,
-          activeFilters,
+          activeFilters
         };
       });
-    },
+    }
   };
 
   useDeepCompareEffect(() => {
