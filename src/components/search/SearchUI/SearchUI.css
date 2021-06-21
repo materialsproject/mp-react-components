@@ -140,10 +140,13 @@
   padding-bottom: 0.25rem;
 }
 
-.mpc-search-ui .filter-group-caret,
 .mpc-search-ui .filter-cancel-button {
   vertical-align: text-bottom;
+}
+
+.mpc-search-ui .filter-group-caret {
   height: 1.5rem;
+  vertical-align: text-bottom;
 }
 
 .mpc-search-ui .boolean-cell-wrapper {
