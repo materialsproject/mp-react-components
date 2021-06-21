@@ -10,22 +10,6 @@ import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolu
 /** Extend the jest timeout to allow time for async mock api requests */
 jest.setTimeout(30000);
 
-jest.mock('./SearchUI.css', () => {});
-jest.mock('../MaterialsInput/MaterialsInput.css', () => {});
-jest.mock('../DualRangeSlider/DualRangeSlider.css', () => {});
-jest.mock('../Select/Select.css', () => {});
-jest.mock('../ActiveFilterButtons/ActiveFilterButtons.css', () => {});
-jest.mock('../DataCard/DataCard.css', () => {});
-jest.mock('../SynthesisRecipeCard/SynthesisRecipeCard.css', () => {});
-jest.mock('../../periodic-table/periodic-table-component/periodic-table.module.less', () => {});
-jest.mock('../../periodic-table/periodic-element/periodic-element.module.less', () => {});
-jest.mock('../../periodic-table/periodic-element/periodic-element.detailed.less', () => {});
-jest.mock(
-  '../../periodic-table/PeriodicTableFormulaButtons/PeriodicTableFormulaButtons.css',
-  () => {}
-);
-jest.mock('../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher.css', () => {});
-
 const defaultProps = {
   resultLabel: 'material',
   columns: columns,
@@ -39,7 +23,7 @@ const defaultProps = {
     'Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search.',
   searchBarPlaceholder: 'Search by elements, formula, or mp-id',
   sortField: 'e_above_hull',
-  sortAscending: true,
+  sortAscending: true
 };
 
 const renderElement = (props: SearchUIProps) => {
@@ -78,7 +62,7 @@ describe('<SearchUI/>', () => {
   it('should return results filtered by mp-id', async () => {
     renderElement({ ...defaultProps });
     fireEvent.change(screen.getAllByTestId('materials-input-search-input')[0], {
-      target: { value: materialsByIdQuery },
+      target: { value: materialsByIdQuery }
     });
     fireEvent.submit(screen.getByTestId('materials-input-form'));
     await waitFor(() => {
@@ -90,7 +74,7 @@ describe('<SearchUI/>', () => {
   it('should filter results with slider', async () => {
     renderElement({ ...defaultProps });
     fireEvent.change(screen.getAllByTestId('upper-bound-input')[0], {
-      target: { value: materialsByVolumeQuery[1] },
+      target: { value: materialsByVolumeQuery[1] }
     });
     await waitFor(() => {
       expect(screen.getAllByRole('row').length).toBe(10);

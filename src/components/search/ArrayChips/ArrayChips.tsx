@@ -11,7 +11,7 @@ interface Props {
   id?: string;
   setProps?: (value: any) => any;
   className?: string;
-  chips: string[] | number[];
+  chips: any[];
   chipTooltips?: string[];
   chipLinks?: string[];
   chipType?: 'normal' | 'publications' | 'dynamic-publications';
