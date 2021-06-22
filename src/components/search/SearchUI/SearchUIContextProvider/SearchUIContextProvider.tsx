@@ -190,7 +190,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState((currentState) => {
-              const totalResults = result.data.meta.max_limit;
+              const totalResults = result.data.meta.total_doc;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
               return {
