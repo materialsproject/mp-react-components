@@ -103,11 +103,13 @@ export const CrossrefCard: React.FC<Props> = (props) => {
         <BibCard
           id={props.id}
           className={props.className}
-          title={crossref && crossref.title.join(' ')}
+          title={crossref && crossref.title && crossref.title.join(' ')}
           author={crossref && getCrossrefAuthorString(crossref.author)}
-          year={crossref && crossref.created['date-parts'][0][0]}
+          year={crossref && crossref.created && crossref.created['date-parts'][0][0]}
           journal={crossref && crossref.publisher}
-          shortName={crossref && crossref['short-container-title'][0]}
+          shortName={
+            crossref && crossref['short-container-title'] && crossref['short-container-title'][0]
+          }
           doi={crossref && crossref.DOI}
           preventOpenAccessFetch={props.preventOpenAccessFetch}
           openAccessUrl={crossref && crossref.openAccessUrl}
