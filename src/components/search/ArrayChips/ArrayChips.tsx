@@ -4,7 +4,7 @@ import { FaDownload } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 import { PublicationButton } from '../../publications/PublicationButton';
 import { Formula } from '../Formula';
-import { validateFormula } from '../MaterialsInput/utils';
+import { validateRangedFormula } from '../MaterialsInput/utils';
 import { Tooltip } from '../Tooltip';
 
 interface Props {
@@ -23,7 +23,7 @@ export const ArrayChips: React.FC<Props> = ({ chipType = 'normal', ...otherProps
   return (
     <span className="tags">
       {props.chips.map((item, i) => {
-        const chipContent = validateFormula(item) ? <Formula>{item}</Formula> : item;
+        const chipContent = validateRangedFormula(item) ? <Formula>{item}</Formula> : item;
         const tooltipId = uuidv4();
         const tooltip = props.chipTooltips && props.chipTooltips[i] && (
           <Tooltip id={tooltipId}>{props.chipTooltips[i]}</Tooltip>

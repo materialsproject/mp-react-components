@@ -120,22 +120,26 @@ export const parseFormula = (formula) => {
  * a parsed array of valid elements if successful.
  *
  * @param {string} formula An unparsed chemical formula string
+ * @param {RegExp} illegalCharsRegex Optional param to override the default regex for finding illegal characters
+ * @param {RegExp} elementsRegex Optional param to override the default regex for finding element symbols
  * @returns {string[] or null} Array of valid element symbols or null
  */
-export const validateFormula = (formula: string): string[] | null => {
+export const validateFormula = (
+  formula: string,
+  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g,
+  elementsRegex: RegExp = /([A-Z][a-z]*)([\d\.]*)/g
+): string[] | null => {
   try {
     const cleanformula = formula.replace(/\s/g, '');
-    const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-x\.]+/g);
+    const illegalChars = cleanformula.match(illegalCharsRegex);
     if (illegalChars != null) {
       return null;
     }
 
-    /** Finds occurrences of an element symbol and numbers */
-    const re = /([A-Z][a-z]*)([\d\.]*)/g;
     let elements: string[] = [];
     let match: RegExpExecArray | null = null;
     /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
-    while ((match = re.exec(cleanformula))) {
+    while ((match = elementsRegex.exec(cleanformula))) {
       if (!isElement(match[1])) {
         return null;
       }
@@ -152,6 +156,21 @@ export const validateFormula = (formula: string): string[] | null => {
   } catch (e) {
     return null;
   }
+};
+
+/**
+ * Validates a string as a checmical formula that allows
+ * ranged and wildcard (x) subscripts.
+ *
+ * @param {string} formula An unparsed chemical formula string
+ * @returns {string[] or null} Array of valid element symbols or null
+ */
+export const validateRangedFormula = (formula: string): string[] | null => {
+  /** Allows "x" and "-" to appear in the formula string */
+  const illegalCharsRegex = /([^A-Z]|^)+(?![x])[a-z]|[^\w()\*\.\-]+/g;
+  /** Ensures "x" is not counted as part of an element symbol */
+  const elementsRegex = /([A-Z][a-wyz]*)([\d\.]*)/g;
+  return validateFormula(formula, illegalCharsRegex, elementsRegex);
 };
 
 /**

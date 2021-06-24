@@ -144,11 +144,6 @@ const cleanReactionString = (reactionString: string) => {
 export const SynthesisRecipeCard: React.FC<Props> = (props) => {
   return (
     <div className={classNames('mpc-synthesis-card box', props.className)}>
-      <RenderParagraphOrHighlight
-        doi={props.data.doi}
-        paragraph_string={props.data.paragraph_string}
-        highlights={props.data.highlights}
-      />
       <DataBlock
         data={{
           reactionString: cleanReactionString(props.data.reaction_string),
@@ -157,12 +152,12 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
           targetFormulaLinks: [
             formulaToMaterialLink(props.data.target.material_formula, props.data.target.composition)
           ],
-          precursorFormulaLinks: props.data.precursors.map((d: any) =>
-            formulaToMaterialLink(d.material_formula, d.composition)
-          ),
-          synthesisProcedures: props.data.operations.map(
-            (o, i) => `${i + 1}. ${o.token} ${getConditionsString(o.conditions)}`
-          )
+          precursorFormulaLinks: props.data.precursors.map((d: any) => {
+            return formulaToMaterialLink(d.material_formula, d.composition);
+          }),
+          synthesisProcedures: props.data.operations.map((o, i) => {
+            return `${i + 1}. ${o.token} ${getConditionsString(o.conditions)}`;
+          })
         }}
         columns={[
           {
@@ -195,6 +190,11 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
             hiddenTop: true
           }
         ]}
+      />
+      <RenderParagraphOrHighlight
+        doi={props.data.doi}
+        paragraph_string={props.data.paragraph_string}
+        highlights={props.data.highlights}
       />
 
       {/* <div style={{ marginTop: '0.5rem' }}>

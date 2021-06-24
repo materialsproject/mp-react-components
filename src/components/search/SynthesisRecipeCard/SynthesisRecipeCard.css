@@ -11,9 +11,9 @@
 }
 
 .mpc-synthesis-card-paragraph {
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #ccc;
 }
 
 .mpc-synthesis-card-paragraph > *:first-child {
