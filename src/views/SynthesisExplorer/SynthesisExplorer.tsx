@@ -34,7 +34,7 @@ export const SynthesisExplorer: React.FC = () => {
           }
         }}
         searchBarPeriodicTableMode={PeriodicTableMode.NONE}
-        searchBarPlaceholder="Query recipes by keywords"
+        searchBarPlaceholder="Search recipes by keywords"
         view={SearchUIViewType.SYNTHESIS}
       />
     </>
