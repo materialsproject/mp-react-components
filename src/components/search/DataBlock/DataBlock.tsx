@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   data: object;
   columns?: Column[];
+  expanded?: boolean;
 }
 
 const getColumnsFromKeys = (data: object): Column[] => {
@@ -18,7 +19,7 @@ const getColumnsFromKeys = (data: object): Column[] => {
   return keys.map((key) => {
     return {
       name: key,
-      selector: key,
+      selector: key
     };
   });
 };
@@ -33,7 +34,7 @@ export const DataBlock: React.FC<Props> = (props) => {
   const [bottomColumns, setBottomColumns] = useState(() =>
     columns.filter((c) => !c.hidden && !c.hiddenBottom)
   );
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(props.expanded);
 
   const columnItem = (c: Column) => (
     <div
@@ -42,7 +43,7 @@ export const DataBlock: React.FC<Props> = (props) => {
       style={{
         width: c.width || 'auto',
         minWidth: c.minWidth || 'auto',
-        maxWidth: c.maxWidth || 'auto',
+        maxWidth: c.maxWidth || 'auto'
       }}
     >
       <div className="heading">{c.name}</div>
@@ -60,7 +61,7 @@ export const DataBlock: React.FC<Props> = (props) => {
     <div className={classNames('mpc-data-block', props.className)}>
       <div
         className={classNames('mpc-data-block-top', {
-          expanded: expanded,
+          expanded: expanded
         })}
         onClick={() => setExpanded(!expanded)}
       >

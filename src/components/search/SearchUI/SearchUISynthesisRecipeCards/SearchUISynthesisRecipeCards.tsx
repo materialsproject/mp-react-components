@@ -28,7 +28,7 @@ export const SearchUISynthesisRecipeCards: React.FC = () => {
       <div className="mpc-synthesis-recipe-cards-container">
         {state.results.map((d, i) => (
           // Custom result cards
-          <SynthesisRecipeCard data={d} key={i} />
+          <SynthesisRecipeCard data={d} key={d.doi + '-' + i} />
         ))}
       </div>
       <CustomPaginator />
