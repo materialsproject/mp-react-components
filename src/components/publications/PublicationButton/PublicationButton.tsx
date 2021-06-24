@@ -6,6 +6,7 @@ import { Tooltip } from '../../search/Tooltip';
 import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';
+import { string } from 'prop-types';
 
 interface Props {
   /**

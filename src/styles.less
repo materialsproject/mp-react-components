@@ -73,6 +73,21 @@ Destined for overrides.scss in mp-web
   top: 1px;
 }
 
+a.tag {
+  color: #3273dc !important;
+}
+
+/**
+* Prevent double padding for tags inside tags
+*/
+.tag .tags .tag:first-child {
+  padding-left: 0;
+}
+
+.tag .tags .tag:last-child {
+  padding-right: 0;
+}
+
 /*******************************************************
 
 Destined for bulma-custom.scss in mp-web

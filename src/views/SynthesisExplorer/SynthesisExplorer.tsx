@@ -18,9 +18,7 @@ export const SynthesisExplorer: React.FC = () => {
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
         baseURL={
-          process.env.REACT_APP_BASE_URL
-            ? process.env.REACT_APP_BASE_URL + '/synthesis/recipes/'
-            : ''
+          process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/synthesis/' : ''
         }
         autocompleteFormulaUrl={
           process.env.REACT_APP_AUTOCOMPLETE_URL
@@ -32,8 +30,8 @@ export const SynthesisExplorer: React.FC = () => {
         searchBarTooltip="Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
         searchBarAllowedInputTypesMap={{
           text: {
-            field: 'keywords',
-          },
+            field: 'keywords'
+          }
         }}
         searchBarPeriodicTableMode={PeriodicTableMode.NONE}
         searchBarPlaceholder="Query recipes by keywords"
