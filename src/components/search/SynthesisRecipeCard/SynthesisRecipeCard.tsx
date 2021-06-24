@@ -4,9 +4,10 @@ import Collapsible from 'react-collapsible';
 import './SynthesisRecipeCard.css';
 import { Link } from '../../navigation/Link';
 import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
-import { validateFormula } from '../MaterialsInput/utils';
+import { validateFormula, validateRangedFormula } from '../MaterialsInput/utils';
 import { PublicationButton } from '../../publications/PublicationButton';
 import { DataBlock } from '../DataBlock';
+import { Formula } from '../Formula';
 
 interface Props {
   id?: string;
@@ -131,13 +132,36 @@ const formulaToMaterialLink = (formula: string, composition?: any) => {
   }
 };
 
-const cleanReactionString = (reactionString: string) => {
+const formatReactionString = (reactionString: string) => {
   const cleanedPrefix = reactionString.replace(/(^|[ ])(1(?=\s))/gi, '');
-  const reactionParts = cleanedPrefix.split(' == ');
+  const reactionSectionsSplit = cleanedPrefix.split(' ; ');
+  const reactionSides = reactionSectionsSplit[0].split(' == ').map((r) => r.split(' '));
+  const reactionInfo = reactionSectionsSplit.slice(1).map((r) => r.split(' '));
   return (
-    <span>
-      {reactionParts[0]} <FaArrowRight /> {reactionParts[1]}
-    </span>
+    <div>
+      <div className="has-text-weight-bold">
+        {reactionSides[0].map((d, i) =>
+          validateRangedFormula(d) ? <Formula key={i}>{d}</Formula> : <span key={i}> {d} </span>
+        )}
+        <span>
+          {' '}
+          <FaArrowRight />{' '}
+        </span>
+        {reactionSides[1].map((d, i) =>
+          validateRangedFormula(d) ? <Formula key={i}>{d}</Formula> : <span key={i}> {d} </span>
+        )}
+      </div>
+      <div className="is-size-7 is-italic">
+        {reactionInfo.map((s, k) => (
+          <span key={k}>
+            {s.map((d, i) =>
+              validateRangedFormula(d) ? <Formula key={i}>{d}</Formula> : <span key={i}> {d} </span>
+            )}
+            {k !== reactionInfo.length - 1 && <span> &#183; </span>}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -146,7 +170,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
     <div className={classNames('mpc-synthesis-card box', props.className)}>
       <DataBlock
         data={{
-          reactionString: cleanReactionString(props.data.reaction_string),
+          reactionString: formatReactionString(props.data.reaction_string),
           targetFormulas: [props.data.target.material_formula],
           precursorFormulas: props.data.precursors_formula_s,
           targetFormulaLinks: [
