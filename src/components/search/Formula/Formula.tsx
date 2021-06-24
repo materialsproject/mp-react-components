@@ -10,10 +10,9 @@ interface Props {
 
 export const Formula: React.FC<Props> = (props) => {
   const splitFormula: string[] = props.children.split(/(\d*\.?\d+|\-|x)/g);
-  // const splitFormula: string[] = props.children.split(/(\d*\.?\d+)/g);
   const formulaParts = splitFormula.filter((d) => d !== '' && d !== '1');
   const formulaItem = (str: string) => {
-    if (parseFloat(str)) {
+    if (parseFloat(str) || str === '-' || str === 'x') {
       return <sub>{str}</sub>;
     } else {
       return <span>{str}</span>;
