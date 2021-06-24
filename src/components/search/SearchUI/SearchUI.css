@@ -2,6 +2,21 @@
   min-height: 100vh;
 }
 
+.mpc-search-ui .mpc-search-ui-left {
+  width: 550px;
+}
+
+.mpc-search-ui .mpc-search-ui-right {
+  min-width: 0;
+}
+
+.mpc-search-ui .mpc-inner-column-container {
+  position: sticky;
+  top: 0;
+  padding-top: 1.5rem;
+  margin-top: -1.5rem;
+}
+
 .mpc-search-ui .panel {
   height: auto;
   max-height: 100%;
@@ -54,11 +69,6 @@
 .mpc-search-ui .panel-block-children {
   margin-top: 0.75rem;
   padding-left: 1rem;
-}
-
-.mpc-search-ui .mpc-search-ui-data-table {
-  position: sticky;
-  top: 0;
 }
 
 .mpc-search-ui .react-data-table-outer-container {

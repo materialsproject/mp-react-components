@@ -271,23 +271,27 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
       <Router>
         <SearchUIContextProvider {...props}>
           <div className="columns">
-            <div className="column is-4-desktop is-half-tablet ">
-              {props.hasSearchBar && (
-                <div className="columns mb-1">
-                  <div className="column pb-2">
-                    <SearchUISearchBar />
+            <div className="mpc-search-ui-left column is-narrow is-12-mobile">
+              <div className="mpc-inner-column-container">
+                {props.hasSearchBar && (
+                  <div className="columns mb-1">
+                    <div className="column pb-2">
+                      <SearchUISearchBar />
+                    </div>
                   </div>
-                </div>
-              )}
-              <div className="columns">
-                <div className="column">
-                  <SearchUIFilters />
+                )}
+                <div className="columns">
+                  <div className="column">
+                    <SearchUIFilters />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="column is-8-desktop is-half-tablet mpc-results-container">
-              <SearchUIDataHeader />
-              <SearchUIDataView />
+            <div className="mpc-search-ui-right column">
+              <div className="mpc-inner-column-container">
+                <SearchUIDataHeader />
+                <SearchUIDataView />
+              </div>
             </div>
           </div>
         </SearchUIContextProvider>
@@ -305,14 +309,14 @@ SearchUI.defaultProps = {
   searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
   searchBarAllowedInputTypesMap: {
     formula: {
-      field: 'formula',
+      field: 'formula'
     },
     elements: {
-      field: 'elements',
+      field: 'elements'
     },
     mpid: {
-      field: 'material_ids',
-    },
+      field: 'material_ids'
+    }
   },
-  setProps: () => null,
+  setProps: () => null
 };
