@@ -125,7 +125,7 @@ export const parseFormula = (formula) => {
 export const validateFormula = (formula: string): string[] | null => {
   try {
     const cleanformula = formula.replace(/\s/g, '');
-    const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-]+/g);
+    const illegalChars = cleanformula.match(/([^A-Z]|^)+[a-z]|[^\w()\*\-x\.]+/g);
     if (illegalChars != null) {
       return null;
     }

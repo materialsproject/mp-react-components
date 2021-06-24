@@ -11,7 +11,19 @@
 }
 
 .mpc-synthesis-card-paragraph {
-  font-style: italic;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.mpc-synthesis-card-paragraph > *:first-child {
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #b5b5b5;
+  padding-left: 0.5rem;
+}
+
+.mpc-synthesis-card-paragraph > *:last-child {
+  font-size: 0.8rem;
 }
 
 .mpc-synthesis-card-material-label {
@@ -19,8 +31,7 @@
 }
 
 .mpc-synthesis-card-highlight-hit {
-  font-weight: bold;
-  text-decoration: underline;
+  background: yellow;
 }
 
 .mpc-synthesis-card-operations {

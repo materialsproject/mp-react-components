@@ -15,7 +15,7 @@
 }
 
 .mpc-data-block-top.expanded {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px dashed #ddd;
   padding-bottom: 1.25rem;
   margin-bottom: 1.25rem;
 }
