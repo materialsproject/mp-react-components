@@ -76,9 +76,9 @@ export const SearchUIDataTable: React.FC = () => {
             customStyles={{
               rows: {
                 style: {
-                  minHeight: '3em',
-                },
-              },
+                  minHeight: '4em'
+                }
+              }
             }}
             conditionalRowStyles={conditionalRowStyles}
             selectableRows={state.selectableRows}
