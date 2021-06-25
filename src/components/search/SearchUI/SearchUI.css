@@ -13,6 +13,14 @@
   margin-top: -1.5rem;
 }
 
+.mpc-search-ui .mpc-search-ui-right .mpc-inner-column-container {
+  z-index: 1;
+}
+
+.mpc-search-ui .mpc-search-ui-left .mpc-inner-column-container {
+  z-index: 2;
+}
+
 .mpc-search-ui .panel {
   height: auto;
   max-height: 100%;

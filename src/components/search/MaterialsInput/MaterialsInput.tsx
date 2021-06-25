@@ -24,7 +24,7 @@ export enum MaterialsInputType {
   FORMULA = 'formula',
   MPID = 'mpid',
   SMILES = 'smiles',
-  TEXT = 'text',
+  TEXT = 'text'
 }
 
 /**
@@ -36,7 +36,7 @@ export enum MaterialsInputType {
 export enum PeriodicTableMode {
   TOGGLE = 'toggle',
   FOCUS = 'focus',
-  NONE = 'none',
+  NONE = 'none'
 }
 
 export interface MaterialsInputSharedProps {
@@ -83,7 +83,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   allowedInputTypes = [
     'elements' as MaterialsInputType,
     'formula' as MaterialsInputType,
-    'mpid' as MaterialsInputType,
+    'mpid' as MaterialsInputType
   ],
   onChange = (value) => value,
   ...otherProps
@@ -227,7 +227,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     <div
       data-testid="materials-input-autocomplete-menu"
       className={classNames('dropdown-menu', 'autocomplete-right', {
-        'is-hidden': !showAutocomplete,
+        'is-hidden': !showAutocomplete
       })}
       /** Currently not accessible by keyboard so hiding it to screen readers */
       aria-hidden={true}
@@ -264,7 +264,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         >
           <i
             className={classNames('icon-fontastic-periodic-table-squares', {
-              'is-active': showPeriodicTable,
+              'is-active': showPeriodicTable
             })}
           />
         </button>
@@ -295,7 +295,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         className={classNames(
           'mpc-materials-input-error button has-tooltip-multiline has-tooltip-bottom',
           {
-            'has-tooltip-active': errorTipStayActive,
+            'has-tooltip-active': errorTipStayActive
           }
         )}
         onMouseOver={(e) => setErrorTipStayActive(false)}
@@ -394,8 +394,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       const requestIndex = requestCount;
       axios
         .get(props.autocompleteFormulaUrl, {
-          params: { text: inputValue },
-          headers: props.autocompleteApiKey ? { 'X-Api-Key': props.autocompleteApiKey } : null,
+          params: { formula: inputValue },
+          headers: props.autocompleteApiKey ? { 'X-Api-Key': props.autocompleteApiKey } : null
         })
         .then((result) => {
           console.log(result);
@@ -465,7 +465,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
           data-testid="materials-input-periodic-table"
           className={classNames('table-transition-wrapper-small', 'can-hide-by-height', {
             'is-hidden-by-height': !showPeriodicTable,
-            'mt-3': showPeriodicTable,
+            'mt-3': showPeriodicTable
           })}
           aria-hidden={!showPeriodicTable}
           onMouseDown={(event) => {
@@ -497,5 +497,5 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 MaterialsInput.defaultProps = {
   value: '',
   inputType: MaterialsInputType.ELEMENTS,
-  onChange: (value) => undefined,
+  onChange: (value) => undefined
 };
