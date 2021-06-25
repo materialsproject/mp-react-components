@@ -158,7 +158,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         if (currentState.sortField) {
           params.field = currentState.sortField;
           params.ascending = currentState.sortAscending;
-          query.set('field', params.field);
+          query.set('sort_field', params.field);
           query.set('ascending', params.ascending);
         }
         currentState.activeFilters.forEach((a) => {
