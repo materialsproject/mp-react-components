@@ -156,7 +156,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         query.set('limit', params.limit);
         query.set('skip', params.skip);
         if (currentState.sortField) {
-          params.field = currentState.sortField;
+          params.sort_field = currentState.sortField;
           params.ascending = currentState.sortAscending;
           query.set('sort_field', params.field);
           query.set('ascending', params.ascending);
