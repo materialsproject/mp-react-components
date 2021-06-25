@@ -3,7 +3,7 @@ import { autocompleteQuery, autocompleteResponse } from './constants/autocomplet
 import { materialsByIdQuery, materialsByIdResponse } from './constants/materialsById';
 import {
   materialsByStabilityQuery,
-  materialsByStabilityResponse,
+  materialsByStabilityResponse
 } from './constants/materialsByStability';
 import { materialsByVolumeQuery, materialsByVolumeResponse } from './constants/materialsByVolume';
 import { materialsUnfilteredResponse } from './constants/materialsUnfiltered';
@@ -13,7 +13,7 @@ export const handlers = [
    * Formula autocomplete mock request
    */
   rest.get(process.env.REACT_APP_AUTOCOMPLETE_URL || '', (req, res, ctx) => {
-    const autocompleteText = req.url.searchParams.get('text');
+    const autocompleteText = req.url.searchParams.get('formula');
     if (autocompleteText === autocompleteQuery) {
       return res(ctx.json(autocompleteResponse));
     } else {
@@ -36,5 +36,5 @@ export const handlers = [
     } else {
       return res(ctx.json(materialsUnfilteredResponse));
     }
-  }),
+  })
 ];
