@@ -126,7 +126,7 @@ export const parseFormula = (formula) => {
  */
 export const validateFormula = (
   formula: string,
-  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g,
+  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.\-]+/g,
   elementsRegex: RegExp = /([A-Z][a-z]*)([\d\.]*)/g
 ): string[] | null => {
   try {
