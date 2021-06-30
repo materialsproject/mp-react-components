@@ -18,7 +18,7 @@ const menuContent = [
     items: [
       {
         label: 'Crystal Structure',
-        targetId: 'one',
+        targetId: 'one'
       },
       {
         label: 'Properties',
@@ -26,12 +26,12 @@ const menuContent = [
         items: [
           {
             label: 'Prop One',
-            targetId: 'three',
-          },
-        ],
-      },
-    ],
-  },
+            targetId: 'three'
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 export const MaterialsDetail: React.FC = () => {
@@ -51,7 +51,7 @@ export const MaterialsDetail: React.FC = () => {
             classNamePrefix="react-select"
             options={[
               { value: 1, label: 'one' },
-              { value: 2, label: 'two' },
+              { value: 2, label: 'two' }
             ]}
             defaultValue={{ value: 1, label: 'one' }}
           />
@@ -81,7 +81,7 @@ export const MaterialsDetail: React.FC = () => {
           settings={{
             renderer: Renderer.WEBGL,
             extractAxis: false,
-            zoomToFit2D: true,
+            zoomToFit2D: true
           }}
           data={scene}
           debug={false}

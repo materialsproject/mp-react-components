@@ -24,8 +24,8 @@ export const MaterialsExplorer: React.FC = () => {
           levelTwoKey: 'formula_pretty',
           levelThreeKeys: [
             { key: 'energy_above_hull', label: 'Energy Above Hull' },
-            { key: 'formation_energy_per_atom', label: 'Formation Energy' },
-          ],
+            { key: 'formation_energy_per_atom', label: 'Formation Energy' }
+          ]
         }}
         resultLabel="material"
         columns={columns}
@@ -46,14 +46,14 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         searchBarAllowedInputTypesMap={{
           formula: {
-            field: 'formula',
+            field: 'formula'
           },
           elements: {
-            field: 'elements',
+            field: 'elements'
           },
           mpid: {
-            field: 'material_ids',
-          },
+            field: 'material_ids'
+          }
         }}
       />
     </>

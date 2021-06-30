@@ -48,7 +48,7 @@ function SceneSwitcher() {
           renderer: Renderer.WEBGL,
           extractAxis: false,
           isMultiSelectionEnabled: true,
-          secondaryObjectView: true,
+          secondaryObjectView: true
         }}
         data={_scene}
         debug={true}
@@ -66,14 +66,14 @@ export const CrystalStructureViewer: React.FC = () => {
       x: -0.3824241795060149,
       y: -0.008442802938742472,
       z: 0.0004401494693141228,
-      w: 0.9239481978315308,
+      w: 0.9239481978315308
     },
     position: {
       x: -0.25682715953384966,
       y: 11.387372804441647,
-      z: 11.398460914084055,
+      z: 11.398460914084055
     },
-    zoom: 4,
+    zoom: 4
   };
 
   const cameraState2 = {
@@ -84,7 +84,7 @@ export const CrystalStructureViewer: React.FC = () => {
       0.9797305066109842
     ),
     position: new THREE.Vector3(-2.7956984323728205, -0.29063127398876126, 15.867032946487644),
-    zoom: 2.4640147374718713,
+    zoom: 2.4640147374718713
   };
 
   const [state, setState] = useState<any>({
@@ -92,7 +92,7 @@ export const CrystalStructureViewer: React.FC = () => {
     imageRequest: undefined,
     imageDataTimestamp: undefined,
     currentCameraState: undefined,
-    customCameraState: cameraState2,
+    customCameraState: cameraState2
   });
 
   const [stateTwo, setStateTwo] = useState<any>({
@@ -100,7 +100,7 @@ export const CrystalStructureViewer: React.FC = () => {
     imageRequest: undefined,
     imageDataTimestamp: undefined,
     currentCameraState: undefined,
-    customCameraState: cameraState2,
+    customCameraState: cameraState2
   });
 
   const [value, setValue] = useState<any>('test');
@@ -111,7 +111,7 @@ export const CrystalStructureViewer: React.FC = () => {
         filename: 'crystal',
         content: state.imageData,
         mimeType: 'image/png',
-        isDataURL: true,
+        isDataURL: true
       });
     }
   }, [state.imageDataTimestamp]);
@@ -152,7 +152,7 @@ export const CrystalStructureViewer: React.FC = () => {
             settings={{
               renderer: Renderer.WEBGL,
               extractAxis: false,
-              zoomToFit2D: true,
+              zoomToFit2D: true
             }}
             data={scene}
             debug={false}
@@ -168,7 +168,7 @@ export const CrystalStructureViewer: React.FC = () => {
             settings={{
               renderer: Renderer.WEBGL,
               extractAxis: false,
-              zoomToFit2D: true,
+              zoomToFit2D: true
             }}
             debug
             data={scene}

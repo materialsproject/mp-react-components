@@ -32,7 +32,7 @@ export const MoleculesExplorer: React.FC = () => {
         allowViewSwitching
         cardOptions={{
           levelOneKey: 'task_id',
-          levelTwoKey: 'formula_pretty',
+          levelTwoKey: 'formula_pretty'
         }}
       />
     </>

@@ -11,7 +11,8 @@ export const Publications: React.FC = () => {
   const bibjson = [
     {
       journal: 'Journal of Materials Chemistry A',
-      title: 'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
+      title:
+        'YCuTe2: a member of a new class of thermoelectric materials with CuTe4-based layered structure',
       author: [
         'Aydemir, Umut',
         'P\u00f6hls, Jan-Hendrik',
