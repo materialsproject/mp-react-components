@@ -7,6 +7,7 @@ import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';
 import { string } from 'prop-types';
+import { shortenCrossrefAuthors } from '../../../utils/publications';
 
 interface Props {
   /**
@@ -19,6 +20,12 @@ interface Props {
    * @default 'tag'
    */
   className?: string;
+
+  /**
+   * Customize the tag using bulma's tag classes
+   * These class names will be appended to the component's tag elements
+   */
+  tagClassName?: string;
 
   /**
    * The DOI (Digital Object Identifier) of the publication
@@ -96,10 +103,11 @@ export const PublicationButton: React.FC<Props> = ({
           if (
             !linkLabel &&
             result.data.hasOwnProperty('metadata') &&
-            result.data.metadata.hasOwnProperty('shortname')
+            result.data.metadata.hasOwnProperty('author')
           ) {
-            setLinkLabel(result.data.metadata.shortname);
+            setLinkLabel(shortenCrossrefAuthors(result.data.metadata.author));
           }
+
           if (result.data.hasOwnProperty('url')) {
             setOpenAccessUrl(result.data.url);
           } else {
@@ -114,9 +122,9 @@ export const PublicationButton: React.FC<Props> = ({
   }, []);
 
   return (
-    <span className={classNames('mpc-publication-button', props.className)}>
+    <span className={classNames('mpc-publication-button', props.className, props.tagClassName)}>
       <span className="tags has-addons">
-        <a className="tag" href={url} target="_blank">
+        <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
           <FaBook />
           &nbsp;{linkLabel || 'Publication'}
         </a>
@@ -125,7 +133,7 @@ export const PublicationButton: React.FC<Props> = ({
             id={props.id}
             target={props.target}
             href={openAccessUrl}
-            className="tag mpc-open-access-button"
+            className={classNames('tag mpc-open-access-button', props.tagClassName)}
             data-tip
             data-for={tooltipId}
           >

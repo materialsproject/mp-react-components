@@ -48,13 +48,6 @@ interface Props {
   preventOpenAccessFetch?: boolean;
 }
 
-interface CrossrefAuthor {
-  given: string;
-  family: string;
-  sequence?: 'first' | 'additional';
-  [id: string]: any;
-}
-
 /**
  * Parses a crossref entry or fetches a reference from the crossref API and renders a BibCard.
  */
@@ -65,18 +58,6 @@ export const CrossrefCard: React.FC<Props> = (props) => {
   };
   const [crossref, setCrossref] = useState(props.crossrefEntry);
   const [failedRequest, setFailedRequest] = useState(false);
-
-  const getCrossrefAuthorString = (authors: CrossrefAuthor[]): string => {
-    let authorStr = '';
-    authors.forEach((a, i) => {
-      if (i !== authors.length - 1) {
-        authorStr += `${a.given} ${a.family}, `;
-      } else {
-        authorStr += `and ${a.given} ${a.family}`;
-      }
-    });
-    return authorStr;
-  };
 
   useEffect(() => {
     if (!crossref && props.identifier) {
@@ -104,9 +85,11 @@ export const CrossrefCard: React.FC<Props> = (props) => {
           id={props.id}
           className={props.className}
           title={crossref && crossref.title && crossref.title.join(' ')}
-          author={crossref && getCrossrefAuthorString(crossref.author)}
+          author={crossref && crossref.author}
           year={crossref && crossref.created && crossref.created['date-parts'][0][0]}
-          journal={crossref && crossref.publisher}
+          journal={
+            crossref && crossref['container-title'] && crossref['container-title'].join(', ')
+          }
           shortName={
             crossref && crossref['short-container-title'] && crossref['short-container-title'][0]
           }

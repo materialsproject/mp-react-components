@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
+import { CrossrefAuthor, getAuthorString, shortenAuthorString } from '../../../utils/publications';
 import { PublicationButton } from '../../publications/PublicationButton';
 import { BibtexButton } from '../BibtexButton';
 import './BibCard.css';
@@ -10,7 +11,7 @@ interface Props {
   setProps?: (value: any) => any;
   className?: string;
   title?: string;
-  author?: string;
+  author?: string[] | CrossrefAuthor[];
   year?: string | number;
   journal?: string;
   shortName?: string;
@@ -33,9 +34,13 @@ export const BibCard: React.FC<Props> = (props) => {
   }
 
   return (
-    <div id={props.id} data-testid="bib-card" className={classNames('mpc-bib-card', props.className)}>
+    <div
+      id={props.id}
+      data-testid="bib-card"
+      className={classNames('mpc-bib-card', props.className)}
+    >
       <p className="mpc-bib-card-title">{title}</p>
-      <p className="mpc-bib-card-authors">{props.author}</p>
+      <p className="mpc-bib-card-authors">{getAuthorString(props.author)}</p>
       <p>
         <span className="mpc-bib-card-journal">{props.journal}</span>
         {props.journal && <span>, </span>}
@@ -49,7 +54,7 @@ export const BibCard: React.FC<Props> = (props) => {
             openAccessUrl={props.openAccessUrl}
             preventOpenAccessFetch={props.preventOpenAccessFetch}
           >
-            {props.shortName}
+            {shortenAuthorString(props.author)}
           </PublicationButton>
           <BibtexButton doi={props.doi} />
         </div>

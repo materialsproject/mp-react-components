@@ -196,7 +196,7 @@ export const Sandbox: React.FC = () => {
         preventOpenAccessFetch={true}
       />
       <BibjsonCard bibjsonEntry={bibjsonEntry} />
-      <PublicationButton doi="10.1103/PhysRevB.95.174110">PDF</PublicationButton>
+      <PublicationButton doi="10.1103/PhysRevB.95.174110" tagClassName="is-white" />
       <DataBlock
         className="box"
         columns={[
