@@ -80,7 +80,7 @@
     "rxjs": "^6.6.3",
     "styled-components": "^5.2.1",
     "svgtodatauri": "0.0.0",
-    "three": "^0.115.0",
+    "three": "^0.125.0",
     "ts-debounce": "^2.1.0",
     "use-deep-compare-effect": "^1.6.1",
     "utils": "^0.3.1",
