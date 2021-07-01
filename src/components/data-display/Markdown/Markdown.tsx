@@ -4,8 +4,7 @@ import remarkMath from 'remark-math';
 import remarkSlug from 'remark-slug';
 import remarkHighlight from 'remark-highlight.js';
 import rehypeKatex from 'rehype-katex';
-import 'katex/dist/katex.min.css';
-import 'highlight.js/styles/github.css';
+import './Markdown.css';
 
 interface Props {
   /**
@@ -74,7 +73,6 @@ const dedentLines = (text) => {
 };
 
 /**
- *
  * A custom re-worked version of dcc.Markdown.
  * Uses v6 of react-markdown and applies four plugins
  * to the markdown component by default:

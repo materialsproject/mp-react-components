@@ -141,7 +141,6 @@
     "react-styleguidist": "^11.1.7",
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-import-css": "^2.0.1",
     "rollup-plugin-less-modules": "^0.1.11",
     "rollup-plugin-local-resolve": "^1.0.7",
     "rollup-plugin-node-resolve": "^5.2.0",
