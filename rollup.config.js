@@ -1,6 +1,7 @@
 import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
+import css from 'rollup-plugin-import-css';
 import lessModules from 'rollup-plugin-less-modules';
 import postcss from 'postcss';
 import url from 'postcss-url';
@@ -49,7 +50,7 @@ export default {
       format: 'es'
     }
   ],
-  external: p => {
+  external: (p) => {
     if (
       [
         ...Object.keys(pkg.dependencies || {}),
@@ -65,6 +66,7 @@ export default {
   },
   plugins: [
     lessModules({ output: true, processor }),
+    css(),
     image(),
     localResolve(),
     resolve(),
