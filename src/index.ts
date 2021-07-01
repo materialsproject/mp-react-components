@@ -28,6 +28,7 @@ import { Tooltip } from './components/search/Tooltip';
 import { DataBlock } from './components/search/DataBlock';
 import { Formula } from './components/search/Formula';
 import { SynthesisRecipeCard } from './components/search/SynthesisRecipeCard';
+import { Markdown } from './components/data-display/Markdown';
 
 export {
   SelectableTable,
@@ -62,5 +63,6 @@ export {
   DownloadDropdown,
   Tooltip,
   Formula,
-  SynthesisRecipeCard
+  SynthesisRecipeCard,
+  Markdown
 };
