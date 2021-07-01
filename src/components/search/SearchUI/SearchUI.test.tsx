@@ -2,8 +2,8 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { SearchUI, SearchUIProps } from '.';
 import { FilterGroup } from './types';
-import filterGroups from '../../../views/MaterialsExplorer/filterGroups.json';
-import columns from '../../../views/MaterialsExplorer/columns.json';
+import filterGroups from '../../../pages/MaterialsExplorer/filterGroups.json';
+import columns from '../../../pages/MaterialsExplorer/columns.json';
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
 import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolume';
 
