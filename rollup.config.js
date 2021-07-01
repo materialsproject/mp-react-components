@@ -1,8 +1,10 @@
 import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
+import css from 'rollup-plugin-import-css';
 import lessModules from 'rollup-plugin-less-modules';
 import postcss from 'postcss';
+import styles from 'rollup-plugin-styles';
 import url from 'postcss-url';
 //import urlPlugin from '@rollup/plugin-url'; we use image instead
 import resolve from 'rollup-plugin-node-resolve';
@@ -64,7 +66,9 @@ export default {
     return /^three/.test(p) || /^@trendmicro/.test(p) || /^react-toastify/.test(p);
   },
   plugins: [
-    lessModules({ output: true, processor }),
+    // lessModules({ output: true, processor }),
+    // css(),
+    styles(),
     image(),
     localResolve(),
     resolve(),
