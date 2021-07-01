@@ -8,6 +8,8 @@ import { PublicationButton } from '../../components/publications/PublicationButt
 import crossref from './crossref.json';
 import { DataBlock } from '../../components/search/DataBlock';
 import { NavbarDropdown } from '../../components/navigation/NavbarDropdown';
+import { Markdown } from '../../components/data-display/Markdown';
+import ReactMarkdown from 'react-markdown';
 
 /**
  * View for testing out small new components
@@ -273,6 +275,49 @@ export const Sandbox: React.FC = () => {
             'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.'
         }}
       />
+      <Markdown>
+        {`
+        # This is a header
+        
+        And this is a paragraph
+
+        ## This is a secondary header
+
+        ~~~css
+        h1 {
+          color: red;
+        }
+        ~~~
+
+        ~~~python
+
+        from mp_api.matproj import MPRester
+
+        with MPRester(api_key="your_api_key_here") as mpr:
+
+            # search across basic materials information
+            # for example, materials between 2 and 4 sites
+            materials_docs = mpr.materials.search(nsites=[2, 4])
+
+            # search for materials by thermodynamic properties
+            # for example, energy above hull below 0.2 eV/atom
+            thermo_docs = mpr.thermo.search(energy_above_hull_max=0.2)
+            
+        # access either the entire document
+        print(materials_doc[0])
+        
+        # or individual fields
+        print(thermo_docs[0].energy_above_hull)
+        ~~~
+
+        Lift($L$) can be determined by Lift Coefficient ($C_L$) like the following equation.
+
+        $$
+        L = \\frac{1}{2} \\rho v^2 S C_L
+        $$
+        `}
+      </Markdown>
+      <ReactMarkdown children={'# This is a header\n\nAnd this is a paragraph'} />
     </>
   );
 };
