@@ -10,6 +10,7 @@ import { ScenePosition } from '../../components/crystal-toolkit/scene/inset-help
 import { CameraState } from '../../components/crystal-toolkit/CameraContextProvider/camera-reducer';
 import * as THREE from 'three';
 import { Camera } from 'three';
+import { useRef } from 'react';
 
 /**
  * Component for testing Scene
@@ -60,6 +61,8 @@ function SceneSwitcher() {
 
 export const CrystalStructureViewer: React.FC = () => {
   const [dataInput, setDataInput] = useState<any>();
+  const [structureContainerWidth, setStructureContainerWidth] = useState('100%');
+  const structureContainer = useRef(null);
 
   const cameraState1 = {
     quaternion: {
@@ -146,34 +149,51 @@ export const CrystalStructureViewer: React.FC = () => {
       >
         Camera 2
       </button>
+      <button
+        onClick={() => {
+          const width = structureContainerWidth === '100%' ? '50%' : '100%';
+          setStructureContainerWidth(width);
+        }}
+      >
+        Toggle Structure Width
+      </button>
       <CameraContextProvider>
         <>
-          <CrystalToolkitScene
-            settings={{
-              renderer: Renderer.WEBGL,
-              extractAxis: false,
-              zoomToFit2D: true
-            }}
-            data={scene}
-            debug={false}
-            toggleVisibility={{}}
-            imageRequest={state.imageRequest}
-            imageData={state.imageData}
-            imageDataTimestamp={state.imageDataTimestamp}
-            currentCameraState={state.currentCameraState}
-            customCameraState={state.customCameraState}
-            setProps={setState}
-          />
-          <CrystalToolkitScene
+          <div>
+            <div
+              className="box"
+              ref={structureContainer}
+              style={{ width: structureContainerWidth }}
+            >
+              <CrystalToolkitScene
+                settings={{
+                  renderer: Renderer.WEBGL,
+                  extractAxis: false,
+                  zoomToFit2D: true
+                }}
+                data={s3}
+                sceneSize="100%"
+                debug={false}
+                toggleVisibility={{}}
+                imageRequest={state.imageRequest}
+                imageData={state.imageData}
+                imageDataTimestamp={state.imageDataTimestamp}
+                currentCameraState={state.currentCameraState}
+                customCameraState={state.customCameraState}
+                setProps={setState}
+              />
+            </div>
+          </div>
+          {/* <CrystalToolkitScene
             settings={{
               renderer: Renderer.WEBGL,
               extractAxis: false,
               zoomToFit2D: true
             }}
             debug
-            data={scene}
+            data={s3}
             setProps={setStateTwo}
-          />
+          /> */}
         </>
       </CameraContextProvider>
       <p>Parent Current Camera State:</p>

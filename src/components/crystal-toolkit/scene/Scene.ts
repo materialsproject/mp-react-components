@@ -8,7 +8,7 @@ import {
   defaults,
   ExportType,
   Renderer,
-  ThreePosition,
+  ThreePosition
 } from './constants';
 import { TooltipHelper } from '../scene/tooltip-helper';
 import { InsetHelper, ScenePosition } from '../scene/inset-helper';
@@ -19,7 +19,7 @@ import {
   getScreenCoordinate,
   getThreeScreenCoordinate,
   moveAndUnprojectPoint,
-  ObjectRegistry,
+  ObjectRegistry
 } from '../utils';
 // @ts-ignore
 //import img from './glass.png';
@@ -79,7 +79,7 @@ export default class Scene {
       case Renderer.WEBGL: {
         const renderer = new THREE.WebGLRenderer({
           antialias: this.settings.antialias,
-          alpha: this.settings.transparentBackground,
+          alpha: this.settings.transparentBackground
         });
         renderer.autoClear = false;
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -403,7 +403,7 @@ export default class Scene {
     this.renderInlet();
   }
 
-  resizeRendererToDisplaySize() {
+  public resizeRendererToDisplaySize() {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
     this.cacheMountBBox(canvas.parentElement as Element);
     const { width, height } = this.cachedMountNodeSize;
@@ -738,11 +738,11 @@ export default class Scene {
       const screenPoint = getScreenCoordinate(this.cachedMountNodeSize, point, this.camera);
       const finalPoint = moveAndUnprojectPoint(this.cachedMountNodeSize, screenPoint, this.camera, {
         x: 0,
-        y: -30,
+        y: -30
       });
       const info = {
         point: finalPoint,
-        object: this.getParentObject(intersects[0].object),
+        object: this.getParentObject(intersects[0].object)
       };
       return info;
     }
@@ -766,7 +766,7 @@ export default class Scene {
         //
       } else {
         this.debugHelper.onDestroy();
-        this.debugHelper = (null as unknown) as DebugHelper;
+        this.debugHelper = null as unknown as DebugHelper;
       }
     } else {
       if (this.debugHelper) {
@@ -831,19 +831,19 @@ export default class Scene {
       case ScenePosition.SE: {
         return [
           this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
-          this.inset.getPadding(),
+          this.inset.getPadding()
         ];
       }
       case ScenePosition.NW: {
         return [
           0 + this.inset.getPadding(),
-          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize(),
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
         ];
       }
       case ScenePosition.NE: {
         return [
           this.cachedMountNodeSize.width - this.inset.getPadding() - this.inset.getSize(),
-          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize(),
+          this.cachedMountNodeSize.height - this.inset.getPadding() - this.inset.getSize()
         ];
       }
       default:
@@ -861,7 +861,7 @@ export default class Scene {
       defaultThickness: 0.01,
       defaultColor: [0, 0, 0],
       defaultAlpha: 1.0,
-      defaultKeepAlive: true, // keeps outline material in cache even if material is removed from scene
+      defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
     });
     this.outline = outline;
   }
@@ -871,7 +871,7 @@ export default class Scene {
     const jsonObject = this.threeUUIDTojsonObject[uuid];
     return {
       threeObject,
-      jsonObject,
+      jsonObject
     };
   }
 
