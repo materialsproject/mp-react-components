@@ -91,6 +91,7 @@
     "three": "^0.115.0",
     "ts-debounce": "^2.1.0",
     "use-deep-compare-effect": "^1.6.1",
+    "use-resize-observer": "^7.0.0",
     "utils": "^0.3.1",
     "uuid": "^8.3.2",
     "xlsx": "^0.15.6"

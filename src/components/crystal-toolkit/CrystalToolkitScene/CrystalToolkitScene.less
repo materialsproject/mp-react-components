@@ -9,3 +9,37 @@
 .show-pointer {
   cursor: pointer !important;
 }
+
+// .three-container:before {
+//   content: '';
+//   display: block;
+//   height: 0;
+//   width: 0;
+//   float: left;
+//   padding-bottom: 100%;
+// }
+
+// .three-container::after {
+//   clear: left;
+//   content: " ";
+//   display: table;
+// }
+
+.three-wrapper {
+  position: relative;
+}
+
+.three-wrapper:before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  float: left;
+  padding-bottom: 100%;
+}
+
+.three-wrapper::after {
+  clear: left;
+  content: ' ';
+  display: table;
+}

@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useReducer,
   useRef,
-  useState,
+  useState
 } from 'react';
 import Scene from '../scene/Scene';
 import { subscribe } from '../scene/download-event';
@@ -17,7 +17,7 @@ import {
   ExportType,
   MOUNT_DEBUG_NODE_CLASS,
   MOUNT_NODE_CLASS,
-  MOUNT_NODE_STYLE,
+  MOUNT_NODE_STYLE
 } from '../scene/constants';
 import { CameraContext } from '../CameraContextProvider';
 import {
@@ -25,7 +25,7 @@ import {
   cameraReducer,
   CameraReducerAction,
   CameraState,
-  initialState,
+  initialState
 } from '../CameraContextProvider/camera-reducer';
 import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
@@ -34,6 +34,7 @@ import * as THREE from 'three';
 import { Quaternion, Vector3, WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { Action } from '../utils';
+import useResizeObserver from 'use-resize-observer';
 
 /**
  * CrystalToolkitScene is intended to draw simple 3D scenes using the popular
@@ -179,9 +180,25 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   ...otherProps
 }) => {
   let props = { imageRequest, setProps, ...otherProps };
-  // mount nodes, those are passed in the template and are populated when
-  // the component is mounted
+  /**
+   * mount nodes, those are passed in the template and are populated when
+   * the component is mounted
+   */
   const mountNodeRef = useRef(null);
+
+  /**
+   * Wrap mountNodeRef in a resize observer so that the scene
+   * can resize properly even when the window size doesn't change
+   */
+  const { width, height } = useResizeObserver<HTMLDivElement>({
+    ref: mountNodeRef,
+    onResize: ({ width, height }) => {
+      if (scene.current) {
+        scene.current.resizeRendererToDisplaySize();
+      }
+    }
+  });
+
   const mountNodeDebugRef = useRef(null);
   const componentId = useRef((++ID_GENERATOR).toString());
   const previousAnimationSetting = usePrevious(props.animation);
@@ -212,7 +229,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
         callback: function (imageData: string) {
           const imageDataTimestamp = Date.now();
           props.setProps({ imageData, imageDataTimestamp });
-        },
+        }
       });
     }
   };
@@ -271,8 +288,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
               componentId: componentId.current,
               position,
               quaternion,
-              zoom,
-            },
+              zoom
+            }
           });
       },
       mountNodeDebugRef.current!
@@ -286,9 +303,10 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   }, []);
 
   // Note(chab) those hooks will be executed sequentially at mount time, and on change of the deps array elements
-  useEffect(() => scene.current!.enableDebug(props.debug!, mountNodeDebugRef.current), [
-    props.debug,
-  ]);
+  useEffect(
+    () => scene.current!.enableDebug(props.debug!, mountNodeDebugRef.current),
+    [props.debug]
+  );
   // An interesting classical react issue that we fixed : look at the stories, we do not pass anymore an empty object,
   // but a reference to an empty object, otherwise, it will be a different reference, and treated as a different object, thus
   // triggering the effect
@@ -305,9 +323,10 @@ export const CrystalToolkitScene: React.FC<Props> = ({
     !!props.data && scene.current!.addToScene(props.data, true);
     scene.current!.toggleVisibility(props.toggleVisibility as any);
   }, [props.data]);
-  useEffect(() => scene.current!.toggleVisibility(props.toggleVisibility as any), [
-    props.toggleVisibility,
-  ]);
+  useEffect(
+    () => scene.current!.toggleVisibility(props.toggleVisibility as any),
+    [props.toggleVisibility]
+  );
   useEffect(
     () => scene.current!.updateInsetSettings(props.inletSize!, props.inletPadding!, props.axisView),
     [props.inletSize, props.inletPadding, props.axisView]
@@ -371,8 +390,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
             componentId: componentId.current,
             position,
             quaternion,
-            zoom,
-          },
+            zoom
+          }
         });
       }
     }
@@ -388,7 +407,7 @@ export const CrystalToolkitScene: React.FC<Props> = ({
   // NOTE(chab) we could let the user opt for a flex layout, instead of using relative/absolute
   return (
     <>
-      <div className="three-wrapper" style={{ position: 'relative', width: size, height: size }}>
+      <div className="three-wrapper" style={{ width: size, height: size }}>
         <div
           id={props.id!}
           style={{ ...MOUNT_NODE_STYLE, width: size, height: size }}
