@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkSlug from 'remark-slug';
 import remarkHighlight from 'remark-highlight.js';
@@ -95,7 +96,7 @@ export const Markdown: React.FC<Props> = (props) => {
       data-dash-is-loading={(props.loading_state && props.loading_state.is_loading) || undefined}
     >
       <ReactMarkdown
-        remarkPlugins={[remarkMath, remarkSlug, remarkHighlight]}
+        remarkPlugins={[remarkGfm, remarkMath, remarkSlug, remarkHighlight]}
         rehypePlugins={[rehypeKatex]}
       >
         {displayText}

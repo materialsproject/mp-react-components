@@ -1,43 +1,12 @@
-import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
-import css from 'rollup-plugin-import-css';
-import lessModules from 'rollup-plugin-less-modules';
-import postcss from 'postcss';
 import styles from 'rollup-plugin-styles';
-import url from 'postcss-url';
 //import urlPlugin from '@rollup/plugin-url'; we use image instead
 import resolve from 'rollup-plugin-node-resolve';
 import image from '@rollup/plugin-image';
 import localResolve from 'rollup-plugin-local-resolve';
-const urlOptions = {
-  url: 'copy',
-  // base path to search assets from
-  basePath: [path.resolve('src/assets/images'), path.resolve('src/assets/img/network')],
-  // dir to copy assets
-  assetsPath: './dist/img',
-  // using hash names for assets (generates from asset content)
-  useHash: true
-};
 import replace from 'rollup-plugin-replace';
-import { terser } from 'rollup-plugin-terser';
-
-const processor = (code, id) => {
-  const postCssOptions = {
-    from: id,
-    to: id,
-    map: {
-      prev: code.map
-    }
-  };
-  return postcss()
-    .use(url(urlOptions))
-    .process(code.css, postCssOptions)
-    .then(({ css, map }) => ({
-      css,
-      map
-    }));
-};
+// import { terser } from 'rollup-plugin-terser';
 
 export default {
   input: 'src/index.ts',
@@ -66,8 +35,6 @@ export default {
     return /^three/.test(p) || /^@trendmicro/.test(p) || /^react-toastify/.test(p);
   },
   plugins: [
-    // lessModules({ output: true, processor }),
-    // css(),
     styles(),
     image(),
     localResolve(),
