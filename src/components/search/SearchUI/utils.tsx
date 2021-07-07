@@ -364,6 +364,29 @@ export const getSearchState = (
             });
           }
           break;
+        case FilterType.SELECT:
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          if (
+            filterValues[f.id] !== undefined &&
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
+            const selectedOption = f.props.options.find((d) => d.value === filterValues[f.id]);
+            const displayValue = selectedOption ? selectedOption.label : filterValues[f.id];
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: displayValue,
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id,
+                  value: filterValues[f.id]
+                }
+              ]
+            });
+          }
+          break;
         default:
           if (
             filterValues[f.id] !== undefined &&

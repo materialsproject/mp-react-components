@@ -12,19 +12,10 @@ interface Props {
   onChange?: (value: any) => void;
 }
 
-export const ThreeStateBooleanSelect: React.FC<Props> = ({
-  options,
-  value,
-  onChange
-}) => {
-  const threeOptions = [{label: 'Any', value: undefined}, options[0], options[1]];
-  const selected = threeOptions.find(option => option.value === value);
+export const ThreeStateBooleanSelect: React.FC<Props> = ({ options, value, onChange }) => {
+  const threeOptions = [options[0], options[1], { label: 'Any', value: undefined }];
+  const selected = threeOptions.find((option) => option.value === value);
   return (
-    <Select
-      options={threeOptions}
-      value={selected}
-      menuPosition="fixed"
-      onChange={onChange}
-    />
+    <Select options={threeOptions} value={selected} menuPosition="fixed" onChange={onChange} />
   );
-}
+};
