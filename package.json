@@ -94,7 +94,7 @@
     "use-resize-observer": "^7.0.0",
     "utils": "^0.3.1",
     "uuid": "^8.3.2",
-    "xlsx": "^0.15.6"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
