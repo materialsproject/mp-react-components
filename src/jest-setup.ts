@@ -2,6 +2,7 @@ import * as Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import '@testing-library/jest-dom';
 import { server } from './mocks/server';
+import ResizeObserver from 'resize-observer-polyfill';
 
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());
@@ -14,3 +15,6 @@ afterAll(() => server.close());
 Enzyme.configure({
   adapter: new Adapter()
 });
+
+const globalAny: any = global;
+globalAny.ResizeObserver = ResizeObserver;
