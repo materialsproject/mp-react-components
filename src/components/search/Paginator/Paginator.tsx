@@ -1,8 +1,13 @@
 import classNames from 'classnames';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaAngleDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
+import { FaAngleDown, FaAngleUp, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import {
+  Wrapper as MenuWrapper,
+  Button as MenuButton,
+  Menu,
+  MenuItem
+} from 'react-aria-menubutton';
 import { getPageCount } from '../utils';
 import * as d3 from 'd3';
 import './Paginator.css';
@@ -13,6 +18,7 @@ interface Props {
   onChangePage: (page: number) => any;
   onChangeRowsPerPage?: (rowsPerPage: number) => any;
   currentPage: number;
+  isTop?: boolean;
 }
 
 export const Paginator: React.FC<Props> = ({
@@ -20,7 +26,8 @@ export const Paginator: React.FC<Props> = ({
   rowCount,
   onChangePage,
   onChangeRowsPerPage,
-  currentPage
+  currentPage,
+  isTop
 }) => {
   const [pageCount, setPageCount] = useState(getPageCount(rowCount, rowsPerPage));
 
@@ -99,16 +106,16 @@ export const Paginator: React.FC<Props> = ({
   const resultsPerPageMenu = (
     <MenuWrapper
       data-testid="results-per-page-menu"
-      className="dropdown is-active is-hidden-touch"
+      className={classNames('dropdown is-active is-hidden-touch', {
+        'is-up': !isTop
+      })}
       onSelection={onChangeRowsPerPage}
     >
       <div className="dropdown-trigger">
-        <Button className="button is-small">
+        <MenuButton className="button is-small">
           <span>{rowsPerPage} / page</span>
-          <span className="icon">
-            <FaAngleDown />
-          </span>
-        </Button>
+          <span className="icon">{isTop ? <FaAngleDown /> : <FaAngleUp />}</span>
+        </MenuButton>
       </div>
       <Menu className="dropdown-menu">
         <ul className="dropdown-content">
@@ -130,22 +137,24 @@ export const Paginator: React.FC<Props> = ({
   const jumpToPageMenu = (
     <MenuWrapper
       data-testid="mpc-jump-to-page-menu"
-      className="dropdown is-active is-hidden-touch"
+      className={classNames('dropdown is-active is-hidden-touch', {
+        'is-up': !isTop
+      })}
       onSelection={onChangePage}
     >
       <div className="dropdown-trigger">
-        <Button className="button is-small">
+        <MenuButton className="button is-small">
           <span>Jump to</span>
-          <span className="icon">
-            <FaAngleDown />
-          </span>
-        </Button>
+          <span className="icon">{isTop ? <FaAngleDown /> : <FaAngleUp />}</span>
+        </MenuButton>
       </div>
       <Menu className="dropdown-menu">
         <ul className="dropdown-content">
           {jumpToPageOptions.map((d, i) => (
             <MenuItem key={i} value={d}>
-              <li className="dropdown-item">{d}</li>
+              <li className={classNames('dropdown-item', { 'is-active': d === currentPage })}>
+                {d}
+              </li>
             </MenuItem>
           ))}
         </ul>
@@ -163,6 +172,10 @@ export const Paginator: React.FC<Props> = ({
 
   return (
     <div data-testid="mpc-paginator" className="mpc-paginator">
+      <div>
+        {jumpToPageMenu}
+        {resultsPerPageMenu}
+      </div>
       <nav className="pagination is-small is-centered" role="navigation" aria-label="pagination">
         <button
           className="pagination-previous"
@@ -184,10 +197,6 @@ export const Paginator: React.FC<Props> = ({
         </button>
         {paginationItems}
       </nav>
-      <div>
-        {jumpToPageMenu}
-        {resultsPerPageMenu}
-      </div>
     </div>
   );
 };

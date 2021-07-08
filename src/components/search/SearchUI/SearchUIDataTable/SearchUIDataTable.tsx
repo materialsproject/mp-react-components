@@ -35,13 +35,14 @@ export const SearchUIDataTable: React.FC = () => {
     actions.setSelectedRows(rowState.selectedRows);
   };
 
-  const CustomPaginator = () => (
+  const CustomPaginator = ({ isTop = false }) => (
     <Paginator
       rowCount={state.totalResults}
       rowsPerPage={state.resultsPerPage}
       currentPage={state.page}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
+      isTop={isTop}
     />
   );
 
@@ -52,7 +53,7 @@ export const SearchUIDataTable: React.FC = () => {
 
   return (
     <div className="mpc-search-ui-data-table">
-      <CustomPaginator />
+      {state.resultsPerPage > 15 && <CustomPaginator isTop={true} />}
       <div className="columns react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"

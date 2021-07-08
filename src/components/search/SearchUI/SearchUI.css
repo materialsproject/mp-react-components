@@ -113,10 +113,6 @@
   flex-flow: wrap;
 }
 
-.mpc-search-ui .mpc-search-ui-data-header-content .subtitle {
-  height: 0;
-}
-
 .mpc-search-ui .progress-container {
   /* height: 0;
   overflow-y: visible;
@@ -185,11 +181,11 @@
   margin-top: 0.5rem;
 }
 
-.mpc-search-ui .pagination:not(:last-child) {
+.mpc-search-ui .mpc-paginator:not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
-.mpc-search-ui .pagination:last-child {
+.mpc-search-ui .mpc-paginator:last-child {
   margin-bottom: 0;
 }
 

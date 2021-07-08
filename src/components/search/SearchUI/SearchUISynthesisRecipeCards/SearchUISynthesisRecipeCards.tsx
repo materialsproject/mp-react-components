@@ -13,18 +13,19 @@ export const SearchUISynthesisRecipeCards: React.FC = () => {
     actions.setPage(page);
   };
 
-  const CustomPaginator = () => (
+  const CustomPaginator = ({ isTop = false }) => (
     <Paginator
       rowCount={state.totalResults}
       rowsPerPage={state.resultsPerPage}
       currentPage={state.page}
       onChangePage={handlePageChange}
+      isTop={isTop}
     />
   );
 
   return (
     <div data-testid="mpc-synthesis-recipe-cards" className="mpc-synthesis-recipe-cards">
-      <CustomPaginator />
+      <CustomPaginator isTop />
       <div className="mpc-synthesis-recipe-cards-container">
         {state.results.map((d, i) => (
           // Custom result cards

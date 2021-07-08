@@ -7,9 +7,11 @@ import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
+import scrollIntoView from 'scroll-into-view-if-needed';
 import { MaterialsInputType } from '../../MaterialsInput';
 import { getDefaultFiltersAndValues, getSearchState, initSearchState } from '../utils';
 import { getPageCount } from '../../utils';
+import { useRef } from 'react';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -55,12 +57,27 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
   );
   const prevActiveFilters = usePrevious(state.activeFilters);
+  const ref = useRef<HTMLDivElement>(null);
 
   const actions = {
     setPage: (page: number) => {
+      if (ref.current) {
+        scrollIntoView(ref.current, {
+          scrollMode: 'if-needed',
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
       setState((currentState) => ({ ...currentState, page }));
     },
     setResultsPerPage: (resultsPerPage: number) => {
+      if (ref.current) {
+        scrollIntoView(ref.current, {
+          scrollMode: 'if-needed',
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
       setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
@@ -255,7 +272,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
   return (
     <SearchUIContext.Provider value={state}>
-      <SearchUIContextActions.Provider value={actions}>{children}</SearchUIContextActions.Provider>
+      <SearchUIContextActions.Provider value={actions}>
+        <div ref={ref}>{children}</div>
+      </SearchUIContextActions.Provider>
     </SearchUIContext.Provider>
   );
 };
