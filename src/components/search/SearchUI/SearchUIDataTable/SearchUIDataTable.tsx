@@ -53,7 +53,7 @@ export const SearchUIDataTable: React.FC = () => {
 
   return (
     <div className="mpc-search-ui-data-table">
-      {state.resultsPerPage > 15 && <CustomPaginator isTop={true} />}
+      {state.resultsPerPage > 15 && state.totalResults > 15 && <CustomPaginator isTop={true} />}
       <div className="columns react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"
