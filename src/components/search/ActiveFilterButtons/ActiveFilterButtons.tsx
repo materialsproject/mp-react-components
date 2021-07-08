@@ -31,8 +31,11 @@ export const ActiveFilterButtons: React.FC<Props> = (props) => {
     <div data-testid="active-filter-buttons" className="mpc-active-filter-buttons">
       {props.filters.map((f, i) => (
         <div className="mpc-active-filter-button" key={i}>
-          <button className="button is-small" onClick={() => props.onClick(f.defaultValue, f.id)}>
-            <FaTimesCircle />
+          <button
+            className="button is-small is-rounded"
+            onClick={() => props.onClick(f.defaultValue, f.id)}
+          >
+            <FaTimes />
             <span className="ml-1">
               {f.displayName}: {formatValue(f)}
             </span>
