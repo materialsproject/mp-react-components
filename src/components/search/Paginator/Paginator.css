@@ -1,0 +1,20 @@
+.mpc-paginator .pagination {
+  display: inline-flex;
+}
+
+.mpc-paginator {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mpc-paginator .dropdown {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  text-align: left;
+}
+
+@media screen and (min-width: 1152px) {
+  .mpc-paginator .pagination {
+    min-width: 450px;
+  }
+}

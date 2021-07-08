@@ -41,6 +41,7 @@ export const SearchUIDataTable: React.FC = () => {
       rowsPerPage={state.resultsPerPage}
       currentPage={state.page}
       onChangePage={handlePageChange}
+      onChangeRowsPerPage={actions.setResultsPerPage}
     />
   );
 
@@ -51,7 +52,7 @@ export const SearchUIDataTable: React.FC = () => {
 
   return (
     <div className="mpc-search-ui-data-table">
-      {state.results.length > 15 && <CustomPaginator />}
+      <CustomPaginator />
       <div className="columns react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"

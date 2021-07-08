@@ -223,3 +223,9 @@
     min-width: 550px;
   }
 }
+
+@media screen and (max-width: 1224px) {
+  .mpc-paginator > div:nth-child(2) {
+    display: none;
+  }
+}

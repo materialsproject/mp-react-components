@@ -270,7 +270,7 @@ export const SearchUIDataHeader: React.FC = () => {
         <button
           onClick={() => actions.setView('table')}
           className={classNames('button', {
-            'is-active': state.view === 'table',
+            'is-active': state.view === 'table'
           })}
         >
           <FaTable />
@@ -280,7 +280,7 @@ export const SearchUIDataHeader: React.FC = () => {
         <button
           onClick={() => actions.setView('cards')}
           className={classNames('button', {
-            'is-active': state.view === 'cards',
+            'is-active': state.view === 'cards'
           })}
         >
           <FaThLarge />
@@ -305,9 +305,9 @@ export const SearchUIDataHeader: React.FC = () => {
         </div>
         <div className="mpc-search-ui-data-header-controls">
           {viewSwitcher}
-          {sortMenu}
+          {/* {sortMenu} */}
           {columnsMenu}
-          {resultsPerPageMenu}
+          {/* {resultsPerPageMenu} */}
         </div>
       </div>
       {state.activeFilters.length > 0 && (

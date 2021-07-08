@@ -1,9 +1,11 @@
 import classNames from 'classnames';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaAngleDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import { getPageCount } from '../utils';
 import * as d3 from 'd3';
+import './Paginator.css';
 
 interface Props {
   rowsPerPage: number;
@@ -18,7 +20,7 @@ export const Paginator: React.FC<Props> = ({
   rowCount,
   onChangePage,
   onChangeRowsPerPage,
-  currentPage,
+  currentPage
 }) => {
   const [pageCount, setPageCount] = useState(getPageCount(rowCount, rowsPerPage));
 
@@ -93,6 +95,64 @@ export const Paginator: React.FC<Props> = ({
     paginationItems = pageIsWithinFourOfLast;
   }
 
+  const resultsPerPageOptions = [10, 15, 30, 50, 75];
+  const resultsPerPageMenu = (
+    <MenuWrapper
+      data-testid="results-per-page-menu"
+      className="dropdown is-active is-hidden-touch"
+      onSelection={onChangeRowsPerPage}
+    >
+      <div className="dropdown-trigger">
+        <Button className="button is-small">
+          <span>{rowsPerPage} / page</span>
+          <span className="icon">
+            <FaAngleDown />
+          </span>
+        </Button>
+      </div>
+      <Menu className="dropdown-menu">
+        <ul className="dropdown-content">
+          {resultsPerPageOptions.map((d, i) => (
+            <MenuItem key={i} value={d}>
+              <li className={classNames('dropdown-item', { 'is-active': d === rowsPerPage })}>
+                {d}
+              </li>
+            </MenuItem>
+          ))}
+        </ul>
+      </Menu>
+    </MenuWrapper>
+  );
+
+  const jumpToPageOptions = Array(pageCount)
+    .fill(null)
+    .map((_, i) => i + 1);
+  const jumpToPageMenu = (
+    <MenuWrapper
+      data-testid="mpc-jump-to-page-menu"
+      className="dropdown is-active is-hidden-touch"
+      onSelection={onChangePage}
+    >
+      <div className="dropdown-trigger">
+        <Button className="button is-small">
+          <span>Jump to</span>
+          <span className="icon">
+            <FaAngleDown />
+          </span>
+        </Button>
+      </div>
+      <Menu className="dropdown-menu">
+        <ul className="dropdown-content">
+          {jumpToPageOptions.map((d, i) => (
+            <MenuItem key={i} value={d}>
+              <li className="dropdown-item">{d}</li>
+            </MenuItem>
+          ))}
+        </ul>
+      </Menu>
+    </MenuWrapper>
+  );
+
   /**
    * This effect handles changes to rowsPerPage prop
    * that occur outside this component
@@ -102,31 +162,32 @@ export const Paginator: React.FC<Props> = ({
   }, [rowsPerPage]);
 
   return (
-    <nav
-      data-testid="paginator"
-      className="mpc-paginator pagination is-small is-centered"
-      role="navigation"
-      aria-label="pagination"
-    >
-      <a
-        className={classNames('pagination-previous', { 'is-hidden-by-opacity': currentPage === 1 })}
-        aria-hidden={currentPage === 1}
-        onClick={() => onChangePage(currentPage - 1)}
-      >
-        <FaArrowLeft />
-        <span className="ml-1 is-hidden-touch">Previous</span>
-      </a>
-      <a
-        className={classNames('pagination-next', {
-          'is-hidden-by-opacity': currentPage === pageCount,
-        })}
-        aria-hidden={currentPage === pageCount}
-        onClick={() => onChangePage(currentPage + 1)}
-      >
-        <span className="mr-1 is-hidden-touch">Next</span>
-        <FaArrowRight />
-      </a>
-      {paginationItems}
-    </nav>
+    <div data-testid="mpc-paginator" className="mpc-paginator">
+      <nav className="pagination is-small is-centered" role="navigation" aria-label="pagination">
+        <button
+          className="pagination-previous"
+          disabled={currentPage === 1}
+          aria-hidden={currentPage === 1}
+          onClick={() => onChangePage(currentPage - 1)}
+        >
+          <FaArrowLeft />
+          <span className="ml-1 is-hidden-touch">Previous</span>
+        </button>
+        <button
+          className="pagination-next"
+          disabled={currentPage === pageCount}
+          aria-hidden={currentPage === pageCount}
+          onClick={() => onChangePage(currentPage + 1)}
+        >
+          <span className="mr-1 is-hidden-touch">Next</span>
+          <FaArrowRight />
+        </button>
+        {paginationItems}
+      </nav>
+      <div>
+        {jumpToPageMenu}
+        {resultsPerPageMenu}
+      </div>
+    </div>
   );
 };

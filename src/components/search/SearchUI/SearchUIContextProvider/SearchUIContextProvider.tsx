@@ -61,7 +61,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState((currentState) => ({ ...currentState, page }));
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      setState((currentState) => ({ ...currentState, resultsPerPage }));
+      setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
       setState((currentState) => ({
