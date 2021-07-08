@@ -93,6 +93,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
         return (
           <DualRangeSlider
             {...f.props}
+            debounce={1000}
             initialValues={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}

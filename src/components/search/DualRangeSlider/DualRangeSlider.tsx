@@ -43,7 +43,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   initialValues = domain.slice(),
   debounce,
   onChange = () => undefined,
-  onPropsChange = () => undefined,
+  onPropsChange = () => undefined
 }) => {
   const decimals = countDecimals(step);
   const tickCount = 5;
@@ -108,7 +108,7 @@ export const DualRangeSlider: React.FC<Props> = ({
     const lowerBoundFloat = parseFloat(debouncedLowerBound);
     const upperBoundFloat = parseFloat(upperBound);
     let newValues = [lowerBoundFloat, upperBoundFloat];
-    if (lowerBoundFloat > upperBoundFloat) {
+    if (lowerBoundFloat > upperBoundFloat && lowerBoundFloat <= niceDomain[1]) {
       setUpperBound(lowerBoundFloat);
       newValues = [lowerBoundFloat, lowerBoundFloat];
     } else if (lowerBoundFloat < niceDomain[0]) {
@@ -116,6 +116,7 @@ export const DualRangeSlider: React.FC<Props> = ({
       newValues = [niceDomain[0], upperBoundFloat];
     } else if (lowerBoundFloat > niceDomain[1]) {
       setLowerBound(niceDomain[1]);
+      setUpperBound(niceDomain[1]);
       newValues = [niceDomain[1], niceDomain[1]];
     }
 
@@ -132,7 +133,7 @@ export const DualRangeSlider: React.FC<Props> = ({
     const lowerBoundFloat = parseFloat(lowerBound);
     const upperBoundFloat = parseFloat(debouncedUpperBound);
     let newValues = [lowerBoundFloat, upperBoundFloat];
-    if (upperBoundFloat < lowerBoundFloat) {
+    if (upperBoundFloat < lowerBoundFloat && upperBoundFloat >= niceDomain[0]) {
       setLowerBound(upperBoundFloat);
       newValues = [upperBoundFloat, upperBoundFloat];
     } else if (upperBoundFloat > niceDomain[1]) {
@@ -140,6 +141,7 @@ export const DualRangeSlider: React.FC<Props> = ({
       newValues = [lowerBoundFloat, niceDomain[1]];
     } else if (upperBoundFloat < niceDomain[0]) {
       setUpperBound(niceDomain[0]);
+      setLowerBound(niceDomain[0]);
       newValues = [niceDomain[0], niceDomain[0]];
     }
 
@@ -232,8 +234,8 @@ export const DualRangeSlider: React.FC<Props> = ({
                     values: values,
                     colors: ['#ccc', '#3273dc', '#ccc'],
                     min: niceDomain[0],
-                    max: niceDomain[1],
-                  }),
+                    max: niceDomain[1]
+                  })
                 }}
               >
                 {children}
@@ -264,7 +266,7 @@ export const DualRangeSlider: React.FC<Props> = ({
                     className="slider-tick-mark"
                     style={{
                       ...props.style,
-                      backgroundColor: '#ccc',
+                      backgroundColor: '#ccc'
                       // tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc',
                     }}
                   />
