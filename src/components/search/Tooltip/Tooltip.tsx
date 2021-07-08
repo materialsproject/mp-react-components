@@ -1,5 +1,7 @@
+import classNames from 'classnames';
 import React from 'react';
 import ReactTooltip, { Effect, Place, Type } from 'react-tooltip';
+import './Tooltip.css';
 
 /**
  * Wrapper component for react-tooltip
@@ -55,9 +57,9 @@ interface Props {
 }
 
 export const Tooltip: React.FC<Props> = (props) => {
-  const { children, ...propsWithoutChildren } = props;
+  const { children, className, ...otherProps } = props;
   return (
-    <ReactTooltip {...propsWithoutChildren}>
+    <ReactTooltip className={classNames('mpc-tooltip', className)} {...otherProps}>
       {props.multiline ? (
         <div style={{ maxWidth: '200px', whiteSpace: 'normal' }}>{children}</div>
       ) : (

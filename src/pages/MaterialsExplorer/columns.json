@@ -33,7 +33,8 @@
   {
     "name": "Space Group Symbol",
     "selector": "symmetry.symbol",
-    "format": "SPACEGROUP_SYMBOL"
+    "format": "SPACEGROUP_SYMBOL",
+    "tooltip": "The space group symbol for the lattice"
   },
   {
     "name": "Space Group Number",

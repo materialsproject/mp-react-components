@@ -43,11 +43,15 @@ export const initColumns = (columns: Column[]): Column[] => {
         className={classNames({
           'column-header-right': c.right,
           'column-header-center': c.center,
-          'column-header-left': !c.right && !c.center
+          'column-header-left': !c.right && !c.center,
+          'tooltip-label': c.tooltip
         })}
+        data-tip={c.tooltip}
+        data-for={c.selector}
       >
         <div>{c.hideName ? '' : c.name}</div>
         {c.units && <div className="column-units">({c.units})</div>}
+        {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
       </div>
     );
 
