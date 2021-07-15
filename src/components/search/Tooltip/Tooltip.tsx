@@ -71,6 +71,6 @@ export const Tooltip: React.FC<Props> = (props) => {
 
 Tooltip.defaultProps = {
   effect: 'solid',
-  delayShow: 500,
+  delayShow: 350,
   multiline: true
 };
