@@ -8,7 +8,7 @@ import { pointGroups } from '../../constants/pointGroups';
 export enum DownloadType {
   JSON = 'json',
   CSV = 'csv',
-  EXCEL = 'xlsx',
+  EXCEL = 'xlsx'
 }
 
 type DownloadTypeObject = Partial<Record<DownloadType, any>>;
@@ -81,7 +81,7 @@ export const downloadExcel = (array: any[], filename?: string) => {
 export const downloadAs: DownloadTypeObject = {
   json: downloadJSON,
   csv: downloadCSV,
-  xlsx: downloadExcel,
+  xlsx: downloadExcel
 };
 
 /**
@@ -146,6 +146,9 @@ export function arrayToDelimitedString(arr: any[], delimiter: string | RegExp = 
   } else if (delimiter.indexOf('/') === 0) {
     delimiter = delimiter.replace(/\//g, '');
   }
+
+  const trailingDelimiter = arr.length === 1 ? delimiter : '';
+
   return arr.toString().replace(/,/gi, delimiter);
 }
 
@@ -174,7 +177,7 @@ export const spaceGroupNumberOptions = () => {
   return spaceGroups.map((g) => {
     return {
       value: g['int_number'],
-      label: g['int_number'],
+      label: g['int_number']
     };
   });
 };
@@ -183,7 +186,7 @@ export const spaceGroupSymbolOptions = () => {
   return spaceGroups.map((g) => {
     return {
       value: g['symbol'],
-      label: g['symbol_unicode'],
+      label: g['symbol_unicode']
     };
   });
 };
@@ -197,7 +200,7 @@ export const crystalSystemOptions = () => {
   return spaceGroupsByCrystalSystem.map((d) => {
     return {
       value: d.key,
-      label: d.key,
+      label: d.key
     };
   });
 };
@@ -206,7 +209,7 @@ export const pointGroupOptions = () => {
   return pointGroups.map((val) => {
     return {
       value: val,
-      label: val,
+      label: val
     };
   });
 };
@@ -215,7 +218,7 @@ export const pluralize = (noun) => {
   let plural = noun + 's';
   const specialNouns = {
     battery: 'batteries',
-    spectrum: 'spectra',
+    spectrum: 'spectra'
   };
   if (specialNouns[noun]) plural = specialNouns[noun];
   return plural;

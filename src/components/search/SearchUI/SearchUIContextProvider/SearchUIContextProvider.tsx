@@ -113,18 +113,42 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
       );
     },
-    setFilterWithOverrides: (value: any, id: string, overrideFields: string[]) => {
+    /**
+     * Set one filter and override others.
+     * This is used in the top-level search bar to make sure only a single composition filter
+     * is activated.
+     * @param value filter value
+     * @param id property key for the filter (e.g. "formula")
+     * @param overrideFields array of property keys to override
+     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
+     */
+    setFilterWithOverrides: (
+      value: any,
+      id: string,
+      overrideFields: string[],
+      filterProps?: any
+    ) => {
       setState((currentState) => {
         let newFilterValues = {};
+
         overrideFields.forEach((field) => {
           const activeFilter = currentState.activeFilters.find((a) => a.id === field);
           if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
         });
+
         newFilterValues[id] = value;
+
         let newFilterGroups = currentState.filterGroups.slice();
+
+        if (filterProps) {
+          const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
+          if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
+        }
+
         if (isDesktop) {
           newFilterGroups[0].expanded = true;
         }
+
         return getSearchState(
           { ...currentState, filterGroups: newFilterGroups, page: 1 },
           { ...currentState.filterValues, ...newFilterValues }

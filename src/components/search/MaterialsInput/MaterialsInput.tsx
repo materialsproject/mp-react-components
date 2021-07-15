@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { formatFormula } from '../utils';
+import { arrayToDelimitedString, formatFormula } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 import { FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
@@ -14,7 +14,8 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
-import { MaterialsInputTypesMap } from './utils';
+import { MaterialsInputTypesMap, validateElements, validateFormula } from './utils';
+import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 
 /**
  * Search types supported by this field
@@ -61,7 +62,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   autocompleteApiKey?: string;
   tooltip?: string;
   onChange?: (value: string) => void;
-  onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string) => any;
+  onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -95,13 +96,30 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [error, setError] = useState<string | null>(null);
   const [errorTipStayActive, setErrorTipStayActive] = useState(false);
-  const [isChemSys, setIsChemSys] = useState<boolean>(() =>
-    props.isChemSys ? props.isChemSys : false
-  );
+  const [selectionMode, setSelectionMode] = useState(() => {
+    return inputType === MaterialsInputType.FORMULA
+      ? PeriodicTableSelectionMode.FORMULA
+      : PeriodicTableSelectionMode.CHEMICAL_SYSTEM;
+  });
+  const [isChemSys, setIsChemSys] = useState<boolean | undefined>(() => {
+    if (props.isChemSys) {
+      return props.isChemSys;
+    } else if (
+      props.onInputTypeChange &&
+      selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM
+    ) {
+      if (props.onPropsChange) props.onPropsChange({ isChemSys: true });
+      return true;
+    } else {
+      return false;
+    }
+  });
   const periodicTableClicked = useRef(false);
-  const [showPeriodicTable, setShowPeriodicTable] = useState(() =>
-    props.periodicTableMode === PeriodicTableMode.TOGGLE && !props.hidePeriodicTable ? true : false
-  );
+  const [showPeriodicTable, setShowPeriodicTable] = useState(() => {
+    return props.periodicTableMode === PeriodicTableMode.TOGGLE && !props.hidePeriodicTable
+      ? true
+      : false;
+  });
   const [showAutocomplete, setShowAutocomplete] = useState(true);
   const [formulaSuggestions, setFormulaSuggestions] = useState<FormulaSuggestion[]>([]);
 
@@ -138,7 +156,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
     const target = e.target;
-    if (!periodicTableClicked.current) {
+    if (props.periodicTableMode !== PeriodicTableMode.FOCUS || !periodicTableClicked.current) {
       hideAutoCompleteAndPeriodicTable();
     } else {
       /** Chrome can make use of relatedTarget to avoid using a timeout */
@@ -179,24 +197,36 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     if (props.onSubmit && !error) {
       setShowPeriodicTable(false);
       setShowAutocomplete(false);
-      props.onSubmit(e, value);
+      /**
+       * Pass filterProps to submit so that the chem sys flag
+       * can persist into the activated filter.
+       * This is primarily only important for searches for single elements
+       * because the chem sys flag cannot be inferred by the input value.
+       */
+      const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
+      props.onSubmit(e, value, filterProps);
     } else {
       setErrorTipStayActive(true);
     }
   };
 
+  /**
+   * Dynamically determine if input is a chemical system
+   * based on its inputType and the presence of a '-'
+   */
   const handleChemSysCheck = () => {
     let newIsChemSys = isChemSys;
-    if (inputValue.match(/-/gi)) {
+    if (inputType === MaterialsInputType.ELEMENTS && inputValue.match(/-/gi)) {
       newIsChemSys = true;
     } else if (inputValue.match(/,|\s/gi)) {
       newIsChemSys = false;
     }
     if (props.onPropsChange) props.onPropsChange({ isChemSys: newIsChemSys });
     setIsChemSys(newIsChemSys);
+    return newIsChemSys;
   };
 
-  let MaterialsInputType: JSX.Element | null = null;
+  let materialsInputField: JSX.Element | null = null;
   let toggleControl: JSX.Element | null = null;
   let tooltipControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
@@ -208,7 +238,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       value={inputValue}
       inputType={inputType}
       allowedInputTypes={props.allowedInputTypes}
-      isChemSys={props.isChemSys}
+      isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
       onInputTypeChange={props.onInputTypeChange ? setInputType : undefined}
@@ -307,7 +337,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   );
 
   if (props.onSubmit) {
-    MaterialsInputType = (
+    materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
           {toggleControl}
@@ -323,7 +353,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       </form>
     );
   } else {
-    MaterialsInputType = (
+    materialsInputField = (
       <Field className="has-addons">
         {toggleControl}
         {materialsInputControl}
@@ -369,8 +399,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   if (props.onInputTypeChange) {
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
-        mode={inputType}
-        onSwitch={setInputType}
+        mode={selectionMode}
+        onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
     );
@@ -383,13 +413,28 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }
 
   /**
-   * This effect triggers when the input value changes
-   * It handles modifying the chemsys flag (checked when input is dash-delimited or one element)
-   * It also handles fetching formula suggestions if the necessary props are supplied
+   * When the input value or type changes...
+   * dynamically modify the chem sys flag,
+   * change the periodic table selection mode dropdown value based on the input type,
+   * fetch formula suggestions if input is a formula and the necessary props are supplied
    */
   useEffect(() => {
-    handleChemSysCheck();
-    if (props.autocompleteFormulaUrl && inputType === 'formula' && inputValue.length) {
+    const _isChemSys = handleChemSysCheck();
+    if (props.onInputTypeChange && inputType === MaterialsInputType.ELEMENTS) {
+      setSelectionMode(
+        _isChemSys
+          ? PeriodicTableSelectionMode.CHEMICAL_SYSTEM
+          : PeriodicTableSelectionMode.ELEMENTS
+      );
+    } else if (props.onInputTypeChange && inputType === MaterialsInputType.FORMULA) {
+      setSelectionMode(PeriodicTableSelectionMode.FORMULA);
+    }
+
+    if (
+      props.autocompleteFormulaUrl &&
+      inputType === MaterialsInputType.FORMULA &&
+      inputValue.length
+    ) {
       requestCount++;
       const requestIndex = requestCount;
       axios
@@ -455,10 +500,55 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   }, [debouncedInputValue]);
 
+  /**
+   * Ensure the local isChemSys variable is modified if the
+   * isChemsys prop changes (triggered by the onPropsChange function)
+   */
+  useEffect(() => {
+    if (props.isChemSys !== undefined) {
+      setIsChemSys(props.isChemSys);
+    }
+  }, [props.isChemSys]);
+
+  /**
+   * When the periodic table selection mode changes...
+   * modify the chem sys flag based on the dropdown value,
+   * modify the text input type,
+   * parse input value into proper syntax (i.e. change or remove element delimiter).
+   * Ignore this effect if the input type is not elements or formula (e.g. MPID).
+   */
+  useEffect(() => {
+    if (
+      props.onInputTypeChange &&
+      (inputType === MaterialsInputType.ELEMENTS || inputType === MaterialsInputType.FORMULA)
+    ) {
+      let elements: string[] | null = null;
+
+      if (inputType === MaterialsInputType.ELEMENTS) {
+        elements = validateElements(inputValue);
+      } else if (inputType === MaterialsInputType.FORMULA) {
+        elements = validateFormula(inputValue);
+      }
+
+      if (selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM) {
+        setIsChemSys(true);
+        setInputType(MaterialsInputType.ELEMENTS);
+        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /-/));
+      } else if (selectionMode === PeriodicTableSelectionMode.ELEMENTS) {
+        setIsChemSys(false);
+        setInputType(MaterialsInputType.ELEMENTS);
+        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /,/));
+      } else if (selectionMode === PeriodicTableSelectionMode.FORMULA) {
+        setInputType(MaterialsInputType.FORMULA);
+        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, ''));
+      }
+    }
+  }, [selectionMode]);
+
   return (
     <div className="mpc-materials-input">
       <PeriodicContext>
-        {MaterialsInputType}
+        {materialsInputField}
         {chemSysCheckbox}
         {autocompleteMenu}
         <div

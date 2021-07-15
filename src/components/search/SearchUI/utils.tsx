@@ -204,6 +204,15 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
   const initializedGroups = filterGroups.map((g) => {
     g.filters = g.filters.map((f) => {
       let queryParamValue: any = query.get(f.id);
+
+      if (f.id === 'formula' && queryParamValue && queryParamValue.indexOf('-') > -1) {
+        queryParamValue = '';
+      }
+
+      if (f.id === 'elements' && query.get('formula') && query.get('formula')!.indexOf('-') > -1) {
+        queryParamValue = query.get('formula');
+      }
+
       switch (f.type) {
         case FilterType.SLIDER:
           const queryParamMinString = query.get(f.id + '_min');

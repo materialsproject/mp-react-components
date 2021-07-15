@@ -4,7 +4,7 @@ import {
   getDelimiter,
   formulaStringToArrays,
   getTruthyKeys,
-  arrayToDelimitedString,
+  arrayToDelimitedString
 } from '../../utils';
 import { validateInputType, detectAndValidateInputType } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
@@ -43,7 +43,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   const dropdownItems = [
     { label: 'By elements', value: MaterialsInputType.ELEMENTS },
     { label: 'By formula', value: MaterialsInputType.FORMULA },
-    { label: 'By mp-id', value: MaterialsInputType.MPID },
+    { label: 'By mp-id', value: MaterialsInputType.MPID }
   ];
 
   /**
@@ -101,7 +101,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             if (!enabledElements[el]) {
               newPtActionsToDispatch.push({
                 action: ptActions.addEnabledElement,
-                payload: el,
+                payload: el
               });
             }
           });
@@ -110,27 +110,37 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             if (parsedElements.indexOf(el) === -1) {
               newPtActionsToDispatch.push({
                 action: ptActions.removeEnabledElement,
-                payload: el,
+                payload: el
               });
             }
           });
         } else {
           newPtActionsToDispatch.push({
-            action: ptActions.clear,
+            action: ptActions.clear
           });
         }
 
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
         props.setValue(inputValue);
-        if (props.onInputTypeChange && newMaterialsInputType)
+        if (props.onInputTypeChange && newMaterialsInputType) {
           props.onInputTypeChange(newMaterialsInputType);
+        }
+        // if (props.onInputTypeChange && newMaterialsInputType) {
+        //   props.onInputTypeChange(newMaterialsInputType);
+        // } else {
+        //   props.setValue(inputValue);
+        // }
       } else {
         props.setError(props.errorMessage!);
       }
     }
     valueChangedByPT.current = false;
   }, [inputValue]);
+
+  // useEffect(() => {
+  //   setInputValue(props.value);
+  // }, [props.value]);
 
   /**
    * This effect executes the periodic table context actions collected by the value effect (above)
@@ -195,6 +205,14 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   useEffect(() => {
     if (props.liftInputRef) props.liftInputRef(inputRef);
   }, []);
+
+  /**
+   * When the isChemSys prop is changed (e.g. via checkbox or dropdown),
+   * set the delimiter accordingly
+   */
+  useEffect(() => {
+    setDelimiter(props.isChemSys ? new RegExp('-') : new RegExp(','));
+  }, [props.isChemSys]);
 
   const inputControl = (
     <Control className="is-expanded">
