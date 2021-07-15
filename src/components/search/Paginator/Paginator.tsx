@@ -131,9 +131,10 @@ export const Paginator: React.FC<Props> = ({
     </MenuWrapper>
   );
 
-  const jumpToPageOptions = Array(pageCount)
-    .fill(null)
-    .map((_, i) => i + 1);
+  // const jumpToPageOptions = Array(pageCount)
+  //   .fill(null)
+  //   .map((_, i) => i + 1);
+  const jumpToPageOptions = [1, 2, 3];
   const jumpToPageMenu = (
     <MenuWrapper
       data-testid="mpc-jump-to-page-menu"

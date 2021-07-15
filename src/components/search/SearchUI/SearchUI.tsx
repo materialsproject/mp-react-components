@@ -272,18 +272,16 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
         <SearchUIContextProvider {...props}>
           <div className="columns">
             <div className="mpc-search-ui-left column is-narrow is-12-mobile">
-              <div className="mpc-inner-column-container">
-                {props.hasSearchBar && (
-                  <div className="columns mb-1">
-                    <div className="column pb-2">
-                      <SearchUISearchBar />
-                    </div>
+              {props.hasSearchBar && (
+                <div className="columns mb-1">
+                  <div className="column pb-2">
+                    <SearchUISearchBar />
                   </div>
-                )}
-                <div className="columns">
-                  <div className="column">
-                    <SearchUIFilters />
-                  </div>
+                </div>
+              )}
+              <div className="columns">
+                <div className="column">
+                  <SearchUIFilters />
                 </div>
               </div>
             </div>
@@ -308,11 +306,11 @@ SearchUI.defaultProps = {
   conditionalRowStyles: [],
   searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
   searchBarAllowedInputTypesMap: {
-    formula: {
-      field: 'formula'
-    },
     elements: {
       field: 'elements'
+    },
+    formula: {
+      field: 'formula'
     },
     mpid: {
       field: 'material_ids'

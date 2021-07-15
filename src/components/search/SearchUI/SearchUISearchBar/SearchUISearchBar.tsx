@@ -31,13 +31,17 @@ export const SearchUISearchBar: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
+  const handleSubmit = (
+    e: React.FormEvent | React.MouseEvent,
+    value?: string,
+    filterProps?: any
+  ) => {
     const submitValue = value || searchValue;
     const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
       return allowedInputTypesMap[d].field;
     });
     const fieldsToOverride = allowedFields?.filter((d) => d !== searchField);
-    actions.setFilterWithOverrides(submitValue, searchField, fieldsToOverride);
+    actions.setFilterWithOverrides(submitValue, searchField, fieldsToOverride, filterProps);
   };
 
   /**
