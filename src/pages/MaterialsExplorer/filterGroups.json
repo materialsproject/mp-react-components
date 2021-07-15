@@ -33,6 +33,7 @@
         "props": {
           "inputType": "elements",
           "periodicTableMode": "focus",
+          "hideChemSys": true,
           "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
         }
       },

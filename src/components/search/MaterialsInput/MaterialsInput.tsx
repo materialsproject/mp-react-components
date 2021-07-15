@@ -45,6 +45,8 @@ export interface MaterialsInputSharedProps {
   inputType: MaterialsInputType;
   allowedInputTypes?: MaterialsInputType[];
   showInputTypeDropdown?: boolean;
+  /** Temporary prop until this can be handled in inputTypes */
+  hideChemSys?: boolean;
   isChemSys?: boolean;
   allowSmiles?: boolean;
   placeholder?: string;
@@ -231,7 +233,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   let tooltipControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
   let chemSysCheckbox: JSX.Element | null = null;
-  const hasChemSysCheckbox = props.inputType === 'elements' && !props.onSubmit;
+  const hasChemSysCheckbox =
+    !props.hideChemSys && props.inputType === 'elements' && !props.onSubmit;
 
   const materialsInputControl = (
     <MaterialsInputBox
