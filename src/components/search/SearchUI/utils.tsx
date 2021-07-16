@@ -205,6 +205,11 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
     g.filters = g.filters.map((f) => {
       let queryParamValue: any = query.get(f.id);
 
+      /**
+       * Chem sys queries are represented in the formula query param
+       * but should render in the elements filter. These two checks
+       * make sure chem sys gets assigned to elements filter.
+       */
       if (f.id === 'formula' && queryParamValue && queryParamValue.indexOf('-') > -1) {
         queryParamValue = '';
       }
