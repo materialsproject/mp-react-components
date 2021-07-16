@@ -9,6 +9,7 @@ import { Select } from '../../Select';
 import { CheckboxList } from '../../CheckboxList';
 import { ThreeStateBooleanSelect } from '../../ThreeStateBooleanSelect';
 import { TextInput } from '../../TextInput';
+import { Tooltip } from '../../Tooltip';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -166,13 +167,15 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     const innerLabel = (
       <span
         className={classNames('has-text-weight-bold', 'mb-2', {
-          'has-tooltip-right has-tooltip-multiline has-tooltip-underline': filter.tooltip
+          'tooltip-label': filter.tooltip
         })}
-        data-tooltip={filter.tooltip}
+        data-tip
+        data-for={`filter_${filter.id}`}
       >
         {filter.name}
         {renderUnitsComponent(filter.units)}
         {cancelButton}
+        {filter.tooltip && <Tooltip id={`filter_${filter.id}`}>{filter.tooltip}</Tooltip>}
       </span>
     );
 

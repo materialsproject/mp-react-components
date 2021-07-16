@@ -10,12 +10,14 @@ import { SelectableTable } from '../../periodic-table/table-state';
 import classNames from 'classnames';
 import { useDebounce, usePrevious } from '../../../utils/hooks';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableFormulaButtons';
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
 import { MaterialsInputTypesMap, validateElements, validateFormula } from './utils';
 import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
+import { Tooltip } from '../Tooltip';
 
 /**
  * Search types supported by this field
@@ -306,35 +308,42 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }
 
   if (props.tooltip) {
+    var tooltipId = `materials-input-${uuidv4()}`;
     tooltipControl = (
       <Control>
         <button
           data-testid="materials-input-tooltip-button"
           type="button"
-          className="button has-tooltip-multiline has-tooltip-bottom has-text-grey-light"
-          data-tooltip={props.tooltip}
+          className="button has-text-grey-light"
+          data-tip
+          data-for={tooltipId}
         >
           <FaQuestionCircle />
+          <Tooltip id={tooltipId} place="bottom">
+            {props.tooltip}
+          </Tooltip>
         </button>
       </Control>
     );
   }
 
+  const errorTooltipId = `materials-error-${uuidv4()}`;
   const errorControl = (
     <Control>
       <button
         data-testid="materials-input-error"
         type="button"
-        className={classNames(
-          'mpc-materials-input-error button has-tooltip-multiline has-tooltip-bottom',
-          {
-            'has-tooltip-active': errorTipStayActive
-          }
-        )}
+        className={classNames('mpc-materials-input-error button', {
+          'has-tooltip-active': errorTipStayActive
+        })}
         onMouseOver={(e) => setErrorTipStayActive(false)}
-        data-tooltip={error}
+        data-tip
+        data-for={errorTooltipId}
       >
         <FaExclamationTriangle />
+        <Tooltip id={errorTooltipId} place="bottom">
+          {error}
+        </Tooltip>
       </button>
     </Control>
   );

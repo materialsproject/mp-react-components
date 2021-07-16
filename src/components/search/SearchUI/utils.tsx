@@ -457,7 +457,7 @@ export const initSearchState = (
 
   const urlLimit = query.get('limit');
   const urlSkip = query.get('skip');
-  const urlSortField = query.get('field');
+  const urlSortField = query.get('sort_field');
   const urlAscending = query.get('ascending');
 
   if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
