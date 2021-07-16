@@ -292,7 +292,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                     {g.filters.map((f, j) => (
                       <div className="mb-3" key={j}>
                         <div>
-                          <p className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</p>
+                          <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
                           {renderFilter(f, g.name)}
                         </div>
                       </div>

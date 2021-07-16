@@ -2,15 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { arrayToDelimitedString, formatFormula } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
-import { FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
+import { FaAngleDown, FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
+import classNames from 'classnames';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  Wrapper as MenuWrapper,
+  Button as MenuButton,
+  Menu,
+  MenuItem
+} from 'react-aria-menubutton';
+import { useDebounce, usePrevious } from '../../../utils/hooks';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 import { SelectableTable } from '../../periodic-table/table-state';
-import classNames from 'classnames';
-import { useDebounce, usePrevious } from '../../../utils/hooks';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableFormulaButtons';
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
@@ -76,6 +82,11 @@ interface FormulaSuggestion {
 
 let requestCount = 0;
 
+enum ChemSysDropdownValue {
+  ONLY = 'Only',
+  AT_LEAST = 'At least'
+}
+
 /**
  * An input field component for searching by mp-id, elements, or formula.
  * Renders a text input and a periodic table within a PeriodicContext to support
@@ -112,10 +123,18 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       props.onInputTypeChange &&
       selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM
     ) {
-      if (props.onPropsChange) props.onPropsChange({ isChemSys: true });
       return true;
     } else {
       return false;
+    }
+  });
+  const [chemSysDropdownValue, setChemSysDropdownValue] = useState<
+    ChemSysDropdownValue | undefined
+  >(() => {
+    if (props.hideChemSys || props.inputType !== 'elements' || props.onInputTypeChange) {
+      return;
+    } else {
+      return isChemSys ? ChemSysDropdownValue.ONLY : ChemSysDropdownValue.AT_LEAST;
     }
   });
   const periodicTableClicked = useRef(false);
@@ -219,14 +238,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    * based on its inputType and the presence of a '-'
    */
   const handleChemSysCheck = () => {
-    let newIsChemSys = isChemSys;
+    let newIsChemSys: boolean | undefined;
     if (inputType === MaterialsInputType.ELEMENTS && inputValue.match(/-/gi)) {
       newIsChemSys = true;
     } else if (inputValue.match(/,|\s/gi)) {
       newIsChemSys = false;
     }
-    if (props.onPropsChange) props.onPropsChange({ isChemSys: newIsChemSys });
-    setIsChemSys(newIsChemSys);
+    if (newIsChemSys !== undefined) setIsChemSys(newIsChemSys);
     return newIsChemSys;
   };
 
@@ -234,9 +252,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   let toggleControl: JSX.Element | null = null;
   let tooltipControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
-  let chemSysCheckbox: JSX.Element | null = null;
-  const hasChemSysCheckbox =
-    !props.hideChemSys && props.inputType === 'elements' && !props.onSubmit;
+  let chemSysDropdown: JSX.Element | null = null;
 
   const materialsInputControl = (
     <MaterialsInputBox
@@ -348,6 +364,42 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     </Control>
   );
 
+  if (chemSysDropdownValue) {
+    chemSysDropdown = (
+      <MenuWrapper
+        data-testid="mpc-chemsys-dropdown"
+        className="control dropdown is-active"
+        onSelection={(v: ChemSysDropdownValue) => {
+          setChemSysDropdownValue(v);
+        }}
+      >
+        <div className="dropdown-trigger">
+          <MenuButton className="button">
+            <span>{chemSysDropdownValue}</span>
+            <span className="icon">
+              <FaAngleDown />
+            </span>
+          </MenuButton>
+        </div>
+        <Menu className="dropdown-menu">
+          <ul className="dropdown-content">
+            {Object.values(ChemSysDropdownValue).map((d) => (
+              <MenuItem key={d} value={d}>
+                <li
+                  className={classNames('dropdown-item', {
+                    'is-active': d === chemSysDropdownValue
+                  })}
+                >
+                  {d}
+                </li>
+              </MenuItem>
+            ))}
+          </ul>
+        </Menu>
+      </MenuWrapper>
+    );
+  }
+
   if (props.onSubmit) {
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
@@ -368,35 +420,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     materialsInputField = (
       <Field className="has-addons">
         {toggleControl}
+        {chemSysDropdown}
         {materialsInputControl}
         {error && errorControl}
         {tooltipControl}
       </Field>
-    );
-  }
-
-  if (hasChemSysCheckbox) {
-    chemSysCheckbox = (
-      <label className="checkbox">
-        <input
-          type="checkbox"
-          role="checkbox"
-          checked={isChemSys}
-          aria-checked={isChemSys}
-          onChange={(e) => {
-            let newValue = '';
-            if (e.target.checked) {
-              newValue = props.value.replace(/,\sand|,\s|,|\s/gi, '-');
-            } else {
-              newValue = props.value.replace(/-/gi, ',');
-            }
-            setIsChemSys(e.target.checked);
-            if (props.onPropsChange) props.onPropsChange({ isChemSys: e.target.checked });
-            props.onChange(newValue);
-          }}
-        />
-        <span>Contains no other elements</span>
-      </label>
     );
   }
 
@@ -432,7 +460,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    */
   useEffect(() => {
     const _isChemSys = handleChemSysCheck();
-    if (props.onInputTypeChange && inputType === MaterialsInputType.ELEMENTS) {
+    if (
+      props.onInputTypeChange &&
+      inputType === MaterialsInputType.ELEMENTS &&
+      _isChemSys !== undefined
+    ) {
       setSelectionMode(
         _isChemSys
           ? PeriodicTableSelectionMode.CHEMICAL_SYSTEM
@@ -505,10 +537,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    * The debouncedInputValue is set with inputValue after the specified debounce time
    * If no debounce prop is supplied, there is no debounce and debouncedInputValue is exactly the same as inputValue
    * Triggers the onChange event prop for the value prop
+   *
+   * Also handle lifting up the chemsys prop change. Doing these together ensures that the
+   * deep compare effect in SearchUIContextProvider isn't triggered twice.
    */
   useEffect(() => {
     if (!error) {
       props.onChange(debouncedInputValue);
+      if (props.onPropsChange) props.onPropsChange({ isChemSys: isChemSys });
     }
   }, [debouncedInputValue]);
 
@@ -557,11 +593,41 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   }, [selectionMode]);
 
+  /**
+   * Ensure delimiter in the input value changes if the
+   * chem sys dropdown is changed.
+   */
+  useEffect(() => {
+    if (chemSysDropdownValue) {
+      let newValue = '';
+      let dropdownIsChemSys = chemSysDropdownValue === 'Only' ? true : false;
+      if (dropdownIsChemSys) {
+        newValue = inputValue.replace(/,\sand|,\s|,|\s/gi, '-');
+      } else {
+        newValue = inputValue.replace(/-/gi, ',');
+      }
+      setInputValue(newValue);
+      setIsChemSys(dropdownIsChemSys);
+    }
+  }, [chemSysDropdownValue]);
+
+  /**
+   * Ensure chem sys dropdown value will change dynamically while typing
+   * (i.e. if a new delimiter is typed in, change the dropdown value to match new delimiter)
+   */
+  useEffect(() => {
+    if (chemSysDropdownValue) {
+      setChemSysDropdownValue(
+        isChemSys ? ChemSysDropdownValue.ONLY : ChemSysDropdownValue.AT_LEAST
+      );
+    }
+  }, [isChemSys]);
+
   return (
     <div className="mpc-materials-input">
       <PeriodicContext>
         {materialsInputField}
-        {chemSysCheckbox}
+        {/* {chemSysCheckbox} */}
         {autocompleteMenu}
         <div
           data-testid="materials-input-periodic-table"
