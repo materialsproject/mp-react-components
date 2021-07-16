@@ -219,7 +219,10 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           const queryParamMaxString = query.get(f.id + '_max');
           const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
           const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
-          queryParamValue = queryParamMin && queryParamMax ? [queryParamMin, queryParamMax] : null;
+          queryParamValue =
+            queryParamMin !== null && queryParamMax !== null
+              ? [queryParamMin, queryParamMax]
+              : null;
           initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
           return f;
         case FilterType.MATERIALS_INPUT:
