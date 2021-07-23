@@ -20,6 +20,7 @@ import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { Publications } from './pages/Publications';
 import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
+import { MPContribsSearch } from './pages/MPContribsSearch';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -52,6 +53,9 @@ ReactDOM.render(
               <Link to="/publications">Publications</Link>
             </span>
             <span className="navbar-item">
+              <Link to="/contribs">Contributions</Link>
+            </span>
+            <span className="navbar-item">
               <Link to="/sandbox">Sandbox</Link>
             </span>
           </div>
@@ -79,6 +83,9 @@ ReactDOM.render(
           </Route>
           <Route path="/publications">
             <Publications />
+          </Route>
+          <Route path="/contribs">
+            <MPContribsSearch />
           </Route>
           <Route path="/sandbox">
             <Sandbox />

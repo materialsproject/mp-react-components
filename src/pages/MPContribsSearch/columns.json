@@ -1,0 +1,31 @@
+[
+  {
+    "name": "MPContribs ID",
+    "selector": "id",
+    "format": "LINK",
+    "formatOptions": {
+      "baseUrl": "https://contribs.materialsproject.org/contributions/",
+      "target": "_blank"
+    },
+    "minWidth": "130px"
+  },
+  {
+    "name": "Material ID",
+    "selector": "identifier",
+    "format": "LINK",
+    "formatOptions": {
+      "baseUrl": "/materials/"
+    },
+    "minWidth": "130px"
+  },
+  {
+    "name": "Formula",
+    "selector": "formula",
+    "format": "FORMULA",
+    "minWidth": "130px"
+  },
+  {
+    "name": "Project",
+    "selector": "project"
+  }
+]

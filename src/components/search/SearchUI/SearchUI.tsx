@@ -259,6 +259,7 @@ export interface SearchUIProps {
     }
    */
   cardOptions?: any;
+  isContribs?: boolean;
 }
 
 /**

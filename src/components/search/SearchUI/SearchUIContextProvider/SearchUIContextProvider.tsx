@@ -191,16 +191,30 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let minLoadTimeReached = !showLoading;
         let params: any = {};
         let query = new URLSearchParams();
-        params.fields = currentState.columns.map((d) => d.selector);
-        params.limit = currentState.resultsPerPage;
-        params.skip = (currentState.page - 1) * currentState.resultsPerPage;
-        query.set('limit', params.limit);
-        query.set('skip', params.skip);
-        if (currentState.sortField) {
-          params.sort_field = currentState.sortField;
-          params.ascending = currentState.sortAscending;
-          query.set('sort_field', params.sort_field);
-          query.set('ascending', params.ascending);
+        if (currentState.isContribs) {
+          params._fields = currentState.columns.map((d) => d.selector);
+          params._limit = currentState.resultsPerPage;
+          params._skip = (currentState.page - 1) * currentState.resultsPerPage;
+          query.set('_limit', params._limit);
+          query.set('_skip', params._skip);
+          if (currentState.sortField) {
+            params._order_by = currentState.sortField;
+            params.order = currentState.sortAscending ? 'asc' : 'desc';
+            query.set('_order_by', params._order_by);
+            query.set('order', params.order);
+          }
+        } else {
+          params.fields = currentState.columns.map((d) => d.selector);
+          params.limit = currentState.resultsPerPage;
+          params.skip = (currentState.page - 1) * currentState.resultsPerPage;
+          query.set('limit', params.limit);
+          query.set('skip', params.skip);
+          if (currentState.sortField) {
+            params.sort_field = currentState.sortField;
+            params.ascending = currentState.sortAscending;
+            query.set('sort_field', params.sort_field);
+            query.set('ascending', params.ascending);
+          }
         }
         currentState.activeFilters.forEach((a) => {
           a.searchParams?.forEach((s) => {
@@ -231,7 +245,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             isLoading = false;
             const loadingValue = minLoadTimeReached ? false : true;
             setState((currentState) => {
-              const totalResults = result.data.meta.total_doc;
+              const totalResults = currentState.isContribs
+                ? result.data.total_count
+                : result.data.meta.total_doc;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
               return {
