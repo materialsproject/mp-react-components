@@ -13,6 +13,7 @@ import { FaAngleDown } from 'react-icons/fa';
 
 interface Props {
   mode: PeriodicTableSelectionMode;
+  allowedModes?: PeriodicTableSelectionMode[];
   onSwitch: (mode: PeriodicTableSelectionMode) => any;
   onFormulaButtonClick: (value: string) => any;
 }
@@ -23,7 +24,15 @@ export enum PeriodicTableSelectionMode {
   FORMULA = 'Formula'
 }
 
-export const PeriodicTableModeSwitcher: React.FC<Props> = (props) => {
+export const PeriodicTableModeSwitcher: React.FC<Props> = ({
+  allowedModes = [
+    'Elements (only)' as PeriodicTableSelectionMode,
+    'Elements (at least)' as PeriodicTableSelectionMode,
+    'Formula' as PeriodicTableSelectionMode
+  ],
+  ...otherProps
+}) => {
+  const props = { allowedModes, ...otherProps };
   const [mode, setMode] = useState(props.mode);
 
   useEffect(() => {
@@ -49,7 +58,7 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = (props) => {
       </div>
       <Menu className="dropdown-menu">
         <ul className="dropdown-content">
-          {Object.values(PeriodicTableSelectionMode).map((d, i) => (
+          {props.allowedModes.map((d, i) => (
             <MenuItem key={i} value={d}>
               <li className={classNames('dropdown-item', { 'is-active': d === mode })}>{d}</li>
             </MenuItem>

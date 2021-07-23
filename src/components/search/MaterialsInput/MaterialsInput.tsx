@@ -88,6 +88,29 @@ enum ChemSysDropdownValue {
 }
 
 /**
+ * Map the list of allowed input types to a list of allowed periodic table selection modes.
+ * This prevents periodic table modes dropdown from having items that are
+ * inconsistent with the allowed input types.
+ */
+const getAllowedSelectionModes = (
+  allowedInputTypes: MaterialsInputType[],
+  hideChemSys?: boolean
+) => {
+  const allowedModes: PeriodicTableSelectionMode[] = [];
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
+  }
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
+    if (!hideChemSys) allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+  }
+
+  return allowedModes;
+};
+
+/**
  * An input field component for searching by mp-id, elements, or formula.
  * Renders a text input and a periodic table within a PeriodicContext to support
  * two-way binding between the input and periodic table.
@@ -440,6 +463,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
         mode={selectionMode}
+        allowedModes={getAllowedSelectionModes(props.allowedInputTypes, props.hideChemSys)}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
