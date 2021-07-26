@@ -6,7 +6,7 @@ import { Link } from '../../navigation/Link';
 import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import { validateFormula, validateRangedFormula } from '../MaterialsInput/utils';
 import { PublicationButton } from '../../publications/PublicationButton';
-import { DataBlock } from '../DataBlock';
+import { DataBlock } from '../../data-display/DataBlock';
 import { Formula } from '../Formula';
 
 interface Props {
@@ -214,11 +214,13 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
             hiddenTop: true
           }
         ]}
-      />
-      <RenderParagraphOrHighlight
-        doi={props.data.doi}
-        paragraph_string={props.data.paragraph_string}
-        highlights={props.data.highlights}
+        footer={
+          <RenderParagraphOrHighlight
+            doi={props.data.doi}
+            paragraph_string={props.data.paragraph_string}
+            highlights={props.data.highlights}
+          />
+        }
       />
 
       {/* <div style={{ marginTop: '0.5rem' }}>

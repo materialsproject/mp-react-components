@@ -1,0 +1,101 @@
+.mpc-data-block.box {
+  padding: 0;
+}
+
+.mpc-data-block-header,
+.mpc-data-block-expandable,
+.mpc-data-block-footer {
+  padding: 1.25rem;
+}
+
+.mpc-data-block-header {
+  display: flex;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.mpc-data-block-header .mpc-data-block-item {
+  overflow: hidden;
+  flex: 1;
+}
+
+.mpc-data-block-header .mpc-data-block-item:not(:first-child) {
+  padding-left: 3rem;
+}
+
+.mpc-data-block-header .mpc-data-block-item .value {
+  font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  position: relative;
+}
+
+.mpc-data-block-header .tags {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.mpc-data-block-header .tags::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 25%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+  padding-left: 0.25rem;
+}
+
+.mpc-data-block-expandable {
+  border-top: 1px solid #ddd;
+}
+
+.mpc-data-block-expandable .Collapsible__contentOuter {
+  min-height: 2.5rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.mpc-data-block-expandable .mpc-data-block-item:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.mpc-data-block-fade {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+}
+
+.mpc-data-block-caret {
+  font-size: 1.5rem;
+  float: right;
+  cursor: pointer;
+}
+
+.mpc-data-block-icon-container {
+  width: 4.5rem;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #fff;
+  opacity: 0.95;
+}
+
+.mpc-data-block-icon {
+  font-size: 1.25rem;
+  position: absolute;
+  right: 1.25rem;
+  top: 1.25rem;
+  background: #fff;
+  border-radius: 100%;
+  width: 2rem;
+  height: 2rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
