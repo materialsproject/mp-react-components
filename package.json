@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@s-ui/react-molecule-button-group": "^2.3.0",
-    "@storybook/client-api": "^5.3.21",
+    "@storybook/client-api": "^6.3.6",
     "@trendmicro/react-dropdown": "^1.4.0",
     "@types/classnames": "^2.2.11",
     "@welldone-software/why-did-you-render": "^4.3.2",
