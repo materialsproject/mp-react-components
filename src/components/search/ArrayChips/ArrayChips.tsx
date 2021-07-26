@@ -14,12 +14,17 @@ interface Props {
   chips: any[];
   chipTooltips?: string[];
   chipLinks?: string[];
+  chipLinksTarget?: string;
   chipType?: 'normal' | 'publications' | 'dynamic-publications';
   showDownloadIcon?: boolean;
 }
 
-export const ArrayChips: React.FC<Props> = ({ chipType = 'normal', ...otherProps }) => {
-  const props = { chipType, ...otherProps };
+export const ArrayChips: React.FC<Props> = ({
+  chipType = 'normal',
+  chipLinksTarget = '_blank',
+  ...otherProps
+}) => {
+  const props = { chipType, chipLinksTarget, ...otherProps };
   return (
     <span className="tags">
       {props.chips.map((item, i) => {
@@ -52,7 +57,7 @@ export const ArrayChips: React.FC<Props> = ({ chipType = 'normal', ...otherProps
               key={`array-chip-${i}-${item}`}
               className="tag"
               href={props.chipLinks![i]}
-              target="_blank"
+              target={props.chipLinksTarget}
               onClick={(e) => e.stopPropagation()}
               data-tip
               data-for={tooltipId}

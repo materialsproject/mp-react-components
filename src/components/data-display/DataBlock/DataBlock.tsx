@@ -95,10 +95,9 @@ export const DataBlock: React.FC<Props> = (props) => {
           </p>
         </div>
       )}
-      {props.footer ||
-        (props.children && (
-          <div className="mpc-data-block-footer">{props.footer || props.children}</div>
-        ))}
+      {(props.footer || props.children) && (
+        <div className="mpc-data-block-footer">{props.footer || props.children}</div>
+      )}
     </div>
   );
 };

@@ -27,9 +27,14 @@
 
 .mpc-data-block-header .mpc-data-block-item .value {
   font-weight: 600;
+  font-size: 1.25rem;
   text-overflow: ellipsis;
   overflow: hidden;
   position: relative;
+}
+
+.mpc-data-block-header .tag {
+  font-size: 0.75em;
 }
 
 .mpc-data-block-header .tags {
@@ -49,7 +54,8 @@
   padding-left: 0.25rem;
 }
 
-.mpc-data-block-expandable {
+.mpc-data-block-expandable,
+.mpc-data-block-footer {
   border-top: 1px solid #ddd;
 }
 

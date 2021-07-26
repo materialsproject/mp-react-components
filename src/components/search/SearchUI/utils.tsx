@@ -178,6 +178,7 @@ export const initColumns = (columns: Column[]): Column[] => {
                 chips={rowValue}
                 chipTooltips={hasFormatOptions && row[c.formatOptions.arrayTooltipsKey]}
                 chipLinks={hasFormatOptions && row[c.formatOptions.arrayLinksKey]}
+                chipLinksTarget={hasFormatOptions && c.formatOptions.arrayLinksTarget}
                 chipType={hasFormatOptions && c.formatOptions.arrayChipType}
                 showDownloadIcon={hasFormatOptions && c.formatOptions.arrayLinksShowDownload}
               />

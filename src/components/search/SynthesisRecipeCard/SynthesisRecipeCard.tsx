@@ -111,9 +111,9 @@ function RenderParagraphOrHighlight(props) {
           : props.paragraph_string}
         "
       </p>
-      <div>
+      {/* <div>
         <i>Extracted from</i> <PublicationButton doi={props.doi} />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -167,96 +167,83 @@ const formatReactionString = (reactionString: string) => {
 
 export const SynthesisRecipeCard: React.FC<Props> = (props) => {
   return (
-    <div className={classNames('mpc-synthesis-card box', props.className)}>
-      <DataBlock
-        data={{
-          reactionString: formatReactionString(props.data.reaction_string),
-          targetFormulas: [props.data.target.material_formula],
-          precursorFormulas: props.data.precursors_formula_s,
-          targetFormulaLinks: [
-            formulaToMaterialLink(props.data.target.material_formula, props.data.target.composition)
-          ],
-          precursorFormulaLinks: props.data.precursors.map((d: any) => {
-            return formulaToMaterialLink(d.material_formula, d.composition);
-          }),
-          synthesisProcedures: props.data.operations.map((o, i) => {
-            return `${i + 1}. ${o.token} ${getConditionsString(o.conditions)}`;
-          })
-        }}
-        columns={[
-          {
-            name: 'Solid State Synthesis Recipe',
-            selector: 'reactionString',
-            hiddenBottom: true
-          },
-          {
-            name: 'Target Material',
-            selector: 'targetFormulas',
-            format: 'ARRAY',
-            formatOptions: {
-              arrayLinksKey: 'targetFormulaLinks'
-            },
-            hiddenTop: true
-          },
-          {
-            name: 'Precursor Materials',
-            selector: 'precursorFormulas',
-            format: 'ARRAY',
-            formatOptions: {
-              arrayLinksKey: 'precursorFormulaLinks'
-            },
-            hiddenTop: true
-          },
-          {
-            name: 'Synthesis Procedures',
-            selector: 'synthesisProcedures',
-            format: 'ARRAY',
-            hiddenTop: true
-          }
-        ]}
-        footer={
+    <DataBlock
+      className={classNames('mpc-synthesis-card box', props.className)}
+      data={{
+        targetFormula: props.data.target.material_formula,
+        precursorFormulas: props.data.precursors_formula_s,
+        targetFormulaLink: formulaToMaterialLink(
+          props.data.target.material_formula,
+          props.data.target.composition
+        ),
+        precursorFormulaLinks: props.data.precursors.map((d: any) => {
+          return formulaToMaterialLink(d.material_formula, d.composition);
+        }),
+        synthesisType: props.data.synthesis_type,
+        paragraph: (
           <RenderParagraphOrHighlight
             doi={props.data.doi}
             paragraph_string={props.data.paragraph_string}
             highlights={props.data.highlights}
           />
+        ),
+        reactionString: formatReactionString(props.data.reaction_string),
+        synthesisProcedures: props.data.operations.map((o, i) => {
+          return `${i + 1}. ${o.token} ${getConditionsString(o.conditions)}`;
+        })
+      }}
+      columns={[
+        {
+          name: 'Target Material',
+          selector: 'targetFormulaLink',
+          format: 'LINK',
+          formatOptions: {
+            linkLabelKey: 'targetFormula',
+            target: ''
+          },
+          isTop: true,
+          minWidth: '300px',
+          maxWidth: '300px'
+        },
+        {
+          name: 'Precursor Materials',
+          selector: 'precursorFormulas',
+          format: 'ARRAY',
+          formatOptions: {
+            arrayLinksKey: 'precursorFormulaLinks',
+            arrayLinksTarget: ''
+          },
+          isTop: true
+        },
+        {
+          name: 'Paragraph Excerpt',
+          selector: 'paragraph',
+          isBottom: true
+        },
+        {
+          name: 'Reaction Equation',
+          selector: 'reactionString',
+          isBottom: true
+        },
+        {
+          name: 'Synthesis Procedures',
+          selector: 'synthesisProcedures',
+          format: 'ARRAY',
+          isBottom: true
+        },
+        {
+          name: 'Synthesis Type',
+          selector: 'synthesisType',
+          isBottom: true
         }
-      />
-
-      {/* <div style={{ marginTop: '0.5rem' }}>
-        <p>
-          <span className="mpc-synthesis-card-material-label">Target material:&nbsp;</span>
-          <RenderMaterialWithLink material={props.data.target} is_last={false} />
-        </p>
-      </div>
-      <div>
-        <p>
-          <span className="mpc-synthesis-card-material-label">Precursor materials:&nbsp;</span>
-          {props.data.precursors.map((p, i) => (
-            <RenderMaterialWithLink
-              key={i}
-              material={p}
-              is_last={i >= props.data.precursors.length - 1}
-            />
-          ))}
-        </p>
-      </div>
-
-      <Collapsible
-        className="mpc-synthesis-card-collapse"
-        openedClassName="mpc-synthesis-card-collapse"
-        transitionTime={400}
-        transitionCloseTime={400}
-        triggerOpenedClassName="mpc-synthesis-card-collapse-opened"
-        trigger={
-          <div className="mpc-synthesis-card-collapse-operations">
-            <FaChevronDown className="mpc-synthesis-card-collapse-chevron" /> Toggle experimental
-            details
-          </div>
-        }
-      >
-        <RenderOperations operations={props.data.operations} />
-      </Collapsible> */}
-    </div>
+      ]}
+      footer={
+        <div>
+          <i>Extracted from</i> <PublicationButton doi={props.data.doi} />
+        </div>
+      }
+      iconClassName="icon-fontastic-synthesis"
+      iconTooltip="Synthesis Recipe"
+    />
   );
 };
