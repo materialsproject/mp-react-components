@@ -100,11 +100,12 @@ export const initColumns = (columns: Column[]): Column[] => {
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const linkLabel =
-            c.formatOptions && c.formatOptions.linkLabelKey && rowValue
+            hasFormatOptions && c.formatOptions.linkLabelKey && rowValue
               ? row[c.formatOptions.linkLabelKey]
               : rowValue;
+          const isFormula = hasFormatOptions && c.formatOptions.linkLabelisFormula;
           const url =
-            c.formatOptions && c.formatOptions.baseUrl && rowValue
+            hasFormatOptions && c.formatOptions.baseUrl && rowValue
               ? joinUrl(c.formatOptions.baseUrl, rowValue)
               : rowValue;
 
@@ -112,9 +113,9 @@ export const initColumns = (columns: Column[]): Column[] => {
             <Link
               href={url}
               onClick={(e) => e.stopPropagation()}
-              target={c.formatOptions && c.formatOptions.target}
+              target={hasFormatOptions && c.formatOptions.target}
             >
-              {linkLabel}
+              {isFormula ? <Formula>{linkLabel}</Formula> : linkLabel}
             </Link>
           ) : (
             emptyCellPlaceholder

@@ -199,6 +199,7 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
           format: 'LINK',
           formatOptions: {
             linkLabelKey: 'targetFormula',
+            linkLabelisFormula: true,
             target: ''
           },
           isTop: true,
