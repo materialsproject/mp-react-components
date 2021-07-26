@@ -25,7 +25,7 @@ import { BibtexButton } from './components/publications/BibtexButton';
 import { CrossrefCard } from './components/publications/CrossrefCard';
 import { PublicationButton } from './components/publications/PublicationButton';
 import { Tooltip } from './components/search/Tooltip';
-import { DataBlock } from './components/search/DataBlock';
+import { DataBlock } from './components/data-display/DataBlock';
 import { Formula } from './components/search/Formula';
 import { SynthesisRecipeCard } from './components/search/SynthesisRecipeCard';
 import { Markdown } from './components/data-display/Markdown';

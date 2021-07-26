@@ -6,7 +6,7 @@ import { DownloadButton } from '../../components/search/DownloadButton';
 import { DownloadDropdown } from '../../components/search/DownloadDropdown';
 import { PublicationButton } from '../../components/publications/PublicationButton';
 import crossref from './crossref.json';
-import { DataBlock } from '../../components/search/DataBlock';
+import { DataBlock } from '../../components/data-display/DataBlock';
 import { NavbarDropdown } from '../../components/navigation/NavbarDropdown';
 import { Markdown } from '../../components/data-display/Markdown';
 import ReactMarkdown from 'react-markdown';
@@ -213,7 +213,7 @@ export const Sandbox: React.FC = () => {
             },
             minWidth: '300px',
             maxWidth: '300px',
-            hiddenBottom: true
+            isTop: true
           },
           {
             name: 'Formula',
@@ -221,7 +221,7 @@ export const Sandbox: React.FC = () => {
             format: 'FORMULA',
             minWidth: '300px',
             maxWidth: '300px',
-            hiddenBottom: true
+            isTop: true
           },
           {
             name: 'Data',
@@ -241,13 +241,14 @@ export const Sandbox: React.FC = () => {
               arrayLinksKey: 'tablesLinks',
               arrayLinksShowDownload: false,
               arrayChipType: 'dynamic-publications'
-            }
+            },
+            isBottom: true
             // maxWidth: '200px'
           },
           {
             name: 'Description',
             selector: 'description',
-            hiddenTop: true
+            isBottom: true
           }
         ]}
         data={{
@@ -262,6 +263,8 @@ export const Sandbox: React.FC = () => {
           description:
             'Ab-initio electronic transport database for inorganic materials. Here are reported the\naverage of the eigenvalues of conductivity effective mass (mₑᶜᵒⁿᵈ), the Seebeck coefficient (S),\nthe conductivity (σ), the electronic thermal conductivity (κₑ), and the Power Factor (PF) at a\ndoping level of 10¹⁸ cm⁻³ and at a temperature of 300 K for n- and p-type. Also, the maximum\nvalues for S, σ, PF, and the minimum value for κₑ chosen among the temperatures [100, 1300] K,\nthe doping levels [10¹⁶, 10²¹] cm⁻³, and doping types are reported. The properties that depend\non the relaxation time are reported divided by the constant value 10⁻¹⁴. The average of the\neigenvalues for all the properties at all the temperatures, doping levels, and doping types are\nreported in the tables for each entry. A legend of the columns of the table is provided below.'
         }}
+        iconClassName="fa fa-user"
+        iconTooltip="Card"
       />
       <DataBlock
         className="box"
