@@ -62,3 +62,14 @@
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
 }
+
+.mpc-synthesis-card .mpc-formula {
+  font-weight: 600;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1116px) {
+  .mpc-synthesis-card .mpc-data-block-item {
+    min-width: auto !important;
+    max-width: none !important;
+  }
+}

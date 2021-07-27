@@ -139,7 +139,7 @@ const formatReactionString = (reactionString: string) => {
   const reactionInfo = reactionSectionsSplit.slice(1).map((r) => r.split(' '));
   return (
     <div>
-      <div className="has-text-weight-bold">
+      <div>
         {reactionSides[0].map((d, i) =>
           validateRangedFormula(d) ? <Formula key={i}>{d}</Formula> : <span key={i}> {d} </span>
         )}
@@ -203,8 +203,8 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
             target: ''
           },
           isTop: true,
-          minWidth: '300px',
-          maxWidth: '300px'
+          minWidth: '250px',
+          maxWidth: '250px'
         },
         {
           name: 'Precursor Materials',

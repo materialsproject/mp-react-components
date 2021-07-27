@@ -5,6 +5,11 @@ const VALID_ELEMENTS =
     ' '
   );
 
+export const ELEMENTS_REGEX =
+  /A[cglmrstu]|B[aehikr]?|C[adeflmnorsu]?|D[bsy]|E[rsu]|F[elmr]?|G[ade]|H[efgos]?|I[nr]?|Kr?|L[airuv]|M[dgnot]|N[abdeiop]?|Os?|P[abdmortu]?|R[abefghnu]|S[bcegimnr]?|T[abcehilm]|U(u[opst])?|V|W|Xe|Yb?|Z[nr]|La\-Lu?|Ac\-Lr?/g;
+export const ELEMENTS_SPLIT_REGEX =
+  /(A[cglmrstu]|B[aehikr]?|C[adeflmnorsu]?|D[bsy]|E[rsu]|F[elmr]?|G[ade]|H[efgos]?|I[nr]?|Kr?|L[airuv]|M[dgnot]|N[abdeiop]?|Os?|P[abdmortu]?|R[abefghnu]|S[bcegimnr]?|T[abcehilm]|U(u[opst])?|V|W|Xe|Yb?|Z[nr]|La\-Lu?|Ac\-Lr?)|(.)/g;
+
 /**
  * Check if a string is a valid element symbol
  *
@@ -160,7 +165,7 @@ export const validateFormula = (
 };
 
 /**
- * Validates a string as a checmical formula that allows
+ * Validates a string as a chemical formula that allows
  * ranged and wildcard (x) subscripts.
  *
  * @param {string} formula An unparsed chemical formula string
@@ -168,7 +173,7 @@ export const validateFormula = (
  */
 export const validateRangedFormula = (formula: string): string[] | null => {
   /** Allows "x" and "-" to appear in the formula string */
-  const illegalCharsRegex = /([^A-Z]|^)+(?![x])[a-z]|[^\w()\*\.\-]+/g;
+  const illegalCharsRegex = /([^A-Z]|^)+(?![x])[a-z]|[^\w()\*\.\-\·\/]+/g;
   /** Ensures "x" is not counted as part of an element symbol */
   const elementsRegex = /([A-Z][a-wyz]*)([\d\.]*)/g;
   return validateFormula(formula, illegalCharsRegex, elementsRegex);
