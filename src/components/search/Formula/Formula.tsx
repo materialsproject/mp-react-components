@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import { ELEMENTS_REGEX, ELEMENTS_SPLIT_REGEX } from '../MaterialsInput/utils';
 
 interface Props {
   id?: string;
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const formulaItem = (str: string) => {
-  if (parseFloat(str) || str === '-' || str === 'x') {
+  if (!str.match(/\(|\)/g) && !str.match(ELEMENTS_REGEX)) {
     return <sub>{str}</sub>;
   } else {
     return <span>{str}</span>;
@@ -17,21 +18,15 @@ const formulaItem = (str: string) => {
 };
 
 export const Formula: React.FC<Props> = (props) => {
-  const hasSubscripts = props.children.match(/\d|x/) !== null;
   let formula: React.ReactNode;
-  if (hasSubscripts) {
-    const splitFormula: string[] = props.children.split(/(\d*\.?\d+|\-|x)/g);
-    const formulaParts = splitFormula.filter((d) => d !== '' && d !== '1');
-    formula = (
-      <span>
-        {formulaParts.map((s, i) => (
-          <span key={i}>{formulaItem(s)}</span>
-        ))}
-      </span>
-    );
-  } else {
-    formula = props.children;
-  }
+  const splitFormula = props.children.match(ELEMENTS_SPLIT_REGEX);
+  formula = (
+    <span>
+      {splitFormula?.map((s, i) => (
+        <span key={i}>{formulaItem(s)}</span>
+      ))}
+    </span>
+  );
 
   return (
     <span id={props.id} className={classNames('mpc-formula', props.className)}>
