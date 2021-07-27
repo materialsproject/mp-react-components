@@ -137,14 +137,13 @@ export const initColumns = (columns: Column[]): Column[] => {
           hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
         var falsyClass =
           hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
-        c.cell = (row: any) => {
+        c.cell = (row: any, i: number) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           return (
             <span
-              className={classNames('boolean-cell-wrapper', {
-                'has-tooltip-right': c.cellTooltip
-              })}
-              data-tooltip={c.cellTooltip}
+              className="boolean-cell-wrapper"
+              data-for={`${c.selector}-${i}`}
+              data-tip={c.cellTooltip}
             >
               <i
                 className={classNames({
@@ -152,6 +151,7 @@ export const initColumns = (columns: Column[]): Column[] => {
                   [falsyClass]: !rowValue
                 })}
               ></i>
+              {c.cellTooltip && <Tooltip id={`${c.selector}-${i}`}>{c.cellTooltip}</Tooltip>}
             </span>
           );
         };
