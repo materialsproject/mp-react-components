@@ -1,9 +1,9 @@
 import React from 'react';
-import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup, SearchUIViewType } from '../../components/search/SearchUI/types';
+import { SearchUI } from '../../components/data-display/SearchUI';
+import { FilterGroup, SearchUIViewType } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { PeriodicTableMode } from '../../components/search/MaterialsInput/MaterialsInput';
+import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 /**
  * Component for testing the Synthesis Explorer view

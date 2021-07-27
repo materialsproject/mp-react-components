@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { PeriodicTableFormulaButtons } from '../PeriodicTableFormulaButtons';
 import './PeriodicTableModeSwitcher.css';
 import classNames from 'classnames';
-import { MaterialsInputType } from '../../search/MaterialsInput';
 import {
   Wrapper as MenuWrapper,
   Button as MenuButton,

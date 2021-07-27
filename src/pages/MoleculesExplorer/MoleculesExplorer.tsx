@@ -1,8 +1,8 @@
 import React from 'react';
-import { SearchUI } from '../../components/search/SearchUI';
+import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { FilterGroup } from '../../components/search/SearchUI/types';
+import { FilterGroup } from '../../components/data-display/SearchUI/types';
 
 /**
  * Component for testing the Molecules Explorer view

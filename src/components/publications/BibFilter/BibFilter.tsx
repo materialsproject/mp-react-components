@@ -5,8 +5,8 @@ import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menub
 import { FaAngleDown, FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import './BibFilter.css';
 import { CrossrefCard } from '../CrossrefCard';
-import { SortDropdown } from '../../search/SortDropdown';
-import { sortCrossref, sortDynamic } from '../../search/utils';
+import { SortDropdown } from '../../data-display/SortDropdown';
+import { sortCrossref, sortDynamic } from '../../data-entry/utils';
 
 interface Props {
   /**

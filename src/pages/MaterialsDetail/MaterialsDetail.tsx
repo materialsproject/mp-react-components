@@ -5,7 +5,7 @@ import { CameraContextProvider } from '../../components/crystal-toolkit/CameraCo
 import { AnimationStyle, Renderer } from '../../components/crystal-toolkit/scene/constants';
 import { CrystalToolkitScene } from '../../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
 import { Scrollspy } from '../../components/navigation/Scrollspy';
-import { Select } from '../../components/search/Select';
+import { Select } from '../../components/data-entry/Select';
 
 /**
  * Component for testing parts of the Materials Detail view

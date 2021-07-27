@@ -2,7 +2,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
-import { Tooltip } from '../../search/Tooltip';
+import { Tooltip } from '../../data-display/Tooltip';
 import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';

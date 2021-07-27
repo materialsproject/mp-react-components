@@ -3,9 +3,9 @@ import React, { ReactNode, useRef, useState } from 'react';
 import Collapsible from 'react-collapsible';
 import { FaBicycle, FaCaretDown, FaCaretRight, FaCaretUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
-import { Column } from '../../search/SearchUI/types';
-import { initColumns } from '../../search/SearchUI/utils';
-import { Tooltip } from '../../search/Tooltip';
+import { Column } from '../SearchUI/types';
+import { initColumns } from '../SearchUI/utils';
+import { Tooltip } from '../../data-display/Tooltip';
 import './DataBlock.css';
 
 interface Props {

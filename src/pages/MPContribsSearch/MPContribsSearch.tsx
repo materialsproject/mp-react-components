@@ -1,10 +1,10 @@
 import React from 'react';
-import { SearchUI } from '../../components/search/SearchUI';
-import { FilterGroup } from '../../components/search/SearchUI/types';
+import { SearchUI } from '../../components/data-display/SearchUI';
+import { FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { SearchUIViewType } from '../../components/search/SearchUI/types';
-import { PeriodicTableMode } from '../../components/search/MaterialsInput/MaterialsInput';
+import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
+import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 /**
  * Component for testing the MPContribsSearch view
