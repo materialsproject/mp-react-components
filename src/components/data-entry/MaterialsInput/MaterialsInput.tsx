@@ -501,7 +501,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     if (
       props.autocompleteFormulaUrl &&
       inputType === MaterialsInputType.FORMULA &&
-      inputValue.length
+      inputValue.length &&
+      inputValue.indexOf('*') === -1
     ) {
       requestCount++;
       const requestIndex = requestCount;
