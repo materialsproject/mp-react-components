@@ -10,7 +10,7 @@ interface Props {
 }
 
 const formulaItem = (str: string) => {
-  if (!str.match(/\(|\)/g) && !str.match(ELEMENTS_REGEX)) {
+  if (!str.match(/\(|\)|\*/g) && !str.match(ELEMENTS_REGEX)) {
     return <sub>{str}</sub>;
   } else {
     return <span>{str}</span>;
