@@ -610,7 +610,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         setIsChemSys(false);
         setInputType(MaterialsInputType.ELEMENTS);
         if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /,/));
-      } else if (selectionMode === PeriodicTableSelectionMode.FORMULA) {
+      } else if (
+        selectionMode === PeriodicTableSelectionMode.FORMULA &&
+        inputType !== MaterialsInputType.FORMULA
+      ) {
         setInputType(MaterialsInputType.FORMULA);
         if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, ''));
       }
