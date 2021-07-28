@@ -166,7 +166,18 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       let newValue = '';
       switch (props.inputType) {
         case MaterialsInputType.ELEMENTS:
-          newValue = arrayToDelimitedString(enabledElementsList, delimiter);
+          let elementsSplit = props.value ? props.value.split(delimiter) : [];
+          if (lastAction.type === 'select') {
+            elementsSplit.push(enabledElementsList[enabledElementsList.length - 1]);
+          } else {
+            /** Find which element is no longer enabled (ignore wildcards) */
+            const removedIndex = elementsSplit?.findIndex((d, i) => {
+              let cleanEl = d.replace(/\s/g, '');
+              return cleanEl !== '*' && enabledElementsList.indexOf(cleanEl) === -1;
+            });
+            if (removedIndex !== undefined) elementsSplit?.splice(removedIndex, 1);
+          }
+          newValue = arrayToDelimitedString(elementsSplit, delimiter);
           break;
         case MaterialsInputType.FORMULA:
           if (lastAction.type === 'select') {
@@ -180,8 +191,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
               return d !== '*' && enabledElementsList.indexOf(d) === -1;
             });
             if (removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
-            if (formulaSplitWithNumbers)
-              newValue = formulaSplitWithNumbers.toString().replace(/,/gi, '');
+            if (formulaSplitWithNumbers) newValue = formulaSplitWithNumbers.join('');
           }
           break;
         default:
