@@ -175,8 +175,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             var { formulaSplitWithNumbers, formulaSplitElementsOnly } = formulaStringToArrays(
               props.value
             );
+            /** Find which element is no longer enabled (ignore wildcards) */
             const removedIndex = formulaSplitElementsOnly?.findIndex((d, i) => {
-              return enabledElementsList.indexOf(d) === -1;
+              return d !== '*' && enabledElementsList.indexOf(d) === -1;
             });
             if (removedIndex !== undefined) formulaSplitWithNumbers?.splice(removedIndex, 1);
             if (formulaSplitWithNumbers)

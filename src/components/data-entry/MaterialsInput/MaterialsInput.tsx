@@ -605,17 +605,17 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       if (selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM) {
         setIsChemSys(true);
         setInputType(MaterialsInputType.ELEMENTS);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /-/));
+        if (elements && elements.length > 0) setInputValue(arrayToDelimitedString(elements, /-/));
       } else if (selectionMode === PeriodicTableSelectionMode.ELEMENTS) {
         setIsChemSys(false);
         setInputType(MaterialsInputType.ELEMENTS);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /,/));
+        if (elements && elements.length > 0) setInputValue(arrayToDelimitedString(elements, /,/));
       } else if (
         selectionMode === PeriodicTableSelectionMode.FORMULA &&
         inputType !== MaterialsInputType.FORMULA
       ) {
         setInputType(MaterialsInputType.FORMULA);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, ''));
+        if (elements && elements.length > 0) setInputValue(arrayToDelimitedString(elements, ''));
       }
     }
   }, [selectionMode]);

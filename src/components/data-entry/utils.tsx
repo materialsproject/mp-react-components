@@ -127,8 +127,15 @@ export function elementsArrayToElementState(elements: string[]) {
   return elementState;
 }
 
+/**
+ * Split formula string into two kinds of arrays:
+ * 1. One with numbers e.g. [Eu2, Si, N3]
+ * 2. One without numbers e.g. [Eu, Si, N]
+ *
+ * Wildcards are included as elements e.g. [Eu, Si, N, *, *]
+ */
 export function formulaStringToArrays(str: string) {
-  var formulaSplitWithNumbers = str.match(/[A-Z][a-z][0-9]|[A-Z][0-9]|[A-Z][a-z]|[A-Z]/g);
+  var formulaSplitWithNumbers = str.match(/[A-Z][a-z][0-9]|[A-Z][0-9]|[A-Z][a-z]|[A-Z]|\*/g);
   var formulaSplitElementsOnly = formulaSplitWithNumbers
     ? formulaSplitWithNumbers.map((d) => d.replace(/[0-9]/, ''))
     : [];
