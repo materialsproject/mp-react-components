@@ -287,10 +287,8 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
               </div>
             </div>
             <div className="mpc-search-ui-right column">
-              <div className="mpc-inner-column-container">
-                <SearchUIDataHeader />
-                <SearchUIDataView />
-              </div>
+              <SearchUIDataHeader />
+              <SearchUIDataView />
             </div>
           </div>
         </SearchUIContextProvider>
