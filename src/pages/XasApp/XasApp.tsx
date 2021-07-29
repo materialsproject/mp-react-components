@@ -15,10 +15,13 @@ export const XasApp: React.FC = () => {
       <h1 className="title">X-Ray Absorption Spectra</h1>
       <div>
         <span>Selected Rows: </span>
-        {state?.selectedRows.map((r) => (
-          <span>{r.task_id}, </span>
+        {state?.selectedRows.map((r, i) => (
+          <span key={i}>{r.material_id}, </span>
         ))}
       </div>
+      <button className="button" onClick={() => setState({ ...state, selectedRows: [] })}>
+        Clear Selected Rows
+      </button>
       <SearchUI
         resultLabel="spectrum"
         columns={columns}
