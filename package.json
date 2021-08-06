@@ -89,7 +89,7 @@
     "scroll-into-view-if-needed": "^2.2.28",
     "styled-components": "^5.2.1",
     "svgtodatauri": "0.0.0",
-    "three": "^0.115.0",
+    "three": "^0.131.3",
     "ts-debounce": "^2.1.0",
     "use-deep-compare-effect": "^1.6.1",
     "use-resize-observer": "^7.0.0",
