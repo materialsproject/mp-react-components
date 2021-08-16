@@ -43,6 +43,7 @@ export const DownloadDropdown: React.FC<Props> = ({ filename = 'export', ...othe
 
   return (
     <MenuWrapper
+      id={props.id}
       data-testid="mpc-download-dropdown"
       className={classNames('mpc-download-dropdown dropdown is-active', props.className)}
       onSelection={handleDownloadTypeChange}

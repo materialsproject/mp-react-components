@@ -168,6 +168,7 @@ const formatReactionString = (reactionString: string) => {
 export const SynthesisRecipeCard: React.FC<Props> = (props) => {
   return (
     <DataBlock
+      id={props.id}
       className={classNames('mpc-synthesis-card box', props.className)}
       data={{
         targetFormula: props.data.target.material_formula,

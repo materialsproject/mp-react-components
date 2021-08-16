@@ -122,7 +122,10 @@ export const PublicationButton: React.FC<Props> = ({
   }, []);
 
   return (
-    <span className={classNames('mpc-publication-button', props.className, props.tagClassName)}>
+    <span
+      id={props.id}
+      className={classNames('mpc-publication-button', props.className, props.tagClassName)}
+    >
       <span className="tags has-addons">
         <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
           <FaBook />

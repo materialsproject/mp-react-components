@@ -65,7 +65,7 @@ export const DataBlock: React.FC<Props> = (props) => {
   );
 
   return (
-    <div className={classNames('mpc-data-block', props.className)}>
+    <div id={props.id} className={classNames('mpc-data-block', props.className)}>
       <div className="mpc-data-block-header">
         {topColumns.map((c, i) => columnItem(c))}
         {props.iconClassName && (

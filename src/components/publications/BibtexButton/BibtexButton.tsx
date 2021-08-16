@@ -48,6 +48,7 @@ export const BibtexButton: React.FC<Props> = ({
   });
   return (
     <a
+      id={props.id}
       className={classNames('mpc-bibtex-button', props.className)}
       href={bibtexUrl}
       target={props.target}

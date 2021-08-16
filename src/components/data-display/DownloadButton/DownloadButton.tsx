@@ -26,6 +26,7 @@ export const DownloadButton: React.FC<Props> = ({
 
   return (
     <button
+      id={props.id}
       className={classNames('mpc-download-button', props.className)}
       onClick={() => downloadAs[props.filetype](data, props.filename)}
       data-tooltip={props.tooltip}

@@ -652,7 +652,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }, [isChemSys]);
 
   return (
-    <div className="mpc-materials-input">
+    <div id={props.id} className="mpc-materials-input">
       <PeriodicContext>
         {materialsInputField}
         {/* {chemSysCheckbox} */}

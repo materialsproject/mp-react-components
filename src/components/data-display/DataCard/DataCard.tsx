@@ -20,7 +20,7 @@ interface Props {
 
 export const DataCard: React.FC<Props> = (props) => {
   return (
-    <div className={classNames('mpc-data-card', props.className)}>
+    <div id={props.id} className={classNames('mpc-data-card', props.className)}>
       <div className="mpc-data-card-left">{props.leftComponent}</div>
       <div className="mpc-data-card-right">
         {props.levelOneKey && <p className="title is-4">{props.data[props.levelOneKey]}</p>}
