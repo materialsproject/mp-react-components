@@ -11,7 +11,7 @@ interface Props {
   /**
    * The ID used to identify this component in Dash callbacks
    */
-  [id: string]: any;
+  id?: string;
 
   /**
    * Dash-assigned callback that should be called whenever any of the

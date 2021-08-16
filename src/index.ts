@@ -29,6 +29,7 @@ import { DataBlock } from './components/data-display/DataBlock';
 import { Formula } from './components/data-display/Formula';
 import { SynthesisRecipeCard } from './components/data-display/SynthesisRecipeCard';
 import { Markdown } from './components/data-display/Markdown';
+import { Dropdown } from './components/navigation/Dropdown';
 
 export {
   SelectableTable,
@@ -51,6 +52,7 @@ export {
   DataBlock,
   GlobalSearchBar,
   NavbarDropdown,
+  Dropdown,
   Select,
   Download,
   BibFilter,
