@@ -30,6 +30,11 @@ interface Props {
 }
 
 export const Select: React.FC<Props> = (props) => {
+  const { arbitraryProps, ...otherProps } = props;
+
+  /** Attach object of arbitraryProps to the main props object */
+  props = { ...otherProps, ...arbitraryProps };
+
   const [open, setOpen] = useState(false);
   /**
    * Set selected option based on value or defaultValue prop.
@@ -40,7 +45,7 @@ export const Select: React.FC<Props> = (props) => {
     if (props.value) {
       return option.value === props.value || option === props.value;
     } else if (props.defaultValue) {
-      return option.defaultValue === props.defaultValue || option === props.defaultValue;
+      return option.value === props.defaultValue || option === props.defaultValue;
     } else {
       return;
     }
@@ -55,7 +60,6 @@ export const Select: React.FC<Props> = (props) => {
     >
       <ReactSelect
         {...props}
-        {...props.arbitraryProps}
         className="react-select-container"
         classNamePrefix="react-select"
         value={selected}

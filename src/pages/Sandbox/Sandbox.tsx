@@ -11,6 +11,7 @@ import { NavbarDropdown } from '../../components/navigation/NavbarDropdown';
 import { Markdown } from '../../components/data-display/Markdown';
 import ReactMarkdown from 'react-markdown';
 import { Dropdown } from '../../components/navigation/Dropdown';
+import { Select } from '../../components/data-entry/Select';
 
 /**
  * View for testing out small new components
@@ -282,7 +283,7 @@ export const Sandbox: React.FC = () => {
       <Dropdown
         triggerLabel="Test with Children"
         triggerIcon="icon-fontastic-synthesis"
-        triggerClassName="button is-primary is-small"
+        triggerClassName="button is-link is-small"
       >
         <div className="dropdown-item">
           <PublicationButton doi="10.1103/PhysRevB.95.174110" />
@@ -293,6 +294,14 @@ export const Sandbox: React.FC = () => {
         <div className="dropdown-item">Three</div>
       </Dropdown>
       <Dropdown triggerLabel="Test with Items" items={['one', 'two', 'three']} />
+      <Select
+        defaultValue={2}
+        options={[
+          { value: 1, label: 1 },
+          { value: 2, label: 2 },
+          { value: 1, label: 1 }
+        ]}
+      />
     </>
   );
 };

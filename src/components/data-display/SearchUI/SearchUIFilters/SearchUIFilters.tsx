@@ -109,7 +109,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <Select
             isClearable
             {...f.props}
-            menuPosition="fixed"
             value={state.filterValues[f.id]}
             onChange={(selectedOption) => {
               const value = selectedOption && selectedOption.value ? selectedOption.value : null;
