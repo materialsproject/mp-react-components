@@ -190,33 +190,32 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
-        let params = currentState.baseUrlParams!;
+        let params = Object.assign({}, currentState.baseUrlParams!);
         let query = new URLSearchParams();
-        if (currentState.isContribs) {
-          params._fields = currentState.columns.map((d) => d.selector);
-          params._limit = currentState.resultsPerPage;
-          params._skip = (currentState.page - 1) * currentState.resultsPerPage;
-          query.set('_limit', params._limit);
-          query.set('_skip', params._skip);
-          if (currentState.sortField) {
-            params._order_by = currentState.sortField;
-            params.order = currentState.sortAscending ? 'asc' : 'desc';
-            query.set('_order_by', params._order_by);
-            query.set('order', params.order);
-          }
-        } else {
-          params.fields = currentState.columns.map((d) => d.selector);
-          params.limit = currentState.resultsPerPage;
-          params.skip = (currentState.page - 1) * currentState.resultsPerPage;
-          query.set('limit', params.limit);
-          query.set('skip', params.skip);
-          if (currentState.sortField) {
-            params.sort_field = currentState.sortField;
+
+        /** Resolve inconsistencies between mp-api and contribs-api */
+        const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
+        const limitKey = currentState.isContribs ? '_limit' : 'limit';
+        const skipKey = currentState.isContribs ? '_skip' : 'skip';
+        const sortKey = currentState.isContribs ? '_sort' : 'sort_field';
+
+        params[fieldsKey] = currentState.columns.map((d) => d.selector);
+        params[limitKey] = currentState.resultsPerPage;
+        params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
+        query.set(limitKey, params[limitKey]);
+        query.set(skipKey, params[skipKey]);
+        if (currentState.sortField) {
+          params[sortKey] = currentState.sortField;
+          if (currentState.isContribs) {
+            const sortDirection = currentState.sortAscending ? '+' : '-';
+            params[sortKey] = sortDirection + currentState.sortField;
+          } else {
             params.ascending = currentState.sortAscending;
-            query.set('sort_field', params.sort_field);
             query.set('ascending', params.ascending);
           }
+          query.set(sortKey, params[sortKey]);
         }
+
         currentState.activeFilters.forEach((a) => {
           a.searchParams?.forEach((s) => {
             let field = s.field;
