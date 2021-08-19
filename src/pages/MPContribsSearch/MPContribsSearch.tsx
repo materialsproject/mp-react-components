@@ -20,7 +20,7 @@ export const MPContribsSearch: React.FC = () => {
         resultLabel="contribution"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseURL="https://contribs-api.materialsproject.org/contributions/"
+        baseUrl="https://contribs-api.materialsproject.org/contributions/"
         apiKey={undefined}
         hasSortMenu={true}
         sortAscending={true}

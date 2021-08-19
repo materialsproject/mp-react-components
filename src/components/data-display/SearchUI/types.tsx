@@ -49,6 +49,10 @@ export interface SearchParam {
   value: any;
 }
 
+export interface SearchParams {
+  [id: string]: any;
+}
+
 export interface ActiveFilter {
   id: string;
   displayName: string;

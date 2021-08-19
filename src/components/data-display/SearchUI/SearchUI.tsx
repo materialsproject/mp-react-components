@@ -2,7 +2,14 @@ import React, { useEffect } from 'react';
 import { SearchUIContextProvider } from './SearchUIContextProvider';
 import { SearchUIFilters } from './SearchUIFilters';
 import { SearchUIDataTable } from './SearchUIDataTable';
-import { Column, FilterGroup, ConditionalRowStyle, SearchUIViewType } from './types';
+import {
+  Column,
+  FilterGroup,
+  ConditionalRowStyle,
+  SearchUIViewType,
+  SearchParam,
+  SearchParams
+} from './types';
 import { SearchUISearchBar } from './SearchUISearchBar';
 import './SearchUI.css';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -29,7 +36,9 @@ export interface SearchUIProps {
    * An array of column definitions for the results in the SearchUIDataTable
    * Column properties are based on the react-data-table column settings (https://github.com/jbetancur/react-data-table-component#columns)
    * The "format" property must match a pre-defined one of these predefined strings: "TWO_DECIMALS"
-   * example:
+   * 
+   * eg:
+    
     [
         {
           name: 'Material Id',
@@ -53,7 +62,9 @@ export interface SearchUIProps {
    * Filter "type" must be one of these strings: "SLIDER", "MATERIALS_INPUT"
    * Filter "id" must be a queryable field
    * Filter props defines how that filter should be rendered. See example for props format based on filter type.
-   * example:
+   * 
+   * eg:
+    
     [
       {
         name: 'Material',
@@ -98,7 +109,19 @@ export interface SearchUIProps {
   /**
    * The base URL to the API that this search UI should query
    */
-  baseURL: string;
+  baseUrl: string;
+
+  /**
+   * Query params that will be automatically added for every search.
+   * This can be used to scope down a SearchUI to a specific subset of a larger endpoint.
+   * 
+   * e.g.
+    
+    {
+      project: 'open_catalyst_project'
+    }
+   */
+  baseUrlParams?: SearchParams;
 
   /**
    * The URL endpoint for fetching autocompletion results
@@ -151,7 +174,9 @@ export interface SearchUIProps {
    * Keys must be one of these supported input types: "elements", "formula", "mpid", "smiles", "text"
    * Each key object must have a "field" property which maps the input type
    * to a valid data filter field in the API.
+   * 
    * e.g.
+    
     {
       formula: {
         field: 'formula'
@@ -299,6 +324,7 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 
 SearchUI.defaultProps = {
   view: SearchUIViewType.TABLE,
+  baseUrlParams: {},
   resultLabel: 'results',
   hasSortMenu: true,
   hasSearchBar: true,
