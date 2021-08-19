@@ -310,6 +310,9 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
             initializedValues[f.id] = undefined;
           }
           return f;
+        case FilterType.TEXT_INPUT:
+          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
+          return f;
         default:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
@@ -337,12 +340,12 @@ export const getSearchState = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.SLIDER:
-          const minSuffix = f.minSuffix || defaultMinSuffix;
-          const maxSuffix = f.maxSuffix || defaultMaxSuffix;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
             filterValues[f.id][1] !== f.props.domain[1]
           ) {
+            const minSuffix = f.minSuffix || defaultMinSuffix;
+            const maxSuffix = f.maxSuffix || defaultMaxSuffix;
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -364,6 +367,7 @@ export const getSearchState = (
           break;
         case FilterType.MATERIALS_INPUT:
           if (filterValues[f.id] !== '') {
+            const operatorSuffix = f.operatorSuffix || '';
             let parsedValue = filterValues[f.id];
             let filterDisplayName = f.name.toLowerCase();
 
@@ -390,7 +394,7 @@ export const getSearchState = (
               defaultValue: '',
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: parsedValue
                 }
               ]
@@ -436,6 +440,27 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id,
+                  value: filterValues[f.id]
+                }
+              ]
+            });
+          }
+          break;
+        case FilterType.TEXT_INPUT:
+          if (
+            filterValues[f.id] !== undefined &&
+            filterValues[f.id] !== null &&
+            filterValues[f.id] !== ''
+          ) {
+            const operatorSuffix = f.operatorSuffix || '';
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: filterValues[f.id],
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]

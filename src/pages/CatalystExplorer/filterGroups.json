@@ -1,7 +1,6 @@
 [
   {
-    "name": "MPContribs Properties",
-    "alwaysExpanded": true,
+    "name": "MPContribs Identifiers",
     "filters": [
       {
         "name": "MPContribs ID",
@@ -18,10 +17,16 @@
           "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
-      },
+      }
+    ]
+  },
+  {
+    "name": "Catalyst Properties",
+    "filters": [
       {
         "name": "Bulk Formula",
         "id": "data__bulkFormula",
+        "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "formula",
@@ -31,16 +36,14 @@
       {
         "name": "Adsorbate SMILES",
         "id": "data__adsorbateSmiles",
+        "operatorSuffix": "__exact",
         "type": "TEXT_INPUT"
       },
       {
         "name": "Adsorbate IUPAC Formula",
         "id": "data__adsorbateIUPACFormula",
-        "type": "MATERIALS_INPUT",
-        "props": {
-          "inputType": "formula",
-          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
-        }
+        "operatorSuffix": "__exact",
+        "type": "TEXT_INPUT"
       },
       {
         "name": "Adsorption Energy",
