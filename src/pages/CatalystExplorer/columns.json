@@ -1,0 +1,64 @@
+[
+  {
+    "name": "MPContribs ID",
+    "selector": "id",
+    "format": "LINK",
+    "formatOptions": {
+      "baseUrl": "https://contribs.materialsproject.org/contributions/",
+      "target": "_blank"
+    },
+    "minWidth": "130px"
+  },
+  {
+    "name": "Formula",
+    "selector": "formula",
+    "format": "FORMULA",
+    "minWidth": "150px"
+  },
+  {
+    "name": "Bulk Formula",
+    "selector": "data.bulkFormula",
+    "format": "FORMULA"
+  },
+  {
+    "name": "Adsorbate Smiles",
+    "selector": "data.adsorbateSmiles"
+  },
+  {
+    "name": "Adsorbate IUPAC Formula",
+    "selector": "data.adsorbateIUPACFormula"
+  },
+  {
+    "name": "Adsorption Energy",
+    "selector": "data.adsorptionEnergy.value",
+    "format": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 3
+    },
+    "right": true
+  },
+  {
+    "name": "h",
+    "selector": "data.h.value",
+    "right": true
+  },
+  {
+    "name": "k",
+    "selector": "data.k.value",
+    "right": true
+  },
+  {
+    "name": "l",
+    "selector": "data.l.value",
+    "right": true
+  },
+  {
+    "name": "Surface Shift",
+    "selector": "data.surfaceShift.value",
+    "format": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 3
+    },
+    "right": true
+  }
+]

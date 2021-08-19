@@ -20,12 +20,31 @@ import { Tooltip } from '../Tooltip';
 import { ArrayChips } from '../ArrayChips';
 import { Formula } from '../Formula';
 
+const defaultMinSuffix = '_min';
+const defaultMaxSuffix = '_max';
+const emptyCellPlaceholder = '-';
+
+/**
+ * Get the corresponding value for a row object given a selector string.
+ * Can select values from keys nested up to 3 levels.
+ * @param selector string that corresponds to a key or nested group of keys (e.g. 'data.a.b.c') in an object.
+ * @param row object that has the key(s) specified in selector
+ */
 const getRowValueFromSelectorString = (selector: string, row: any) => {
   const selectors = selector.split('.');
-  return selectors.length === 1 ? row[selectors[0]] : row[selectors[0]][selectors[1]];
+  switch (selectors.length) {
+    case 1:
+      return row[selectors[0]];
+    case 2:
+      return row[selectors[0]][selectors[1]];
+    case 3:
+      return row[selectors[0]][selectors[1]][selectors[2]];
+    case 3:
+      return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
+    default:
+      return emptyCellPlaceholder;
+  }
 };
-
-const emptyCellPlaceholder = '-';
 
 /**
  * Initialize columns with their proper format function
@@ -66,8 +85,11 @@ export const initColumns = (columns: Column[]): Column[] => {
           const numValue = parseFloat(rowValue);
           const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
           const min = Math.pow(10, -decimalPlaces);
+          if (value === 0) {
+            return 0;
+          }
           if (hasFormatOptions && c.formatOptions.abbreviateNearZero) {
-            if (value === 0 || value >= min) {
+            if (value >= min) {
               return value.toFixed(decimalPlaces);
             } else if (value < min) {
               return '< ' + min.toString();
@@ -86,6 +108,9 @@ export const initColumns = (columns: Column[]): Column[] => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const numValue = parseFloat(rowValue);
           const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
+          if (value === 0) {
+            return 0;
+          }
           return isNaN(value) ? emptyCellPlaceholder : value.toPrecision(sigFigs);
         };
         c.right = true;
@@ -194,6 +219,9 @@ export const initColumns = (columns: Column[]): Column[] => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const isNumber = !isNaN(rowValue);
           const value = c.conversionFactor && isNumber ? rowValue * c.conversionFactor : rowValue;
+          if (value === 0) {
+            return 0;
+          }
           return value && value !== '' ? value : emptyCellPlaceholder;
         };
         return c;
@@ -222,8 +250,10 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
 
       switch (f.type) {
         case FilterType.SLIDER:
-          const queryParamMinString = query.get(f.id + '_min');
-          const queryParamMaxString = query.get(f.id + '_max');
+          const minSuffix = f.minSuffix || defaultMinSuffix;
+          const maxSuffix = f.maxSuffix || defaultMaxSuffix;
+          const queryParamMinString = query.get(f.id + minSuffix);
+          const queryParamMaxString = query.get(f.id + maxSuffix);
           const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
           const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
           queryParamValue =
@@ -307,6 +337,8 @@ export const getSearchState = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.SLIDER:
+          const minSuffix = f.minSuffix || defaultMinSuffix;
+          const maxSuffix = f.maxSuffix || defaultMaxSuffix;
           if (
             filterValues[f.id][0] !== f.props.domain[0] ||
             filterValues[f.id][1] !== f.props.domain[1]
@@ -319,11 +351,11 @@ export const getSearchState = (
               conversionFactor: f.conversionFactor,
               searchParams: [
                 {
-                  field: f.id + '_min',
+                  field: f.id + minSuffix,
                   value: filterValues[f.id][0]
                 },
                 {
-                  field: f.id + '_max',
+                  field: f.id + maxSuffix,
                   value: filterValues[f.id][1]
                 }
               ]

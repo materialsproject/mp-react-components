@@ -1,0 +1,102 @@
+[
+  {
+    "name": "MPContribs Properties",
+    "alwaysExpanded": true,
+    "filters": [
+      {
+        "name": "MPContribs ID",
+        "id": "id",
+        "type": "TEXT_INPUT"
+      },
+      {
+        "name": "Formula",
+        "id": "formula",
+        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula",
+          "periodicTableMode": "focus",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+        }
+      },
+      {
+        "name": "Bulk Formula",
+        "id": "data__bulkFormula",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula",
+          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
+        }
+      },
+      {
+        "name": "Adsorbate SMILES",
+        "id": "data__adsorbateSmiles",
+        "type": "TEXT_INPUT"
+      },
+      {
+        "name": "Adsorbate IUPAC Formula",
+        "id": "data__adsorbateIUPACFormula",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula",
+          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
+        }
+      },
+      {
+        "name": "Adsorption Energy",
+        "id": "data__adsorptionEnergy__value",
+        "minSuffix": "__gte",
+        "maxSuffix": "__lte",
+        "type": "SLIDER",
+        "props": {
+          "domain": [-2200, 0],
+          "step": 1
+        }
+      },
+      {
+        "name": "h",
+        "id": "data__h__value",
+        "minSuffix": "__gte",
+        "maxSuffix": "__lte",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 2],
+          "step": 1
+        }
+      },
+      {
+        "name": "k",
+        "id": "data__k__value",
+        "minSuffix": "__gte",
+        "maxSuffix": "__lte",
+        "type": "SLIDER",
+        "props": {
+          "domain": [-2, 2],
+          "step": 1
+        }
+      },
+      {
+        "name": "l",
+        "id": "data__l__value",
+        "minSuffix": "__gte",
+        "maxSuffix": "__lte",
+        "type": "SLIDER",
+        "props": {
+          "domain": [-2, 2],
+          "step": 1
+        }
+      },
+      {
+        "name": "Surface Shift",
+        "id": "data__surfaceShift__value",
+        "minSuffix": "__gte",
+        "maxSuffix": "__lte",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1],
+          "step": 0.01
+        }
+      }
+    ]
+  }
+]

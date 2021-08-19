@@ -35,6 +35,16 @@ export interface Filter {
   units?: string;
   props?: any;
   tooltip?: string;
+  /**
+   * Suffix to append to the id for the lower bound
+   * of a range filter (SearchUI defaults to '_min).
+   */
+  minSuffix?: string;
+  /**
+   * Suffix to append to the id for the upper bound
+   * of a range filter (SearchUI defaults to '_max).
+   */
+  maxSuffix?: string;
 }
 
 export interface FilterGroup {
