@@ -17,7 +17,7 @@ export const BatteryExplorer: React.FC = () => {
         resultLabel="battery"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseURL={
+        baseUrl={
           process.env.REACT_APP_BASE_URL
             ? process.env.REACT_APP_BASE_URL + '/insertion_electrodes/'
             : ''

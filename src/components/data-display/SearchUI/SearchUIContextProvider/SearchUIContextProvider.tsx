@@ -22,7 +22,8 @@ const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const defaultState: SearchState = {
-  baseURL: '',
+  baseUrl: '',
+  baseUrlParams: {},
   columns: [],
   filterGroups: [],
   filterValues: {},
@@ -189,7 +190,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
-        let params: any = {};
+        let params = currentState.baseUrlParams!;
         let query = new URLSearchParams();
         if (currentState.isContribs) {
           params._fields = currentState.columns.map((d) => d.selector);
@@ -233,7 +234,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         });
 
         axios
-          .get(props.baseURL, {
+          .get(props.baseUrl, {
             params: params,
             paramsSerializer: (p) => {
               return qs.stringify(p, { arrayFormat: 'comma' });

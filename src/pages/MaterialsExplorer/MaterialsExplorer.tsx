@@ -30,7 +30,7 @@ export const MaterialsExplorer: React.FC = () => {
         resultLabel="material"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseURL={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''}
+        baseUrl={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''}
         autocompleteFormulaUrl={
           process.env.REACT_APP_AUTOCOMPLETE_URL
             ? process.env.REACT_APP_AUTOCOMPLETE_URL

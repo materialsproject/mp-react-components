@@ -21,6 +21,7 @@ import { Publications } from './pages/Publications';
 import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
 import { MPContribsSearch } from './pages/MPContribsSearch';
+import { CatalystExplorer } from './pages/CatalystExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -56,6 +57,9 @@ ReactDOM.render(
               <Link to="/contribs">Contributions</Link>
             </span>
             <span className="navbar-item">
+              <Link to="/catalysts">Catalysts</Link>
+            </span>
+            <span className="navbar-item">
               <Link to="/sandbox">Sandbox</Link>
             </span>
           </div>
@@ -86,6 +90,9 @@ ReactDOM.render(
           </Route>
           <Route path="/contribs">
             <MPContribsSearch />
+          </Route>
+          <Route path="/catalysts">
+            <CatalystExplorer />
           </Route>
           <Route path="/sandbox">
             <Sandbox />
