@@ -45,6 +45,12 @@ export interface Filter {
    * of a range filter (SearchUI defaults to '_max).
    */
   maxSuffix?: string;
+  /**
+   * Suffix to append to the id for a TEXT_INPUT or MATERIALS_INPUT filter.
+   * This enables you to use different operators like
+   * '__contains' or '__exact'
+   */
+  operatorSuffix?: string;
 }
 
 export interface FilterGroup {
