@@ -1,15 +1,8 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
+import { isUrl } from '../../../utils/navigation';
 import { Link } from '../Link';
-
-interface NavbarItem {
-  className?: string;
-  text?: string;
-  href?: string;
-  isDivider?: boolean;
-  isMenuLabel?: boolean;
-  openInNewTab?: boolean;
-}
+import { NavbarItem } from '../Navbar';
 
 interface Props {
   className?: string;
@@ -24,14 +17,14 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
   return (
     <div
       className={classNames('navbar-item has-dropdown', props.className, {
-        'is-active': isActive,
+        'is-active': isActive
       })}
       onMouseOver={() => setIsActive(true)}
       onMouseLeave={() => setIsActive(false)}
     >
       <a
         className={classNames('navbar-link', {
-          'is-arrowless': props.isArrowless,
+          'is-arrowless': props.isArrowless
         })}
       >
         {/**
@@ -42,7 +35,7 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
       </a>
       <div
         className={classNames('navbar-dropdown', {
-          'is-right': props.isRight,
+          'is-right': props.isRight
         })}
       >
         {props.items.map((item, i) => {
@@ -53,20 +46,20 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
             /** Use a <span> and the menu-label class for menu labels */
             return (
               <span className="navbar-item menu-label" key={i}>
-                {item.text}
+                {item.label}
               </span>
             );
-          } else if (item.href && item.href.indexOf('://') > -1) {
+          } else if (item.href && isUrl(item.href)) {
             /** Use a regular <a> tag for full external links */
             return (
               <a
                 key={i}
                 href={item.href}
-                target={item.openInNewTab ? '_blank' : '_self'}
+                target={item.target}
                 className={classNames('navbar-item', item.className)}
                 onClick={() => setIsActive(false)}
               >
-                {item.text}
+                {item.label}
               </a>
             );
           } else {
@@ -78,7 +71,7 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
                 className={classNames('navbar-item', item.className)}
                 onClick={() => setIsActive(false)}
               >
-                {item.text}
+                {item.label}
               </Link>
             );
           }
@@ -89,5 +82,5 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
 };
 
 NavbarDropdown.defaultProps = {
-  items: [],
+  items: []
 };

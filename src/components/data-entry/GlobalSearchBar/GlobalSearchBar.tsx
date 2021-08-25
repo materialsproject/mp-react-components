@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { linkOnClick } from '../../../utils/utils';
+import { linkOnClick } from '../../../utils/navigation';
 import { MaterialsInput, MaterialsInputType } from '../MaterialsInput';
 import { PeriodicTableMode } from '../MaterialsInput/MaterialsInput';
 

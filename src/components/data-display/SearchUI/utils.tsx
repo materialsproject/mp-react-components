@@ -15,7 +15,7 @@ import { MaterialsInputType } from '../../data-entry/MaterialsInput';
 import { MaterialsInputTypesMap, validateElements } from '../../data-entry/MaterialsInput/utils';
 import { SearchUIProps } from '.';
 import { FaDownload } from 'react-icons/fa';
-import { joinUrl } from '../../../utils/utils';
+import { joinUrl } from '../../../utils/navigation';
 import { Tooltip } from '../Tooltip';
 import { ArrayChips } from '../ArrayChips';
 import { Formula } from '../Formula';
