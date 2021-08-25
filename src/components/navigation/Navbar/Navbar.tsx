@@ -112,7 +112,15 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
           'is-active': activeMobile
         })}
       >
-        <div className="navbar-mobile-controls">
+        <div className="navbar-brand">
+          <Link
+            className={classNames('navbar-item', props.brandItem.className)}
+            href={props.brandItem.href}
+          >
+            {props.brandItem.image && <img src={props.brandItem.image} />}
+            {!props.brandItem.image && props.brandItem.icon && <Icon icon={props.brandItem.icon} />}
+            {!props.brandItem.image && !props.brandItem.icon && props.brandItem.label}
+          </Link>
           <button className="navbar-burger" onClick={() => setActiveMobile(false)}>
             <FaTimes />
           </button>
@@ -121,17 +129,31 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
           {props.items.map((item, i) => (
             <div>
               {item.items ? (
-                <div
-                  key={`navbar-mobile-item-${i}`}
-                  className={classNames('navbar-item', item.className)}
-                >
-                  <Collapsible trigger={<div>{item.label}</div> || ''} transitionTime={250}>
-                    {item.items.map((innerItem, k) => (
-                      <InternalOrExternalLink
-                        item={innerItem}
-                        key={`navbar-mobile-inner-item-${k}`}
-                      />
-                    ))}
+                <div key={`navbar-mobile-item-${i}`} className={item.className}>
+                  <Collapsible
+                    contentInnerClassName="navbar-dropdown"
+                    trigger={item.label || ''}
+                    triggerClassName="navbar-item"
+                    triggerOpenedClassName="navbar-item"
+                    transitionTime={250}
+                  >
+                    {item.items.map((innerItem, k) => {
+                      if (innerItem.isMenuLabel) {
+                        /** Use a <span> and the menu-label class for menu labels */
+                        return (
+                          <span className="navbar-item menu-label" key={i}>
+                            {innerItem.label}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <InternalOrExternalLink
+                            item={innerItem}
+                            key={`navbar-mobile-inner-item-${k}`}
+                          />
+                        );
+                      }
+                    })}
                   </Collapsible>
                 </div>
               ) : (
@@ -145,6 +167,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
         className={classNames('modal-background', {
           'is-hidden-by-opacity': !activeMobile
         })}
+        onClick={() => setActiveMobile(false)}
       ></div>
     </nav>
   );
