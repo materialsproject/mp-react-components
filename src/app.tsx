@@ -66,6 +66,10 @@ ReactDOM.render(
             isRight: true,
             items: [
               {
+                label: 'first',
+                isMenuLabel: true
+              },
+              {
                 label: 'Publications',
                 href: '/publications'
               },
@@ -80,6 +84,10 @@ ReactDOM.render(
               {
                 label: 'Sandbox',
                 href: '/sandbox'
+              },
+              {
+                label: 'second',
+                isMenuLabel: true
               },
               {
                 label: 'Publications',
