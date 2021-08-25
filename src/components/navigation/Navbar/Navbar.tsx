@@ -22,6 +22,8 @@ export interface NavbarItem {
 }
 
 interface Props {
+  id?: string;
+  setProps?: (value: any) => any;
   className?: string;
   items: NavbarItem[];
   brandItem: NavbarItem;
@@ -65,6 +67,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
 
   return (
     <nav
+      id={props.id}
       className={classNames('navbar', props.className)}
       role="navigation"
       aria-label="main navigation"
@@ -122,7 +125,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
                   key={`navbar-mobile-item-${i}`}
                   className={classNames('navbar-item', item.className)}
                 >
-                  <Collapsible trigger={item.label || ''} transitionTime={250}>
+                  <Collapsible trigger={<div>{item.label}</div> || ''} transitionTime={250}>
                     {item.items.map((innerItem, k) => (
                       <InternalOrExternalLink
                         item={innerItem}
@@ -138,6 +141,11 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
           ))}
         </div>
       </div>
+      <div
+        className={classNames('modal-background', {
+          'is-hidden-by-opacity': !activeMobile
+        })}
+      ></div>
     </nav>
   );
 };
