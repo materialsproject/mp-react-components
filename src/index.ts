@@ -30,6 +30,7 @@ import { Formula } from './components/data-display/Formula';
 import { SynthesisRecipeCard } from './components/data-display/SynthesisRecipeCard';
 import { Markdown } from './components/data-display/Markdown';
 import { Dropdown } from './components/navigation/Dropdown';
+import { Navbar } from './components/navigation/Navbar';
 
 export {
   SelectableTable,
@@ -51,6 +52,7 @@ export {
   DataTable,
   DataBlock,
   GlobalSearchBar,
+  Navbar,
   NavbarDropdown,
   Dropdown,
   Select,
