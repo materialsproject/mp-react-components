@@ -6,9 +6,15 @@
   width: 75%;
   overflow: auto;
   background: #fff;
+  z-index: 2;
   transition: 0.5s;
 }
 
 .navbar-mobile.is-active {
   right: 0;
+}
+
+.modal-background {
+  position: fixed;
+  transition: 0.5s;
 }
