@@ -1,5 +1,5 @@
 import React from 'react';
-import { linkOnClick } from '../../../utils/utils';
+import { linkOnClick } from '../../../utils/navigation';
 
 interface Props {
   className?: string;

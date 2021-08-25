@@ -22,6 +22,8 @@ import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
 import { MPContribsSearch } from './pages/MPContribsSearch';
 import { CatalystExplorer } from './pages/CatalystExplorer';
+import { Navbar } from './components/navigation/Navbar';
+import periodicTableImage from './assets/images/periodictable.png';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -29,42 +31,108 @@ const mountNode = document.getElementById(mountNodeSelector);
 ReactDOM.render(
   <>
     <Router>
-      <nav className="navbar" role="navigation" aria-label="main navigation">
-        <div id="navbarBasicExample" className="navbar-menu">
-          <div className="navbar-start">
-            <span className="navbar-item">
-              <Link to="/materials">Materials</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/molecules">Molecules</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/batteries">Batteries</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/xas">X-Ray Absorption Spectra</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/crystal">Crystal Structure</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/synthesis">Synthesis</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/publications">Publications</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/contribs">Contributions</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/catalysts">Catalysts</Link>
-            </span>
-            <span className="navbar-item">
-              <Link to="/sandbox">Sandbox</Link>
-            </span>
-          </div>
-        </div>
-      </nav>
+      <Navbar
+        brandItem={{
+          label: 'MP React',
+          href: '/materials'
+        }}
+        items={[
+          {
+            label: 'Materials',
+            href: '/materials'
+          },
+          {
+            label: 'Molecules',
+            href: '/molecules'
+          },
+          {
+            label: 'Batteries',
+            href: '/batteries'
+          },
+          {
+            label: 'Synthesis',
+            href: '/synthesis'
+          },
+          {
+            label: 'Catalysts',
+            href: '/catalysts'
+          },
+          {
+            label: 'X-Ray Absorption Spectra',
+            href: '/xas'
+          },
+          {
+            label: 'More',
+            isRight: true,
+            items: [
+              {
+                label: 'Publications',
+                href: '/publications'
+              },
+              {
+                label: 'Contributions',
+                href: '/contribs'
+              },
+              {
+                label: 'Crystal Structure',
+                href: '/crystal'
+              },
+              {
+                label: 'Sandbox',
+                href: '/sandbox'
+              },
+              {
+                label: 'Publications',
+                href: '/publications'
+              },
+              {
+                label: 'Contributions',
+                href: '/contribs'
+              },
+              {
+                label: 'Crystal Structure',
+                href: '/crystal'
+              },
+              {
+                label: 'Sandbox',
+                href: '/sandbox'
+              },
+              {
+                label: 'Publications',
+                href: '/publications'
+              },
+              {
+                label: 'Contributions',
+                href: '/contribs'
+              },
+              {
+                label: 'Crystal Structure',
+                href: '/crystal'
+              },
+              {
+                label: 'Sandbox',
+                href: '/sandbox'
+              },
+              {
+                label: 'Publications',
+                href: '/publications'
+              },
+              {
+                label: 'Contributions',
+                href: '/contribs'
+              },
+              {
+                label: 'Crystal Structure',
+                href: '/crystal'
+              },
+              {
+                label: 'Sandbox',
+                href: '/sandbox'
+              }
+            ]
+          }
+        ]}
+      />
       <section className="p-3">
         <Switch>
           <Route path="/materials">

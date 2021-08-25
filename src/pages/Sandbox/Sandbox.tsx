@@ -12,6 +12,9 @@ import { Markdown } from '../../components/data-display/Markdown';
 import ReactMarkdown from 'react-markdown';
 import { Dropdown } from '../../components/navigation/Dropdown';
 import { Select } from '../../components/data-entry/Select';
+import { Link } from '../../components/navigation/Link';
+import { Navbar } from '../../components/navigation/Navbar/Navbar';
+import periodicTableImage from '../../assets/images/periodictable.png';
 
 /**
  * View for testing out small new components
@@ -300,6 +303,50 @@ export const Sandbox: React.FC = () => {
           { value: 1, label: 1 },
           { value: 2, label: 2 },
           { value: 1, label: 1 }
+        ]}
+      />
+      <nav className="navbar" role="navigation" aria-label="main navigation">
+        <div id="navbarBasicExample" className="navbar-menu">
+          <div className="navbar-start">
+            <span className="navbar-item">
+              <Link href="/materials">Materials</Link>
+            </span>
+          </div>
+        </div>
+      </nav>
+      <Navbar
+        brandItem={{
+          label: 'The Materials Project',
+          href: '/materials',
+          image: periodicTableImage
+        }}
+        items={[
+          {
+            label: 'Materials',
+            href: '/materials'
+          },
+          {
+            label: 'Molecules',
+            href: '/molecules'
+          },
+          {
+            icon: 'icon-fontastic-synthesis is-size-4',
+            isRight: true,
+            items: [
+              {
+                label: 'Materials',
+                href: '/materials'
+              },
+              {
+                label: 'Molecules',
+                href: '/molecules'
+              },
+              {
+                label: 'Batteries',
+                href: '/batteries'
+              }
+            ]
+          }
         ]}
       />
     </>
