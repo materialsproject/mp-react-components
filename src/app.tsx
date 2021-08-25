@@ -62,7 +62,11 @@ ReactDOM.render(
             href: '/xas'
           },
           {
-            label: 'More',
+            icon: 'icon-fontastic-synthesis',
+            href: '/catalysts'
+          },
+          {
+            icon: 'icon-fontastic-synthesis',
             isRight: true,
             items: [
               {

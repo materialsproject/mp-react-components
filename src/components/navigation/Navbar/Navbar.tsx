@@ -116,6 +116,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
           <Link
             className={classNames('navbar-item', props.brandItem.className)}
             href={props.brandItem.href}
+            onClick={() => setActiveMobile(false)}
           >
             {props.brandItem.image && <img src={props.brandItem.image} />}
             {!props.brandItem.image && props.brandItem.icon && <Icon icon={props.brandItem.icon} />}
@@ -132,7 +133,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
                 <div key={`navbar-mobile-item-${i}`} className={item.className}>
                   <Collapsible
                     contentInnerClassName="navbar-dropdown"
-                    trigger={item.label || ''}
+                    trigger={item.label || <Icon icon={item.icon} /> || ''}
                     triggerClassName="navbar-item"
                     triggerOpenedClassName="navbar-item"
                     transitionTime={250}
