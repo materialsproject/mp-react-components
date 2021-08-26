@@ -34,3 +34,7 @@ src/archive/
 
 # VSCode configs
 .vscode/
+
+# Assets used for local development only
+src/assets/fonts
+src/assets/styles.css

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../../assets/styles.css';
 import './Sidebar.less';
 import ReactTooltip from 'react-tooltip';
 import { AiOutlineFund, AiOutlineSetting } from 'react-icons/ai';
@@ -116,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setCurrentAppId(currentApp ? currentApp : '');
   }, [currentApp]);
 
-  const setApp = id => {
+  const setApp = (id) => {
     const app = APP_DICO[id];
     if (app) {
       setCurrentAppId(app.id);
@@ -140,7 +139,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ref={tooltip}
         offset={layout === 'vertical' ? { left: 20, top: 17 } : { left: 0, top: 0 }}
         place={layout === 'vertical' ? 'right' : 'bottom'}
-        getContent={idx => {
+        getContent={(idx) => {
           const app = APP_DICO[idx];
           if (idx === mainApps[0].id) {
             tooltip.current!.state.extraClass = 'top';
@@ -152,7 +151,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <>
               {app &&
                 app.subApps &&
-                app.subApps.map(app => (
+                app.subApps.map((app) => (
                   <span
                     onClick={() => setApp(app.id)}
                     key={app.name}
