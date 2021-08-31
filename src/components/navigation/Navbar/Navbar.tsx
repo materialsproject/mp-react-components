@@ -128,9 +128,9 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
         </div>
         <div className="navbar-mobile-menu">
           {props.items.map((item, i) => (
-            <div>
+            <div key={`navbar-mobile-item-${i}`}>
               {item.items ? (
-                <div key={`navbar-mobile-item-${i}`} className={item.className}>
+                <div className={item.className}>
                   <Collapsible
                     contentInnerClassName="navbar-dropdown"
                     trigger={item.label || <Icon icon={item.icon} /> || ''}
@@ -142,7 +142,10 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
                       if (innerItem.isMenuLabel) {
                         /** Use a <span> and the menu-label class for menu labels */
                         return (
-                          <span className="navbar-item menu-label" key={i}>
+                          <span
+                            className="navbar-item menu-label"
+                            key={`navbar-mobile-inner-item-${k}`}
+                          >
                             {innerItem.label}
                           </span>
                         );
@@ -158,7 +161,7 @@ export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
                   </Collapsible>
                 </div>
               ) : (
-                <InternalOrExternalLink item={item} key={`navbar-mobile-item-${i}`} />
+                <InternalOrExternalLink item={item} />
               )}
             </div>
           ))}
