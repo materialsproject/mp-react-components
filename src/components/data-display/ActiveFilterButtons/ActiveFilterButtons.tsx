@@ -16,10 +16,13 @@ interface Props {
 
 const formatValue = (filter: ActiveFilter) => {
   if (Array.isArray(filter.value) && filter.value.length === 2 && !isNaN(filter.value[0])) {
-    const lowerInclusivityLabel =
-      filter.defaultValue[0] !== 0 && filter.value[0] === filter.defaultValue[0] ? ' or less' : '';
-    const upperInclusivityLabel = filter.value[1] === filter.defaultValue[1] ? ' or more' : '';
-    return `${filter.value[0]}${lowerInclusivityLabel} to ${filter.value[1]}${upperInclusivityLabel}`;
+    if (filter.defaultValue[0] !== 0 && filter.value[0] === filter.defaultValue[0]) {
+      return `${filter.value[1]} or less`;
+    } else if (filter.value[1] === filter.defaultValue[1]) {
+      return `${filter.value[0]} or more`;
+    } else {
+      return `${filter.value[0]} to ${filter.value[1]}`;
+    }
   } else if (filter.id === 'pointgroup') {
     return formatPointGroup(filter.value);
   } else if (validateFormula(filter.value.toString())) {
