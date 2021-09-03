@@ -8,7 +8,15 @@ import {
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions
 } from '../../data-entry/utils';
-import { ActiveFilter, Column, ColumnFormat, FilterGroup, FilterType, SearchState } from './types';
+import {
+  ActiveFilter,
+  Column,
+  ColumnFormat,
+  FilterGroup,
+  FilterType,
+  SearchParam,
+  SearchState
+} from './types';
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
@@ -340,28 +348,34 @@ export const getSearchState = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.SLIDER:
-          if (
-            filterValues[f.id][0] !== f.props.domain[0] ||
-            filterValues[f.id][1] !== f.props.domain[1]
-          ) {
+          const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
+          const hasActiveMax = filterValues[f.id][1] !== f.props.domain[1];
+          if (hasActiveMin || hasActiveMax) {
             const minSuffix = f.minSuffix || defaultMinSuffix;
             const maxSuffix = f.maxSuffix || defaultMaxSuffix;
+            const searchParams: SearchParam[] = [];
+            /**
+             * If the min/max value is equal to the domain min/max,
+             * then there won't be a param added for that bound.
+             * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
+             */
+            if (hasActiveMin)
+              searchParams.push({
+                field: f.id + minSuffix,
+                value: filterValues[f.id][0]
+              });
+            if (hasActiveMax)
+              searchParams.push({
+                field: f.id + maxSuffix,
+                value: filterValues[f.id][1]
+              });
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
               value: filterValues[f.id],
               defaultValue: f.props.domain,
               conversionFactor: f.conversionFactor,
-              searchParams: [
-                {
-                  field: f.id + minSuffix,
-                  value: filterValues[f.id][0]
-                },
-                {
-                  field: f.id + maxSuffix,
-                  value: filterValues[f.id][1]
-                }
-              ]
+              searchParams: searchParams
             });
           }
           break;

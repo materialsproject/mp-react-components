@@ -37,12 +37,12 @@ export interface Filter {
   tooltip?: string;
   /**
    * Suffix to append to the id for the lower bound
-   * of a range filter (SearchUI defaults to '_min).
+   * of a range filter (SearchUI defaults to "_min").
    */
   minSuffix?: string;
   /**
    * Suffix to append to the id for the upper bound
-   * of a range filter (SearchUI defaults to '_max).
+   * of a range filter (SearchUI defaults to "_max").
    */
   maxSuffix?: string;
   /**

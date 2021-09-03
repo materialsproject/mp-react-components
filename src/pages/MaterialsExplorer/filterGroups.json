@@ -290,10 +290,10 @@
       },
       {
         "name": "Elastic Anisotropy",
-        "id": "elastic_anisotropy",
+        "id": "universal_anisotropy",
         "type": "SLIDER",
         "props": {
-          "domain": [-2000, 25],
+          "domain": [-1000, 1000],
           "step": 1
         }
       }
