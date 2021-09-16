@@ -126,7 +126,13 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           />
         );
       case FilterType.CHECKBOX_LIST:
-        return <CheckboxList {...f.props} onChange={(v) => actions.setFilterValue(v, f.id)} />;
+        return (
+          <CheckboxList
+            {...f.props}
+            values={state.filterValues[f.id]}
+            onChange={(v) => actions.setFilterValue(v, f.id)}
+          />
+        );
       default:
         null;
     }

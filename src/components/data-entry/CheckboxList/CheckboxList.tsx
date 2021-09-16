@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import CheckBox from 'rc-checkbox';
+import React, { useEffect, useState } from 'react';
 
 interface Option {
   value: any;
@@ -9,15 +8,21 @@ interface Option {
 
 interface Props {
   options: Option[];
+  values?: any[];
   onChange?: (value: any) => void;
 }
 
-const initOptions = (options: Option[]) => {
+const initOptions = (options: Option[], values?: any[]) => {
   return options.map((d) => {
-    if (!d.hasOwnProperty('checked')) d.checked = false;
+    if (values) {
+      d.checked = values.indexOf(d.value) > -1 ? true : false;
+    } else if (!d.hasOwnProperty('checked')) {
+      d.checked = false;
+    }
     return d;
   });
 };
+
 const getCheckedValues = (ops: Option[]) => {
   const checkedValues: any[] = [];
   ops.forEach((d) => {
@@ -25,16 +30,12 @@ const getCheckedValues = (ops: Option[]) => {
       checkedValues.push(d.value);
     }
   });
-  if (checkedValues.length === ops.length) {
-    return null;
-  } else {
-    return checkedValues;
-  }
+
+  return checkedValues;
 };
 
 export const CheckboxList: React.FC<Props> = (props) => {
-  const [options, setOptions] = useState(initOptions(props.options));
-  const [values, setValues] = useState(getCheckedValues(props.options));
+  const [options, setOptions] = useState(initOptions(props.options, props.values));
 
   const handleChange = (index: number) => {
     let newOptions = [...options];
@@ -42,21 +43,26 @@ export const CheckboxList: React.FC<Props> = (props) => {
     const newValues = getCheckedValues(newOptions);
     if (props.onChange) props.onChange(newValues);
     setOptions(newOptions);
-    setValues(newValues);
   };
+
+  useEffect(() => {
+    setOptions(initOptions(props.options, props.values));
+  }, [props.values]);
 
   return (
     <div className="checkbox-list">
       {options.map((d, i) => (
-        <label key={i} className="checkbox">
-          <input
-            type="checkbox"
-            value={d.value}
-            checked={d.checked}
-            onChange={(e) => handleChange(i)}
-          />
-          {d.label}
-        </label>
+        <div key={i}>
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              value={d.value}
+              checked={d.checked}
+              onChange={(e) => handleChange(i)}
+            />
+            {d.label}
+          </label>
+        </div>
       ))}
     </div>
   );

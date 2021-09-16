@@ -54,6 +54,14 @@ const getRowValueFromSelectorString = (selector: string, row: any) => {
   }
 };
 
+const isNotEmpty = (value: any) => {
+  if (Array.isArray(value)) {
+    return value.length > 0 ? true : false;
+  } else {
+    return value !== undefined && value !== null && value !== '';
+  }
+};
+
 /**
  * Initialize columns with their proper format function
  * The "format" prop should initially be one of the ColumnFormat strings
@@ -321,6 +329,9 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
         case FilterType.TEXT_INPUT:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
+        case FilterType.CHECKBOX_LIST:
+          initializedValues[f.id] = query.get(f.id)?.split(',');
+          return f;
         default:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
@@ -416,11 +427,7 @@ export const getSearchState = (
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (isNotEmpty(filterValues[f.id])) {
             const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
             const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : filterValues[f.id];
             activeFilters.push({
@@ -439,11 +446,7 @@ export const getSearchState = (
           break;
         case FilterType.SELECT:
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (isNotEmpty(filterValues[f.id])) {
             const selectedOption = f.props.options.find((d) => d.value === filterValues[f.id]);
             const displayValue = selectedOption ? selectedOption.label : filterValues[f.id];
             activeFilters.push({
@@ -461,11 +464,7 @@ export const getSearchState = (
           }
           break;
         case FilterType.TEXT_INPUT:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (isNotEmpty(filterValues[f.id])) {
             const operatorSuffix = f.operatorSuffix || '';
             activeFilters.push({
               id: f.id,
@@ -481,12 +480,29 @@ export const getSearchState = (
             });
           }
           break;
+        case FilterType.CHECKBOX_LIST:
+          if (isNotEmpty(filterValues[f.id])) {
+            const displayValue = filterValues[f.id].map((d) => {
+              const option = f.props.options.find((o) => o.value === d);
+              return option.label || d;
+            });
+
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: displayValue,
+              defaultValue: [],
+              searchParams: [
+                {
+                  field: f.id,
+                  value: filterValues[f.id]
+                }
+              ]
+            });
+          }
+          break;
         default:
-          if (
-            filterValues[f.id] !== undefined &&
-            filterValues[f.id] !== null &&
-            filterValues[f.id] !== ''
-          ) {
+          if (isNotEmpty(filterValues[f.id])) {
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
