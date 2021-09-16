@@ -165,9 +165,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   });
   const periodicTableClicked = useRef(false);
   const [showPeriodicTable, setShowPeriodicTable] = useState(() => {
-    return props.periodicTableMode === PeriodicTableMode.TOGGLE && !props.hidePeriodicTable
-      ? true
-      : false;
+    return false;
+    // return props.periodicTableMode === PeriodicTableMode.TOGGLE && !props.hidePeriodicTable
+    //   ? true
+    //   : false;
   });
   const [showHelpMenu, setShowHelpMenu] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
