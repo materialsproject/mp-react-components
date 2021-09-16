@@ -1,6 +1,17 @@
+.mpc-search-ui {
+  height: 85vh;
+  margin-bottom: 2rem;
+}
+
 .mpc-search-ui > div,
+.mpc-search-ui > div > .columns,
 .mpc-search-ui > div > .columns > .column {
   height: 100%;
+}
+
+.mpc-search-ui > div > .columns > .column {
+  display: flex;
+  flex-direction: column;
 }
 
 .mpc-search-ui .mpc-search-ui-right {
@@ -15,12 +26,12 @@
   z-index: 2;
 }
 
-/* .mpc-search-ui .panel {
+.mpc-search-ui .panel {
   max-height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-} */
+}
 
 .mpc-search-ui .panel-heading {
   /* position: absolute;
@@ -202,6 +213,7 @@
 }
 
 .mpc-search-ui .mpc-paginator,
+.mpc-search-ui .mpc-search-ui-data-header,
 .mpc-search-ui .mpc-active-filter-buttons,
 .mpc-search-ui .mpc-search-ui-data-view {
   margin-top: 0.5rem;
