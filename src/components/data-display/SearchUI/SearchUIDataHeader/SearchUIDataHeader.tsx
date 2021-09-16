@@ -290,7 +290,7 @@ export const SearchUIDataHeader: React.FC = () => {
   ) : null;
 
   return (
-    <div id={componentHtmlId} className="mpc-search-ui-data-header">
+    <div id={componentHtmlId} className="mpc-search-ui-data-header box">
       <div className="mpc-search-ui-data-header-content">
         <div>
           <TableHeaderTitle />
