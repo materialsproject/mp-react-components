@@ -227,6 +227,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             if (field === 'elements' && typeof value === 'string') {
               field = 'formula';
             }
+
+            if (field === 'has_props' && params[field]) {
+              params[field].push(value);
+            }
+
             params[field] = value;
             query.set(field, s.value);
           });
@@ -250,6 +255,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
                 : result.data.meta.total_doc;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
+              console.log(result);
               return {
                 ...currentState,
                 results: result.data.data,

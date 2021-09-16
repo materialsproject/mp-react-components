@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { Button } from 'react-bulma-components';
+import * as d3 from 'd3';
 import { FaTimes, FaTimesCircle } from 'react-icons/fa';
 import { Formula } from '../Formula';
 import { validateFormula } from '../../data-entry/MaterialsInput/utils';
@@ -16,13 +16,17 @@ interface Props {
 
 const formatValue = (filter: ActiveFilter) => {
   if (Array.isArray(filter.value) && filter.value.length === 2 && !isNaN(filter.value[0])) {
+    const displayMin = d3.format(',')(filter.value[0]);
+    const displayMax = d3.format(',')(filter.value[1]);
     if (filter.defaultValue[0] !== 0 && filter.value[0] === filter.defaultValue[0]) {
-      return `${filter.value[1]} or less`;
+      return `${displayMax} or less`;
     } else if (filter.value[1] === filter.defaultValue[1]) {
-      return `${filter.value[0]} or more`;
+      return `${displayMin} or more`;
     } else {
-      return `${filter.value[0]} to ${filter.value[1]}`;
+      return `${displayMin} to ${displayMax}`;
     }
+  } else if (Array.isArray(filter.value)) {
+    return filter.value.join(', ');
   } else if (filter.id === 'pointgroup') {
     return formatPointGroup(filter.value);
   } else if (validateFormula(filter.value.toString())) {
