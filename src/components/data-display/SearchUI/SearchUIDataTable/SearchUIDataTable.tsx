@@ -53,11 +53,10 @@ export const SearchUIDataTable: React.FC = () => {
 
   return (
     <div className="mpc-search-ui-data-table">
-      {state.resultsPerPage > 10 && state.totalResults > 10 && <CustomPaginator isTop={true} />}
-      <div className="columns react-data-table-outer-container">
+      <div className="react-data-table-outer-container">
         <div
           data-testid="react-data-table-container"
-          className="column react-data-table-container"
+          className="react-data-table-container"
           ref={tableRef}
         >
           <DataTable
@@ -67,9 +66,7 @@ export const SearchUIDataTable: React.FC = () => {
             columns={state.columns.filter((c) => !c.hidden)}
             data={state.results}
             highlightOnHover
-            pagination
             paginationServer
-            paginationComponent={CustomPaginator}
             sortServer
             sortIcon={<FaCaretDown />}
             defaultSortField={state.sortField}
@@ -94,6 +91,7 @@ export const SearchUIDataTable: React.FC = () => {
             // }}
           />
         </div>
+        <CustomPaginator />
       </div>
     </div>
   );

@@ -231,85 +231,82 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   }, [state.filterGroups]);
 
   return (
-    <div className={props.className}>
-      <div className="panel">
-        <div className="panel-heading">
-          <div className="level is-mobile">
-            <span>Filters</span>
-            <button
-              data-testid="search-ui-reset-button"
-              className="button"
-              onClick={(e) => actions.resetFilters()}
-            >
-              Reset
-            </button>
-          </div>
+    <div className={classNames('panel', props.className)}>
+      <div className="panel-heading">
+        <div className="level is-mobile">
+          <span>Filters</span>
+          <button
+            data-testid="search-ui-reset-button"
+            className="button"
+            onClick={(e) => actions.resetFilters()}
+          >
+            Reset
+          </button>
         </div>
-        <div data-testid="panel-block-container" className="panel-block-container">
-          {state.filterGroups.map((g, i) => (
-            <div
-              className={classNames('panel-block', { 'is-active': groupsByName[g.name].expanded })}
-              key={i}
-            >
-              <div className="control">
-                <h3 className="panel-block-title">
-                  <button
-                    className={classNames('button', 'is-fullwidth')}
-                    /**
-                     * Using keydown event for accessibility
-                     * Avoiding click event due to performance issues and collisions with mousedown
-                     */
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') toggleGroup(g.name);
-                    }}
-                    /**
-                     * Using mousedown event to prevent event order issues
-                     * Periodic tables close on blur which fires before click events,
-                     * causing click event to be skipped because button position changes when table is hidden
-                     */
-                    onMouseDown={(e) => toggleGroup(g.name)}
-                    aria-expanded={groupsByName[g.name].expanded}
-                    aria-controls={'filter-group-' + i}
-                    id={'filter-group-button-' + i}
-                    type="button"
-                  >
-                    <span className="mr-4">{renderCaret(groupsByName[g.name])}</span>
-                    <span
-                      className={classNames('is-size-5', {
-                        'has-opacity-70': !groupsByName[g.name].expanded
-                      })}
-                    >
-                      {g.name}
-                      {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
-                    </span>
-                  </button>
-                </h3>
-                <div
-                  id={'filter-group-region-' + i}
-                  role="region"
-                  aria-labelledby={'filter-group-button-' + i}
-                  ref={(el) => (groupRefs.current[i] = el)}
-                  className={classNames('panel-block-children', {
-                    'is-hidden': !groupsByName[g.name].expanded
-                  })}
+      </div>
+      <div data-testid="panel-block-container" className="panel-block-container">
+        {state.filterGroups.map((g, i) => (
+          <div
+            className={classNames('panel-block', { 'is-active': groupsByName[g.name].expanded })}
+            key={i}
+          >
+            <div className="control">
+              <h3 className="panel-block-title">
+                <button
+                  className={classNames('button', 'is-fullwidth')}
+                  /**
+                   * Using keydown event for accessibility
+                   * Avoiding click event due to performance issues and collisions with mousedown
+                   */
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') toggleGroup(g.name);
+                  }}
+                  /**
+                   * Using mousedown event to prevent event order issues
+                   * Periodic tables close on blur which fires before click events,
+                   * causing click event to be skipped because button position changes when table is hidden
+                   */
+                  onMouseDown={(e) => toggleGroup(g.name)}
+                  aria-expanded={groupsByName[g.name].expanded}
+                  aria-controls={'filter-group-' + i}
+                  id={'filter-group-button-' + i}
+                  type="button"
                 >
-                  <div aria-hidden={!groupsByName[g.name].expanded}>
-                    {g.filters.map((f, j) => (
-                      <div className="mb-3" key={j}>
-                        <div>
-                          <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
-                          {renderFilter(f, g.name)}
-                        </div>
+                  <span className="mr-4">{renderCaret(groupsByName[g.name])}</span>
+                  <span
+                    className={classNames('is-size-5', {
+                      'has-opacity-70': !groupsByName[g.name].expanded
+                    })}
+                  >
+                    {g.name}
+                    {renderActiveFilterCount(groupsByName[g.name].activeFilterCount)}
+                  </span>
+                </button>
+              </h3>
+              <div
+                id={'filter-group-region-' + i}
+                role="region"
+                aria-labelledby={'filter-group-button-' + i}
+                ref={(el) => (groupRefs.current[i] = el)}
+                className={classNames('panel-block-children', {
+                  'is-hidden': !groupsByName[g.name].expanded
+                })}
+              >
+                <div aria-hidden={!groupsByName[g.name].expanded}>
+                  {g.filters.map((f, j) => (
+                    <div className="mb-3" key={j}>
+                      <div>
+                        <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
+                        {renderFilter(f, g.name)}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
-// onClick={(v, id) => actions.setFilterValue(v, id)}

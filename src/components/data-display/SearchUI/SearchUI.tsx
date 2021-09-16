@@ -299,20 +299,10 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
         <SearchUIContextProvider {...props}>
           <div className="columns">
             <div className="mpc-search-ui-left column is-narrow is-12-mobile">
-              {props.hasSearchBar && (
-                <div className="columns mb-1">
-                  <div className="column pb-2">
-                    <SearchUISearchBar />
-                  </div>
-                </div>
-              )}
-              <div className="columns">
-                <div className="column">
-                  <SearchUIFilters />
-                </div>
-              </div>
+              <SearchUIFilters />
             </div>
             <div className="mpc-search-ui-right column">
+              {props.hasSearchBar && <SearchUISearchBar />}
               <SearchUIDataHeader />
               <SearchUIDataView />
             </div>
