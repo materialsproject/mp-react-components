@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry } from 'three';
 import { JSON3DObject } from './constants';
-import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
+import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { SceneJsonObject } from './simple-scene';
 import { ThreeBuilder } from './three_builder';
 
@@ -40,20 +40,24 @@ export class AnimationHelper {
         const end = positionPair[1];
         const targetPP = [
           [start[0] + animation[0][0], start[1] + animation[0][1], start[2] + animation[0][2]],
-          [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]],
+          [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]]
         ];
-        const { scale: scaleStart, position: positionStart, quaternion: rotation } = three.children[
-          idx
-        ];
+        const {
+          scale: scaleStart,
+          position: positionStart,
+          quaternion: rotation
+        } = three.children[idx];
         const st = [positionStart.x, positionStart.y, positionStart.z];
         const qt = [rotation.x, rotation.y, rotation.z, rotation.w];
-        const { position, scale, quaternion: quaternionEnd } = this.objectBuilder.getCylinderInfo(
-          targetPP
-        );
+        const {
+          position,
+          scale,
+          quaternion: quaternionEnd
+        } = this.objectBuilder.getCylinderInfo(targetPP);
         let valuesp = [...st, ...position];
         let valuesq = [
           ...qt,
-          ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w],
+          ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w]
         ];
         const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], valuesp);
         const scaleKF = new THREE.NumberKeyframeTrack(
@@ -78,8 +82,9 @@ export class AnimationHelper {
         pt.push(p[0] + animations[idx][0], p[1] + animations[idx][1], p[2] + animations[idx][2]);
       });
       const lines = three.children[0] as THREE.LineSegments;
-      const a: any = ((lines.geometry as THREE.BufferGeometry).attributes
-        .position as BufferAttribute).array;
+      const a: any = (
+        (lines.geometry as THREE.BufferGeometry).attributes.position as BufferAttribute
+      ).array;
       (lines as any).value = [...a];
       const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...pt]);
       this.lineGeometriesToUpdate.push(lines as THREE.LineSegments);
@@ -98,11 +103,11 @@ export class AnimationHelper {
           ...[
             p[0] + animations[idx][0][0],
             p[1] + animations[idx][0][1],
-            p[2] + animations[idx][0][2],
+            p[2] + animations[idx][0][2]
           ]
         );
       });
-      const geom = new ConvexBufferGeometry(pt);
+      const geom = new ConvexGeometry(pt);
       geo.morphAttributes.position[0] = geom.attributes.position;
       mesh.morphTargetInfluences = [0];
       const keyFrame = new THREE.NumberKeyframeTrack('.morphTargetInfluences', kf, [0.0, 1.0]);
@@ -116,8 +121,9 @@ export class AnimationHelper {
         'position',
         edges.getAttribute('position')
       );*/
-      const a: any = ((lines.geometry as THREE.BufferGeometry).attributes
-        .position as BufferAttribute).array;
+      const a: any = (
+        (lines.geometry as THREE.BufferGeometry).attributes.position as BufferAttribute
+      ).array;
       const p: any = (line.geometry as any).attributes.position.array;
       (lines as any).value = [...a];
       const keyFrame2 = new THREE.NumberKeyframeTrack('.value', kf, [...a, ...p]);
