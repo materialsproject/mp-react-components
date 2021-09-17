@@ -4,7 +4,7 @@ import {
   DirectionalLight,
   HemisphereLight,
   Object3D,
-  SphereBufferGeometry,
+  SphereBufferGeometry
 } from 'three';
 import {
   JSON3DObject,
@@ -13,9 +13,9 @@ import {
   RADIUS_SEGMENTS,
   Renderer,
   ThreePosition,
-  TUBE_SEGMENTS,
+  TUBE_SEGMENTS
 } from './constants';
-import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
+import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { RadiusTubeBufferGeometry } from './RadiusTubeBufferGeometry';
 
@@ -151,12 +151,12 @@ export class ThreeBuilder {
         linewidth: object_json.line_width || 1,
         scale: object_json.scale || 1,
         dashSize: object_json.dashSize || 3,
-        gapSize: object_json.gapSize || 1,
+        gapSize: object_json.gapSize || 1
       });
     } else {
       mat = new THREE.LineBasicMaterial({
         color: object_json.color || DEFAULT_LINE_COLOR,
-        linewidth: object_json.line_width || 1,
+        linewidth: object_json.line_width || 1
       });
     }
 
@@ -213,7 +213,7 @@ export class ThreeBuilder {
 
   public makeConvex(object_json, obj: THREE.Object3D) {
     const points = object_json.positions.map((p) => new THREE.Vector3(...p));
-    const geom = new ConvexBufferGeometry(points);
+    const geom = new ConvexGeometry(points);
 
     const opacity = object_json.opacity || this.settings.defaultSurfaceOpacity;
     const mat = this.makeMaterial(object_json.color, object_json.animate, opacity);
@@ -306,7 +306,7 @@ export class ThreeBuilder {
     const parameters = Object.assign(this.settings.material.parameters, {
       color: color,
       opacity: opacity,
-      morphTargets: animated,
+      morphTargets: animated
     });
 
     if (this.settings.renderer === Renderer.SVG) {
@@ -511,7 +511,7 @@ export class ThreeBuilder {
 
   public updateConvexEdges(obj, objjson, positions) {
     const points = positions.map((p) => new THREE.Vector3(...p));
-    const geom = new ConvexBufferGeometry(points);
+    const geom = new ConvexGeometry(points);
     const edges = new THREE.EdgesGeometry(geom);
     obj.children[0].geometry.dispose();
     obj.children[1].geometry.dispose();
@@ -610,12 +610,12 @@ export class ThreeBuilder {
         linewidth: lineWidth || object_json.line_width || 1,
         scale: scale || object_json.scale || 1,
         dashSize: dashSize || object_json.dashSize || 3,
-        gapSize: gapSize || object_json.gapSize || 1,
+        gapSize: gapSize || object_json.gapSize || 1
       });
     } else {
       mat = new THREE.LineBasicMaterial({
         color: color || object_json.color || DEFAULT_LINE_COLOR,
-        linewidth: lineWidth || object_json.line_width || 1,
+        linewidth: lineWidth || object_json.line_width || 1
       });
     }
     mesh.material = mat;
@@ -655,7 +655,7 @@ export class ThreeBuilder {
     return {
       scale: length,
       position: [vec_midpoint.x, vec_midpoint.y, vec_midpoint.z],
-      quaternion,
+      quaternion
     };
   }
 
