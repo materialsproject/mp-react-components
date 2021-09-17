@@ -69,60 +69,8 @@ ReactDOM.render(
             isRight: true,
             items: [
               {
-                label: 'first',
+                label: 'More',
                 isMenuLabel: true
-              },
-              {
-                label: 'Publications',
-                href: '/publications'
-              },
-              {
-                label: 'Contributions',
-                href: '/contribs'
-              },
-              {
-                label: 'Crystal Structure',
-                href: '/crystal'
-              },
-              {
-                label: 'Sandbox',
-                href: '/sandbox'
-              },
-              {
-                label: 'second',
-                isMenuLabel: true
-              },
-              {
-                label: 'Publications',
-                href: '/publications'
-              },
-              {
-                label: 'Contributions',
-                href: '/contribs'
-              },
-              {
-                label: 'Crystal Structure',
-                href: '/crystal'
-              },
-              {
-                label: 'Sandbox',
-                href: '/sandbox'
-              },
-              {
-                label: 'Publications',
-                href: '/publications'
-              },
-              {
-                label: 'Contributions',
-                href: '/contribs'
-              },
-              {
-                label: 'Crystal Structure',
-                href: '/crystal'
-              },
-              {
-                label: 'Sandbox',
-                href: '/sandbox'
               },
               {
                 label: 'Publications',

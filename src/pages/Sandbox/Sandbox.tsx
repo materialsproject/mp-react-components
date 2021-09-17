@@ -314,41 +314,26 @@ export const Sandbox: React.FC = () => {
           </div>
         </div>
       </nav>
-      <Navbar
-        brandItem={{
-          label: 'The Materials Project',
-          href: '/materials',
-          image: periodicTableImage
-        }}
-        items={[
-          {
-            label: 'Materials',
-            href: '/materials'
-          },
-          {
-            label: 'Molecules',
-            href: '/molecules'
-          },
-          {
-            icon: 'icon-fontastic-synthesis is-size-4',
-            isRight: true,
-            items: [
-              {
-                label: 'Materials',
-                href: '/materials'
-              },
-              {
-                label: 'Molecules',
-                href: '/molecules'
-              },
-              {
-                label: 'Batteries',
-                href: '/batteries'
-              }
-            ]
-          }
-        ]}
-      />
+      <Markdown>
+        {`
+        ~~~python
+        from mp_api.matproj import MPRester
+        with MPRester(api_key="your_api_key_here") as mpr:
+            # search across basic materials information
+            # for example, materials between 2 and 4 sites
+            materials_docs = mpr.materials.search(nsites=[2, 4])
+            # search for materials by thermodynamic properties
+            # for example, energy above hull below 0.2 eV/atom
+            thermo_docs = mpr.thermo.search(energy_above_hull_max=0.2)
+            
+        # access either the entire document
+        print(materials_doc[0])
+        
+        # or individual fields
+        print(thermo_docs[0].energy_above_hull)
+        ~~~
+      `}
+      </Markdown>
     </>
   );
 };

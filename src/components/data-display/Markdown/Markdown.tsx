@@ -6,7 +6,7 @@ import remarkSlug from 'remark-slug';
 import remarkHighlight from 'remark-highlight.js';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/github-dark.css';
 
 interface Props {
   /**
