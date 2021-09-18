@@ -41,7 +41,8 @@ jobs:
         run: |
           npm -v
           node -v
-          npm install --force
+          npm i
+          npm install three
           npm install -g npm-snapshot
       - name: Check files
         run: |
