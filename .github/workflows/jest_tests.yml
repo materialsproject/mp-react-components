@@ -41,7 +41,7 @@ jobs:
         run: |
           npm -v
           node -v
-          npm install
+          npm install --force
           npm install -g npm-snapshot
       - name: Check files
         run: |
