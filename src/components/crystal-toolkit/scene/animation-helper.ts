@@ -108,7 +108,7 @@ export class AnimationHelper {
         );
       });
       const geom = new ConvexGeometry(pt);
-      geo.morphAttributes.position[0] = geom.attributes!.position;
+      geo.morphAttributes.position[0] = (geom as ConvexGeometry).attributes!.position;
       mesh.morphTargetInfluences = [0];
       const keyFrame = new THREE.NumberKeyframeTrack('.morphTargetInfluences', kf, [0.0, 1.0]);
       this.pushAnimations('Convex', kfl, [keyFrame], mesh);
