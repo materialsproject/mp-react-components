@@ -42,7 +42,6 @@ jobs:
           npm -v
           node -v
           npm i
-          npm install three
           npm install -g npm-snapshot
       - name: Check files
         run: |
