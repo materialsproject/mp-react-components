@@ -34,3 +34,19 @@
 .mpc-materials-input .mpc-materials-input-error {
   color: #d72638;
 }
+
+.mpc-materials-input .table-transition-wrapper-small {
+  width: 600px;
+  margin: auto;
+  position: absolute;
+  z-index: 500;
+  top: 1.75rem;
+  left: 3rem;
+}
+
+.mpc-materials-input .table-legend-container.box {
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  background: #fff;
+}
