@@ -676,6 +676,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
           }}
         >
           <SelectableTable
+            className="box"
             disabled={!showPeriodicTable}
             maxElementSelectable={20}
             forceTableLayout={TableLayout.MINI}

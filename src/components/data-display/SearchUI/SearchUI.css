@@ -245,7 +245,7 @@
 
 @media screen and (min-width: 960px) {
   .mpc-search-ui .mpc-search-ui-left {
-    min-width: 550px;
+    min-width: 400px;
   }
 }
 

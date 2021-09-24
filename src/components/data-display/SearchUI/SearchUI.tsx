@@ -320,7 +320,7 @@ SearchUI.defaultProps = {
   hasSortMenu: true,
   hasSearchBar: true,
   conditionalRowStyles: [],
-  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
+  searchBarPeriodicTableMode: PeriodicTableMode.FOCUS,
   searchBarAllowedInputTypesMap: {
     elements: {
       field: 'elements'
