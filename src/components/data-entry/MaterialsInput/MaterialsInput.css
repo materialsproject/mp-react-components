@@ -41,7 +41,8 @@
   position: absolute;
   z-index: 500;
   top: 1.75rem;
-  left: 3rem;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .mpc-materials-input .table-legend-container.box {
@@ -49,4 +50,5 @@
   border-top: none;
   border-radius: 0 0 6px 6px;
   background: #fff;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 4px 4px 1px #777;
 }
