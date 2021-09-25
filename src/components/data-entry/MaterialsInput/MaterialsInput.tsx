@@ -663,8 +663,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         {/* {chemSysCheckbox} */}
         <div
           data-testid="materials-input-periodic-table"
-          className={classNames('table-transition-wrapper-small can-hide-by-height', {
-            'is-hidden-by-height': !showPeriodicTable,
+          className={classNames('table-transition-wrapper-small', {
+            'is-hidden-by-opacity': !showPeriodicTable,
             'mt-3': showPeriodicTable
           })}
           aria-hidden={!showPeriodicTable}
