@@ -17,15 +17,15 @@ describe('<DataBlock/>', () => {
   });
   it('should render formula text as formula components', () => {
     render(<DataBlock {...defaultProps} />);
-    expect(screen.getAllByTestId('mpc-formula')).toHaveLength(2);
+    expect(screen.getAllByTestId('formula')).toHaveLength(2);
   });
   it('should render array chips', () => {
     render(<DataBlock {...defaultProps} />);
-    expect(screen.getAllByTestId('mpc-array-chips')).toHaveLength(2);
+    expect(screen.getAllByTestId('array-chips')).toHaveLength(2);
   });
   it('should render icon', () => {
     render(<DataBlock {...defaultProps} />);
-    expect(screen.getByTestId('mpc-data-block-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('data-block-icon')).toBeInTheDocument();
   });
   it('should be expandable', async () => {
     render(<DataBlock {...defaultProps} />);
@@ -37,7 +37,6 @@ describe('<DataBlock/>', () => {
 });
 
 const defaultProps = {
-  className: 'mpc-data-block-test',
   data: {
     material_id: 'mp-777',
     formula_pretty: 'MnO2',

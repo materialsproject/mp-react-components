@@ -71,7 +71,7 @@ export const DataBlock: React.FC<Props> = (props) => {
         {props.iconClassName && (
           <span className="mpc-data-block-icon-container">
             <span
-              data-testid="mpc-data-block-icon"
+              data-testid="data-block-icon"
               className="mpc-data-block-icon"
               data-tip={props.iconTooltip}
               data-for={props.iconTooltip && tooltipId}
