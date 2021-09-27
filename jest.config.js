@@ -16,7 +16,8 @@ module.exports = {
   setupFilesAfterEnv: ['./src/jest-setup.ts'],
   globals: {
     'ts-jest': {
-      tsConfig: './tsconfig.json'
+      tsConfig: './tsconfig.json',
+      isolatedModules: true
     }
   }
 };
