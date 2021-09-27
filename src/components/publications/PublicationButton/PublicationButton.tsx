@@ -123,6 +123,7 @@ export const PublicationButton: React.FC<Props> = ({
 
   return (
     <span
+      data-testid="publication-button"
       id={props.id}
       className={classNames('mpc-publication-button', props.className, props.tagClassName)}
     >

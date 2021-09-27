@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { Formula } from '.';
 
 afterEach(() => cleanup());

@@ -26,7 +26,7 @@ export const ArrayChips: React.FC<Props> = ({
 }) => {
   const props = { chipType, chipLinksTarget, ...otherProps };
   return (
-    <span data-testid="mpc-array-chips" id={props.id} className="tags">
+    <span data-testid="array-chips" id={props.id} className="tags">
       {props.chips.map((item, i) => {
         const chipContent = validateRangedFormula(item) ? <Formula>{item}</Formula> : item;
         const tooltipId = uuidv4();
