@@ -1,6 +1,4 @@
 import React from 'react';
-import Enzyme, { shallow } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { DataBlock } from '.';
 
