@@ -29,7 +29,11 @@ export const Formula: React.FC<Props> = (props) => {
   );
 
   return (
-    <span id={props.id} className={classNames('mpc-formula', props.className)}>
+    <span
+      data-testid="mpc-formula"
+      id={props.id}
+      className={classNames('mpc-formula', props.className)}
+    >
       {formula}
     </span>
   );

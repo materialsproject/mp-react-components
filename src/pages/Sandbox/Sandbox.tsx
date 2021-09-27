@@ -213,8 +213,7 @@ export const Sandbox: React.FC = () => {
             format: 'LINK',
             formatOptions: {
               baseUrl: 'https://lbl.gov',
-              target: '_blank',
-              linkLabelKey: 'formula_pretty'
+              target: '_blank'
             },
             minWidth: '300px',
             maxWidth: '300px',
