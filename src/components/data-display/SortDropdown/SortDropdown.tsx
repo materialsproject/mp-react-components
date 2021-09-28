@@ -74,6 +74,8 @@ export const SortDropdown: React.FC<Props> = ({
     >
       <div className="control">
         <button
+          role="button"
+          data-testid="sort-button"
           className="mpc-sort-button button"
           onClick={handleSortDirection}
           aria-label={

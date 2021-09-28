@@ -124,7 +124,13 @@ export const BibFilter: React.FC<Props> = ({
       className={classNames('mpc-bib-filter', props.className)}
     >
       <div className="mpc-bib-filter-controls">
-        <input className="mpc-bib-filter-input input" type="search" onChange={handleSearchChange} />
+        <input
+          className="mpc-bib-filter-input input"
+          role="searchbox"
+          type="search"
+          aria-label="publication search"
+          onChange={handleSearchChange}
+        />
         <SortDropdown
           sortValues={bibEntries}
           setSortValues={setBibEntries}

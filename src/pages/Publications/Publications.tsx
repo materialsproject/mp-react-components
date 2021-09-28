@@ -1,7 +1,7 @@
 import React from 'react';
 import { BibjsonCard } from '../../components/publications/BibjsonCard';
 import { BibFilter } from '../../components/publications/BibFilter';
-import mpPapers from './mp-papers.json';
+import mpPapers from '../../mocks/constants/mp-papers.json';
 
 /**
  * Component for testing the Publications filter
