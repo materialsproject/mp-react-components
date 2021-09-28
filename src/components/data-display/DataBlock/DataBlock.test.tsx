@@ -2,8 +2,6 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { DataBlock } from '.';
 
-afterEach(() => cleanup());
-
 describe('<DataBlock/>', () => {
   it('should render data items', () => {
     render(<DataBlock {...defaultProps} />);

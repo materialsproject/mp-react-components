@@ -39,12 +39,18 @@ export const BibCard: React.FC<Props> = (props) => {
       data-testid="bib-card"
       className={classNames('mpc-bib-card', props.className)}
     >
-      <p className="mpc-bib-card-title">{title}</p>
-      <p className="mpc-bib-card-authors">{getAuthorString(props.author)}</p>
+      <p data-testid="bib-card-title" className="mpc-bib-card-title">
+        {title}
+      </p>
+      <p data-testid="bib-card-authors" className="mpc-bib-card-authors">
+        {getAuthorString(props.author)}
+      </p>
       <p>
         <span className="mpc-bib-card-journal">{props.journal}</span>
         {props.journal && <span>, </span>}
-        <span className="mpc-bib-card-year">{props.year}</span>
+        <span data-testid="bib-card-year" className="mpc-bib-card-year">
+          {props.year}
+        </span>
       </p>
       {props.doi && (
         <div className="mpc-bib-card-buttons tags">
