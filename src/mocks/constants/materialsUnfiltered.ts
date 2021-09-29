@@ -9,11 +9,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'cubic',
         symbol: 'Fm-3m',
-        number: 225,
+        number: 225
       },
       formation_energy_per_atom: -0.7768430193750007,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1020592',
@@ -24,11 +24,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'tetragonal',
         symbol: 'P4/mnc',
-        number: 128,
+        number: 128
       },
       formation_energy_per_atom: -1.5069643808047377,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1029602',
@@ -39,11 +39,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'trigonal',
         symbol: 'R-3c',
-        number: 167,
+        number: 167
       },
       formation_energy_per_atom: -0.9479946972072717,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-10622',
@@ -54,11 +54,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'cubic',
         symbol: 'Fm-3m',
-        number: 225,
+        number: 225
       },
       formation_energy_per_atom: -1.4914572525,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1068157',
@@ -69,11 +69,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Immm',
-        number: 71,
+        number: 71
       },
       formation_energy_per_atom: -0.7404805046666659,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1069882',
@@ -84,11 +84,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'tetragonal',
         symbol: 'I4mm',
-        number: 107,
+        number: 107
       },
       formation_energy_per_atom: -0.6548833079999994,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1071555',
@@ -99,11 +99,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'hexagonal',
         symbol: 'P6_3mc',
-        number: 186,
+        number: 186
       },
       formation_energy_per_atom: -0.5900836933333332,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1070916',
@@ -114,11 +114,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Cmcm',
-        number: 63,
+        number: 63
       },
       formation_energy_per_atom: -0.30467069611111103,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1077556',
@@ -129,11 +129,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Cmcm',
-        number: 63,
+        number: 63
       },
       formation_energy_per_atom: -0.6463072049999999,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1101139',
@@ -144,11 +144,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'monoclinic',
         symbol: 'Pm',
-        number: 6,
+        number: 6
       },
       formation_energy_per_atom: -0.8732702144444452,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1102926',
@@ -159,11 +159,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Pnma',
-        number: 62,
+        number: 62
       },
       formation_energy_per_atom: -0.46967049361111063,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1102486',
@@ -174,11 +174,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'tetragonal',
         symbol: 'I4_1/amd',
-        number: 141,
+        number: 141
       },
       formation_energy_per_atom: -3.4798433111507934,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1103414',
@@ -189,11 +189,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Pnma',
-        number: 62,
+        number: 62
       },
       formation_energy_per_atom: -1.008339703333333,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1103810',
@@ -204,11 +204,11 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Pmma',
-        number: 51,
+        number: 51
       },
       formation_energy_per_atom: -0.3919968785714281,
       energy_above_hull: 0,
-      is_stable: true,
+      is_stable: true
     },
     {
       material_id: 'mp-1104011',
@@ -219,16 +219,16 @@ export const materialsUnfilteredResponse = {
       symmetry: {
         crystal_system: 'orthorhombic',
         symbol: 'Cmcm',
-        number: 63,
+        number: 63
       },
       formation_energy_per_atom: -1.1049283471551732,
       energy_above_hull: 0,
-      is_stable: true,
-    },
+      is_stable: true
+    }
   ],
   meta: {
     max_limit: 100,
     default_fields: ['material_id'],
-    total: 124061,
-  },
+    total_doc: 124061
+  }
 };

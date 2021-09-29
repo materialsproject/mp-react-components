@@ -10,16 +10,16 @@ export const materialsByIdResponse = {
       symmetry: {
         crystal_system: 'monoclinic',
         symbol: 'C2/c',
-        number: 15,
+        number: 15
       },
       formation_energy_per_atom: -0.9689243143125003,
       energy_above_hull: 0,
-      is_stable: true,
-    },
+      is_stable: true
+    }
   ],
   meta: {
     max_limit: 100,
     default_fields: ['material_id'],
-    total: 1,
-  },
+    total_doc: 1
+  }
 };

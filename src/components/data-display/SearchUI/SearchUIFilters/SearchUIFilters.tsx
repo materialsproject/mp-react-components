@@ -68,7 +68,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
       case FilterType.TEXT_INPUT:
         return (
           <TextInput
-            debounce={1000}
+            debounce={state.debounce}
             type="text"
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
@@ -78,7 +78,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
       case FilterType.MATERIALS_INPUT:
         return (
           <MaterialsInput
-            debounce={1000}
+            debounce={state.debounce}
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
             periodicTableMode="focus"
@@ -94,7 +94,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
         return (
           <DualRangeSlider
             {...f.props}
-            debounce={1000}
+            debounce={state.debounce}
             initialValues={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
