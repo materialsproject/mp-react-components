@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-  cleanup,
-  waitForElement
-} from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import mpPapers from '../../../mocks/constants/mp-papers.json';
 import { BibFilter } from '.';
 

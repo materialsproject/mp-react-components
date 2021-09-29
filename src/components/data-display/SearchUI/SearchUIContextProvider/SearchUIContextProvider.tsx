@@ -255,7 +255,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
                 : result.data.meta.total_doc;
               const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
               const page = currentState.page > pageCount ? pageCount : currentState.page;
-              console.log(result);
               return {
                 ...currentState,
                 results: result.data.data,

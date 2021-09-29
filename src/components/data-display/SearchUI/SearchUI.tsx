@@ -285,6 +285,7 @@ export interface SearchUIProps {
    */
   cardOptions?: any;
   isContribs?: boolean;
+  debounce?: number;
 }
 
 /**
@@ -341,5 +342,6 @@ SearchUI.defaultProps = {
       field: 'material_ids'
     }
   },
-  setProps: () => null
+  setProps: () => null,
+  debounce: 1000
 };
