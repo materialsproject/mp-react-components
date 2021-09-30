@@ -23,7 +23,7 @@ interface Props {
   /**
    * Text to display in the button that triggers the dropdown to open
    */
-  triggerLabel: string;
+  triggerLabel?: string;
 
   /**
    * Class name(s) to apply to button that opens the dropdown menu
@@ -93,7 +93,7 @@ export const Dropdown: React.FC<Props> = ({
               <i className={props.triggerIcon}></i>
             </span>
           )}
-          <span>{props.triggerLabel}</span>
+          {props.triggerLabel && <span>{props.triggerLabel}</span>}
           {!props.isArrowless && (
             <span className="icon">{props.isUp ? <FaAngleUp /> : <FaAngleDown />}</span>
           )}
