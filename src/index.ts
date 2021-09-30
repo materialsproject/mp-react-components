@@ -32,6 +32,7 @@ import { Markdown } from './components/data-display/Markdown';
 import { Dropdown } from './components/navigation/Dropdown';
 import { Navbar } from './components/navigation/Navbar';
 import { Modal } from './components/data-display/Modal';
+import { Tabs } from './components/navigation/Tabs';
 
 export {
   SelectableTable,
@@ -70,5 +71,6 @@ export {
   Formula,
   SynthesisRecipeCard,
   Markdown,
-  Modal
+  Modal,
+  Tabs
 };

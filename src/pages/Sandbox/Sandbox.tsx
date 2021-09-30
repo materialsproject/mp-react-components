@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BibjsonCard } from '../../components/publications/BibjsonCard';
 import { BibFilter } from '../../components/publications/BibFilter';
 import { CrossrefCard } from '../../components/publications/CrossrefCard';
@@ -16,15 +16,22 @@ import { Link } from '../../components/navigation/Link';
 import { Navbar } from '../../components/navigation/Navbar/Navbar';
 import periodicTableImage from '../../assets/images/periodictable.png';
 import { Modal } from '../../components/data-display/Modal';
+import { Tab as ReactTab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
+import { Tabs } from '../../components/navigation/Tabs';
 
 /**
  * View for testing out small new components
  */
 
 export const Sandbox: React.FC = () => {
+  const [state, setState] = useState({ tabIndex: 1 });
   return (
     <>
       <h1 className="title">Sandbox</h1>
+      <Tabs setProps={setState} tabIndex={state.tabIndex} labels={['Tab 1', 'Tab2']}>
+        <div>Content 1</div>
+        <div>Content 2</div>
+      </Tabs>
       <Modal>
         <button className="button">Open Modal</button>
         <div className="panel">
