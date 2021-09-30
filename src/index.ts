@@ -31,6 +31,7 @@ import { SynthesisRecipeCard } from './components/data-display/SynthesisRecipeCa
 import { Markdown } from './components/data-display/Markdown';
 import { Dropdown } from './components/navigation/Dropdown';
 import { Navbar } from './components/navigation/Navbar';
+import { Modal } from './components/data-display/Modal';
 
 export {
   SelectableTable,
@@ -68,5 +69,6 @@ export {
   Tooltip,
   Formula,
   SynthesisRecipeCard,
-  Markdown
+  Markdown,
+  Modal
 };
