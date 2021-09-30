@@ -32,7 +32,11 @@ export const Sandbox: React.FC = () => {
           <div className="panel-block">content</div>
         </div>
       </Modal>
-      <Markdown>
+      <Dropdown triggerIcon="fa fa-pizza-slice" isArrowless={true}>
+        <div className="dropdown-item">One</div>
+        <div className="dropdown-item">Two</div>
+      </Dropdown>
+      <Markdown style={{ height: '150vh' }}>
         {`
         ~~~python
         from mp_api.matproj import MPRester
