@@ -53,7 +53,7 @@ export const Tabs: React.FC<Props> = ({
   setProps = () => null,
   className,
   labels,
-  tabIndex = 1,
+  tabIndex = 0,
   arbitraryProps,
   children,
   ...otherProps
