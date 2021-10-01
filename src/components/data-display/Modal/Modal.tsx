@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import './Modal.css';
+import { useModalContext } from './ModalContextProvider';
 
 interface Props {
   /**
@@ -13,6 +14,12 @@ interface Props {
    * properties change
    */
   setProps?: (value: any) => any;
+
+  /**
+   * Class name applied to modal content div.
+   * The "mpc-modal-content" and "modal" classes are added automatically
+   */
+  className?: string;
 
   /**
    * Element to be used to open the modal.
@@ -28,40 +35,24 @@ interface Props {
 }
 
 /**
- * Render a trigger that opens a modal with the specified modal content
+ * Render modal that can be opened by a ModalTrigger within its same ModalContextProvider
  */
 export const Modal: React.FC<Props> = (props) => {
-  const [active, setActive] = useState(false);
-  let trigger = props.trigger;
-  let modalContent = props.modalContent;
-
-  if (Array.isArray(props.children) && props.children[1]) {
-    trigger = props.children[0];
-    modalContent = props.children[1];
-  } else if (props.children) {
-    modalContent = props.children;
-  }
-
-  if (React.isValidElement(trigger)) {
-    trigger = React.cloneElement(trigger, { onClick: () => setActive(true) });
-  }
-
+  const { active, setActive } = useModalContext();
   return (
-    <div className="mpc-modal">
-      {trigger}
-      <div
-        className={classNames('modal', {
-          'is-active': active
-        })}
-      >
-        <div className="modal-background" onClick={() => setActive(false)}></div>
-        <div className="modal-content">{modalContent}</div>
-        <button
-          className="modal-close is-large"
-          aria-label="close"
-          onClick={() => setActive(false)}
-        ></button>
-      </div>
+    <div
+      id={props.id}
+      className={classNames('mpc-modal modal', props.className, {
+        'is-active': active
+      })}
+    >
+      <div className="modal-background" onClick={() => setActive(false)}></div>
+      <div className="modal-content">{props.children}</div>
+      <button
+        className="modal-close is-large"
+        aria-label="close"
+        onClick={() => setActive(false)}
+      ></button>
     </div>
   );
 };

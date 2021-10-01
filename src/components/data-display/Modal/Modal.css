@@ -1,27 +1,29 @@
-.mpc-modal .modal {
+.mpc-modal.modal {
   display: flex;
   bottom: 100%;
   opacity: 0;
   transition: 0.5s;
 }
 
-.mpc-modal .modal.is-active {
+.mpc-modal.modal.is-active {
   bottom: 0;
   opacity: 1;
 }
 
-.mpc-modal .modal .modal-background {
+.mpc-modal.modal .modal-background {
+  position: fixed;
+  top: 0;
   opacity: 0;
   pointer-events: none;
   transition: 0.5s;
 }
 
-.mpc-modal .modal.is-active .modal-background {
+.mpc-modal.modal.is-active .modal-background {
   opacity: 1;
   pointer-events: all;
 }
 
-.mpc-modal .modal-content {
+.mpc-modal.modal-content {
   background: #fff;
   border-radius: 6px;
 }
