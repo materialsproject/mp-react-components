@@ -660,8 +660,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         {autocompleteMenu}
         <div
           data-testid="materials-input-periodic-table"
-          className={classNames('table-transition-wrapper-small', {
-            'is-hidden-by-opacity': !showPeriodicTable,
+          className={classNames('table-transition-wrapper-small can-hide-by-height', {
+            'is-hidden-by-height': !showPeriodicTable,
             'mt-3': showPeriodicTable
           })}
           aria-hidden={!showPeriodicTable}
