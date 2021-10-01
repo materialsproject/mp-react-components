@@ -20,18 +20,6 @@ interface Props {
    * The "mpc-modal-content" and "modal" classes are added automatically
    */
   className?: string;
-
-  /**
-   * Element to be used to open the modal.
-   * Can also be supplied as the first of two children (necessary in Dash).
-   */
-  trigger?: ReactNode;
-
-  /**
-   * Element to render inside the modal-content div.
-   * Can also be supplied as the second of two children (necessary in Dash).
-   */
-  modalContent?: ReactNode;
 }
 
 /**
