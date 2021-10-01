@@ -14,7 +14,7 @@
   right: 0;
 }
 
-.modal-background {
+.navbar .modal-background {
   position: fixed;
   transition: 0.5s;
 }

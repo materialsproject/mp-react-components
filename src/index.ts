@@ -31,7 +31,7 @@ import { SynthesisRecipeCard } from './components/data-display/SynthesisRecipeCa
 import { Markdown } from './components/data-display/Markdown';
 import { Dropdown } from './components/navigation/Dropdown';
 import { Navbar } from './components/navigation/Navbar';
-import { Modal } from './components/data-display/Modal';
+import { Modal, ModalTrigger, ModalContextProvider } from './components/data-display/Modal';
 import { Tabs } from './components/navigation/Tabs';
 
 export {
@@ -71,6 +71,8 @@ export {
   Formula,
   SynthesisRecipeCard,
   Markdown,
+  ModalContextProvider,
   Modal,
+  ModalTrigger,
   Tabs
 };

@@ -15,7 +15,7 @@ import { Select } from '../../components/data-entry/Select';
 import { Link } from '../../components/navigation/Link';
 import { Navbar } from '../../components/navigation/Navbar/Navbar';
 import periodicTableImage from '../../assets/images/periodictable.png';
-import { Modal } from '../../components/data-display/Modal';
+import { ModalContextProvider, Modal, ModalTrigger } from '../../components/data-display/Modal';
 import { Tab as ReactTab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
 import { Tabs } from '../../components/navigation/Tabs';
 
@@ -32,13 +32,17 @@ export const Sandbox: React.FC = () => {
         <div>Content 1</div>
         <div>Content 2</div>
       </Tabs>
-      <Modal>
-        <button className="button">Open Modal</button>
-        <div className="panel">
-          <div className="panel-heading">Panel</div>
-          <div className="panel-block">content</div>
-        </div>
-      </Modal>
+      <ModalContextProvider>
+        <ModalTrigger>
+          <button className="button">Open Modal</button>
+        </ModalTrigger>
+        <Modal>
+          <div className="panel">
+            <div className="panel-heading">Panel</div>
+            <div className="panel-block">content</div>
+          </div>
+        </Modal>
+      </ModalContextProvider>
       <Dropdown triggerIcon="fa fa-pizza-slice" isArrowless={true}>
         <div className="dropdown-item">One</div>
         <div className="dropdown-item">Two</div>
