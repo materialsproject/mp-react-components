@@ -16,8 +16,8 @@ interface Props {
   setProps?: (value: any) => any;
 
   /**
-   * Class name applied to modal content div.
-   * The "mpc-modal-content" and "modal" classes are added automatically
+   * Class name applied to the modal trigger span.
+   * The "mpc-modal-trigger" class is added automatically
    */
   className?: string;
 }

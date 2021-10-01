@@ -17,7 +17,7 @@ interface Props {
 
   /**
    * Class name applied to modal content div.
-   * The "mpc-modal-content" and "modal" classes are added automatically
+   * The "mpc-modal" and "modal" classes are added automatically
    */
   className?: string;
 }
