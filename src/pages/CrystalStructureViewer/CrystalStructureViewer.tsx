@@ -61,7 +61,7 @@ function SceneSwitcher() {
 
 export const CrystalStructureViewer: React.FC = () => {
   const [dataInput, setDataInput] = useState<any>();
-  const [structureContainerWidth, setStructureContainerWidth] = useState('100%');
+  const [structureContainerWidth, setStructureContainerWidth] = useState('50%');
   const structureContainer = useRef(null);
 
   const cameraState1 = {
