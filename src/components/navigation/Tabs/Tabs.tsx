@@ -46,8 +46,12 @@ interface Props {
 }
 
 /**
- * Custom wrapper for the react-tabs component.
+ * Custom Tabs component based on react-tabs.
  * See https://github.com/reactjs/react-tabs
+ *
+ * This component will only render a tab's content once it has been activated.
+ * After it's been activated, the tab's content will stay rendered and will be
+ * shown/hidden using css only.
  */
 export const Tabs: React.FC<Props> = ({
   setProps = () => null,
@@ -82,6 +86,7 @@ export const Tabs: React.FC<Props> = ({
       className={classNames('mpc-tabs', className)}
       selectedTabClassName="is-active"
       selectedIndex={internalTabIndex}
+      forceRenderTabPanel={true}
       onSelect={(index) => setInternalTabIndex(index)}
       {...tabProps}
     >
@@ -95,8 +100,34 @@ export const Tabs: React.FC<Props> = ({
         </TabList>
       </div>
       {React.Children.map(children, (child, i) => (
-        <TabPanel key={`tab-panel-${i}`}>{child}</TabPanel>
+        <TabPanel
+          className={classNames({ 'is-hidden': internalTabIndex !== i })}
+          key={`tab-panel-${i}`}
+        >
+          <CachedTab isActive={internalTabIndex === i}>{child}</CachedTab>
+        </TabPanel>
       ))}
     </ReactTabs>
+  );
+};
+
+/**
+ * Component that wraps a tab's content and keeps it rendered once it has been activated.
+ * After it has been activated, it is hidden with css.
+ * Before it has been activated, it is not rendered at all.
+ */
+const CachedTab: React.FC<any> = ({ isActive = false, children }) => {
+  const [hasBeenActivated, setHasBeenActivated] = useState(() => isActive);
+
+  useEffect(() => {
+    if (isActive) setHasBeenActivated(true);
+  }, [isActive]);
+
+  return (
+    <>
+      {(isActive || hasBeenActivated) && (
+        <div className={classNames({ 'is-hidden': !isActive })}>{children}</div>
+      )}
+    </>
   );
 };

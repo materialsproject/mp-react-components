@@ -28,10 +28,28 @@ export const Sandbox: React.FC = () => {
   return (
     <>
       <h1 className="title">Sandbox</h1>
-      <Tabs setProps={setState} tabIndex={state.tabIndex} labels={['Tab 1', 'Tab2']}>
-        <div>Content 1</div>
+      <Tabs labels={['Tab 1', 'Tab2']}>
+        <div>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum excepturi dolor eveniet
+          doloremque vero autem eaque magni. Quo quis maiores illo cum! Quasi cum fugit animi quis
+          praesentium saepe veritatis.
+        </div>
         <div>Content 2</div>
       </Tabs>
+      <ReactTabs selectedTabClassName="is-active">
+        <div className="tabs">
+          <TabList>
+            <ReactTab>
+              <a>React 1</a>
+            </ReactTab>
+            <ReactTab>
+              <a>React 2</a>
+            </ReactTab>
+          </TabList>
+        </div>
+        <TabPanel>Panel 1</TabPanel>
+        <TabPanel>Panel 2</TabPanel>
+      </ReactTabs>
       <ModalContextProvider>
         <ModalTrigger>
           <button className="button">Open Modal</button>
