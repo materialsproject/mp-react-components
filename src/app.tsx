@@ -21,6 +21,7 @@ import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
 import { MPContribsSearch } from './pages/MPContribsSearch';
 import { CatalystExplorer } from './pages/CatalystExplorer';
+import { PhononVisualization } from './pages/PhononVisualization';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 
@@ -63,6 +64,10 @@ ReactDOM.render(
           {
             icon: 'icon-fontastic-synthesis',
             href: '/catalysts'
+          },
+          {
+            label: 'Phonon Visualization',
+            href: '/phonon'
           },
           {
             icon: 'icon-fontastic-synthesis',
@@ -123,6 +128,9 @@ ReactDOM.render(
           </Route>
           <Route path="/sandbox">
             <Sandbox />
+          </Route>
+          <Route path="/phonon">
+            <PhononVisualization />
           </Route>
           <Route path="/">
             <MaterialsExplorer />
