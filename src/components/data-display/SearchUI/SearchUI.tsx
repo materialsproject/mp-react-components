@@ -297,12 +297,16 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
     <div id={props.id} className="mpc-search-ui">
       <Router>
         <SearchUIContextProvider {...props}>
-          <div className="columns">
+          {props.hasSearchBar && (
+            <div className="container is-max-desktop">
+              <SearchUISearchBar />
+            </div>
+          )}
+          <div className="mpc-search-ui-content columns">
             <div className="mpc-search-ui-left column is-narrow is-12-mobile">
               <SearchUIFilters />
             </div>
             <div className="mpc-search-ui-right column">
-              {props.hasSearchBar && <SearchUISearchBar />}
               <SearchUIDataHeader />
               <SearchUIDataView />
             </div>
