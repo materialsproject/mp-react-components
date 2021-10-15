@@ -24,7 +24,7 @@ import { Tabs } from '../../components/navigation/Tabs';
  */
 
 export const Sandbox: React.FC = () => {
-  const [state, setState] = useState({ tabIndex: 1 });
+  const [state, setState] = useState({ tabIndex: 1, active: false });
   return (
     <>
       <h1 className="title">Sandbox</h1>
@@ -50,7 +50,10 @@ export const Sandbox: React.FC = () => {
         <TabPanel>Panel 1</TabPanel>
         <TabPanel>Panel 2</TabPanel>
       </ReactTabs>
-      <ModalContextProvider>
+      <button className="button" onClick={() => setState({ ...state, active: true })}>
+        Out of context modal trigger
+      </button>
+      <ModalContextProvider active={state.active} forceAction={true} setProps={setState}>
         <ModalTrigger>
           <button className="button">Open Modal</button>
         </ModalTrigger>
@@ -58,6 +61,9 @@ export const Sandbox: React.FC = () => {
           <div className="panel">
             <div className="panel-heading">Panel</div>
             <div className="panel-block">content</div>
+            <button className="button" onClick={() => setState({ ...state, active: false })}>
+              Save
+            </button>
           </div>
         </Modal>
       </ModalContextProvider>

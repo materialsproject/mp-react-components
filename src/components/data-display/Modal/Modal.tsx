@@ -26,7 +26,7 @@ interface Props {
  * Render modal that can be opened by a ModalTrigger within its same ModalContextProvider
  */
 export const Modal: React.FC<Props> = (props) => {
-  const { active, setActive } = useModalContext();
+  const { active, setActive, forceAction } = useModalContext();
   return (
     <div
       id={props.id}
@@ -34,13 +34,26 @@ export const Modal: React.FC<Props> = (props) => {
         'is-active': active
       })}
     >
-      <div className="modal-background" onClick={() => setActive(false)}></div>
-      <div className="modal-content">{props.children}</div>
-      <button
-        className="modal-close is-large"
-        aria-label="close"
-        onClick={() => setActive(false)}
-      ></button>
+      <div
+        className="modal-background"
+        onClick={() => {
+          if (forceAction) {
+            return;
+          } else {
+            setActive(false);
+          }
+        }}
+      ></div>
+      <div className="modal-content">
+        {!forceAction && (
+          <button
+            className="modal-close"
+            aria-label="close"
+            onClick={() => setActive(false)}
+          ></button>
+        )}
+        {props.children}
+      </div>
     </div>
   );
 };
