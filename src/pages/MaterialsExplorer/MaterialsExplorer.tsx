@@ -13,7 +13,9 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
 export const MaterialsExplorer: React.FC = () => {
   return (
     <>
-      <h1 className="title">Materials Explorer</h1>
+      <h1 className="title" style={{ height: '12rem', border: '3px solid #ddd' }}>
+        Materials Explorer
+      </h1>
       <SearchUI
         view={SearchUIViewType.TABLE}
         // allowViewSwitching
