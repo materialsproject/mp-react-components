@@ -49,7 +49,7 @@ export const ModalContextProvider: React.FC<Props> = (props) => {
     } else {
       document.documentElement.classList.remove('is-clipped');
     }
-    props.setProps!({ ...props, active: active });
+    props.setProps!({ active: active });
   }, [active]);
 
   /**
