@@ -53,7 +53,7 @@ export const Sandbox: React.FC = () => {
       <button className="button" onClick={() => setState({ ...state, active: true })}>
         Out of context modal trigger
       </button>
-      <ModalContextProvider active={state.active} forceAction={false} setProps={setState}>
+      <ModalContextProvider active={state.active} forceAction={true} setProps={setState}>
         <ModalTrigger>
           <button className="button">Open Modal</button>
         </ModalTrigger>
