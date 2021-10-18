@@ -37,28 +37,28 @@ export const ModalContextProvider: React.FC<Props> = (props) => {
   const [active, setActive] = useState(() => props.active || false);
   const [forceAction, setForceAction] = useState(() => props.forceAction || false);
 
-  /**
-   * Dynamically update the isActive prop so that the
-   * active tab index can be accessed via dash callbacks.
-   *
-   * Prevent document scrolling when active
-   */
-  useEffect(() => {
-    if (active) {
-      document.documentElement.classList.add('is-clipped');
-    } else {
-      document.documentElement.classList.remove('is-clipped');
-    }
-    props.setProps!({ active: active });
-  }, [active]);
+  // /**
+  //  * Dynamically update the isActive prop so that the
+  //  * active tab index can be accessed via dash callbacks.
+  //  *
+  //  * Prevent document scrolling when active
+  //  */
+  // useEffect(() => {
+  //   if (active) {
+  //     document.documentElement.classList.add('is-clipped');
+  //   } else {
+  //     document.documentElement.classList.remove('is-clipped');
+  //   }
+  //   props.setProps!({ ...props, active: active });
+  // }, [active]);
 
-  /**
-   * Allow changes to active state from outside the component
-   * (e.g. to change modal state via dash callback).
-   */
-  useEffect(() => {
-    setActive(props.active || false);
-  }, [props.active]);
+  // /**
+  //  * Allow changes to active state from outside the component
+  //  * (e.g. to change modal state via dash callback).
+  //  */
+  // useEffect(() => {
+  //   setActive(props.active || false);
+  // }, [props.active]);
 
   return (
     <ModalContext.Provider value={{ active, setActive, forceAction, setForceAction }}>
