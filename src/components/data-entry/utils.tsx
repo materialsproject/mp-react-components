@@ -231,6 +231,10 @@ export const pluralize = (noun) => {
   return plural;
 };
 
+export const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 /**
  * Perform a naive validation of a string as a formula
  * Returns the string if it has more than one capital letter, a number, or wildcard character ("*")

@@ -10,6 +10,7 @@ import { CheckboxList } from '../../../data-entry/CheckboxList';
 import { ThreeStateBooleanSelect } from '../../../data-entry/ThreeStateBooleanSelect';
 import { TextInput } from '../../../data-entry/TextInput';
 import { Tooltip } from '../../Tooltip';
+import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -81,7 +82,8 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             debounce={state.debounce}
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
-            periodicTableMode="focus"
+            periodicTableMode={PeriodicTableMode.NONE}
+            hidePeriodicTable={true}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}

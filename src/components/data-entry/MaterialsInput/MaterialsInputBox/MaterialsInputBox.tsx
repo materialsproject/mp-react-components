@@ -9,6 +9,7 @@ import {
 import { validateInputType, detectAndValidateInputType } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
+import classNames from 'classnames';
 const { Input, Field, Control } = Form;
 
 /**
@@ -229,7 +230,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     <Control className="is-expanded">
       <input
         data-testid="materials-input-search-input"
-        className="input"
+        className={classNames('input', props.inputClassName)}
         type="search"
         autoComplete="off"
         value={inputValue}

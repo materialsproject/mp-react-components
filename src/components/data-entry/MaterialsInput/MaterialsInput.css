@@ -13,6 +13,16 @@
   border-radius: 5px;
 }
 
+.mpc-materials-input .autocomplete {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 0;
+  border: solid 1px #eee;
+  border-radius: 5px;
+}
+
 .mpc-materials-input .autocomplete-label {
   font-size: 0.8em;
   font-style: italic;
@@ -33,6 +43,10 @@
 
 .mpc-materials-input .mpc-materials-input-error {
   color: #d72638;
+}
+
+.mpc-materials-input .control .button {
+  height: 100%;
 }
 
 /* .mpc-materials-input .table-transition-wrapper-small {
