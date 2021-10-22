@@ -18,16 +18,16 @@ interface Props {
 }
 
 export enum PeriodicTableSelectionMode {
-  CHEMICAL_SYSTEM = 'Elements (only)',
-  ELEMENTS = 'Elements (at least)',
+  CHEMICAL_SYSTEM = 'Only Elements',
+  ELEMENTS = 'At Least Elements',
   FORMULA = 'Formula'
 }
 
 export const PeriodicTableModeSwitcher: React.FC<Props> = ({
   allowedModes = [
-    'Elements (only)' as PeriodicTableSelectionMode,
-    'Elements (at least)' as PeriodicTableSelectionMode,
-    'Formula' as PeriodicTableSelectionMode
+    'Formula' as PeriodicTableSelectionMode,
+    'At Least Elements' as PeriodicTableSelectionMode,
+    'Only Elements' as PeriodicTableSelectionMode
   ],
   ...otherProps
 }) => {
@@ -67,10 +67,29 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = ({
     </MenuWrapper>
   );
 
+  const modesSelector = (
+    <div className="tabs is-small is-toggle is-toggle-rounded is-centered">
+      <ul>
+        {props.allowedModes.map((d, i) => (
+          <li key={'mode-' + i} className={classNames({ 'is-active': d === mode })}>
+            <a
+              onClick={() => {
+                setMode(d);
+                props.onSwitch(d);
+              }}
+            >
+              <span>{d}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
   return (
     <>
       <div data-testid="mpc-pt-mode-switcher" className="mpc-pt-mode-switcher first-span">
-        <div className="dropdown-container">{modesMenu}</div>
+        <div className="dropdown-container">{modesSelector}</div>
       </div>
       <div className="second-span">
         {props.mode === PeriodicTableSelectionMode.FORMULA && (

@@ -546,7 +546,7 @@ export const initSearchState = (
       initializedValues['task_ids'] ||
       initializedValues['material_ids'])
   ) {
-    initializedGroups[0].expanded = true;
+    // initializedGroups[0].expanded = true;
   }
 
   initialState.filterGroups = initializedGroups;

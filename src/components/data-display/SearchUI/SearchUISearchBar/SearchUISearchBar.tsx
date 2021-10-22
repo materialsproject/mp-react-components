@@ -64,6 +64,7 @@ export const SearchUISearchBar: React.FC = () => {
   return (
     <MaterialsInput
       value={searchValue}
+      label={state.resultLabel}
       inputType={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
@@ -77,6 +78,7 @@ export const SearchUISearchBar: React.FC = () => {
       placeholder={state.searchBarPlaceholder}
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
       errorMessage={state.searchBarErrorMessage}
+      inputClassName="is-medium"
     />
   );
 };

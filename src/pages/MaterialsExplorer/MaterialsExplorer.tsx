@@ -13,7 +13,15 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
 export const MaterialsExplorer: React.FC = () => {
   return (
     <>
-      <h1 className="title" style={{ height: '12rem', border: '3px solid #ddd' }}>
+      <h1
+        className="title is-1"
+        style={{
+          height: '12rem',
+          lineHeight: '12rem',
+          borderBottom: '1px solid #ddd',
+          textAlign: 'center'
+        }}
+      >
         Materials Explorer
       </h1>
       <SearchUI
@@ -43,7 +51,7 @@ export const MaterialsExplorer: React.FC = () => {
         sortField="formula_pretty"
         sortAscending={true}
         searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        searchBarPlaceholder="Search by elements, formula, or ID"
+        searchBarPlaceholder="e.g. Li-Fe or Li,Fe or Li3Fe or mp-19017"
         searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         searchBarAllowedInputTypesMap={{

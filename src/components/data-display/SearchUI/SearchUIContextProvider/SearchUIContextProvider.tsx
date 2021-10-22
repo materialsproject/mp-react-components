@@ -146,9 +146,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
         }
 
-        if (isDesktop) {
-          newFilterGroups[0].expanded = true;
-        }
+        // if (isDesktop) {
+        //   newFilterGroups[0].expanded = true;
+        // }
 
         return getSearchState(
           { ...currentState, filterGroups: newFilterGroups, page: 1 },
