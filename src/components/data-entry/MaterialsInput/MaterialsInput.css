@@ -30,7 +30,7 @@
   top: 100%;
   left: 0;
   z-index: 1000;
-  width: 648px;
+  width: 100%;
   background: #fff;
   padding: 1rem;
   border: solid 1px #eee;
@@ -66,7 +66,20 @@
   color: #d72638;
 }
 
-.mpc-materials-input .table-transition-wrapper-small {
+.mpc-materials-input .control .button {
+  height: 100%;
+}
+
+.mpc-materials-input .input-help-button {
+  border-left: none;
+}
+
+.mpc-materials-input .input-help-button:hover,
+.mpc-materials-input .input-help-button:focus {
+  border-color: #dbdbdb;
+}
+
+/* .mpc-materials-input .table-transition-wrapper-small {
   width: 600px;
   margin: auto;
   position: absolute;

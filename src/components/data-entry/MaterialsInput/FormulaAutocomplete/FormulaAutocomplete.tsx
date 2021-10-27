@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import React, { useState, useRef, useEffect } from 'react';
 import { formatFormula } from '../../utils';
 import { MaterialsInputType } from '../MaterialsInput';
+import { validateFormula } from '../utils';
 
 interface FormulaSuggestion {
   formula_pretty: string;
@@ -10,6 +11,7 @@ interface FormulaSuggestion {
 
 interface Props {
   value: string;
+  inputType?: MaterialsInputType | null;
   apiEndpoint: string;
   apiKey?: string;
   show?: boolean;
@@ -34,7 +36,12 @@ export const FormulaAutocomplete: React.FC<Props> = (props) => {
    * fetch formula suggestions if input is a formula and the necessary props are supplied
    */
   useEffect(() => {
-    if (props.value.length && props.value.indexOf('*') === -1) {
+    if (
+      props.inputType === MaterialsInputType.FORMULA &&
+      props.value.length &&
+      validateFormula(props.value) &&
+      props.value.indexOf('*') === -1
+    ) {
       requestCount++;
       const requestIndex = requestCount;
       axios
