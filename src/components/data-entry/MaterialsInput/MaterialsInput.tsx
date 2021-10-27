@@ -24,6 +24,7 @@ import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePl
 import { MaterialsInputTypesMap, validateElements, validateFormula } from './utils';
 import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { Tooltip } from '../../data-display/Tooltip';
+import { InputHelpItem } from './InputHelp/InputHelp';
 
 /**
  * Search types supported by this field
@@ -62,6 +63,7 @@ export interface MaterialsInputSharedProps {
   inputClassName?: string;
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
+  helpItems?: InputHelpItem[];
   onChange?: (value: string) => void;
   onInputTypeChange?: (inputType: MaterialsInputType) => void;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
@@ -77,12 +79,6 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   label?: string;
   onPropsChange?: (propsObject: any) => void;
 }
-
-interface FormulaSuggestion {
-  formula_pretty: string;
-}
-
-let requestCount = 0;
 
 enum ChemSysDropdownValue {
   ONLY = 'Only',
@@ -183,7 +179,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   const getOnFocusProp = () => {
     setErrorTipStayActive(false);
-    shouldShowHelpMenu();
     setIsFocused(true);
     if (props.periodicTableMode === PeriodicTableMode.FOCUS) {
       return setShowPeriodicTable(true);
@@ -203,7 +198,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     const target = e.target;
     setShowHelpMenu(false);
     setIsFocused(false);
-    if (props.periodicTableMode === PeriodicTableMode.FOCUS || !periodicTableClicked.current) {
+    if (props.periodicTableMode !== PeriodicTableMode.FOCUS) {
+      return;
+    } else if (!periodicTableClicked.current) {
       setShowPeriodicTable(false);
     } else {
       /** Chrome can make use of relatedTarget to avoid using a timeout */
@@ -300,61 +297,33 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       autocompleteFormulaUrl={props.autocompleteFormulaUrl}
       autocompleteApiKey={props.autocompleteApiKey}
       onChange={props.onChange}
+      helpItems={[
+        {
+          label: 'Include at least elements',
+          examples: ['Li,Fe', 'Si,O,K']
+        },
+        {
+          label: 'Include only elements',
+          examples: ['Li-Fe', 'Si-O-K']
+        },
+        {
+          label: 'Include only elements plus wildcard elements',
+          examples: ['Li-Fe-*-*', 'Si-*-*-*']
+        },
+        {
+          label: 'Has exact formula',
+          examples: ['Li3Fe', 'Eu2SiCl2O3']
+        },
+        {
+          label: 'Has formula plus wildcard atoms',
+          examples: ['LiFe*2*', 'Si*']
+        },
+        {
+          label: 'Has Material ID',
+          examples: ['mp-149', 'mp-19326']
+        }
+      ]}
     />
-  );
-
-  const helpMenu = (
-    <div
-      data-testid="materials-input-help-menu"
-      className={classNames('input-help-menu', {
-        'is-hidden': !showHelpMenu
-      })}
-    >
-      <div className="mb-2 is-size-7">How to Search</div>
-      <div className="mb-2">
-        <strong>Include at least elements:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">Li,Fe</a>
-          <a className="tag is-medium">Si,O,K</a>
-        </div>
-      </div>
-      <div className="mb-2">
-        <strong>Include only elements:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">Li-Fe</a>
-          <a className="tag is-medium">Si-O-K</a>
-        </div>
-      </div>
-      <div className="mb-2">
-        <strong>Include only elements plus wildcard elements:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">Li-Fe-*-*</a>
-          <a className="tag is-medium">Si-*-*-*</a>
-        </div>
-      </div>
-      <div className="mb-2">
-        <strong>Has exact formula:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">Li3Fe</a>
-          <a className="tag is-medium">Eu2SiCl2O3</a>
-        </div>
-      </div>
-      <div className="mb-2">
-        <strong>Has formula plus wildcard atoms:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">LiFe*2*</a>
-          <a className="tag is-medium">Si*</a>
-        </div>
-      </div>
-      <div className="mb-4">
-        <strong>Has Material ID:</strong>
-        <div className="ml-3 tags">
-          <a className="tag is-medium">mp-149</a>
-          <a className="tag is-medium">mp-19326</a>
-        </div>
-      </div>
-      <div className="is-size-7">Additional search options available in the filters panel</div>
-    </div>
   );
 
   if (props.label) {
@@ -472,11 +441,9 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
           {labelControl}
-          <Control>{helpMenu}</Control>
           {materialsInputControl}
           {error && errorControl}
           {periodicToggleControl}
-          {tooltipControl}
           <Control>
             <Button color="primary" type="submit">
               Search
@@ -493,7 +460,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         {materialsInputControl}
         {error && errorControl}
         {periodicToggleControl}
-        {tooltipControl}
       </Field>
     );
   }
