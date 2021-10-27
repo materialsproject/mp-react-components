@@ -357,6 +357,7 @@ export const getSearchState = (
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
+      const operatorSuffix = f.operatorSuffix || '';
       switch (f.type) {
         case FilterType.SLIDER:
           const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
@@ -392,7 +393,6 @@ export const getSearchState = (
           break;
         case FilterType.MATERIALS_INPUT:
           if (filterValues[f.id] !== '') {
-            const operatorSuffix = f.operatorSuffix || '';
             let parsedValue = filterValues[f.id];
             let filterDisplayName = f.name.toLowerCase();
 
@@ -437,7 +437,7 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]
@@ -456,7 +456,7 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]
@@ -465,7 +465,6 @@ export const getSearchState = (
           break;
         case FilterType.TEXT_INPUT:
           if (isNotEmpty(filterValues[f.id])) {
-            const operatorSuffix = f.operatorSuffix || '';
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -494,7 +493,7 @@ export const getSearchState = (
               defaultValue: [],
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]
@@ -510,7 +509,7 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]
