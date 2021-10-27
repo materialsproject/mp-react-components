@@ -18,9 +18,30 @@
   position: absolute;
   top: 100%;
   left: 0;
+  width: 100%;
   padding: 0;
   border: solid 1px #eee;
   border-radius: 5px;
+}
+
+.mpc-materials-input .input-help-menu {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  width: 648px;
+  background: #fff;
+  padding: 1rem;
+  border: solid 1px #eee;
+  border-radius: 5px;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
+  max-height: 200px;
+  overflow: auto;
+}
+
+.mpc-materials-input .input-help-menu .tags {
+  display: inline-flex;
 }
 
 .mpc-materials-input .autocomplete-label {

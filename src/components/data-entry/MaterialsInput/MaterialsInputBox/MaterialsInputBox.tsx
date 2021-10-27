@@ -10,6 +10,7 @@ import { validateInputType, detectAndValidateInputType } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 import classNames from 'classnames';
+import { FormulaAutocomplete } from '../FormulaAutocomplete';
 const { Input, Field, Control } = Form;
 
 /**
@@ -39,6 +40,10 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const includeAutocomplete =
+    props.autocompleteFormulaUrl &&
+    (props.inputType == MaterialsInputType.FORMULA || props.onInputTypeChange);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -56,11 +61,18 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   };
 
   const handleFocus = () => {
+    setShowAutocomplete(true);
     if (props.onFocus) props.onFocus();
   };
 
-  const handleBlur = (event) => {
-    if (props.onBlur) props.onBlur(event);
+  const handleBlur = (e) => {
+    setShowAutocomplete(false);
+    if (props.onBlur) props.onBlur(e);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 9) setShowAutocomplete(false);
+    if (props.onKeyDown) props.onKeyDown(e);
   };
 
   /**
@@ -85,6 +97,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
+      if (newMaterialsInputType === MaterialsInputType.FORMULA) {
+        setShowAutocomplete(true);
+      }
 
       if (isValid) {
         props.setError(null);
@@ -239,8 +254,19 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         onBlur={handleBlur}
         placeholder={props.placeholder}
         ref={inputRef}
-        onKeyDown={props.onKeyDown}
+        onKeyDown={handleKeyDown}
       />
+      {includeAutocomplete && (
+        <FormulaAutocomplete
+          value={inputValue}
+          apiEndpoint={props.autocompleteFormulaUrl}
+          apiKey={props.autocompleteApiKey}
+          show={showAutocomplete}
+          onChange={props.setValue}
+          onSubmit={props.onSubmit}
+          setError={props.setError}
+        />
+      )}
     </Control>
   );
 
@@ -265,7 +291,36 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           </Dropdown>
         </Control>
       )}
-      {inputControl}
+      <Control className="is-expanded">
+        <input
+          data-testid="materials-input-search-input"
+          className={classNames('input', props.inputClassName)}
+          type="search"
+          autoComplete="off"
+          value={inputValue}
+          onChange={handleRawValueChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={props.placeholder}
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+        />
+        {includeAutocomplete && (
+          <FormulaAutocomplete
+            value={inputValue}
+            apiEndpoint={props.autocompleteFormulaUrl}
+            apiKey={props.autocompleteApiKey}
+            show={showAutocomplete}
+            /**
+             * onChange must come from the top-level onChange event for MaterialsInput (i.e. not modify inputValue directly)
+             * otherwise there will be circular hooks.
+             */
+            onChange={props.onChange}
+            onSubmit={props.onSubmit}
+            setError={props.setError}
+          />
+        )}
+      </Control>
     </>
   );
 };
