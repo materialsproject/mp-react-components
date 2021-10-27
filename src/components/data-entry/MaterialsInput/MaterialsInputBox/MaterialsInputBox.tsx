@@ -97,7 +97,10 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
-      if (newMaterialsInputType === MaterialsInputType.FORMULA) {
+      if (
+        newMaterialsInputType === MaterialsInputType.FORMULA &&
+        document.activeElement === inputRef.current
+      ) {
         setShowAutocomplete(true);
       }
 
@@ -241,35 +244,6 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     setDelimiter(props.isChemSys ? new RegExp('-') : new RegExp(','));
   }, [props.isChemSys]);
 
-  const inputControl = (
-    <Control className="is-expanded">
-      <input
-        data-testid="materials-input-search-input"
-        className={classNames('input', props.inputClassName)}
-        type="search"
-        autoComplete="off"
-        value={inputValue}
-        onChange={handleRawValueChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        placeholder={props.placeholder}
-        ref={inputRef}
-        onKeyDown={handleKeyDown}
-      />
-      {includeAutocomplete && (
-        <FormulaAutocomplete
-          value={inputValue}
-          apiEndpoint={props.autocompleteFormulaUrl}
-          apiKey={props.autocompleteApiKey}
-          show={showAutocomplete}
-          onChange={props.setValue}
-          onSubmit={props.onSubmit}
-          setError={props.setError}
-        />
-      )}
-    </Control>
-  );
-
   return (
     <>
       {props.showInputTypeDropdown && (
@@ -308,14 +282,17 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         {includeAutocomplete && (
           <FormulaAutocomplete
             value={inputValue}
-            apiEndpoint={props.autocompleteFormulaUrl}
+            apiEndpoint={props.autocompleteFormulaUrl!}
             apiKey={props.autocompleteApiKey}
             show={showAutocomplete}
             /**
              * onChange must come from the top-level onChange event for MaterialsInput (i.e. not modify inputValue directly)
              * otherwise there will be circular hooks.
              */
-            onChange={props.onChange}
+            onChange={(value) => {
+              inputRef.current?.blur();
+              if (props.onChange) props.onChange(value);
+            }}
             onSubmit={props.onSubmit}
             setError={props.setError}
           />

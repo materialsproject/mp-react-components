@@ -14,8 +14,8 @@ interface Props {
   apiKey?: string;
   show?: boolean;
   onChange?: (value: string) => void;
-  onSubmit?: () => void;
-  setError?: (value: string) => void;
+  onSubmit?: (e: any, value: any) => void;
+  setError?: (value: any) => void;
 }
 
 let requestCount = 0;
@@ -23,7 +23,7 @@ let requestCount = 0;
 /**
  *
  */
-export const FormulaAutocomplete: React.FC<any> = (props) => {
+export const FormulaAutocomplete: React.FC<Props> = (props) => {
   const [show, setShow] = useState(props.show);
   const [formulaSuggestions, setFormulaSuggestions] = useState<FormulaSuggestion[]>([]);
 
@@ -89,8 +89,8 @@ export const FormulaAutocomplete: React.FC<any> = (props) => {
             className="dropdown-item"
             onMouseDown={(e) => {
               setShow(false);
-              props.setError(null);
-              props.onChange(d.formula_pretty);
+              if (props.setError) props.setError(null);
+              if (props.onChange) props.onChange(d.formula_pretty);
               if (props.onSubmit) {
                 props.onSubmit(e, d.formula_pretty);
               }
