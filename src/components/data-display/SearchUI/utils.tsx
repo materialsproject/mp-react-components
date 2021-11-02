@@ -262,6 +262,9 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
 
       if (f.id === 'elements' && query.get('formula') && query.get('formula')!.indexOf('-') > -1) {
         queryParamValue = query.get('formula');
+        if (!f.hasOwnProperty('props')) f.props = {};
+        /** Make sure elements filter is initialized with the appropriate elements mode */
+        f.props.isChemSys = true;
       }
 
       switch (f.type) {
@@ -280,8 +283,8 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           return f;
         case FilterType.MATERIALS_INPUT:
           initializedValues[f.id] = queryParamValue ? queryParamValue : '';
-          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
-          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue')) {
+          if (!f.hasOwnProperty('props')) f.props = {};
+          if (!f.props.hasOwnProperty('parsedValue')) {
             f.props.parsedValue = [];
           }
           return f;
