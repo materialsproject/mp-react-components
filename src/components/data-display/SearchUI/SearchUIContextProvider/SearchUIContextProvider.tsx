@@ -109,10 +109,51 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setColumns: (columns: Column[]) => {
       setState((currentState) => ({ ...currentState, columns }));
     },
-    setFilterValue: (value: any, id: string) => {
-      setState((currentState) =>
-        getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
-      );
+    // setFilterValue: (value: any, id: string) => {
+    //   setState((currentState) =>
+    //     getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
+    //   );
+    // },
+    /**
+     * Set one filter and override others.
+     * This is used in the top-level search bar to make sure only a single composition filter
+     * is activated.
+     * @param value filter value
+     * @param id property key for the filter (e.g. "formula")
+     * @param overrideFields array of property keys to override
+     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
+     */
+    setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
+      setState((currentState) => {
+        if (!overrideFields) {
+          return getSearchState(
+            { ...currentState, page: 1 },
+            { ...currentState.filterValues, [id]: value }
+          );
+        } else {
+          let newFilterValues = {};
+
+          overrideFields.forEach((field) => {
+            const activeFilter = currentState.activeFilters.find((a) => a.id === field);
+            if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+          });
+
+          newFilterValues[id] = value;
+
+          let newFilterGroups = currentState.filterGroups;
+
+          if (filterProps) {
+            newFilterGroups = currentState.filterGroups.slice();
+            const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
+            if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
+          }
+
+          return getSearchState(
+            { ...currentState, filterGroups: newFilterGroups, page: 1 },
+            { ...currentState.filterValues, ...newFilterValues }
+          );
+        }
+      });
     },
     /**
      * Set one filter and override others.

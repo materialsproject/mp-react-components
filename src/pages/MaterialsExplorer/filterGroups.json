@@ -6,6 +6,7 @@
       {
         "name": "Material ID",
         "id": "material_ids",
+        "overrides": ["elements", "formula"],
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -17,6 +18,7 @@
       {
         "name": "Include Elements",
         "id": "elements",
+        "overrides": ["material_ids", "formula"],
         "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. Ga,N). Enter a \" - \" separated list of element symbols to find materials that contain only these elements (e.g. Ga-N).",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -40,6 +42,7 @@
       {
         "name": "Formula",
         "id": "formula",
+        "overrides": ["elements", "material_ids"],
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
