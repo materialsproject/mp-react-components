@@ -51,6 +51,11 @@ export interface Filter {
    * '__contains' or '__exact'
    */
   operatorSuffix?: string;
+  /**
+   * List of filter ids that this filter should override (turn off) when activated.
+   * Filter ids listed here must exist in the filterGroups json.
+   */
+  overrides?: string[];
 }
 
 export interface FilterGroup {

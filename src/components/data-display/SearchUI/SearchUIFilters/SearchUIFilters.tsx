@@ -81,7 +81,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <MaterialsInput
             debounce={state.debounce}
             value={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
+            onChange={(v) => actions.setFilterValue(v, f.id, f.overrides)}
             periodicTableMode={PeriodicTableMode.NONE}
             hidePeriodicTable={true}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
