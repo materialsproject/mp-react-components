@@ -128,18 +128,18 @@ export const parseFormula = (formula) => {
  * @param {string} formula An unparsed chemical formula string
  * @param {RegExp} illegalCharsRegex Optional param to override the default regex for finding illegal characters
  * @param {RegExp} elementsRegex Optional param to override the default regex for finding element symbols
- * @returns {string[] or null} Array of valid element symbols or null
+ * @returns {string[] or undefined} Array of valid element symbols or undefined
  */
 export const validateFormula = (
   formula: string,
   illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g,
   elementsRegex: RegExp = /([A-Z][a-z]*)([\d\.]*)/g
-): string[] | null => {
+): string[] | undefined => {
   try {
     const cleanformula = formula.replace(/\s/g, '');
     const illegalChars = cleanformula.match(illegalCharsRegex);
     if (illegalChars != null) {
-      return null;
+      return;
     }
 
     let elements: string[] = [];
@@ -147,7 +147,7 @@ export const validateFormula = (
     /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
     while ((match = elementsRegex.exec(cleanformula))) {
       if (!isElement(match[1])) {
-        return null;
+        return;
       }
       if (elements.indexOf(match[1]) === -1) {
         elements.push(match[1]);
@@ -160,7 +160,7 @@ export const validateFormula = (
       throw 'Not a valid formula';
     }
   } catch (e) {
-    return null;
+    return;
   }
 };
 
@@ -169,9 +169,9 @@ export const validateFormula = (
  * ranged and wildcard (x) subscripts.
  *
  * @param {string} formula An unparsed chemical formula string
- * @returns {string[] or null} Array of valid element symbols or null
+ * @returns {string[] or undefined} Array of valid element symbols or undefined
  */
-export const validateRangedFormula = (formula: string): string[] | null => {
+export const validateRangedFormula = (formula: string): string[] | undefined => {
   /** Allows "x" and "-" to appear in the formula string */
   const illegalCharsRegex = /([^A-Z]|^)+(?![x])[a-z]|[^\w()\*\.\-\·\/]+/g;
   /** Ensures "x" is not counted as part of an element symbol */
@@ -224,7 +224,7 @@ export const getDelimiter = (input: string): RegExp => {
  * @param {string} elementStr String of element symbols to be validated
  * @returns Array of valid element symbols
  */
-export const validateElements = (elementStr: string): string[] | null => {
+export const validateElements = (elementStr: string): string[] | undefined => {
   let cleanElementsStr = '';
   const delimiter = getDelimiter(elementStr);
   const delimiterString = delimiter.toString();
@@ -248,7 +248,7 @@ export const validateElements = (elementStr: string): string[] | null => {
   if (valid) {
     return parsedElements;
   } else {
-    return null;
+    return;
   }
 };
 

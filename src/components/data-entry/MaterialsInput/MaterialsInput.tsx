@@ -308,7 +308,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         },
         {
           label: 'Include only elements plus wildcard elements',
-          examples: ['Li-Fe-*-*', 'Si-*-*-*']
+          examples: ['Li-Fe-*-*', 'Si-Fe-*-*-*']
         },
         {
           label: 'Has exact formula',
@@ -566,7 +566,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       props.onInputTypeChange &&
       (inputType === MaterialsInputType.ELEMENTS || inputType === MaterialsInputType.FORMULA)
     ) {
-      let elements: string[] | null = null;
+      let elements: string[] | undefined;
+      let elementsPlusWildcards: string[] | undefined;
 
       if (inputType === MaterialsInputType.ELEMENTS) {
         elements = validateElements(inputValue);
@@ -574,10 +575,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         elements = validateFormula(inputValue);
       }
 
+      const wildcards = inputValue.match(/\*/g);
+      elementsPlusWildcards = wildcards ? elements?.concat(wildcards) : elements;
+
       if (selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM) {
         setIsChemSys(true);
         setInputType(MaterialsInputType.ELEMENTS);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /-/));
+        if (elementsPlusWildcards && elementsPlusWildcards.length > 1)
+          setInputValue(arrayToDelimitedString(elementsPlusWildcards, /-/));
       } else if (selectionMode === PeriodicTableSelectionMode.ELEMENTS) {
         setIsChemSys(false);
         setInputType(MaterialsInputType.ELEMENTS);
