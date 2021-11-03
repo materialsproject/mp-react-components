@@ -2,17 +2,6 @@
   position: relative;
 }
 
-.mpc-materials-input .autocomplete-right {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 100%;
-  padding: 0;
-  margin-left: 1em;
-  border: solid 1px #eee;
-  border-radius: 5px;
-}
-
 .mpc-materials-input .autocomplete {
   display: block;
   position: absolute;
@@ -21,7 +10,11 @@
   width: 100%;
   padding: 0;
   border: solid 1px #eee;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
+}
+
+.mpc-materials-input .autocomplete .dropdown-content {
+  border-radius: 0 0 5px 5px;
 }
 
 .mpc-materials-input .input-help-menu {
@@ -29,15 +22,18 @@
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: 2;
   width: 100%;
   background: #fff;
   padding: 1rem;
   border: solid 1px #eee;
-  border-radius: 5px;
-  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
+  border-radius: 0 0 5px 5px;
   max-height: 200px;
   overflow: auto;
+}
+
+.mpc-materials-input .input-help-menu > div:not(:last-child) {
+  margin-bottom: 0.5rem;
 }
 
 .mpc-materials-input .input-help-menu .tags {

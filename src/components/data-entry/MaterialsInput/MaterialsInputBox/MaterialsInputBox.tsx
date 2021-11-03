@@ -345,7 +345,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           >
             <FaQuestionCircle />
             <Tooltip id={helpTooltipId} place="bottom">
-              Show search examples
+              {showInputHelp ? 'Hide examples' : 'Show examples'}
             </Tooltip>
           </button>
         </Control>
