@@ -21,7 +21,7 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
-import { MaterialsInputTypesMap, validateElements, validateFormula } from './utils';
+import { MaterialsInputTypesMap, validateElements, validateFormula, validateMPID } from './utils';
 import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { Tooltip } from '../../data-display/Tooltip';
 import { InputHelpItem } from './InputHelp/InputHelp';
@@ -228,6 +228,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
+  const getOnPropsChangeProp = () => {
+    if (props.onInputTypeChange) {
+      return (value: MaterialsInputType) => setInputType(value);
+    } else {
+      return;
+    }
+  };
+
   /**
    * Trigger MaterialsInput submit event
    * Optional value param allows clicking on autocomplete items
@@ -259,7 +267,16 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    */
   const handleChemSysCheck = () => {
     let newIsChemSys: boolean | undefined;
-    if (inputType === MaterialsInputType.ELEMENTS && inputValue.match(/-/gi)) {
+    /**
+     * Temporary fix to make sure input values are not mpid's.
+     * This should be fixed in the future by removing inputValue from the [inputValue, inputType] useEffect
+     * and modifying MaterialsInputType so that CHEMICAL_SYSTEM is its own type.
+     */
+    if (
+      !validateMPID(inputValue) &&
+      inputType === MaterialsInputType.ELEMENTS &&
+      inputValue.match(/-/gi)
+    ) {
       newIsChemSys = true;
     } else if (inputValue.match(/,|\s/gi)) {
       newIsChemSys = false;
@@ -283,7 +300,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
-      onInputTypeChange={props.onInputTypeChange ? setInputType : undefined}
+      onInputTypeChange={getOnPropsChangeProp()}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       onKeyDown={getOnKeyDownProp}

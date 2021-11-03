@@ -294,19 +294,24 @@ export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
  */
 export const materialsInputTypes: MaterialsInputTypesMap = {
   mpid: {
-    validate: validateMPID
+    validate: validateMPID,
+    order: 1
   },
   elements: {
-    validate: validateElements
+    validate: validateElements,
+    order: 2
   },
   formula: {
-    validate: validateFormula
+    validate: validateFormula,
+    order: 3
   },
   smiles: {
-    validate: validateSmiles
+    validate: validateSmiles,
+    order: 4
   },
   text: {
-    validate: () => true
+    validate: () => true,
+    order: 5
   }
 };
 
