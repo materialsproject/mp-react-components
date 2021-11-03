@@ -41,7 +41,7 @@ export const SearchUISearchBar: React.FC = () => {
       return allowedInputTypesMap[d].field;
     });
     const fieldsToOverride = allowedFields?.filter((d) => d !== searchField);
-    actions.setFilterWithOverrides(submitValue, searchField, fieldsToOverride, filterProps);
+    actions.setFilterValue(submitValue, searchField, fieldsToOverride, filterProps);
   };
 
   /**

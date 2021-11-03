@@ -12,7 +12,6 @@ const MAX = 30000;
 
 interface Props {
   domain: number[];
-  niceDomain?: number[];
   initialValues: number[];
   step: number;
   debounce?: number;
@@ -58,7 +57,6 @@ const niceInitialValues = (vals, domain, niceDomain) => {
 
 export const DualRangeSlider: React.FC<Props> = ({
   domain = [0, 100],
-  niceDomain = domain.slice(),
   step = 1,
   initialValues = domain.slice(),
   debounce,
@@ -68,7 +66,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   const decimals = countDecimals(step);
   const tickCount = 5;
   const scale = d3.scaleLinear().domain(domain).nice(tickCount);
-  niceDomain = scale.domain();
+  const niceDomain = scale.domain();
   const ticks = scale.ticks(5);
   const [values, setValues] = useState(niceInitialValues(initialValues, domain, niceDomain));
   const [lowerBound, setLowerBound] = useState(values[0]);

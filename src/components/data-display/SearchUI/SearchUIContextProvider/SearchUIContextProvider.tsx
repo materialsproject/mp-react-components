@@ -109,23 +109,18 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setColumns: (columns: Column[]) => {
       setState((currentState) => ({ ...currentState, columns }));
     },
-    // setFilterValue: (value: any, id: string) => {
-    //   setState((currentState) =>
-    //     getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
-    //   );
-    // },
     /**
-     * Set one filter and override others.
-     * This is used in the top-level search bar to make sure only a single composition filter
-     * is activated.
-     * @param value filter value
+     * Set one filter to a specified value.
+     * Optionally include a list of filter id's that should be deactivated
+     * if this filter is being set to an active value (e.g. "material_id" should override "formula" and "elements").
+     * @param value new filter value
      * @param id property key for the filter (e.g. "formula")
      * @param overrideFields array of property keys to override
      * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
      */
     setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
       setState((currentState) => {
-        if (!overrideFields) {
+        if (!overrideFields || !value || value === '') {
           return getSearchState(
             { ...currentState, page: 1 },
             { ...currentState.filterValues, [id]: value }

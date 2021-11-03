@@ -364,17 +364,15 @@ export const getSearchState = (
       const operatorSuffix = f.operatorSuffix || '';
       switch (f.type) {
         case FilterType.SLIDER:
-          // const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
-          // const hasActiveMax = filterValues[f.id][1] !== f.props.domain[1];
+          /**
+           * The lower bound will be null if initialized from a url that only has a max param.
+           * The upper bound will be null if initialized from a url that only has a min param.
+           */
           const hasActiveMin =
             filterValues[f.id][0] !== null && filterValues[f.id][0] > f.props.domain[0];
           const hasActiveMax =
             filterValues[f.id][1] !== null && filterValues[f.id][1] < f.props.domain[1];
-          if (f.id === 'volume' && !hasActiveMin) {
-            console.log('filter destroyed');
-          } else if (f.id === 'volume' && hasActiveMin) {
-            console.log('filter alive');
-          }
+
           if (hasActiveMin || hasActiveMax) {
             const minSuffix = f.minSuffix || defaultMinSuffix;
             const maxSuffix = f.maxSuffix || defaultMaxSuffix;
