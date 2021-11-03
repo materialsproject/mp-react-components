@@ -314,32 +314,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       autocompleteFormulaUrl={props.autocompleteFormulaUrl}
       autocompleteApiKey={props.autocompleteApiKey}
       onChange={props.onChange}
-      helpItems={[
-        {
-          label: 'Include at least elements',
-          examples: ['Li,Fe', 'Si,O,K']
-        },
-        {
-          label: 'Include only elements',
-          examples: ['Li-Fe', 'Si-O-K']
-        },
-        {
-          label: 'Include only elements plus wildcard elements',
-          examples: ['Li-Fe-*-*', 'Si-Fe-*-*-*']
-        },
-        {
-          label: 'Has exact formula',
-          examples: ['Li3Fe', 'Eu2SiCl2O3']
-        },
-        {
-          label: 'Has formula plus wildcard atoms',
-          examples: ['LiFe*2*', 'Si*']
-        },
-        {
-          label: 'Has Material ID',
-          examples: ['mp-149', 'mp-19326']
-        }
-      ]}
+      helpItems={props.helpItems}
     />
   );
 

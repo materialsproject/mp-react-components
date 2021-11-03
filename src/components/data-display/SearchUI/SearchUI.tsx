@@ -19,6 +19,7 @@ import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
 import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
+import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
 
 export interface SearchUIProps {
   /**
@@ -199,6 +200,11 @@ export interface SearchUIProps {
    * @default 'toggle'
    */
   searchBarPeriodicTableMode?: PeriodicTableMode;
+
+  /**
+   *
+   */
+  searchBarHelpItems?: InputHelpItem[];
 
   /**
    * Optionally include/exclude the menu for dynamically controlling sort options
