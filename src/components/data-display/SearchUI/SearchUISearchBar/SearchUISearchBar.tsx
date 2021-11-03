@@ -79,6 +79,7 @@ export const SearchUISearchBar: React.FC = () => {
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
       errorMessage={state.searchBarErrorMessage}
       inputClassName="is-medium"
+      helpItems={state.searchBarHelpItems}
     />
   );
 };
