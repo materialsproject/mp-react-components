@@ -12,6 +12,7 @@ const MAX = 30000;
 
 interface Props {
   domain: number[];
+  niceDomain?: number[];
   initialValues: number[];
   step: number;
   debounce?: number;
@@ -19,11 +20,29 @@ interface Props {
   onPropsChange?: (props: any) => void;
 }
 
+/**
+ * Ensure the slider values are valid.
+ * i.e. ensure that the values are within the domain bounds
+ * and that the first value is less than the second value.
+ * @param vals array of slider lower and upper values e.g. [4, 27]
+ * @param domain array of original slider lower and upper limits e.g. [1, 49]
+ * @param niceDomain array of rounded (nice) slider lower and upper limits e.g. [0, 50]
+ * @returns valid array of slider values
+ */
 const niceInitialValues = (vals, domain, niceDomain) => {
+  /**
+   * The lower bound will be null if initialized from a url that only has a max param.
+   * The upper bound will be null if initialized from a url that only has a min param.
+   * When this happens, set value to the corresponding nice domain bound.
+   */
+  if (vals[0] === null) vals[0] = niceDomain[0];
+  if (vals[1] === null) vals[1] = niceDomain[1];
+
   const upperBoundIsValid =
     vals[1] <= niceDomain[1] && vals[1] >= vals[0] && vals[1] >= niceDomain[0];
   const lowerBoundIsValid =
     vals[0] >= niceDomain[0] && vals[0] <= vals[1] && vals[0] <= niceDomain[1];
+
   if (vals[0] === domain[0] && vals[1] === domain[1]) {
     return [niceDomain[0], niceDomain[1]];
   } else if (upperBoundIsValid && !lowerBoundIsValid) {
@@ -39,6 +58,7 @@ const niceInitialValues = (vals, domain, niceDomain) => {
 
 export const DualRangeSlider: React.FC<Props> = ({
   domain = [0, 100],
+  niceDomain = domain.slice(),
   step = 1,
   initialValues = domain.slice(),
   debounce,
@@ -48,7 +68,7 @@ export const DualRangeSlider: React.FC<Props> = ({
   const decimals = countDecimals(step);
   const tickCount = 5;
   const scale = d3.scaleLinear().domain(domain).nice(tickCount);
-  const niceDomain = scale.domain();
+  niceDomain = scale.domain();
   const ticks = scale.ticks(5);
   const [values, setValues] = useState(niceInitialValues(initialValues, domain, niceDomain));
   const [lowerBound, setLowerBound] = useState(values[0]);
