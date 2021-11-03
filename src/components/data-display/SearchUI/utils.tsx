@@ -273,12 +273,13 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           const maxSuffix = f.maxSuffix || defaultMaxSuffix;
           const queryParamMinString = query.get(f.id + minSuffix);
           const queryParamMaxString = query.get(f.id + maxSuffix);
-          const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
-          const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
-          queryParamValue =
-            queryParamMin !== null && queryParamMax !== null
-              ? [queryParamMin, queryParamMax]
-              : null;
+          let queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
+          let queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
+          if (queryParamMin !== null || queryParamMax !== null) {
+            queryParamValue = [queryParamMin, queryParamMax];
+          } else {
+            queryParamValue = null;
+          }
           initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
           return f;
         case FilterType.MATERIALS_INPUT:
@@ -363,8 +364,17 @@ export const getSearchState = (
       const operatorSuffix = f.operatorSuffix || '';
       switch (f.type) {
         case FilterType.SLIDER:
-          const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
-          const hasActiveMax = filterValues[f.id][1] !== f.props.domain[1];
+          // const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
+          // const hasActiveMax = filterValues[f.id][1] !== f.props.domain[1];
+          const hasActiveMin =
+            filterValues[f.id][0] !== null && filterValues[f.id][0] > f.props.domain[0];
+          const hasActiveMax =
+            filterValues[f.id][1] !== null && filterValues[f.id][1] < f.props.domain[1];
+          if (f.id === 'volume' && !hasActiveMin) {
+            console.log('filter destroyed');
+          } else if (f.id === 'volume' && hasActiveMin) {
+            console.log('filter alive');
+          }
           if (hasActiveMin || hasActiveMax) {
             const minSuffix = f.minSuffix || defaultMinSuffix;
             const maxSuffix = f.maxSuffix || defaultMaxSuffix;
