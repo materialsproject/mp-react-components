@@ -69,6 +69,9 @@ export const MaterialsExplorer: React.FC = () => {
         }}
         searchBarHelpItems={[
           {
+            label: 'Search Examples'
+          },
+          {
             label: 'Include at least elements',
             examples: ['Li,Fe', 'Si,O,K']
           },
@@ -91,6 +94,9 @@ export const MaterialsExplorer: React.FC = () => {
           {
             label: 'Has Material ID',
             examples: ['mp-149', 'mp-19326']
+          },
+          {
+            label: 'Additional search options available in the filters panel.'
           }
         ]}
       />

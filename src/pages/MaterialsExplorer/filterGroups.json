@@ -24,7 +24,16 @@
         "props": {
           "inputType": "elements",
           "periodicTableMode": "none",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Li-Fe", "Li-Fe-*-*"]
+            }
+          ]
         }
       },
       {
