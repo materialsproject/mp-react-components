@@ -623,36 +623,31 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     <div id={props.id} className="mpc-materials-input">
       <PeriodicContext>
         {materialsInputField}
-        {/* {chemSysCheckbox} */}
-        <div
-          data-testid="materials-input-periodic-table"
-          className={classNames('table-transition-wrapper-small', {
-            'is-hidden-by-opacity': !showPeriodicTable,
-            'mt-3': showPeriodicTable
-          })}
-          aria-hidden={!showPeriodicTable}
-          onMouseDown={(event) => {
-            periodicTableClicked.current = true;
-            // if (inputRef && inputRef.current) {
-            //   const target = inputRef.current;
-            //   setTimeout(() => {
-            //     target.focus();
-            //   }, 500);
-            // }
-          }}
-        >
-          <SelectableTable
-            className="box"
-            disabled={!showPeriodicTable}
-            maxElementSelectable={20}
-            forceTableLayout={TableLayout.MINI}
-            hiddenElements={[]}
-            plugin={periodicTablePlugin}
-            onStateChange={(enabledElements) => {
-              Object.keys(enabledElements).filter((el) => enabledElements[el]);
+        {props.periodicTableMode !== PeriodicTableMode.NONE && (
+          <div
+            data-testid="materials-input-periodic-table"
+            className={classNames('table-transition-wrapper-small can-hide-by-height', {
+              'is-hidden-by-height': !showPeriodicTable,
+              'mt-3': showPeriodicTable
+            })}
+            aria-hidden={!showPeriodicTable}
+            onMouseDown={(event) => {
+              periodicTableClicked.current = true;
             }}
-          />
-        </div>
+          >
+            <SelectableTable
+              className="box"
+              disabled={!showPeriodicTable}
+              maxElementSelectable={20}
+              forceTableLayout={TableLayout.MINI}
+              hiddenElements={[]}
+              plugin={periodicTablePlugin}
+              onStateChange={(enabledElements) => {
+                Object.keys(enabledElements).filter((el) => enabledElements[el]);
+              }}
+            />
+          </div>
+        )}
       </PeriodicContext>
     </div>
   );

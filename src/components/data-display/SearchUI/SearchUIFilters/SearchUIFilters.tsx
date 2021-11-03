@@ -296,7 +296,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
               >
                 <div aria-hidden={!groupsByName[g.name].expanded}>
                   {g.filters.map((f, j) => (
-                    <div className="mb-3" key={j}>
+                    <div className="mb-4" key={j}>
                       <div>
                         <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
                         {renderFilter(f, g.name)}

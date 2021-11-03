@@ -12,7 +12,7 @@
         "props": {
           "inputType": "mpid",
           "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
-          "periodicTableMode": null
+          "periodicTableMode": "none"
         }
       },
       {
