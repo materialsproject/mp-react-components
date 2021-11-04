@@ -1,9 +1,5 @@
-import axios from 'axios';
 import classNames from 'classnames';
-import React, { useState, useRef, useEffect } from 'react';
-import { ItemTypes } from '../../../../archive/search-grid/cards-definition';
-import { formatFormula } from '../../utils';
-import { MaterialsInputType } from '../MaterialsInput';
+import React from 'react';
 
 export interface InputHelpItem {
   label?: string;
@@ -17,7 +13,7 @@ interface Props {
 }
 
 /**
- *
+ * Interactive help menu to display below MaterialsInput
  */
 export const InputHelp: React.FC<Props> = (props) => {
   return (
