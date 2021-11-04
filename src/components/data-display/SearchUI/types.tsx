@@ -120,6 +120,7 @@ export interface SearchState extends SearchUIProps {
   sortAscending?: boolean;
   error: boolean;
   selectedRows?: any[];
+  searchBarValue?: string;
 }
 
 export enum ColumnFormat {

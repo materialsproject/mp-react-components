@@ -35,7 +35,8 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  error: false
+  error: false,
+  searchBarValue: ''
 };
 
 /**
@@ -120,9 +121,35 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      */
     setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
       setState((currentState) => {
-        if (!overrideFields || !value || value === '') {
+        const filterIsActivating = value && value !== '';
+        let searchBarValue = currentState.searchBarValue;
+        let searchBarFields: string[] | undefined;
+
+        /**
+         * If the filter is being activated and the SearchUI has a top search bar,
+         * parse searchBarAllowedInputTypesMap for the fields it controls.
+         * These will be used to dynamically update the search bar value based on the new filter being activated.
+         */
+        if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
+          searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
+            key,
+            index
+          ) {
+            return currentState.searchBarAllowedInputTypesMap![key].field;
+          });
+        }
+
+        /**
+         * If the filter being activated is also a search bar field,
+         * update the search bar value with this filter's value.
+         */
+        if (searchBarFields && searchBarFields.indexOf(id) > -1) {
+          searchBarValue = value;
+        }
+
+        if (!overrideFields || !filterIsActivating) {
           return getSearchState(
-            { ...currentState, page: 1 },
+            { ...currentState, searchBarValue, page: 1 },
             { ...currentState.filterValues, [id]: value }
           );
         } else {
@@ -144,7 +171,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           }
 
           return getSearchState(
-            { ...currentState, filterGroups: newFilterGroups, page: 1 },
+            { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
             { ...currentState.filterValues, ...newFilterValues }
           );
         }

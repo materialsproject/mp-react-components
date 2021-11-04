@@ -15,7 +15,7 @@ export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();
   const state = useSearchUIContext();
   const allowedInputTypesMap = state.searchBarAllowedInputTypesMap!;
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState(state.searchBarValue || '');
   const initialInputType = convertMaterialsInputTypesMapToArray(allowedInputTypesMap)[0];
   const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(initialInputType);
   const [searchField, setSearchField] = useState(() =>
@@ -60,6 +60,14 @@ export const SearchUISearchBar: React.FC = () => {
   useEffect(() => {
     setSearchField(mapInputTypeToField(searchInputType, allowedInputTypesMap));
   }, [searchInputType]);
+
+  /**
+   * Update the search bar value if it's changed from outside this component
+   * (e.g. from the url on load or from a linked filter in the filters panel).
+   */
+  useEffect(() => {
+    setSearchValue(state.searchBarValue || '');
+  }, [state.searchBarValue]);
 
   return (
     <MaterialsInput
