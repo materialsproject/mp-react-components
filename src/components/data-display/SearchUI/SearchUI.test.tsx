@@ -45,8 +45,8 @@ describe('<SearchUI/>', () => {
     /** should render data table components */
     expect(screen.getByTestId('data-table-title')).toBeInTheDocument();
     expect(screen.getByTestId('columns-menu')).toBeInTheDocument();
-    expect(screen.getByTestId('results-per-page-menu')).toBeInTheDocument();
     await waitFor(() => {
+      expect(screen.getByTestId('results-per-page-menu')).toBeInTheDocument();
       expect(screen.getAllByRole('row').length).toBe(16);
       expect(screen.getByTestId('react-data-table-container')).toBeInTheDocument();
     });
