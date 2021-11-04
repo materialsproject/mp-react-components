@@ -7,15 +7,24 @@
   text-align: left;
 }
 
-.mpc-pt-mode-switcher-description {
-  position: absolute;
-  width: 80%;
-  margin-left: 20%;
+.mpc-pt-mode-content {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 1fr;
+  grid-gap: 2px;
+}
+
+.mpc-pt-mode-content .pt-description {
+  grid-column: 5 / span 6;
+  grid-row: 1 / span 2;
+}
+
+.mpc-pt-mode-content .pt-description p {
+  padding: 0.25rem;
   font-size: 0.85rem;
-  height: 100%;
-  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 2px;
+  height: 100%;
 }
 
 @media screen and (min-width: 769px) and (max-width: 959px) {
