@@ -313,7 +313,6 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
               <SearchUIFilters />
             </div>
             <div className="mpc-search-ui-right column">
-              {props.hasSearchBar && <SearchUISearchBar />}
               <SearchUIDataHeader />
               <SearchUIDataView />
             </div>
