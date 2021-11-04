@@ -10,6 +10,7 @@ const defaultProps = {
   value: '',
   inputType: 'elements' as MaterialsInputType,
   periodicTableMode: PeriodicTableMode.TOGGLE,
+  helpItems: [{ label: 'Search Help' }],
   onChange: (value: string) => null
 };
 
