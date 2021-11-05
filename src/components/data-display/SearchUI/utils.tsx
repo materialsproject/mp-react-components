@@ -180,6 +180,12 @@ export const initColumns = (columns: Column[]): Column[] => {
           hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
         c.cell = (row: any, i: number) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
+          let cleanValue = rowValue;
+
+          if (hasFormatOptions && c.formatOptions.truthyValue !== undefined) {
+            cleanValue = rowValue === c.formatOptions.truthyValue;
+          }
+
           return (
             <span
               className="boolean-cell-wrapper"
@@ -188,8 +194,8 @@ export const initColumns = (columns: Column[]): Column[] => {
             >
               <i
                 className={classNames({
-                  [truthyClass]: rowValue,
-                  [falsyClass]: !rowValue
+                  [truthyClass]: cleanValue,
+                  [falsyClass]: !cleanValue
                 })}
               ></i>
               {c.cellTooltip && <Tooltip id={`${c.selector}-${i}`}>{c.cellTooltip}</Tooltip>}
