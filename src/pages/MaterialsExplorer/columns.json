@@ -5,8 +5,7 @@
     "format": "BOOLEAN_CLASS",
     "formatOptions": {
       "truthyClass": "",
-      "falsyClass": "fas fa-star",
-      "truthyValue": true
+      "falsyClass": "fas fa-star"
     },
     "cellTooltip": "Experimentally observed",
     "hideName": true,
