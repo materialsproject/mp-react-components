@@ -437,7 +437,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: parsedValue
+                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
                 }
               ]
             });
@@ -474,7 +474,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -490,7 +490,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -511,7 +511,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -527,7 +527,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });

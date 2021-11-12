@@ -56,6 +56,12 @@ export interface Filter {
    * Filter ids listed here must exist in the filterGroups json.
    */
   overrides?: string[];
+  /**
+   * Set to true to force filter input values to be lowercased before added to the query.
+   * This should be used in situations where the filter input make contain an uppercase letter,
+   * but the values on the backend are all lowercase.
+   */
+  makeLowerCase?: boolean;
 }
 
 export interface FilterGroup {
