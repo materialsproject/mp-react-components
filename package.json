@@ -142,7 +142,7 @@
     "react-docgen-typescript-loader": "^3.6.0",
     "react-styleguidist": "^11.1.7",
     "resize-observer-polyfill": "^1.5.1",
-    "rollup": "^1.29.0",
+    "rollup": "^2.60.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-local-resolve": "^1.0.7",
     "rollup-plugin-node-resolve": "^5.2.0",
