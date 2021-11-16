@@ -63,21 +63,16 @@ export const Download: React.FC<Props> = ({
       // Construct the blob.
       const blob = new Blob([content], { type: mimeType });
       const filename = props.data.filename;
-      // Save file function, from https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
-      if (window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveOrOpenBlob(blob, filename);
-      } else {
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        const url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = filename;
-        a.click();
-        setTimeout(() => {
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-        }, 0);
-      }
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 0);
     }
   }, [props.data]);
 
