@@ -4,7 +4,6 @@ import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 import { FaAngleDown, FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
 import classNames from 'classnames';
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Wrapper as MenuWrapper,
@@ -118,11 +117,7 @@ const getAllowedSelectionModes = (
  */
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   errorMessage = 'Invalid input value',
-  allowedInputTypes = [
-    'elements' as MaterialsInputType,
-    'formula' as MaterialsInputType,
-    'mpid' as MaterialsInputType
-  ],
+  allowedInputTypes = ['elements', 'formula', 'mpid'],
   onChange = (value) => value,
   ...otherProps
 }) => {
@@ -295,7 +290,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     <MaterialsInputBox
       value={inputValue}
       inputType={inputType}
-      allowedInputTypes={props.allowedInputTypes}
+      allowedInputTypes={props.allowedInputTypes as MaterialsInputType[]}
       isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
@@ -467,7 +462,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
         mode={selectionMode}
-        allowedModes={getAllowedSelectionModes(props.allowedInputTypes, props.hideChemSys)}
+        allowedModes={getAllowedSelectionModes(
+          props.allowedInputTypes as MaterialsInputType[],
+          props.hideChemSys
+        )}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
