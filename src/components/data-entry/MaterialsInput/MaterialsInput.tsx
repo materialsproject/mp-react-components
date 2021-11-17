@@ -232,9 +232,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   /**
    * Trigger MaterialsInput submit event
-   * Optional value param allows clicking on autocomplete items
-   * to submit the input using a new value that doesn't necessarily
-   * match the current input value
    */
   const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     e.preventDefault();
@@ -249,7 +246,12 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
        * because the chem sys flag cannot be inferred by the input value.
        */
       const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
-      props.onSubmit(e, value, filterProps);
+      /**
+       * Optional value param allows function to submit a new value that doesn't necessarily
+       * match the current input value (currently used for clicking on autocomplete items)
+       */
+      const submitValue = value || inputValue;
+      props.onSubmit(e, submitValue, filterProps);
     } else {
       setErrorTipStayActive(true);
     }
