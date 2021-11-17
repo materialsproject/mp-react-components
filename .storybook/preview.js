@@ -4,5 +4,5 @@ import '../src/assets/fonts.css';
 import '../src//stories/stories.css';
 
 export const parameters = {
-  controls: { expanded: true }
+  controls: { expanded: true, sort: 'alpha' }
 };

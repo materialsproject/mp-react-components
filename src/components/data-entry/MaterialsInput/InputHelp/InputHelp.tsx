@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import React from 'react';
 
 export interface InputHelpItem {
-  label?: string;
-  examples?: string[];
+  label?: string | null;
+  examples?: string[] | null;
 }
 
 interface Props {

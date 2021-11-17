@@ -36,6 +36,7 @@ export const SearchUISearchBar: React.FC = () => {
     value?: string,
     filterProps?: any
   ) => {
+    console.log(value);
     const submitValue = value || searchValue;
     const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
       return allowedInputTypesMap[d].field;
