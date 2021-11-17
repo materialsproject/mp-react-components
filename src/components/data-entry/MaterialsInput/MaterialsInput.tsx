@@ -74,7 +74,6 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
   hidePeriodicTable?: boolean;
-  tooltip?: string;
   label?: string;
   onPropsChange?: (propsObject: any) => void;
 }
@@ -284,7 +283,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   let materialsInputField: JSX.Element | null = null;
   let labelControl: JSX.Element | null = null;
   let periodicToggleControl: JSX.Element | null = null;
-  let tooltipControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
   let chemSysDropdown: JSX.Element | null = null;
 
@@ -341,26 +339,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
           />
           <Tooltip id={tooltipId} place="bottom">
             {showPeriodicTable ? 'Hide Periodic Table' : 'Show Periodic Table'}
-          </Tooltip>
-        </button>
-      </Control>
-    );
-  }
-
-  if (props.tooltip) {
-    var tooltipId = `materials-input-help-${uuidv4()}`;
-    tooltipControl = (
-      <Control>
-        <button
-          data-testid="materials-input-tooltip-button"
-          type="button"
-          className="button has-text-grey-light"
-          data-tip
-          data-for={tooltipId}
-        >
-          <FaQuestionCircle />
-          <Tooltip id={tooltipId} place="bottom">
-            {props.tooltip}
           </Tooltip>
         </button>
       </Control>
