@@ -19,14 +19,12 @@ const renderElement = (props: MaterialsInputProps) => {
 };
 
 describe('<MaterialsInput/>', () => {
-  it('should render periodic table, tooltip control, and search button', () => {
+  it('should render periodic table and search button', () => {
     renderElement({
       ...defaultProps,
-      tooltip: 'Test tooltip',
       onSubmit: (value) => null
     });
     expect(screen.getByTestId('materials-input-search-input')).toBeInTheDocument();
-    expect(screen.getByTestId('materials-input-tooltip-button')).toBeInTheDocument();
     expect(screen.getByTestId('materials-input-form')).toBeInTheDocument();
     expect(screen.getByTestId('materials-input-periodic-table')).toBeInTheDocument();
   });

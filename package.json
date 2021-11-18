@@ -18,7 +18,7 @@
     "build-prod": "parcel build src/index.html",
     "build-publish": "rollup -c",
     "test": "jest --env=jsdom",
-    "storybook": "start-storybook --no-manager-cache -p 6006",
+    "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
     "docz:dev": "docz dev",
