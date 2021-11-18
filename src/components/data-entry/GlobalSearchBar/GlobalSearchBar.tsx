@@ -14,7 +14,6 @@ interface Props {
   hidePeriodicTable?: boolean;
   autocompleteFormulaUrl?: string;
   apiKey?: string;
-  tooltip?: string;
   placeholder?: string;
 }
 
@@ -40,7 +39,6 @@ export const GlobalSearchBar: React.FC<Props> = (props) => {
       hidePeriodicTable={props.hidePeriodicTable}
       autocompleteFormulaUrl={props.autocompleteFormulaUrl}
       autocompleteApiKey={props.apiKey}
-      tooltip={props.tooltip}
       placeholder={props.placeholder}
     />
   );
