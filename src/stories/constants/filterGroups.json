@@ -1,0 +1,422 @@
+[
+  {
+    "name": "Composition",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Material ID",
+        "id": "material_ids",
+        "overrides": ["elements", "formula"],
+        "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "mpid",
+          "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
+          "periodicTableMode": "none"
+        }
+      },
+      {
+        "name": "Include Elements",
+        "id": "elements",
+        "overrides": ["material_ids", "formula"],
+        "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. Ga,N). Enter a \" - \" separated list of element symbols to find materials that contain only these elements (e.g. Ga-N).",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "elements",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Li-Fe", "Li-Fe-*-*"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Exclude Elements",
+        "id": "exclude_elements",
+        "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that do not contain certain elements in their formula.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "elements",
+          "periodicTableMode": "none",
+          "hideChemSys": true,
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
+        }
+      },
+      {
+        "name": "Formula",
+        "id": "formula",
+        "overrides": ["elements", "material_ids"],
+        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "inputType": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+        }
+      }
+    ]
+  },
+  {
+    "name": "Thermodynamics",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Energy Above Hull",
+        "id": "energy_above_hull",
+        "type": "SLIDER",
+        "units": "meV/atom",
+        "conversionFactor": 0.001,
+        "props": {
+          "domain": [0, 1000],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Formation Energy",
+        "id": "formation_energy_per_atom",
+        "type": "SLIDER",
+        "units": "eV/atom",
+        "props": {
+          "domain": [-10, 6],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Is Stable",
+        "id": "is_stable",
+        "tooltip": "Materials with an energy above hull equal to 0 are flagged as stable. All other materials are flagged as not stable.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Experimentally Observed",
+        "id": "theoretical",
+        "tooltip": "Materials that match an entry in the ICSD are considered experimentally observed or synthesizable.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": false
+            },
+            {
+              "label": "No",
+              "value": true
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Structural Properties",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Volume",
+        "id": "volume",
+        "tooltip": "Total volume of the structure",
+        "units": "\u00c5\u00b3",
+        "type": "SLIDER",
+        "props": {
+          "domain": [5, 19407],
+          "step": 1
+        }
+      },
+      {
+        "name": "Density",
+        "id": "density",
+        "units": "cm\u00b3",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 25],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Number of Sites",
+        "id": "nsites",
+        "type": "SLIDER",
+        "props": {
+          "domain": [1, 360],
+          "step": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Symmetry",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Spacegroup Symbol",
+        "id": "spacegroup_symbol",
+        "tooltip": "The spacegroup symbol for the lattice",
+        "type": "SELECT_SPACEGROUP_SYMBOL"
+      },
+      {
+        "name": "Spacegroup Number",
+        "id": "spacegroup_number",
+        "tooltip": "The spacegroup number for the lattice",
+        "type": "SELECT_SPACEGROUP_NUMBER"
+      },
+      {
+        "name": "Crystal System",
+        "id": "crystal_system",
+        "tooltip": "The crystal system for the lattice",
+        "type": "SELECT_CRYSTAL_SYSTEM"
+      }
+    ]
+  },
+  {
+    "name": "Calculated Properties",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Has Properties",
+        "id": "has_props",
+        "type": "CHECKBOX_LIST",
+        "props": {
+          "options": [
+            { "value": "magnetism", "label": "Magnetism" },
+            { "value": "elasticity", "label": "Elasticity" },
+            { "value": "surface_properties", "label": "Surfaces" },
+            { "value": "piezoelectric", "label": "Piezoelectric" },
+            { "value": "dielectric", "label": "Dielectric" }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Magnetism",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Magnetic Ordering",
+        "id": "ordering",
+        "tooltip": "Magnetic ordering of the calculation",
+        "type": "SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Ferromagnetic",
+              "value": "FM"
+            },
+            {
+              "label": "Non-magnetic",
+              "value": "NM"
+            },
+            {
+              "label": "Ferrimagnetic",
+              "value": "FiM"
+            },
+            {
+              "label": "Antiferromagnetic",
+              "value": "AFM"
+            },
+            {
+              "label": "Unknown",
+              "value": "Unknown"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Max Magnetic Moment",
+        "id": "total_magnetization",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 325],
+          "step": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Elasticity",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Bulk Modulus, Voigt",
+        "id": "k_voigt",
+        "tooltip": "Voigt average of the bulk modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Bulk Modulus, Reuss",
+        "id": "k_reuss",
+        "tooltip": "Reuss average of the bulk modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Bulk Modulus, Voigt-Reuss-Hill",
+        "id": "k_vrh",
+        "tooltip": "Voigt-Reuss-Hill average of the bulk modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Shear Modulus, Voigt",
+        "id": "g_voigt",
+        "tooltip": "Voigt average of the shear modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Shear Modulus, Reuss",
+        "id": "g_reuss",
+        "tooltip": "Reuss average of the shear modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Shear Modulus, Voigt-Reuss-Hill",
+        "id": "g_vrh",
+        "tooltip": "Voigt-Reuss-Hill average of the shear modulus",
+        "units": "GPa",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 1000],
+          "step": 1
+        }
+      },
+      {
+        "name": "Elastic Anisotropy",
+        "id": "universal_anisotropy",
+        "type": "SLIDER",
+        "props": {
+          "domain": [-1000, 1000],
+          "step": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Surfaces",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Weighted Surface Energy",
+        "id": "weighted_surface_energy",
+        "units": "J/m\u00b2",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 5],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Surface Anisotropy",
+        "id": "surface_anisotropy",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 25],
+          "step": 1
+        }
+      },
+      {
+        "name": "Shape Factor",
+        "id": "shape_factor",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Piezoelectric",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Piezo Modulus",
+        "id": "piezo_modulus",
+        "units": "Cm\u00b2",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Dielectric",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Total Dielectric Constant",
+        "id": "e_total",
+        "units": "",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Ionic Dielectric Constant",
+        "id": "e_ionic",
+        "tooltip": "Ionic contribution to dielectric constant",
+        "units": "",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Static Dielectric Constant",
+        "id": "e_static",
+        "tooltip": "Electronic contribution to dielectric constant",
+        "units": "",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 100],
+          "step": 0.1
+        }
+      }
+    ]
+  }
+]

@@ -374,14 +374,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
-  // useDeepCompareEffect(() => {
-  //   actions.getData();
-  // }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
+  useDeepCompareEffect(() => {
+    actions.getData();
+  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   return (
     <SearchUIContext.Provider value={state}>
       <SearchUIContextActions.Provider value={actions}>
-        <div>{children}</div>
+        <div ref={ref}>{children}</div>
       </SearchUIContextActions.Provider>
     </SearchUIContext.Provider>
   );
