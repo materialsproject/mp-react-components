@@ -1,0 +1,57 @@
+[
+  {
+    "title": "QMOF ID",
+    "selector": "identifier",
+    "formatType": "LINK",
+    "formatOptions": {
+      "baseUrl": "/mofs/"
+    },
+    "tooltip": "Unique identifier for each material in the QMOF Database",
+    "minWidth": "135px"
+  },
+  {
+    "title": "Formula",
+    "selector": "data.reducedFormula",
+    "formatType": "FORMULA",
+    "minWidth": "175px",
+    "tooltip": "Empirical formula"
+  },
+  {
+    "title": "Molecular Formula",
+    "selector": "formula",
+    "formatType": "FORMULA",
+    "minWidth": "185px",
+    "omit": true,
+    "tooltip": "Non-reduced formula that expresses the total number of atoms per simulation unit cell"
+  },
+  {
+    "title": "Space Group",
+    "selector": "data.spacegroup",
+    "formatType": "SPACEGROUP_SYMBOL",
+    "tooltip": "Space group symbol for the lattice",
+    "omit": true
+  },
+  {
+    "title": "Crystal System",
+    "selector": "data.spacegroupCrystal",
+    "tooltip": "Crystal system for the lattice",
+    "omit": true
+  },
+  {
+    "title": "Number of Atoms",
+    "selector": "data.natoms.value",
+    "tooltip": "Total number of atoms per simulation unit cell",
+    "right": true
+  },
+  {
+    "title": "PLD",
+    "selector": "data.pld.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "units": "\u212B",
+    "right": true,
+    "tooltip": "Pore-limiting diameter"
+  }
+]
