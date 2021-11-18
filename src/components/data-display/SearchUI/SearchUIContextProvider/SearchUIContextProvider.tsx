@@ -22,8 +22,8 @@ const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const defaultState: SearchState = {
-  baseUrl: '',
-  baseUrlParams: {},
+  apiEndpoint: '',
+  apiEndpointParams: {},
   columns: [],
   filterGroups: [],
   filterValues: {},
@@ -253,7 +253,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
-        let params = Object.assign({}, currentState.baseUrlParams!);
+        let params = Object.assign({}, currentState.apiEndpointParams!);
         let query = new URLSearchParams();
 
         /** Resolve inconsistencies between mp-api and contribs-api */
@@ -301,7 +301,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         });
 
         axios
-          .get(props.baseUrl, {
+          .get(props.apiEndpoint, {
             params: params,
             paramsSerializer: (p) => {
               return qs.stringify(p, { arrayFormat: 'comma' });
