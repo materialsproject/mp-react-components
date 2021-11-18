@@ -306,6 +306,12 @@ export interface SearchUIProps {
   cardOptions?: any;
   isContribs?: boolean;
   debounce?: number;
+  /**
+   * This is a temporary solution to allow SearchUI's to render in Storybook.
+   * There is an issue with the dynamic column header components that causes
+   * Storybook to crash. Rendering column headers as plain strings fixes the problem.
+   */
+  disableRichColumnHeaders?: boolean;
 }
 
 /**

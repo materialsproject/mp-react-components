@@ -1,8 +1,8 @@
 [
   {
-    "name": "MPContribs ID",
+    "title": "MPContribs ID",
     "selector": "id",
-    "format": "LINK",
+    "formatType": "LINK",
     "formatOptions": {
       "baseUrl": "https://contribs.materialsproject.org/contributions/",
       "target": "_blank"
@@ -10,52 +10,52 @@
     "minWidth": "130px"
   },
   {
-    "name": "Formula",
+    "title": "Formula",
     "selector": "formula",
-    "format": "FORMULA",
+    "formatType": "FORMULA",
     "minWidth": "150px"
   },
   {
-    "name": "Bulk Formula",
+    "title": "Bulk Formula",
     "selector": "data.bulkFormula",
-    "format": "FORMULA"
+    "formatType": "FORMULA"
   },
   {
-    "name": "Adsorbate Smiles",
+    "title": "Adsorbate Smiles",
     "selector": "data.adsorbateSmiles"
   },
   {
-    "name": "Adsorbate IUPAC Formula",
+    "title": "Adsorbate IUPAC Formula",
     "selector": "data.adsorbateIUPACFormula"
   },
   {
-    "name": "Adsorption Energy",
+    "title": "Adsorption Energy",
     "selector": "data.adsorptionEnergy.value",
-    "format": "FIXED_DECIMAL",
+    "formatType": "FIXED_DECIMAL",
     "formatOptions": {
       "decimals": 3
     },
     "right": true
   },
   {
-    "name": "h",
+    "title": "h",
     "selector": "data.h.value",
     "right": true
   },
   {
-    "name": "k",
+    "title": "k",
     "selector": "data.k.value",
     "right": true
   },
   {
-    "name": "l",
+    "title": "l",
     "selector": "data.l.value",
     "right": true
   },
   {
-    "name": "Surface Shift",
+    "title": "Surface Shift",
     "selector": "data.surfaceShift.value",
-    "format": "FIXED_DECIMAL",
+    "formatType": "FIXED_DECIMAL",
     "formatOptions": {
       "decimals": 3
     },

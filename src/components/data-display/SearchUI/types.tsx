@@ -91,12 +91,24 @@ export interface ActiveFilter {
 
 export type FilterValues = Partial<Record<string, any>>;
 
+export enum ColumnFormat {
+  FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
+  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
+  FORMULA = 'FORMULA', // formatArg: none
+  LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
+  BOOLEAN = 'BOOLEAN', // formatArg: array with two items for display values, first item is for truthy, second item is for falsy (e.g. ['yes', 'no'])
+  BOOLEAN_CLASS = 'BOOLEAN_CLASS', // formatArg: class name string to add to element within cell
+  SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
+  POINTGROUP = 'POINTGROUP',
+  ARRAY = 'ARRAY'
+}
+
 export interface Column {
-  name: any;
+  title: string | number;
   selector: string;
+  formatType?: ColumnFormat;
   units?: string;
   conversionFactor?: number;
-  nameString?: string;
   abbreviateNearZero?: boolean;
   /** Hides column from table AND column selector but includes in data */
   hidden?: boolean;
@@ -127,18 +139,6 @@ export interface SearchState extends SearchUIProps {
   error: boolean;
   selectedRows?: any[];
   searchBarValue?: string;
-}
-
-export enum ColumnFormat {
-  FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
-  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
-  FORMULA = 'FORMULA', // formatArg: none
-  LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
-  BOOLEAN = 'BOOLEAN', // formatArg: array with two items for display values, first item is for truthy, second item is for falsy (e.g. ['yes', 'no'])
-  BOOLEAN_CLASS = 'BOOLEAN_CLASS', // formatArg: class name string to add to element within cell
-  SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
-  POINTGROUP = 'POINTGROUP',
-  ARRAY = 'ARRAY'
 }
 
 export enum SearchUIViewType {
