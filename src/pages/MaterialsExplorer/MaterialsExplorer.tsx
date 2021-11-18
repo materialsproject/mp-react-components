@@ -40,8 +40,10 @@ export const MaterialsExplorer: React.FC = () => {
         resultLabel="material"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''}
-        // baseUrl="test"
+        apiEndpoint={
+          process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''
+        }
+        // apiEndpoint="test"
         autocompleteFormulaUrl={
           process.env.REACT_APP_AUTOCOMPLETE_URL
             ? process.env.REACT_APP_AUTOCOMPLETE_URL

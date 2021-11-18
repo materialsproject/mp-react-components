@@ -26,7 +26,7 @@ export const XasApp: React.FC = () => {
         resultLabel="spectrum"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
+        apiEndpoint={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={false}
         selectableRows={true}

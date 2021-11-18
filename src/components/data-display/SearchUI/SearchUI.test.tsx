@@ -14,7 +14,7 @@ const defaultProps = {
   resultLabel: 'material',
   columns: columns,
   filterGroups: filterGroups as FilterGroup[],
-  baseUrl: process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + 'search/' : '',
+  apiEndpoint: process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + 'search/' : '',
   autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL
     ? process.env.REACT_APP_AUTOCOMPLETE_URL
     : undefined,

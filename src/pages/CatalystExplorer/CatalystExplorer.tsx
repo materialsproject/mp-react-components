@@ -20,8 +20,8 @@ export const CatalystExplorer: React.FC = () => {
         resultLabel="catalyst"
         columns={columns}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl="https://contribs-api.materialsproject.org/contributions/"
-        baseUrlParams={{
+        apiEndpoint="https://contribs-api.materialsproject.org/contributions/"
+        apiEndpointParams={{
           project: 'open_catalyst_project'
         }}
         apiKey={undefined}

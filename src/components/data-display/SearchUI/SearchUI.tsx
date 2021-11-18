@@ -110,7 +110,7 @@ export interface SearchUIProps {
   /**
    * The base URL to the API that this search UI should query
    */
-  baseUrl: string;
+  apiEndpoint: string;
 
   /**
    * Query params that will be automatically added for every search.
@@ -122,7 +122,7 @@ export interface SearchUIProps {
       project: 'open_catalyst_project'
     }
    */
-  baseUrlParams?: SearchParams;
+  apiEndpointParams?: SearchParams;
 
   /**
    * The URL endpoint for fetching autocompletion results
@@ -339,7 +339,7 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 
 SearchUI.defaultProps = {
   view: SearchUIViewType.TABLE,
-  baseUrlParams: {},
+  apiEndpointParams: {},
   resultLabel: 'results',
   hasSortMenu: true,
   hasSearchBar: true,
