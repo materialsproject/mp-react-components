@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
@@ -38,7 +38,7 @@ export const MaterialsExplorer: React.FC = () => {
         //   ]
         // }}
         resultLabel="material"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''
