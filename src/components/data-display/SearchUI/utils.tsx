@@ -62,6 +62,24 @@ const isNotEmpty = (value: any) => {
   }
 };
 
+const getColumnHeader = (c: any) => {
+  return (
+    <div
+      className={classNames({
+        'column-header-right': c.right,
+        'column-header-center': c.center,
+        'column-header-left': !c.right && !c.center,
+        'tooltip-label': c.tooltip
+      })}
+      data-tip={c.tooltip}
+      data-for={c.selector}
+    >
+      <div>{c.hideName || !c.title ? '' : c.title}</div>
+      {c.units && <div className="column-units">({c.units})</div>}
+      {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
+    </div>
+  );
+};
 /**
  * Initialize columns with their proper format function
  * The "format" prop should initially be one of the ColumnFormat strings
@@ -69,30 +87,34 @@ const isNotEmpty = (value: any) => {
  * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
  * that will specify how many decimals or figures to apply to the format.
  */
-export const initColumns = (columns: Column[]): Column[] => {
+export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolean): Column[] => {
   return columns.map((c) => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
-    c.nameString = c.name.toString();
-    c.name = (
-      <div
-        className={classNames({
-          'column-header-right': c.right,
-          'column-header-center': c.center,
-          'column-header-left': !c.right && !c.center,
-          'tooltip-label': c.tooltip
-        })}
-        data-tip={c.tooltip}
-        data-for={c.selector}
-      >
-        <div>{c.hideName ? '' : c.name}</div>
-        {c.units && <div className="column-units">({c.units})</div>}
-        {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
-      </div>
-    );
+
+    if (disableRichColumnHeaders) {
+      c.name = c.hideName ? '' : c.title;
+    } else {
+      c.name = (
+        <div
+          className={classNames({
+            'column-header-right': c.right,
+            'column-header-center': c.center,
+            'column-header-left': !c.right && !c.center,
+            'tooltip-label': c.tooltip
+          })}
+          data-tip={c.tooltip}
+          data-for={c.selector}
+        >
+          <div>{c.hideName ? '' : c.title}</div>
+          {c.units && <div className="column-units">({c.units})</div>}
+          {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
+        </div>
+      );
+    }
 
     const hasFormatOptions = c.hasOwnProperty('formatOptions');
 
-    switch (c.format) {
+    switch (c.formatType) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces =
           hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
@@ -549,7 +571,10 @@ export const initSearchState = (
    * and all the values provided in props (except props.children)
    */
   const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
-  initialState.columns = initColumns(propsWithoutChildren.columns);
+  initialState.columns = initColumns(
+    propsWithoutChildren.columns,
+    initialState.disableRichColumnHeaders
+  );
   const { initializedGroups, initializedValues } = initFilterGroups(
     propsWithoutChildren.filterGroups,
     query

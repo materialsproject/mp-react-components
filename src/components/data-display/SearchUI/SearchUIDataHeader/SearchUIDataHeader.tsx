@@ -207,7 +207,7 @@ export const SearchUIDataHeader: React.FC = () => {
                       }}
                       onChange={(e) => toggleColumn(i)}
                     />
-                    <span>{col.nameString}</span>
+                    <span>{col.title}</span>
                   </label>
                 </li>
               </MenuItem>

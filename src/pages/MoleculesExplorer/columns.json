@@ -1,30 +1,30 @@
 [
   {
-    "name": "Molecule ID",
+    "title": "Molecule ID",
     "selector": "task_id",
-    "format": "LINK",
+    "formatType": "LINK",
     "formatOptions": {
       "baseUrl": "/molecules/"
     }
   },
   {
-    "name": "Formula",
+    "title": "Formula",
     "selector": "formula_pretty",
-    "format": "FORMULA"
+    "formatType": "FORMULA"
   },
   {
-    "name": "SMILES",
+    "title": "SMILES",
     "selector": "smiles"
   },
   {
-    "name": "Point Group",
+    "title": "Point Group",
     "selector": "pointgroup",
-    "format": "POINTGROUP"
+    "formatType": "POINTGROUP"
   },
   {
-    "name": "Electron Affinity",
+    "title": "Electron Affinity",
     "selector": "EA",
-    "format": "FIXED_DECIMAL",
+    "formatType": "FIXED_DECIMAL",
     "formatOptions": {
       "decimals": 2
     },
@@ -32,9 +32,9 @@
     "right": true
   },
   {
-    "name": "Ionization Energy",
+    "title": "Ionization Energy",
     "selector": "IE",
-    "format": "FIXED_DECIMAL",
+    "formatType": "FIXED_DECIMAL",
     "formatOptions": {
       "decimals": 2
     },
@@ -42,7 +42,7 @@
     "right": true
   },
   {
-    "name": "Charge",
+    "title": "Charge",
     "selector": "charge",
     "units": "+e",
     "right": true

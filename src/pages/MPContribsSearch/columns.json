@@ -1,8 +1,8 @@
 [
   {
-    "name": "MPContribs ID",
+    "title": "MPContribs ID",
     "selector": "id",
-    "format": "LINK",
+    "formatType": "LINK",
     "formatOptions": {
       "baseUrl": "https://contribs.materialsproject.org/contributions/",
       "target": "_blank"
@@ -10,22 +10,22 @@
     "minWidth": "130px"
   },
   {
-    "name": "Material ID",
+    "title": "Material ID",
     "selector": "identifier",
-    "format": "LINK",
+    "formatType": "LINK",
     "formatOptions": {
       "baseUrl": "/materials/"
     },
     "minWidth": "130px"
   },
   {
-    "name": "Formula",
+    "title": "Formula",
     "selector": "formula",
-    "format": "FORMULA",
+    "formatType": "FORMULA",
     "minWidth": "130px"
   },
   {
-    "name": "Project",
+    "title": "Project",
     "selector": "project"
   }
 ]
