@@ -92,7 +92,7 @@ export interface ActiveFilter {
 export type FilterValues = Partial<Record<string, any>>;
 
 export interface Column {
-  name: string | number | JSX.Element;
+  name: any;
   selector: string;
   units?: string;
   conversionFactor?: number;
