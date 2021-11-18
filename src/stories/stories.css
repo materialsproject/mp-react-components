@@ -21,3 +21,23 @@ body {
 .sidebar-story .content p {
   height: 500px;
 }
+
+/**
+ * Override bulma tag styles that conflict with the tag class
+ * used in storybook code blocks.
+ */
+.tag.token {
+  background-color: inherit;
+  border-radius: 0;
+  display: inline;
+  font-size: inherit;
+  height: auto;
+  line-height: inherit;
+  padding-left: 0;
+  padding-right: 0;
+  white-space: pre-wrap;
+}
+
+.mpc-materials-input {
+  max-width: 750px;
+}

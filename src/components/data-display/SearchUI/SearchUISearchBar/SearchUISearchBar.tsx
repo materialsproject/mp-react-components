@@ -5,6 +5,7 @@ import { MaterialsInputType } from '../../../data-entry/MaterialsInput';
 import { Filter } from '../types';
 import { MaterialsInputTypesMap } from '../../../data-entry/MaterialsInput/utils';
 import { convertMaterialsInputTypesMapToArray, mapInputTypeToField } from '../utils';
+import { capitalize, pluralize } from '../../../data-entry/utils';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -73,7 +74,7 @@ export const SearchUISearchBar: React.FC = () => {
   return (
     <MaterialsInput
       value={searchValue}
-      label={state.resultLabel}
+      label={capitalize(pluralize(state.resultLabel))}
       inputType={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
@@ -83,7 +84,6 @@ export const SearchUISearchBar: React.FC = () => {
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
       allowSmiles={allowSmiles}
-      tooltip={state.searchBarTooltip}
       placeholder={state.searchBarPlaceholder}
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
       errorMessage={state.searchBarErrorMessage}

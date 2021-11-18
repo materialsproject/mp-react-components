@@ -315,7 +315,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   if (props.label) {
     labelControl = (
       <Control>
-        <button className="button is-static">{capitalize(pluralize(props.label))}</button>
+        <button className="button is-static">{props.label}</button>
       </Control>
     );
   }

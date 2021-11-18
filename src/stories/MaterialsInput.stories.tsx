@@ -13,11 +13,7 @@ export default {
   parameters: { actions: { argTypesRegex: '^on.*' } }
 };
 
-const Template: Story<MaterialsInputProps> = (args) => (
-  <div style={{ width: '750px' }}>
-    <MaterialsInput {...args} />
-  </div>
-);
+const Template: Story<MaterialsInputProps> = (args) => <MaterialsInput {...args} />;
 
 export const MultiType = Template.bind({});
 MultiType.args = {
@@ -69,11 +65,23 @@ FormulaWithoutPeriodicTable.args = {
   periodicTableMode: 'none' as PeriodicTableMode
 };
 
+export const FormulaWithLabel = Template.bind({});
+FormulaWithLabel.args = {
+  ...FormulaWithoutPeriodicTable.args,
+  label: 'Formula'
+};
+
 export const FormulaWithoutSubmit = Template.bind({});
-FormulaWithoutPeriodicTable.args = {
-  periodicTableMode: 'toggle' as PeriodicTableMode,
-  allowedInputTypes: ['formula' as MaterialsInputType],
-  errorMessage: 'Please enter a valid chemical formula.',
+FormulaWithoutSubmit.args = {
+  ...FormulaWithLabel.args,
+  onSubmit: undefined,
   inputType: 'formula' as MaterialsInputType
 };
-FormulaWithoutSubmit.parameters = { actions: 'onChange' };
+/** Need to ignore onSubmit action or else it won't be considered undefined */
+FormulaWithoutSubmit.parameters = { actions: { argTypesRegex: '^(?!onSubmit)on.*' } };
+
+export const FormulaWithAutocomplete = Template.bind({});
+FormulaWithAutocomplete.args = {
+  ...FormulaWithLabel.args,
+  autocompleteFormulaUrl: 'https://api.materialsproject.org/materials/formula_autocomplete/'
+};
