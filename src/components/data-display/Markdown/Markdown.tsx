@@ -8,7 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github-dark.css';
 
-interface Props {
+export interface MarkdownProps {
   /**
    * The ID of this component, used to identify dash components
    * in callbacks. The ID needs to be unique across all of the
@@ -83,7 +83,7 @@ const dedentLines = (text) => {
  * - remark-math
  * - rehype-katex
  */
-export const Markdown: React.FC<Props> = (props) => {
+export const Markdown: React.FC<MarkdownProps> = (props) => {
   const textProp =
     props.children && Array.isArray(props.children) ? props.children.join('\n') : props.children;
   const displayText = props.dedent && textProp ? dedentLines(textProp) : textProp;
