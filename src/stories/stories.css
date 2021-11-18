@@ -22,6 +22,11 @@ body {
   height: 500px;
 }
 
+.mpc-materials-input {
+  max-width: 750px;
+  margin: auto;
+}
+
 /**
  * Override bulma tag styles that conflict with the tag class
  * used in storybook code blocks.
@@ -38,7 +43,31 @@ body {
   white-space: pre-wrap;
 }
 
-.mpc-materials-input {
-  max-width: 750px;
-  margin: auto;
+/**
+ * Override bulma number styles that conflict with the number class
+ * used in storybook code blocks.
+ */
+.number {
+  background-color: transparent;
+  border-radius: 0;
+  display: inline;
+  font-size: inherit;
+  height: inherit;
+  margin-right: 0;
+  min-width: auto;
+  padding: 0;
+  text-align: inherit;
+  vertical-align: inherit;
+}
+
+pre code {
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+
+pre {
+  color: inherit;
+  font-size: inherit;
 }

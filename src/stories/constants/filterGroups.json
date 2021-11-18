@@ -166,18 +166,6 @@
     "expanded": false,
     "filters": [
       {
-        "name": "Spacegroup Symbol",
-        "id": "spacegroup_symbol",
-        "tooltip": "The spacegroup symbol for the lattice",
-        "type": "SELECT_SPACEGROUP_SYMBOL"
-      },
-      {
-        "name": "Spacegroup Number",
-        "id": "spacegroup_number",
-        "tooltip": "The spacegroup number for the lattice",
-        "type": "SELECT_SPACEGROUP_NUMBER"
-      },
-      {
         "name": "Crystal System",
         "id": "crystal_system",
         "tooltip": "The crystal system for the lattice",

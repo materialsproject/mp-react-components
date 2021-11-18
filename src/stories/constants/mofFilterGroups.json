@@ -74,13 +74,6 @@
     "expanded": false,
     "filters": [
       {
-        "name": "Space Group Symbol",
-        "id": "data__spacegroup",
-        "tooltip": "The space group symbol for the lattice",
-        "type": "SELECT_SPACEGROUP_SYMBOL",
-        "operatorSuffix": "__exact"
-      },
-      {
         "name": "Crystal System",
         "id": "data__spacegroupCrystal",
         "tooltip": "The crystal system for the lattice",
