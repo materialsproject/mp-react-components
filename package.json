@@ -106,6 +106,7 @@
     "@rollup/plugin-image": "^2.0.6",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-url": "^6.0.0",
+    "@storybook/addon-docs": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
     "@storybook/addon-knobs": "6.2.9",
     "@storybook/addon-links": "^6.3.8",

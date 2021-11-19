@@ -1,5 +1,14 @@
 import React from 'react';
 import { Story } from '@storybook/react';
+import {
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  ArgsTable,
+  Stories,
+  PRIMARY_STORY
+} from '@storybook/addon-docs';
 import { SearchUI, SearchUIProps } from '../components/data-display/SearchUI';
 import columns from './constants/columns.json';
 import filterGroups from './constants/filterGroups.json';
@@ -10,7 +19,22 @@ import { PeriodicTableMode } from '../components/data-entry/MaterialsInput/Mater
 
 export default {
   component: SearchUI,
-  title: 'Data-Display/SearchUI'
+  title: 'Data-Display/SearchUI',
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <Subtitle />
+          <Description />
+          <Primary />
+          <ArgsTable story={PRIMARY_STORY} />
+          <div>Test~~~~~~~~~~~~~~~~</div>
+          <Stories />
+        </>
+      )
+    }
+  }
 };
 
 const Template: Story<SearchUIProps> = (args) => <SearchUI {...args} />;
@@ -56,6 +80,11 @@ FullyFeatured.args = {
 };
 
 export const WithMPContribsData = Template.bind({});
+WithMPContribsData.parameters = {
+  docs: {
+    storyDescription: `Imagine this to be a much longer block of text that spans several lines.`
+  }
+};
 WithMPContribsData.args = {
   disableRichColumnHeaders: true,
   isContribs: true,

@@ -143,7 +143,7 @@ export interface SearchState extends SearchUIProps {
 
 export enum SearchUIViewType {
   TABLE = 'table',
-  CARDS = 'cards',
+  // CARDS = 'cards',
   SYNTHESIS = 'synthesis'
 }
 

@@ -286,7 +286,7 @@ export interface SearchUIProps {
   /**
    * Optionally enable/disable switching between SearchUI result views
    */
-  allowViewSwitching?: boolean;
+  // allowViewSwitching?: boolean;
 
   /**
    * Set of options for configuring what is displayed in the result cards
@@ -303,7 +303,7 @@ export interface SearchUIProps {
       ],
     }
    */
-  cardOptions?: any;
+  // cardOptions?: any;
   isContribs?: boolean;
   debounce?: number;
   /**
