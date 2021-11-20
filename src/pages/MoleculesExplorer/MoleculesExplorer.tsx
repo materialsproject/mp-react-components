@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 /**
@@ -15,7 +15,7 @@ export const MoleculesExplorer: React.FC = () => {
       <h1 className="title is-1">Molecules Explorer</h1>
       <SearchUI
         resultLabel="molecule"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/molecules/' : ''
@@ -31,11 +31,6 @@ export const MoleculesExplorer: React.FC = () => {
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         sortField="IE"
         sortAscending={false}
-        allowViewSwitching
-        cardOptions={{
-          levelOneKey: 'task_id',
-          levelTwoKey: 'formula_pretty'
-        }}
       />
     </>
   );

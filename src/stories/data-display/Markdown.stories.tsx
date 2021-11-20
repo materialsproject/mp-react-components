@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story } from '@storybook/react';
-import { Markdown } from '../components/data-display/Markdown';
-import { MarkdownProps } from '../components/data-display/Markdown/Markdown';
+import { Markdown } from '../../components/data-display/Markdown';
+import { MarkdownProps } from '../../components/data-display/Markdown/Markdown';
 
 export default {
   component: Markdown,

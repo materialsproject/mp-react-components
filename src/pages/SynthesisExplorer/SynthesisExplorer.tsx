@@ -1,6 +1,10 @@
 import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
-import { FilterGroup, SearchUIViewType } from '../../components/data-display/SearchUI/types';
+import {
+  Column,
+  FilterGroup,
+  SearchUIViewType
+} from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
@@ -15,7 +19,7 @@ export const SynthesisExplorer: React.FC = () => {
       <h1 className="title">Synthesis Explorer</h1>
       <SearchUI
         resultLabel="synthesis recipe"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/synthesis/' : ''

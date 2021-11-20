@@ -264,30 +264,30 @@ export const SearchUIDataHeader: React.FC = () => {
     />
   ) : null;
 
-  const viewSwitcher = state.allowViewSwitching ? (
-    <div className="field has-addons">
-      <div className="control">
-        <button
-          onClick={() => actions.setView('table')}
-          className={classNames('button', {
-            'is-active': state.view === 'table'
-          })}
-        >
-          <FaTable />
-        </button>
-      </div>
-      <div className="control">
-        <button
-          onClick={() => actions.setView('cards')}
-          className={classNames('button', {
-            'is-active': state.view === 'cards'
-          })}
-        >
-          <FaThLarge />
-        </button>
-      </div>
-    </div>
-  ) : null;
+  // const viewSwitcher = state.allowViewSwitching ? (
+  //   <div className="field has-addons">
+  //     <div className="control">
+  //       <button
+  //         onClick={() => actions.setView('table')}
+  //         className={classNames('button', {
+  //           'is-active': state.view === 'table'
+  //         })}
+  //       >
+  //         <FaTable />
+  //       </button>
+  //     </div>
+  //     <div className="control">
+  //       <button
+  //         onClick={() => actions.setView('cards')}
+  //         className={classNames('button', {
+  //           'is-active': state.view === 'cards'
+  //         })}
+  //       >
+  //         <FaThLarge />
+  //       </button>
+  //     </div>
+  //   </div>
+  // ) : null;
 
   return (
     <div id={componentHtmlId} className="mpc-search-ui-data-header box">
@@ -304,7 +304,7 @@ export const SearchUIDataHeader: React.FC = () => {
           )}
         </div>
         <div className="mpc-search-ui-data-header-controls">
-          {viewSwitcher}
+          {/* {viewSwitcher} */}
           {/* {sortMenu} */}
           {columnsMenu}
           {/* {resultsPerPageMenu} */}

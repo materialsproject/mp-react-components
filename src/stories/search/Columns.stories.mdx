@@ -1,0 +1,135 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs';
+import { ColumnInterface } from '../type-components';
+
+<Meta title="Search UI/Columns" />
+
+# SearchUI Columns
+
+The `SearchUI` component requires a `columns` prop that defines a list of columns to query for and how to render them.
+Below are all the options available in a column definition object.
+
+<ArgsTable of={ColumnInterface} />
+
+## Example
+
+```js
+[
+  {
+    title: 'Synthesizable',
+    selector: 'theoretical',
+    formatType: 'BOOLEAN_CLASS',
+    formatOptions: {
+      truthyClass: '',
+      falsyClass: 'fas fa-star'
+    },
+    cellTooltip: 'Experimentally observed',
+    hideName: true,
+    width: '30px'
+  },
+  {
+    title: 'Material ID',
+    selector: 'material_id',
+    formatType: 'LINK',
+    formatOptions: {
+      baseUrl: '/materials/'
+    },
+    minWidth: '130px'
+  },
+  {
+    title: 'Formula',
+    selector: 'formula_pretty',
+    formatType: 'FORMULA',
+    minWidth: '130px'
+  },
+  {
+    title: 'Crystal System',
+    selector: 'symmetry.crystal_system'
+  },
+  {
+    title: 'Space Group Symbol',
+    selector: 'symmetry.symbol',
+    formatType: 'SPACEGROUP_SYMBOL',
+    tooltip: 'The space group symbol for the lattice'
+  },
+  {
+    title: 'Space Group Number',
+    selector: 'symmetry.number',
+    right: true
+  },
+  {
+    title: 'Volume',
+    selector: 'volume',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    units: '\u00c5\u00b3',
+    omit: true,
+    right: true
+  },
+  {
+    title: 'Density',
+    selector: 'density',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    units: 'cm\u00b3',
+    omit: true,
+    right: true
+  },
+  {
+    title: 'Sites',
+    selector: 'nsites',
+    right: true
+  },
+  {
+    title: 'Energy Above Hull',
+    selector: 'energy_above_hull',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    units: 'meV/atom',
+    conversionFactor: 1000,
+    abbreviateNearZero: true,
+    right: true
+  },
+  {
+    title: 'Formation Energy',
+    selector: 'formation_energy_per_atom',
+    formatType: 'SIGNIFICANT_FIGURES',
+    formatOptions: {
+      sigFigs: 3
+    },
+    units: 'eV/atom',
+    omit: true,
+    right: true
+  },
+  {
+    title: 'Predicted Stable',
+    selector: 'is_stable',
+    formatType: 'BOOLEAN',
+    formatOptions: {
+      truthyLabel: 'yes',
+      falsyLabel: 'no'
+    },
+    omit: true,
+    right: false
+  },
+  {
+    title: 'Magnetic Ordering',
+    selector: 'ordering',
+    omit: true
+  },
+  {
+    title: 'Max Magnetic Moment',
+    selector: 'total_magnetization',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    omit: true
+  }
+];
+```

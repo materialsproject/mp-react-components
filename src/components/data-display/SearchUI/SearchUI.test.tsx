@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { SearchUI, SearchUIProps } from '.';
-import { FilterGroup } from './types';
+import { Column, FilterGroup } from './types';
 import filterGroups from '../../../mocks/constants/materialsFilterGroups.json';
 import columns from '../../../mocks/constants/materialsColumns.json';
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
@@ -12,7 +12,7 @@ jest.setTimeout(30000);
 
 const defaultProps = {
   resultLabel: 'material',
-  columns: columns,
+  columns: columns as Column[],
   filterGroups: filterGroups as FilterGroup[],
   apiEndpoint: process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + 'search/' : '',
   autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL

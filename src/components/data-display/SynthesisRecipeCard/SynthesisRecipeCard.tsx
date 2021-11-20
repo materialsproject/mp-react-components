@@ -8,6 +8,7 @@ import { validateFormula, validateRangedFormula } from '../../data-entry/Materia
 import { PublicationButton } from '../../publications/PublicationButton';
 import { DataBlock } from '../../data-display/DataBlock';
 import { Formula } from '../Formula';
+import { ColumnFormat } from '../SearchUI/types';
 
 interface Props {
   id?: string;
@@ -195,9 +196,9 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
       }}
       columns={[
         {
-          name: 'Target Material',
+          title: 'Target Material',
           selector: 'targetFormulaLink',
-          format: 'LINK',
+          formatType: 'LINK' as ColumnFormat,
           formatOptions: {
             linkLabelKey: 'targetFormula',
             linkLabelisFormula: true,
@@ -208,9 +209,9 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
           maxWidth: '250px'
         },
         {
-          name: 'Precursor Materials',
+          title: 'Precursor Materials',
           selector: 'precursorFormulas',
-          format: 'ARRAY',
+          formatType: 'ARRAY' as ColumnFormat,
           formatOptions: {
             arrayLinksKey: 'precursorFormulaLinks',
             arrayLinksTarget: ''
@@ -218,23 +219,23 @@ export const SynthesisRecipeCard: React.FC<Props> = (props) => {
           isTop: true
         },
         {
-          name: 'Paragraph Excerpt',
+          title: 'Paragraph Excerpt',
           selector: 'paragraph',
           isBottom: true
         },
         {
-          name: 'Reaction Equation',
+          title: 'Reaction Equation',
           selector: 'reactionString',
           isBottom: true
         },
         {
-          name: 'Synthesis Procedures',
+          title: 'Synthesis Procedures',
           selector: 'synthesisProcedures',
-          format: 'ARRAY',
+          formatType: 'ARRAY' as ColumnFormat,
           isBottom: true
         },
         {
-          name: 'Synthesis Type',
+          title: 'Synthesis Type',
           selector: 'synthesisType',
           isBottom: true
         }

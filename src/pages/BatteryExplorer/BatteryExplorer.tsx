@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 /**
@@ -16,7 +16,7 @@ export const BatteryExplorer: React.FC = () => {
       <h1 className="title is-1">Battery Explorer</h1>
       <SearchUI
         resultLabel="battery"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL
