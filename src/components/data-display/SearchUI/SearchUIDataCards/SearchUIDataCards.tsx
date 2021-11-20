@@ -4,6 +4,7 @@ import { Paginator } from '../../Paginator';
 import { DataCard } from '../../DataCard';
 
 /**
+ * NOT IMPLEMENTED
  * Component for rendering SearchUI results in the cards view
  * Will use the DataCard component to render results as a grid
  * of cards where each shows an image and a few select data properties.
@@ -27,7 +28,7 @@ export const SearchUIDataCards: React.FC = () => {
   return (
     <div data-testid="mpc-search-ui-data-cards" className="mpc-search-ui-data-cards">
       <CustomPaginator />
-      <div className="mpc-search-ui-data-cards-container">
+      {/* <div className="mpc-search-ui-data-cards-container">
         {state.results.map((d, i) => (
           <DataCard
             key={`mpc-data-card-${i}`}
@@ -45,7 +46,7 @@ export const SearchUIDataCards: React.FC = () => {
             }
           />
         ))}
-      </div>
+      </div> */}
       <CustomPaginator />
     </div>
   );

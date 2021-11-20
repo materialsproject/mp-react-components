@@ -24,7 +24,7 @@ const getColumnsFromKeys = (data: object): Column[] => {
   const keys = Object.keys(data);
   return keys.map((key) => {
     return {
-      name: key,
+      title: key,
       selector: key
     };
   });

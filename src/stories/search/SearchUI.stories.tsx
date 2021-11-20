@@ -9,17 +9,17 @@ import {
   Stories,
   PRIMARY_STORY
 } from '@storybook/addon-docs';
-import { SearchUI, SearchUIProps } from '../components/data-display/SearchUI';
-import columns from './constants/columns.json';
-import filterGroups from './constants/filterGroups.json';
-import mofColumns from './constants/mofColumns.json';
-import mofFilterGroups from './constants/mofFilterGroups.json';
-import { Column, FilterGroup } from '../components/data-display/SearchUI/types';
-import { PeriodicTableMode } from '../components/data-entry/MaterialsInput/MaterialsInput';
+import { SearchUI, SearchUIProps } from '../../components/data-display/SearchUI';
+import columns from '../constants/columns.json';
+import filterGroups from '../constants/filterGroups.json';
+import mofColumns from '../constants/mofColumns.json';
+import mofFilterGroups from '../constants/mofFilterGroups.json';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
+import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 export default {
   component: SearchUI,
-  title: 'Data-Display/SearchUI',
+  title: 'Search UI/SearchUI Component',
   parameters: {
     docs: {
       page: () => (
@@ -29,7 +29,6 @@ export default {
           <Description />
           <Primary />
           <ArgsTable story={PRIMARY_STORY} />
-          <div>Test~~~~~~~~~~~~~~~~</div>
           <Stories />
         </>
       )

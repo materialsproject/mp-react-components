@@ -103,26 +103,115 @@ export enum ColumnFormat {
   ARRAY = 'ARRAY'
 }
 
+/**
+ * Options for columns that are passed through `initColumns()`.
+ */
 export interface Column {
+  /**
+   * Human readable title to display with the column
+   */
   title: string | number;
+  /**
+   * Name of the property that this column should pull its value from
+   */
   selector: string;
+  /**
+   * A specified format type that will run the values in this column
+   * through the corresponding format function.
+   */
   formatType?: ColumnFormat;
+  /**
+   * Object of extra options that are used in conjunction with the formatType.
+   * The properties that you can supply to formatOptions are specific to each
+   * formatType. See `ColumnFormat` documentation for more information.
+   */
+  formatOptions?: any;
+  /**
+   * Units string to display underneath the column title.
+   */
   units?: string;
+  /**
+   * Number by which to multiply all values in the column by.
+   */
   conversionFactor?: number;
+  /**
+   * If true, the minimum displayable value will be determined by the number of decimals
+   * set in `formatOptions`. For example, if `decimals` is `2` then the minimum displayable
+   * value will be `0.01` and all values less than that will display as `< 0.01`.
+   */
   abbreviateNearZero?: boolean;
-  /** Hides column from table AND column selector but includes in data */
+  /**
+   * If true, column is hidden from table and column selector but is included in data
+   */
   hidden?: boolean;
-  /** Hides column from table AND column selector but includes in data */
-  hiddenTop?: boolean;
-  /** Hides column from table AND column selector but includes in data */
-  hiddenBottom?: boolean;
+  /**
+   * If true, column is hidden from table but is selectable from the column selector
+   */
+  omit?: boolean;
+  /**
+   * (`DataCard` only) column is visible in top section of `DataCard` and hidden from bottom
+   */
+  isTop?: boolean;
+  /**
+   * (`DataCard` only) column is visible in bottom section of `DataCard` and hidden from top
+   */
+  isBottom?: boolean;
+  /**
+   * Fixed width for the column with units e.g. `"100px"`
+   */
+  width?: string;
+  /**
+   * Minimum width for the column with units e.g. `"100px"`
+   */
+  minWidth?: string;
+  /**
+   * Maximum width for the column with units e.g. `"100px"`
+   */
+  maxWidth?: string;
+  /**
+   * Tooltip string to show on column title hover
+   */
+  tooltip?: string;
+  /**
+   * Right align the column
+   */
+  right?: boolean;
+  /**
+   * Center align the column
+   */
+  center?: boolean;
+  /**
+   * Set whether you can sort by column. Defaults to `true`.
+   */
+  sortable?: boolean;
+  /**
+   * Allows you to customize the css of the cell using css-in-js style objects
+   */
+  style?: any;
   [id: string]: any;
 }
 
+/**
+ * Object to specifiy conditional row styles for a DataTable or SearchUI component
+ */
 export interface ConditionalRowStyle {
+  /**
+   * Name of the data property to use for the condition
+   */
   selector: string;
+  /**
+   * Value that meets the condition
+   */
   value: any;
+  /**
+   * object of styles supplied in "CSS-in-JS" format
+   */
   style: any;
+  /**
+   * Condition function to determine if row should have the specified styles.
+   * This is property is not used in the context of a `SearchUI` component.
+   * Instead, the row is styled if the row's selector field equals the specified value.
+   */
   when?: (row: any) => any;
 }
 
@@ -141,6 +230,13 @@ export interface SearchState extends SearchUIProps {
   searchBarValue?: string;
 }
 
+/**
+ * To add a new view type, head to SearchUI/types and add the name of the type to the
+ * SearchUIViewType enum, then add a property in searchUIViewsMap using the same name
+ * you used for the type, then provide your custom view component as the value.
+ * The view component should consume the SearchUIContext state using the useSearchUIContext hook.
+ * See SearchUIDataTable or SearchUIDataCards for example view components.
+ */
 export enum SearchUIViewType {
   TABLE = 'table',
   // CARDS = 'cards',
@@ -151,6 +247,6 @@ export type SearchUIViewTypeMap = Partial<Record<SearchUIViewType, any>>;
 
 export const searchUIViewsMap: SearchUIViewTypeMap = {
   table: SearchUIDataTable,
-  cards: SearchUIDataCards,
+  // cards: SearchUIDataCards,
   synthesis: SearchUISynthesisRecipeCards
 };

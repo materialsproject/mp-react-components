@@ -1,11 +1,11 @@
 import React from 'react';
 import { Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { MaterialsInput, MaterialsInputProps } from '../components/data-entry/MaterialsInput';
+import { MaterialsInput, MaterialsInputProps } from '../../components/data-entry/MaterialsInput';
 import {
   MaterialsInputType,
   PeriodicTableMode
-} from '../components/data-entry/MaterialsInput/MaterialsInput';
+} from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 export default {
   component: MaterialsInput,
