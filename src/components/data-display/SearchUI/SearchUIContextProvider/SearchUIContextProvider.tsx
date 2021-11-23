@@ -83,12 +83,19 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortField,
-        sortAscending,
-        page: 1
-      }));
+      setState((currentState) => {
+        let secondarySortField = currentState.secondarySortField;
+        if (sortField === secondarySortField) {
+          secondarySortField = undefined;
+        }
+        return {
+          ...currentState,
+          sortField,
+          sortAscending,
+          secondarySortField,
+          page: 1
+        };
+      });
     },
     setSortField: (sortField: string) => {
       setState((currentState) => ({
@@ -260,22 +267,31 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
         const limitKey = currentState.isContribs ? '_limit' : 'limit';
         const skipKey = currentState.isContribs ? '_skip' : 'skip';
-        const sortKey = currentState.isContribs ? '_sort' : 'sort_field';
+        const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
 
         params[fieldsKey] = currentState.columns.map((d) => d.selector);
         params[limitKey] = currentState.resultsPerPage;
         params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
         query.set(limitKey, params[limitKey]);
         query.set(skipKey, params[skipKey]);
+
+        /**
+         * Convert sort props to syntax expected by API.
+         * Descending fields are prepended with "-".
+         * Secondary sort field is added with a comma separator.
+         */
+        let secondarySort: string | undefined;
+        if (currentState.secondarySortField) {
+          secondarySort = currentState.secondarySortAscending
+            ? currentState.secondarySortField
+            : `-${currentState.secondarySortField}`;
+        }
+
         if (currentState.sortField) {
-          params[sortKey] = currentState.sortField;
-          if (currentState.isContribs) {
-            const sortDirection = currentState.sortAscending ? '+' : '-';
-            params[sortKey] = sortDirection + currentState.sortField;
-          } else {
-            params.ascending = currentState.sortAscending;
-            query.set('ascending', params.ascending);
-          }
+          let primarySort = currentState.sortAscending
+            ? currentState.sortField
+            : `-${currentState.sortField}`;
+          params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
           query.set(sortKey, params[sortKey]);
         }
 

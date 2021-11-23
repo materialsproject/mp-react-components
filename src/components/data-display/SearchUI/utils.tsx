@@ -595,13 +595,31 @@ export const initSearchState = (
 
   const urlLimit = query.get('limit');
   const urlSkip = query.get('skip');
-  const urlSortField = query.get('sort_field');
-  const urlAscending = query.get('ascending');
+  const urlSortFields = query.get('sort_fields');
 
   if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
   if (urlSkip) initialState.page = parseInt(urlSkip) / initialState.resultsPerPage + 1;
-  if (urlSortField) initialState.sortField = urlSortField;
-  if (urlAscending) initialState.sortAscending = urlAscending === 'true' ? true : false;
+
+  /** Serialize sort params from API syntax to SearchUI props */
+  if (urlSortFields) {
+    const sortFields = urlSortFields.split(',');
+    const sortFieldSplitDesc = sortFields[0].split('-');
+    initialState.sortField =
+      sortFieldSplitDesc.length === 1 ? sortFieldSplitDesc[0] : sortFieldSplitDesc[1];
+    initialState.sortAscending = sortFieldSplitDesc.length === 1;
+    initialState.secondarySortField = sortFields[1] || undefined;
+    if (sortFields[1]) {
+      const secondaryFieldSplitDesc = sortFields[1].split('-');
+      const secondaryField =
+        secondaryFieldSplitDesc.length === 1
+          ? secondaryFieldSplitDesc[0]
+          : secondaryFieldSplitDesc[1];
+      initialState.secondarySortField =
+        secondaryField !== initialState.sortField ? secondaryField : undefined;
+      initialState.secondarySortAscending =
+        initialState.secondarySortField !== undefined && secondaryFieldSplitDesc.length === 1;
+    }
+  }
 
   return getSearchState(initialState);
 };

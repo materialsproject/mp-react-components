@@ -173,6 +173,19 @@ export interface SearchUIProps {
   sortAscending?: boolean;
 
   /**
+   * Optionally include a secondary sort field. If the sortField ever becomes the same as
+   * the secondarySortField, the secondary field is removed.
+   * Must be a valid field and included in your list of columns.
+   */
+  secondarySortField?: string;
+
+  /**
+   * If including a secondarySortField, set whether it should ascend by default.
+   * True for ascending, False for descending.
+   */
+  secondarySortAscending?: boolean;
+
+  /**
    * List of conditions for styling rows based on a property (selector) and a value.
    * Note that this prop currently only supports checking for
    * value equivalence (i.e. row[selector] === value).

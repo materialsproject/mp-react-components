@@ -51,8 +51,10 @@ export const MaterialsExplorer: React.FC = () => {
         }
         apiKey={undefined}
         hasSortMenu={true}
-        sortField="formula_pretty"
+        sortField="energy_above_hull"
         sortAscending={true}
+        secondarySortField="formula_pretty"
+        secondarySortAscending={true}
         searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
         searchBarPlaceholder="e.g. Li-Fe or Li,Fe or Li3Fe or mp-19017"
         // searchBarPlaceholder="Search by elements, formula, or Material ID"
