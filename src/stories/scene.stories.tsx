@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   s2,
   s2 as sceneJson,
-  shperes as sceneJson2,
+  shperes as sceneJson2
 } from '../components/crystal-toolkit/scene/simple-scene';
 import JSONViewComponent from '../components/crystal-toolkit/JSONViewComponent.react';
 import { CrystalToolkitScene } from '../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
@@ -78,7 +78,7 @@ export const animatedScene = () => (
       renderer: Renderer.WEBGL,
       extractAxis: false,
       isMultiSelectionEnabled: false,
-      secondaryObjectView: true,
+      secondaryObjectView: true
     }}
     data={s2}
     debug={false}
@@ -101,7 +101,7 @@ export const tubeScene = () => (
         renderer: Renderer.WEBGL,
         extractAxis: false,
         isMultiSelectionEnabled: false,
-        secondaryObjectView: true,
+        secondaryObjectView: true
       }}
       data={object('scene', bezierScene)}
       debug={false}
@@ -111,7 +111,7 @@ export const tubeScene = () => (
 
 export default {
   component: CrystalToolkitScene,
-  title: 'Crystal-toolkit',
+  title: 'Crystal Toolkit/Crystal-toolkit',
   decorators: [withKnobs],
-  stories: [],
+  stories: []
 };
