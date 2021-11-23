@@ -95,6 +95,6 @@ const defaultProps = {
     }
   ] as Column[],
   footer: <div>Footer</div>,
-  iconClasstitle: 'fas fa-pizza-slice',
+  iconClassName: 'fas fa-pizza-slice',
   iconTooltip: 'Pizza'
 };
