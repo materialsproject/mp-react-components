@@ -27,28 +27,58 @@ export enum FilterType {
 }
 
 export interface Filter {
+  /**
+   * Name of the filter that will be rendered above its input component
+   */
   name: string;
+  /**
+   * Exact and unique name of the parameter in the API that this filter should query.
+   * If the parameter has a suffix such as "_min" or "__exact", the id should be the
+   * name of the parameter without the suffix.
+   */
   id: string;
+  /**
+   * The type of filter component to use. Must be one of the pre-determined filter type strings
+   * which maps to a component. See `FilterType` documentation for more information.
+   */
   type: FilterType;
+  /**
+   * Whether this filter is active or not. This is handled by the `SearchUI` dynamically so
+   * should generally not be used in configuration.
+   */
   active?: boolean;
+  /**
+   * Number by which to multiply the filter value by before it is added to the API query.
+   */
   conversionFactor?: number;
+  /**
+   * Units used in this filter. Can be a unicode string.
+   */
   units?: string;
+  /**
+   * An object of filter options that is dependent on the filter type used.
+   * See `FilterType` documentation for more information about which props can be used
+   * for specific filter types.
+   */
   props?: any;
+  /**
+   * Tooltip to display when hovering over the filter name
+   */
   tooltip?: string;
   /**
    * Suffix to append to the id for the lower bound
-   * of a range filter (SearchUI defaults to "_min").
+   * of a range filter (`SearchUI` defaults to "_min").
    */
   minSuffix?: string;
   /**
    * Suffix to append to the id for the upper bound
-   * of a range filter (SearchUI defaults to "_max").
+   * of a range filter (`SearchUI` defaults to "_max").
    */
   maxSuffix?: string;
   /**
-   * Suffix to append to the id for a TEXT_INPUT or MATERIALS_INPUT filter.
+   * Suffix to append to the id for a `TEXT_INPUT` or `MATERIALS_INPUT` filter.
    * This enables you to use different operators like
-   * '__contains' or '__exact'
+   * "\__contains" or "\__exact"
    */
   operatorSuffix?: string;
   /**
@@ -65,9 +95,21 @@ export interface Filter {
 }
 
 export interface FilterGroup {
+  /**
+   * Name of the group that will be rendered in the panel
+   */
   name: string;
+  /**
+   * If true, the filter group will be expanded on load
+   */
   expanded?: boolean;
+  /**
+   * If true, the filter group will not be collapsible
+   */
   alwaysExpanded?: boolean;
+  /**
+   * List of filters to render inside of the filter group
+   */
   filters: Filter[];
 }
 
@@ -92,12 +134,12 @@ export interface ActiveFilter {
 export type FilterValues = Partial<Record<string, any>>;
 
 export enum ColumnFormat {
-  FIXED_DECIMAL = 'FIXED_DECIMAL', // formatArg: integer representing number of decimals to round to
-  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES', // formatArg: integer representing the number of significant figures
-  FORMULA = 'FORMULA', // formatArg: none
-  LINK = 'LINK', // formatArg: string to prefix column value in link (e.g. '/materials/')
-  BOOLEAN = 'BOOLEAN', // formatArg: array with two items for display values, first item is for truthy, second item is for falsy (e.g. ['yes', 'no'])
-  BOOLEAN_CLASS = 'BOOLEAN_CLASS', // formatArg: class name string to add to element within cell
+  FIXED_DECIMAL = 'FIXED_DECIMAL',
+  SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES',
+  FORMULA = 'FORMULA',
+  LINK = 'LINK',
+  BOOLEAN = 'BOOLEAN',
+  BOOLEAN_CLASS = 'BOOLEAN_CLASS',
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
   ARRAY = 'ARRAY'
