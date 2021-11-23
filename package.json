@@ -146,7 +146,7 @@
     "jest": "^25.5.4",
     "jsdom": "^16.4.0",
     "less": "^3.13.1",
-    "less-loader": "^6.2.0",
+    "less-loader": "^10.2.0",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.2.1",
     "pretty-quick": "^2.0.2",
