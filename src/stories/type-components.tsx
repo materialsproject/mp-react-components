@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Column,
   ConditionalRowStyle,
+  Filter,
   FilterGroup
 } from '../components/data-display/SearchUI/types';
 
@@ -15,6 +16,14 @@ import {
  */
 
 export const ColumnInterface: React.FC<Column> = (props) => {
+  return <></>;
+};
+
+export const FilterGroupInterface: React.FC<FilterGroup> = (props) => {
+  return <></>;
+};
+
+export const FilterInterface: React.FC<Filter> = (props) => {
   return <></>;
 };
 

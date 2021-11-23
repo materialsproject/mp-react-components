@@ -9,7 +9,13 @@ export const parameters = {
     storySort: {
       order: [
         'Search UI',
-        ['SearchUI Component', 'Columns', 'Conditional Row Styles', 'Allowed Input Types Map']
+        [
+          'SearchUI Component',
+          'Columns',
+          'Filters',
+          'Conditional Row Styles',
+          'Allowed Input Types Map'
+        ]
       ]
     }
   }
