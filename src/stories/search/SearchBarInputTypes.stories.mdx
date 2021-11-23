@@ -1,0 +1,39 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs';
+import { ConditionalRowStyleInterface } from '../type-components';
+
+<Meta title="Search UI/Search Bar Input Types" />
+
+# Search Bar Input Types
+
+The `SearchUI` component accepts a prop called `searchBarAllowedInputTypesMap` to control which kinds of inputs
+should be allowed in the search bar and map the different input types to filter fields in the API being queried.
+The search bar can handle multiple input types and thus can query different fields depending on the input type
+that is detected. This prop determines which API fields to use when a certain input type is detected. Note that
+this mapping is 1-to-1, i.e. you can only query one field per input type.
+
+In the object you supply to this prop, the top-level keys are the allowed input types. Those keys should be assigned to objects with
+only one property: `field`. The `field` property should be the name of the filter field used in the API.
+
+The possible input types (keys) are:
+
+- formula
+- elements
+- mpid
+- smiles
+- text
+
+## Example
+
+```js
+{
+  formula: {
+    field: 'formula'
+  },
+  elements: {
+    field: 'elements'
+  },
+  mpid: {
+    field: 'material_ids'
+  }
+}
+```
