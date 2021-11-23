@@ -71,3 +71,7 @@ pre {
   color: inherit;
   font-size: inherit;
 }
+
+.maybe-class-name {
+  color: #ffffb6;
+}

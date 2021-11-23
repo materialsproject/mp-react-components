@@ -209,8 +209,8 @@ export interface ConditionalRowStyle {
   style: any;
   /**
    * Condition function to determine if row should have the specified styles.
-   * This is property is not used in the context of a `SearchUI` component.
-   * Instead, the row is styled if the row's selector field equals the specified value.
+   * NOT USED for `SearchUI` component.
+   * The `SearchUI` component will style the row if the row's selector field equals the specified value.
    */
   when?: (row: any) => any;
 }

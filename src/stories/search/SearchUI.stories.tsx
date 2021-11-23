@@ -19,21 +19,7 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
 
 export default {
   component: SearchUI,
-  title: 'Search UI/SearchUI Component',
-  parameters: {
-    docs: {
-      page: () => (
-        <>
-          <Title />
-          <Subtitle />
-          <Description />
-          <Primary />
-          <ArgsTable story={PRIMARY_STORY} />
-          <Stories />
-        </>
-      )
-    }
-  }
+  title: 'Search UI/SearchUI Component'
 };
 
 const Template: Story<SearchUIProps> = (args) => <SearchUI {...args} />;
@@ -79,11 +65,6 @@ FullyFeatured.args = {
 };
 
 export const WithMPContribsData = Template.bind({});
-WithMPContribsData.parameters = {
-  docs: {
-    storyDescription: `Imagine this to be a much longer block of text that spans several lines.`
-  }
-};
 WithMPContribsData.args = {
   disableRichColumnHeaders: true,
   isContribs: true,
