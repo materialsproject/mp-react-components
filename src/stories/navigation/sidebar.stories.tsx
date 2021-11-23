@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scrollspy } from '../components/navigation/Scrollspy';
+import { Scrollspy } from '../../components/navigation/Scrollspy';
 
 const menuContent = [
   {
@@ -62,5 +62,5 @@ export const SidebarScrollspy = () => (
 
 export default {
   component: Scrollspy,
-  title: 'Sidebar'
+  title: 'Navigation/Sidebar'
 };

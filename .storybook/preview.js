@@ -15,7 +15,8 @@ export const parameters = {
           'Filters',
           'Conditional Row Styles',
           'Allowed Input Types Map'
-        ]
+        ],
+        'Data-Entry'
       ]
     }
   }
