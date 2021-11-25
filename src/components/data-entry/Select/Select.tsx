@@ -3,13 +3,12 @@ import { default as ReactSelect } from 'react-select';
 import './Select.css';
 import classNames from 'classnames';
 
-/**
- * Wrapper component for react-select
- * Automatically adds the wrapper class "react-select-container"
- * and the class prefix "react-select-" to all the elements created by react-select
- */
+interface SelectOption {
+  label: string;
+  value: any;
+}
 
-interface Props {
+export interface SelectProps {
   [id: string]: any;
   onChange?: (value: any) => any;
   /**
@@ -27,9 +26,24 @@ interface Props {
    * properties change
    */
   setProps?: (value: any) => any;
+  /**
+   * The current or initial selected value.
+   * This can be the raw value or a full option object.
+   */
+  value?: any;
+  /**
+   * List of options to display in the dropdown.
+   * Each option should be an object with a `label` and a `value`.
+   */
+  options: SelectOption[];
 }
 
-export const Select: React.FC<Props> = (props) => {
+/**
+ * Wrapper component for react-select.
+ * Automatically adds the wrapper class "react-select-container"
+ * and the class prefix "react-select-" to all the elements created by react-select.
+ */
+export const Select: React.FC<SelectProps> = (props) => {
   const { arbitraryProps, ...otherProps } = props;
 
   /** Attach object of arbitraryProps to the main props object */
@@ -41,7 +55,7 @@ export const Select: React.FC<Props> = (props) => {
    * Value or defaultValue can be passed in as a full option object (as required by react-select)
    * or as a simple value.
    */
-  let selected = props.options.find((option) => {
+  let selected: SelectOption | null | undefined = props.options.find((option) => {
     if (props.value) {
       return option.value === props.value || option === props.value;
     } else if (props.defaultValue) {
