@@ -3,7 +3,7 @@ import { default as ReactSelect } from 'react-select';
 import './Select.css';
 import classNames from 'classnames';
 
-interface SelectOption {
+export interface SelectOption {
   label: string;
   value: any;
 }
