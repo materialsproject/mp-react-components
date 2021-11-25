@@ -10,12 +10,36 @@ const STEPDEF = 0.1;
 const MIN = -100;
 const MAX = 30000;
 
-interface Props {
+export interface DualRangeSliderProps {
+  /**
+   * Array with the minimum and maximum possible values.
+   * Note that the domain bounds will be made "nice" so that
+   * the slider ticks can be placed on easy-to-read numbers.
+   */
   domain: number[];
+  /**
+   * Array with the initial min and max values that the slider
+   * should be set to.
+   */
   initialValues: number[];
+  /**
+   * Number by which the slider handles should move with each step.
+   * Defaults to 1.
+   */
   step: number;
+  /**
+   * Number of milliseconds that should pass between typing into the slider
+   * number input and the slider handles updating.
+   */
   debounce?: number;
+  /**
+   * Function to call when slider values change.
+   */
   onChange?: (values: number[]) => void;
+  /**
+   * Function to call when the slider props change.
+   * This can be used to lift the new "nice" domain upwards.
+   */
   onPropsChange?: (props: any) => void;
 }
 
@@ -55,7 +79,10 @@ const niceInitialValues = (vals, domain, niceDomain) => {
   }
 };
 
-export const DualRangeSlider: React.FC<Props> = ({
+/**
+ * Slider input with controls for both the minimum and maximum bounds.
+ */
+export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   domain = [0, 100],
   step = 1,
   initialValues = domain.slice(),
