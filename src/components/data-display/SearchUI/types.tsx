@@ -197,11 +197,11 @@ export interface Column {
    */
   omit?: boolean;
   /**
-   * (`DataCard` only) column is visible in top section of `DataCard` and hidden from bottom
+   * Column is visible in top section of `DataBlock` and hidden from bottom (`DataBlock` only)
    */
   isTop?: boolean;
   /**
-   * (`DataCard` only) column is visible in bottom section of `DataCard` and hidden from top
+   * Column is visible in bottom section of `DataBlock` and hidden from top (`DataBlock` only)
    */
   isBottom?: boolean;
   /**

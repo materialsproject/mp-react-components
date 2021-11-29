@@ -3,7 +3,7 @@ import React, { ReactNode, useState } from 'react';
 import './Modal.css';
 import { useModalContext } from './ModalContextProvider';
 
-interface Props {
+export interface ModalProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -25,7 +25,7 @@ interface Props {
 /**
  * Render modal that can be opened by a ModalTrigger within its same ModalContextProvider
  */
-export const Modal: React.FC<Props> = (props) => {
+export const Modal: React.FC<ModalProps> = (props) => {
   const { active, setActive, forceAction } = useModalContext();
   return (
     <div
