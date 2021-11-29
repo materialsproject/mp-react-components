@@ -8,16 +8,56 @@ import { initColumns } from '../SearchUI/utils';
 import { Tooltip } from '../../data-display/Tooltip';
 import './DataBlock.css';
 
-interface Props {
+export interface DataBlockProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
   setProps?: (value: any) => any;
+  /**
+   * Class name(s) to append to the component's default class (`mpc-data-block`)
+   */
   className?: string;
+  /**
+   * Object to render inside the data block.
+   * A key value must be a string, number, or array of strings/numbers.
+   * Key values cannot be objects.
+   */
   data: object;
+  /**
+   * An array of column definition objects to control how keys/values are rendered in the data block.
+   * See `Column` documentation for specifics on how to construct `Column` objects.
+   * If no column definitions are supplied, the key names are used as labels and the values are rendered
+   * without any formatting.
+   */
   columns?: Column[];
+  /**
+   * Set to true to have bottom columns section expanded on load.
+   */
   expanded?: boolean;
+  /**
+   * Content to display at the bottom-most section of the block.
+   */
   footer?: ReactNode;
+  /**
+   * Class name of an icon to display in the top right of the block.
+   */
   iconClassName?: string;
+  /**
+   * Tooltip text to display when hovering over the icon.
+   */
   iconTooltip?: string;
+  /**
+   * This is a temporary solution to allow SearchUI's to render in Storybook.
+   * There is an issue with the dynamic column header components that causes
+   * Storybook to crash. Rendering column headers as plain strings fixes the problem.
+   * Note that this will disable column tooltips and unit labels.
+   */
+  disableRichColumnHeaders?: boolean;
 }
 
 const getColumnsFromKeys = (data: object): Column[] => {
@@ -30,9 +70,16 @@ const getColumnsFromKeys = (data: object): Column[] => {
   });
 };
 
-export const DataBlock: React.FC<Props> = (props) => {
+/**
+ * Component for displaying a single row (object) of data in a card-like block.
+ * Blocks have a top section that displays data horizontally and an optional collapsible bottom
+ * section that displays data vertically.
+ */
+export const DataBlock: React.FC<DataBlockProps> = (props) => {
   const [columns, setColumns] = useState(() => {
-    return props.columns ? initColumns(props.columns) : getColumnsFromKeys(props.data);
+    return props.columns
+      ? initColumns(props.columns, props.disableRichColumnHeaders)
+      : getColumnsFromKeys(props.data);
   });
   const [topColumns, setTopColumns] = useState(() =>
     columns.filter((c) => !c.hidden && (c.isTop || (!c.isTop && !c.isBottom)))
@@ -82,7 +129,7 @@ export const DataBlock: React.FC<Props> = (props) => {
         )}
         {props.iconTooltip && <Tooltip id={tooltipId}>{props.iconTooltip}</Tooltip>}
       </div>
-      {bottomColumns && (
+      {bottomColumns && bottomColumns.length > 0 && (
         <div className="mpc-data-block-expandable">
           <Collapsible trigger={<span></span>} open={expanded} transitionTime={250}>
             {!expanded && <div className="mpc-data-block-fade"></div>}

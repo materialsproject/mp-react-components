@@ -7,7 +7,7 @@ interface ModalState {
   setForceAction: (value: any) => any;
 }
 
-interface Props {
+export interface ModalContextProviderProps {
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -31,9 +31,10 @@ interface Props {
 const ModalContext = React.createContext<ModalState | undefined>(undefined);
 
 /**
- * Use ModalContextProvider to coordinate modal trigger and modal content
+ * Wrap a `ModalTrigger` component and a `Modal` component inside a `ModalContextProvider` to render an element (trigger) that
+ * will open up a modal. Apply props to the `ModalContextProvider`.
  */
-export const ModalContextProvider: React.FC<Props> = (props) => {
+export const ModalContextProvider: React.FC<ModalContextProviderProps> = (props) => {
   const [active, setActive] = useState(() => props.active || false);
   const [forceAction, setForceAction] = useState(() => props.forceAction || false);
 
