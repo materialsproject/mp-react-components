@@ -13,6 +13,9 @@ export enum FilterId {
   NELEMENTS = 'nelements'
 }
 
+/**
+ * See storybook for documentation
+ */
 export enum FilterType {
   SLIDER = 'SLIDER',
   MATERIALS_INPUT = 'MATERIALS_INPUT',
@@ -67,12 +70,12 @@ export interface Filter {
   tooltip?: string;
   /**
    * Suffix to append to the id for the lower bound
-   * of a range filter (`SearchUI` defaults to "_min").
+   * of a slider filter (`SearchUI` defaults to "_min").
    */
   minSuffix?: string;
   /**
    * Suffix to append to the id for the upper bound
-   * of a range filter (`SearchUI` defaults to "_max").
+   * of a slider filter (`SearchUI` defaults to "_max").
    */
   maxSuffix?: string;
   /**
@@ -133,6 +136,9 @@ export interface ActiveFilter {
 
 export type FilterValues = Partial<Record<string, any>>;
 
+/**
+ * See storybook for documentation
+ */
 export enum ColumnFormat {
   FIXED_DECIMAL = 'FIXED_DECIMAL',
   SIGNIFICANT_FIGURES = 'SIGNIFICANT_FIGURES',
