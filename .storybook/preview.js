@@ -16,7 +16,12 @@ export const parameters = {
           'Conditional Row Styles',
           'Allowed Input Types Map'
         ],
-        'Data-Entry'
+        'Data-Entry',
+        'Data-Display',
+        'Publications',
+        ['BibCard', 'CrossrefCard', 'BibjsonCard', 'PublicationCard', 'BibtexCard', 'BibFilter'],
+        'Crystal-Toolkit',
+        'Navigation'
       ]
     }
   }
