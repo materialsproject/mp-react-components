@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Story } from '@storybook/react';
-import { Markdown } from '../../components/data-display/Markdown';
-import { MarkdownProps } from '../../components/data-display/Markdown/Markdown';
 import { Modal, ModalContextProvider, ModalTrigger } from '../../components/data-display/Modal';
 import { ModalContextProviderProps } from '../../components/data-display/Modal/ModalContextProvider';
 
