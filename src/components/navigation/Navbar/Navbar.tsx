@@ -21,7 +21,7 @@ export interface NavbarItem {
   isRight?: boolean;
 }
 
-interface Props {
+export interface NavbarProps {
   id?: string;
   setProps?: (value: any) => any;
   className?: string;
@@ -29,7 +29,7 @@ interface Props {
   brandItem: NavbarItem;
 }
 
-export const Navbar: React.FC<Props> = ({ items = [], ...otherProps }) => {
+export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => {
   const props = { items, ...otherProps };
   const [activeMobile, setActiveMobile] = useState(false);
 

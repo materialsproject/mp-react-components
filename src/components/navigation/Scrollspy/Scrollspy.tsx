@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-/**
- * Component for building in-page navigation menus with scrollspy functionality
- */
-interface ScrollspyProps {
+export interface ScrollspyProps {
   /**
 	 * An array of MenuGroup items that is used to build the menu and its links.
 	 * Each MenuGroup has an optional label and a required 'items' array of MenuItems.
@@ -37,7 +34,7 @@ interface ScrollspyProps {
    */
   menuItemContainerClassName?: string;
   /**
-   * Class name applied to the <li> of each menu item (default: '')
+   * Class name applied to the `<li>` of each menu item (default: '')
    */
   menuItemClassName?: string;
   /**
@@ -61,6 +58,9 @@ interface SpyItemMap {
   [id: string]: boolean;
 }
 
+/**
+ * Component for building in-page navigation menus with scrollspy functionality
+ */
 export const Scrollspy: React.FC<ScrollspyProps> = ({
   menuGroups,
   menuClassName = 'menu',
@@ -74,10 +74,10 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
 
   function initSpyItemsViewMap(): SpyItemMap {
     let viewMap: SpyItemMap = {};
-    menuGroups.forEach(group => {
-      group.items.forEach(item => {
+    menuGroups.forEach((group) => {
+      group.items.forEach((item) => {
         viewMap[item.targetId] = false;
-        item.items?.forEach(subitem => {
+        item.items?.forEach((subitem) => {
           viewMap[subitem.targetId] = false;
         });
       });
@@ -88,7 +88,7 @@ export const Scrollspy: React.FC<ScrollspyProps> = ({
   function spy(): void {
     let firstItemFound: boolean = false;
     let newSpyItemsViewMap: SpyItemMap = {};
-    Object.keys(spyItemsViewMap).forEach(key => {
+    Object.keys(spyItemsViewMap).forEach((key) => {
       newSpyItemsViewMap[key] = firstItemFound ? false : isInView(key);
       if (newSpyItemsViewMap[key]) firstItemFound = true;
     });

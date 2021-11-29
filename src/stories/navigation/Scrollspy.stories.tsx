@@ -1,36 +1,16 @@
+import { Story } from '@storybook/react';
 import React from 'react';
 import { Scrollspy } from '../../components/navigation/Scrollspy';
+import { ScrollspyProps } from '../../components/navigation/Scrollspy/Scrollspy';
 
-const menuContent = [
-  {
-    label: 'Table of Contents',
-    items: [
-      {
-        label: 'Crystal Structure',
-        targetId: 'one'
-      },
-      {
-        label: 'Properties',
-        targetId: 'two',
-        items: [
-          {
-            label: 'Prop One',
-            targetId: 'three'
-          }
-        ]
-      }
-    ]
-  }
-];
+export default {
+  component: Scrollspy,
+  title: 'Navigation/Scrollspy'
+};
 
-export const SidebarScrollspy = () => (
+const Template: Story<React.PropsWithChildren<ScrollspyProps>> = (args) => (
   <div className="sidebar-story">
-    <Scrollspy
-      menuGroups={menuContent}
-      menuClassName="menu"
-      menuItemContainerClassName="menu-list"
-      activeClassName="is-active"
-    ></Scrollspy>
+    <Scrollspy {...args} />
     <div className="content">
       <div id="one">
         <h1>Crystal Structure</h1>
@@ -60,7 +40,30 @@ export const SidebarScrollspy = () => (
   </div>
 );
 
-export default {
-  component: Scrollspy,
-  title: 'Navigation/Sidebar'
+export const Basic = Template.bind({});
+Basic.args = {
+  menuGroups: [
+    {
+      label: 'Table of Contents',
+      items: [
+        {
+          label: 'Crystal Structure',
+          targetId: 'one'
+        },
+        {
+          label: 'Properties',
+          targetId: 'two',
+          items: [
+            {
+              label: 'Prop One',
+              targetId: 'three'
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  menuClassName: 'menu',
+  menuItemContainerClassName: 'menu-list',
+  activeClassName: 'is-active'
 };

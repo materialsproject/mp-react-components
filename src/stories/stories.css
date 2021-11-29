@@ -12,6 +12,10 @@ body {
   width: 200px;
 }
 
+.sbdocs .sidebar-story .menu {
+  position: relative;
+}
+
 .sidebar-story .content {
   display: inline-block;
   margin-left: 200px;
@@ -20,6 +24,14 @@ body {
 
 .sidebar-story .content p {
   height: 500px;
+}
+
+/**
+ * Make element stick to the top when scrolled past
+ */
+.sticky {
+  position: sticky;
+  top: 0rem;
 }
 
 .mpc-materials-input {
