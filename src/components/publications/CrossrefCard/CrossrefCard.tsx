@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { BibCard } from '../BibCard';
 
-interface Props {
+export interface CrossrefCardProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -28,7 +28,7 @@ interface Props {
   crossrefEntry?: any;
 
   /**
-   * Either a DOI or bibtex string to use to search against the Crossref /works endpoint.
+   * Either a DOI or bibtex string to use to search against the Crossref `/works` endpoint.
    * An identifier must be supplied if you are not supplying the crossrefEntry directly.
    */
   identifier?: string;
@@ -49,9 +49,9 @@ interface Props {
 }
 
 /**
- * Parses a crossref entry or fetches a reference from the crossref API and renders a BibCard.
+ * Parses a crossref entry or fetches a reference from the crossref API and renders a `BibCard`.
  */
-export const CrossrefCard: React.FC<Props> = (props) => {
+export const CrossrefCard: React.FC<CrossrefCardProps> = (props) => {
   props = {
     errorMessage: 'Could not find reference',
     ...props

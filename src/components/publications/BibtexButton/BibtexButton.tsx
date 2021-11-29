@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
-interface Props extends React.HTMLProps<HTMLAnchorElement> {
+export interface BibtexButtonProps extends React.HTMLProps<HTMLAnchorElement> {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -34,10 +34,10 @@ interface Props extends React.HTMLProps<HTMLAnchorElement> {
 
 /**
  * Standardized button for linking to BibTeX.
- * If no url prop is supplied, a link will be generated
- * using the doi prop and doi2bib.org.
+ * If no `url` prop is supplied, a link will be generated
+ * using the `doi` prop and doi2bib.org.
  */
-export const BibtexButton: React.FC<Props> = ({
+export const BibtexButton: React.FC<BibtexButtonProps> = ({
   className = 'tag',
   target = '_blank',
   ...otherProps

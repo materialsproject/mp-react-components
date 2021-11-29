@@ -9,7 +9,7 @@ import './PublicationButton.css';
 import { string } from 'prop-types';
 import { shortenCrossrefAuthors } from '../../../utils/publications';
 
-interface Props {
+export interface PublicationButtonProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -61,10 +61,10 @@ interface Props {
 
 /**
  * Standardized button for linking to a publication.
- * If a doi prop or doi.org link is supplied, an open access link
+ * If a `doi` prop or doi.org link is supplied, an open access link
  * will also be generated next to the publication link.
  */
-export const PublicationButton: React.FC<Props> = ({
+export const PublicationButton: React.FC<PublicationButtonProps> = ({
   className = 'tag',
   target = '_blank',
   ...otherProps
