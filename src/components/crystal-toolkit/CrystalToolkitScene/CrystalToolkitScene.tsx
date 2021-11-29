@@ -36,19 +36,11 @@ import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { Action } from '../utils';
 import useResizeObserver from 'use-resize-observer';
 
-/**
- * CrystalToolkitScene is intended to draw simple 3D scenes using the popular
- * Three.js scene graph library. In particular, the JSON representing the 3D scene
- * is intended to be human-readable, and easily generated via Python. This is not
- * intended to be a replacement for a full scene graph library, but for rapid
- * prototyping by non-experts.
- */
-
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
 let ID_GENERATOR = 0;
 
-interface Props {
+export interface CrystalToolkitSceneProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -174,7 +166,14 @@ interface Props {
   setProps?: (value: any) => any;
 }
 
-export const CrystalToolkitScene: React.FC<Props> = ({
+/**
+ * This component is intended to draw simple 3D scenes using the popular
+ * Three.js scene graph library. In particular, the JSON representing the 3D scene
+ * is intended to be human-readable, and easily generated via Python. This is not
+ * intended to be a replacement for a full scene graph library, but for rapid
+ * prototyping by non-experts.
+ */
+export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   imageRequest = {},
   setProps = () => null,
   ...otherProps

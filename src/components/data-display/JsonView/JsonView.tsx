@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import ReactJson from 'react-json-view';
 
-export default function JSONViewComponent(props: InferProps<typeof JSONViewComponent.propTypes>) {
+export function JsonView(props: InferProps<typeof JsonView.propTypes>) {
   const {
     src,
     name,
@@ -38,14 +38,14 @@ export default function JSONViewComponent(props: InferProps<typeof JSONViewCompo
       defaultValue={defaultValue}
       sortKeys={sortKeys}
       validationMessage={validationMessage}
-      onEdit={e => {}}
-      onAdd={a => {}}
-      onDelete={d => {}}
+      onEdit={(e) => {}}
+      onAdd={(a) => {}}
+      onDelete={(d) => {}}
     />
   );
 }
 
-JSONViewComponent.propTypes = {
+JsonView.propTypes = {
   type: PropTypes.oneOf(['array', 'object']),
   // see documentation at https://github.com/mac-s-g/react-json-view
   src: PropTypes.object,
@@ -66,7 +66,7 @@ JSONViewComponent.propTypes = {
 };
 
 // https://github.com/mac-s-g/react-json-view/blob/39f7b6b2e73a873b974f0801c260d90d76cccdae/index.d.ts
-JSONViewComponent.defaultProps = {
+JsonView.defaultProps = {
   src: null,
   name: false,
   theme: 'rjv-default',

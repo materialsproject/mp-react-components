@@ -20,7 +20,8 @@ export const parameters = {
         'Data-Display',
         'Publications',
         ['BibCard', 'CrossrefCard', 'BibjsonCard', 'PublicationCard', 'BibtexCard', 'BibFilter'],
-        'Crystal-Toolkit',
+        'Crystal Toolkit',
+        ['CrystalToolkitScene', 'ReactGraphComponent'],
         'Navigation'
       ]
     }
