@@ -4,7 +4,7 @@ import { StandalonePeriodicComponent } from './components/periodic-table/periodi
 import { PeriodicContext } from './components/periodic-table/periodic-table-state/periodic-selection-context';
 import { CrystalToolkitScene } from './components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
 import { CameraContextProvider } from './components/crystal-toolkit/CameraContextProvider';
-import JsonView from './components/crystal-toolkit/JsonView.react';
+import { JsonView } from './components/data-display/JsonView';
 import ReactGraphComponent from './components/crystal-toolkit/graph.component';
 import { Sidebar } from './components/navigation/Sidebar';
 import Scene from './components/crystal-toolkit/scene/Scene';
