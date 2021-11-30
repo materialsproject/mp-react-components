@@ -57,7 +57,7 @@ AnimatedScene.args = {
   debug: false
 };
 
-export const LinkedCameras = () => (
+export const LinkedCameras: Story<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
   <CameraContextProvider>
     <>
       <CrystalToolkitScene

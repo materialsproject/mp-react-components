@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useEffect } from 'react';
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
 
-interface Props {
+export interface TabsProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -20,6 +20,12 @@ interface Props {
    * The "mpc-tabs" class is added automatically
    */
   className?: string;
+
+  /**
+   * Content for each tab. Each top-level element will be the content for a tab.
+   * The order of the elements inside of children should correspond to the order of the `labels` prop.
+   */
+  children: ReactNode;
 
   /**
    * List of strings to use as labels for the tabs.
@@ -46,14 +52,14 @@ interface Props {
 }
 
 /**
- * Custom Tabs component based on react-tabs.
- * See https://github.com/reactjs/react-tabs
- *
+ * Render content as labeled tabs.
  * This component will only render a tab's content once it has been activated.
  * After it's been activated, the tab's content will stay rendered and will be
  * shown/hidden using css only.
+ * The react-tabs library is used under the hood but usage has been modified to make this component dash-friendly.
+ * See https://github.com/reactjs/react-tabs
  */
-export const Tabs: React.FC<Props> = ({
+export const Tabs: React.FC<TabsProps> = ({
   setProps = () => null,
   className,
   labels,
