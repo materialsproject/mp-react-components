@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { ActiveFilterButtons } from '../../../data-display/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
@@ -43,6 +43,7 @@ const getUpperResultBound = (
 export const SearchUIDataHeader: React.FC = () => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
+  const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
@@ -289,8 +290,12 @@ export const SearchUIDataHeader: React.FC = () => {
   //   </div>
   // ) : null;
 
+  useEffect(() => {
+    actions.setResultsRef(ref);
+  }, []);
+
   return (
-    <div id={componentHtmlId} className="mpc-search-ui-data-header box">
+    <div id={componentHtmlId} className="mpc-search-ui-data-header box" ref={ref}>
       <div className="mpc-search-ui-data-header-content">
         <div>
           <TableHeaderTitle />

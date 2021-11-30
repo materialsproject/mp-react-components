@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSearchUIContext } from '../SearchUIContextProvider';
+import React, { useEffect, useRef } from 'react';
+import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { searchUIViewsMap } from '../types';
 import { FaExclamationTriangle } from 'react-icons/fa';
 

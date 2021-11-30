@@ -36,7 +36,8 @@ const defaultState: SearchState = {
   sortField: undefined,
   sortAscending: true,
   error: false,
-  searchBarValue: ''
+  searchBarValue: '',
+  resultsRef: null
 };
 
 /**
@@ -59,27 +60,29 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
   );
   const prevActiveFilters = usePrevious(state.activeFilters);
-  const ref = useRef<HTMLDivElement>(null);
 
   const actions = {
     setPage: (page: number) => {
-      if (ref.current) {
-        scrollIntoView(ref.current, {
-          scrollMode: 'if-needed',
-          block: 'start',
-          behavior: 'smooth'
-        });
-      }
-      setState((currentState) => ({ ...currentState, page }));
+      setState((currentState) => {
+        const ref = currentState.resultsRef;
+        if (ref && ref.current) {
+          scrollIntoView(ref.current, {
+            scrollMode: 'if-needed',
+            block: 'start',
+            behavior: 'smooth'
+          });
+        }
+        return { ...currentState, page };
+      });
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      if (ref.current) {
-        scrollIntoView(ref.current, {
-          scrollMode: 'if-needed',
-          block: 'start',
-          behavior: 'smooth'
-        });
-      }
+      // if (ref.current) {
+      //   scrollIntoView(ref.current, {
+      //     scrollMode: 'if-needed',
+      //     block: 'start',
+      //     behavior: 'smooth'
+      //   });
+      // }
       setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
@@ -387,6 +390,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           activeFilters
         };
       });
+    },
+    setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
+      setState((currentState) => ({ ...currentState, resultsRef }));
     }
   };
 
@@ -397,7 +403,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   return (
     <SearchUIContext.Provider value={state}>
       <SearchUIContextActions.Provider value={actions}>
-        <div ref={ref}>{children}</div>
+        <div>{children}</div>
       </SearchUIContextActions.Provider>
     </SearchUIContext.Provider>
   );
