@@ -24,6 +24,7 @@ import { MPContribsSearch } from './pages/MPContribsSearch';
 import { CatalystExplorer } from './pages/CatalystExplorer';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
+import { MofExplorer } from './pages/MofExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -56,6 +57,10 @@ ReactDOM.render(
           {
             label: 'Catalysts',
             href: '/catalysts'
+          },
+          {
+            label: 'MOF',
+            href: '/mof'
           },
           {
             label: 'X-Ray Absorption Spectra',
@@ -121,6 +126,9 @@ ReactDOM.render(
           </Route>
           <Route path="/catalysts">
             <CatalystExplorer />
+          </Route>
+          <Route path="/mof">
+            <MofExplorer />
           </Route>
           <Route path="/sandbox">
             <Sandbox />

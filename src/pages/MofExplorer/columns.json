@@ -1,0 +1,200 @@
+[
+  {
+    "title": "Synthesizable",
+    "selector": "data.synthesized",
+    "formatType": "BOOLEAN_CLASS",
+    "formatOptions": {
+      "truthyClass": "fas fa-star",
+      "falsyClass": "",
+      "truthyValue": "True"
+    },
+    "cellTooltip": "Experimentally observed",
+    "hideName": true,
+    "tooltip": "Materials that were taken from the experimental crystal structure databases are considered to be synthesized",
+    "width": "30px"
+  },
+  {
+    "title": "QMOF ID",
+    "selector": "identifier",
+    "formatType": "LINK",
+    "formatOptions": {
+      "baseUrl": "/mofs/"
+    },
+    "tooltip": "Unique identifier for each material in the QMOF Database",
+    "minWidth": "135px"
+  },
+  {
+    "title": "Formula",
+    "selector": "data.reducedFormula",
+    "formatType": "FORMULA",
+    "minWidth": "175px",
+    "tooltip": "Empirical formula"
+  },
+  {
+    "title": "Molecular Formula",
+    "selector": "formula",
+    "formatType": "FORMULA",
+    "minWidth": "185px",
+    "omit": true,
+    "tooltip": "Non-reduced formula that expresses the total number of atoms per simulation unit cell"
+  },
+  {
+    "title": "Chemical System",
+    "selector": "data.chemsys",
+    "omit": true,
+    "tooltip": "List of chemical elements in the strcture (e.g. 'C-H-O-Zn')"
+  },
+  {
+    "title": "Structure Database",
+    "selector": "data.source",
+    "tooltip": "Source database for the material"
+  },
+  {
+    "title": "CSD Refcode",
+    "selector": "data.csdRefcode",
+    "tooltip": "Unique Cambridge Structural Database (CSD) Reference Code",
+    "omit": true
+  },
+  {
+    "title": "Space Group",
+    "selector": "data.spacegroup",
+    "formatType": "SPACEGROUP_SYMBOL",
+    "tooltip": "Space group symbol for the lattice",
+    "omit": true
+  },
+  {
+    "title": "Space Group Number",
+    "selector": "data.spacegroupNumber",
+    "tooltip": "Space group number for the lattice",
+    "omit": true
+  },
+  {
+    "title": "Crystal System",
+    "selector": "data.spacegroupCrystal",
+    "tooltip": "Crystal system for the lattice",
+    "omit": true
+  },
+  {
+    "title": "Topology",
+    "selector": "data.topology",
+    "tooltip": "Topology describing the connectivity of the inorganic and organic building blocks",
+    "omit": true
+  },
+  {
+    "title": "Number of Atoms",
+    "selector": "data.natoms.value",
+    "tooltip": "Total number of atoms per simulation unit cell",
+    "right": true
+  },
+  {
+    "title": "PLD",
+    "selector": "data.pld.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "units": "\u212B",
+    "right": true,
+    "tooltip": "Pore-limiting diameter"
+  },
+  {
+    "title": "LCD",
+    "selector": "data.lcd.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "units": "\u212B",
+    "right": true,
+    "tooltip": "Largest cavity diameter"
+  },
+  {
+    "title": "Volume",
+    "selector": "data.volume.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 1
+    },
+    "units": "\u212B\u00b3/cell",
+    "right": true,
+    "tooltip": "Volume of the simulation unit cell"
+  },
+  {
+    "title": "Density",
+    "selector": "data.density.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 3
+    },
+    "units": "g/cm\u00b3",
+    "right": true,
+    "tooltip": "Mass density"
+  },
+  {
+    "title": "Band Gap - PBE",
+    "selector": "data.EgPBE.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "units": "eV",
+    "right": true,
+    "tooltip": "Band gap calculated with the PBE-D3(BJ) GGA functional"
+  },
+  {
+    "title": "Band Gap - EgHLE17",
+    "selector": "data.EgHLE17.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "units": "eV",
+    "right": true,
+    "tooltip": "Band gap calculated with the PBE-D3(BJ) GGA functional"
+  },
+  {
+    "title": "Max Partial Charge",
+    "selector": "data.maxPBEChargeDDEC.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 3
+    },
+    "omit": true,
+    "right": true,
+    "tooltip": "Maximum DDEC6 partial atomic charge at the PBE-D3(BJ) level of theory"
+  },
+  {
+    "title": "Total Magnetization",
+    "selector": "data.netPBEMagmom.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 1
+    },
+    "omit": true,
+    "right": true,
+    "tooltip": "Total number of unpaired electrons per unit cell calculated at the PBE-D3(BJ) level of theory"
+  },
+  {
+    "title": "Max Magnetic Moment",
+    "selector": "data.maxPBEMagmom.value",
+    "formatType": "FIXED_DECIMAL",
+    "units": "\u03BCB",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "omit": true,
+    "right": true,
+    "tooltip": "Maximum (absolute) atomic magnetic moment at the PBE-D3(BJ) level of theory"
+  },
+  {
+    "title": "Max Spin Moment",
+    "selector": "data.maxPBESpinDDEC.value",
+    "formatType": "FIXED_DECIMAL",
+    "formatOptions": {
+      "decimals": 2
+    },
+    "omit": true,
+    "right": true,
+    "tooltip": "Maximum (absolute) atomic spin moment calculated via the DDEC6 method at the PBE-D3(BJ) level of theory"
+  }
+]

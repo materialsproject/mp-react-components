@@ -39,18 +39,22 @@ const emptyCellPlaceholder = '-';
  * @param row object that has the key(s) specified in selector
  */
 const getRowValueFromSelectorString = (selector: string, row: any) => {
-  const selectors = selector.split('.');
-  switch (selectors.length) {
-    case 1:
-      return row[selectors[0]];
-    case 2:
-      return row[selectors[0]][selectors[1]];
-    case 3:
-      return row[selectors[0]][selectors[1]][selectors[2]];
-    case 3:
-      return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
-    default:
-      return emptyCellPlaceholder;
+  try {
+    const selectors = selector.split('.');
+    switch (selectors.length) {
+      case 1:
+        return row[selectors[0]];
+      case 2:
+        return row[selectors[0]][selectors[1]];
+      case 3:
+        return row[selectors[0]][selectors[1]][selectors[2]];
+      case 4:
+        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
+      default:
+        return emptyCellPlaceholder;
+    }
+  } catch (error) {
+    return emptyCellPlaceholder;
   }
 };
 
