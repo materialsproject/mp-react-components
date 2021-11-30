@@ -8,7 +8,7 @@ import {
 } from 'react-aria-menubutton';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
-interface Props {
+export interface DropdownProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -19,6 +19,11 @@ interface Props {
    * properties change
    */
   setProps?: (value: any) => any;
+
+  /**
+   * Class name(s) to append to the component's default class (`dropdown`)
+   */
+  className?: string;
 
   /**
    * Text to display in the button that triggers the dropdown to open
@@ -68,7 +73,7 @@ interface Props {
  * Generic dropdown menu that can render arbitrary items for display
  * and navigation purposes only (i.e. not for selecting options or performing actions that are not links)
  */
-export const Dropdown: React.FC<Props> = ({
+export const Dropdown: React.FC<DropdownProps> = ({
   items = [],
   triggerClassName = 'button',
   closeOnSelection = true,
@@ -80,7 +85,7 @@ export const Dropdown: React.FC<Props> = ({
     <MenuWrapper
       data-testid="mpc-dropdown"
       id={props.id}
-      className={classNames('dropdown is-active', {
+      className={classNames('dropdown is-active', props.className, {
         'is-up': props.isUp,
         'is-right': props.isRight
       })}
