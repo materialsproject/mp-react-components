@@ -233,8 +233,8 @@ export interface SearchUIProps {
 }
 
 /**
- * Component for rendering advanced search interfaces for data in an API
- * Renders results alongside a set of filters that map to properties in the data.
+ * Renders a complete search interface for fetching and filtering data from a REST API.
+ * Results are rendered in a table alongside a set of filters that map to properties in the data.
  */
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
   return (

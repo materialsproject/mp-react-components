@@ -8,6 +8,7 @@ export const parameters = {
   options: {
     storySort: {
       order: [
+        'Introduction',
         'Search UI',
         [
           'SearchUI Component',
