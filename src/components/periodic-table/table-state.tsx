@@ -3,7 +3,7 @@ import { TableSelectionStyle, useElements } from './periodic-table-state/table-s
 import { Table, TableLayout } from './periodic-table-component/periodic-table.component';
 import { useEffect } from 'react';
 
-interface SelectableTableProps {
+export interface SelectableTableProps {
   className?: string;
   /** array of enabled elements, e.g : ['H', 'O'] */
   enabledElements?: string[];
