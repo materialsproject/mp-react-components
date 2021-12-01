@@ -101,3 +101,7 @@ pre {
 .mt-10 {
   margin-top: 10rem;
 }
+
+.max-750 {
+  max-width: 750px;
+}
