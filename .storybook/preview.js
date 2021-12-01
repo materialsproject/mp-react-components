@@ -9,6 +9,7 @@ export const parameters = {
     storySort: {
       order: [
         'Introduction',
+        ['MP React Components', 'Usage with Dash'],
         'Search UI',
         [
           'SearchUI Component',

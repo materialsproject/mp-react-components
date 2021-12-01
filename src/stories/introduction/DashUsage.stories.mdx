@@ -1,0 +1,75 @@
+import { Meta, ArgsTable, Source } from '@storybook/addon-docs';
+
+<Meta title="Introduction/Usage with Dash" />
+
+# Usage with Dash
+
+The components in this library are ported to [plotly Dash](https://dash.plotly.com/)
+via the [dash-mp-components](https://github.com/materialsproject/dash-mp-components) library.
+With dash-mp-components, any of the components seen in these docs can be used and all of the same options apply.
+
+### Installation
+
+`pip install dash-mp-components`
+
+### React Syntax to Dash Syntax
+
+All of the code you see in these docs are displayed in React (JavaScript) but the syntax for writing components in Dash is almost identical.
+
+For example, here is how you write a `PublicationButton` component in React:
+
+```jsx
+<PublicationButton doi="10.1093/mnras/stu869" />
+```
+
+And here is how that same component would be written in Dash:
+
+```python
+PublicationButton(doi="10.1093/mnras/stu869")
+```
+
+For components that utilize the `children` prop, React lets you nest the children inside
+of a component similar to HTML:
+
+```jsx
+<ModalContextProvider forceAction={true}>
+  <ModalTrigger>
+    <button className="button">Open Modal</button>
+  </ModalTrigger>
+  <Modal>
+    <div className="panel">
+      <div className="panel-heading">Panel</div>
+      <div className="panel-block p-5">content</div>
+    </div>
+  </Modal>
+</ModalContextProvider>
+```
+
+In Dash, children must be supplied in a list (unless there is only one child) and
+must be the first argument of the component (unless specifically setting `children=`).
+The same `Modal` component above would look like this:
+
+```python
+ModalContextProvider(
+  [
+    ModalTrigger(
+      html.Button("Open Modal", className="button")
+    ),
+    Modal(
+      html.Div(
+        [
+          html.Div("Panel", className="panel-heading"),
+          html.Div("content", className="panel-block p-5")
+        ],
+        className="panel"
+      )
+    )
+  ],
+  forceAction=True
+)
+```
+
+### Function Props
+
+Some components have function props like `onChange` -- these props are not compatible with Dash. The only function prop that
+can be used in Dash is the `setProps` function which is included by Dash automatically.
