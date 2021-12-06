@@ -486,7 +486,71 @@ export default class Scene {
       });
     };
 
-    traverse_scene(sceneJson, rootObject, '');
+    const _get_tiles = (tiling: number[]) => {
+      // enumerate all tiles needed for a given tiling size
+      let tiles: number[][] = [];
+      for (let x: number = 0; x <= tiling[0]; x++) {
+        for (let y: number = 0; y <= tiling[1]; y++) {
+          for (let z: number = 0; z <= tiling[2]; z++) {
+            tiles.push([x, y, z]);
+          }
+        }
+      }
+      return tiles;
+    };
+
+    // a alternative inner loop that includes tiling
+    const traverse_scene_w_tiling = (
+      o: SceneJsonObject,
+      parent: THREE.Object3D,
+      currentId: string
+    ) => {
+      o.contents!.forEach((childObject, idx) => {
+        // determine proper tiling if it exists
+        let tiling = childObject.tiling ? childObject.tiling : [0, 0, 0];
+        let tiles = _get_tiles(tiling);
+        let lattice = childObject.lattice
+          ? childObject.lattice
+          : [
+              [0, 0, 0],
+              [0, 0, 0],
+              [0, 0, 0]
+            ];
+        // loop over all tiles and render each tile
+        for (const tile of tiles) {
+          const threeObject = new THREE.Object3D();
+          threeObject.name = childObject.name!;
+          this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
+          childObject.id = `${currentId}--${threeObject.name}`;
+          threeObject.visible = childObject.visible === undefined ? true : !!childObject.visible;
+          let scaled_lattice = lattice.map((vector: number[], index: number) => {
+            return vector.map((x: number) => x * tile[index]);
+          });
+          // transform tile according to lattice vectors
+          for (const vec of scaled_lattice) {
+            const tiling_translation = new THREE.Matrix4();
+            tiling_translation.makeTranslation(...(vec as ThreePosition));
+            threeObject.applyMatrix4(tiling_translation);
+          }
+          if (childObject.origin) {
+            const origin_translation = new THREE.Matrix4();
+            // note(chab) have a typedefinition for the JSON
+            origin_translation.makeTranslation(...(childObject.origin as ThreePosition));
+            threeObject.applyMatrix4(origin_translation);
+          }
+          if (!this.settings.extractAxis || threeObject.name !== 'axes') {
+            parent.add(threeObject);
+          }
+          traverse_scene(childObject, threeObject, `${currentId}--${threeObject.name}`);
+          if (threeObject.name === 'axes') {
+            this.axis = threeObject.clone();
+            this.axisJson = { ...childObject };
+          }
+        }
+      });
+    };
+
+    traverse_scene_w_tiling(sceneJson, rootObject, '');
     // can cause memory leak
     //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
