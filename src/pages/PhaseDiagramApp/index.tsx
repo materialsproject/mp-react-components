@@ -1,0 +1,1 @@
+export { PhaseDiagramApp } from './PhaseDiagramApp';

@@ -266,7 +266,6 @@ export interface ConditionalRowStyle {
 export interface SearchState extends SearchUIProps {
   filterValues: FilterValues;
   activeFilters: ActiveFilter[];
-  results: any[];
   totalResults: number;
   resultsPerPage: number;
   page: number;
