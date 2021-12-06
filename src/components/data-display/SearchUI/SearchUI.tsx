@@ -230,6 +230,11 @@ export interface SearchUIProps {
    * Note that this will disable column tooltips and unit labels.
    */
   disableRichColumnHeaders?: boolean;
+
+  /**
+   *
+   */
+  results?: any[];
 }
 
 /**

@@ -25,6 +25,7 @@ import { CatalystExplorer } from './pages/CatalystExplorer';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
+import { PhaseDiagramApp } from './pages/PhaseDiagramApp/PhaseDiagramApp';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -67,16 +68,16 @@ ReactDOM.render(
             href: '/xas'
           },
           {
-            icon: 'icon-fontastic-synthesis',
-            href: '/catalysts'
-          },
-          {
-            icon: 'icon-fontastic-synthesis',
+            label: 'More',
             isRight: true,
             items: [
               {
                 label: 'More',
                 isMenuLabel: true
+              },
+              {
+                label: 'Phase Diagram',
+                href: '/phasediagram'
               },
               {
                 label: 'Publications',
@@ -129,6 +130,9 @@ ReactDOM.render(
           </Route>
           <Route path="/mof">
             <MofExplorer />
+          </Route>
+          <Route path="/phasediagram">
+            <PhaseDiagramApp />
           </Route>
           <Route path="/sandbox">
             <Sandbox />
