@@ -1012,13 +1012,7 @@ export const shperes = {
       origin: [0, 0, 0]
     }
   ],
-  origin: [-2.1, -2.1, -2.1],
-  latticeVectors: [
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1]
-  ],
-  tiling: [1, 0, 0]
+  origin: [-2.1, -2.1, -2.1]
 };
 
 export const buggyScene = {
