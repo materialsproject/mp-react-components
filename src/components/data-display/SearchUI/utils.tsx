@@ -440,17 +440,16 @@ export const getSearchState = (
             let filterDisplayName = f.name.toLowerCase();
 
             if (
-              (f.props.inputType === MaterialsInputType.ELEMENTS &&
+              (f.props.type === MaterialsInputType.ELEMENTS &&
                 f.id === 'elements' &&
                 (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
-              (f.props.inputType === MaterialsInputType.FORMULA &&
-                filterValues[f.id].indexOf('-') > -1)
+              (f.props.type === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
             ) {
               /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
               filterDisplayName = 'include only elements';
               /** Remove trailing '-' from chemical system string */
               parsedValue = filterValues[f.id].replace(/\-$/, '');
-            } else if (f.props.inputType === MaterialsInputType.ELEMENTS) {
+            } else if (f.props.type === MaterialsInputType.ELEMENTS) {
               /** Parse elements back into array so that they're in a normalized format for the query */
               parsedValue = validateElements(filterValues[f.id]);
             }

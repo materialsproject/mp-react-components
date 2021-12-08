@@ -20,7 +20,7 @@
         "id": "target_formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula"
+          "type": "formula"
         }
       },
       {
@@ -28,7 +28,7 @@
         "id": "precursor_formula",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula"
+          "type": "formula"
         }
       }
     ]

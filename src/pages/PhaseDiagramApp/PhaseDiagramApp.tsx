@@ -4,7 +4,10 @@ import { Column, FilterGroup } from '../../components/data-display/SearchUI/type
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
-import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
+import {
+  MaterialsInput,
+  PeriodicTableMode
+} from '../../components/data-entry/MaterialsInput/MaterialsInput';
 import { SearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer';
 import { SearchUISearchBar } from '../../components/data-display/SearchUI/SearchUISearchBar';
 import { SearchUIDataView } from '../../components/data-display/SearchUI/SearchUIDataView';
@@ -12,11 +15,11 @@ import { SearchUIDataView } from '../../components/data-display/SearchUI/SearchU
 /**
  * Component for testing the Phase Diagram view
  */
-
 export const PhaseDiagramApp: React.FC = () => {
   return (
     <>
       <h1>Phase Diagram</h1>
+      <MaterialsInput />
       <SearchUIContainer
         resultLabel="material"
         columns={columns as Column[]}
@@ -28,6 +31,17 @@ export const PhaseDiagramApp: React.FC = () => {
         hasSortMenu={true}
         sortField="formula_pretty"
         sortAscending={true}
+        searchBarAllowedInputTypesMap={{
+          elements: {
+            field: 'elements'
+          },
+          formula: {
+            field: 'formula'
+          },
+          mpid: {
+            field: 'material_ids'
+          }
+        }}
       >
         <SearchUISearchBar />
         <SearchUIDataView />

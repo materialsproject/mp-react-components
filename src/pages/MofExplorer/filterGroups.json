@@ -51,7 +51,7 @@
         "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Include Elements Examples"
@@ -70,7 +70,7 @@
         "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "periodicTableMode": "none",
           "errorMessage": "Please enter a valid chemical formula (e.g. Zn4C24H12O13).",
           "helpItems": [
@@ -97,7 +97,7 @@
         "operatorSuffix": "__contains",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Node SMILES Examples"
@@ -116,7 +116,7 @@
         "operatorSuffix": "__contains",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Linker SMILES Examples"

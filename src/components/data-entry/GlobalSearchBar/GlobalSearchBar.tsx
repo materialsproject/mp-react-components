@@ -31,7 +31,7 @@ export const GlobalSearchBar: React.FC<Props> = (props) => {
   return (
     <MaterialsInput
       value={searchValue}
-      inputType={searchInputType}
+      type={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(inputType) => setSearchInputType(inputType)}
       onSubmit={handleSubmit}
