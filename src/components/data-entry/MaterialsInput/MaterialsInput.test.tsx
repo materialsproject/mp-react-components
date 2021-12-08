@@ -107,7 +107,7 @@ describe('<MaterialsInput/>', () => {
   it('should show autocomplete results', async () => {
     renderElement({
       ...defaultProps,
-      inputType: 'formula' as MaterialsInputType,
+      type: 'formula' as MaterialsInputType,
       autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
       autocompleteApiKey: process.env.REACT_APP_API_KEY
     });

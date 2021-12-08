@@ -33,7 +33,7 @@ SearchUIContainer.defaultProps = {
   hasSortMenu: true,
   hasSearchBar: true,
   conditionalRowStyles: [],
-  searchBarPeriodicTableMode: PeriodicTableMode.FOCUS,
+  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
   searchBarAllowedInputTypesMap: {
     elements: {
       field: 'elements'

@@ -13,7 +13,7 @@
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
@@ -29,7 +29,7 @@
         "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
         }
       },

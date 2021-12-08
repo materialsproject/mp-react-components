@@ -44,12 +44,12 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
-  const [inputType, setInputType] = useState<MaterialsInputType | null>(props.inputType);
+  const [inputType, setInputType] = useState<MaterialsInputType | null>(props.type || null);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [showInputHelp, setShowInputHelp] = useState(false);
   const includeAutocomplete =
     props.autocompleteFormulaUrl &&
-    (props.inputType == MaterialsInputType.FORMULA || props.onInputTypeChange);
+    (props.type == MaterialsInputType.FORMULA || props.onInputTypeChange);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -121,7 +121,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      const staticInputField = !props.onInputTypeChange ? props.inputType : undefined;
+      const staticInputField = !props.onInputTypeChange ? props.type : undefined;
       let [newMaterialsInputType, parsedValue] = staticInputField
         ? validateInputType(inputValue, staticInputField)
         : detectAndValidateInputType(inputValue, props.allowedInputTypes!);
@@ -211,7 +211,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (lastAction && lastAction.hasOwnProperty('type')) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newValue = '';
-      switch (props.inputType) {
+      switch (props.type) {
         case MaterialsInputType.ELEMENTS:
           let elementsSplit = props.value ? props.value.split(delimiter) : [];
           if (lastAction.type === 'select') {
@@ -277,7 +277,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       {props.showInputTypeDropdown && (
         <Control>
           <Dropdown
-            value={props.inputType}
+            value={props.type}
             onChange={(item: MaterialsInputType) => {
               if (props.onInputTypeChange) props.onInputTypeChange(item);
             }}

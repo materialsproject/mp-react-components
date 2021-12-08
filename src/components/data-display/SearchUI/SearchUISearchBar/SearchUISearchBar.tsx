@@ -75,7 +75,7 @@ export const SearchUISearchBar: React.FC = () => {
     <MaterialsInput
       value={searchValue}
       label={capitalize(pluralize(state.resultLabel))}
-      inputType={searchInputType}
+      type={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
       onSubmit={handleSubmit}

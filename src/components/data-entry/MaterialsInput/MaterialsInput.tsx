@@ -49,8 +49,8 @@ export enum PeriodicTableMode {
 }
 
 export interface MaterialsInputSharedProps {
-  value: string;
-  inputType: MaterialsInputType;
+  value?: string;
+  type?: MaterialsInputType;
   allowedInputTypes?: MaterialsInputType[];
   showInputTypeDropdown?: boolean;
   /** Temporary prop until this can be handled in inputTypes */
@@ -64,7 +64,7 @@ export interface MaterialsInputSharedProps {
   autocompleteApiKey?: string;
   helpItems?: InputHelpItem[];
   onChange?: (value: string) => void;
-  onInputTypeChange?: (inputType: MaterialsInputType) => void;
+  onInputTypeChange?: (type: MaterialsInputType) => void;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
 }
 
@@ -115,14 +115,16 @@ const getAllowedSelectionModes = (
  * and when elements are selected in the table, they are appended to the field's input.
  */
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
+  value = '',
   errorMessage = 'Invalid input value',
   allowedInputTypes = ['elements', 'formula', 'mpid'],
+  type = allowedInputTypes[0] as MaterialsInputType,
   onChange = (value) => value,
   ...otherProps
 }) => {
-  const props = { errorMessage, allowedInputTypes, onChange, ...otherProps };
+  const props = { value, type, errorMessage, allowedInputTypes, onChange, ...otherProps };
   const [inputValue, setInputValue] = useState(props.value);
-  const [inputType, setInputType] = useState(props.inputType);
+  const [inputType, setInputType] = useState(props.type);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [error, setError] = useState<string | null>(null);
@@ -147,7 +149,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [chemSysDropdownValue, setChemSysDropdownValue] = useState<
     ChemSysDropdownValue | undefined
   >(() => {
-    if (props.hideChemSys || props.inputType !== 'elements' || props.onInputTypeChange) {
+    if (props.hideChemSys || props.type !== 'elements' || props.onInputTypeChange) {
       return;
     } else {
       return isChemSys ? ChemSysDropdownValue.ONLY : ChemSysDropdownValue.AT_LEAST;
@@ -289,7 +291,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const materialsInputControl = (
     <MaterialsInputBox
       value={inputValue}
-      inputType={inputType}
+      type={inputType}
       allowedInputTypes={props.allowedInputTypes as MaterialsInputType[]}
       isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
@@ -450,7 +452,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
     );
-  } else if (props.inputType === 'formula') {
+  } else if (props.type === 'formula') {
     periodicTablePlugin = (
       <PeriodicTablePluginWrapper>
         <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />
@@ -490,8 +492,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }, [props.value]);
 
   useEffect(() => {
-    setInputType(props.inputType);
-  }, [props.inputType]);
+    setInputType(props.type);
+  }, [props.type]);
 
   useEffect(() => {
     if (props.onInputTypeChange) props.onInputTypeChange(inputType);
@@ -628,10 +630,4 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       </PeriodicContext>
     </div>
   );
-};
-
-MaterialsInput.defaultProps = {
-  value: '',
-  inputType: MaterialsInputType.ELEMENTS,
-  onChange: (value) => undefined
 };
