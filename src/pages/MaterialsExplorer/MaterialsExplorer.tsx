@@ -64,6 +64,9 @@ export const MaterialsExplorer: React.FC = () => {
           elements: {
             field: 'elements'
           },
+          chemical_system: {
+            field: 'formula'
+          },
           formula: {
             field: 'formula'
           },
