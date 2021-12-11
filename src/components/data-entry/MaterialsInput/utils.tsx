@@ -1,3 +1,5 @@
+import { FindValueOperator } from 'rxjs/internal/operators/find';
+import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { MaterialsInputType } from '../MaterialsInput';
 
 const VALID_ELEMENTS =
@@ -224,9 +226,9 @@ export const getDelimiter = (input: string): RegExp => {
  * @param {string} elementStr String of element symbols to be validated
  * @returns Array of valid element symbols
  */
-export const validateElements = (elementStr: string): string[] | undefined => {
+export const validateElements = (elementStr: string, delimiter?: RegExp): string[] | undefined => {
   let cleanElementsStr = '';
-  const delimiter = getDelimiter(elementStr);
+  delimiter = delimiter || getDelimiter(elementStr);
   const delimiterString = delimiter.toString();
   if (delimiterString === new RegExp(/,/).toString()) {
     cleanElementsStr = elementStr.replace(/and|\s|-|[0-9]/gi, '');
@@ -250,6 +252,20 @@ export const validateElements = (elementStr: string): string[] | undefined => {
   } else {
     return;
   }
+};
+
+export const validateElementsList = (elementStr: string): string[] | undefined => {
+  const delimiter = getDelimiter(elementStr);
+  const delimiterString = delimiter.toString();
+  if (delimiterString === new RegExp(/-/).toString()) {
+    return;
+  } else {
+    return validateElements(elementStr, delimiter);
+  }
+};
+
+export const validateChemicalSystem = (elementStr: string): string[] | undefined => {
+  return validateElements(elementStr, new RegExp(/-/));
 };
 
 /**
@@ -288,31 +304,63 @@ export const validateMPID = (value: string): string | null => {
 
 export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
 
+export const defaultAllowedInputTypes = [
+  MaterialsInputType.ELEMENTS,
+  MaterialsInputType.CHEMICAL_SYSTEM,
+  MaterialsInputType.FORMULA,
+  MaterialsInputType.MPID
+];
+
 /**
- * Object to map MaterialsInputType values to validation functions
- * Object keys must be one of the values defined in the MaterialsInputType enum
+ * Object to map MaterialsInputType values to other values
+ * such as validation functions or periodic table selection modes.
+ * Object keys must be one of the values defined in the MaterialsInputType enum.
  */
 export const materialsInputTypes: MaterialsInputTypesMap = {
   mpid: {
     validate: validateMPID,
-    order: 1
+    order: 1,
+    dropdownValue: 'Material ID'
   },
   elements: {
-    validate: validateElements,
-    order: 2
+    validate: validateElementsList,
+    order: 2,
+    selectionMode: PeriodicTableSelectionMode.ELEMENTS,
+    dropdownValue: 'Elements',
+    elementsOnlyDropdownValue: 'At least'
+  },
+  chemical_system: {
+    validate: validateChemicalSystem,
+    order: 3,
+    selectionMode: PeriodicTableSelectionMode.CHEMICAL_SYSTEM,
+    dropdownValue: 'Chemical System',
+    elementsOnlyDropdownValue: 'Only'
   },
   formula: {
     validate: validateFormula,
-    order: 3
+    order: 4,
+    selectionMode: PeriodicTableSelectionMode.FORMULA,
+    dropdownValue: 'Formula'
   },
   smiles: {
     validate: validateSmiles,
-    order: 4
+    order: 5,
+    dropdownValue: 'SMILES'
   },
   text: {
     validate: () => true,
-    order: 5
+    order: 6,
+    dropdownValue: 'Text'
   }
+};
+
+export const getMaterialsInputTypeByMappedValue = (key: string, value: any) => {
+  for (const t in materialsInputTypes) {
+    if (materialsInputTypes[t][key] === value) {
+      return t as MaterialsInputType;
+    }
+  }
+  return;
 };
 
 /**

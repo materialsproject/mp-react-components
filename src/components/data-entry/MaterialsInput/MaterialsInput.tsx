@@ -20,7 +20,15 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
-import { MaterialsInputTypesMap, validateElements, validateFormula, validateMPID } from './utils';
+import {
+  defaultAllowedInputTypes,
+  getMaterialsInputTypeByMappedValue,
+  materialsInputTypes,
+  MaterialsInputTypesMap,
+  validateElements,
+  validateFormula,
+  validateMPID
+} from './utils';
 import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { Tooltip } from '../../data-display/Tooltip';
 import { InputHelpItem } from './InputHelp/InputHelp';
@@ -30,6 +38,7 @@ import { InputHelpItem } from './InputHelp/InputHelp';
  */
 export enum MaterialsInputType {
   ELEMENTS = 'elements',
+  CHEMICAL_SYSTEM = 'chemical_system',
   FORMULA = 'formula',
   MPID = 'mpid',
   SMILES = 'smiles',
@@ -73,7 +82,9 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   setProps?: (value: any) => any;
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
+  detectInputMode?: boolean;
   hidePeriodicTable?: boolean;
+  showTypeDropdown?: boolean;
   label?: string;
   onPropsChange?: (propsObject: any) => void;
 }
@@ -117,7 +128,7 @@ const getAllowedSelectionModes = (
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   value = '',
   errorMessage = 'Invalid input value',
-  allowedInputTypes = ['elements', 'formula', 'mpid'],
+  allowedInputTypes = defaultAllowedInputTypes,
   type = allowedInputTypes[0] as MaterialsInputType,
   onChange = (value) => value,
   ...otherProps
@@ -129,23 +140,63 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [error, setError] = useState<string | null>(null);
   const [errorTipStayActive, setErrorTipStayActive] = useState(false);
+  const hasPeriodicTable = props.periodicTableMode !== PeriodicTableMode.NONE;
   const [selectionMode, setSelectionMode] = useState(() => {
-    return inputType === MaterialsInputType.FORMULA
-      ? PeriodicTableSelectionMode.FORMULA
-      : PeriodicTableSelectionMode.CHEMICAL_SYSTEM;
+    return materialsInputTypes[inputType].selectionMode;
   });
   const [isChemSys, setIsChemSys] = useState<boolean | undefined>(() => {
-    if (props.isChemSys) {
-      return props.isChemSys;
-    } else if (
-      props.onInputTypeChange &&
-      selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM
-    ) {
-      return true;
+    return inputType === MaterialsInputType.CHEMICAL_SYSTEM;
+  });
+  const hasDynamicInputType = props.allowedInputTypes.length > 1;
+  const showTypeDropdown = props.showTypeDropdown && hasDynamicInputType;
+  let typeDropdownOptions: string[] = [];
+  /**
+   * Determine if this input only allows elements and chemical system so
+   * that a different type dropdown can be used.
+   */
+  let dropdownOnlyElementsOrChemSys = false;
+  if (
+    (showTypeDropdown &&
+      props.allowedInputTypes.length === 2 &&
+      props.allowedInputTypes[0] === MaterialsInputType.ELEMENTS) ||
+    (MaterialsInputType.CHEMICAL_SYSTEM &&
+      props.allowedInputTypes[1] === MaterialsInputType.ELEMENTS) ||
+    (MaterialsInputType.CHEMICAL_SYSTEM &&
+      props.allowedInputTypes[0] !== props.allowedInputTypes[1])
+  ) {
+    dropdownOnlyElementsOrChemSys = true;
+    typeDropdownOptions = [
+      materialsInputTypes[MaterialsInputType.CHEMICAL_SYSTEM].elementsOnlyDropdownValue,
+      materialsInputTypes[MaterialsInputType.ELEMENTS].elementsOnlyDropdownValue
+    ];
+  } else if (showTypeDropdown) {
+    props.allowedInputTypes.forEach((t) => {
+      typeDropdownOptions.push(materialsInputTypes[t].dropdownValue);
+    });
+  }
+
+  const [typeDropdownValue, setTypeDropdownValue] = useState<string | undefined>(() => {
+    if (showTypeDropdown && !dropdownOnlyElementsOrChemSys) {
+      return materialsInputTypes[inputType].dropdownValue;
+    } else if (showTypeDropdown && dropdownOnlyElementsOrChemSys) {
+      return materialsInputTypes[inputType].elementsOnlyDropdownValue;
     } else {
-      return false;
+      return;
     }
   });
+
+  // const [isChemSys, setIsChemSys] = useState<boolean | undefined>(() => {
+  //   if (props.isChemSys) {
+  //     return props.isChemSys;
+  //   } else if (
+  //     props.onInputTypeChange &&
+  //     selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM
+  //   ) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
   const [chemSysDropdownValue, setChemSysDropdownValue] = useState<
     ChemSysDropdownValue | undefined
   >(() => {
@@ -223,8 +274,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
-  const getOnPropsChangeProp = () => {
-    if (props.onInputTypeChange) {
+  const getOnInputTypeChangeProp = () => {
+    if (hasDynamicInputType) {
       return (value: MaterialsInputType) => setInputType(value);
     } else {
       return;
@@ -282,11 +333,55 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     return newIsChemSys;
   };
 
+  /**
+   * Take a new value from either the periodic table mode selector or
+   * the input type dropdown, set the new input type, and convert the input value
+   * to match the new type (e.g. Fe,Co --> Fe-Co).
+   * @param selectedValue value selected from the selector or dropdown
+   * @param lookupKey key within `materialsInputTypes` that maps this kind of selection to a MaterialsInputType
+   * @param currentInputType the current inputType value
+   * @param currentInputValue the current inputValue
+   */
+  const convertSelectionToInputType = (
+    selectedValue: any,
+    lookupKey: string,
+    currentInputType: MaterialsInputType,
+    currentInputValue: string
+  ) => {
+    const elements: string[] | undefined =
+      materialsInputTypes[currentInputType].validate(currentInputValue);
+    const wildcards = currentInputValue.match(/\*/g);
+    const elementsPlusWildcards = wildcards ? elements?.concat(wildcards) : elements;
+    const newSelection = getMaterialsInputTypeByMappedValue(lookupKey, selectedValue);
+
+    if (newSelection) {
+      setInputType(newSelection);
+    }
+
+    if (newSelection === MaterialsInputType.CHEMICAL_SYSTEM) {
+      if (elementsPlusWildcards && elementsPlusWildcards.length > 1) {
+        setInputValue(arrayToDelimitedString(elementsPlusWildcards, /-/));
+      }
+    } else if (newSelection === MaterialsInputType.ELEMENTS) {
+      if (elements && elements.length > 1) {
+        setInputValue(arrayToDelimitedString(elements, /,/));
+      }
+    } else if (
+      newSelection === MaterialsInputType.FORMULA &&
+      currentInputType !== MaterialsInputType.FORMULA
+    ) {
+      if (elements && elements.length > 1) {
+        setInputValue(arrayToDelimitedString(elements, ''));
+      }
+    }
+  };
+
   let materialsInputField: JSX.Element | null = null;
+  let materialsInputFieldControls: JSX.Element | null = null;
   let labelControl: JSX.Element | null = null;
   let periodicToggleControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
-  let chemSysDropdown: JSX.Element | null = null;
+  let typeDropdown: JSX.Element | null = null;
 
   const materialsInputControl = (
     <MaterialsInputBox
@@ -296,7 +391,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
-      onInputTypeChange={getOnPropsChangeProp()}
+      onInputTypeChange={getOnInputTypeChangeProp()}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       onKeyDown={getOnKeyDownProp}
@@ -368,18 +463,18 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     </Control>
   );
 
-  if (chemSysDropdownValue) {
-    chemSysDropdown = (
+  if (showTypeDropdown) {
+    typeDropdown = (
       <MenuWrapper
         data-testid="mpc-chemsys-dropdown"
         className="control dropdown is-active"
-        onSelection={(v: ChemSysDropdownValue) => {
-          setChemSysDropdownValue(v);
+        onSelection={(v: string) => {
+          setTypeDropdownValue(v);
         }}
       >
         <div className="dropdown-trigger">
           <MenuButton className="button">
-            <span>{chemSysDropdownValue}</span>
+            <span>{typeDropdownValue}</span>
             <span className="icon">
               <FaAngleDown />
             </span>
@@ -387,11 +482,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         </div>
         <Menu className="dropdown-menu">
           <ul className="dropdown-content">
-            {Object.values(ChemSysDropdownValue).map((d) => (
+            {typeDropdownOptions.map((d) => (
               <MenuItem key={d} value={d}>
                 <li
                   className={classNames('dropdown-item', {
-                    'is-active': d === chemSysDropdownValue
+                    'is-active': d === typeDropdownValue
                   })}
                 >
                   {d}
@@ -404,14 +499,21 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     );
   }
 
+  materialsInputFieldControls = (
+    <>
+      {labelControl}
+      {typeDropdown}
+      {materialsInputControl}
+      {error && errorControl}
+      {periodicToggleControl}
+    </>
+  );
+
   if (props.onSubmit) {
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
-          {labelControl}
-          {materialsInputControl}
-          {error && errorControl}
-          {periodicToggleControl}
+          {materialsInputFieldControls}
           <Control>
             <Button color="primary" type="submit">
               Search
@@ -421,15 +523,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       </form>
     );
   } else {
-    materialsInputField = (
-      <Field className="has-addons">
-        {labelControl}
-        {chemSysDropdown}
-        {materialsInputControl}
-        {error && errorControl}
-        {periodicToggleControl}
-      </Field>
-    );
+    materialsInputField = <Field className="has-addons">{materialsInputFieldControls}</Field>;
   }
 
   /**
@@ -440,7 +534,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    *
    * Include no plugin if component only handles elements field.
    */
-  if (props.onInputTypeChange) {
+  if (hasPeriodicTable) {
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
         mode={selectionMode}
@@ -452,36 +546,40 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
     );
-  } else if (props.type === 'formula') {
-    periodicTablePlugin = (
-      <PeriodicTablePluginWrapper>
-        <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />
-      </PeriodicTablePluginWrapper>
-    );
   }
+  // } else if (props.type === 'formula') {
+  //   periodicTablePlugin = (
+  //     <PeriodicTablePluginWrapper>
+  //       <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />
+  //     </PeriodicTablePluginWrapper>
+  //   );
+  // }
 
   /**
-   * When the input value or type changes...
-   * dynamically modify the chem sys flag,
-   * change the periodic table selection mode dropdown value based on the input type
+   * When the input type changes, dynamically change the periodic table mode and/or
+   * type dropdown value so that they stay in sync with the current value's type.
    */
   useEffect(() => {
-    if (isFocused) shouldShowHelpMenu();
-    const _isChemSys = handleChemSysCheck();
-    if (
-      props.onInputTypeChange &&
-      inputType === MaterialsInputType.ELEMENTS &&
-      _isChemSys !== undefined
-    ) {
-      setSelectionMode(
-        _isChemSys
-          ? PeriodicTableSelectionMode.CHEMICAL_SYSTEM
-          : PeriodicTableSelectionMode.ELEMENTS
-      );
-    } else if (props.onInputTypeChange && inputType === MaterialsInputType.FORMULA) {
-      setSelectionMode(PeriodicTableSelectionMode.FORMULA);
+    if (props.onInputTypeChange) props.onInputTypeChange(inputType);
+
+    if (showTypeDropdown && !dropdownOnlyElementsOrChemSys) {
+      setTypeDropdownValue(materialsInputTypes[inputType].dropdownValue);
+    } else if (showTypeDropdown && dropdownOnlyElementsOrChemSys) {
+      setTypeDropdownValue(materialsInputTypes[inputType].elementsOnlyDropdownValue);
     }
-  }, [inputValue, inputType]);
+
+    if (
+      (hasPeriodicTable && inputType === MaterialsInputType.FORMULA) ||
+      inputType === MaterialsInputType.ELEMENTS ||
+      inputType === MaterialsInputType.CHEMICAL_SYSTEM
+    ) {
+      setSelectionMode(materialsInputTypes[inputType].selectionMode);
+    }
+  }, [inputType]);
+
+  useEffect(() => {
+    if (isFocused) shouldShowHelpMenu();
+  }, [inputValue]);
 
   /**
    * This effect is triggered when the value prop is changed from outside this component
@@ -494,10 +592,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   useEffect(() => {
     setInputType(props.type);
   }, [props.type]);
-
-  useEffect(() => {
-    if (props.onInputTypeChange) props.onInputTypeChange(inputType);
-  }, [inputType]);
 
   /**
    * This effect is triggered after the debouncedInputValue is set
@@ -534,39 +628,24 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    */
   useEffect(() => {
     if (
-      props.onInputTypeChange &&
-      (inputType === MaterialsInputType.ELEMENTS || inputType === MaterialsInputType.FORMULA)
+      hasPeriodicTable &&
+      hasDynamicInputType &&
+      (inputType === MaterialsInputType.ELEMENTS ||
+        inputType === MaterialsInputType.CHEMICAL_SYSTEM ||
+        inputType === MaterialsInputType.FORMULA)
     ) {
-      let elements: string[] | undefined;
-      let elementsPlusWildcards: string[] | undefined;
-
-      if (inputType === MaterialsInputType.ELEMENTS) {
-        elements = validateElements(inputValue);
-      } else if (inputType === MaterialsInputType.FORMULA) {
-        elements = validateFormula(inputValue);
-      }
-
-      const wildcards = inputValue.match(/\*/g);
-      elementsPlusWildcards = wildcards ? elements?.concat(wildcards) : elements;
-
-      if (selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM) {
-        setIsChemSys(true);
-        setInputType(MaterialsInputType.ELEMENTS);
-        if (elementsPlusWildcards && elementsPlusWildcards.length > 1)
-          setInputValue(arrayToDelimitedString(elementsPlusWildcards, /-/));
-      } else if (selectionMode === PeriodicTableSelectionMode.ELEMENTS) {
-        setIsChemSys(false);
-        setInputType(MaterialsInputType.ELEMENTS);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /,/));
-      } else if (
-        selectionMode === PeriodicTableSelectionMode.FORMULA &&
-        inputType !== MaterialsInputType.FORMULA
-      ) {
-        setInputType(MaterialsInputType.FORMULA);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, ''));
-      }
+      convertSelectionToInputType(selectionMode, 'selectionMode', inputType, inputValue);
     }
   }, [selectionMode]);
+
+  useEffect(() => {
+    if (showTypeDropdown) {
+      const lookupKey = dropdownOnlyElementsOrChemSys
+        ? 'elementsOnlyDropdownValue'
+        : 'dropdownValue';
+      convertSelectionToInputType(typeDropdownValue, lookupKey, inputType, inputValue);
+    }
+  }, [typeDropdownValue]);
 
   /**
    * Ensure delimiter in the input value changes if the

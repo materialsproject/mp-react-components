@@ -6,7 +6,7 @@ import {
   getTruthyKeys,
   arrayToDelimitedString
 } from '../../utils';
-import { validateInputType, detectAndValidateInputType } from '../utils';
+import { validateInputType, detectAndValidateInputType, defaultAllowedInputTypes } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 import classNames from 'classnames';
@@ -37,7 +37,11 @@ interface DispatchAction {
   payload?: any;
 }
 
-export const MaterialsInputBox: React.FC<Props> = (props) => {
+export const MaterialsInputBox: React.FC<Props> = ({
+  allowedInputTypes = defaultAllowedInputTypes,
+  ...otherProps
+}) => {
+  const props = { allowedInputTypes, ...otherProps };
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(() =>
     props.isChemSys ? new RegExp('-') : new RegExp(',')
@@ -47,9 +51,11 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   const [inputType, setInputType] = useState<MaterialsInputType | null>(props.type || null);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [showInputHelp, setShowInputHelp] = useState(false);
+  const staticInputField = props.allowedInputTypes.length === 1 ? props.type : undefined;
   const includeAutocomplete =
     props.autocompleteFormulaUrl &&
-    (props.type == MaterialsInputType.FORMULA || props.onInputTypeChange);
+    (props.type == MaterialsInputType.FORMULA ||
+      props.allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -121,7 +127,6 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!valueChangedByPT.current) {
       const enabledElementsList = getTruthyKeys(enabledElements);
-      const staticInputField = !props.onInputTypeChange ? props.type : undefined;
       let [newMaterialsInputType, parsedValue] = staticInputField
         ? validateInputType(inputValue, staticInputField)
         : detectAndValidateInputType(inputValue, props.allowedInputTypes!);
@@ -135,6 +140,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         props.setError(null);
         if (
           newMaterialsInputType === MaterialsInputType.ELEMENTS ||
+          newMaterialsInputType === MaterialsInputType.CHEMICAL_SYSTEM ||
           newMaterialsInputType === MaterialsInputType.FORMULA
         ) {
           /** Parse the input for a delimiter */
@@ -213,6 +219,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       let newValue = '';
       switch (props.type) {
         case MaterialsInputType.ELEMENTS:
+        case MaterialsInputType.CHEMICAL_SYSTEM:
           let elementsSplit = props.value ? props.value.split(delimiter) : [];
           if (lastAction.type === 'select') {
             elementsSplit.push(enabledElementsList[enabledElementsList.length - 1]);

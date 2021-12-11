@@ -19,7 +19,13 @@ export const PhaseDiagramApp: React.FC = () => {
   return (
     <>
       <h1>Phase Diagram</h1>
-      <MaterialsInput />
+      <div className="container is-max-desktop">
+        <MaterialsInput
+          label="Phase Diagram"
+          hideChemSys={true}
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+        />
+      </div>
       <SearchUIContainer
         resultLabel="material"
         columns={columns as Column[]}
@@ -43,7 +49,6 @@ export const PhaseDiagramApp: React.FC = () => {
           }
         }}
       >
-        <SearchUISearchBar />
         <SearchUIDataView />
       </SearchUIContainer>
     </>
