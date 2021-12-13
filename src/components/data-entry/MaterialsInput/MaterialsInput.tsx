@@ -155,13 +155,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    * that a different type dropdown can be used.
    */
   let dropdownOnlyElementsOrChemSys = false;
+  const elementTypes = [MaterialsInputType.ELEMENTS, MaterialsInputType.CHEMICAL_SYSTEM];
   if (
     showTypeDropdown &&
     props.allowedInputTypes.length === 2 &&
-    (props.allowedInputTypes[0] === MaterialsInputType.ELEMENTS ||
-      props.allowedInputTypes[0] === MaterialsInputType.CHEMICAL_SYSTEM) &&
-    (props.allowedInputTypes[1] === MaterialsInputType.ELEMENTS ||
-      props.allowedInputTypes[1] === MaterialsInputType.CHEMICAL_SYSTEM) &&
+    props.allowedInputTypes.every((t) => elementTypes.indexOf(t) > -1) &&
     props.allowedInputTypes[0] !== props.allowedInputTypes[1]
   ) {
     dropdownOnlyElementsOrChemSys = true;
