@@ -233,7 +233,7 @@ export const validateElements = (elementStr: string, delimiter?: RegExp): string
   if (delimiterString === new RegExp(/,/).toString()) {
     cleanElementsStr = elementStr.replace(/and|\s|-|[0-9]/gi, '');
   } else if (delimiterString === new RegExp(/-/).toString()) {
-    cleanElementsStr = elementStr.replace(/and|\s|,|[0-9]/gi, '');
+    cleanElementsStr = elementStr.replace(/and|\s|[0-9]/gi, '');
   } else if (delimiterString === new RegExp(/\s/).toString()) {
     cleanElementsStr = elementStr.replace(/and|,|-|[0-9]/gi, '');
   }
