@@ -69,16 +69,17 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
       case FilterType.TEXT_INPUT:
         return (
           <TextInput
+            {...f.props}
             debounce={state.debounce}
             type="text"
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id)}
-            {...f.props}
           />
         );
       case FilterType.MATERIALS_INPUT:
         return (
           <MaterialsInput
+            {...f.props}
             debounce={state.debounce}
             value={state.filterValues[f.id]}
             onChange={(v) => actions.setFilterValue(v, f.id, f.overrides)}
@@ -87,9 +88,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}
-            // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
-            // showFieldDropdown={true}
-            {...f.props}
           />
         );
       case FilterType.SLIDER:

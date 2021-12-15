@@ -32,18 +32,14 @@ export const SearchUISearchBar: React.FC = () => {
     }
   };
 
-  const handleSubmit = (
-    e: React.FormEvent | React.MouseEvent,
-    value?: string,
-    filterProps?: any
-  ) => {
+  const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     console.log(value);
     const submitValue = value || searchValue;
     const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
       return allowedInputTypesMap[d].field;
     });
     const fieldsToOverride = allowedFields?.filter((d) => d !== searchField);
-    actions.setFilterValue(submitValue, searchField, fieldsToOverride, filterProps);
+    actions.setFilterValue(submitValue, searchField, fieldsToOverride);
   };
 
   /**
@@ -78,6 +74,7 @@ export const SearchUISearchBar: React.FC = () => {
       type={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
+      // onPropsChange={({ type }) => setSearchInputType(type)}
       onSubmit={handleSubmit}
       periodicTableMode={state.searchBarPeriodicTableMode}
       hidePeriodicTable={shouldHidePeriodicTable()}
