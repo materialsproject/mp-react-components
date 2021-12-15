@@ -322,19 +322,19 @@ export const materialsInputTypes: MaterialsInputTypesMap = {
     order: 1,
     dropdownValue: 'Material ID'
   },
-  elements: {
-    validate: validateElementsList,
-    order: 2,
-    selectionMode: PeriodicTableSelectionMode.ELEMENTS,
-    dropdownValue: 'Elements',
-    elementsOnlyDropdownValue: 'At least'
-  },
   chemical_system: {
     validate: validateChemicalSystem,
-    order: 3,
+    order: 2,
     selectionMode: PeriodicTableSelectionMode.CHEMICAL_SYSTEM,
     dropdownValue: 'Chemical System',
     elementsOnlyDropdownValue: 'Only'
+  },
+  elements: {
+    validate: validateElementsList,
+    order: 3,
+    selectionMode: PeriodicTableSelectionMode.ELEMENTS,
+    dropdownValue: 'Elements',
+    elementsOnlyDropdownValue: 'At least'
   },
   formula: {
     validate: validateFormula,

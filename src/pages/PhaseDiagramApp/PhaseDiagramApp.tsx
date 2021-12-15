@@ -27,7 +27,6 @@ export const PhaseDiagramApp: React.FC = () => {
       <h1>Phase Diagram</h1>
       <div className="container is-max-desktop">
         <MaterialsInput
-          value=""
           type={MaterialsInputType.CHEMICAL_SYSTEM}
           setProps={setState}
           label="Phase Diagram"
