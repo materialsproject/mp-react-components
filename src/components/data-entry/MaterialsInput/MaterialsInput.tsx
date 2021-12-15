@@ -75,6 +75,7 @@ export interface MaterialsInputSharedProps {
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
   id?: string;
   setProps?: (value: any) => any;
+  className?: string;
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
   detectInputMode?: boolean;
@@ -617,7 +618,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }, [typeDropdownValue]);
 
   return (
-    <div id={props.id} className="mpc-materials-input">
+    <div id={props.id} className={classNames('mpc-materials-input', props.className)}>
       <PeriodicContext>
         {materialsInputField}
         {props.periodicTableMode !== PeriodicTableMode.NONE && (

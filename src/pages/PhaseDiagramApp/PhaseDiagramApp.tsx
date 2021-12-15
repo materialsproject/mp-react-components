@@ -31,6 +31,7 @@ export const PhaseDiagramApp: React.FC = () => {
           setProps={setState}
           label="Phase Diagram"
           showTypeDropdown={false}
+          showSubmitButton={true}
           periodicTableMode={PeriodicTableMode.TOGGLE}
           allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM, MaterialsInputType.FORMULA]}
         />
