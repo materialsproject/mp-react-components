@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
@@ -17,17 +17,28 @@ import { SearchUIDataView } from '../../components/data-display/SearchUI/SearchU
  * Component for testing the Phase Diagram view
  */
 export const PhaseDiagramApp: React.FC = () => {
+  const [state, setState] = useState({
+    value: '',
+    type: 'test'
+  });
+
   return (
     <>
       <h1>Phase Diagram</h1>
       <div className="container is-max-desktop">
         <MaterialsInput
-          label="Phase Diagram"
-          showTypeDropdown={true}
-          periodicTableMode={PeriodicTableMode.TOGGLE}
+          value=""
           type={MaterialsInputType.CHEMICAL_SYSTEM}
+          setProps={setState}
+          label="Phase Diagram"
+          showTypeDropdown={false}
+          periodicTableMode={PeriodicTableMode.TOGGLE}
           allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM, MaterialsInputType.FORMULA]}
         />
+      </div>
+      <div>
+        <h2>{state.value}</h2>
+        <h3>{state.type}</h3>
       </div>
       <SearchUIContainer
         resultLabel="material"
