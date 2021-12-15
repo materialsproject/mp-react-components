@@ -64,7 +64,6 @@ export interface MaterialsInputSharedProps {
   showInputTypeDropdown?: boolean;
   /** Temporary prop until this can be handled in inputTypes */
   hideChemSys?: boolean;
-  isChemSys?: boolean;
   allowSmiles?: boolean;
   placeholder?: string;
   errorMessage?: string;
@@ -89,25 +88,20 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   onPropsChange?: (propsObject: any) => void;
 }
 
-enum ChemSysDropdownValue {
-  ONLY = 'Only',
-  AT_LEAST = 'At least'
-}
-
 /**
  * Map the list of allowed input types to a list of allowed periodic table selection modes.
  * This prevents periodic table modes dropdown from having items that are
  * inconsistent with the allowed input types.
  * The order that these items are appended determines the order they are rendered in the periodic table.
  */
-const getAllowedSelectionModes = (
-  allowedInputTypes: MaterialsInputType[],
-  hideChemSys?: boolean
-) => {
+const getAllowedSelectionModes = (allowedInputTypes: MaterialsInputType[]) => {
   const allowedModes: PeriodicTableSelectionMode[] = [];
 
+  if (allowedInputTypes.indexOf(MaterialsInputType.CHEMICAL_SYSTEM) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+  }
+
   if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
-    if (!hideChemSys) allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
     allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
   }
 
@@ -144,9 +138,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [selectionMode, setSelectionMode] = useState(() => {
     return materialsInputTypes[inputType].selectionMode;
   });
-  const [isChemSys, setIsChemSys] = useState<boolean | undefined>(() => {
-    return inputType === MaterialsInputType.CHEMICAL_SYSTEM;
-  });
   const hasDynamicInputType = props.allowedInputTypes.length > 1;
   const showTypeDropdown = props.showTypeDropdown && hasDynamicInputType;
   let typeDropdownOptions: string[] = [];
@@ -180,28 +171,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       return materialsInputTypes[inputType].elementsOnlyDropdownValue;
     } else {
       return;
-    }
-  });
-
-  // const [isChemSys, setIsChemSys] = useState<boolean | undefined>(() => {
-  //   if (props.isChemSys) {
-  //     return props.isChemSys;
-  //   } else if (
-  //     props.onInputTypeChange &&
-  //     selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM
-  //   ) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // });
-  const [chemSysDropdownValue, setChemSysDropdownValue] = useState<
-    ChemSysDropdownValue | undefined
-  >(() => {
-    if (props.hideChemSys || props.type !== 'elements' || props.onInputTypeChange) {
-      return;
-    } else {
-      return isChemSys ? ChemSysDropdownValue.ONLY : ChemSysDropdownValue.AT_LEAST;
     }
   });
   const periodicTableClicked = useRef(false);
@@ -307,29 +276,29 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
-  /**
-   * Dynamically determine if input is a chemical system
-   * based on its inputType and the presence of a '-'
-   */
-  const handleChemSysCheck = () => {
-    let newIsChemSys: boolean | undefined;
-    /**
-     * Temporary fix to make sure input values are not mpid's.
-     * This should be fixed in the future by removing inputValue from the [inputValue, inputType] useEffect
-     * and modifying MaterialsInputType so that CHEMICAL_SYSTEM is its own type.
-     */
-    if (
-      !validateMPID(inputValue) &&
-      inputType === MaterialsInputType.ELEMENTS &&
-      inputValue.match(/-/gi)
-    ) {
-      newIsChemSys = true;
-    } else if (inputValue.match(/,|\s/gi)) {
-      newIsChemSys = false;
-    }
-    if (newIsChemSys !== undefined) setIsChemSys(newIsChemSys);
-    return newIsChemSys;
-  };
+  // /**
+  //  * Dynamically determine if input is a chemical system
+  //  * based on its inputType and the presence of a '-'
+  //  */
+  // const handleChemSysCheck = () => {
+  //   let newIsChemSys: boolean | undefined;
+  //   /**
+  //    * Temporary fix to make sure input values are not mpid's.
+  //    * This should be fixed in the future by removing inputValue from the [inputValue, inputType] useEffect
+  //    * and modifying MaterialsInputType so that CHEMICAL_SYSTEM is its own type.
+  //    */
+  //   if (
+  //     !validateMPID(inputValue) &&
+  //     inputType === MaterialsInputType.ELEMENTS &&
+  //     inputValue.match(/-/gi)
+  //   ) {
+  //     newIsChemSys = true;
+  //   } else if (inputValue.match(/,|\s/gi)) {
+  //     newIsChemSys = false;
+  //   }
+  //   if (newIsChemSys !== undefined) setIsChemSys(newIsChemSys);
+  //   return newIsChemSys;
+  // };
 
   /**
    * Take a new value from either the periodic table mode selector or
@@ -386,7 +355,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       value={inputValue}
       type={inputType}
       allowedInputTypes={props.allowedInputTypes as MaterialsInputType[]}
-      isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
       onInputTypeChange={getOnInputTypeChangeProp()}
@@ -536,10 +504,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
         mode={selectionMode}
-        allowedModes={getAllowedSelectionModes(
-          props.allowedInputTypes as MaterialsInputType[],
-          props.hideChemSys
-        )}
+        allowedModes={getAllowedSelectionModes(props.allowedInputTypes as MaterialsInputType[])}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
@@ -608,16 +573,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }, [debouncedInputValue]);
 
   /**
-   * Ensure the local isChemSys variable is modified if the
-   * isChemsys prop changes (triggered by the onPropsChange function)
-   */
-  useEffect(() => {
-    if (props.isChemSys !== undefined) {
-      setIsChemSys(props.isChemSys);
-    }
-  }, [props.isChemSys]);
-
-  /**
    * When the periodic table selection mode changes...
    * modify the chem sys flag based on the dropdown value,
    * modify the text input type,
@@ -644,36 +599,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       convertSelectionToInputType(typeDropdownValue, lookupKey, inputType, inputValue);
     }
   }, [typeDropdownValue]);
-
-  /**
-   * Ensure delimiter in the input value changes if the
-   * chem sys dropdown is changed.
-   */
-  useEffect(() => {
-    if (chemSysDropdownValue) {
-      let newValue = '';
-      let dropdownIsChemSys = chemSysDropdownValue === 'Only' ? true : false;
-      if (dropdownIsChemSys) {
-        newValue = inputValue.replace(/,\sand|,\s|,|\s/gi, '-');
-      } else {
-        newValue = inputValue.replace(/-/gi, ',');
-      }
-      setInputValue(newValue);
-      setIsChemSys(dropdownIsChemSys);
-    }
-  }, [chemSysDropdownValue]);
-
-  /**
-   * Ensure chem sys dropdown value will change dynamically while typing
-   * (i.e. if a new delimiter is typed in, change the dropdown value to match new delimiter)
-   */
-  useEffect(() => {
-    if (chemSysDropdownValue) {
-      setChemSysDropdownValue(
-        isChemSys ? ChemSysDropdownValue.ONLY : ChemSysDropdownValue.AT_LEAST
-      );
-    }
-  }, [isChemSys]);
 
   return (
     <div id={props.id} className="mpc-materials-input">
