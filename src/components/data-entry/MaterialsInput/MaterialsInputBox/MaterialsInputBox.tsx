@@ -44,7 +44,7 @@ export const MaterialsInputBox: React.FC<Props> = ({
   const props = { allowedInputTypes, ...otherProps };
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(() =>
-    props.isChemSys ? new RegExp('-') : new RegExp(',')
+    props.type === MaterialsInputType.CHEMICAL_SYSTEM ? new RegExp('-') : new RegExp(',')
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
@@ -272,12 +272,14 @@ export const MaterialsInputBox: React.FC<Props> = ({
   }, []);
 
   /**
-   * When the isChemSys prop is changed (e.g. via checkbox or dropdown),
+   * When the input type prop is changed (e.g. via dropdown),
    * set the delimiter accordingly
    */
   useEffect(() => {
-    setDelimiter(props.isChemSys ? new RegExp('-') : new RegExp(','));
-  }, [props.isChemSys]);
+    setDelimiter(
+      props.type === MaterialsInputType.CHEMICAL_SYSTEM ? new RegExp('-') : new RegExp(',')
+    );
+  }, [props.type]);
 
   return (
     <>

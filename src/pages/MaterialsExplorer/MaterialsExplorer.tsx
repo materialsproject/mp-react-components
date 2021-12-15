@@ -61,11 +61,11 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         searchBarAllowedInputTypesMap={{
-          elements: {
-            field: 'elements'
-          },
           chemical_system: {
             field: 'formula'
+          },
+          elements: {
+            field: 'elements'
           },
           formula: {
             field: 'formula'
