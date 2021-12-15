@@ -67,8 +67,8 @@ export interface MaterialsInputSharedProps {
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
   helpItems?: InputHelpItem[];
-  onChange?: (value: string) => void;
-  onInputTypeChange?: (type: MaterialsInputType) => void;
+  onChange?: (value: string) => any;
+  onInputTypeChange?: (type: MaterialsInputType) => any;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
 }
 
@@ -339,6 +339,19 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
+  /**
+   * Set values for props that Dash needs to be dynamically aware of.
+   */
+  const setDashProps = () => {
+    if (props.setProps) {
+      props.setProps({
+        ...props,
+        value: inputValue,
+        type: inputType
+      });
+    }
+  };
+
   let materialsInputField: JSX.Element | null = null;
   let materialsInputFieldControls: JSX.Element | null = null;
   let labelControl: JSX.Element | null = null;
@@ -517,6 +530,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    * type dropdown value so that they stay in sync with the current value's type.
    */
   useEffect(() => {
+    setDashProps();
     if (props.onInputTypeChange) props.onInputTypeChange(inputType);
 
     if (showTypeDropdown && !dropdownOnlyElementsOrChemSys) {
@@ -535,6 +549,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   }, [inputType]);
 
   useEffect(() => {
+    setDashProps();
     if (isFocused) shouldShowHelpMenu();
   }, [inputValue]);
 
