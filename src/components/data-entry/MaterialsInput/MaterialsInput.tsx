@@ -128,8 +128,8 @@ const getAllowedSelectionModes = (
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   value = '',
   errorMessage = 'Invalid input value',
-  allowedInputTypes = defaultAllowedInputTypes,
-  type = allowedInputTypes[0] as MaterialsInputType,
+  type = MaterialsInputType.ELEMENTS,
+  allowedInputTypes = [type],
   onChange = (value) => value,
   ...otherProps
 }) => {
@@ -289,19 +289,19 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
     if (props.onSubmit && !error) {
       setShowPeriodicTable(false);
-      /**
-       * Pass filterProps to submit so that the chem sys flag
-       * can persist into the activated filter.
-       * This is primarily only important for searches for single elements
-       * because the chem sys flag cannot be inferred by the input value.
-       */
-      const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
+      // /**
+      //  * Pass filterProps to submit so that the chem sys flag
+      //  * can persist into the activated filter.
+      //  * This is primarily only important for searches for single elements
+      //  * because the chem sys flag cannot be inferred by the input value.
+      //  */
+      // const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
       /**
        * Optional value param allows function to submit a new value that doesn't necessarily
        * match the current input value (currently used for clicking on autocomplete items)
        */
       const submitValue = value || inputValue;
-      props.onSubmit(e, submitValue, filterProps);
+      props.onSubmit(e, submitValue);
     } else {
       setErrorTipStayActive(true);
     }
@@ -603,7 +603,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   useEffect(() => {
     if (!error) {
       props.onChange(debouncedInputValue);
-      if (props.onPropsChange) props.onPropsChange({ isChemSys: isChemSys });
+      if (props.onPropsChange) props.onPropsChange({ ...props, type: inputType });
     }
   }, [debouncedInputValue]);
 

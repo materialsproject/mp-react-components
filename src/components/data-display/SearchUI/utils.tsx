@@ -296,7 +296,7 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
         queryParamValue = query.get('formula');
         if (!f.hasOwnProperty('props')) f.props = {};
         /** Make sure elements filter is initialized with the appropriate elements mode */
-        f.props.isChemSys = true;
+        f.props.type = 'chemical_system';
       }
 
       switch (f.type) {
@@ -440,9 +440,7 @@ export const getSearchState = (
             let filterDisplayName = f.name.toLowerCase();
 
             if (
-              (f.props.type === MaterialsInputType.ELEMENTS &&
-                f.id === 'elements' &&
-                (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
+              f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
               (f.props.type === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
             ) {
               /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
