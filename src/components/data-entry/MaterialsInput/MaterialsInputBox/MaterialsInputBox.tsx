@@ -283,25 +283,6 @@ export const MaterialsInputBox: React.FC<Props> = ({
 
   return (
     <>
-      {props.showInputTypeDropdown && (
-        <Control>
-          <Dropdown
-            value={props.type}
-            onChange={(item: MaterialsInputType) => {
-              if (props.onInputTypeChange) props.onInputTypeChange(item);
-            }}
-            color="primary"
-          >
-            {dropdownItems.map((item, k) => {
-              return (
-                <Dropdown.Item key={k} value={item.value}>
-                  {item.label}
-                </Dropdown.Item>
-              );
-            })}
-          </Dropdown>
-        </Control>
-      )}
       <Control className="is-expanded">
         <input
           data-testid="materials-input-search-input"
