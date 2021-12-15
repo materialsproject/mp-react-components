@@ -61,10 +61,6 @@ export interface MaterialsInputSharedProps {
   value?: string;
   type?: MaterialsInputType;
   allowedInputTypes?: MaterialsInputType[];
-  showInputTypeDropdown?: boolean;
-  /** Temporary prop until this can be handled in inputTypes */
-  hideChemSys?: boolean;
-  allowSmiles?: boolean;
   placeholder?: string;
   errorMessage?: string;
   inputClassName?: string;
@@ -355,7 +351,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       value={inputValue}
       type={inputType}
       allowedInputTypes={props.allowedInputTypes as MaterialsInputType[]}
-      allowSmiles={props.allowSmiles}
       setValue={setInputValue}
       onInputTypeChange={getOnInputTypeChangeProp()}
       onFocus={getOnFocusProp}
@@ -363,7 +358,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       onKeyDown={getOnKeyDownProp}
       onSubmit={handleSubmit}
       liftInputRef={(ref) => setInputRef(ref)}
-      showInputTypeDropdown={props.showInputTypeDropdown}
       placeholder={props.placeholder}
       errorMessage={props.errorMessage}
       setError={setError}

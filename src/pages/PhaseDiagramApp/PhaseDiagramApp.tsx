@@ -6,6 +6,7 @@ import columns from './columns.json';
 import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
 import {
   MaterialsInput,
+  MaterialsInputType,
   PeriodicTableMode
 } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 import { SearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer';
@@ -22,8 +23,10 @@ export const PhaseDiagramApp: React.FC = () => {
       <div className="container is-max-desktop">
         <MaterialsInput
           label="Phase Diagram"
-          hideChemSys={true}
+          showTypeDropdown={true}
           periodicTableMode={PeriodicTableMode.TOGGLE}
+          type={MaterialsInputType.CHEMICAL_SYSTEM}
+          allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM, MaterialsInputType.FORMULA]}
         />
       </div>
       <SearchUIContainer
