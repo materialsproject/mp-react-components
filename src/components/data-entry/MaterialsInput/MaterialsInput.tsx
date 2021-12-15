@@ -80,6 +80,8 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   detectInputMode?: boolean;
   hidePeriodicTable?: boolean;
   showTypeDropdown?: boolean;
+  showSubmitButton?: boolean;
+  submitButtonId?: string;
   label?: string;
   onPropsChange?: (propsObject: any) => void;
 }
@@ -252,7 +254,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    if (props.onSubmit && !error) {
+    if (!error) {
       setShowPeriodicTable(false);
       // /**
       //  * Pass filterProps to submit so that the chem sys flag
@@ -261,12 +263,17 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       //  * because the chem sys flag cannot be inferred by the input value.
       //  */
       // const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
-      /**
-       * Optional value param allows function to submit a new value that doesn't necessarily
-       * match the current input value (currently used for clicking on autocomplete items)
-       */
-      const submitValue = value || inputValue;
-      props.onSubmit(e, submitValue);
+
+      if (props.onSubmit) {
+        /**
+         * Optional value param allows function to submit a new value that doesn't necessarily
+         * match the current input value (currently used for clicking on autocomplete items).
+         * This only works in React. No way right now to pass a clicked autocomplete value
+         * directly to a callback.
+         */
+        const submitValue = value || inputValue;
+        props.onSubmit(e, submitValue);
+      }
     } else {
       setErrorTipStayActive(true);
     }
@@ -482,13 +489,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     </>
   );
 
-  if (props.onSubmit) {
+  if (props.showSubmitButton) {
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
           {materialsInputFieldControls}
           <Control>
-            <Button color="primary" type="submit">
+            <Button id={props.submitButtonId} color="primary" type="submit">
               Search
             </Button>
           </Control>

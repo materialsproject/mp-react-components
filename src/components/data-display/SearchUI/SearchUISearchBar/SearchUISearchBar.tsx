@@ -22,7 +22,6 @@ export const SearchUISearchBar: React.FC = () => {
   const [searchField, setSearchField] = useState(() =>
     mapInputTypeToField(searchInputType, allowedInputTypesMap)
   );
-  const allowSmiles = state.resultLabel === 'molecule';
 
   const shouldHidePeriodicTable = () => {
     if (state.activeFilters && state.activeFilters.length > 0) {
@@ -74,13 +73,12 @@ export const SearchUISearchBar: React.FC = () => {
       type={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
-      // onPropsChange={({ type }) => setSearchInputType(type)}
       onSubmit={handleSubmit}
+      showSubmitButton={true}
       periodicTableMode={state.searchBarPeriodicTableMode}
       hidePeriodicTable={shouldHidePeriodicTable()}
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
-      allowSmiles={allowSmiles}
       placeholder={state.searchBarPlaceholder}
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
       errorMessage={state.searchBarErrorMessage}
