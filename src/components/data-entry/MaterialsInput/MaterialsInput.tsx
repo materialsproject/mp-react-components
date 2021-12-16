@@ -85,6 +85,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   submitButtonId?: string;
   label?: string;
   maxElementSelectable?: number;
+  hideWildcardButton?: boolean;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -530,6 +531,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       <PeriodicTableModeSwitcher
         mode={selectionMode}
         allowedModes={getAllowedSelectionModes(props.allowedInputTypes as MaterialsInputType[])}
+        hideWildcardButton={props.hideWildcardButton}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />

@@ -14,6 +14,7 @@ import { Tooltip } from '../../data-display/Tooltip';
 interface Props {
   mode: PeriodicTableSelectionMode;
   allowedModes?: PeriodicTableSelectionMode[];
+  hideWildcardButton?: boolean;
   onSwitch: (mode: PeriodicTableSelectionMode) => any;
   onFormulaButtonClick: (value: string) => any;
 }
@@ -94,25 +95,32 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = ({
       </div>
       <div className="second-span mpc-pt-mode-content">
         {props.mode === PeriodicTableSelectionMode.FORMULA && (
-          <PeriodicTableFormulaButtons onClick={props.onFormulaButtonClick} />
+          <PeriodicTableFormulaButtons
+            onClick={props.onFormulaButtonClick}
+            hideWildcardButton={props.hideWildcardButton}
+          />
         )}
         {props.mode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM && (
           <>
             <div className="pt-spacer"></div>
-            <button
-              type="button"
-              className="pt-wildcard-button mat-element has-tooltip-bottom"
-              onClick={() => props.onFormulaButtonClick('-*')}
-              data-tip
-              data-for="element-wildcard-button"
-            >
-              <span className="mat-symbol">
-                <FaAsterisk />
-              </span>
-            </button>
-            <Tooltip id="element-wildcard-button" place="bottom">
-              Wildcard element
-            </Tooltip>
+            {!props.hideWildcardButton && (
+              <>
+                <button
+                  type="button"
+                  className="pt-wildcard-button mat-element has-tooltip-bottom"
+                  onClick={() => props.onFormulaButtonClick('-*')}
+                  data-tip
+                  data-for="element-wildcard-button"
+                >
+                  <span className="mat-symbol">
+                    <FaAsterisk />
+                  </span>
+                </button>
+                <Tooltip id="element-wildcard-button" place="bottom">
+                  Wildcard element
+                </Tooltip>
+              </>
+            )}
             <div className="pt-description">
               <p>
                 Select elements to search for materials with <strong>only</strong> these elements
