@@ -86,6 +86,18 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   label?: string;
   maxElementSelectable?: number;
   hideWildcardButton?: boolean;
+  /**
+   * Text to display in the periodic table help box when
+   * the chemical system selection mode is selected.
+   * Supports markdown.
+   */
+  chemicalSystemSelectHelpText?: string;
+  /**
+   * Text to display in the periodic table help box when
+   * the elements selection mode is selected.
+   * Supports markdown.
+   */
+  elementsSelectHelpText?: string;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -532,6 +544,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         mode={selectionMode}
         allowedModes={getAllowedSelectionModes(props.allowedInputTypes as MaterialsInputType[])}
         hideWildcardButton={props.hideWildcardButton}
+        chemicalSystemSelectHelpText={props.chemicalSystemSelectHelpText}
+        elementsSelectHelpText={props.elementsSelectHelpText}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />

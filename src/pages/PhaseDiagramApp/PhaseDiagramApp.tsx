@@ -36,6 +36,9 @@ export const PhaseDiagramApp: React.FC = () => {
           allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM]}
           maxElementSelectable={4}
           hideWildcardButton={true}
+          chemicalSystemSelectHelpText={
+            'Select up to 4 elements to build a phase diagram with **only** these elements.'
+          }
         />
       </div>
       <div>
