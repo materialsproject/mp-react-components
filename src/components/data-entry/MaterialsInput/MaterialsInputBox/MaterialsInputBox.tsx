@@ -6,7 +6,13 @@ import {
   getTruthyKeys,
   arrayToDelimitedString
 } from '../../utils';
-import { validateInputType, detectAndValidateInputType, defaultAllowedInputTypes } from '../utils';
+import {
+  validateInputType,
+  detectAndValidateInputType,
+  defaultAllowedInputTypes,
+  validateInputLength,
+  materialsInputTypes
+} from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 import classNames from 'classnames';
@@ -15,6 +21,7 @@ import { InputHelp } from '../InputHelp';
 import { FaQuestionCircle } from 'react-icons/fa';
 import { Tooltip } from '../../../data-display/Tooltip';
 import { v4 as uuidv4 } from 'uuid';
+import { mapArrayToBooleanObject } from '../../../crystal-toolkit/utils';
 const { Input, Field, Control } = Form;
 
 /**
@@ -49,6 +56,8 @@ export const MaterialsInputBox: React.FC<Props> = ({
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
   const [inputType, setInputType] = useState<MaterialsInputType | null>(props.type || null);
+  const [prevInputValue, setPrevInputValue] = useState(props.value);
+  const [maxElementsReached, setMaxElementsReached] = useState(false);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [showInputHelp, setShowInputHelp] = useState(false);
   const staticInputField = props.allowedInputTypes.length === 1 ? props.type : undefined;
@@ -126,15 +135,41 @@ export const MaterialsInputBox: React.FC<Props> = ({
    */
   useEffect(() => {
     if (!valueChangedByPT.current) {
-      const enabledElementsList = getTruthyKeys(enabledElements);
-      let [newMaterialsInputType, parsedValue] = staticInputField
+      const [newMaterialsInputType, parsedValue] = staticInputField
         ? validateInputType(inputValue, staticInputField)
         : detectAndValidateInputType(inputValue, props.allowedInputTypes!);
-      let isValid = parsedValue !== null || !inputValue ? true : false;
-      let newDelimiter = delimiter;
-      let newPtActionsToDispatch: DispatchAction[] = [];
-
+      const isValidInputLength = validateInputLength(
+        parsedValue,
+        newMaterialsInputType,
+        props.maxElementSelectable
+      );
+      const isMaxElements =
+        Array.isArray(parsedValue) && parsedValue.length === props.maxElementSelectable;
+      const isValid = (parsedValue && isValidInputLength) || !inputValue ? true : false;
       shouldShowHelpOrAutocomplete(newMaterialsInputType);
+
+      /**
+       * Short circuit the input update and return to previous value
+       * if the new value is beyond the max number of elements,
+       * or if the max number of elements has already been reached and
+       * the new value is invalid.
+       *
+       * This two-step check ensures that it's possible to reach the max
+       * number of elements and be able to type another letter if the result
+       * is still a valid list of the max number of elements.
+       * e.g. If max = 4, it's possible to go from Fe-Ni-H-C to Fe-Ni-H-Co.
+       */
+      if (!isValidInputLength || (maxElementsReached && !isValid)) {
+        console.log('stop input update');
+        console.log(prevInputValue);
+        setInputValue(prevInputValue);
+        props.setValue(prevInputValue);
+        return;
+      }
+
+      setMaxElementsReached(isMaxElements);
+      const newPtActionsToDispatch: DispatchAction[] = [];
+      let newDelimiter = delimiter;
 
       if (isValid) {
         props.setError(null);
@@ -148,23 +183,9 @@ export const MaterialsInputBox: React.FC<Props> = ({
           /** If no delimiter present, don't change the delimiter value */
           newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
           const parsedElements = parsedValue || [];
-          /** Enable new elements if they aren't already enabled */
-          parsedElements.forEach((el) => {
-            if (!enabledElements[el]) {
-              newPtActionsToDispatch.push({
-                action: ptActions.addEnabledElement,
-                payload: el
-              });
-            }
-          });
-          /** Remove enabled element if it is not part of the new list of parsed elements */
-          enabledElementsList.forEach((el) => {
-            if (parsedElements.indexOf(el) === -1) {
-              newPtActionsToDispatch.push({
-                action: ptActions.removeEnabledElement,
-                payload: el
-              });
-            }
+          newPtActionsToDispatch.push({
+            action: ptActions.setEnabledElements,
+            payload: mapArrayToBooleanObject(parsedElements)
           });
         } else {
           newPtActionsToDispatch.push({
@@ -175,6 +196,7 @@ export const MaterialsInputBox: React.FC<Props> = ({
         setInputType(newMaterialsInputType);
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
+        setPrevInputValue(inputValue);
         props.setValue(inputValue);
         if (props.onInputTypeChange && newMaterialsInputType) {
           props.onInputTypeChange(newMaterialsInputType);
@@ -190,10 +212,6 @@ export const MaterialsInputBox: React.FC<Props> = ({
     }
     valueChangedByPT.current = false;
   }, [inputValue]);
-
-  // useEffect(() => {
-  //   setInputValue(props.value);
-  // }, [props.value]);
 
   /**
    * This effect executes the periodic table context actions collected by the value effect (above)
@@ -221,6 +239,7 @@ export const MaterialsInputBox: React.FC<Props> = ({
         case MaterialsInputType.ELEMENTS:
         case MaterialsInputType.CHEMICAL_SYSTEM:
           let elementsSplit = props.value ? props.value.split(delimiter) : [];
+          elementsSplit = elementsSplit.filter((d) => d !== '');
           if (lastAction.type === 'select') {
             elementsSplit.push(enabledElementsList[enabledElementsList.length - 1]);
           } else {

@@ -302,6 +302,33 @@ export const validateMPID = (value: string): string | null => {
   }
 };
 
+/**
+ * Validate the number of elements in an input's parsed value.
+ * If the input type is not an element-like type, the length will always be valid.
+ * @param parsedValue either a validated input string or a validated list of elements
+ * @param type the input type that the parsedValue came from
+ * @param maxElements maximum number of allowable elements
+ * @returns true or false
+ */
+export const validateInputLength = (
+  parsedValue: string | string[] | undefined,
+  type: MaterialsInputType | null,
+  maxElements?: number
+): boolean => {
+  switch (type) {
+    case MaterialsInputType.CHEMICAL_SYSTEM:
+    case MaterialsInputType.ELEMENTS:
+    case MaterialsInputType.FORMULA:
+      if (maxElements && parsedValue && parsedValue.length > maxElements) {
+        return false;
+      } else {
+        return true;
+      }
+    default:
+      return true;
+  }
+};
+
 export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
 
 export const defaultAllowedInputTypes = [
