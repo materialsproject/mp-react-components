@@ -33,8 +33,9 @@ export const PhaseDiagramApp: React.FC = () => {
           showTypeDropdown={false}
           showSubmitButton={true}
           periodicTableMode={PeriodicTableMode.TOGGLE}
-          allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM, MaterialsInputType.FORMULA]}
+          allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM]}
           maxElementSelectable={4}
+          hideWildcardButton={true}
         />
       </div>
       <div>
