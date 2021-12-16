@@ -10,11 +10,14 @@ import {
 } from 'react-aria-menubutton';
 import { FaAngleDown, FaAsterisk } from 'react-icons/fa';
 import { Tooltip } from '../../data-display/Tooltip';
+import { Markdown } from '../../data-display/Markdown';
 
 interface Props {
   mode: PeriodicTableSelectionMode;
   allowedModes?: PeriodicTableSelectionMode[];
   hideWildcardButton?: boolean;
+  chemicalSystemSelectHelpText?: string;
+  elementsSelectHelpText?: string;
   onSwitch: (mode: PeriodicTableSelectionMode) => any;
   onFormulaButtonClick: (value: string) => any;
 }
@@ -122,17 +125,13 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = ({
               </>
             )}
             <div className="pt-description">
-              <p>
-                Select elements to search for materials with <strong>only</strong> these elements
-              </p>
+              <Markdown>{props.chemicalSystemSelectHelpText}</Markdown>
             </div>
           </>
         )}
         {props.mode === PeriodicTableSelectionMode.ELEMENTS && (
           <div className="pt-description">
-            <p>
-              Select elements to search for materials with <strong>at least</strong> these elements
-            </p>
+            <Markdown>{props.elementsSelectHelpText}</Markdown>
           </div>
         )}
       </div>

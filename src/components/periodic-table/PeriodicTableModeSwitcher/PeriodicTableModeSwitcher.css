@@ -19,7 +19,7 @@
   grid-row: 1 / span 2;
 }
 
-.mpc-pt-mode-content .pt-description p {
+.mpc-pt-mode-content .pt-description > * {
   padding: 0.25rem;
   font-size: 0.85rem;
   border: 1px solid #ccc;
