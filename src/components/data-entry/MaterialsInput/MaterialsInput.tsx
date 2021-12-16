@@ -84,6 +84,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   showSubmitButton?: boolean;
   submitButtonId?: string;
   label?: string;
+  maxElementSelectable?: number;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -124,9 +125,18 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   type = MaterialsInputType.ELEMENTS,
   allowedInputTypes = [type],
   onChange = (value) => value,
+  maxElementSelectable = 20,
   ...otherProps
 }) => {
-  const props = { value, type, errorMessage, allowedInputTypes, onChange, ...otherProps };
+  const props = {
+    value,
+    type,
+    errorMessage,
+    allowedInputTypes,
+    onChange,
+    maxElementSelectable,
+    ...otherProps
+  };
   const [inputValue, setInputValue] = useState(props.value);
   const [inputType, setInputType] = useState(props.type);
   const debouncedInputValue = props.debounce ? useDebounce(inputValue, props.debounce) : inputValue;
@@ -636,7 +646,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
             <SelectableTable
               className="box"
               disabled={!showPeriodicTable}
-              maxElementSelectable={20}
+              maxElementSelectable={props.maxElementSelectable}
               forceTableLayout={TableLayout.MINI}
               hiddenElements={[]}
               plugin={periodicTablePlugin}

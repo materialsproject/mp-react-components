@@ -4,11 +4,12 @@ import {
   distinctUntilKeyChanged,
   map,
   shareReplay,
-  tap,
+  tap
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
 import { mapArrayToBooleanObject } from '../../crystal-toolkit/utils';
+import { VALID_ELEMENTS } from '../../data-entry/MaterialsInput/utils';
 
 // TODO(chab) break that store into multiple pieces
 // 1) what is used for rendering, via RXJS
@@ -36,7 +37,7 @@ interface State {
 export enum TableSelectionStyle {
   ENABLE_DISABLE = 'enableDisable',
   SELECT = 'select',
-  MULTI_INPUTS_SELECT = 'mis',
+  MULTI_INPUTS_SELECT = 'mis'
 }
 
 const getDefaultState: () => Readonly<State> = () => ({
@@ -45,7 +46,7 @@ const getDefaultState: () => Readonly<State> = () => ({
   detailedElement: null,
   hiddenElements: {},
   forwardOuterChange: true,
-  lastAction: {} as any,
+  lastAction: {} as any
 });
 
 export function getPeriodicSelectionStore() {
@@ -62,14 +63,16 @@ export function getPeriodicSelectionStore() {
           }),
           shareReplay(1)
         );
-  let lastElementsToggled: string = '';
+  let initialDisabledElements: ElementState = {};
   const actions = {
     // only use it in test, instead, change the props of the context react element
     init: (initialState: State = getDefaultState()) => {
       // use object assign instead
-
-      if (initialState.disabledElements)
+      console.log(initialState);
+      if (initialState.disabledElements) {
         state.disabledElements = mapArrayToBooleanObject(initialState.disabledElements);
+        initialDisabledElements = state.disabledElements;
+      }
       if (initialState.enabledElements)
         state.enabledElements = mapArrayToBooleanObject(initialState.enabledElements);
       if (initialState.hiddenElements)
@@ -113,7 +116,7 @@ export function getPeriodicSelectionStore() {
       }
       state$.next({
         ...state,
-        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE,
+        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE
       });
     },
     addDisabledElement: (disabledElement: string) =>
@@ -152,34 +155,44 @@ export function getPeriodicSelectionStore() {
           }
 
           const _s = { ...state.enabledElements };
+          _s[enabledElement] = true;
+          state.enabledElements = _s;
+
+          /**
+           * Disable all other elements if max selected limit is reached.
+           */
           if (Object.keys(state.enabledElements).length === maxItemAllowed) {
-            delete _s[lastElementsToggled];
-            _s[enabledElement] = true;
-            lastElementsToggled = enabledElement;
-            state.enabledElements = _s;
-            state$.next({ ...state, forwardOuterChange: true });
-          } else {
-            lastElementsToggled = enabledElement;
-            _s[enabledElement] = true;
-            (state.enabledElements = _s) && state$.next({ ...state, forwardOuterChange: true });
+            state.disabledElements = mapArrayToBooleanObject(VALID_ELEMENTS);
+            for (const element in state.enabledElements) {
+              delete state.disabledElements[element];
+            }
           }
+
+          state$.next({ ...state, forwardOuterChange: true });
         } else {
           delete state.enabledElements[enabledElement];
           state.lastAction.type = 'deselect';
 
-          (state.enabledElements = { ...state.enabledElements }) &&
-            state$.next({ ...state, forwardOuterChange: true });
+          /**
+           * Re-enable elements if selected elements has returned to below the max limit.
+           */
+          if (Object.keys(state.enabledElements).length === maxItemAllowed - 1) {
+            state.disabledElements = initialDisabledElements;
+          }
+
+          state.enabledElements = { ...state.enabledElements };
+          state$.next({ ...state, forwardOuterChange: true });
         }
       }
     },
     setMaxSelectionLimit: (maxItem: number) => {
       maxItemAllowed = maxItem;
-    },
+    }
   };
 
   return {
     observable,
-    actions,
+    actions
   };
 }
 
@@ -187,7 +200,7 @@ type Actions = ReturnType<typeof getPeriodicSelectionStore>;
 
 export const PeriodicSelectionContext = React.createContext({
   observable: {} as Observable<State>,
-  actions: {},
+  actions: {}
 } as Actions);
 
 /**
@@ -222,7 +235,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
         map(({ enabledElements, disabledElements, forwardOuterChange }: any) => ({
           enabledElements,
           disabledElements,
-          forwardOuterChange,
+          forwardOuterChange
         })),
         distinctUntilChanged((p, q) => {
           return (
@@ -235,7 +248,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
           onStateChange &&
           onStateChange({
             enabledElements: Object.keys(enabledElements),
-            disabledElements: Object.keys(disabledElements),
+            disabledElements: Object.keys(disabledElements)
           });
       });
 
