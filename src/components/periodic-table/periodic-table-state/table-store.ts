@@ -49,6 +49,22 @@ const getDefaultState: () => Readonly<State> = () => ({
   lastAction: {} as any
 });
 
+/**
+ * Disable all other elements if max selected limit is reached,
+ * otherwise return disabledElements to its initial value.
+ */
+const getDisabledElements = (state: State, max: number, initialDisabledElements: ElementState) => {
+  if (Object.keys(state.enabledElements).length === max) {
+    state.disabledElements = mapArrayToBooleanObject(VALID_ELEMENTS);
+    for (const element in state.enabledElements) {
+      delete state.disabledElements[element];
+    }
+  } else {
+    state.disabledElements = initialDisabledElements;
+  }
+  return state;
+};
+
 export function getPeriodicSelectionStore() {
   let state: State = getDefaultState();
   const state$: Subject<State> = new Subject();
@@ -64,6 +80,7 @@ export function getPeriodicSelectionStore() {
           shareReplay(1)
         );
   let initialDisabledElements: ElementState = {};
+  let lastElementEnabled = '';
   const actions = {
     // only use it in test, instead, change the props of the context react element
     init: (initialState: State = getDefaultState()) => {
@@ -88,8 +105,12 @@ export function getPeriodicSelectionStore() {
     selectedElements: {} as any,
     //
     setForwardChange: (fwdChange) => (state.forwardOuterChange = fwdChange),
-    setEnabledElements: (enabledElements: any) =>
-      (state = { ...state, enabledElements }) && state$.next(state),
+    setEnabledElements: (enabledElements: any) => {
+      state.lastAction = {} as any;
+      state = { ...state, enabledElements };
+      state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
+      state$.next(state);
+    },
     setDisabledElements: (disabledElements: any) =>
       (state = { ...state, disabledElements }) && state$.next(state),
     clear: () => {
@@ -103,8 +124,11 @@ export function getPeriodicSelectionStore() {
     //TODO(chab) add check to prever unnecessary state mutation
     addEnabledElement: (enabledElement: string) => {
       state.lastAction = {} as any;
-      (state.enabledElements = { ...state.enabledElements, [enabledElement]: true }) &&
-        state$.next(state);
+      const _s = { ...state.enabledElements, [enabledElement]: true };
+      state.enabledElements = _s;
+      // state = getDisabledElementsIfMaxed(state, maxItemAllowed);
+      lastElementEnabled = enabledElement;
+      state$.next(state);
     },
     toggleDisabledElement: (disabledElement: string) => {
       if (!state.disabledElements[disabledElement]) {
@@ -124,6 +148,7 @@ export function getPeriodicSelectionStore() {
       state$.next(state),
     removeEnabledElement: (enabledElement: string) => {
       state.lastAction = {} as any;
+      console.log('remove element');
       if (!state.enabledElements[enabledElement]) {
         // if element is already removed, we do not want to trigger a state change
         state$.next(state);
@@ -131,7 +156,8 @@ export function getPeriodicSelectionStore() {
       }
       const _s = { ...state.enabledElements };
       delete _s[enabledElement];
-      (state.enabledElements = _s) && state$.next(state);
+      state.enabledElements = _s;
+      state$.next(state);
     },
     removeDisabledElement: (disabledElement: string) => {
       const _s = { ...state.disabledElements };
@@ -157,29 +183,13 @@ export function getPeriodicSelectionStore() {
           const _s = { ...state.enabledElements };
           _s[enabledElement] = true;
           state.enabledElements = _s;
-
-          /**
-           * Disable all other elements if max selected limit is reached.
-           */
-          if (Object.keys(state.enabledElements).length === maxItemAllowed) {
-            state.disabledElements = mapArrayToBooleanObject(VALID_ELEMENTS);
-            for (const element in state.enabledElements) {
-              delete state.disabledElements[element];
-            }
-          }
-
+          state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
+          lastElementEnabled = enabledElement;
           state$.next({ ...state, forwardOuterChange: true });
         } else {
           delete state.enabledElements[enabledElement];
           state.lastAction.type = 'deselect';
-
-          /**
-           * Re-enable elements if selected elements has returned to below the max limit.
-           */
-          if (Object.keys(state.enabledElements).length === maxItemAllowed - 1) {
-            state.disabledElements = initialDisabledElements;
-          }
-
+          state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
           state.enabledElements = { ...state.enabledElements };
           state$.next({ ...state, forwardOuterChange: true });
         }

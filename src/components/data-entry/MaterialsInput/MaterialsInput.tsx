@@ -67,6 +67,7 @@ export interface MaterialsInputSharedProps {
   autocompleteFormulaUrl?: string;
   autocompleteApiKey?: string;
   helpItems?: InputHelpItem[];
+  maxElementSelectable?: number;
   onChange?: (value: string) => any;
   onInputTypeChange?: (type: MaterialsInputType) => any;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
@@ -84,7 +85,6 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   showSubmitButton?: boolean;
   submitButtonId?: string;
   label?: string;
-  maxElementSelectable?: number;
   hideWildcardButton?: boolean;
   /**
    * Text to display in the periodic table help box when
@@ -410,6 +410,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       autocompleteApiKey={props.autocompleteApiKey}
       onChange={props.onChange}
       helpItems={props.helpItems}
+      maxElementSelectable={props.maxElementSelectable}
     />
   );
 
