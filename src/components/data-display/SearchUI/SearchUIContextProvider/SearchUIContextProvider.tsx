@@ -263,13 +263,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           a.searchParams?.forEach((s) => {
             let field = s.field;
             let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
-            /**
-             * Elements values that are strings should be interpreted as formula fields
-             * This lets the elements field handle chemical system searches (e.g. Fe-Co-Si)
-             */
-            if (field === 'elements' && typeof value === 'string') {
-              field = 'formula';
-            }
 
             if (field === 'has_props' && params[field]) {
               params[field].push(value);

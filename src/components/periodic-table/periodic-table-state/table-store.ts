@@ -85,7 +85,6 @@ export function getPeriodicSelectionStore() {
     // only use it in test, instead, change the props of the context react element
     init: (initialState: State = getDefaultState()) => {
       // use object assign instead
-      console.log(initialState);
       if (initialState.disabledElements) {
         state.disabledElements = mapArrayToBooleanObject(initialState.disabledElements);
         initialDisabledElements = state.disabledElements;

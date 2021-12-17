@@ -6,13 +6,46 @@
       {
         "name": "Material ID",
         "id": "material_ids",
-        "overrides": ["elements", "formula"],
+        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "mpid",
           "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
           "periodicTableMode": "none"
+        }
+      },
+      {
+        "name": "Formula",
+        "id": "formula",
+        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
+        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+        }
+      },
+      {
+        "name": "Chemical System",
+        "id": "formula",
+        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
+        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "chemical_system",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5).",
+          "helpItems": [
+            {
+              "label": "Chemical System Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Si,Al,Mn"]
+            }
+          ]
         }
       },
       {
@@ -23,7 +56,6 @@
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "elements",
-          "allowedInputTypes": ["elements", "chemical_system"],
           "showTypeDropdown": true,
           "periodicTableMode": "none",
           "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
@@ -33,7 +65,7 @@
             },
             {
               "label": null,
-              "examples": ["Li,Fe", "Li-Fe", "Li-Fe-*-*"]
+              "examples": ["Li,Fe", "Si,Al,Mn"]
             }
           ]
         }
@@ -41,6 +73,7 @@
       {
         "name": "Exclude Elements",
         "id": "exclude_elements",
+        "overrides": ["material_ids", "formula"],
         "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that do not contain certain elements in their formula.",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -51,15 +84,13 @@
         }
       },
       {
-        "name": "Formula",
-        "id": "formula",
-        "overrides": ["elements", "material_ids"],
-        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
-        "type": "MATERIALS_INPUT",
+        "name": "Number of Elements",
+        "id": "nelements",
+        "overrides": ["material_ids", "formula"],
+        "type": "SLIDER",
         "props": {
-          "type": "formula",
-          "periodicTableMode": "none",
-          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+          "domain": [1, 20],
+          "step": 1
         }
       }
     ]
