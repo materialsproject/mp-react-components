@@ -317,9 +317,6 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
         case FilterType.MATERIALS_INPUT:
           initializedValues[f.id] = queryParamValue ? queryParamValue : '';
           if (!f.hasOwnProperty('props')) f.props = {};
-          if (!f.props.hasOwnProperty('parsedValue')) {
-            f.props.parsedValue = [];
-          }
           return f;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
           initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
@@ -437,14 +434,11 @@ export const getSearchState = (
         case FilterType.MATERIALS_INPUT:
           if (filterValues[f.id] !== '') {
             let parsedValue = filterValues[f.id];
-            let filterDisplayName = f.name.toLowerCase();
 
             if (
               f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
               (f.props.type === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
             ) {
-              /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
-              filterDisplayName = 'include only elements';
               /** Remove trailing '-' from chemical system string */
               parsedValue = filterValues[f.id].replace(/\-$/, '');
             } else if (f.props.type === MaterialsInputType.ELEMENTS) {
@@ -454,7 +448,7 @@ export const getSearchState = (
 
             activeFilters.push({
               id: f.id,
-              displayName: filterDisplayName,
+              displayName: f.name ? f.name : f.id,
               value: parsedValue,
               defaultValue: '',
               searchParams: [
