@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import * as THREE from 'three';
 import { Object3D, Quaternion, Vector3, WebGLRenderer } from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
