@@ -7,19 +7,6 @@ import { PeriodicTableMode } from './MaterialsInput';
 
 afterEach(() => cleanup());
 
-const defaultProps: MaterialsInputProps = {
-  value: '',
-  type: 'elements' as MaterialsInputType,
-  periodicTableMode: PeriodicTableMode.TOGGLE,
-  showSubmitButton: true,
-  helpItems: [{ label: 'Search Help' }],
-  onChange: (value: string) => null
-};
-
-const renderElement = (props: MaterialsInputProps) => {
-  render(<MaterialsInput {...props} />);
-};
-
 describe('<MaterialsInput/>', () => {
   test('multi-type input with periodic table, submit button, and autocomplete', async () => {
     render(
@@ -123,61 +110,45 @@ describe('<MaterialsInput/>', () => {
     });
   });
 
-  // it('should enable elements', () => {
-  //   renderElement({ ...defaultProps });
+  test('chemical system input with maximum elements limit', async () => {
+    render(
+      <MaterialsInput
+        type={'chemical_system' as MaterialsInputType}
+        periodicTableMode={PeriodicTableMode.TOGGLE}
+        maxElementSelectable={4}
+      />
+    );
 
-  // });
+    /**
+     * should enable elements
+     */
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: 'Fe-Co-Ni-Cu' }
+    });
+    expect(screen.getByText('Fe').parentElement).toHaveClass('enabled');
+    expect(screen.getByText('Co').parentElement).toHaveClass('enabled');
+    expect(screen.getByText('Ni').parentElement).toHaveClass('enabled');
+    expect(screen.getByText('Cu').parentElement).toHaveClass('enabled');
 
-  // it('should switch to formula mode', () => {
-  //   renderElement({
-  //     ...defaultProps,
-  //     allowedInputTypes: ['elements' as MaterialsInputType, 'formula' as MaterialsInputType]
-  //   });
+    /**
+     * should disable other elements
+     */
+    expect(screen.getByText('H').parentElement).toHaveClass('disabled');
 
-  // });
+    /**
+     * should not allow an input with more than 4 elements
+     */
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: 'Fe-Co-Ni-Cu-Al' }
+    });
+    expect(screen.getByTestId('materials-input-search-input')).toHaveValue('Fe-Co-Ni-Cu');
 
-  // it('should toggle periodic table', () => {
-  //   renderElement({ ...defaultProps });
-
-  // });
-
-  // it('should update input on element click', () => {
-  //   renderElement({ ...defaultProps });
-
-  // });
-
-  // it('should show periodic table on focus', () => {
-  //   renderElement({
-  //     ...defaultProps,
-  //     periodicTableMode: PeriodicTableMode.FOCUS
-  //   });
-  //   expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
-  //     'aria-hidden',
-  //     'true'
-  //   );
-  //   screen.getByTestId('materials-input-search-input').focus();
-  //   expect(screen.getByTestId('materials-input-periodic-table')).toHaveAttribute(
-  //     'aria-hidden',
-  //     'false'
-  //   );
-  // });
-
-  // it('should show autocomplete results', async () => {
-  //   renderElement({
-  //     ...defaultProps,
-  //     type: 'formula' as MaterialsInputType,
-  //     autocompleteFormulaUrl: process.env.REACT_APP_AUTOCOMPLETE_URL,
-  //     autocompleteApiKey: process.env.REACT_APP_API_KEY
-  //   });
-  //   fireEvent.change(screen.getByTestId('materials-input-search-input'), {
-  //     target: { value: autocompleteQuery }
-  //   });
-  //   screen.getByTestId('materials-input-search-input').focus();
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId('materials-input-autocomplete-menu')).not.toHaveClass('is-hidden');
-  //     expect(
-  //       screen.getByTestId('materials-input-autocomplete-menu-items').childNodes.length
-  //     ).toBeGreaterThan(1);
-  //   });
-  // });
+    /**
+     * should un-disable other elements
+     */
+    fireEvent.change(screen.getByTestId('materials-input-search-input'), {
+      target: { value: 'Fe-Co-Ni' }
+    });
+    expect(screen.getByText('H').parentElement).not.toHaveClass('disabled');
+  });
 });
