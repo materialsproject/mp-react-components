@@ -84,6 +84,8 @@ export const SearchUISearchBar: React.FC = () => {
       errorMessage={state.searchBarErrorMessage}
       inputClassName="is-medium"
       helpItems={state.searchBarHelpItems}
+      chemicalSystemSelectHelpText={state.searchBarChemicalSystemSelectHelpText}
+      elementsSelectHelpText={state.searchBarElementsSelectHelpText}
     />
   );
 };

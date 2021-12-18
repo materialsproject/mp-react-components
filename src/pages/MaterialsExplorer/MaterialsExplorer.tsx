@@ -60,6 +60,8 @@ export const MaterialsExplorer: React.FC = () => {
         // searchBarPlaceholder="Search by elements, formula, or Material ID"
         searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
+        searchBarChemicalSystemSelectHelpText="Select elements to search for materials with **only** these elements"
+        searchBarElementsSelectHelpText="Select elements to search for materials with **at least** these elements"
         searchBarAllowedInputTypesMap={{
           chemical_system: {
             field: 'formula'

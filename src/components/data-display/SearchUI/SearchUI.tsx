@@ -155,6 +155,20 @@ export interface SearchUIProps {
   searchBarHelpItems?: InputHelpItem[];
 
   /**
+   * Text to display in the periodic table help box when
+   * the chemical system selection mode is selected.
+   * Supports markdown.
+   */
+  searchBarChemicalSystemSelectHelpText?: string;
+
+  /**
+   * Text to display in the periodic table help box when
+   * the elements selection mode is selected.
+   * Supports markdown.
+   */
+  searchBarElementsSelectHelpText?: string;
+
+  /**
    * Optionally include/exclude the menu for dynamically controlling sort options
    * @default true
    */
