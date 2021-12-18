@@ -6,10 +6,11 @@ import { PeriodicTableMode } from './MaterialsInput';
 
 afterEach(() => cleanup());
 
-const defaultProps = {
+const defaultProps: MaterialsInputProps = {
   value: '',
-  inputType: 'elements' as MaterialsInputType,
+  type: 'elements' as MaterialsInputType,
   periodicTableMode: PeriodicTableMode.TOGGLE,
+  showSubmitButton: true,
   helpItems: [{ label: 'Search Help' }],
   onChange: (value: string) => null
 };
@@ -41,14 +42,14 @@ describe('<MaterialsInput/>', () => {
   it('should switch to formula mode', () => {
     renderElement({
       ...defaultProps,
-      onInputTypeChange: (field) => field
+      allowedInputTypes: ['elements' as MaterialsInputType, 'formula' as MaterialsInputType]
     });
     fireEvent.change(screen.getByTestId('materials-input-search-input'), {
       target: { value: 'GaN' }
     });
     expect(screen.getByText('Ga').parentElement).toHaveClass('enabled');
     expect(screen.getByText('N').parentElement).toHaveClass('enabled');
-    expect(screen.getByText('(')).toBeDefined();
+    expect(screen.getByText('Formula').parentElement?.parentElement).toHaveClass('is-active');
   });
 
   it('should toggle periodic table', () => {
@@ -92,16 +93,6 @@ describe('<MaterialsInput/>', () => {
       'aria-hidden',
       'false'
     );
-  });
-
-  it('should stay focused on element click', () => {
-    renderElement({
-      ...defaultProps,
-      periodicTableMode: PeriodicTableMode.FOCUS
-    });
-    screen.getByTestId('materials-input-search-input').focus();
-    fireEvent.click(screen.getByText('Fe'));
-    expect(screen.getByTestId('materials-input-search-input')).toHaveFocus();
   });
 
   it('should show autocomplete results', async () => {

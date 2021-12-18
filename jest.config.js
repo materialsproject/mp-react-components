@@ -4,7 +4,7 @@ module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'jsdom',
   collectCoverage: true,
-  transformIgnorePatterns: ['node_modules/(?!(three)/)'], // force JEST to process this module
+  transformIgnorePatterns: ['node_modules/(?!(three|unist-.*|hast-.*|rehype-slug)/)'], // force JEST to process this module
   modulePaths: ['<rootDir>'],
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
@@ -19,5 +19,9 @@ module.exports = {
       tsConfig: './tsconfig.json',
       isolatedModules: true
     }
+  },
+  transform: {
+    '^.+\\.(ts|tsx)?$': 'ts-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest'
   }
 };

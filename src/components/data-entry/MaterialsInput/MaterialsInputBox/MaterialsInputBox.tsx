@@ -4,12 +4,12 @@ import {
   getDelimiter,
   formulaStringToArrays,
   getTruthyKeys,
-  arrayToDelimitedString
+  arrayToDelimitedString,
+  mapArrayToBooleanObject
 } from '../../utils';
 import {
   validateInputType,
   detectAndValidateInputType,
-  defaultAllowedInputTypes,
   validateInputLength,
   materialsInputTypes
 } from '../utils';
@@ -21,7 +21,6 @@ import { InputHelp } from '../InputHelp';
 import { FaQuestionCircle } from 'react-icons/fa';
 import { Tooltip } from '../../../data-display/Tooltip';
 import { v4 as uuidv4 } from 'uuid';
-import { mapArrayToBooleanObject } from '../../../crystal-toolkit/utils';
 const { Input, Field, Control } = Form;
 
 /**
@@ -44,10 +43,7 @@ interface DispatchAction {
   payload?: any;
 }
 
-export const MaterialsInputBox: React.FC<Props> = ({
-  allowedInputTypes = defaultAllowedInputTypes,
-  ...otherProps
-}) => {
+export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...otherProps }) => {
   const props = { allowedInputTypes, ...otherProps };
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(() =>

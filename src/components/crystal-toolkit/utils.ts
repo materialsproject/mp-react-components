@@ -107,17 +107,6 @@ export class ObjectRegistry {
   }
 }
 
-export function mapArrayToBooleanObject(array: any, value: boolean = true) {
-  if (Array.isArray(array)) {
-    return array.reduce((acc, id) => {
-      acc[id] = value;
-      return acc;
-    }, {});
-  } else {
-    return array;
-  }
-}
-
 /**
  * Takes an array of arrays and merges the inner arrays into a single array.
  * This is a scalable alternative to [].concat.apply([], arr)

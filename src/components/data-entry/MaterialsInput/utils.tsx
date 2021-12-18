@@ -331,13 +331,6 @@ export const validateInputLength = (
 
 export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
 
-export const defaultAllowedInputTypes = [
-  MaterialsInputType.ELEMENTS,
-  MaterialsInputType.CHEMICAL_SYSTEM,
-  MaterialsInputType.FORMULA,
-  MaterialsInputType.MPID
-];
-
 /**
  * Object to map MaterialsInputType values to other values
  * such as validation functions or periodic table selection modes.

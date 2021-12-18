@@ -335,3 +335,14 @@ export const sortCrossref = (field, asc?) => {
     return result * sortDirection;
   };
 };
+
+export function mapArrayToBooleanObject(array: any, value: boolean = true) {
+  if (Array.isArray(array)) {
+    return array.reduce((acc, id) => {
+      acc[id] = value;
+      return acc;
+    }, {});
+  } else {
+    return array;
+  }
+}
