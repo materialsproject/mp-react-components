@@ -251,7 +251,7 @@ export const SearchUIDataHeader: React.FC = () => {
 
   const sortMenu = state.hasSortMenu ? (
     <SortDropdown
-      sortValues={state.results}
+      sortValues={state.results || []}
       sortOptions={state.columns
         .filter((c) => !c.hidden)
         .map((c) => {
