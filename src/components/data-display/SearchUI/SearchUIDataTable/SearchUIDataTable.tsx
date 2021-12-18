@@ -64,7 +64,7 @@ export const SearchUIDataTable: React.FC = () => {
             noHeader
             theme="material"
             columns={state.columns.filter((c) => !c.hidden)}
-            data={state.results}
+            data={state.results!}
             highlightOnHover
             paginationServer
             sortServer
