@@ -40,6 +40,15 @@ export const PhaseDiagramApp: React.FC = () => {
             'Select up to 4 elements to build a phase diagram with **only** these elements.'
           }
         />
+        <MaterialsInput
+          type={'elements' as MaterialsInputType}
+          allowedInputTypes={['elements' as MaterialsInputType, 'formula' as MaterialsInputType]}
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+          showSubmitButton={true}
+          helpItems={[{ label: 'Search Help' }]}
+          autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL}
+          autocompleteApiKey={process.env.REACT_APP_API_KEY}
+        />
       </div>
       <div>
         <h2>{state.value}</h2>

@@ -519,7 +519,12 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         <Field className="has-addons">
           {materialsInputFieldControls}
           <Control>
-            <Button id={props.submitButtonId} color="primary" type="submit">
+            <Button
+              data-testid="materials-input-submit-button"
+              id={props.submitButtonId}
+              color="primary"
+              type="submit"
+            >
               Search
             </Button>
           </Control>

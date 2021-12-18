@@ -64,7 +64,7 @@ export const FormulaAutocomplete: React.FC<Props> = (props) => {
     } else {
       setFormulaSuggestions([]);
     }
-  }, [props.value]);
+  }, [props.value, props.inputType]);
 
   /**
    * Modify visibility of autocomplete when show prop is changed from

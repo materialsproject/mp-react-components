@@ -338,7 +338,7 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
       {props.helpItems && (
         <Control>
           <button
-            data-testid="materials-input-tooltip-button"
+            data-testid="materials-input-help-button"
             type="button"
             className={classNames('button input-help-button', {
               'has-text-grey-light': !showInputHelp,
