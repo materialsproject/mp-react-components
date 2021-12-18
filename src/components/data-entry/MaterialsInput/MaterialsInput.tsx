@@ -21,7 +21,6 @@ import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
 import {
-  defaultAllowedInputTypes,
   getMaterialsInputTypeByMappedValue,
   materialsInputTypes,
   MaterialsInputTypesMap,

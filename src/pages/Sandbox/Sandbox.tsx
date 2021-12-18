@@ -71,7 +71,7 @@ export const Sandbox: React.FC = () => {
         <div className="dropdown-item">One</div>
         <div className="dropdown-item">Two</div>
       </Dropdown>
-      <Markdown>{`# Heading 1`}</Markdown>
+      <Markdown>{`## Heading 2`}</Markdown>
       <Markdown style={{ height: '150vh' }}>
         {`
         ~~~python

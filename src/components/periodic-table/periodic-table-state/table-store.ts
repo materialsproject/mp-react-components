@@ -8,8 +8,8 @@ import {
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
-import { mapArrayToBooleanObject } from '../../crystal-toolkit/utils';
 import { VALID_ELEMENTS } from '../../data-entry/MaterialsInput/utils';
+import { mapArrayToBooleanObject } from '../../data-entry/utils';
 
 // TODO(chab) break that store into multiple pieces
 // 1) what is used for rendering, via RXJS
