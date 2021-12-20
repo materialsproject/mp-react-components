@@ -120,9 +120,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setColumns: (columns: Column[]) => {
       setState((currentState) => ({ ...currentState, columns }));
     },
-    setResults: (results?: any[]) => {
-      setState((currentState) => ({ ...currentState, results }));
-    },
     /**
      * Set one filter to a specified value.
      * Optionally include a list of filter id's that should be deactivated
@@ -360,13 +357,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   useEffect(() => {
     props.setProps({ ...state, results: state.results });
   }, [state.results]);
-
-  /**
-   * Ensure results prop has up-to-date value.
-   */
-  useEffect(() => {
-    actions.setResults(props.results);
-  }, [props.results]);
 
   return (
     <SearchUIContext.Provider value={state}>

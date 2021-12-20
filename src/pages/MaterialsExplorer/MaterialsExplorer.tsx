@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
@@ -11,6 +11,7 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
  */
 
 export const MaterialsExplorer: React.FC = () => {
+  const [state, setState] = useState({ results: [] });
   return (
     <>
       <h1
@@ -26,6 +27,7 @@ export const MaterialsExplorer: React.FC = () => {
       </h1>
       <SearchUI
         view={SearchUIViewType.TABLE}
+        setProps={setState}
         // allowViewSwitching
         // cardOptions={{
         //   imageBaseURL: 'https://next-gen.materialsproject.org/static/structures/',
@@ -109,6 +111,7 @@ export const MaterialsExplorer: React.FC = () => {
           }
         ]}
       />
+      <p>{JSON.stringify(state.results)}</p>
     </>
   );
 };
