@@ -21,6 +21,7 @@ import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
 import {
+  getAllowedSelectionModes,
   getMaterialsInputTypeByMappedValue,
   materialsInputTypes,
   MaterialsInputTypesMap,
@@ -82,7 +83,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   hidePeriodicTable?: boolean;
   showTypeDropdown?: boolean;
   showSubmitButton?: boolean;
-  submitButtonId?: string;
+  submitButtonClicks?: number;
   label?: string;
   hideWildcardButton?: boolean;
   /**
@@ -99,30 +100,6 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   elementsSelectHelpText?: string;
   onPropsChange?: (propsObject: any) => void;
 }
-
-/**
- * Map the list of allowed input types to a list of allowed periodic table selection modes.
- * This prevents periodic table modes dropdown from having items that are
- * inconsistent with the allowed input types.
- * The order that these items are appended determines the order they are rendered in the periodic table.
- */
-const getAllowedSelectionModes = (allowedInputTypes: MaterialsInputType[]) => {
-  const allowedModes: PeriodicTableSelectionMode[] = [];
-
-  if (allowedInputTypes.indexOf(MaterialsInputType.CHEMICAL_SYSTEM) > -1) {
-    allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
-  }
-
-  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
-    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
-  }
-
-  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
-    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
-  }
-
-  return allowedModes;
-};
 
 /**
  * An input field component for searching by mp-id, elements, or formula.
@@ -155,6 +132,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [error, setError] = useState<string | null>(null);
   const [errorTipStayActive, setErrorTipStayActive] = useState(false);
+  const [submitButtonClicks, setSubmitButtonClicks] = useState(0);
   const hasPeriodicTable = props.periodicTableMode !== PeriodicTableMode.NONE;
   const [selectionMode, setSelectionMode] = useState(() => {
     return materialsInputTypes[inputType].selectionMode;
@@ -287,6 +265,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       //  */
       // const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
 
+      if (props.setProps) {
+        setSubmitButtonClicks(submitButtonClicks + 1);
+      }
+
       if (props.onSubmit) {
         /**
          * Optional value param allows function to submit a new value that doesn't necessarily
@@ -377,7 +359,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       props.setProps({
         ...props,
         value: inputValue,
-        type: inputType
+        type: inputType,
+        submitButtonClicks: submitButtonClicks
       });
     }
   };
@@ -519,12 +502,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         <Field className="has-addons">
           {materialsInputFieldControls}
           <Control>
-            <Button
-              data-testid="materials-input-submit-button"
-              id={props.submitButtonId}
-              color="primary"
-              type="submit"
-            >
+            <Button data-testid="materials-input-submit-button" color="primary" type="submit">
               Search
             </Button>
           </Control>
@@ -591,6 +569,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     setDashProps();
     if (isFocused) shouldShowHelpMenu();
   }, [inputValue]);
+
+  useEffect(() => {
+    setDashProps();
+  }, [submitButtonClicks]);
 
   /**
    * This effect is triggered when the value prop is changed from outside this component

@@ -456,3 +456,27 @@ export const detectAndValidateInputType = (
   }
   return [null, null];
 };
+
+/**
+ * Map the list of allowed input types to a list of allowed periodic table selection modes.
+ * This prevents periodic table modes dropdown from having items that are
+ * inconsistent with the allowed input types.
+ * The order that these items are appended determines the order they are rendered in the periodic table.
+ */
+export const getAllowedSelectionModes = (allowedInputTypes: MaterialsInputType[]) => {
+  const allowedModes: PeriodicTableSelectionMode[] = [];
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.CHEMICAL_SYSTEM) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+  }
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
+  }
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
+  }
+
+  return allowedModes;
+};
