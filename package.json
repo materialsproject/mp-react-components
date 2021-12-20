@@ -116,7 +116,7 @@
     "@storybook/addons": "5.3.18",
     "@storybook/builder-webpack5": "^6.3.12",
     "@storybook/client-api": "^6.3.8",
-    "@storybook/core": "5.3.18",
+    "@storybook/core": "6.4.9",
     "@storybook/manager-webpack5": "^6.3.12",
     "@storybook/react": "6.3.8",
     "@storybook/storybook-deployer": "^2.8.7",
