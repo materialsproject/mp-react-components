@@ -19,9 +19,5 @@ module.exports = {
       tsConfig: './tsconfig.json',
       isolatedModules: true
     }
-  },
-  transform: {
-    '^.+\\.(ts|tsx)?$': 'ts-jest',
-    '^.+\\.(js|jsx)$': 'babel-jest'
   }
 };
