@@ -24,7 +24,7 @@ export const PhaseDiagramApp: React.FC = () => {
 
   return (
     <>
-      <h1>Phase Diagram</h1>
+      <h1>Phase Diagram Test</h1>
       <div className="container is-max-desktop">
         <MaterialsInput
           type={MaterialsInputType.CHEMICAL_SYSTEM}
@@ -32,6 +32,7 @@ export const PhaseDiagramApp: React.FC = () => {
           label="Phase Diagram"
           showTypeDropdown={false}
           showSubmitButton={true}
+          submitButtonText="Generate"
           periodicTableMode={PeriodicTableMode.TOGGLE}
           allowedInputTypes={[MaterialsInputType.CHEMICAL_SYSTEM]}
           maxElementSelectable={4}
@@ -40,7 +41,7 @@ export const PhaseDiagramApp: React.FC = () => {
             'Select up to 4 elements to build a phase diagram with **only** these elements.'
           }
         />
-        <MaterialsInput
+        {/* <MaterialsInput
           type={'elements' as MaterialsInputType}
           allowedInputTypes={['elements' as MaterialsInputType, 'formula' as MaterialsInputType]}
           periodicTableMode={PeriodicTableMode.TOGGLE}
@@ -48,7 +49,7 @@ export const PhaseDiagramApp: React.FC = () => {
           helpItems={[{ label: 'Search Help' }]}
           autocompleteFormulaUrl={process.env.REACT_APP_AUTOCOMPLETE_URL}
           autocompleteApiKey={process.env.REACT_APP_API_KEY}
-        />
+        /> */}
       </div>
       <div>
         <h2>{state.value}</h2>
