@@ -11,6 +11,7 @@ import { ThreeStateBooleanSelect } from '../../../data-entry/ThreeStateBooleanSe
 import { TextInput } from '../../../data-entry/TextInput';
 import { Tooltip } from '../../Tooltip';
 import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
+import { FilterField } from '../../../data-entry/FilterField';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -294,12 +295,23 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
               >
                 <div aria-hidden={!groupsByName[g.name].expanded}>
                   {g.filters.map((f, j) => (
-                    <div className="mb-4" key={j}>
-                      <div>
-                        <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
-                        {renderFilter(f, g.name)}
-                      </div>
-                    </div>
+                    <FilterField
+                      key={j}
+                      id={f.id}
+                      label={f.name}
+                      tooltip={f.tooltip}
+                      units={f.units}
+                      active={f.active}
+                      resetFilter={() => resetFilter(f.id)}
+                    >
+                      {renderFilter(f, g.name)}
+                    </FilterField>
+                    // <div className="mb-4" key={j}>
+                    //   <div>
+                    //     <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
+                    //     {renderFilter(f, g.name)}
+                    //   </div>
+                    // </div>
                   ))}
                 </div>
               </div>

@@ -33,6 +33,7 @@ import { Dropdown } from './components/navigation/Dropdown';
 import { Navbar } from './components/navigation/Navbar';
 import { Modal, ModalTrigger, ModalContextProvider } from './components/data-display/Modal';
 import { Tabs } from './components/navigation/Tabs';
+import { FilterField } from './components/data-entry/FilterField';
 
 export {
   SelectableTable,
@@ -74,5 +75,6 @@ export {
   ModalContextProvider,
   Modal,
   ModalTrigger,
-  Tabs
+  Tabs,
+  FilterField
 };
