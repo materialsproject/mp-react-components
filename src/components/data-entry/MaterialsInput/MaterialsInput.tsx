@@ -11,25 +11,18 @@ import {
   Menu,
   MenuItem
 } from 'react-aria-menubutton';
-import { useDebounce, usePrevious } from '../../../utils/hooks';
+import { useDebounce } from '../../../utils/hooks';
 import { PeriodicContext } from '../../periodic-table/periodic-table-state/periodic-selection-context';
 import { MaterialsInputBox } from './MaterialsInputBox';
 import { TableLayout } from '../../periodic-table/periodic-table-component/periodic-table.component';
 import { SelectableTable } from '../../periodic-table/table-state';
-import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableFormulaButtons';
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
-import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
 import {
   getAllowedSelectionModes,
   getMaterialsInputTypeByMappedValue,
-  materialsInputTypes,
-  MaterialsInputTypesMap,
-  validateElements,
-  validateFormula,
-  validateMPID
+  materialsInputTypes
 } from './utils';
-import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { Tooltip } from '../../data-display/Tooltip';
 import { InputHelpItem } from './InputHelp/InputHelp';
 
@@ -79,7 +72,6 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   className?: string;
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
-  detectInputMode?: boolean;
   hidePeriodicTable?: boolean;
   showTypeDropdown?: boolean;
   showSubmitButton?: boolean;
@@ -180,16 +172,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       ? true
       : false;
   });
-  const [showHelpMenu, setShowHelpMenu] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-
-  const shouldShowHelpMenu = () => {
-    if (!inputValue || inputValue == '') {
-      return setShowHelpMenu(true);
-    } else {
-      return setShowHelpMenu(false);
-    }
-  };
 
   const getOnFocusProp = () => {
     setErrorTipStayActive(false);
@@ -210,7 +193,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
     const target = e.target;
-    setShowHelpMenu(false);
     setIsFocused(false);
     if (props.periodicTableMode !== PeriodicTableMode.FOCUS) {
       return;
@@ -285,30 +267,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       setErrorTipStayActive(true);
     }
   };
-
-  // /**
-  //  * Dynamically determine if input is a chemical system
-  //  * based on its inputType and the presence of a '-'
-  //  */
-  // const handleChemSysCheck = () => {
-  //   let newIsChemSys: boolean | undefined;
-  //   /**
-  //    * Temporary fix to make sure input values are not mpid's.
-  //    * This should be fixed in the future by removing inputValue from the [inputValue, inputType] useEffect
-  //    * and modifying MaterialsInputType so that CHEMICAL_SYSTEM is its own type.
-  //    */
-  //   if (
-  //     !validateMPID(inputValue) &&
-  //     inputType === MaterialsInputType.ELEMENTS &&
-  //     inputValue.match(/-/gi)
-  //   ) {
-  //     newIsChemSys = true;
-  //   } else if (inputValue.match(/,|\s/gi)) {
-  //     newIsChemSys = false;
-  //   }
-  //   if (newIsChemSys !== undefined) setIsChemSys(newIsChemSys);
-  //   return newIsChemSys;
-  // };
 
   /**
    * Take a new value from either the periodic table mode selector or
@@ -555,13 +513,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       />
     );
   }
-  // } else if (props.type === 'formula') {
-  //   periodicTablePlugin = (
-  //     <PeriodicTablePluginWrapper>
-  //       <PeriodicTableFormulaButtons onClick={(v) => setInputValue(inputValue + v)} />
-  //     </PeriodicTablePluginWrapper>
-  //   );
-  // }
 
   /**
    * When the input type changes, dynamically change the periodic table mode and/or
@@ -589,7 +540,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   useEffect(() => {
     setDashProps();
     setDisabled(error || !inputValue ? true : false);
-    if (isFocused) shouldShowHelpMenu();
   }, [inputValue]);
 
   useEffect(() => {
