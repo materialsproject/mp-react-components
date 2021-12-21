@@ -86,6 +86,7 @@ export const SearchUISearchBar: React.FC = () => {
       helpItems={state.searchBarHelpItems}
       chemicalSystemSelectHelpText={state.searchBarChemicalSystemSelectHelpText}
       elementsSelectHelpText={state.searchBarElementsSelectHelpText}
+      loading={state.loading}
     />
   );
 };

@@ -98,6 +98,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
    * Supports markdown.
    */
   elementsSelectHelpText?: string;
+  loading?: boolean;
   onPropsChange?: (propsObject: any) => void;
 }
 
@@ -132,6 +133,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>();
   const [error, setError] = useState<string | null>(null);
   const [errorTipStayActive, setErrorTipStayActive] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const [submitButtonClicks, setSubmitButtonClicks] = useState(0);
   const hasPeriodicTable = props.periodicTableMode !== PeriodicTableMode.NONE;
   const [selectionMode, setSelectionMode] = useState(() => {
@@ -365,6 +367,17 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
+  /**
+   * Check whether submit button should be disabled
+   */
+  const shouldDisable = () => {
+    if (props.loading || error || !inputValue) {
+      return setDisabled(true);
+    } else {
+      return setDisabled(false);
+    }
+  };
+
   let materialsInputField: JSX.Element | null = null;
   let materialsInputFieldControls: JSX.Element | null = null;
   let labelControl: JSX.Element | null = null;
@@ -502,7 +515,15 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         <Field className="has-addons">
           {materialsInputFieldControls}
           <Control>
-            <Button data-testid="materials-input-submit-button" color="primary" type="submit">
+            <Button
+              data-testid="materials-input-submit-button"
+              className={classNames({
+                'is-loading': props.loading
+              })}
+              color="primary"
+              type="submit"
+              disabled={disabled}
+            >
               Search
             </Button>
           </Control>
@@ -567,6 +588,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   useEffect(() => {
     setDashProps();
+    setDisabled(error || !inputValue ? true : false);
     if (isFocused) shouldShowHelpMenu();
   }, [inputValue]);
 
@@ -629,6 +651,20 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       convertSelectionToInputType(typeDropdownValue, lookupKey, inputType, inputValue);
     }
   }, [typeDropdownValue]);
+
+  /**
+   * Set submit button to disabled when there is an error or when loading
+   */
+  useEffect(() => {
+    shouldDisable();
+  }, [error, props.loading]);
+
+  /**
+   * Set submit button to disabled when there is an error or when loading
+   */
+  useEffect(() => {
+    shouldDisable();
+  }, [error, props.loading]);
 
   return (
     <div id={props.id} className={classNames('mpc-materials-input', props.className)}>
