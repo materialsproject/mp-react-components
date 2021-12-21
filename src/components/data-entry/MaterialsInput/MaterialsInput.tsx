@@ -61,6 +61,8 @@ export interface MaterialsInputSharedProps {
   autocompleteApiKey?: string;
   helpItems?: InputHelpItem[];
   maxElementSelectable?: number;
+  showAutocomplete?: boolean;
+  setShowAutocomplete?: (value: boolean) => any;
   onChange?: (value: string) => any;
   onInputTypeChange?: (type: MaterialsInputType) => any;
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
@@ -127,6 +129,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   const [errorTipStayActive, setErrorTipStayActive] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [submitButtonClicks, setSubmitButtonClicks] = useState(0);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
   const hasPeriodicTable = props.periodicTableMode !== PeriodicTableMode.NONE;
   const [selectionMode, setSelectionMode] = useState(() => {
     return materialsInputTypes[inputType].selectionMode;
@@ -241,13 +244,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
     if (!error) {
       setShowPeriodicTable(false);
-      // /**
-      //  * Pass filterProps to submit so that the chem sys flag
-      //  * can persist into the activated filter.
-      //  * This is primarily only important for searches for single elements
-      //  * because the chem sys flag cannot be inferred by the input value.
-      //  */
-      // const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
+      setShowAutocomplete(false);
 
       if (props.setProps) {
         setSubmitButtonClicks(submitButtonClicks + 1);
@@ -361,6 +358,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       inputClassName={props.inputClassName}
       autocompleteFormulaUrl={props.autocompleteFormulaUrl}
       autocompleteApiKey={props.autocompleteApiKey}
+      showAutocomplete={showAutocomplete}
+      setShowAutocomplete={setShowAutocomplete}
       onChange={props.onChange}
       helpItems={props.helpItems}
       maxElementSelectable={props.maxElementSelectable}

@@ -54,7 +54,6 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
   const [inputType, setInputType] = useState<MaterialsInputType | null>(props.type || null);
   const [prevInputValue, setPrevInputValue] = useState(props.value);
   const [maxElementsReached, setMaxElementsReached] = useState(false);
-  const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [showInputHelp, setShowInputHelp] = useState(false);
   const staticInputField = props.allowedInputTypes.length === 1 ? props.type : undefined;
   const includeAutocomplete =
@@ -84,7 +83,7 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
       inputValue !== '' &&
       document.activeElement === inputRef.current
     ) {
-      setShowAutocomplete(true);
+      if (props.setShowAutocomplete) props.setShowAutocomplete(true);
       setShowInputHelp(false);
     } else if (document.activeElement === inputRef.current && (!inputValue || inputValue === '')) {
       setShowInputHelp(true);
@@ -107,13 +106,13 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
   };
 
   const handleBlur = (e) => {
-    setShowAutocomplete(false);
+    if (props.setShowAutocomplete) props.setShowAutocomplete(false);
     setShowInputHelp(false);
     if (props.onBlur) props.onBlur(e);
   };
 
   const handleKeyDown = (e) => {
-    if (e.keyCode === 9) setShowAutocomplete(false);
+    if (e.keyCode === 9 && props.setShowAutocomplete) props.setShowAutocomplete(false);
     if (props.onKeyDown) props.onKeyDown(e);
   };
 
@@ -318,7 +317,7 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
             inputType={inputType}
             apiEndpoint={props.autocompleteFormulaUrl!}
             apiKey={props.autocompleteApiKey}
-            show={showAutocomplete}
+            show={props.showAutocomplete}
             /**
              * onChange must come from the top-level onChange event for MaterialsInput (i.e. not modify inputValue directly)
              * otherwise there will be circular hooks.
