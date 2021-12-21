@@ -78,6 +78,7 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   showTypeDropdown?: boolean;
   showSubmitButton?: boolean;
   submitButtonClicks?: number;
+  submitButtonText?: string;
   label?: string;
   hideWildcardButton?: boolean;
   /**
@@ -110,6 +111,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   allowedInputTypes = [type],
   onChange = (value) => value,
   maxElementSelectable = 20,
+  submitButtonText = 'Search',
   ...otherProps
 }) => {
   const props = {
@@ -119,6 +121,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     allowedInputTypes,
     onChange,
     maxElementSelectable,
+    submitButtonText,
     ...otherProps
   };
   const [inputValue, setInputValue] = useState(props.value);
@@ -481,7 +484,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
               type="submit"
               disabled={disabled}
             >
-              Search
+              {props.submitButtonText}
             </Button>
           </Control>
         </Field>
