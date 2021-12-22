@@ -133,9 +133,7 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = ({
         )}
         {props.mode === PeriodicTableSelectionMode.ELEMENTS && (
           <div className="pt-description">
-            {props.chemicalSystemSelectHelpText && (
-              <Markdown>{props.elementsSelectHelpText}</Markdown>
-            )}
+            {props.elementsSelectHelpText && <Markdown>{props.elementsSelectHelpText}</Markdown>}
           </div>
         )}
       </div>

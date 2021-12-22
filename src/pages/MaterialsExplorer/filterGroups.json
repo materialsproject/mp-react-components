@@ -73,7 +73,7 @@
       {
         "name": "Exclude Elements",
         "id": "exclude_elements",
-        "overrides": ["material_ids", "formula"],
+        "overrides": ["material_ids", "formula", "chemsys"],
         "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that do not contain certain elements in their formula.",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -86,7 +86,7 @@
       {
         "name": "Number of Elements",
         "id": "nelements",
-        "overrides": ["material_ids", "formula"],
+        "overrides": ["material_ids", "formula", "chemsys"],
         "type": "SLIDER",
         "props": {
           "domain": [1, 20],
