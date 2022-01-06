@@ -11,6 +11,7 @@ import * as d3 from 'd3';
 import { SortDropdown } from '../../SortDropdown';
 import { DropdownItem } from '../../SortDropdown/SortDropdown';
 import { SearchUIViewType } from '../types';
+import { ColumnsMenu } from '../../DataTable/ColumnsMenu';
 
 const componentHtmlId = uuidv4();
 
@@ -150,72 +151,7 @@ export const SearchUIDataHeader: React.FC = () => {
 
   const columnsMenu =
     state.view === SearchUIViewType.TABLE ? (
-      <MenuWrapper
-        data-testid="columns-menu"
-        className="dropdown is-right is-active"
-        closeOnSelection={false}
-      >
-        <div className="dropdown-trigger">
-          <Button className="button">
-            <span>Columns</span>
-            <span className="icon">
-              <FaAngleDown />
-            </span>
-          </Button>
-        </div>
-        <Menu className="dropdown-menu">
-          <ul className="dropdown-content">
-            <MenuItem>
-              <li className="dropdown-item">
-                <label className="checkbox is-block">
-                  <input
-                    type="checkbox"
-                    role="checkbox"
-                    checked={allCollumnsSelected}
-                    aria-checked={allCollumnsSelected}
-                    /**
-                     * Use key-up event to allow toggling with the space bar
-                     * Must use key-up instead of key-down to prevent double-firing in Firefox
-                     */
-                    onKeyUp={(e) => {
-                      e.preventDefault();
-                      if (e.keyCode === 32) toggleAllColumns();
-                    }}
-                    onChange={(e) => toggleAllColumns()}
-                  />
-                  <span>
-                    <strong>Select all</strong>
-                  </span>
-                </label>
-              </li>
-            </MenuItem>
-            {columns.map((col, i) => (
-              <MenuItem key={i}>
-                <li className="dropdown-item">
-                  <label className="checkbox is-block">
-                    <input
-                      type="checkbox"
-                      role="checkbox"
-                      checked={!col.omit}
-                      aria-checked={!col.omit}
-                      /**
-                       * Use key-up event to allow toggling with the space bar
-                       * Must use key-up instead of key-down to prevent double-firing in Firefox
-                       */
-                      onKeyUp={(e) => {
-                        e.preventDefault();
-                        if (e.keyCode === 32) toggleColumn(i);
-                      }}
-                      onChange={(e) => toggleColumn(i)}
-                    />
-                    <span>{col.title}</span>
-                  </label>
-                </li>
-              </MenuItem>
-            ))}
-          </ul>
-        </Menu>
-      </MenuWrapper>
+      <ColumnsMenu columns={columns} setColumns={actions.setColumns} />
     ) : null;
 
   const resultsPerPageOptions = [10, 15, 30, 50, 75];

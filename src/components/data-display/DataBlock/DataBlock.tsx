@@ -4,9 +4,9 @@ import Collapsible from 'react-collapsible';
 import { FaBicycle, FaCaretDown, FaCaretRight, FaCaretUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 import { Column } from '../SearchUI/types';
-import { initColumns } from '../SearchUI/utils';
 import { Tooltip } from '../../data-display/Tooltip';
 import './DataBlock.css';
+import { getColumnsFromKeys, initColumns } from '../../../utils/table';
 
 export interface DataBlockProps {
   /**
@@ -59,16 +59,6 @@ export interface DataBlockProps {
    */
   disableRichColumnHeaders?: boolean;
 }
-
-const getColumnsFromKeys = (data: object): Column[] => {
-  const keys = Object.keys(data);
-  return keys.map((key) => {
-    return {
-      title: key,
-      selector: key
-    };
-  });
-};
 
 /**
  * Component for displaying a single row (object) of data in a card-like block.
