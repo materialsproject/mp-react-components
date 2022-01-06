@@ -4,11 +4,11 @@
 }
 
 .mpc-data-table .mpc-data-table-header {
-  padding: 1rem 1.5rem 0 1.5rem;
+  padding: 1rem 1rem 0 1rem;
 }
 
 .mpc-data-table .mpc-paginator {
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 

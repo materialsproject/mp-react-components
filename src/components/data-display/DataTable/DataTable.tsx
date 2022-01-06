@@ -6,6 +6,7 @@ import { getColumnsFromKeys, initColumns } from '../../../utils/table';
 import { Paginator } from '../Paginator';
 import { ColumnsMenu } from './ColumnsMenu';
 import './DataTable.css';
+import classNames from 'classnames';
 
 export interface DataTableProps {
   /**
@@ -67,12 +68,38 @@ export interface DataTableProps {
    * they are accessible via Dash callback
    */
   selectedRows?: any[];
+  /**
+   * Set to true to show a header with total number of rows and a columns selector
+   */
   hasHeader?: boolean;
+  /**
+   * Optional class name to apply to the table header
+   */
   headerClassName?: string;
+  /**
+   * A noun in singular form to describe what a result represents (e.g. "material").
+   * This is displayed in the table header.
+   */
   resultLabel?: string;
+  /**
+   * Plural form of the result label. If none supplied, it will automatically be the result label plus an "s"
+   */
   resultLabelPlural?: string;
+  /**
+   * Set to true to paginate the table records
+   */
   pagination?: boolean;
-  paginationIsCompact?: boolean;
+  /**
+   * If true, an expanded component will be used for pagination (same as in `SearchUI`).
+   * If false, a compact version will be used.
+   */
+  paginationIsExpanded?: boolean;
+  /**
+   * This is a temporary solution to allow SearchUI's to render in Storybook.
+   * There is an issue with the dynamic column header components that causes
+   * Storybook to crash. Rendering column headers as plain strings fixes the problem.
+   * Note that this will disable column tooltips and unit labels.
+   */
   disableRichColumnHeaders?: boolean;
 }
 
@@ -84,14 +111,12 @@ export const DataTable: React.FC<DataTableProps> = ({
   resultLabel = 'record',
   resultLabelPlural = `${resultLabel}s`,
   headerClassName = 'title is-6',
-  paginationIsCompact = true,
   ...otherProps
 }) => {
   const props = {
     resultLabel,
     resultLabelPlural,
     headerClassName,
-    paginationIsCompact,
     ...otherProps
   };
   const columnDefs = props.columns || getColumnsFromKeys(props.data[0]);
@@ -131,7 +156,7 @@ export const DataTable: React.FC<DataTableProps> = ({
   });
 
   return (
-    <div className="mpc-data-table">
+    <div className={classNames('mpc-data-table', props.className)}>
       {props.hasHeader && (
         <div className="mpc-data-table-header">
           <div className="level is-mobile">
@@ -160,7 +185,7 @@ export const DataTable: React.FC<DataTableProps> = ({
             data={data}
             highlightOnHover
             pagination={props.pagination}
-            paginationComponent={props.paginationIsCompact ? null : CustomPaginator}
+            paginationComponent={props.paginationIsExpanded ? CustomPaginator : null}
             sortIcon={<FaCaretDown />}
             defaultSortField={props.sortField}
             defaultSortAsc={props.sortAscending}

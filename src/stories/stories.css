@@ -105,3 +105,8 @@ pre {
 .max-750 {
   max-width: 750px;
 }
+
+.mpc-data-table {
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
