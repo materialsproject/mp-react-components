@@ -11,7 +11,6 @@ import Scene from './components/crystal-toolkit/scene/Scene';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/data-entry/MaterialsInput/MaterialsInput';
 import { SearchUI } from './components/data-display/SearchUI';
-import DataTable from 'react-data-table-component';
 import { GlobalSearchBar } from './components/data-entry/GlobalSearchBar';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { Select } from './components/data-entry/Select';
@@ -34,6 +33,7 @@ import { Navbar } from './components/navigation/Navbar';
 import { Modal, ModalTrigger, ModalContextProvider } from './components/data-display/Modal';
 import { Tabs } from './components/navigation/Tabs';
 import { FilterField } from './components/data-entry/FilterField';
+import { DataTable } from './components/data-display/DataTable';
 
 export {
   SelectableTable,

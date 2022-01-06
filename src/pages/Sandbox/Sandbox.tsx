@@ -34,9 +34,8 @@ export const Sandbox: React.FC = () => {
       <p>{JSON.stringify(state.selectedRows)}</p>
       <DataTable
         setProps={setState}
-        selectableRows
+        // selectableRows
         pagination
-        paginationIsCompact
         hasHeader
         columns={[
           {
