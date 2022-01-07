@@ -19,7 +19,9 @@ export interface DataTableProps {
    */
   setProps?: (value: any) => any;
   /**
-   * Class name(s) to append to the component's default class
+   * Class name(s) to append to the component's default class.
+   * By default, the .box and .p-0 classes are applied to the table, but these will be
+   * overridden if a className is supplied.
    */
   className?: string;
   /**
