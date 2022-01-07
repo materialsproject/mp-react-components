@@ -228,8 +228,11 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const isNumber = !isNaN(rowValue);
           let value = rowValue;
-          if (typeof value === 'object') {
-            value = JSON.stringify(value);
+          if (React.isValidElement(value)) {
+            return value;
+          }
+          if (typeof rowValue === 'object') {
+            value = JSON.stringify(rowValue);
           }
           if (c.conversionFactor && isNumber) {
             value = rowValue * c.conversionFactor;
