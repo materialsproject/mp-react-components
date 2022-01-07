@@ -1,6 +1,7 @@
 .mpc-data-table {
   background-color: #fff;
   border-radius: 6px;
+  overflow: hidden;
 }
 
 .mpc-data-table .mpc-data-table-header {

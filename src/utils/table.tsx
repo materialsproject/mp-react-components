@@ -46,7 +46,17 @@ const getRowValueFromSelectorString = (selector: string, row: any) => {
  */
 export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolean): Column[] => {
   return columns.map((c) => {
+    /** Make columns sortable by default */
     c.sortable = c.sortable !== undefined ? c.sortable : true;
+
+    /** Automatically right align numberic columns */
+    if (
+      (c.formatType === ColumnFormat.FIXED_DECIMAL ||
+        c.formatType === ColumnFormat.SIGNIFICANT_FIGURES) &&
+      c.right !== false
+    ) {
+      c.right = true;
+    }
 
     if (disableRichColumnHeaders) {
       c.name = c.hideName ? '' : c.title;
@@ -95,7 +105,6 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
             return isNaN(value) ? emptyCellPlaceholder : value.toFixed(decimalPlaces);
           }
         };
-        if (c.right !== false) c.right = true;
         return c;
       case ColumnFormat.SIGNIFICANT_FIGURES:
         const sigFigs = hasFormatOptions && c.formatOptions.sigFigs ? c.formatOptions.sigFigs : 5;
@@ -108,7 +117,6 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           }
           return isNaN(value) ? emptyCellPlaceholder : value.toPrecision(sigFigs);
         };
-        if (c.right !== false) c.right = true;
         return c;
       case ColumnFormat.FORMULA:
         c.cell = (row: any) => {
@@ -219,7 +227,13 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
         c.format = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const isNumber = !isNaN(rowValue);
-          const value = c.conversionFactor && isNumber ? rowValue * c.conversionFactor : rowValue;
+          let value = rowValue;
+          if (typeof value === 'object') {
+            value = JSON.stringify(value);
+          }
+          if (c.conversionFactor && isNumber) {
+            value = rowValue * c.conversionFactor;
+          }
           if (value === 0) {
             return 0;
           }

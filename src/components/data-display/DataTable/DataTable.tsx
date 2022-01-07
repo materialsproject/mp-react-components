@@ -108,12 +108,14 @@ export interface DataTableProps {
  * Uses react-data-table-component under the hood.
  */
 export const DataTable: React.FC<DataTableProps> = ({
+  className = 'box p-0',
   resultLabel = 'record',
   resultLabelPlural = `${resultLabel}s`,
   headerClassName = 'title is-6',
   ...otherProps
 }) => {
   const props = {
+    className,
     resultLabel,
     resultLabelPlural,
     headerClassName,

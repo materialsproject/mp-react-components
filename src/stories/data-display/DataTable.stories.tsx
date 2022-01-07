@@ -79,3 +79,19 @@ WithHeader.args = {
   hasHeader: true,
   resultLabel: 'material'
 };
+
+export const WithoutColumnDefinitions = Template.bind({});
+WithoutColumnDefinitions.args = {
+  disableRichColumnHeaders: true,
+  data: materialsRecords,
+  pagination: true
+};
+const descriptionWithOutColumnDefinitions = `
+  You can generate a table without directly supplying column definitions. 
+  In this case, the columns will be inferred from the properties in the first object in the data array.
+`;
+WithoutColumnDefinitions.parameters = {
+  docs: {
+    description: { story: descriptionWithOutColumnDefinitions }
+  }
+};
