@@ -127,7 +127,7 @@ export const DataTable: React.FC<DataTableProps> = ({
   const [columns, setColumns] = useState(() => {
     return initColumns(columnDefs, props.disableRichColumnHeaders);
   });
-  const [tableColumns, setTableColumns] = useState(() => columns.filter((c) => !c.hidden));
+  const [tableColumns, setTableColumns] = useState(columns);
   const [data, setData] = useState(props.data);
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -159,8 +159,29 @@ export const DataTable: React.FC<DataTableProps> = ({
     return c;
   });
 
+  /**
+   * Update data if changed from outside component (e.g. via dash callback)
+   */
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
+
+  /**
+   * Update columns if changed from outside component (e.g. via dash callback)
+   */
+  useEffect(() => {
+    setColumns(initColumns(columnDefs, props.disableRichColumnHeaders));
+  }, [props.columns]);
+
+  /**
+   * tableColumns should include only the columns that are viewable in the table (i.e. not hidden)
+   */
+  useEffect(() => {
+    setTableColumns(columns.filter((c) => !c.hidden));
+  }, [columns]);
+
   return (
-    <div className={classNames('mpc-data-table', props.className)}>
+    <div id={props.id} className={classNames('mpc-data-table', props.className)}>
       {props.hasHeader && (
         <div className="mpc-data-table-header">
           <div className="level is-mobile">
