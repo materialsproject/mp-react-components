@@ -41,7 +41,8 @@ export const Sandbox: React.FC = () => {
           {
             selector: 'a',
             title: 'A',
-            tooltip: 'first column',
+            tooltip:
+              'Esse non proident non quis et nostrud aliqua occaecat. Tempor velit do mollit sint non. Adipisicing id laborum enim commodo aliqua consequat sint aute ad aliqua ipsum nisi. Mollit eu proident occaecat pariatur do est ut pariatur quis eu. Non tempor aliquip aute laborum adipisicing culpa labore labore reprehenderit.',
             units: 'cm',
             formatType: ColumnFormat.FIXED_DECIMAL,
             formatOptions: {
