@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { default as ReactDataTable } from 'react-data-table-component';
 import { FaCaretDown } from 'react-icons/fa';
-import { Column, ConditionalRowStyle } from '../SearchUI/types';
+import { Column, ColumnFormat, ConditionalRowStyle } from '../SearchUI/types';
 import { getColumnsFromKeys, initColumns } from '../../../utils/table';
 import { Paginator } from '../Paginator';
 import { ColumnsMenu } from './ColumnsMenu';
@@ -71,6 +71,15 @@ export interface DataTableProps {
    */
   selectedRows?: any[];
   /**
+   * Optionally include/exclude checkboxes next to rows for selecting
+   */
+  singleSelectableRows?: boolean;
+  /**
+   * Property to maintain the state of the last clicked row so that
+   * it is accessible via Dash callback
+   */
+  selectedRow?: any;
+  /**
    * Set to true to show a header with total number of rows and a columns selector
    */
   hasHeader?: boolean;
@@ -112,7 +121,7 @@ export interface DataTableProps {
 export const DataTable: React.FC<DataTableProps> = ({
   className = 'box p-0',
   resultLabel = 'record',
-  resultLabelPlural = `${resultLabel}s`,
+  resultLabelPlural = resultLabel + 's',
   headerClassName = 'title is-6',
   ...otherProps
 }) => {
@@ -124,16 +133,71 @@ export const DataTable: React.FC<DataTableProps> = ({
     ...otherProps
   };
   const columnDefs = props.columns || getColumnsFromKeys(props.data[0]);
+  /**
+   * If table rows are set to be clickable, a radio button column will be added to the column defs,
+   * an isClicked property will be added to each record, and an id will be added to each record to
+   * keep track of which row was clicked.
+   */
+  if (props.singleSelectableRows) {
+    columnDefs.unshift({
+      selector: 'isSelected',
+      title: '',
+      formatType: ColumnFormat.RADIO,
+      width: '48px'
+    });
+  }
   const [columns, setColumns] = useState(() => {
     return initColumns(columnDefs, props.disableRichColumnHeaders);
   });
   const [tableColumns, setTableColumns] = useState(columns);
-  const [data, setData] = useState(props.data);
+  const [data, setData] = useState(() => {
+    if (props.selectableRows) {
+      return props.data.map((d, i) => {
+        d.isSelected = false;
+        d.id = i;
+        return d;
+      });
+    } else {
+      return props.data;
+    }
+  });
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const hasMultiSelectableRows = props.selectableRows && !props.singleSelectableRows;
 
+  /**
+   * In order for the table to allow for data to be set from outside the component (i.e. via dash callback),
+   * row selection needs to be handled in an explicit data variable. Otherwise, all rows would become deselected
+   * once the data hook effect is triggered. This happens because that hook forces a re-render and react-data-table
+   * would refresh its internal row state.
+   */
   const handleSelectedRowsChange = (rowState) => {
-    if (props.setProps) props.setProps({ ...props, selectedRows: rowState.selectedRows });
+    const newData = data.map((d) => {
+      const selected = rowState.selectedRows.find((r) => r.id === d.id);
+      if (selected) {
+        d.isSelected = true;
+        selected.isSelected = true;
+      } else {
+        d.isSelected = false;
+      }
+      return { ...d };
+    });
+    setData(newData);
+    if (props.setProps)
+      props.setProps({ ...props, data: [...newData], selectedRows: rowState.selectedRows });
+  };
+
+  const handleClickedRow = (row) => {
+    const newData = data.map((d) => {
+      if (d.id === row.id) {
+        d.isSelected = true;
+      } else {
+        d.isSelected = false;
+      }
+      return { ...d };
+    });
+    setData(newData);
+    if (props.setProps) props.setProps({ ...props, data: [...newData], selectedRows: [row] });
   };
 
   const CustomPaginator = ({
@@ -221,9 +285,14 @@ export const DataTable: React.FC<DataTableProps> = ({
                 }
               }
             }}
+            onRowClicked={handleClickedRow}
             conditionalRowStyles={conditionalRowStyles}
-            selectableRows={props.selectableRows}
+            selectableRows={hasMultiSelectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}
+            selectableRowSelected={(row) => {
+              console.log(row);
+              return row.isSelected;
+            }}
             clearSelectedRows={toggleClearRows}
           />
         </div>
