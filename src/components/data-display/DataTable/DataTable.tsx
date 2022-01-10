@@ -290,7 +290,7 @@ export const DataTable: React.FC<DataTableProps> = ({
             data={data}
             highlightOnHover
             pagination={props.pagination}
-            paginationComponent={props.paginationIsExpanded ? CustomPaginator : null}
+            paginationComponent={props.paginationIsExpanded ? CustomPaginator : undefined}
             sortIcon={<FaCaretDown />}
             defaultSortField={props.sortField}
             defaultSortAsc={props.sortAscending}
@@ -301,7 +301,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                 }
               }
             }}
-            onRowClicked={handleClickedRow}
+            onRowClicked={props.selectableRows ? handleClickedRow : undefined}
             conditionalRowStyles={conditionalRowStyles}
             selectableRows={hasMultiSelectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}

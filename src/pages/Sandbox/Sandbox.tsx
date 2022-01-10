@@ -123,8 +123,8 @@ export const Sandbox: React.FC = () => {
       <p>{JSON.stringify(state.selectedRows)}</p>
       <DataTable
         setProps={setState}
-        selectableRows
-        singleSelectableRows
+        // selectableRows
+        // singleSelectableRows
         pagination
         paginationIsExpanded
         hasHeader
