@@ -143,7 +143,8 @@ export const DataTable: React.FC<DataTableProps> = ({
       selector: 'isSelected',
       title: '',
       formatType: ColumnFormat.RADIO,
-      width: '48px'
+      width: '48px',
+      onChange: handleClickedRow
     });
   }
   const [columns, setColumns] = useState(() => {
@@ -171,6 +172,13 @@ export const DataTable: React.FC<DataTableProps> = ({
    * once the data hook effect is triggered. This happens because that hook forces a re-render and react-data-table
    * would refresh its internal row state.
    */
+
+  /**
+   * Event triggered when a row checkbox is clicked.
+   * This only pertains to multi selectable rows.
+   * This event is triggered by react-data-table-component's onSelectedRowsChange and therefore
+   * has access to rowState which is managed internally by react-data-table-component.
+   */
   const handleSelectedRowsChange = (rowState) => {
     const newData = data.map((d) => {
       const selected = rowState.selectedRows.find((r) => r.id === d.id);
@@ -187,18 +195,25 @@ export const DataTable: React.FC<DataTableProps> = ({
       props.setProps({ ...props, data: [...newData], selectedRows: rowState.selectedRows });
   };
 
-  const handleClickedRow = (row) => {
+  /**
+   * Event triggered when any part of a row is clicked.
+   * Define this function using a function declaration so that
+   * it gets hoisted and can be used in the isSelected column def.
+   */
+  function handleClickedRow(row) {
     const newData = data.map((d) => {
-      if (d.id === row.id) {
-        d.isSelected = true;
-      } else {
-        d.isSelected = false;
+      if (props.singleSelectableRows) {
+        d.isSelected = d.id === row.id ? true : false;
+      } else if (d.id === row.id) {
+        d.isSelected = !d.isSelected;
       }
       return { ...d };
     });
+    const newSelectedRows = newData.filter((d) => d.isSelected);
     setData(newData);
-    if (props.setProps) props.setProps({ ...props, data: [...newData], selectedRows: [row] });
-  };
+    if (props.setProps)
+      props.setProps({ ...props, data: [...newData], selectedRows: newSelectedRows });
+  }
 
   const CustomPaginator = ({
     rowsPerPage,
@@ -290,7 +305,6 @@ export const DataTable: React.FC<DataTableProps> = ({
             selectableRows={hasMultiSelectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}
             selectableRowSelected={(row) => {
-              console.log(row);
               return row.isSelected;
             }}
             clearSelectedRows={toggleClearRows}

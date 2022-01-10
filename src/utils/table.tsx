@@ -225,8 +225,8 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
         return c;
       case ColumnFormat.RADIO:
         c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return <input type="radio" checked={rowValue}></input>;
+          let rowValue = getRowValueFromSelectorString(c.selector, row);
+          return <input type="radio" checked={rowValue} onChange={() => c.onChange(row)}></input>;
         };
         return c;
       default:
