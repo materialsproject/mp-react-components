@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { default as ReactDataTable } from 'react-data-table-component';
 import { FaCaretDown } from 'react-icons/fa';
 import { Column, ColumnFormat, ConditionalRowStyle } from '../SearchUI/types';
@@ -7,6 +7,7 @@ import { Paginator } from '../Paginator';
 import { ColumnsMenu } from './ColumnsMenu';
 import './DataTable.css';
 import classNames from 'classnames';
+import { Markdown } from '../Markdown';
 
 export interface DataTableProps {
   /**
@@ -105,6 +106,11 @@ export interface DataTableProps {
    * If false, a compact version will be used.
    */
   paginationIsExpanded?: boolean;
+  /**
+   * Content to display below the table but inside the table's box wrapper.
+   * Accepts markdown.
+   */
+  footer?: ReactNode;
   /**
    * This is a temporary solution to allow SearchUI's to render in Storybook.
    * There is an issue with the dynamic column header components that causes
@@ -311,6 +317,11 @@ export const DataTable: React.FC<DataTableProps> = ({
           />
         </div>
       </div>
+      {props.footer && (
+        <div className="mpc-data-table-footer">
+          <Markdown>{props.footer}</Markdown>
+        </div>
+      )}
     </div>
   );
 };

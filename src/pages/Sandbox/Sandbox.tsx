@@ -126,7 +126,9 @@ export const Sandbox: React.FC = () => {
         selectableRows
         singleSelectableRows
         pagination
+        paginationIsExpanded
         hasHeader
+        footer="This is the footer"
         columns={[
           {
             selector: 'a',
