@@ -19,21 +19,27 @@ export const MultiType = Template.bind({});
 MultiType.args = {
   periodicTableMode: 'toggle' as PeriodicTableMode,
   allowedInputTypes: [
+    'chemical_system' as MaterialsInputType,
     'elements' as MaterialsInputType,
     'formula' as MaterialsInputType,
     'mpid' as MaterialsInputType
   ],
+  type: 'chemical_system' as MaterialsInputType,
+  chemicalSystemSelectHelpText:
+    'Select elements to search for materials with **only** these elements',
+  elementsSelectHelpText:
+    'Select elements to search for materials with **at least** these elements',
   errorMessage: 'Please enter a valid list of element symbols, chemical formula, or Material ID.',
+  showSubmitButton: true,
   onSubmit: action('onSubmit')
 };
 
 export const Elements = Template.bind({});
 Elements.args = {
-  periodicTableMode: 'toggle' as PeriodicTableMode,
-  allowedInputTypes: ['elements' as MaterialsInputType],
+  ...MultiType.args,
+  allowedInputTypes: ['chemical_system' as MaterialsInputType, 'elements' as MaterialsInputType],
   errorMessage: 'Please enter a valid list of element symbols separated by a comma or a dash.',
-  inputType: 'elements' as MaterialsInputType,
-  onSubmit: action('onSubmit')
+  type: 'chemical_system' as MaterialsInputType
 };
 
 export const ElementsWithHelp = Template.bind({});
@@ -50,13 +56,20 @@ ElementsWithHelp.args = {
   ]
 };
 
+export const ChemicalSystem = Template.bind({});
+ChemicalSystem.args = {
+  ...MultiType.args,
+  allowedInputTypes: ['chemical_system' as MaterialsInputType],
+  errorMessage: 'Please enter a valid chemical system (e.g. Li-Fe-Co).',
+  type: 'chemical_system' as MaterialsInputType
+};
+
 export const Formula = Template.bind({});
 Formula.args = {
-  periodicTableMode: 'toggle' as PeriodicTableMode,
+  ...MultiType.args,
   allowedInputTypes: ['formula' as MaterialsInputType],
   errorMessage: 'Please enter a valid chemical formula.',
-  inputType: 'formula' as MaterialsInputType,
-  onSubmit: action('onSubmit')
+  type: 'formula' as MaterialsInputType
 };
 
 export const FormulaWithoutPeriodicTable = Template.bind({});
@@ -74,8 +87,8 @@ FormulaWithLabel.args = {
 export const FormulaWithoutSubmit = Template.bind({});
 FormulaWithoutSubmit.args = {
   ...FormulaWithLabel.args,
-  onSubmit: undefined,
-  inputType: 'formula' as MaterialsInputType
+  showSubmitButton: false,
+  type: 'formula' as MaterialsInputType
 };
 /** Need to ignore onSubmit action or else it won't be considered undefined */
 FormulaWithoutSubmit.parameters = { actions: { argTypesRegex: '^(?!onSubmit)on.*' } };
