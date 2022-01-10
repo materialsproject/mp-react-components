@@ -72,14 +72,9 @@ export interface DataTableProps {
    */
   selectedRows?: any[];
   /**
-   * Optionally include/exclude checkboxes next to rows for selecting
+   * Combine with selectableRows prop to only allow one row to be selected at a time.
    */
   singleSelectableRows?: boolean;
-  /**
-   * Property to maintain the state of the last clicked row so that
-   * it is accessible via Dash callback
-   */
-  selectedRow?: any;
   /**
    * Set to true to show a header with total number of rows and a columns selector
    */
