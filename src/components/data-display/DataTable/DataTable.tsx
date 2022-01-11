@@ -172,6 +172,7 @@ export const DataTable: React.FC<DataTableProps> = ({
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
   const hasMultiSelectableRows = props.selectableRows && !props.singleSelectableRows;
+  const showPagination = props.pagination && data.length > 10;
 
   /**
    * In order for the table to allow for data to be set from outside the component (i.e. via dash callback),
@@ -297,7 +298,7 @@ export const DataTable: React.FC<DataTableProps> = ({
             columns={tableColumns}
             data={data}
             highlightOnHover
-            pagination={props.pagination}
+            pagination={showPagination}
             paginationComponent={props.paginationIsExpanded ? CustomPaginator : undefined}
             sortIcon={<FaCaretDown />}
             defaultSortField={props.sortField}

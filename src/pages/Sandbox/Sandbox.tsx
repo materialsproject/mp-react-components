@@ -38,8 +38,8 @@ export const Sandbox: React.FC = () => {
       { a: 3, b: 7 },
       { a: 1, b: 99 },
       { a: 3, b: 7 },
-      { a: 1, b: 44 }
-      // { a: 3, b: 7 },
+      { a: 1, b: 44 },
+      { a: 3, b: 7 }
       // { a: 1, b: 321 },
       // { a: 6, b: 7 },
       // { a: 45, b: 2 },
@@ -127,7 +127,7 @@ export const Sandbox: React.FC = () => {
         singleSelectableRows
         // sortField="b"
         pagination
-        paginationIsExpanded
+        // paginationIsExpanded
         hasHeader
         footer="This is the footer"
         columns={[
