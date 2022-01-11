@@ -141,7 +141,7 @@ export const DataTable: React.FC<DataTableProps> = ({
    */
   if (props.singleSelectableRows) {
     columnDefs.unshift({
-      selector: 'isSelected',
+      selector: '_isSelected',
       title: '',
       formatType: ColumnFormat.RADIO,
       width: '48px',
@@ -152,11 +152,16 @@ export const DataTable: React.FC<DataTableProps> = ({
     return initColumns(columnDefs, props.disableRichColumnHeaders);
   });
   const [tableColumns, setTableColumns] = useState(columns);
+  /**
+   * Add _isSelected property to track which rows are selected.
+   * Add _index property so that rows can be uniquely identified for selection logic.
+   * The _index value is simply the row's index in the full unsorted data array.
+   */
   const [data, setData] = useState(() => {
     if (props.selectableRows) {
       return props.data.map((d, i) => {
-        d.isSelected = false;
-        d.id = i;
+        d._isSelected = false;
+        d._index = i;
         return d;
       });
     } else {
@@ -181,36 +186,38 @@ export const DataTable: React.FC<DataTableProps> = ({
    * has access to rowState which is managed internally by react-data-table-component.
    */
   const handleSelectedRowsChange = (rowState) => {
-    const newData = data.map((d) => {
-      const selected = rowState.selectedRows.find((r) => r.id === d.id);
-      if (selected) {
-        d.isSelected = true;
-        selected.isSelected = true;
-      } else {
-        d.isSelected = false;
-      }
-      return { ...d };
-    });
-    setData(newData);
-    if (props.setProps)
-      props.setProps({ ...props, data: [...newData], selectedRows: rowState.selectedRows });
+    if (rowState.selectedRows != props.selectedRows) {
+      const newData = data.map((d) => {
+        const selected = rowState.selectedRows.find((r) => r._index === d._index);
+        if (selected) {
+          d._isSelected = true;
+          selected._isSelected = true;
+        } else {
+          d._isSelected = false;
+        }
+        return { ...d };
+      });
+      setData(newData);
+      if (props.setProps)
+        props.setProps({ ...props, data: [...newData], selectedRows: rowState.selectedRows });
+    }
   };
 
   /**
    * Event triggered when any part of a row is clicked.
    * Define this function using a function declaration so that
-   * it gets hoisted and can be used in the isSelected column def.
+   * it gets hoisted and can be used in the _isSelected column def.
    */
   function handleClickedRow(row) {
     const newData = data.map((d) => {
       if (props.singleSelectableRows) {
-        d.isSelected = d.id === row.id ? true : false;
-      } else if (d.id === row.id) {
-        d.isSelected = !d.isSelected;
+        d._isSelected = d._index === row._index ? true : false;
+      } else if (d._index === row._index) {
+        d._isSelected = !d._isSelected;
       }
       return { ...d };
     });
-    const newSelectedRows = newData.filter((d) => d.isSelected);
+    const newSelectedRows = newData.filter((d) => d._isSelected);
     setData(newData);
     if (props.setProps)
       props.setProps({ ...props, data: [...newData], selectedRows: newSelectedRows });
@@ -306,7 +313,7 @@ export const DataTable: React.FC<DataTableProps> = ({
             selectableRows={hasMultiSelectableRows}
             onSelectedRowsChange={handleSelectedRowsChange}
             selectableRowSelected={(row) => {
-              return row.isSelected;
+              return row._isSelected;
             }}
             clearSelectedRows={toggleClearRows}
           />
