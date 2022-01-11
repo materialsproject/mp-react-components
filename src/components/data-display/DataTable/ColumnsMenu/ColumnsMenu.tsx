@@ -46,7 +46,11 @@ export const ColumnsMenu: React.FC<ColumnsMenuProps> = (props) => {
   const toggleAllColumns = () => {
     const newAllColumnsSelected = !allCollumnsSelected;
     const newColumns = props.columns.map((col) => {
-      col.omit = !newAllColumnsSelected;
+      if (col.excludeFromColumnsSelector) {
+        col.omit = false;
+      } else {
+        col.omit = !newAllColumnsSelected;
+      }
       return col;
     });
     setAllCollumnsSelected(newAllColumnsSelected);
@@ -93,30 +97,36 @@ export const ColumnsMenu: React.FC<ColumnsMenuProps> = (props) => {
               </label>
             </li>
           </MenuItem>
-          {props.columns.map((col, i) => (
-            <MenuItem key={i}>
-              <li className="dropdown-item">
-                <label className="checkbox is-block">
-                  <input
-                    type="checkbox"
-                    role="checkbox"
-                    checked={!col.omit}
-                    aria-checked={!col.omit}
-                    /**
-                     * Use key-up event to allow toggling with the space bar
-                     * Must use key-up instead of key-down to prevent double-firing in Firefox
-                     */
-                    onKeyUp={(e) => {
-                      e.preventDefault();
-                      if (e.keyCode === 32) toggleColumn(i);
-                    }}
-                    onChange={(e) => toggleColumn(i)}
-                  />
-                  <span>{col.title}</span>
-                </label>
-              </li>
-            </MenuItem>
-          ))}
+          {props.columns.map((col, i) => {
+            if (col.excludeFromColumnsSelector) {
+              return null;
+            } else {
+              return (
+                <MenuItem key={i}>
+                  <li className="dropdown-item">
+                    <label className="checkbox is-block">
+                      <input
+                        type="checkbox"
+                        role="checkbox"
+                        checked={!col.omit}
+                        aria-checked={!col.omit}
+                        /**
+                         * Use key-up event to allow toggling with the space bar
+                         * Must use key-up instead of key-down to prevent double-firing in Firefox
+                         */
+                        onKeyUp={(e) => {
+                          e.preventDefault();
+                          if (e.keyCode === 32) toggleColumn(i);
+                        }}
+                        onChange={(e) => toggleColumn(i)}
+                      />
+                      <span>{col.title}</span>
+                    </label>
+                  </li>
+                </MenuItem>
+              );
+            }
+          })}
         </ul>
       </Menu>
     </MenuWrapper>

@@ -145,6 +145,7 @@ export const DataTable: React.FC<DataTableProps> = ({
       title: '',
       formatType: ColumnFormat.RADIO,
       width: '48px',
+      excludeFromColumnsSelector: true,
       onChange: handleClickedRow
     });
   }

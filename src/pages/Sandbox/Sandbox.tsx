@@ -124,7 +124,7 @@ export const Sandbox: React.FC = () => {
       <DataTable
         setProps={setState}
         selectableRows
-        // singleSelectableRows
+        singleSelectableRows
         // sortField="b"
         pagination
         paginationIsExpanded
@@ -140,8 +140,7 @@ export const Sandbox: React.FC = () => {
             formatType: ColumnFormat.FIXED_DECIMAL,
             formatOptions: {
               decimals: 2
-            },
-            right: false
+            }
           },
           {
             selector: 'b',
