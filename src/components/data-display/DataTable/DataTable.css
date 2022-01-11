@@ -1,7 +1,11 @@
 .mpc-data-table {
   background-color: #fff;
   border-radius: 6px;
-  overflow: hidden;
+}
+
+.mpc-data-table .rdt_Table,
+.mpc-data-table .rdt_TableRow {
+  background: none;
 }
 
 .mpc-data-table .mpc-data-table-header {

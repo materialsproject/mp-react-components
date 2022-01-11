@@ -129,7 +129,7 @@ export const Sandbox: React.FC = () => {
         pagination
         // paginationIsExpanded
         hasHeader
-        footer="This is the footer"
+        // footer="This is the footer"
         columns={[
           {
             selector: 'a',
