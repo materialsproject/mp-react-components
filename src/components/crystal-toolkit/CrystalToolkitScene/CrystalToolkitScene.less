@@ -43,3 +43,15 @@
   content: ' ';
   display: table;
 }
+
+/**
+* Prevent the structure layout from growing beyond the height of the modal.
+* Setting max-width with vh instead of simply setting max-height so we don't interfere
+* with the structure's styles that force it to render with 1:1 ratio.
+*/
+.mpc-crystal-viewer-box {
+  width: 100% !important;
+  max-width: 80vh;
+  height: auto !important;
+  margin: auto;
+}
