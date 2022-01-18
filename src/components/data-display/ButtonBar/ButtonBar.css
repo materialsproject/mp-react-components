@@ -11,6 +11,7 @@
   width: 100%;
 }
 
+.mpc-button-bar .dropdown,
 .mpc-button-bar .dropdown-trigger,
 .mpc-button-bar .dropdown-trigger .button {
   width: 100%;

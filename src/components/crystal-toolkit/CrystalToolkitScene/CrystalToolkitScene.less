@@ -1,3 +1,7 @@
+.mpc-crystal-toolkit-scene {
+  position: relative;
+}
+
 .tooltiptext {
   background-color: black;
   color: #fff;
@@ -51,7 +55,26 @@
 */
 .mpc-crystal-viewer-box {
   width: 100% !important;
-  max-width: 80vh;
+  max-width: calc(95vh - 3rem);
   height: auto !important;
   margin: auto;
+}
+
+.mpc-crystal-toolkit-scene .mpc-button-bar {
+  position: absolute;
+  right: 0;
+}
+
+.mpc-crystal-toolkit-settings-panel {
+  position: absolute;
+  right: 4.5rem;
+  max-height: 100%;
+  max-width: 450px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1.25rem;
+  background-color: #fff;
+  opacity: 0.8;
+  z-index: 1;
 }
