@@ -183,7 +183,30 @@ export const CrystalStructureViewer: React.FC = () => {
                 fileOptions={['File 1', 'File 2', 'File 3']}
                 fileType={state.fileType}
                 fileTimestamp={state.fileTimestamp}
-              />
+              >
+                <p>
+                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
+                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
+                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
+                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
+                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
+                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
+                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
+                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
+                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
+                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
+                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
+                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
+                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
+                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
+                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
+                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
+                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
+                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
+                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
+                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
+                </p>
+              </CrystalToolkitScene>
             </div>
           </div>
           {/* <CrystalToolkitScene

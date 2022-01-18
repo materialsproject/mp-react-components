@@ -36,9 +36,21 @@ import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { Action } from '../utils';
 import useResizeObserver from 'use-resize-observer';
 import { Enlargeable } from '../../data-display/Enlargeable';
-import { FaCamera, FaCog, FaCogs, FaCompressAlt, FaExpandAlt } from 'react-icons/fa';
+import {
+  FaCamera,
+  FaCog,
+  FaCogs,
+  FaCompress,
+  FaCompressAlt,
+  FaExpand,
+  FaExpandAlt
+} from 'react-icons/fa';
 import { ButtonBar } from '../../data-display/ButtonBar';
 import { Dropdown } from '../../navigation/Dropdown';
+import classNames from 'classnames';
+import { Tooltip } from '../../data-display/Tooltip';
+import ReactTooltip from 'react-tooltip';
+import { v4 as uuidv4 } from 'uuid';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -219,7 +231,11 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const previousAnimationSetting = usePrevious(props.animation);
   // we use a ref to keep a reference to the underlying scene
   const scene: MutableRefObject<Scene | null> = useRef(null);
-  var [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+  const settingsPanel = React.Children.map(props.children, (child, i) => (i === 0 ? child : null));
+  const legend = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
+  const tooltipId = uuidv4();
 
   /**
    * Handle saving image to png
@@ -415,47 +431,82 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
 
   // NOTE(chab) we could let the user opt for a flex layout, instead of using relative/absolute
   return (
-    <>
-      <Enlargeable
-        className={props.className}
-        hideButton
-        expanded={expanded}
-        setExpanded={setExpanded}
-      >
+    <Enlargeable
+      className={props.className}
+      hideButton
+      expanded={expanded}
+      setExpanded={setExpanded}
+    >
+      <div className="mpc-crystal-toolkit-scene">
         {!props.hideControls && (
-          <ButtonBar>
-            <button className="button" onClick={() => setExpanded(!expanded)}>
-              {expanded ? <FaCompressAlt /> : <FaExpandAlt />}
-            </button>
-            <button className="button">
-              <FaCogs />
-            </button>
-            <button
-              className="button"
-              onClick={() => requestImage(props.imageType, scene.current!)}
+          <>
+            <ButtonBar>
+              <button
+                className="button"
+                onClick={() => {
+                  ReactTooltip.hide();
+                  setExpanded(!expanded);
+                }}
+                data-tip
+                data-for={`expand-${tooltipId}`}
+              >
+                {expanded ? <FaCompress /> : <FaExpand />}
+                <Tooltip id={`expand-${tooltipId}`} place="left">
+                  {expanded ? 'Exit full screen' : 'Full screen'}
+                </Tooltip>
+              </button>
+              <button
+                className="button"
+                onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+                data-tip
+                data-for={`settings-${tooltipId}`}
+              >
+                <FaCogs />
+                <Tooltip id={`settings-${tooltipId}`} place="left">
+                  {showSettingsPanel ? 'Hide settings' : 'Show settings'}
+                </Tooltip>
+              </button>
+              <button
+                className="button"
+                onClick={() => requestImage(props.imageType, scene.current!)}
+                data-tip
+                data-for={`image-${tooltipId}`}
+              >
+                <FaCamera />
+                <Tooltip id={`image-${tooltipId}`} place="left">
+                  Download image
+                </Tooltip>
+              </button>
+              <div onClick={() => ReactTooltip.hide()} data-tip data-for={`export-${tooltipId}`}>
+                <Dropdown triggerIcon="fas fa-file-export" isArrowless isRight>
+                  {props.fileOptions?.map((option, i) => (
+                    <p
+                      key={`file-export-${i}`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        props.setProps({ ...props, fileType: option, fileTimestamp: Date.now() });
+                      }}
+                    >
+                      {option}
+                    </p>
+                  ))}
+                </Dropdown>
+                <Tooltip id={`export-${tooltipId}`} place="left">
+                  Export as
+                </Tooltip>
+              </div>
+            </ButtonBar>
+            <div
+              className={classNames('mpc-crystal-toolkit-settings-panel', {
+                'is-hidden': !showSettingsPanel
+              })}
             >
-              <FaCamera />
-            </button>
-            <Dropdown triggerIcon="fas fa-file-download" isArrowless isRight>
-              {props.fileOptions?.map((option, i) => (
-                <p
-                  key={`file-download-${i}`}
-                  className="dropdown-item"
-                  onClick={() => {
-                    props.setProps({ ...props, fileType: option, fileTimestamp: Date.now() });
-                  }}
-                >
-                  {option}
-                </p>
-              ))}
-            </Dropdown>
-          </ButtonBar>
+              {settingsPanel}
+            </div>
+          </>
         )}
         <div className="mpc-crystal-viewer-box">
-          <div
-            className="mpc-crystal-toolkit-scene three-wrapper"
-            style={{ width: size, height: size }}
-          >
+          <div className="three-wrapper" style={{ width: size, height: size }}>
             <div
               id={props.id!}
               style={{ ...MOUNT_NODE_STYLE, width: size, height: size }}
@@ -475,7 +526,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
             />
           )}
         </div>
-      </Enlargeable>
-    </>
+      </div>
+    </Enlargeable>
   );
 };

@@ -2,3 +2,8 @@
   float: right;
   z-index: 2;
 }
+
+.modal.is-active .modal-content.is-large {
+  width: 95vw;
+  max-height: 95vh;
+}
