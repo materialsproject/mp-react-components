@@ -43,7 +43,8 @@ import {
   FaCompress,
   FaCompressAlt,
   FaExpand,
-  FaExpandAlt
+  FaExpandAlt,
+  FaTimesCircle
 } from 'react-icons/fa';
 import { ButtonBar } from '../../data-display/ButtonBar';
 import { Dropdown } from '../../navigation/Dropdown';
@@ -51,6 +52,7 @@ import classNames from 'classnames';
 import { Tooltip } from '../../data-display/Tooltip';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
+import { ModalCloseButton } from '../../data-display/Modal/ModalCloseButton';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -501,6 +503,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 'is-hidden': !showSettingsPanel
               })}
             >
+              <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
               {settingsPanel}
             </div>
           </>

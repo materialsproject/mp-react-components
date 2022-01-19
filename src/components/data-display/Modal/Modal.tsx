@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import './Modal.css';
+import { ModalCloseButton } from './ModalCloseButton';
 import { useModalContext } from './ModalContextProvider';
 
 export interface ModalProps {
@@ -45,13 +46,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
         }}
       ></div>
       <div className="modal-content">
-        {!forceAction && (
-          <button
-            className="modal-close"
-            aria-label="close"
-            onClick={() => setActive(false)}
-          ></button>
-        )}
+        {!forceAction && <ModalCloseButton onClick={() => setActive(false)} />}
         {props.children}
       </div>
     </div>
