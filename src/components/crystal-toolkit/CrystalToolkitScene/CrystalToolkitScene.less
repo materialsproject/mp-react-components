@@ -1,4 +1,4 @@
-.mpc-crystal-toolkit-scene {
+.mpc-scene {
   position: relative;
 }
 
@@ -29,11 +29,11 @@
 //   display: table;
 // }
 
-.three-wrapper {
+.mpc-scene-square {
   position: relative;
 }
 
-.three-wrapper:before {
+.mpc-scene-square:before {
   content: '';
   display: block;
   height: 0;
@@ -42,7 +42,7 @@
   padding-bottom: 100%;
 }
 
-.three-wrapper::after {
+.mpc-scene-square::after {
   clear: left;
   content: ' ';
   display: table;
@@ -53,19 +53,19 @@
 * Setting max-width with vh instead of simply setting max-height so we don't interfere
 * with the structure's styles that force it to render with 1:1 ratio.
 */
-.mpc-crystal-viewer-box {
+.mpc-scene-square-wrapper {
   width: 100% !important;
   max-width: calc(95vh - 3rem);
   height: auto !important;
   margin: auto;
 }
 
-.mpc-crystal-toolkit-scene .mpc-button-bar {
+.mpc-scene .mpc-button-bar {
   position: absolute;
   right: 0;
 }
 
-.mpc-crystal-toolkit-settings-panel {
+.mpc-scene-settings-panel {
   position: absolute;
   right: 4.5rem;
   max-height: 100%;
@@ -77,4 +77,10 @@
   background-color: #fff;
   opacity: 0.8;
   z-index: 1;
+}
+
+.mpc-scene-bottom-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }

@@ -14,7 +14,7 @@ describe('<CrystalToolkitScene/>', () => {
   it('should be rendered', () => {
     const wrapper = renderElement();
     expect(wrapper.find(`.${MOUNT_NODE_CLASS}`).length).toBe(1);
-    expect(wrapper.find(`.three-wrapper`).length).toBe(1);
+    expect(wrapper.find(`.mpc-scene-square`).length).toBe(1);
 
     // Note(chab) we call renderScene when we mount, due to the react effect
     // those are the three call sites (constructor / toggleVis / inlet )
