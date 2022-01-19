@@ -34,6 +34,7 @@ import { Modal, ModalTrigger, ModalContextProvider } from './components/data-dis
 import { Tabs } from './components/navigation/Tabs';
 import { FilterField } from './components/data-entry/FilterField';
 import { DataTable } from './components/data-display/DataTable';
+import { Enlargeable } from './components/data-display/Enlargeable';
 
 export {
   SelectableTable,
@@ -76,5 +77,6 @@ export {
   Modal,
   ModalTrigger,
   Tabs,
-  FilterField
+  FilterField,
+  Enlargeable
 };

@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { toByteArray } from 'base64-js';
 import classNames from 'classnames';
-import { FaCompressAlt, FaExpand, FaExpandAlt } from 'react-icons/fa';
+import { FaCompress, FaCompressAlt, FaExpand, FaExpandAlt } from 'react-icons/fa';
 import './Enlargeable.css';
 
 export interface EnlargeableProps {
@@ -66,7 +66,7 @@ export const Enlargeable: React.FC<EnlargeableProps> = ({ className = '', ...oth
       >
         {!props.hideButton && (
           <button className="button mpc-enlarge-button" onClick={() => setExpanded(!expanded)}>
-            {props.expanded ? <FaCompressAlt /> : <FaExpandAlt />}
+            {props.expanded ? <FaCompress /> : <FaExpand />}
           </button>
         )}
         {props.children}
