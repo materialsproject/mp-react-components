@@ -226,7 +226,7 @@ export const CrystalStructureViewer: React.FC = () => {
       <p>{state.imageDataTimestamp}</p>
       <p>Parent Current Camera State:</p>
       <p>{JSON.stringify(state.currentCameraState)}</p>
-      {/* <Download id="image-download" data={dataInput} /> */}
+      <Download id="image-download" data={dataInput} />
       {/* <CameraContextProvider>
         <>
           <CrystalToolkitScene

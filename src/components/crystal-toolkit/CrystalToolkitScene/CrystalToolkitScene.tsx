@@ -246,15 +246,12 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
    */
   const setPngData = (sceneComponent) => {
     if (sceneComponent.renderer instanceof WebGLRenderer) {
-      const oldRatio = sceneComponent.renderer.getPixelRatio();
-      sceneComponent.renderer.setPixelRatio(8);
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
       const imageDataTimestamp = Date.now();
       props.setProps({ ...props, imageData, imageDataTimestamp });
       // wait for next event loop before rendering
       setTimeout(() => {
-        sceneComponent.renderer.setPixelRatio(oldRatio);
         sceneComponent.renderScene();
       });
     } else {
