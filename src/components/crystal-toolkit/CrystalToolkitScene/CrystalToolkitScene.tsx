@@ -59,6 +59,8 @@ const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE)
 
 let ID_GENERATOR = 0;
 
+let originalCameraState: CameraState;
+
 export interface CrystalToolkitSceneProps {
   /**
    * The ID used to identify this component in Dash callbacks
@@ -189,6 +191,7 @@ export interface CrystalToolkitSceneProps {
    */
   customCameraState?: CameraState;
   hideControls?: boolean;
+  showPositionButton?: boolean;
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -375,28 +378,28 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const cameraContext = useContext(CameraContext);
   const [cameraReducerState, cameraReducerDispatch] = useReducer(cameraReducer, initialState);
   const cameraState = cameraContext ? cameraContext.state : cameraReducerState;
-  // const cs = cameraState;
-  // const px = parseFloat(cs?.position?.x);
-  // const originalCameraState: CameraState =  {
-  //   position: new THREE.Vector3(px, cs?.position?.y, cs?.position?.z),
-  //   quaternion: new THREE.Quaternion(cs?.quaternion?._x, cs?.quaternion?._y, cs?.quaternion?._z, cs?.quaternion?._w),
-  //   zoom: cs?.zoom
-  // };
   const cameraDispatch = cameraContext ? cameraContext.dispatch : cameraReducerDispatch;
   if (cameraState) {
     useEffect(() => {
       props.setProps({ ...props, currentCameraState: cameraState });
 
-      if (
-        cameraState &&
-        cameraState.setByComponentId !== componentId.current &&
-        cameraState.position &&
-        cameraState.quaternion &&
-        cameraState.zoom
-      ) {
-        scene.current!.updateCamera(cameraState.position, cameraState.quaternion, cameraState.zoom);
+      if (cameraState && cameraState.position && cameraState.quaternion && cameraState.zoom) {
+        if (cameraState.setByComponentId !== componentId.current) {
+          scene.current!.updateCamera(
+            cameraState.position,
+            cameraState.quaternion,
+            cameraState.zoom
+          );
+        }
+        if (!originalCameraState) {
+          originalCameraState = { ...cameraState };
+        }
       }
     }, [cameraState.position]);
+
+    useEffect(() => {
+      console.log('quarternion changed');
+    }, [cameraState.quaternion]);
   }
 
   /**
@@ -475,21 +478,27 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   </Tooltip>
                 </button>
               )}
-              {/* <button
-                className="button"
-                onClick={() => {
-                  if (cameraState) {
-                    scene.current!.updateCamera(originalCameraState.position, originalCameraState.quaternion, originalCameraState.zoom);
-                  }
-                }}
-                data-tip
-                data-for={`image-${tooltipId}`}
-              >
-                <FaUndo />
-                <Tooltip id={`image-${tooltipId}`} place="left">
-                  Download image
-                </Tooltip>
-              </button> */}
+              {props.showPositionButton && (
+                <button
+                  className="button"
+                  onClick={() => {
+                    if (originalCameraState) {
+                      scene.current!.updateCamera(
+                        originalCameraState.position,
+                        originalCameraState.quaternion,
+                        originalCameraState.zoom
+                      );
+                    }
+                  }}
+                  data-tip
+                  data-for={`position-${tooltipId}`}
+                >
+                  <FaUndo />
+                  <Tooltip id={`position-${tooltipId}`} place="left">
+                    Return to original position
+                  </Tooltip>
+                </button>
+              )}
               <button
                 className="button"
                 onClick={() => requestImage(props.imageType, scene.current!)}

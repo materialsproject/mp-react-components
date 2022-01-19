@@ -178,8 +178,8 @@ export const CrystalStructureViewer: React.FC = () => {
                 toggleVisibility={{}}
                 imageData={state.imageData}
                 imageDataTimestamp={state.imageDataTimestamp}
-                currentCameraState={state.currentCameraState}
-                customCameraState={state.customCameraState}
+                // currentCameraState={state.currentCameraState}
+                // customCameraState={state.customCameraState}
                 fileOptions={['File 1', 'File 2', 'File 3']}
                 fileType={state.fileType}
                 fileTimestamp={state.fileTimestamp}
