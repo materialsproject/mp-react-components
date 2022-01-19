@@ -44,7 +44,8 @@ import {
   FaCompressAlt,
   FaExpand,
   FaExpandAlt,
-  FaTimesCircle
+  FaTimesCircle,
+  FaUndo
 } from 'react-icons/fa';
 import { ButtonBar } from '../../data-display/ButtonBar';
 import { Dropdown } from '../../navigation/Dropdown';
@@ -236,7 +237,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
   const settingsPanel = React.Children.map(props.children, (child, i) => (i === 0 ? child : null));
-  const legend = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
+  const bottomPanel = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
   const tooltipId = uuidv4();
 
   /**
@@ -374,6 +375,13 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const cameraContext = useContext(CameraContext);
   const [cameraReducerState, cameraReducerDispatch] = useReducer(cameraReducer, initialState);
   const cameraState = cameraContext ? cameraContext.state : cameraReducerState;
+  // const cs = cameraState;
+  // const px = parseFloat(cs?.position?.x);
+  // const originalCameraState: CameraState =  {
+  //   position: new THREE.Vector3(px, cs?.position?.y, cs?.position?.z),
+  //   quaternion: new THREE.Quaternion(cs?.quaternion?._x, cs?.quaternion?._y, cs?.quaternion?._z, cs?.quaternion?._w),
+  //   zoom: cs?.zoom
+  // };
   const cameraDispatch = cameraContext ? cameraContext.dispatch : cameraReducerDispatch;
   if (cameraState) {
     useEffect(() => {
@@ -436,7 +444,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       expanded={expanded}
       setExpanded={setExpanded}
     >
-      <div className="mpc-crystal-toolkit-scene">
+      <div className="mpc-scene">
         {!props.hideControls && (
           <>
             <ButtonBar>
@@ -454,17 +462,34 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   {expanded ? 'Exit full screen' : 'Full screen'}
                 </Tooltip>
               </button>
-              <button
+              {settingsPanel && (
+                <button
+                  className="button"
+                  onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+                  data-tip
+                  data-for={`settings-${tooltipId}`}
+                >
+                  <FaCogs />
+                  <Tooltip id={`settings-${tooltipId}`} place="left">
+                    {showSettingsPanel ? 'Hide settings' : 'Show settings'}
+                  </Tooltip>
+                </button>
+              )}
+              {/* <button
                 className="button"
-                onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+                onClick={() => {
+                  if (cameraState) {
+                    scene.current!.updateCamera(originalCameraState.position, originalCameraState.quaternion, originalCameraState.zoom);
+                  }
+                }}
                 data-tip
-                data-for={`settings-${tooltipId}`}
+                data-for={`image-${tooltipId}`}
               >
-                <FaCogs />
-                <Tooltip id={`settings-${tooltipId}`} place="left">
-                  {showSettingsPanel ? 'Hide settings' : 'Show settings'}
+                <FaUndo />
+                <Tooltip id={`image-${tooltipId}`} place="left">
+                  Download image
                 </Tooltip>
-              </button>
+              </button> */}
               <button
                 className="button"
                 onClick={() => requestImage(props.imageType, scene.current!)}
@@ -495,18 +520,21 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 </Tooltip>
               </div>
             </ButtonBar>
-            <div
-              className={classNames('mpc-crystal-toolkit-settings-panel', {
-                'is-hidden': !showSettingsPanel
-              })}
-            >
-              <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
-              {settingsPanel}
-            </div>
+            {settingsPanel && (
+              <div
+                className={classNames('mpc-scene-settings-panel', {
+                  'is-hidden': !showSettingsPanel
+                })}
+              >
+                <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
+                {settingsPanel}
+              </div>
+            )}
+            {bottomPanel && <div className="mpc-scene-bottom-panel">{bottomPanel}</div>}
           </>
         )}
-        <div className="mpc-crystal-viewer-box">
-          <div className="three-wrapper" style={{ width: size, height: size }}>
+        <div className="mpc-scene-square-wrapper">
+          <div className="mpc-scene-square" style={{ width: size, height: size }}>
             <div
               id={props.id!}
               style={{ ...MOUNT_NODE_STYLE, width: size, height: size }}

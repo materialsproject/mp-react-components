@@ -206,6 +206,7 @@ export const CrystalStructureViewer: React.FC = () => {
                   exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
                   Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
                 </p>
+                <p>This could be a legend</p>
               </CrystalToolkitScene>
             </div>
           </div>
