@@ -1,0 +1,6 @@
+.mpc-modal-close.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(10, 10, 10, 0.2);
+}
