@@ -183,6 +183,7 @@ export const CrystalStructureViewer: React.FC = () => {
                 fileOptions={['File 1', 'File 2', 'File 3']}
                 fileType={state.fileType}
                 fileTimestamp={state.fileTimestamp}
+                showPositionButton={true}
               >
                 <p>
                   Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt

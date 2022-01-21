@@ -66,7 +66,7 @@ export const Enlargeable: React.FC<EnlargeableProps> = ({ className = '', ...oth
       >
         {!props.hideButton && (
           <button className="button mpc-enlarge-button" onClick={() => setExpanded(!expanded)}>
-            {props.expanded ? <FaCompress /> : <FaExpand />}
+            {expanded ? <FaCompress /> : <FaExpand />}
           </button>
         )}
         {props.children}

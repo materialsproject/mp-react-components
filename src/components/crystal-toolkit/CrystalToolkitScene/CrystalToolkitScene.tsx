@@ -1,6 +1,7 @@
 import PropTypes, { InferProps } from 'prop-types';
 import React, {
   MutableRefObject,
+  ReactNode,
   useContext,
   useEffect,
   useReducer,
@@ -66,6 +67,18 @@ export interface CrystalToolkitSceneProps {
    * The ID used to identify this component in Dash callbacks
    */
   id?: string;
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (value: any) => any;
+
+  /**
+   * First child will be rendered as the settings panel.
+   * Second child will be rendered as the bottom panel (legend).
+   */
+  children?: ReactNode;
 
   /**
    * Class name that will wrap around the whole scene component.
@@ -192,11 +205,6 @@ export interface CrystalToolkitSceneProps {
   customCameraState?: CameraState;
   hideControls?: boolean;
   showPositionButton?: boolean;
-  /**
-   * Dash-assigned callback that should be called whenever any of the
-   * properties change
-   */
-  setProps?: (value: any) => any;
 }
 
 /**
@@ -239,8 +247,9 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const scene: MutableRefObject<Scene | null> = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-  const settingsPanel = React.Children.map(props.children, (child, i) => (i === 0 ? child : null));
-  const bottomPanel = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
+  const childCount = React.Children.count(props.children);
+  const hasSettingsPanel = childCount > 0;
+  const hasBottomPanel = childCount > 1;
   const tooltipId = uuidv4();
 
   /**
@@ -465,7 +474,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   {expanded ? 'Exit full screen' : 'Full screen'}
                 </Tooltip>
               </button>
-              {settingsPanel && (
+              {hasSettingsPanel && (
                 <button
                   className="button"
                   onClick={() => setShowSettingsPanel(!showSettingsPanel)}
@@ -529,17 +538,25 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 </Tooltip>
               </div>
             </ButtonBar>
-            {settingsPanel && (
+            {hasSettingsPanel && (
               <div
                 className={classNames('mpc-scene-settings-panel', {
                   'is-hidden': !showSettingsPanel
                 })}
               >
                 <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
-                {settingsPanel}
+                {React.Children.map(props.children, (child, i) => (
+                  <>{i === 0 && child}</>
+                ))}
               </div>
             )}
-            {bottomPanel && <div className="mpc-scene-bottom-panel">{bottomPanel}</div>}
+            {hasBottomPanel && (
+              <div className="mpc-scene-bottom-panel">
+                {React.Children.map(props.children, (child, i) => (
+                  <>{i === 1 && child}</>
+                ))}
+              </div>
+            )}
           </>
         )}
         <div className="mpc-scene-square-wrapper">

@@ -20,6 +20,7 @@ import { Tab as ReactTab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tab
 import { Tabs } from '../../components/navigation/Tabs';
 import { DataTable } from '../../components/data-display/DataTable';
 import { ColumnFormat } from '../../components/data-display/SearchUI/types';
+import { Enlargeable } from '../../components/data-display/Enlargeable';
 
 /**
  * View for testing out small new components
@@ -121,39 +122,41 @@ export const Sandbox: React.FC = () => {
     <>
       <h1 className="title">Sandbox</h1>
       {/* <p>{JSON.stringify(state.selectedRows)}</p> */}
-      <DataTable
-        setProps={setState}
-        // selectableRows
-        // singleSelectableRows
-        // sortField="b"
-        pagination
-        // paginationIsExpanded
-        hasHeader
-        // footer="This is the footer"
-        columns={[
-          {
-            selector: 'a',
-            title: 'A',
-            tooltip:
-              'Esse non proident non quis et nostrud aliqua occaecat. Tempor velit do mollit sint non. Adipisicing id laborum enim commodo aliqua consequat sint aute ad aliqua ipsum nisi. Mollit eu proident occaecat pariatur do est ut pariatur quis eu. Non tempor aliquip aute laborum adipisicing culpa labore labore reprehenderit.',
-            units: 'cm',
-            formatType: ColumnFormat.FIXED_DECIMAL,
-            formatOptions: {
-              decimals: 2
+      <Enlargeable>
+        <DataTable
+          setProps={setState}
+          // selectableRows
+          // singleSelectableRows
+          // sortField="b"
+          pagination
+          // paginationIsExpanded
+          hasHeader
+          // footer="This is the footer"
+          columns={[
+            {
+              selector: 'a',
+              title: 'A',
+              tooltip:
+                'Esse non proident non quis et nostrud aliqua occaecat. Tempor velit do mollit sint non. Adipisicing id laborum enim commodo aliqua consequat sint aute ad aliqua ipsum nisi. Mollit eu proident occaecat pariatur do est ut pariatur quis eu. Non tempor aliquip aute laborum adipisicing culpa labore labore reprehenderit.',
+              units: 'cm',
+              formatType: ColumnFormat.FIXED_DECIMAL,
+              formatOptions: {
+                decimals: 2
+              }
+            },
+            {
+              selector: 'b',
+              title: 'B',
+              units: 'cm',
+              formatType: ColumnFormat.FIXED_DECIMAL,
+              formatOptions: {
+                decimals: 2
+              }
             }
-          },
-          {
-            selector: 'b',
-            title: 'B',
-            units: 'cm',
-            formatType: ColumnFormat.FIXED_DECIMAL,
-            formatOptions: {
-              decimals: 2
-            }
-          }
-        ]}
-        data={state.data}
-      />
+          ]}
+          data={state.data}
+        />
+      </Enlargeable>
       <DataTable
         setProps={setState}
         selectableRows
