@@ -185,28 +185,7 @@ export const CrystalStructureViewer: React.FC = () => {
                 fileTimestamp={state.fileTimestamp}
                 showPositionButton={true}
               >
-                <p>
-                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
-                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
-                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
-                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
-                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
-                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
-                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
-                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
-                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
-                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
-                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
-                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
-                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
-                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
-                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
-                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
-                  Qui aute sunt ut aliquip anim tempor eiusmod Lorem proident. Minim sunt deserunt
-                  adipisicing culpa cillum nostrud aute excepteur id duis minim commodo aliquip
-                  exercitation. Ex tempor sit culpa Lorem ad nostrud proident id ullamco in duis.
-                  Cillum laborum adipisicing excepteur est dolor fugiat consequat id id consectetur.
-                </p>
+                {null}
                 <p>This could be a legend</p>
               </CrystalToolkitScene>
             </div>

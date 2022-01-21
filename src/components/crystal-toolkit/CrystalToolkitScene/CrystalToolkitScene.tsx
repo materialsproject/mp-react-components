@@ -249,7 +249,9 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
   const settingsPanel = React.Children.map(props.children, (child, i) => (i === 0 ? child : null));
+  const hasSettingsPanel = settingsPanel && settingsPanel.length > 0;
   const bottomPanel = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
+  const hasBottomPanel = bottomPanel && bottomPanel.length > 0;
   const tooltipId = uuidv4();
 
   /**
@@ -474,7 +476,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   {expanded ? 'Exit full screen' : 'Full screen'}
                 </Tooltip>
               </button>
-              {settingsPanel && (
+              {hasSettingsPanel && (
                 <button
                   className="button"
                   onClick={() => setShowSettingsPanel(!showSettingsPanel)}
@@ -540,7 +542,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
             </ButtonBar>
           </>
         )}
-        {settingsPanel && (
+        {hasSettingsPanel && (
           <div
             className={classNames('mpc-scene-settings-panel', {
               'is-hidden': !showSettingsPanel
@@ -550,7 +552,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
             {settingsPanel}
           </div>
         )}
-        {bottomPanel && <div className="mpc-scene-bottom-panel">{bottomPanel}</div>}
+        {hasBottomPanel && <div className="mpc-scene-bottom-panel">{bottomPanel}</div>}
         <div className="mpc-scene-square-wrapper">
           <div className="mpc-scene-square" style={{ width: size, height: size }}>
             <div
