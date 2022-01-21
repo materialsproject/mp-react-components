@@ -262,7 +262,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
       const imageDataTimestamp = Date.now();
-      props.setProps({ ...props, imageData, imageDataTimestamp });
+      props.setProps({ imageData, imageDataTimestamp });
       // wait for next event loop before rendering
       setTimeout(() => {
         sceneComponent.renderScene();
@@ -272,7 +272,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
         callback: function (imageData: string) {
           const imageDataTimestamp = Date.now();
-          props.setProps({ ...props, imageData, imageDataTimestamp });
+          props.setProps({ imageData, imageDataTimestamp });
         }
       });
     }
@@ -390,7 +390,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const cameraDispatch = cameraContext ? cameraContext.dispatch : cameraReducerDispatch;
   if (cameraState) {
     useEffect(() => {
-      props.setProps({ ...props, currentCameraState: cameraState });
+      props.setProps({ currentCameraState: cameraState });
 
       if (cameraState && cameraState.position && cameraState.quaternion && cameraState.zoom) {
         if (cameraState.setByComponentId !== componentId.current) {
@@ -526,7 +526,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                       key={`file-export-${i}`}
                       className="dropdown-item"
                       onClick={() => {
-                        props.setProps({ ...props, fileType: option, fileTimestamp: Date.now() });
+                        props.setProps({ fileType: option, fileTimestamp: Date.now() });
                       }}
                     >
                       {option}
