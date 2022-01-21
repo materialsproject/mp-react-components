@@ -468,6 +468,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   // NOTE(chab) we could let the user opt for a flex layout, instead of using relative/absolute
   return (
     <Enlargeable
+      id={props.id}
       className={props.className}
       hideButton
       expanded={expanded}
