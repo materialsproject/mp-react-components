@@ -45,6 +45,7 @@ import {
   FaCompressAlt,
   FaExpand,
   FaExpandAlt,
+  FaFileExport,
   FaTimesCircle,
   FaUndo
 } from 'react-icons/fa';
@@ -519,7 +520,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 </Tooltip>
               </button>
               <div onClick={() => ReactTooltip.hide()} data-tip data-for={`export-${tooltipId}`}>
-                <Dropdown triggerIcon="fas fa-file-export" isArrowless isRight>
+                <Dropdown triggerIcon={<FaFileExport />} isArrowless isRight>
                   {props.fileOptions?.map((option, i) => (
                     <p
                       key={`file-export-${i}`}

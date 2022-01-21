@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
   Wrapper as MenuWrapper,
   Button as MenuButton,
@@ -39,7 +39,7 @@ export interface DropdownProps {
   /**
    * Class name(s) for the icon to display to the left of the trigger label (optional)
    */
-  triggerIcon?: string;
+  triggerIcon?: string | ReactNode;
 
   /**
    * List of strings to display inside the dropdown menu.
@@ -80,6 +80,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
   ...otherProps
 }) => {
   const props = { items, closeOnSelection, triggerClassName, ...otherProps };
+  const iconComponent = React.isValidElement(props.triggerIcon) ? (
+    props.triggerIcon
+  ) : (
+    <i className={props.triggerIcon?.toString()}></i>
+  );
 
   return (
     <MenuWrapper
@@ -93,11 +98,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <div className="dropdown-trigger">
         <MenuButton className={classNames(props.triggerClassName)}>
-          {props.triggerIcon && (
-            <span className="icon">
-              <i className={props.triggerIcon}></i>
-            </span>
-          )}
+          {props.triggerIcon && iconComponent}
           {props.triggerLabel && <span>{props.triggerLabel}</span>}
           {!props.isArrowless && (
             <span className="icon">{props.isUp ? <FaAngleUp /> : <FaAngleDown />}</span>
