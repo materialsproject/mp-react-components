@@ -247,9 +247,8 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const scene: MutableRefObject<Scene | null> = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-  const childCount = React.Children.count(props.children);
-  const hasSettingsPanel = childCount > 0;
-  const hasBottomPanel = childCount > 1;
+  const settingsPanel = React.Children.map(props.children, (child, i) => (i === 0 ? child : null));
+  const bottomPanel = React.Children.map(props.children, (child, i) => (i === 1 ? child : null));
   const tooltipId = uuidv4();
 
   /**
@@ -474,7 +473,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   {expanded ? 'Exit full screen' : 'Full screen'}
                 </Tooltip>
               </button>
-              {hasSettingsPanel && (
+              {settingsPanel && (
                 <button
                   className="button"
                   onClick={() => setShowSettingsPanel(!showSettingsPanel)}
@@ -538,27 +537,19 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 </Tooltip>
               </div>
             </ButtonBar>
-            {hasSettingsPanel && (
-              <div
-                className={classNames('mpc-scene-settings-panel', {
-                  'is-hidden': !showSettingsPanel
-                })}
-              >
-                <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
-                {React.Children.map(props.children, (child, i) => (
-                  <>{i === 0 && child}</>
-                ))}
-              </div>
-            )}
-            {hasBottomPanel && (
-              <div className="mpc-scene-bottom-panel">
-                {React.Children.map(props.children, (child, i) => (
-                  <>{i === 1 && child}</>
-                ))}
-              </div>
-            )}
           </>
         )}
+        {settingsPanel && (
+          <div
+            className={classNames('mpc-scene-settings-panel', {
+              'is-hidden': !showSettingsPanel
+            })}
+          >
+            <ModalCloseButton onClick={() => setShowSettingsPanel(false)} />
+            {settingsPanel}
+          </div>
+        )}
+        {bottomPanel && <div className="mpc-scene-bottom-panel">{bottomPanel}</div>}
         <div className="mpc-scene-square-wrapper">
           <div className="mpc-scene-square" style={{ width: size, height: size }}>
             <div
