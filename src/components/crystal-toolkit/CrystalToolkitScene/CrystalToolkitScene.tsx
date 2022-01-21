@@ -136,7 +136,7 @@ export interface CrystalToolkitSceneProps {
    * Date string that represents the time imageData was set.
    * Use this prop in dash callbacks to trigger downloads of imageData.
    */
-  imageDataTimestamp?: string;
+  imageDataTimestamp?: any;
   /**
    * List of options to show in file download dropdown
    */
