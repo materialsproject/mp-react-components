@@ -97,7 +97,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       closeOnSelection={props.closeOnSelection}
     >
       <div className="dropdown-trigger">
-        <MenuButton className={classNames(props.triggerClassName)}>
+        <MenuButton className={classNames(props.triggerClassName)} tag="button">
           {props.triggerIcon && iconComponent}
           {props.triggerLabel && <span>{props.triggerLabel}</span>}
           {!props.isArrowless && (
