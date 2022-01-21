@@ -204,7 +204,10 @@ export interface CrystalToolkitSceneProps {
    * }
    */
   customCameraState?: CameraState;
-  hideControls?: boolean;
+  showControls?: boolean;
+  showExpandButton?: boolean;
+  showImageButton?: boolean;
+  showExportButton?: boolean;
   showPositionButton?: boolean;
 }
 
@@ -218,9 +221,21 @@ export interface CrystalToolkitSceneProps {
 export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   imageType = ExportType.png,
   setProps = () => null,
+  showControls = true,
+  showExpandButton = true,
+  showImageButton = true,
+  showExportButton = true,
   ...otherProps
 }) => {
-  let props = { imageType, setProps, ...otherProps };
+  let props = {
+    imageType,
+    setProps,
+    showControls,
+    showExpandButton,
+    showImageButton,
+    showExportButton,
+    ...otherProps
+  };
   /**
    * mount nodes, those are passed in the template and are populated when
    * the component is mounted
@@ -459,23 +474,25 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       setExpanded={setExpanded}
     >
       <div className="mpc-scene">
-        {!props.hideControls && (
+        {props.showControls && (
           <>
             <ButtonBar>
-              <button
-                className="button"
-                onClick={() => {
-                  ReactTooltip.hide();
-                  setExpanded(!expanded);
-                }}
-                data-tip
-                data-for={`expand-${tooltipId}`}
-              >
-                {expanded ? <FaCompress /> : <FaExpand />}
-                <Tooltip id={`expand-${tooltipId}`} place="left">
-                  {expanded ? 'Exit full screen' : 'Full screen'}
-                </Tooltip>
-              </button>
+              {props.showExpandButton && (
+                <button
+                  className="button"
+                  onClick={() => {
+                    ReactTooltip.hide();
+                    setExpanded(!expanded);
+                  }}
+                  data-tip
+                  data-for={`expand-${tooltipId}`}
+                >
+                  {expanded ? <FaCompress /> : <FaExpand />}
+                  <Tooltip id={`expand-${tooltipId}`} place="left">
+                    {expanded ? 'Exit full screen' : 'Full screen'}
+                  </Tooltip>
+                </button>
+              )}
               {hasSettingsPanel && (
                 <button
                   className="button"
@@ -510,35 +527,39 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                   </Tooltip>
                 </button>
               )}
-              <button
-                className="button"
-                onClick={() => requestImage(props.imageType, scene.current!)}
-                data-tip
-                data-for={`image-${tooltipId}`}
-              >
-                <FaCamera />
-                <Tooltip id={`image-${tooltipId}`} place="left">
-                  Download image
-                </Tooltip>
-              </button>
-              <div onClick={() => ReactTooltip.hide()} data-tip data-for={`export-${tooltipId}`}>
-                <Dropdown triggerIcon={<FaFileExport />} isArrowless isRight>
-                  {props.fileOptions?.map((option, i) => (
-                    <p
-                      key={`file-export-${i}`}
-                      className="dropdown-item"
-                      onClick={() => {
-                        props.setProps({ fileType: option, fileTimestamp: Date.now() });
-                      }}
-                    >
-                      {option}
-                    </p>
-                  ))}
-                </Dropdown>
-                <Tooltip id={`export-${tooltipId}`} place="left">
-                  Export as
-                </Tooltip>
-              </div>
+              {props.showImageButton && (
+                <button
+                  className="button"
+                  onClick={() => requestImage(props.imageType, scene.current!)}
+                  data-tip
+                  data-for={`image-${tooltipId}`}
+                >
+                  <FaCamera />
+                  <Tooltip id={`image-${tooltipId}`} place="left">
+                    Download image
+                  </Tooltip>
+                </button>
+              )}
+              {props.showExportButton && (
+                <div onClick={() => ReactTooltip.hide()} data-tip data-for={`export-${tooltipId}`}>
+                  <Dropdown triggerIcon={<FaFileExport />} isArrowless isRight>
+                    {props.fileOptions?.map((option, i) => (
+                      <p
+                        key={`file-export-${i}`}
+                        className="dropdown-item"
+                        onClick={() => {
+                          props.setProps({ fileType: option, fileTimestamp: Date.now() });
+                        }}
+                      >
+                        {option}
+                      </p>
+                    ))}
+                  </Dropdown>
+                  <Tooltip id={`export-${tooltipId}`} place="left">
+                    Export as
+                  </Tooltip>
+                </div>
+              )}
             </ButtonBar>
           </>
         )}

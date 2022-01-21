@@ -27,14 +27,14 @@
   border-radius: 0;
 }
 
-.mpc-button-bar > *:first-child,
-.mpc-button-bar > *:first-child .button {
+.mpc-button-bar > *:first-child:not(:last-child),
+.mpc-button-bar > *:first-child:not(:last-child) .button {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.mpc-button-bar > *:last-child,
-.mpc-button-bar > *:last-child .button {
+.mpc-button-bar > *:last-child:not(:first-child),
+.mpc-button-bar > *:last-child:not(:first-child) .button {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }

@@ -184,6 +184,9 @@ export const CrystalStructureViewer: React.FC = () => {
                 fileType={state.fileType}
                 fileTimestamp={state.fileTimestamp}
                 showPositionButton={true}
+                // showExpandButton={false}
+                // showImageButton={false}
+                showExportButton={false}
               >
                 {null}
                 <p>This could be a legend</p>
