@@ -97,6 +97,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             {...f.props}
             debounce={state.debounce}
             initialValues={state.filterValues[f.id]}
+            inclusiveTickBounds={true}
             onChange={(v) => actions.setFilterValue(v, f.id)}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
           />

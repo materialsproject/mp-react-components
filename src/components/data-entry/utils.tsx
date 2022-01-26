@@ -346,3 +346,13 @@ export function mapArrayToBooleanObject(array: any, value: boolean = true) {
     return array;
   }
 }
+
+export const validateValueInRange = (value: number, min: number, max: number) => {
+  if (value > max) {
+    return max;
+  } else if (value < min) {
+    return min;
+  } else {
+    return value;
+  }
+};

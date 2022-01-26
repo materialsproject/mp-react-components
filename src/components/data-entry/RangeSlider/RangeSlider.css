@@ -1,51 +1,55 @@
-.slider-container {
+.mpc-range-slider:not(.no-ticks) {
   padding-bottom: 1em;
 }
 
-.slider-container .input {
+.mpc-dual-range-slider .input {
   flex-basis: 75px;
   min-width: 75px;
 }
 
-.slider {
+.mpc-range-slider .input {
+  width: 75px;
+}
+
+.mpc-range-slider .slider {
   padding: 0 0.75em;
 }
 
-.slider-track {
+.mpc-range-slider .slider-track {
   height: 1.5em;
   display: flex;
   justify-content: center;
 }
 
-.slider-track-inner {
+.mpc-range-slider .slider-track-inner {
   height: 5px;
   width: 100%;
   align-self: center;
 }
 
-.button.is-slider {
+.mpc-range-slider .button.is-slider {
   padding: 0;
   height: 1.5em;
   width: 1.5em;
 }
 
-.button.is-slider > .inner-slider-button {
+.mpc-range-slider .button.is-slider > .inner-slider-button {
   height: 1em;
   width: 5px;
   background-color: #ccc;
 }
 
-.button.is-slider.is-dragged > .inner-slider-button {
+.mpc-range-slider .button.is-slider.is-dragged > .inner-slider-button {
   background-color: #3273dc;
 }
 
-.slider-tick-mark {
+.mpc-range-slider .slider-tick-mark {
   height: 0.4em;
   width: 1px;
   margin-top: 7px !important;
 }
 
-.slider-tick-value {
+.mpc-range-slider .slider-tick-value {
   position: absolute;
   top: 2em;
   font-size: 0.8em;

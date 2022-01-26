@@ -2,15 +2,29 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import { countDecimals } from '../utils';
-import './DualRangeSlider.css';
+import '../RangeSlider/RangeSlider.css';
 import * as d3 from 'd3';
 import { useDebounce } from '../../../utils/hooks';
+import { renderMark, renderThumb, renderTrack } from '../RangeSlider/RangeSlider';
 
 const STEPDEF = 0.1;
 const MIN = -100;
 const MAX = 30000;
 
 export interface DualRangeSliderProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
+  id?: string;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (value: any) => any;
+  /**
+   * Class name(s) to append to the component's default class.
+   */
+  className?: string;
   /**
    * Array with the minimum and maximum possible values.
    * Note that the domain bounds will be made "nice" so that
@@ -32,6 +46,11 @@ export interface DualRangeSliderProps {
    * number input and the slider handles updating.
    */
   debounce?: number;
+  /**
+   * Set to true to display a "+" with the upper bound tick (e.g. "100+").
+   * Use this to indicate that the upper bound is inclusive (e.g. 100 or more).
+   */
+  inclusiveTickBounds?: boolean;
   /**
    * Function to call when slider values change.
    */
@@ -88,8 +107,10 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   initialValues = domain.slice(),
   debounce,
   onChange = () => undefined,
-  onPropsChange = () => undefined
+  onPropsChange = () => undefined,
+  ...otherProps
 }) => {
+  const props = { domain, step, initialValues, debounce, onChange, onPropsChange, ...otherProps };
   const decimals = countDecimals(step);
   const tickCount = 5;
   const scale = d3.scaleLinear().domain(domain).nice(tickCount);
@@ -229,7 +250,11 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   }, [debouncedUpperBound]);
 
   return (
-    <div className="slider-container" data-testid="dual-range-slider">
+    <div
+      id={props.id}
+      className={classNames('mpc-dual-range-slider mpc-range-slider', props.className)}
+      data-testid="dual-range-slider"
+    >
       <div className="level is-mobile mb-1">
         <div className="level-left">
           <input
@@ -264,71 +289,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           max={niceDomain[1]}
           onChange={handleSliderChange}
           onFinalChange={handleSliderFinalChange}
-          renderTrack={({ props, children }) => (
-            <div
-              onMouseDown={props.onMouseDown}
-              onTouchStart={props.onTouchStart}
-              className="slider-track"
-              style={{ ...props.style }}
-            >
-              <div
-                ref={props.ref}
-                className="slider-track-inner"
-                style={{
-                  background: getTrackBackground({
-                    values: values,
-                    colors: ['#ccc', '#3273dc', '#ccc'],
-                    min: niceDomain[0],
-                    max: niceDomain[1]
-                  })
-                }}
-              >
-                {children}
-              </div>
-            </div>
-          )}
-          renderThumb={({ props, isDragged }) => (
-            <div
-              {...props}
-              data-testid="slider-button"
-              className={classNames('button', 'is-slider', { 'is-dragged': isDragged })}
-            >
-              <div className="inner-slider-button" />
-            </div>
-          )}
-          renderMark={({ props, index }) => {
-            /**
-             * Only render the number of ticks specificed in the ticks var (currently 5).
-             * Otherwise, react-range will try to render a tick at each step
-             * which is way too many.
-             */
-            const tickValue = niceDomain[0] + index * step;
-            if (ticks.indexOf(tickValue) > -1) {
-              return (
-                <div key={'tick-' + index}>
-                  <div
-                    {...props}
-                    className="slider-tick-mark"
-                    style={{
-                      ...props.style,
-                      backgroundColor: '#ccc'
-                      // tickValue >= values[0] && tickValue <= values[1] ? '#3273dc' : '#ccc',
-                    }}
-                  />
-                  <span
-                    data-testid="tick-value"
-                    className="slider-tick-value"
-                    style={{ ...props.style }}
-                  >
-                    {tickValue}
-                    {tickValue === ticks[ticks.length - 1] && '+'}
-                  </span>
-                </div>
-              );
-            } else {
-              return null;
-            }
-          }}
+          renderTrack={renderTrack(values, niceDomain, ['#ccc', '#3273dc', '#ccc'])}
+          renderThumb={renderThumb()}
+          renderMark={renderMark(step, ticks, niceDomain, props.inclusiveTickBounds)}
         />
       </div>
     </div>
