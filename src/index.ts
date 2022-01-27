@@ -35,6 +35,7 @@ import { Tabs } from './components/navigation/Tabs';
 import { FilterField } from './components/data-entry/FilterField';
 import { DataTable } from './components/data-display/DataTable';
 import { Enlargeable } from './components/data-display/Enlargeable';
+import { Switch } from './components/data-entry/Switch';
 
 export {
   SelectableTable,
@@ -78,5 +79,6 @@ export {
   ModalTrigger,
   Tabs,
   FilterField,
-  Enlargeable
+  Enlargeable,
+  Switch
 };

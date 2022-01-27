@@ -23,19 +23,23 @@ import { ColumnFormat } from '../../components/data-display/SearchUI/types';
 import { Enlargeable } from '../../components/data-display/Enlargeable';
 import { RangeSlider } from '../../components/data-entry/RangeSlider';
 import { DualRangeSlider } from '../../components/data-entry/DualRangeSlider';
+import { Switch } from '../../components/data-entry/Switch';
 
 /**
  * View for testing out small new components
  */
 
 export const Sandbox: React.FC = () => {
+  const [state, setState] = useState({ value: false });
   return (
     <>
       <h1 className="title">Sandbox</h1>
+      <div>{state.value}</div>
       <div style={{ width: '300px' }}>
-        <RangeSlider value={450} domain={[300, 1800]} />
+        {/* <RangeSlider value={state.value} domain={[300, 1800]} setProps={setState}/> */}
       </div>
-      <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} />
+      {/* <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} /> */}
+      <Switch value={state.value} setProps={setState} />
     </>
   );
 };

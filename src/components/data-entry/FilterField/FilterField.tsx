@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { FaRegTimesCircle } from 'react-icons/fa';
+import { FaRegTimesCircle, FaToggleOn } from 'react-icons/fa';
 import { Tooltip } from '../../data-display/Tooltip';
 import './FilterField.css';
 
@@ -38,6 +38,7 @@ export const FilterField: React.FC<FilterFieldProps> = (props) => {
         data-tip
         data-for={`filter_${props.id}`}
       >
+        {props.label === 'Chemical System' && <FaToggleOn />}
         {props.label}
         {renderUnitsComponent(props.units)}
         {cancelButton}
@@ -53,7 +54,7 @@ export const FilterField: React.FC<FilterFieldProps> = (props) => {
   };
 
   return (
-    <div className="mpc-filter-field">
+    <div id={props.id} className={classNames('mpc-filter-field', props.className)}>
       {props.label && <div className="mpc-filter-label">{renderFilterLabel()}</div>}
       {props.children}
     </div>
