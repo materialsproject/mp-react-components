@@ -36,6 +36,7 @@ import { FilterField } from './components/data-entry/FilterField';
 import { DataTable } from './components/data-display/DataTable';
 import { Enlargeable } from './components/data-display/Enlargeable';
 import { Switch } from './components/data-entry/Switch';
+import { RangeSlider } from './components/data-entry/RangeSlider';
 
 export {
   SelectableTable,
@@ -80,5 +81,6 @@ export {
   Tabs,
   FilterField,
   Enlargeable,
-  Switch
+  Switch,
+  RangeSlider
 };
