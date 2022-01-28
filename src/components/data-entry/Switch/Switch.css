@@ -1,5 +1,13 @@
 .mpc-switch {
-  font-size: 2rem;
   display: inline-block;
+}
+
+.mpc-switch-icon {
+  font-size: 2rem;
   vertical-align: bottom;
+}
+
+.mpc-switch-label {
+  margin-left: 0.5rem;
+  vertical-align: text-bottom;
 }

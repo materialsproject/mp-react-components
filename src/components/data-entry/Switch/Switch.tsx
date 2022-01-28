@@ -12,13 +12,22 @@ interface SwitchProps {
   setProps?: (value: any) => any;
   className?: string;
   value?: boolean;
+  hasLabel?: boolean;
+  truthyLabel?: string;
+  falsyLabel?: string;
   onChange?: (value: boolean) => any;
 }
 
 /**
  * Simple boolean switch
  */
-export const Switch: React.FC<SwitchProps> = (props) => {
+export const Switch: React.FC<SwitchProps> = ({
+  value = false,
+  truthyLabel = 'On',
+  falsyLabel = 'Off',
+  ...otherProps
+}) => {
+  const props = { value, truthyLabel, falsyLabel, ...otherProps };
   const handleClick = () => {
     const newValue = !props.value;
     if (props.onChange) {
@@ -31,7 +40,16 @@ export const Switch: React.FC<SwitchProps> = (props) => {
 
   return (
     <div id={props.id} className={classNames('mpc-switch', props.className)}>
-      {props.value ? <FaToggleOn onClick={handleClick} /> : <FaToggleOff onClick={handleClick} />}
+      {props.value ? (
+        <FaToggleOn className="mpc-switch-icon" onClick={handleClick} />
+      ) : (
+        <FaToggleOff className="mpc-switch-icon" onClick={handleClick} />
+      )}
+      {props.hasLabel && (
+        <span className="mpc-switch-label">
+          {props.value ? props.truthyLabel : props.falsyLabel}
+        </span>
+      )}
     </div>
   );
 };

@@ -39,7 +39,13 @@ export const Sandbox: React.FC = () => {
         {/* <RangeSlider value={state.value} domain={[300, 1800]} setProps={setState}/> */}
       </div>
       {/* <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} /> */}
-      <Switch value={state.value} setProps={setState} />
+      <Switch
+        value={state.value}
+        setProps={setState}
+        hasLabel
+        truthyLabel="Enabled"
+        falsyLabel="Disabled"
+      />
     </>
   );
 };
