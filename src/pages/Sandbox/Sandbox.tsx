@@ -36,9 +36,9 @@ export const Sandbox: React.FC = () => {
       <h1 className="title">Sandbox</h1>
       <div>{state.value}</div>
       <div style={{ width: '300px' }}>
-        {/* <RangeSlider value={state.value} domain={[300, 1800]} setProps={setState}/> */}
+        <RangeSlider value={450} domain={[300, 1800]} setProps={setState} />
       </div>
-      {/* <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} /> */}
+      <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} />
       <Switch
         value={state.value}
         setProps={setState}

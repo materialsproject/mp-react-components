@@ -2,6 +2,10 @@
   padding-bottom: 1em;
 }
 
+.mpc-range-slider .level {
+  margin-bottom: 0;
+}
+
 .mpc-dual-range-slider .input {
   flex-basis: 75px;
   min-width: 75px;
@@ -13,6 +17,7 @@
 
 .mpc-range-slider .slider {
   padding: 0 0.75em;
+  margin-top: 0.25rem;
 }
 
 .mpc-range-slider .slider-track {

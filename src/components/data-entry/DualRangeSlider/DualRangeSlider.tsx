@@ -255,7 +255,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
       className={classNames('mpc-dual-range-slider mpc-range-slider', props.className)}
       data-testid="dual-range-slider"
     >
-      <div className="level is-mobile mb-1">
+      <div className="level is-mobile">
         <div className="level-left">
           <input
             data-testid="lower-bound-input"
