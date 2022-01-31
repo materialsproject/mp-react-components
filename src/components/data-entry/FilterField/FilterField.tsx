@@ -38,7 +38,6 @@ export const FilterField: React.FC<FilterFieldProps> = (props) => {
         data-tip
         data-for={`filter_${props.id}`}
       >
-        {props.label === 'Chemical System' && <FaToggleOn />}
         {props.label}
         {renderUnitsComponent(props.units)}
         {cancelButton}
