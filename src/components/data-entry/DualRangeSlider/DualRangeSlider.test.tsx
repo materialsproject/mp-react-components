@@ -8,7 +8,7 @@ afterEach(() => cleanup());
 
 const renderElement = ({
   domain = [0, 25],
-  values = [5, 10],
+  value = [5, 10],
   step = 1,
   onChange = () => undefined,
   onPropsChange = () => undefined
@@ -16,7 +16,7 @@ const renderElement = ({
   render(
     <DualRangeSlider
       domain={domain}
-      value={values}
+      value={value}
       step={step}
       onChange={onChange}
       onPropsChange={onPropsChange}
@@ -28,7 +28,7 @@ describe('<DualRangeSlider/>', () => {
   it('should render with correct values', () => {
     renderElement({
       domain: [-100, 100],
-      values: [-20, 50]
+      value: [-20, 50]
     });
     expect(screen.getByTestId('lower-bound-input')).toHaveValue(-20);
     expect(screen.getByTestId('upper-bound-input')).toHaveValue(50);
@@ -39,26 +39,32 @@ describe('<DualRangeSlider/>', () => {
   it('should change slider values when input changes', async () => {
     renderElement({
       domain: [-100, 100],
-      values: [-20, 50]
+      value: [-20, 50]
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: 9 } });
-    expect(screen.getByTestId('lower-bound-input')).toHaveValue(9);
-    expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '9');
+    await waitFor(() => {
+      expect(screen.getByTestId('lower-bound-input')).toHaveValue(9);
+      expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '9');
+    });
   });
 
   it('should prevent values outside of domain', async () => {
     renderElement({
       domain: [-100, 100],
-      values: [-20, 50]
+      value: [-20, 50]
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: -111 } });
-    expect(screen.getByTestId('lower-bound-input')).toHaveValue(-100);
-    expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '-100');
+    await waitFor(() => {
+      expect(screen.getByTestId('lower-bound-input')).toHaveValue(-100);
+      expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '-100');
+    });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: 70 } });
-    expect(screen.getByTestId('lower-bound-input')).toHaveValue(70);
-    expect(screen.getByTestId('upper-bound-input')).toHaveValue(70);
-    expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '70');
-    expect(screen.getAllByTestId('slider-button')[1]).toHaveAttribute('aria-valuenow', '70');
+    await waitFor(() => {
+      expect(screen.getByTestId('lower-bound-input')).toHaveValue(70);
+      expect(screen.getByTestId('upper-bound-input')).toHaveValue(70);
+      expect(screen.getAllByTestId('slider-button')[0]).toHaveAttribute('aria-valuenow', '70');
+      expect(screen.getAllByTestId('slider-button')[1]).toHaveAttribute('aria-valuenow', '70');
+    });
   });
 
   it('should use nice domain values', async () => {
