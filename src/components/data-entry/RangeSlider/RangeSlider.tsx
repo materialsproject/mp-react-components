@@ -48,6 +48,7 @@ export const renderMark = (
   step: number,
   tickMarks: any,
   domain: number[],
+  isLogScale?: boolean,
   inclusiveTickBounds?: boolean
 ) => {
   return ({ props, index }) => {
@@ -56,7 +57,13 @@ export const renderMark = (
      * Otherwise, react-range will try to render a tick at each step
      * which is way too many.
      */
-    const tickValue = domain[0] + index * step;
+    let tickValue: number;
+    if (isLogScale) {
+      tickValue = Math.pow(10, domain[0] + index * step);
+    } else {
+      tickValue = domain[0] + index * step;
+    }
+
     let showTick = false;
     if (tickMarks.length === 2) {
       showTick = tickValue === domain[0] || tickValue === domain[1];
@@ -117,6 +124,13 @@ export interface RangeSliderProps {
    */
   step?: number;
   /**
+   * Use a logarithmic scale for the slider.
+   * Domain values will be interpreted as exponents and will be transformed to be 10^x.
+   * So a domain of [-1, 2] will yields a range of [0.01, 100].
+   * Note that when using a log scale, the `value` prop will always be the pre-transformed value.
+   */
+  isLogScale?: boolean;
+  /**
    * Number of milliseconds that should pass between typing into the slider
    * number input and the slider handles updating.
    */
@@ -147,22 +161,29 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   domain,
   value = domain[0],
   step = 1,
-  debounce = 500,
+  isLogScale = false,
+  debounce = isLogScale ? 1000 : 500,
   ticks = 5,
   ...otherProps
 }) => {
-  const props = { domain, value, step, debounce, ticks, ...otherProps };
+  const props = { domain, value, step, isLogScale, debounce, ticks, ...otherProps };
   const [values, setValues] = useState(() => {
     return [validateValueInRange(props.value, props.domain[0], props.domain[1])];
   });
-  const [inputValue, setInputValue] = useState(values[0]);
+  const [inputValue, setInputValue] = useState<number | string>(values[0]);
   const [inputValueToDebounce, setInputValueToDebounce] = useState(inputValue);
   const debouncedInputValue = props.debounce
     ? useDebounce(inputValueToDebounce, props.debounce)
     : inputValue;
   const decimals = countDecimals(props.step);
-  const scale = d3.scaleLinear().domain(props.domain);
+  let scale: any = undefined;
   let tickMarks: number[] | undefined = undefined;
+
+  if (props.isLogScale) {
+    scale = d3.scaleLog().domain([Math.pow(10, props.domain[0]), Math.pow(10, props.domain[1])]);
+  } else {
+    scale = d3.scaleLinear().domain(props.domain);
+  }
 
   if (props.ticks === 2) {
     tickMarks = props.domain;
@@ -170,9 +191,20 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
     tickMarks = scale.ticks(props.ticks);
   }
 
-  const handleSliderChange = (vals) => {
+  const handleSliderChange = (vals: number[]) => {
     setValues(vals);
-    setInputValue(vals[0]);
+    let newInputValue: number | string = vals[0];
+    /**
+     * If using a log scale, convert the slider value to it's exponential value to show in the input.
+     * For exponents 0 or more, only show whole numbers.
+     * For exponents less than 0, the exponent value will determine the number of decimals
+     * (e.g. -1 -> 1 decimal place, -1.3 -> 2 decimal places).
+     */
+    if (props.isLogScale) {
+      if (vals[0] >= 0) newInputValue = Math.pow(10, vals[0]).toFixed();
+      if (vals[0] < 0) newInputValue = Math.pow(10, vals[0]).toFixed(Math.ceil(Math.abs(vals[0])));
+    }
+    setInputValue(newInputValue);
   };
 
   const handleSliderFinalChange = (vals) => {
@@ -194,11 +226,31 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   };
 
   const validateDebouncedInputValue = () => {
-    const newValue = validateValueInRange(parseFloat(debouncedInputValue), domain[0], domain[1]);
-    if (newValue !== values[0]) {
-      setValues([newValue]);
-      setInputValue(newValue);
-      handleSliderFinalChange([newValue]);
+    let validatedInputValue: any;
+    let validValue: any;
+    /**
+     * If using a log scale, convert the input value back into
+     * an exponent and pass that to the slider.
+     */
+    if (props.isLogScale) {
+      validatedInputValue = validateValueInRange(
+        parseFloat(debouncedInputValue),
+        Math.pow(10, domain[0]),
+        Math.pow(10, domain[1])
+      );
+      validValue = Math.log10(validatedInputValue).toFixed(decimals);
+    } else {
+      validatedInputValue = validateValueInRange(
+        parseFloat(debouncedInputValue),
+        domain[0],
+        domain[1]
+      );
+      validValue = validatedInputValue;
+    }
+    if (validValue !== values[0]) {
+      setValues([validValue]);
+      setInputValue(validatedInputValue);
+      handleSliderFinalChange([validValue]);
     }
   };
 
@@ -238,7 +290,14 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           renderTrack={renderTrack(values, props.domain, ['#3273dc', '#ccc'])}
           renderThumb={renderThumb()}
           renderMark={
-            tickMarks && renderMark(props.step, tickMarks, props.domain, props.inclusiveTickBounds)
+            tickMarks &&
+            renderMark(
+              props.step,
+              tickMarks,
+              props.domain,
+              props.isLogScale,
+              props.inclusiveTickBounds
+            )
           }
         />
       </div>

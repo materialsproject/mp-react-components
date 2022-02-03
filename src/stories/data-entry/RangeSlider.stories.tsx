@@ -30,3 +30,12 @@ WithTicksOnLimitsOnly.args = {
   ...Basic.args,
   ticks: 2
 };
+
+export const WithLogScale = Template.bind({});
+WithLogScale.args = {
+  ...Basic.args,
+  domain: [-2, 3],
+  value: -1,
+  step: 0.01,
+  isLogScale: true
+};
