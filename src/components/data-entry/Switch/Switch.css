@@ -1,5 +1,6 @@
 .mpc-switch {
   display: inline-block;
+  line-height: 1.5;
 }
 
 .mpc-switch-icon {
