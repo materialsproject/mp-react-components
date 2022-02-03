@@ -16,7 +16,7 @@ export const Basic = Template.bind({});
 Basic.args = {
   domain: [0, 100],
   step: 1,
-  initialValues: [10, 50]
+  value: [10, 50]
 };
 
 export const WithDebounce = Template.bind({});

@@ -16,7 +16,7 @@ const renderElement = ({
   render(
     <DualRangeSlider
       domain={domain}
-      initialValues={values}
+      value={values}
       step={step}
       onChange={onChange}
       onPropsChange={onPropsChange}

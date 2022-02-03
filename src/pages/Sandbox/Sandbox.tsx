@@ -30,18 +30,25 @@ import { Switch } from '../../components/data-entry/Switch';
  */
 
 export const Sandbox: React.FC = () => {
-  const [state, setState] = useState({ value: false });
+  const [state, setState] = useState({ value: [10, 45] });
+  const [switchState, setSwitchState] = useState({ value: false });
   return (
     <>
       <h1 className="title">Sandbox</h1>
       <div>{state.value}</div>
       <div style={{ width: '300px' }}>
-        <RangeSlider value={450} domain={[300, 1800]} setProps={setState} />
+        <RangeSlider value={450} domain={[300, 1800]} />
       </div>
-      <DualRangeSlider initialValues={[20]} domain={[0, 100]} step={1} />
-      <Switch
+      <DualRangeSlider
         value={state.value}
+        domain={[0, 100]}
+        step={1}
         setProps={setState}
+        ticks={5}
+      />
+      <Switch
+        value={switchState.value}
+        setProps={setSwitchState}
         hasLabel
         truthyLabel="Enabled"
         falsyLabel="Disabled"

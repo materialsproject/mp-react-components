@@ -204,8 +204,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         //   filter && filter.props.hasOwnProperty('parsedValue')
         //     ? getSearchState(stateWithNewFilterProps)
         //     : stateWithNewFilterProps;
-        const newFilterValues = props.hasOwnProperty('initialValues')
-          ? { ...currentState.filterValues, [filterId]: props.initialValues }
+        const newFilterValues = props.hasOwnProperty('value')
+          ? { ...currentState.filterValues, [filterId]: props.value }
           : undefined;
         return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
       });

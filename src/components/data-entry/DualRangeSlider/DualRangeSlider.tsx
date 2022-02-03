@@ -32,10 +32,10 @@ export interface DualRangeSliderProps {
    */
   domain: number[];
   /**
-   * Array with the initial min and max values that the slider
+   * Array with the min and max values that the slider
    * should be set to.
    */
-  initialValues: number[];
+  value: number[];
   /**
    * Number by which the slider handles should move with each step.
    * Defaults to 1.
@@ -46,6 +46,12 @@ export interface DualRangeSliderProps {
    * number input and the slider handles updating.
    */
   debounce?: number;
+  /**
+   * Number of ticks to show on the slider scale.
+   * Note that D3 will automatically convert this number to a multiple of 1, 2, 5, or 10.
+   * Set to 2 to only include ticks at the min and max bounds of the scale.
+   */
+  ticks?: number | null;
   /**
    * Set to true to display a "+" with the upper bound tick (e.g. "100+").
    * Use this to indicate that the upper bound is inclusive (e.g. 100 or more).
@@ -104,19 +110,24 @@ const niceInitialValues = (vals, domain, niceDomain) => {
 export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   domain = [0, 100],
   step = 1,
-  initialValues = domain.slice(),
-  debounce,
+  value = domain.slice(),
+  debounce = 500,
+  ticks = 5,
   onChange = () => undefined,
   onPropsChange = () => undefined,
   ...otherProps
 }) => {
-  const props = { domain, step, initialValues, debounce, onChange, onPropsChange, ...otherProps };
+  const props = { domain, step, value, debounce, ticks, onChange, onPropsChange, ...otherProps };
   const decimals = countDecimals(step);
-  const tickCount = 5;
-  const scale = d3.scaleLinear().domain(domain).nice(tickCount);
+  const scale = d3.scaleLinear().domain(domain).nice(props.ticks);
   const niceDomain = scale.domain();
-  const ticks = scale.ticks(5);
-  const [values, setValues] = useState(niceInitialValues(initialValues, domain, niceDomain));
+  let tickMarks: number[] | undefined = undefined;
+  if (props.ticks === 2) {
+    tickMarks = niceDomain;
+  } else if (props.ticks !== null) {
+    tickMarks = scale.ticks(props.ticks);
+  }
+  const [values, setValues] = useState(niceInitialValues(props.value, domain, niceDomain));
   const [lowerBound, setLowerBound] = useState(values[0]);
   const [upperBound, setUpperBound] = useState(values[1]);
   const [lowerBoundToDebounce, setLowerBoundToDebounce] = useState(lowerBound);
@@ -129,6 +140,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
     : upperBoundToDebounce;
 
   const handleSliderFinalChange = (vals) => {
+    if (props.setProps) {
+      props.setProps({ value: vals });
+    }
     if (onChange) {
       onChange(
         vals.map((val) => {
@@ -222,16 +236,16 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
    * This effect lifts the prop changes up to the parent
    */
   useEffect(() => {
-    onPropsChange({ domain: niceDomain, initialValues: values });
+    onPropsChange({ domain: niceDomain, value: values });
   }, []);
 
   /**
-   * If the initialValues prop is changed from outside this component
+   * If the value prop is changed from outside this component
    * trigger a slider change
    */
   useEffect(() => {
-    handleSliderChange(niceInitialValues(initialValues, domain, niceDomain));
-  }, [initialValues]);
+    handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
+  }, [props.value]);
 
   /**
    * These two effects are triggered when debouncedLowerBound and debouncedUpperBound
@@ -291,7 +305,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           onFinalChange={handleSliderFinalChange}
           renderTrack={renderTrack(values, niceDomain, ['#ccc', '#3273dc', '#ccc'])}
           renderThumb={renderThumb()}
-          renderMark={renderMark(step, ticks, niceDomain, props.inclusiveTickBounds)}
+          renderMark={renderMark(step, tickMarks, niceDomain, props.inclusiveTickBounds)}
         />
       </div>
     </div>

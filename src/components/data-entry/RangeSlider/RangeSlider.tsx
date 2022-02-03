@@ -121,6 +121,11 @@ export interface RangeSliderProps {
    * number input and the slider handles updating.
    */
   debounce?: number;
+  /**
+   * Number of ticks to show on the slider scale.
+   * Note that D3 will automatically convert this number to a multiple of 1, 2, 5, or 10.
+   * Set to 2 to only include ticks at the min and max bounds of the scale.
+   */
   ticks?: number | null;
   /**
    * Set to true to display a "+" with the upper bound tick (e.g. "100+").
