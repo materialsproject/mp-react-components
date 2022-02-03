@@ -19,8 +19,14 @@ Basic.args = {
   value: [10, 50]
 };
 
-export const WithDebounce = Template.bind({});
-WithDebounce.args = {
+export const WithoutDebounce = Template.bind({});
+WithoutDebounce.args = {
   ...Basic.args,
-  debounce: 1000
+  debounce: 0
+};
+
+export const WithMoreTicks = Template.bind({});
+WithMoreTicks.args = {
+  ...Basic.args,
+  ticks: 10
 };

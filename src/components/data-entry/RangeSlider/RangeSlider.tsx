@@ -148,7 +148,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   value = domain[0],
   step = 1,
   debounce = 500,
-  ticks = 3,
+  ticks = 5,
   ...otherProps
 }) => {
   const props = { domain, value, step, debounce, ticks, ...otherProps };

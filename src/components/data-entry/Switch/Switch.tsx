@@ -3,17 +3,37 @@ import React from 'react';
 import { FaToggleOff, FaToggleOn } from 'react-icons/fa';
 import './Switch.css';
 
-interface SwitchProps {
+export interface SwitchProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
    */
   setProps?: (value: any) => any;
+  /**
+   * Class name(s) to append to the component's default class.
+   */
   className?: string;
+  /**
+   * Value of the input, either true or false.
+   */
   value?: boolean;
+  /**
+   * Whether to show a label to the right of the switch.
+   */
   hasLabel?: boolean;
+  /**
+   * Text to show when the switch is on.
+   * @default 'On'
+   */
   truthyLabel?: string;
+  /**
+   * Text to show when the switch is off.
+   * @default 'Off'
+   */
   falsyLabel?: string;
   onChange?: (value: boolean) => any;
 }

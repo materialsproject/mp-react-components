@@ -19,6 +19,15 @@ export const parameters = {
           'Allowed Input Types Map'
         ],
         'Data-Entry',
+        [
+          'MaterialsInput',
+          'PeriodicTable',
+          'RangeSlider',
+          'DualRangeSlider',
+          'Select',
+          'ThreeStateBooleanSelect',
+          'Switch'
+        ],
         'Data-Display',
         'Publications',
         ['BibCard', 'CrossrefCard', 'BibjsonCard', 'PublicationCard', 'BibtexCard', 'BibFilter'],
