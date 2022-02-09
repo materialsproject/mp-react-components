@@ -37,7 +37,7 @@ export const Sandbox: React.FC = () => {
       <h1 className="title">Sandbox</h1>
       <div>{state.value}</div>
       <div style={{ width: '300px' }}>
-        <RangeSlider value={-1} domain={[-2, 3]} step={0.1} isLogScale />
+        <RangeSlider value={-1} domain={[-2, 3]} step={0.01} isLogScale />
       </div>
       <div style={{ width: '300px' }}>
         <RangeSlider value={-1} domain={[-2, 3]} step={0.1} />

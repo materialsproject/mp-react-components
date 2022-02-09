@@ -37,6 +37,7 @@ import { DataTable } from './components/data-display/DataTable';
 import { Enlargeable } from './components/data-display/Enlargeable';
 import { Switch } from './components/data-entry/Switch';
 import { RangeSlider } from './components/data-entry/RangeSlider';
+import { DualRangeSlider } from './components/data-entry/DualRangeSlider';
 
 export {
   SelectableTable,
@@ -82,5 +83,6 @@ export {
   FilterField,
   Enlargeable,
   Switch,
-  RangeSlider
+  RangeSlider,
+  DualRangeSlider
 };

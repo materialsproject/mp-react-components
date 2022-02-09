@@ -347,11 +347,19 @@ export function mapArrayToBooleanObject(array: any, value: boolean = true) {
   }
 }
 
-export const validateValueInRange = (value: number, min: number, max: number) => {
+export const validateValueInRange = (value: number, min: number, max: number): number => {
   if (value > max) {
     return max;
   } else if (value < min) {
     return min;
+  } else {
+    return value;
+  }
+};
+
+export const convertToNumber = (value: number | string): number => {
+  if (typeof value === 'string') {
+    return parseFloat(value);
   } else {
     return value;
   }
