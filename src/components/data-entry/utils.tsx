@@ -369,7 +369,7 @@ export const initSliderScale = (domain: number[], isLogScale?: boolean) => {
   if (isLogScale) {
     return d3.scaleLog().domain([Math.pow(10, domain[0]), Math.pow(10, domain[1])]);
   } else {
-    return d3.scaleLinear().domain(domain);
+    return d3.scaleLinear().domain(domain).nice();
   }
 };
 

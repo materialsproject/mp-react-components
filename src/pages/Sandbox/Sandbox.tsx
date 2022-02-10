@@ -37,19 +37,19 @@ export const Sandbox: React.FC = () => {
       <h1 className="title">Sandbox</h1>
       <div>{state.value}</div>
       <div style={{ width: '300px' }}>
-        <RangeSlider value={-1} domain={[-2, 3]} step={0.01} isLogScale />
+        {/* <RangeSlider value={-1} domain={[-2, 3]} step={0.01} isLogScale /> */}
       </div>
       <div style={{ width: '300px' }}>
-        <RangeSlider value={-1} domain={[-2, 3]} step={0.1} />
+        {/* <RangeSlider value={-1} domain={[-2, 3]} step={0.1} /> */}
       </div>
-      {/* <DualRangeSlider
+      <DualRangeSlider
         value={state.value}
-        domain={[0, 100]}
+        domain={[-97, 88]}
         step={1}
         setProps={setState}
         ticks={5}
-      /> */}
-      <DualRangeSlider value={[-1, 1]} domain={[-2, 3]} step={0.01} isLogScale />
+      />
+      {/* <DualRangeSlider value={[-1, 1]} domain={[-2, 3]} step={0.01} isLogScale /> */}
       <Switch
         value={switchState.value}
         setProps={setSwitchState}

@@ -233,13 +233,14 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
         : lowerBoundFloat;
       newUpperBoundValue = newLowerBoundValue;
     } else if (lowerBoundFloat < domainForComparison[0]) {
-      setLowerBound(pow10Fixed(niceDomain[0]));
+      const newInputValue = props.isLogScale ? pow10Fixed(niceDomain[0]) : niceDomain[0];
+      setLowerBound(newInputValue);
       newLowerBoundValue = niceDomain[0];
       newUpperBoundValue = props.isLogScale
         ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
         : upperBoundFloat;
     } else if (lowerBoundFloat > domainForComparison[1]) {
-      const newInputValue = pow10Fixed(niceDomain[1]);
+      const newInputValue = props.isLogScale ? pow10Fixed(niceDomain[1]) : niceDomain[1];
       setLowerBound(newInputValue);
       setUpperBound(newInputValue);
       newLowerBoundValue = niceDomain[1];
@@ -274,13 +275,14 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
         : upperBoundFloat;
       newUpperBoundValue = newLowerBoundValue;
     } else if (upperBoundFloat > domainForComparison[1]) {
-      setUpperBound(pow10Fixed(niceDomain[1]));
+      const newInputValue = props.isLogScale ? pow10Fixed(niceDomain[1]) : niceDomain[1];
+      setUpperBound(newInputValue);
       newLowerBoundValue = props.isLogScale
         ? parseFloat(Math.log10(lowerBoundFloat).toFixed(decimals))
         : lowerBoundFloat;
       newUpperBoundValue = niceDomain[1];
     } else if (upperBoundFloat < domainForComparison[0]) {
-      const newInputValue = pow10Fixed(niceDomain[0]);
+      const newInputValue = props.isLogScale ? pow10Fixed(niceDomain[0]) : niceDomain[0];
       setUpperBound(newInputValue);
       setLowerBound(newInputValue);
       newLowerBoundValue = niceDomain[0];
@@ -373,7 +375,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             renderMark(
               props.step,
               tickMarks,
-              props.domain,
+              niceDomain,
               props.isLogScale,
               props.inclusiveTickBounds
             )
