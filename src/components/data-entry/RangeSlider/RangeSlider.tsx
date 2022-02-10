@@ -3,7 +3,14 @@ import { Range, getTrackBackground } from 'react-range';
 import classNames from 'classnames';
 import './RangeSlider.css';
 import { useDebounce } from '../../../utils/hooks';
-import { convertToNumber, countDecimals, validateValueInRange } from '../utils';
+import {
+  convertToNumber,
+  countDecimals,
+  initSliderScale,
+  initSliderTicks,
+  pow10Fixed,
+  validateValueInRange
+} from '../utils';
 import * as d3 from 'd3';
 
 export const renderTrack = (values: number[], domain: number[], colors: string[]) => {
@@ -177,35 +184,13 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
     ? useDebounce(inputValueToDebounce, props.debounce)
     : inputValue;
   const decimals = countDecimals(props.step);
-  let scale: any = undefined;
-  let tickMarks: number[] | undefined = undefined;
-
-  if (props.isLogScale) {
-    scale = d3.scaleLog().domain([Math.pow(10, props.domain[0]), Math.pow(10, props.domain[1])]);
-  } else {
-    scale = d3.scaleLinear().domain(props.domain);
-  }
-
-  if (props.ticks === 2) {
-    tickMarks = props.domain;
-  } else if (props.ticks !== null) {
-    tickMarks = scale.ticks(props.ticks);
-  }
+  const scale = initSliderScale(props.domain, props.isLogScale);
+  const tickMarks = initSliderTicks(props.ticks, props.domain, scale);
 
   const handleSliderChange = (vals: number[]) => {
     setValues(vals);
-    let newInputValue: number | string = vals[0];
-    /**
-     * If using a log scale, convert the slider value to it's exponential value to show in the input.
-     * For exponents 0 or more, only show whole numbers.
-     * For exponents less than 0, the exponent value will determine the number of decimals
-     * (e.g. -1 -> 1 decimal place, -1.3 -> 2 decimal places).
-     */
-    if (props.isLogScale) {
-      if (vals[0] >= 0) newInputValue = Math.pow(10, vals[0]).toFixed();
-      if (vals[0] < 0) newInputValue = Math.pow(10, vals[0]).toFixed(Math.ceil(Math.abs(vals[0])));
-    }
-    setInputValue(newInputValue.toString());
+    const newInputValue = props.isLogScale ? pow10Fixed(vals[0]) : vals[0].toString();
+    setInputValue(newInputValue);
   };
 
   const handleSliderFinalChange = (vals) => {

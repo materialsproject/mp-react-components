@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
-import { countDecimals } from '../utils';
+import { countDecimals, initSliderScale, initSliderTicks, pow10Fixed } from '../utils';
 import '../RangeSlider/RangeSlider.css';
 import * as d3 from 'd3';
 import { useDebounce } from '../../../utils/hooks';
@@ -41,6 +41,13 @@ export interface DualRangeSliderProps {
    * Defaults to 1.
    */
   step: number;
+  /**
+   * Use a logarithmic scale for the slider.
+   * Domain values will be interpreted as exponents and will be transformed to be `10^x`.
+   * So a domain of `[-1, 2]` will yields a range of `[0.01, 100]`.
+   * Note that when using a log scale, the `value` prop will always be the pre-transformed value.
+   */
+  isLogScale?: boolean;
   /**
    * Number of milliseconds that should pass between typing into the slider
    * number input and the slider handles updating.
@@ -111,25 +118,35 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   domain = [0, 100],
   step = 1,
   value = domain.slice(),
-  debounce = 500,
+  isLogScale = false,
+  debounce = isLogScale ? 1000 : 500,
   ticks = 5,
   onChange = () => undefined,
   onPropsChange = () => undefined,
   ...otherProps
 }) => {
-  const props = { domain, step, value, debounce, ticks, onChange, onPropsChange, ...otherProps };
+  const props = {
+    domain,
+    step,
+    value,
+    isLogScale,
+    debounce,
+    ticks,
+    onChange,
+    onPropsChange,
+    ...otherProps
+  };
   const decimals = countDecimals(step);
-  const scale = d3.scaleLinear().domain(domain).nice(props.ticks);
-  const niceDomain = scale.domain();
-  let tickMarks: number[] | undefined = undefined;
-  if (props.ticks === 2) {
-    tickMarks = niceDomain;
-  } else if (props.ticks !== null) {
-    tickMarks = scale.ticks(props.ticks);
-  }
+  const scale = initSliderScale(props.domain, props.isLogScale);
+  const niceDomain = props.isLogScale ? props.domain : scale.domain();
+  const tickMarks = initSliderTicks(props.ticks, props.domain, scale);
   const [values, setValues] = useState(niceInitialValues(props.value, domain, niceDomain));
-  const [lowerBound, setLowerBound] = useState(values[0]);
-  const [upperBound, setUpperBound] = useState(values[1]);
+  const [lowerBound, setLowerBound] = useState(
+    props.isLogScale ? pow10Fixed(values[0]) : values[0]
+  );
+  const [upperBound, setUpperBound] = useState(
+    props.isLogScale ? pow10Fixed(values[1]) : values[1]
+  );
   const [lowerBoundToDebounce, setLowerBoundToDebounce] = useState(lowerBound);
   const [upperBoundToDebounce, setUpperBoundToDebounce] = useState(upperBound);
   const debouncedLowerBound = debounce
@@ -154,8 +171,10 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
 
   const handleSliderChange = (vals) => {
     setValues(vals);
-    setLowerBound(vals[0]);
-    setUpperBound(vals[1]);
+    const newLowerInputValue = props.isLogScale ? pow10Fixed(vals[0]) : vals[0].toString();
+    const newUpperInputValue = props.isLogScale ? pow10Fixed(vals[1]) : vals[1].toString();
+    setLowerBound(newLowerInputValue);
+    setUpperBound(newUpperInputValue);
   };
 
   /**
@@ -187,20 +206,38 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   const validateDebouncedLowerBound = () => {
     const lowerBoundFloat = parseFloat(debouncedLowerBound);
     const upperBoundFloat = parseFloat(upperBound);
-    let newValues = [lowerBoundFloat, upperBoundFloat];
-    if (lowerBoundFloat > upperBoundFloat && lowerBoundFloat <= niceDomain[1]) {
+    let newLowerBoundValue: number = props.isLogScale
+      ? parseFloat(Math.log10(lowerBoundFloat).toFixed(decimals))
+      : lowerBoundFloat;
+    let newUpperBoundValue: number = props.isLogScale
+      ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
+      : upperBoundFloat;
+    const domainForComparison = props.isLogScale
+      ? [Math.pow(10, niceDomain[0]), Math.pow(10, niceDomain[1])]
+      : niceDomain;
+
+    if (lowerBoundFloat > upperBoundFloat && lowerBoundFloat <= domainForComparison[1]) {
       setUpperBound(lowerBoundFloat);
-      newValues = [lowerBoundFloat, lowerBoundFloat];
-    } else if (lowerBoundFloat < niceDomain[0]) {
-      setLowerBound(niceDomain[0]);
-      newValues = [niceDomain[0], upperBoundFloat];
-    } else if (lowerBoundFloat > niceDomain[1]) {
-      setLowerBound(niceDomain[1]);
-      setUpperBound(niceDomain[1]);
-      newValues = [niceDomain[1], niceDomain[1]];
+      newLowerBoundValue = props.isLogScale
+        ? parseFloat(Math.log10(lowerBoundFloat).toFixed(decimals))
+        : lowerBoundFloat;
+      newUpperBoundValue = newLowerBoundValue;
+    } else if (lowerBoundFloat < domainForComparison[0]) {
+      setLowerBound(pow10Fixed(niceDomain[0]));
+      newLowerBoundValue = niceDomain[0];
+      newUpperBoundValue = props.isLogScale
+        ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
+        : upperBoundFloat;
+    } else if (lowerBoundFloat > domainForComparison[1]) {
+      const newInputValue = pow10Fixed(niceDomain[1]);
+      setLowerBound(newInputValue);
+      setUpperBound(newInputValue);
+      newLowerBoundValue = niceDomain[1];
+      newUpperBoundValue = newLowerBoundValue;
     }
 
-    if (newValues[0] !== values[0] || newValues[1] !== values[1]) {
+    if (newLowerBoundValue !== values[0] || newUpperBoundValue !== values[1]) {
+      const newValues = [newLowerBoundValue, newUpperBoundValue];
       setValues(newValues);
       handleSliderFinalChange(newValues);
     }
@@ -212,20 +249,38 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   const validateDebouncedUpperBound = () => {
     const lowerBoundFloat = parseFloat(lowerBound);
     const upperBoundFloat = parseFloat(debouncedUpperBound);
-    let newValues = [lowerBoundFloat, upperBoundFloat];
-    if (upperBoundFloat < lowerBoundFloat && upperBoundFloat >= niceDomain[0]) {
+    let newLowerBoundValue: number = props.isLogScale
+      ? parseFloat(Math.log10(lowerBoundFloat).toFixed(decimals))
+      : lowerBoundFloat;
+    let newUpperBoundValue: number = props.isLogScale
+      ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
+      : upperBoundFloat;
+    const domainForComparison = props.isLogScale
+      ? [Math.pow(10, niceDomain[0]), Math.pow(10, niceDomain[1])]
+      : niceDomain;
+
+    if (upperBoundFloat < lowerBoundFloat && upperBoundFloat >= domainForComparison[0]) {
       setLowerBound(upperBoundFloat);
-      newValues = [upperBoundFloat, upperBoundFloat];
-    } else if (upperBoundFloat > niceDomain[1]) {
-      setUpperBound(niceDomain[1]);
-      newValues = [lowerBoundFloat, niceDomain[1]];
-    } else if (upperBoundFloat < niceDomain[0]) {
-      setUpperBound(niceDomain[0]);
-      setLowerBound(niceDomain[0]);
-      newValues = [niceDomain[0], niceDomain[0]];
+      newLowerBoundValue = props.isLogScale
+        ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
+        : upperBoundFloat;
+      newUpperBoundValue = newLowerBoundValue;
+    } else if (upperBoundFloat > domainForComparison[1]) {
+      setUpperBound(pow10Fixed(niceDomain[1]));
+      newLowerBoundValue = props.isLogScale
+        ? parseFloat(Math.log10(lowerBoundFloat).toFixed(decimals))
+        : lowerBoundFloat;
+      newUpperBoundValue = niceDomain[1];
+    } else if (upperBoundFloat < domainForComparison[0]) {
+      const newInputValue = pow10Fixed(niceDomain[0]);
+      setUpperBound(newInputValue);
+      setLowerBound(newInputValue);
+      newLowerBoundValue = niceDomain[0];
+      newUpperBoundValue = newLowerBoundValue;
     }
 
-    if (newValues[0] !== values[0] || newValues[1] !== values[1]) {
+    if (newLowerBoundValue !== values[0] || newUpperBoundValue !== values[1]) {
+      const newValues = [newLowerBoundValue, newUpperBoundValue];
       setValues(newValues);
       handleSliderFinalChange(newValues);
     }
@@ -305,7 +360,16 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           onFinalChange={handleSliderFinalChange}
           renderTrack={renderTrack(values, niceDomain, ['#ccc', '#3273dc', '#ccc'])}
           renderThumb={renderThumb()}
-          renderMark={renderMark(step, tickMarks, niceDomain, props.inclusiveTickBounds)}
+          renderMark={
+            tickMarks &&
+            renderMark(
+              props.step,
+              tickMarks,
+              props.domain,
+              props.isLogScale,
+              props.inclusiveTickBounds
+            )
+          }
         />
       </div>
     </div>

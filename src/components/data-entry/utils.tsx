@@ -364,3 +364,35 @@ export const convertToNumber = (value: number | string): number => {
     return value;
   }
 };
+
+export const initSliderScale = (domain: number[], isLogScale?: boolean) => {
+  if (isLogScale) {
+    return d3.scaleLog().domain([Math.pow(10, domain[0]), Math.pow(10, domain[1])]);
+  } else {
+    return d3.scaleLinear().domain(domain);
+  }
+};
+
+export const initSliderTicks = (ticks: number | null, domain: number[], scale?: any) => {
+  if (ticks === 2) {
+    return domain;
+  } else if (ticks !== null) {
+    return scale.ticks(ticks);
+  } else {
+    return;
+  }
+};
+
+/**
+ * Convert value to 10^value and handle the amount of decimals to fix the number to.
+ * For exponents 0 or more, only show whole numbers.
+ * For exponents less than 0, the exponent value will determine the number of decimals
+ * (e.g. -1 -> 1 decimal place, -1.3 -> 2 decimal places).
+ */
+export const pow10Fixed = (value: number): string => {
+  if (value < 0) {
+    return Math.pow(10, value).toFixed(Math.ceil(Math.abs(value)));
+  } else {
+    return Math.pow(10, value).toFixed();
+  }
+};

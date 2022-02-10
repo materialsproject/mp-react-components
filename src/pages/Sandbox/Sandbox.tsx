@@ -42,13 +42,14 @@ export const Sandbox: React.FC = () => {
       <div style={{ width: '300px' }}>
         <RangeSlider value={-1} domain={[-2, 3]} step={0.1} />
       </div>
-      <DualRangeSlider
+      {/* <DualRangeSlider
         value={state.value}
         domain={[0, 100]}
         step={1}
         setProps={setState}
         ticks={5}
-      />
+      /> */}
+      <DualRangeSlider value={[-1, 1]} domain={[-2, 3]} step={0.01} isLogScale />
       <Switch
         value={switchState.value}
         setProps={setSwitchState}
