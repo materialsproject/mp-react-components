@@ -262,8 +262,8 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
         className="input is-small"
         type="number"
         value={inputValue}
-        min={props.domain[0]}
-        max={props.domain[1]}
+        min={scale.domain()[0]}
+        max={scale.domain()[1]}
         step={props.step}
         onChange={handleInputChange}
       />

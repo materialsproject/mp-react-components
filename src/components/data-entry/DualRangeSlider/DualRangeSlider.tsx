@@ -137,7 +137,19 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
     ...otherProps
   };
   const decimals = countDecimals(step);
+  /**
+   * For log sliders, the scale is 10^min to 10^max
+   */
   const scale = initSliderScale(props.domain, props.isLogScale);
+  /**
+   * The niceDomain determines the allowable values in the slider.
+   * For regular linear sliders, the domain prop is translated into "nice"
+   * values (values ending in 5 or 0) that are determined when the scale is initialized.
+   * For log sliders, the exact values from the domain prop are used to determine allowable
+   * slider values so niceDomain is the same as props.domain.
+   * Note that for log sliders, the slider values are the exponent values but the tick and
+   * input values are 10^value.
+   */
   const niceDomain = props.isLogScale ? props.domain : scale.domain();
   const tickMarks = initSliderTicks(props.ticks, props.domain, scale);
   const [values, setValues] = useState(niceInitialValues(props.value, domain, niceDomain));
@@ -212,9 +224,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
     let newUpperBoundValue: number = props.isLogScale
       ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
       : upperBoundFloat;
-    const domainForComparison = props.isLogScale
-      ? [Math.pow(10, niceDomain[0]), Math.pow(10, niceDomain[1])]
-      : niceDomain;
+    const domainForComparison = props.isLogScale ? scale.domain() : niceDomain;
 
     if (lowerBoundFloat > upperBoundFloat && lowerBoundFloat <= domainForComparison[1]) {
       setUpperBound(lowerBoundFloat);
@@ -255,9 +265,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
     let newUpperBoundValue: number = props.isLogScale
       ? parseFloat(Math.log10(upperBoundFloat).toFixed(decimals))
       : upperBoundFloat;
-    const domainForComparison = props.isLogScale
-      ? [Math.pow(10, niceDomain[0]), Math.pow(10, niceDomain[1])]
-      : niceDomain;
+    const domainForComparison = props.isLogScale ? scale.domain() : niceDomain;
 
     if (upperBoundFloat < lowerBoundFloat && upperBoundFloat >= domainForComparison[0]) {
       setLowerBound(upperBoundFloat);
@@ -331,8 +339,8 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             className="input is-small"
             type="number"
             value={lowerBound}
-            min={niceDomain[0]}
-            max={niceDomain[1]}
+            min={scale.domain()[0]}
+            max={scale.domain()[1]}
             step={step}
             onChange={handleLowerInputChange}
           />
@@ -343,8 +351,8 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             className="input is-small"
             type="number"
             value={upperBound}
-            min={niceDomain[0]}
-            max={niceDomain[1]}
+            min={scale.domain()[0]}
+            max={scale.domain()[1]}
             step={step}
             onChange={handleUpperInputChange}
           />
