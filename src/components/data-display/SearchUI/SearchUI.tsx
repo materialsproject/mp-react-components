@@ -20,6 +20,7 @@ import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
 import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
 import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
+import classNames from 'classnames';
 
 export interface SearchUIProps {
   /**
@@ -32,6 +33,11 @@ export interface SearchUIProps {
    * properties change
    */
   setProps?: (value: any) => any;
+
+  /**
+   * Class name(s) to add to in addition to the default top-level class
+   */
+  className?: string;
 
   /**
    * An array of column definition objects to control what is rendered in the results table.
@@ -257,7 +263,7 @@ export interface SearchUIProps {
  */
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
   return (
-    <div id={props.id} className="mpc-search-ui">
+    <div id={props.id} className={classNames('mpc-search-ui', props.className)}>
       <Router>
         <SearchUIContextProvider {...props}>
           {props.hasSearchBar && (
