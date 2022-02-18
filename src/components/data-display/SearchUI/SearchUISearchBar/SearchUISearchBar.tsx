@@ -6,16 +6,105 @@ import { Filter } from '../types';
 import { MaterialsInputTypesMap } from '../../../data-entry/MaterialsInput/utils';
 import { convertMaterialsInputTypesMapToArray, mapInputTypeToField } from '../utils';
 import { capitalize, pluralize } from '../../../data-entry/utils';
+import { InputHelpItem } from '../../../data-entry/MaterialsInput/InputHelp/InputHelp';
+import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
+
+export interface SearchUISearchBarProps {
+  /**
+   * Class name(s) to add to the input field
+   * @default 'is-medium'
+   */
+  className?: string;
+
+  /**
+   * Optionally add a string of text to show up in the top-level search bar
+   */
+  placeholder?: string;
+
+  /**
+   * Custom error message to display with the top-level search bar
+   * if the user types an invalid value
+   */
+  errorMessage?: string;
+
+  /**
+   * Object with keys of allowed input types for the top-level search bar.
+   * Keys must be one of these supported input types: "elements", "formula", "mpid", "smiles", "text."
+   * Each key object must have a "field" property which maps the input type
+   * to a valid data filter field in the API.
+   * 
+   * e.g.
+     
+     {
+       formula: {
+         field: 'formula'
+       },
+       elements: {
+         field: 'elements'
+       },
+       mpid: {
+         field: 'material_ids'
+       }
+     }
+   */
+  allowedInputTypesMap?: MaterialsInputTypesMap;
+
+  /**
+   * Modes for showing the periodic table with the top search bar
+   * "toggle": render a button for toggling visibility of periodic table
+   * "focus": show periodic table when input is focuses, hide on blur
+   * "none": never show the periodic table for this input
+   * @default 'toggle'
+   */
+  periodicTableMode?: PeriodicTableMode;
+
+  /**
+   * Search examples to include below the search bar input.
+   * This will display when input is in focus and empty, or when the help button is clicked.
+   * Expects an array of items with the following properties:
+   * "label": text to display before examples. If only "label" and no "examples", text will render as small.
+   * "examples": array of input examples. These will become clickable and will update the input value. 
+   * e.g.
+     [
+       {
+         label: 'Search Examples'
+       },
+       {
+         label: 'Include at least elements',
+         examples: ['Li,Fe', 'Si,O,K']
+       }
+     ]
+   */
+  helpItems?: InputHelpItem[];
+
+  /**
+   * Text to display in the periodic table help box when
+   * the chemical system selection mode is selected.
+   * Supports markdown.
+   */
+  chemicalSystemSelectHelpText?: string;
+
+  /**
+   * Text to display in the periodic table help box when
+   * the elements selection mode is selected.
+   * Supports markdown.
+   */
+  elementsSelectHelpText?: string;
+}
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
  * for performing top level searches by mp-id, formula, or elements.
  * The input value is parsed into its appropriate search field upon submission.
  */
-export const SearchUISearchBar: React.FC = () => {
+export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
+  className = 'is-medium',
+  ...otherProps
+}) => {
+  const props = { className, ...otherProps };
   const actions = useSearchUIContextActions();
   const state = useSearchUIContext();
-  const allowedInputTypesMap = state.searchBarAllowedInputTypesMap!;
+  const allowedInputTypesMap = props.allowedInputTypesMap!;
   const [searchValue, setSearchValue] = useState(state.searchBarValue || '');
   const initialInputType = convertMaterialsInputTypesMapToArray(allowedInputTypesMap)[0];
   const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(initialInputType);
@@ -75,17 +164,17 @@ export const SearchUISearchBar: React.FC = () => {
       onInputTypeChange={(field) => setSearchInputType(field)}
       onSubmit={handleSubmit}
       showSubmitButton={true}
-      periodicTableMode={state.searchBarPeriodicTableMode}
+      periodicTableMode={props.periodicTableMode}
       hidePeriodicTable={shouldHidePeriodicTable()}
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
-      placeholder={state.searchBarPlaceholder}
+      placeholder={props.placeholder}
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
-      errorMessage={state.searchBarErrorMessage}
-      inputClassName="is-medium"
-      helpItems={state.searchBarHelpItems}
-      chemicalSystemSelectHelpText={state.searchBarChemicalSystemSelectHelpText}
-      elementsSelectHelpText={state.searchBarElementsSelectHelpText}
+      errorMessage={props.errorMessage}
+      inputClassName={props.className}
+      helpItems={props.helpItems}
+      chemicalSystemSelectHelpText={props.chemicalSystemSelectHelpText}
+      elementsSelectHelpText={props.elementsSelectHelpText}
       loading={state.loading}
     />
   );
