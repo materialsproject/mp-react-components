@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SearchUIContextProvider } from '../SearchUIContextProvider';
-import {
-  Column,
-  FilterGroup,
-  ConditionalRowStyle,
-  SearchUIViewType,
-  SearchParam,
-  SearchParams
-} from '../types';
+import { SearchUIViewType } from '../types';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
 import { SearchUIProps } from '../SearchUI';
 
 /**
- * Renders a complete search interface for fetching and filtering data from a REST API.
- * Results are rendered in a table alongside a set of filters that map to properties in the data.
+ * A component that can wrap around sub-components of `SearchUI` and ensure they are
+ * all hooked up to the same context.
+ * This allows you to use the state management functionality of `SearchUI` with the ability
+ * to customize the inner layout and components.
  */
 export const SearchUIContainer: React.FC<SearchUIProps> = (props) => {
   return (

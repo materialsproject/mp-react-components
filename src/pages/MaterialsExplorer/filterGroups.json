@@ -6,44 +6,53 @@
       {
         "name": "Material ID",
         "id": "material_ids",
-        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
+        "overrides": ["elements", "formula", "chemsys", "exclude_elements", "nelements"],
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "mpid",
-          "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
-          "periodicTableMode": "none"
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid material ID (e.g. mp-394)."
         }
       },
       {
         "name": "Formula",
         "id": "formula",
-        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
+        "overrides": ["material_ids", "elements", "chemsys", "exclude_elements", "nelements"],
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "formula",
           "periodicTableMode": "none",
-          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5).",
+          "helpItems": [
+            {
+              "label": "Formula Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li3Fe", "Eu2SiCl2O3", "LiFe*2*", "Si*"]
+            }
+          ]
         }
       },
       {
         "name": "Chemical System",
-        "id": "formula",
-        "overrides": ["material_ids", "elements", "exclude_elements", "nelements"],
-        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "id": "chemsys",
+        "overrides": ["material_ids", "elements", "formula", "exclude_elements", "nelements"],
+        "tooltip": "Enter a \" - \" separated list of element symbols (e.g. \"Ga-N\") to find materials within that chemical space (i.e. materials that contain only these elements).",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "chemical_system",
           "periodicTableMode": "none",
-          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5).",
+          "errorMessage": "Please enter a valid chemical system (e.g. Ce-Zn).",
           "helpItems": [
             {
-              "label": "Chemical System Examples"
+              "label": "Formula Examples"
             },
             {
               "label": null,
-              "examples": ["Li,Fe", "Si,Al,Mn"]
+              "examples": ["Li-Fe", "Eu-Si-Cl-O", "Li-Fe-*-*", "Si-*"]
             }
           ]
         }
@@ -51,21 +60,20 @@
       {
         "name": "Include Elements",
         "id": "elements",
-        "overrides": ["material_ids", "formula"],
-        "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. Ga,N). Enter a \" - \" separated list of element symbols to find materials that contain only these elements (e.g. Ga-N).",
+        "overrides": ["material_ids", "formula", "chemsys"],
+        "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. \"Ga,N\").",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "elements",
-          "showTypeDropdown": true,
           "periodicTableMode": "none",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma.",
           "helpItems": [
             {
               "label": "Elements Examples"
             },
             {
               "label": null,
-              "examples": ["Li,Fe", "Si,Al,Mn"]
+              "examples": ["Li,Fe", "Al,Ge,O"]
             }
           ]
         }
@@ -80,7 +88,16 @@
           "type": "elements",
           "periodicTableMode": "none",
           "hideChemSys": true,
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).",
+          "helpItems": [
+            {
+              "label": "Exclude Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Si,O,H"]
+            }
+          ]
         }
       },
       {
@@ -103,11 +120,10 @@
         "name": "Energy Above Hull",
         "id": "energy_above_hull",
         "type": "SLIDER",
-        "units": "meV/atom",
-        "conversionFactor": 0.001,
+        "units": "eV/atom",
         "props": {
-          "domain": [0, 1000],
-          "step": 0.1
+          "domain": [0, 1],
+          "step": 0.01
         }
       },
       {
@@ -176,7 +192,7 @@
       {
         "name": "Density",
         "id": "density",
-        "units": "cm\u00b3",
+        "units": "g/cm\u00b3",
         "type": "SLIDER",
         "props": {
           "domain": [0, 25],
@@ -201,13 +217,13 @@
       {
         "name": "Spacegroup Symbol",
         "id": "spacegroup_symbol",
-        "tooltip": "The spacegroup symbol for the lattice",
+        "tooltip": "The standard short symbol for the spacegroup.",
         "type": "SELECT_SPACEGROUP_SYMBOL"
       },
       {
-        "name": "Spacegroup Number",
+        "name": "Spacegroup International Number",
         "id": "spacegroup_number",
-        "tooltip": "The spacegroup number for the lattice",
+        "tooltip": "The international number for the spacegroup.",
         "type": "SELECT_SPACEGROUP_NUMBER"
       },
       {
@@ -223,16 +239,73 @@
     "expanded": false,
     "filters": [
       {
-        "name": "Has Properties",
+        "name": "Available Properties",
         "id": "has_props",
         "type": "CHECKBOX_LIST",
         "props": {
           "options": [
+            { "value": "dos", "label": "Density of States" },
+            { "value": "bandstructure", "label": "Band Structure" },
             { "value": "magnetism", "label": "Magnetism" },
             { "value": "elasticity", "label": "Elasticity" },
             { "value": "surface_properties", "label": "Surfaces" },
             { "value": "piezoelectric", "label": "Piezoelectric" },
-            { "value": "dielectric", "label": "Dielectric" }
+            { "value": "dielectric", "label": "Dielectric" },
+            { "value": "charge_density", "label": "Charge Density" },
+            { "value": "eos", "label": "Equations of State" },
+            { "value": "grain_boundaries", "label": "Grain Boundaries" }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Electronic Structure",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Band Gap",
+        "id": "band_gap",
+        "type": "SLIDER",
+        "units": "eV",
+        "props": {
+          "domain": [0, 20],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Is Gap Direct",
+        "id": "is_gap_direct",
+        "tooltip": "Whether a band gap is direct or not.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Is Metal",
+        "id": "is_metal",
+        "tooltip": "Whether the material is considered a metal.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
           ]
         }
       }
@@ -273,9 +346,10 @@
         }
       },
       {
-        "name": "Max Magnetic Moment",
+        "name": "Total Magnetization",
         "id": "total_magnetization",
         "type": "SLIDER",
+        "tooltip": "Total number of unpaired electrons per unit cell",
         "props": {
           "domain": [0, 325],
           "step": 1
@@ -395,6 +469,16 @@
           "domain": [0, 100],
           "step": 0.1
         }
+      },
+      {
+        "name": "Work Function",
+        "id": "weighted_work_function",
+        "units": "eV",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 6],
+          "step": 0.1
+        }
       }
     ]
   },
@@ -403,9 +487,9 @@
     "expanded": false,
     "filters": [
       {
-        "name": "Piezo Modulus",
+        "name": "Piezoelectric Modulus",
         "id": "piezo_modulus",
-        "units": "Cm\u00b2",
+        "units": "C/m\u00b2",
         "type": "SLIDER",
         "props": {
           "domain": [0, 100],

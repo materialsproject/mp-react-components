@@ -161,9 +161,7 @@ export interface RangeSliderProps {
 }
 
 /**
- * Wrapper component for react-select.
- * Automatically adds the wrapper class "react-select-container"
- * and the class prefix "react-select-" to all the elements created by react-select.
+ * Slider input for selecting a single value in a range
  */
 export const RangeSlider: React.FC<RangeSliderProps> = ({
   domain,

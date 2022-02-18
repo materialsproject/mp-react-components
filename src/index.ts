@@ -38,6 +38,11 @@ import { Enlargeable } from './components/data-display/Enlargeable';
 import { Switch } from './components/data-entry/Switch';
 import { RangeSlider } from './components/data-entry/RangeSlider';
 import { DualRangeSlider } from './components/data-entry/DualRangeSlider';
+import { SearchUIContainer } from './components/data-display/SearchUI/SearchUIContainer';
+import { SearchUISearchBar } from './components/data-display/SearchUI/SearchUISearchBar';
+import { SearchUIDataHeader } from './components/data-display/SearchUI/SearchUIDataHeader';
+import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDataView';
+import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
 
 export {
   SelectableTable,
@@ -50,11 +55,13 @@ export {
   JsonView,
   ReactGraphComponent,
   Sidebar,
-  // MtPrintViewContext,
-  // MTGrid,
-  // MtMaterialTable,
   Scrollspy,
   SearchUI,
+  SearchUIContainer,
+  SearchUISearchBar,
+  SearchUIGrid,
+  SearchUIDataHeader,
+  SearchUIDataView,
   MaterialsInput,
   DataTable,
   DataBlock,

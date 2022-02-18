@@ -86,7 +86,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             onChange={(v) => actions.setFilterValue(v, f.id, f.overrides)}
             periodicTableMode={PeriodicTableMode.NONE}
             hidePeriodicTable={true}
-            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}
           />
