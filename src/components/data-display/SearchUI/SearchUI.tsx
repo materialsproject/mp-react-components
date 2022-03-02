@@ -268,7 +268,15 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
         <SearchUIContextProvider {...props}>
           {props.hasSearchBar && (
             <div className="container is-max-desktop">
-              <SearchUISearchBar />
+              <SearchUISearchBar
+                placeholder={props.searchBarPlaceholder}
+                periodicTableMode={props.searchBarPeriodicTableMode}
+                errorMessage={props.searchBarErrorMessage}
+                chemicalSystemSelectHelpText={props.searchBarChemicalSystemSelectHelpText}
+                elementsSelectHelpText={props.searchBarElementsSelectHelpText}
+                allowedInputTypesMap={props.searchBarAllowedInputTypesMap}
+                helpItems={props.searchBarHelpItems}
+              />
             </div>
           )}
           <div className="mpc-search-ui-content columns">

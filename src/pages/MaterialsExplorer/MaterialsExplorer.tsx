@@ -66,7 +66,7 @@ export const MaterialsExplorer: React.FC = () => {
         searchBarElementsSelectHelpText="Select elements to search for materials with **at least** these elements"
         searchBarAllowedInputTypesMap={{
           chemical_system: {
-            field: 'formula'
+            field: 'chemsys'
           },
           elements: {
             field: 'elements'
