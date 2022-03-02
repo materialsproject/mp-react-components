@@ -337,7 +337,7 @@ export const initSearchState = (
     propsWithoutChildren.filterGroups,
     query
   );
-
+  console.log('init search state');
   if (
     isDesktop &&
     (initializedValues['elements'] ||
