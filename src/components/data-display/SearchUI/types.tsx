@@ -277,6 +277,8 @@ export interface SearchState extends SearchUIProps {
   selectedRows?: any[];
   searchBarValue?: string;
   resultsRef?: React.RefObject<HTMLDivElement> | null;
+  queryParams?: SearchParams;
+  urlParams?: URLSearchParams;
 }
 
 /**

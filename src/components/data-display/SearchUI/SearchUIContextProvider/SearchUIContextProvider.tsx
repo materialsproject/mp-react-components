@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { Column, SearchState, SearchUIViewType } from '../types';
+import { Column, SearchParams, SearchState, SearchUIViewType } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -37,7 +37,9 @@ const defaultState: SearchState = {
   sortAscending: true,
   error: false,
   searchBarValue: '',
-  resultsRef: null
+  resultsRef: null,
+  queryParams: undefined,
+  urlParams: undefined
 };
 
 /**
@@ -55,6 +57,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const { children, ...propsWithoutChildren } = props;
   const query = useQuery();
   const history = useHistory();
+  // const [params, setParams] = useState<SearchParams>();
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const [state, setState] = useState(() =>
     initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
@@ -214,25 +217,21 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       props.setProps({ ...props, selectedRows });
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
-    getData: () => {
+    setUrl: () => {
       setState((currentState) => {
-        /** Only show the loading icon if this is a filter change not on simple page change */
-        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
-        let isLoading = showLoading;
-        let minLoadTime = 1000;
-        let minLoadTimeReached = !showLoading;
-        let params = Object.assign({}, currentState.apiEndpointParams!);
+        console.log('changing url');
+        let params = Object.assign({}, state.apiEndpointParams!);
         let query = new URLSearchParams();
 
         /** Resolve inconsistencies between mp-api and contribs-api */
-        const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
-        const limitKey = currentState.isContribs ? '_limit' : 'limit';
-        const skipKey = currentState.isContribs ? '_skip' : 'skip';
-        const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
+        const fieldsKey = state.isContribs ? '_fields' : 'fields';
+        const limitKey = state.isContribs ? '_limit' : 'limit';
+        const skipKey = state.isContribs ? '_skip' : 'skip';
+        const sortKey = state.isContribs ? '_sort' : 'sort_fields';
 
-        params[fieldsKey] = currentState.columns.map((d) => d.selector);
-        params[limitKey] = currentState.resultsPerPage;
-        params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
+        params[fieldsKey] = state.columns.map((d) => d.selector);
+        params[limitKey] = state.resultsPerPage;
+        params[skipKey] = (state.page - 1) * state.resultsPerPage;
         query.set(limitKey, params[limitKey]);
         query.set(skipKey, params[skipKey]);
 
@@ -242,21 +241,19 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
          * Secondary sort field is added with a comma separator.
          */
         let secondarySort: string | undefined;
-        if (currentState.secondarySortField) {
-          secondarySort = currentState.secondarySortAscending
-            ? currentState.secondarySortField
-            : `-${currentState.secondarySortField}`;
+        if (state.secondarySortField) {
+          secondarySort = state.secondarySortAscending
+            ? state.secondarySortField
+            : `-${state.secondarySortField}`;
         }
 
-        if (currentState.sortField) {
-          let primarySort = currentState.sortAscending
-            ? currentState.sortField
-            : `-${currentState.sortField}`;
+        if (state.sortField) {
+          let primarySort = state.sortAscending ? state.sortField : `-${state.sortField}`;
           params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
           query.set(sortKey, params[sortKey]);
         }
 
-        currentState.activeFilters.forEach((a) => {
+        state.activeFilters.forEach((a) => {
           a.searchParams?.forEach((s) => {
             let field = s.field;
             let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
@@ -270,6 +267,67 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           });
         });
 
+        // history.push({ search: query.toString() });
+        return { ...currentState, queryParams: params, urlParams: query };
+      });
+    },
+    getData: () => {
+      setState((currentState) => {
+        /** Only show the loading icon if this is a filter change not on simple page change */
+        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
+        let isLoading = showLoading;
+        let minLoadTime = 1000;
+        let minLoadTimeReached = !showLoading;
+        // let params = Object.assign({}, currentState.apiEndpointParams!);
+        // let query = new URLSearchParams();
+
+        // /** Resolve inconsistencies between mp-api and contribs-api */
+        // const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
+        // const limitKey = currentState.isContribs ? '_limit' : 'limit';
+        // const skipKey = currentState.isContribs ? '_skip' : 'skip';
+        // const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
+
+        // params[fieldsKey] = currentState.columns.map((d) => d.selector);
+        // params[limitKey] = currentState.resultsPerPage;
+        // params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
+        // query.set(limitKey, params[limitKey]);
+        // query.set(skipKey, params[skipKey]);
+
+        // /**
+        //  * Convert sort props to syntax expected by API.
+        //  * Descending fields are prepended with "-".
+        //  * Secondary sort field is added with a comma separator.
+        //  */
+        // let secondarySort: string | undefined;
+        // if (currentState.secondarySortField) {
+        //   secondarySort = currentState.secondarySortAscending
+        //     ? currentState.secondarySortField
+        //     : `-${currentState.secondarySortField}`;
+        // }
+
+        // if (currentState.sortField) {
+        //   let primarySort = currentState.sortAscending
+        //     ? currentState.sortField
+        //     : `-${currentState.sortField}`;
+        //   params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
+        //   query.set(sortKey, params[sortKey]);
+        // }
+
+        // currentState.activeFilters.forEach((a) => {
+        //   a.searchParams?.forEach((s) => {
+        //     let field = s.field;
+        //     let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
+
+        //     if (field === 'has_props' && params[field]) {
+        //       params[field].push(value);
+        //     }
+
+        //     params[field] = value;
+        //     query.set(field, s.value);
+        //   });
+        // });
+        console.log(currentState.queryParams);
+        let params = currentState.queryParams;
         axios
           .get(props.apiEndpoint, {
             params: params,
@@ -279,8 +337,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
             headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
           })
           .then((result) => {
-            history.push({ search: query.toString() });
+            // history.push({ search: query.toString() });
             isLoading = false;
+            console.log(result);
             const loadingValue = minLoadTimeReached ? false : true;
             setState((currentState) => {
               const totalResults = currentState.isContribs
@@ -348,7 +407,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   };
 
   useDeepCompareEffect(() => {
-    actions.getData();
+    // actions.getData();
+    actions.setUrl();
   }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   /**
@@ -357,6 +417,18 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   useEffect(() => {
     props.setProps({ ...state, results: state.results });
   }, [state.results]);
+
+  /**
+   *
+   */
+  useEffect(() => {
+    console.log('url has changed');
+    actions.getData();
+  }, [history.location.search]);
+
+  useEffect(() => {
+    history.push({ search: state.urlParams?.toString() });
+  }, [state.queryParams, state.urlParams]);
 
   return (
     <SearchUIContext.Provider value={state}>
