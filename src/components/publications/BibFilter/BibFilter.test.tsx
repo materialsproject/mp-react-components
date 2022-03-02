@@ -8,14 +8,15 @@ describe('<BibFilter/>', () => {
     render(<BibFilter {...defaultProps} />);
     expect(screen.getAllByTestId('bib-card').length).toBeGreaterThanOrEqual(100);
 
-    const cards = await screen.findAllByTestId('bib-card-year');
-    expect(cards[0]).toHaveTextContent('2017');
-    expect(cards[cards.length - 1]).toHaveTextContent('2008');
+    const cardsDesc = await screen.findAllByTestId('bib-card-year');
+    expect(cardsDesc[0]).toHaveTextContent('2017');
+    expect(cardsDesc[cardsDesc.length - 1]).toHaveTextContent('2008');
 
     fireEvent.click(screen.getByTestId('sort-button'));
+    const cardsAsc = await screen.findAllByTestId('bib-card-year');
     await waitFor(() => {
-      expect(cards[0]).toHaveTextContent('2008');
-      expect(cards[cards.length - 1]).toHaveTextContent('2017');
+      expect(cardsAsc[0]).toHaveTextContent('2008');
+      expect(cardsAsc[cardsAsc.length - 1]).toHaveTextContent('2017');
     });
 
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'Patrick' } });
