@@ -2,23 +2,32 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { Column, SearchParams, SearchState, SearchUIViewType } from '../types';
+import { Column, SearchContextValue, SearchState, SearchUIViewType } from '../types';
 import { SearchUIProps } from '../../SearchUI';
 import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { MaterialsInputType } from '../../../data-entry/MaterialsInput';
-import { getDefaultFiltersAndValues, getSearchState, initSearchState } from '../utils';
+import {
+  getDefaultFiltersAndValues,
+  getSearchState,
+  initQueryParams,
+  initSearchState,
+  isNotEmpty,
+  newInitFilterGroups,
+  updateActiveFilters
+} from '../utils';
 import { getPageCount } from '../../../data-entry/utils';
 import { useRef } from 'react';
+import { useQueryParams } from 'use-query-params';
 
 /**
  * Two contexts are invoked inside the SearchUI component
  * SearchUIContext exposes the search state to all of its consumers
  * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
  */
-const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
+const SearchUIContext = React.createContext<SearchContextValue | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const defaultState: SearchState = {
@@ -26,20 +35,13 @@ const defaultState: SearchState = {
   apiEndpointParams: {},
   columns: [],
   filterGroups: [],
-  filterValues: {},
   activeFilters: [],
   results: [],
   totalResults: 0,
-  resultsPerPage: 15,
-  page: 1,
   loading: false,
-  sortField: undefined,
-  sortAscending: true,
   error: false,
   searchBarValue: '',
-  resultsRef: null,
-  queryParams: undefined,
-  urlParams: undefined
+  resultsRef: null
 };
 
 /**
@@ -55,28 +57,33 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 }) => {
   let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
   const { children, ...propsWithoutChildren } = props;
-  const query = useQuery();
-  const history = useHistory();
-  // const [params, setParams] = useState<SearchParams>();
-  const isDesktop = useMediaQuery({ minWidth: 1024 });
-  const [state, setState] = useState(() =>
-    initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
-  );
-  const prevActiveFilters = usePrevious(state.activeFilters);
+  // const query = useQuery();
+  // const history = useHistory();
+  // const isDesktop = useMediaQuery({ minWidth: 1024 });
+  // const [state, setState] = useState(() =>
+  //   initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
+  // );
+  const [query, setQuery] = useQueryParams(initQueryParams(props.filterGroups));
+  const filterGroups = newInitFilterGroups(props.filterGroups);
+  const [state, setState] = useState<SearchState>({
+    ...defaultState,
+    ...propsWithoutChildren,
+    filterGroups
+  });
+  // const queryParamToFilterMap = mapQueryParamsToFilter
+  // const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
     setPage: (page: number) => {
-      setState((currentState) => {
-        const ref = currentState.resultsRef;
-        if (ref && ref.current) {
-          scrollIntoView(ref.current, {
-            scrollMode: 'if-needed',
-            block: 'start',
-            behavior: 'smooth'
-          });
-        }
-        return { ...currentState, page };
-      });
+      setQuery({ skip: page * query.limit });
+      const ref = state.resultsRef;
+      if (ref && ref.current) {
+        scrollIntoView(ref.current, {
+          scrollMode: 'if-needed',
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
     },
     setResultsPerPage: (resultsPerPage: number) => {
       // if (ref.current) {
@@ -133,62 +140,70 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
      */
     setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
-      setState((currentState) => {
-        const filterIsActivating = value && value !== '';
-        let searchBarValue = currentState.searchBarValue;
-        let searchBarFields: string[] | undefined;
+      if (isNotEmpty(value)) {
+        setQuery({ [id]: value });
+        // const activeFilters = [...state.activeFilters];
 
-        /**
-         * If the filter is being activated and the SearchUI has a top search bar,
-         * parse searchBarAllowedInputTypesMap for the fields it controls.
-         * These will be used to dynamically update the search bar value based on the new filter being activated.
-         */
-        if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
-          searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
-            key,
-            index
-          ) {
-            return currentState.searchBarAllowedInputTypesMap![key].field;
-          });
-        }
+        // setState({...state, activeFilters});
+      } else {
+        setQuery({ [id]: undefined });
+      }
+      // setState((currentState) => {
+      //   const filterIsActivating = value && value !== '';
+      //   let searchBarValue = currentState.searchBarValue;
+      //   let searchBarFields: string[] | undefined;
 
-        /**
-         * If the filter being activated is also a search bar field,
-         * update the search bar value with this filter's value.
-         */
-        if (searchBarFields && searchBarFields.indexOf(id) > -1) {
-          searchBarValue = value;
-        }
+      //   /**
+      //    * If the filter is being activated and the SearchUI has a top search bar,
+      //    * parse searchBarAllowedInputTypesMap for the fields it controls.
+      //    * These will be used to dynamically update the search bar value based on the new filter being activated.
+      //    */
+      //   if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
+      //     searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
+      //       key,
+      //       index
+      //     ) {
+      //       return currentState.searchBarAllowedInputTypesMap![key].field;
+      //     });
+      //   }
 
-        if (!overrideFields || !filterIsActivating) {
-          return getSearchState(
-            { ...currentState, searchBarValue, page: 1 },
-            { ...currentState.filterValues, [id]: value }
-          );
-        } else {
-          let newFilterValues = {};
+      //   /**
+      //    * If the filter being activated is also a search bar field,
+      //    * update the search bar value with this filter's value.
+      //    */
+      //   if (searchBarFields && searchBarFields.indexOf(id) > -1) {
+      //     searchBarValue = value;
+      //   }
 
-          overrideFields.forEach((field) => {
-            const activeFilter = currentState.activeFilters.find((a) => a.id === field);
-            if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
-          });
+      //   if (!overrideFields || !filterIsActivating) {
+      //     return getSearchState(
+      //       { ...currentState, searchBarValue, page: 1 },
+      //       { ...currentState.filterValues, [id]: value }
+      //     );
+      //   } else {
+      //     let newFilterValues = {};
 
-          newFilterValues[id] = value;
+      //     overrideFields.forEach((field) => {
+      //       const activeFilter = currentState.activeFilters.find((a) => a.id === field);
+      //       if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+      //     });
 
-          let newFilterGroups = currentState.filterGroups;
+      //     newFilterValues[id] = value;
 
-          if (filterProps) {
-            newFilterGroups = currentState.filterGroups.slice();
-            const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
-            if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
-          }
+      //     let newFilterGroups = currentState.filterGroups;
 
-          return getSearchState(
-            { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
-            { ...currentState.filterValues, ...newFilterValues }
-          );
-        }
-      });
+      //     if (filterProps) {
+      //       newFilterGroups = currentState.filterGroups.slice();
+      //       const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
+      //       if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
+      //     }
+
+      //     return getSearchState(
+      //       { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
+      //       { ...currentState.filterValues, ...newFilterValues }
+      //     );
+      //   }
+      // });
     },
     resetAllFiltersExcept: (value: any, id: string) => {
       setState((currentState) => {
@@ -197,198 +212,154 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       });
     },
     setFilterProps: (props: any, filterId: string, groupId: string) => {
-      setState((currentState) => {
-        const filterGroups = currentState.filterGroups;
-        const group = filterGroups.find((g) => g.name === groupId);
-        const filter = group?.filters.find((f) => f.id === filterId);
-        if (filter) filter.props = { ...filter.props, ...props };
-        const stateWithNewFilterProps = { ...currentState, filterGroups: filterGroups };
-        // const newState =
-        //   filter && filter.props.hasOwnProperty('parsedValue')
-        //     ? getSearchState(stateWithNewFilterProps)
-        //     : stateWithNewFilterProps;
-        const newFilterValues = props.hasOwnProperty('value')
-          ? { ...currentState.filterValues, [filterId]: props.value }
-          : undefined;
-        return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
-      });
+      const filterGroups = state.filterGroups;
+      const group = filterGroups.find((g) => g.name === groupId);
+      const filter = group?.filters.find((f) => f.id === filterId);
+      if (filter) filter.props = { ...filter.props, ...props };
+      setState({ ...state, filterGroups: filterGroups });
+
+      if (props.hasOwnProperty('value')) {
+        setQuery({ [filterId]: props.value });
+      }
+
+      // const newState =
+      //   filter && filter.props.hasOwnProperty('parsedValue')
+      //     ? getSearchState(stateWithNewFilterProps)
+      //     : stateWithNewFilterProps;
+      //   const newFilterValues = props.hasOwnProperty('value')
+      //     ? { ...currentState.filterValues, [filterId]: props.value }
+      //     : undefined;
+      //   return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
+      // });
     },
     setSelectedRows: (selectedRows: any[]) => {
       props.setProps({ ...props, selectedRows });
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
-    setUrl: () => {
-      setState((currentState) => {
-        console.log('changing url');
-        let params = Object.assign({}, state.apiEndpointParams!);
-        let query = new URLSearchParams();
+    getData: () => {
+      // setState((currentState) => {
+      /** Only show the loading icon if this is a filter change not on simple page change */
+      // const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
+      // let isLoading = showLoading;
+      // let minLoadTime = 1000;
+      // let minLoadTimeReached = !showLoading;
+      // let params = Object.assign({}, currentState.apiEndpointParams!);
+      // let query = new URLSearchParams();
 
-        /** Resolve inconsistencies between mp-api and contribs-api */
-        const fieldsKey = state.isContribs ? '_fields' : 'fields';
-        const limitKey = state.isContribs ? '_limit' : 'limit';
-        const skipKey = state.isContribs ? '_skip' : 'skip';
-        const sortKey = state.isContribs ? '_sort' : 'sort_fields';
+      // /** Resolve inconsistencies between mp-api and contribs-api */
+      // const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
+      // const limitKey = currentState.isContribs ? '_limit' : 'limit';
+      // const skipKey = currentState.isContribs ? '_skip' : 'skip';
+      // const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
 
-        params[fieldsKey] = state.columns.map((d) => d.selector);
-        params[limitKey] = state.resultsPerPage;
-        params[skipKey] = (state.page - 1) * state.resultsPerPage;
-        query.set(limitKey, params[limitKey]);
-        query.set(skipKey, params[skipKey]);
+      // params[fieldsKey] = currentState.columns.map((d) => d.selector);
+      // params[limitKey] = currentState.resultsPerPage;
+      // params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
+      // query.set(limitKey, params[limitKey]);
+      // query.set(skipKey, params[skipKey]);
 
-        /**
-         * Convert sort props to syntax expected by API.
-         * Descending fields are prepended with "-".
-         * Secondary sort field is added with a comma separator.
-         */
-        let secondarySort: string | undefined;
-        if (state.secondarySortField) {
-          secondarySort = state.secondarySortAscending
-            ? state.secondarySortField
-            : `-${state.secondarySortField}`;
-        }
+      // /**
+      //  * Convert sort props to syntax expected by API.
+      //  * Descending fields are prepended with "-".
+      //  * Secondary sort field is added with a comma separator.
+      //  */
+      // let secondarySort: string | undefined;
+      // if (currentState.secondarySortField) {
+      //   secondarySort = currentState.secondarySortAscending
+      //     ? currentState.secondarySortField
+      //     : `-${currentState.secondarySortField}`;
+      // }
 
-        if (state.sortField) {
-          let primarySort = state.sortAscending ? state.sortField : `-${state.sortField}`;
-          params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
-          query.set(sortKey, params[sortKey]);
-        }
+      // if (currentState.sortField) {
+      //   let primarySort = currentState.sortAscending
+      //     ? currentState.sortField
+      //     : `-${currentState.sortField}`;
+      //   params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
+      //   query.set(sortKey, params[sortKey]);
+      // }
 
-        state.activeFilters.forEach((a) => {
-          a.searchParams?.forEach((s) => {
-            let field = s.field;
-            let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
+      // currentState.activeFilters.forEach((a) => {
+      //   a.searchParams?.forEach((s) => {
+      //     let field = s.field;
+      //     let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
 
-            if (field === 'has_props' && params[field]) {
-              params[field].push(value);
-            }
+      //     if (field === 'has_props' && params[field]) {
+      //       params[field].push(value);
+      //     }
 
-            params[field] = value;
-            query.set(field, s.value);
+      //     params[field] = value;
+      //     query.set(field, s.value);
+      //   });
+      // });
+
+      const params = { ...query };
+
+      // if (params.formation_energy_per_atom) {
+      //   params.formation_energy_per_atom_min = params.formation_energy_per_atom[0];
+      //   params.formation_energy_per_atom_max = params.formation_energy_per_atom[1];
+      //   delete params.formation_energy_per_atom;
+      // }
+
+      axios
+        .get(props.apiEndpoint, {
+          params: params,
+          paramsSerializer: (p) => {
+            return qs.stringify(p, { arrayFormat: 'comma' });
+          },
+          headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+        })
+        .then((result) => {
+          // history.push({ search: query.toString() });
+          // isLoading = false;
+          // const loadingValue = minLoadTimeReached ? false : true;
+          setState((currentState) => {
+            const totalResults = props.isContribs
+              ? result.data.total_count
+              : result.data.meta.total_doc;
+            // const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
+            // const page = currentState.page > pageCount ? pageCount : currentState.page;
+            return {
+              ...currentState,
+              results: result.data.data,
+              totalResults: totalResults,
+              // page: page,
+              // loading: loadingValue,
+              error: false
+            };
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          // isLoading = false;
+          // const loadingValue = minLoadTimeReached ? false : true;
+          setState((currentState) => {
+            return {
+              ...currentState,
+              results: [],
+              totalResults: 0,
+              // loading: loadingValue,
+              error: true
+            };
           });
         });
 
-        // history.push({ search: query.toString() });
-        return { ...currentState, queryParams: params, urlParams: query };
-      });
-    },
-    getData: () => {
-      setState((currentState) => {
-        /** Only show the loading icon if this is a filter change not on simple page change */
-        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
-        let isLoading = showLoading;
-        let minLoadTime = 1000;
-        let minLoadTimeReached = !showLoading;
-        // let params = Object.assign({}, currentState.apiEndpointParams!);
-        // let query = new URLSearchParams();
+      // if (showLoading) {
+      //   setTimeout(() => {
+      //     if (!isLoading) {
+      //       setState((currentState) => {
+      //         return { ...currentState, loading: false };
+      //       });
+      //     } else {
+      //       minLoadTimeReached = true;
+      //     }
+      //   }, minLoadTime);
+      // }
 
-        // /** Resolve inconsistencies between mp-api and contribs-api */
-        // const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
-        // const limitKey = currentState.isContribs ? '_limit' : 'limit';
-        // const skipKey = currentState.isContribs ? '_skip' : 'skip';
-        // const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
-
-        // params[fieldsKey] = currentState.columns.map((d) => d.selector);
-        // params[limitKey] = currentState.resultsPerPage;
-        // params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
-        // query.set(limitKey, params[limitKey]);
-        // query.set(skipKey, params[skipKey]);
-
-        // /**
-        //  * Convert sort props to syntax expected by API.
-        //  * Descending fields are prepended with "-".
-        //  * Secondary sort field is added with a comma separator.
-        //  */
-        // let secondarySort: string | undefined;
-        // if (currentState.secondarySortField) {
-        //   secondarySort = currentState.secondarySortAscending
-        //     ? currentState.secondarySortField
-        //     : `-${currentState.secondarySortField}`;
-        // }
-
-        // if (currentState.sortField) {
-        //   let primarySort = currentState.sortAscending
-        //     ? currentState.sortField
-        //     : `-${currentState.sortField}`;
-        //   params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
-        //   query.set(sortKey, params[sortKey]);
-        // }
-
-        // currentState.activeFilters.forEach((a) => {
-        //   a.searchParams?.forEach((s) => {
-        //     let field = s.field;
-        //     let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
-
-        //     if (field === 'has_props' && params[field]) {
-        //       params[field].push(value);
-        //     }
-
-        //     params[field] = value;
-        //     query.set(field, s.value);
-        //   });
-        // });
-        console.log(currentState.queryParams);
-        let params = currentState.queryParams;
-        axios
-          .get(props.apiEndpoint, {
-            params: params,
-            paramsSerializer: (p) => {
-              return qs.stringify(p, { arrayFormat: 'comma' });
-            },
-            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
-          })
-          .then((result) => {
-            // history.push({ search: query.toString() });
-            isLoading = false;
-            console.log(result);
-            const loadingValue = minLoadTimeReached ? false : true;
-            setState((currentState) => {
-              const totalResults = currentState.isContribs
-                ? result.data.total_count
-                : result.data.meta.total_doc;
-              const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
-              const page = currentState.page > pageCount ? pageCount : currentState.page;
-              return {
-                ...currentState,
-                results: result.data.data,
-                totalResults: totalResults,
-                page: page,
-                loading: loadingValue,
-                error: false
-              };
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-            isLoading = false;
-            const loadingValue = minLoadTimeReached ? false : true;
-            setState((currentState) => {
-              return {
-                ...currentState,
-                results: [],
-                totalResults: 0,
-                loading: loadingValue,
-                error: true
-              };
-            });
-          });
-
-        if (showLoading) {
-          setTimeout(() => {
-            if (!isLoading) {
-              setState((currentState) => {
-                return { ...currentState, loading: false };
-              });
-            } else {
-              minLoadTimeReached = true;
-            }
-          }, minLoadTime);
-        }
-
-        return {
-          ...currentState,
-          loading: showLoading
-        };
-      });
+      //   return {
+      //     ...currentState,
+      //     loading: showLoading
+      //   };
+      // });
     },
     resetFilters: () => {
       setState((currentState) => {
@@ -406,10 +377,27 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
+  // useDeepCompareEffect(() => {
+  //   actions.getData();
+  // }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
+
   useDeepCompareEffect(() => {
-    // actions.getData();
-    actions.setUrl();
-  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
+    const activeFilters = updateActiveFilters(state.filterGroups, query);
+    setState({ ...state, activeFilters });
+  }, [query]);
+
+  useDeepCompareEffect(() => {
+    actions.getData();
+  }, [state.activeFilters]);
+
+  useEffect(() => {
+    setQuery({
+      sort_fields: ['formula_pretty'],
+      limit: 15,
+      skip: 0,
+      fields: state.columns.map((c) => c.selector)
+    });
+  }, []);
 
   /**
    * Ensure results props has up-to-date value.
@@ -418,20 +406,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     props.setProps({ ...state, results: state.results });
   }, [state.results]);
 
-  /**
-   *
-   */
-  useEffect(() => {
-    console.log('url has changed');
-    actions.getData();
-  }, [history.location.search]);
-
-  useEffect(() => {
-    history.push({ search: state.urlParams?.toString() });
-  }, [state.queryParams, state.urlParams]);
-
   return (
-    <SearchUIContext.Provider value={state}>
+    <SearchUIContext.Provider value={{ state, query }}>
       <SearchUIContextActions.Provider value={actions}>
         <div>{children}</div>
       </SearchUIContextActions.Provider>

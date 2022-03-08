@@ -42,7 +42,7 @@ const getUpperResultBound = (
  * for modifying the data in the results view.
  */
 export const SearchUIDataHeader: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
@@ -53,14 +53,10 @@ export const SearchUIDataHeader: React.FC = () => {
   });
   const lowerResultBound = getLowerResultBound(
     state.totalResults,
-    state.resultsPerPage,
-    state.page
+    query.limit,
+    query.skip / query.limit
   );
-  const upperResultBound = getUpperResultBound(
-    state.totalResults,
-    state.resultsPerPage,
-    lowerResultBound
-  );
+  const upperResultBound = getUpperResultBound(state.totalResults, query.limit, lowerResultBound);
 
   const toggleColumn = (columnIndex: number) => {
     const newColumns = [...columns];
@@ -163,7 +159,7 @@ export const SearchUIDataHeader: React.FC = () => {
     >
       <div className="dropdown-trigger">
         <Button className="button">
-          <span>Results per page: {state.resultsPerPage}</span>
+          <span>Results per page: {query.limit}</span>
           <span className="icon">
             <FaAngleDown />
           </span>
@@ -173,9 +169,7 @@ export const SearchUIDataHeader: React.FC = () => {
         <ul className="dropdown-content">
           {resultsPerPageOptions.map((d, i) => (
             <MenuItem key={i} value={d}>
-              <li
-                className={classNames('dropdown-item', { 'is-active': d === state.resultsPerPage })}
-              >
+              <li className={classNames('dropdown-item', { 'is-active': d === query.limit })}>
                 {d}
               </li>
             </MenuItem>

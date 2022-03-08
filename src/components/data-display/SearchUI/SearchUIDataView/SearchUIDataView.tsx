@@ -9,7 +9,7 @@ import { FaExclamationTriangle } from 'react-icons/fa';
  * of results.
  */
 export const SearchUIDataView: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
 
   const getDataView = () => {
     if (state.error) {
