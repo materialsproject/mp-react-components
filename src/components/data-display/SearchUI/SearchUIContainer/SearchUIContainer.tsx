@@ -1,10 +1,11 @@
 import React from 'react';
 import { SearchUIContextProvider } from '../SearchUIContextProvider';
 import { SearchUIViewType } from '../types';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
 import { SearchUIProps } from '../SearchUI';
 import classNames from 'classnames';
+import { QueryParamProvider } from 'use-query-params';
 
 /**
  * A component that can wrap around sub-components of `SearchUI` and ensure they are
@@ -16,7 +17,9 @@ export const SearchUIContainer: React.FC<SearchUIProps> = (props) => {
   return (
     <div id={props.id} className={classNames('mpc-search-ui', props.className)}>
       <Router>
-        <SearchUIContextProvider {...props}>{props.children}</SearchUIContextProvider>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <SearchUIContextProvider {...props}>{props.children}</SearchUIContextProvider>
+        </QueryParamProvider>
       </Router>
     </div>
   );

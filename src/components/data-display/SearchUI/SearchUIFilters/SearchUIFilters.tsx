@@ -52,7 +52,7 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
 };
 
 export const SearchUIFilters: React.FC<Props> = (props) => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
   const [groupsByName, setGroupsByName] = useState(
@@ -66,6 +66,8 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
    * dynamically change their "props" property with actions.setFilterProps().
    */
   const renderFilter = (f: Filter, groupId: string) => {
+    let queryParam = f.id;
+    let queryParamValue = query[queryParam];
     switch (f.type) {
       case FilterType.TEXT_INPUT:
         return (
@@ -73,8 +75,8 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             {...f.props}
             debounce={state.debounce}
             type="text"
-            value={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
+            value={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam)}
           />
         );
       case FilterType.MATERIALS_INPUT:
@@ -82,8 +84,8 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <MaterialsInput
             {...f.props}
             debounce={state.debounce}
-            value={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id, f.overrides)}
+            value={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam, f.overrides)}
             periodicTableMode={PeriodicTableMode.NONE}
             hidePeriodicTable={true}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
@@ -91,13 +93,14 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           />
         );
       case FilterType.SLIDER:
+        queryParamValue = query[f.id + f.operatorSuffix];
         return (
           <DualRangeSlider
             {...f.props}
             debounce={state.debounce}
-            value={state.filterValues[f.id]}
+            value={queryParamValue}
             inclusiveTickBounds={true}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
+            onChange={(v) => actions.setFilterValue(v, queryParam)}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
           />
         );
@@ -110,28 +113,28 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <Select
             isClearable
             {...f.props}
-            value={state.filterValues[f.id]}
+            value={queryParamValue}
             onChange={(selectedOption) => {
               const value = selectedOption && selectedOption.value ? selectedOption.value : null;
-              actions.setFilterValue(value, f.id);
+              actions.setFilterValue(value, queryParam);
             }}
-            arbitraryProps={{ id: 'test' }}
+            // arbitraryProps={{ id: 'test' }}
           />
         );
       case FilterType.THREE_STATE_BOOLEAN_SELECT:
         return (
           <ThreeStateBooleanSelect
             {...f.props}
-            value={state.filterValues[f.id]}
-            onChange={(item) => actions.setFilterValue(item.value, f.id)}
+            value={queryParamValue}
+            onChange={(item) => actions.setFilterValue(item.value, queryParam)}
           />
         );
       case FilterType.CHECKBOX_LIST:
         return (
           <CheckboxList
             {...f.props}
-            values={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
+            values={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam)}
           />
         );
       default:

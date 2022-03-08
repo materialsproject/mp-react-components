@@ -10,7 +10,7 @@ import { FaCaretDown } from 'react-icons/fa';
  * on the current state of the SearchUIContext
  */
 export const SearchUIDataTable: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -38,8 +38,8 @@ export const SearchUIDataTable: React.FC = () => {
   const CustomPaginator = ({ isTop = false }) => (
     <Paginator
       rowCount={state.totalResults}
-      rowsPerPage={state.resultsPerPage}
-      currentPage={state.page}
+      rowsPerPage={query.limit}
+      currentPage={query.skip / query.limit}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}
@@ -69,8 +69,8 @@ export const SearchUIDataTable: React.FC = () => {
             paginationServer
             sortServer
             sortIcon={<FaCaretDown />}
-            defaultSortField={state.sortField}
-            defaultSortAsc={state.sortAscending}
+            defaultSortField={query.sort_fields[0]}
+            // defaultSortAsc={state.sortAscending}
             onSort={handleSort}
             customStyles={{
               rows: {

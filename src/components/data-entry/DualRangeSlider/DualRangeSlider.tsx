@@ -300,17 +300,17 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
    * Domain props are made "nice" (rounded bounds for nice ticks)
    * This effect lifts the prop changes up to the parent
    */
-  useEffect(() => {
-    onPropsChange({ domain: niceDomain, value: values });
-  }, []);
+  // useEffect(() => {
+  //   onPropsChange({ domain: niceDomain, value: values });
+  // }, []);
 
   /**
    * If the value prop is changed from outside this component
    * trigger a slider change
    */
-  useEffect(() => {
-    handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
-  }, [props.value]);
+  // useEffect(() => {
+  //   handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
+  // }, [props.value]);
 
   /**
    * These two effects are triggered when debouncedLowerBound and debouncedUpperBound

@@ -103,7 +103,7 @@ export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
 }) => {
   const props = { className, ...otherProps };
   const actions = useSearchUIContextActions();
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const allowedInputTypesMap = props.allowedInputTypesMap! || state.searchBarAllowedInputTypesMap;
   const [searchValue, setSearchValue] = useState(state.searchBarValue || '');
   const initialInputType = convertMaterialsInputTypesMapToArray(allowedInputTypesMap)[0];
@@ -134,11 +134,11 @@ export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
    * This effect clears the search value if its corresponding filter value changes.
    * This ensures the search value is not contradicted by the filter value.
    */
-  useEffect(() => {
-    if (state.filterValues[searchField] !== searchValue) {
-      setSearchValue('');
-    }
-  }, [state.filterValues]);
+  // useEffect(() => {
+  //   if (state.filterValues[searchField] !== searchValue) {
+  //     setSearchValue('');
+  //   }
+  // }, [state.filterValues]);
 
   /**
    * Map searchInputType to its corresponding data field

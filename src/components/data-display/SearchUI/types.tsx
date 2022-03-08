@@ -1,3 +1,4 @@
+import { DecodedValueMap, QueryParamConfigMap } from 'use-query-params';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
 import { SearchUIProps } from './SearchUI';
 import { SearchUIDataCards } from './SearchUIDataCards';
@@ -264,21 +265,37 @@ export interface ConditionalRowStyle {
   when?: (row: any) => any;
 }
 
+// export interface SearchState extends SearchUIProps {
+//   filterValues: FilterValues;
+//   activeFilters: ActiveFilter[];
+//   totalResults: number;
+//   resultsPerPage: number;
+//   page: number;
+//   loading: boolean;
+//   sortField?: string;
+//   sortAscending?: boolean;
+//   error: boolean;
+//   selectedRows?: any[];
+//   searchBarValue?: string;
+//   resultsRef?: React.RefObject<HTMLDivElement> | null;
+//   queryParams?: SearchParams;
+//   urlParams?: URLSearchParams;
+// }
+
 export interface SearchState extends SearchUIProps {
-  filterValues: FilterValues;
-  activeFilters: ActiveFilter[];
   totalResults: number;
-  resultsPerPage: number;
-  page: number;
-  loading: boolean;
-  sortField?: string;
-  sortAscending?: boolean;
-  error: boolean;
+  activeFilters: ActiveFilter[];
+  loading?: boolean;
+  error?: boolean;
   selectedRows?: any[];
   searchBarValue?: string;
+  view?: SearchUIViewType;
   resultsRef?: React.RefObject<HTMLDivElement> | null;
-  queryParams?: SearchParams;
-  urlParams?: URLSearchParams;
+}
+
+export interface SearchContextValue {
+  state: SearchState;
+  query: DecodedValueMap<QueryParamConfigMap>;
 }
 
 /**

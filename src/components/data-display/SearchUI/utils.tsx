@@ -28,16 +28,47 @@ import { Tooltip } from '../Tooltip';
 import { ArrayChips } from '../ArrayChips';
 import { Formula } from '../Formula';
 import { initColumns } from '../../../utils/table';
+import { ArrayParam, NumberParam, QueryParamConfigMap, StringParam } from 'use-query-params';
 
 const defaultMinSuffix = '_min';
 const defaultMaxSuffix = '_max';
 
-const isNotEmpty = (value: any) => {
+export const isNotEmpty = (value: any) => {
   if (Array.isArray(value)) {
     return value.length > 0 ? true : false;
   } else {
     return value !== undefined && value !== null && value !== '';
   }
+};
+
+export const newInitFilterGroups = (filterGroups: FilterGroup[]): FilterGroup[] => {
+  const initializedGroups = filterGroups.map((g) => {
+    g.filters = g.filters.map((f) => {
+      switch (f.type) {
+        case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          f.props = { options: spaceGroupSymbolOptions() };
+          return f;
+        case FilterType.SELECT_SPACEGROUP_NUMBER:
+          f.props = { options: spaceGroupNumberOptions() };
+          return f;
+        case FilterType.SELECT_CRYSTAL_SYSTEM:
+          f.props = { options: crystalSystemOptions() };
+          return f;
+        case FilterType.SELECT_POINTGROUP:
+          f.props = {
+            options: pointGroupOptions(),
+            formatOptionLabel: ({ value, label, customAbbreviation }) => {
+              return formatPointGroup(label);
+            }
+          };
+          return f;
+        default:
+          return f;
+      }
+    });
+    return g;
+  });
+  return initializedGroups;
 };
 
 const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
@@ -136,6 +167,173 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
     return g;
   });
   return { initializedGroups, initializedValues };
+};
+
+export const updateActiveFilters = (filterGroups, query) => {
+  const activeFilters: ActiveFilter[] = [];
+  filterGroups.forEach((g) => {
+    g.filters.forEach((f) => {
+      const operatorSuffix = f.operatorSuffix || '';
+      switch (f.type) {
+        case FilterType.SLIDER:
+          /**
+           * The lower bound will be null if initialized from a url that only has a max param.
+           * The upper bound will be null if initialized from a url that only has a min param.
+           */
+          const hasActiveMin = query[f.id] && query[f.id][0] && query[f.id][0] > f.props.domain[0];
+          const hasActiveMax = query[f.id] && query[f.id][1] && query[f.id][1] < f.props.domain[1];
+
+          if (hasActiveMin || hasActiveMax) {
+            const minSuffix = f.minSuffix || defaultMinSuffix;
+            const maxSuffix = f.maxSuffix || defaultMaxSuffix;
+            const searchParams: SearchParam[] = [];
+            /**
+             * If the min/max value is equal to the domain min/max,
+             * then there won't be a param added for that bound.
+             * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
+             */
+            if (hasActiveMin)
+              searchParams.push({
+                field: f.id + minSuffix,
+                value: query[f.id][0]
+              });
+            if (hasActiveMax)
+              searchParams.push({
+                field: f.id + maxSuffix,
+                value: query[f.id][1]
+              });
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: query[f.id],
+              defaultValue: f.props.domain,
+              conversionFactor: f.conversionFactor,
+              searchParams: searchParams
+            });
+          }
+          break;
+        case FilterType.MATERIALS_INPUT:
+          if (isNotEmpty(query[f.id])) {
+            let parsedValue = query[f.id];
+
+            if (
+              f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
+              (f.props.type === MaterialsInputType.FORMULA && query[f.id].indexOf('-') > -1)
+            ) {
+              /** Remove trailing '-' from chemical system string */
+              parsedValue = query[f.id].replace(/\-$/, '');
+            } else if (f.props.type === MaterialsInputType.ELEMENTS) {
+              /** Parse elements back into array so that they're in a normalized format for the query */
+              parsedValue = validateElements(query[f.id]);
+            }
+
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: parsedValue,
+              defaultValue: '',
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
+                }
+              ]
+            });
+          }
+          break;
+        case FilterType.SELECT_SPACEGROUP_SYMBOL:
+          if (isNotEmpty(query[f.id])) {
+            const spaceGroup = spaceGroups.find((d) => d['symbol'] === query[f.id]);
+            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : query[f.id];
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: formattedSymbol,
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: query[f.id]
+                }
+              ]
+            });
+          }
+          break;
+        case FilterType.SELECT:
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          if (isNotEmpty(query[f.id])) {
+            const selectedOption = f.props.options.find((d) => d.value === query[f.id]);
+            const displayValue = selectedOption ? selectedOption.label : query[f.id];
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: displayValue,
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
+                }
+              ]
+            });
+          }
+          break;
+        case FilterType.TEXT_INPUT:
+          if (isNotEmpty(query[f.id])) {
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: query[f.id],
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
+                }
+              ]
+            });
+          }
+          break;
+        case FilterType.CHECKBOX_LIST:
+          if (isNotEmpty(query[f.id])) {
+            const displayValue = query[f.id].map((d) => {
+              const option = f.props.options.find((o) => o.value === d);
+              return option.label || d;
+            });
+
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: displayValue,
+              defaultValue: [],
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
+                }
+              ]
+            });
+          }
+          break;
+        default:
+          if (isNotEmpty(query[f.id])) {
+            activeFilters.push({
+              id: f.id,
+              displayName: f.name ? f.name : f.id,
+              value: query[f.id],
+              defaultValue: undefined,
+              searchParams: [
+                {
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
+                }
+              ]
+            });
+          }
+      }
+    });
+  });
+  return activeFilters;
 };
 
 /**
@@ -316,6 +514,51 @@ export const getSearchState = (
     });
   });
   return { ...currentState, filterValues, activeFilters };
+};
+
+export const initQueryParams = (
+  filterGroups: FilterGroup[],
+  isContribs?: boolean
+): QueryParamConfigMap => {
+  const params: QueryParamConfigMap = {};
+  const paramsToFilterMap = {};
+
+  if (isContribs) {
+    params._fields = ArrayParam;
+    params._limit = NumberParam;
+    params._skip = NumberParam;
+    params._sort = ArrayParam;
+  } else {
+    params.fields = ArrayParam;
+    params.limit = NumberParam;
+    params.skip = NumberParam;
+    params.sort_fields = ArrayParam;
+  }
+
+  filterGroups.forEach((g) => {
+    g.filters.forEach((f) => {
+      const operatorSuffix = f.operatorSuffix || '';
+      paramsToFilterMap[f.id] = f;
+      switch (f.type) {
+        // case FilterType.SLIDER:
+        //   const minSuffix = f.minSuffix || defaultMinSuffix;
+        //   const maxSuffix = f.maxSuffix || defaultMaxSuffix;
+        //   params[f.id + minSuffix] = NumberParam;
+        //   params[f.id + maxSuffix] = NumberParam;
+        //   break;
+        case FilterType.MATERIALS_INPUT:
+          params[f.id + operatorSuffix] = f.props.type === 'elements' ? ArrayParam : StringParam;
+          break;
+        case FilterType.SLIDER:
+        case FilterType.CHECKBOX_LIST:
+          params[f.id + operatorSuffix] = ArrayParam;
+          break;
+        default:
+          params[f.id + operatorSuffix] = StringParam;
+      }
+    });
+  });
+  return params;
 };
 
 export const initSearchState = (
