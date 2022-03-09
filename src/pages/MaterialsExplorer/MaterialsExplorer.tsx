@@ -31,26 +31,35 @@ export const MaterialsExplorer: React.FC = () => {
         setProps={setState}
         resultLabel="material"
         columns={columns as Column[]}
-        filterGroups={
-          [
-            {
-              name: 'Composition',
-              expanded: false,
-              filters: [
-                {
-                  name: 'Number of Elements',
-                  id: 'nelements',
-                  overrides: ['material_ids', 'formula', 'chemsys'],
-                  type: 'SLIDER',
-                  props: {
-                    domain: [1, 20],
-                    step: 1
-                  }
-                }
-              ]
-            }
-          ] as FilterGroup[]
-        }
+        // filterGroups={
+        //   [
+        //     {
+        //       name: 'Composition',
+        //       expanded: false,
+        //       filters: [
+        //         {
+        //           "name": "Is Stable",
+        //           "id": "is_stable",
+        //           "tooltip": "Materials with an energy above hull equal to 0 are flagged as stable. All other materials are flagged as not stable.",
+        //           "type": "THREE_STATE_BOOLEAN_SELECT",
+        //           "props": {
+        //             "options": [
+        //               {
+        //                 "label": "Yes",
+        //                 "value": true
+        //               },
+        //               {
+        //                 "label": "No",
+        //                 "value": false
+        //               }
+        //             ]
+        //           }
+        //         },
+        //       ]
+        //     }
+        //   ] as FilterGroup[]
+        // }
+        filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''
         }

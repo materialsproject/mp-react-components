@@ -98,7 +98,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <DualRangeSlider
             {...f.props}
             debounce={state.debounce}
-            value={queryParamValue}
+            value={query[f.id]}
             inclusiveTickBounds={true}
             onChange={(v) => actions.setFilterValue(v, queryParam)}
             onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
@@ -198,7 +198,8 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   const resetFilter = (id: string) => {
     const activeFilter = getActiveFilterById(id, state.activeFilters);
     if (activeFilter) {
-      actions.setFilterValue(activeFilter.defaultValue, id);
+      // actions.setFilterValue(activeFilter.defaultValue, id);
+      actions.removeFilter(id);
     }
   };
 
