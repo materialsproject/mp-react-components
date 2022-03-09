@@ -28,7 +28,14 @@ import { Tooltip } from '../Tooltip';
 import { ArrayChips } from '../ArrayChips';
 import { Formula } from '../Formula';
 import { initColumns } from '../../../utils/table';
-import { ArrayParam, NumberParam, QueryParamConfigMap, StringParam } from 'use-query-params';
+import {
+  ArrayParam,
+  BooleanParam,
+  DelimitedNumericArrayParam,
+  NumberParam,
+  QueryParamConfigMap,
+  StringParam
+} from 'use-query-params';
 
 const defaultMinSuffix = '_min';
 const defaultMaxSuffix = '_max';
@@ -550,8 +557,13 @@ export const initQueryParams = (
           params[f.id + operatorSuffix] = f.props.type === 'elements' ? ArrayParam : StringParam;
           break;
         case FilterType.SLIDER:
+          params[f.id + operatorSuffix] = DelimitedNumericArrayParam;
+          break;
         case FilterType.CHECKBOX_LIST:
           params[f.id + operatorSuffix] = ArrayParam;
+          break;
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          params[f.id + operatorSuffix] = BooleanParam;
           break;
         default:
           params[f.id + operatorSuffix] = StringParam;

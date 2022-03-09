@@ -35,7 +35,7 @@ export interface DualRangeSliderProps {
    * Array with the min and max values that the slider
    * should be set to.
    */
-  value: number[];
+  value?: number[];
   /**
    * Number by which the slider handles should move with each step.
    * Defaults to 1.
@@ -85,6 +85,7 @@ export interface DualRangeSliderProps {
  * @returns valid array of slider values
  */
 const niceInitialValues = (vals, domain, niceDomain) => {
+  if (!vals) vals = domain;
   /**
    * The lower bound will be null if initialized from a url that only has a max param.
    * The upper bound will be null if initialized from a url that only has a min param.
@@ -117,7 +118,7 @@ const niceInitialValues = (vals, domain, niceDomain) => {
 export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   domain = [0, 100],
   step = 1,
-  value = domain.slice(),
+  value,
   isLogScale = false,
   debounce = isLogScale ? 1000 : 500,
   ticks = 5,
@@ -152,6 +153,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
    */
   const niceDomain = props.isLogScale ? props.domain : scale.domain();
   const tickMarks = initSliderTicks(props.ticks, props.domain, scale);
+  // if (!props.value) props.value = []
   const [values, setValues] = useState(niceInitialValues(props.value, domain, niceDomain));
   const [lowerBound, setLowerBound] = useState(
     props.isLogScale ? pow10Fixed(values[0]) : values[0]
@@ -300,17 +302,17 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
    * Domain props are made "nice" (rounded bounds for nice ticks)
    * This effect lifts the prop changes up to the parent
    */
-  // useEffect(() => {
-  //   onPropsChange({ domain: niceDomain, value: values });
-  // }, []);
+  useEffect(() => {
+    onPropsChange({ domain: niceDomain, value: values });
+  }, []);
 
   /**
    * If the value prop is changed from outside this component
    * trigger a slider change
    */
-  // useEffect(() => {
-  //   handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
-  // }, [props.value]);
+  useEffect(() => {
+    handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
+  }, [props.value]);
 
   /**
    * These two effects are triggered when debouncedLowerBound and debouncedUpperBound

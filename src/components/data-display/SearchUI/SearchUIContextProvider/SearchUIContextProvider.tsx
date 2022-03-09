@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious, useQuery } from '../../../../utils/hooks';
@@ -70,6 +70,12 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     ...propsWithoutChildren,
     filterGroups
   });
+  const queryDefault = {
+    sort_fields: ['formula_pretty'],
+    limit: 15,
+    skip: 0,
+    fields: state.columns.map((c) => c.selector)
+  };
   // const queryParamToFilterMap = mapQueryParamsToFilter
   // const prevActiveFilters = usePrevious(state.activeFilters);
 
@@ -205,6 +211,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       //   }
       // });
     },
+    removeFilter: (id: string) => {
+      setQuery({ [id]: undefined });
+    },
     resetAllFiltersExcept: (value: any, id: string) => {
       setState((currentState) => {
         const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
@@ -218,9 +227,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       if (filter) filter.props = { ...filter.props, ...props };
       setState({ ...state, filterGroups: filterGroups });
 
-      if (props.hasOwnProperty('value')) {
-        setQuery({ [filterId]: props.value });
-      }
+      // if (props.hasOwnProperty('value')) {
+      //   setQuery({ [filterId]: props.value });
+      // }
 
       // const newState =
       //   filter && filter.props.hasOwnProperty('parsedValue')
@@ -362,15 +371,16 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       // });
     },
     resetFilters: () => {
-      setState((currentState) => {
-        const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-        return {
-          ...currentState,
-          page: 1,
-          filterValues,
-          activeFilters
-        };
-      });
+      setQuery({ ...queryDefault, sort: query.sort, limit: query.limit }, 'push');
+      // setState((currentState) => {
+      //   const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
+      //   return {
+      //     ...currentState,
+      //     page: 1,
+      //     filterValues,
+      //     activeFilters
+      //   };
+      // });
     },
     setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
       setState((currentState) => ({ ...currentState, resultsRef }));
@@ -382,21 +392,20 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   // }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   useDeepCompareEffect(() => {
-    const activeFilters = updateActiveFilters(state.filterGroups, query);
-    setState({ ...state, activeFilters });
+    if (query.fields) {
+      const activeFilters = updateActiveFilters(state.filterGroups, query);
+      setState({ ...state, activeFilters });
+    }
   }, [query]);
 
   useDeepCompareEffect(() => {
-    actions.getData();
-  }, [state.activeFilters]);
+    if (query.fields) {
+      actions.getData();
+    }
+  }, [state.activeFilters, query.fields]);
 
   useEffect(() => {
-    setQuery({
-      sort_fields: ['formula_pretty'],
-      limit: 15,
-      skip: 0,
-      fields: state.columns.map((c) => c.selector)
-    });
+    setQuery(queryDefault);
   }, []);
 
   /**
