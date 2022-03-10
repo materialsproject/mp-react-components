@@ -21,6 +21,7 @@ import {
 import { getPageCount } from '../../../data-entry/utils';
 import { useRef } from 'react';
 import { useQueryParams } from 'use-query-params';
+import { initColumns } from '../../../../utils/table';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -65,12 +66,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   // );
   const [query, setQuery] = useQueryParams(initQueryParams(props.filterGroups));
   const filterGroups = newInitFilterGroups(props.filterGroups);
+  const columns = initColumns(props.columns, props.disableRichColumnHeaders);
   const [state, setState] = useState<SearchState>({
     ...defaultState,
     ...propsWithoutChildren,
-    filterGroups
+    filterGroups,
+    columns
   });
-  const queryDefault = {
+  const defaultQuery = {
     sort_fields: ['formula_pretty'],
     limit: 15,
     skip: 0,
@@ -102,33 +105,18 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      setState((currentState) => {
-        let secondarySortField = currentState.secondarySortField;
-        if (sortField === secondarySortField) {
-          secondarySortField = undefined;
-        }
-        return {
-          ...currentState,
-          sortField,
-          sortAscending,
-          secondarySortField,
-          page: 1
-        };
-      });
+      const sort_fields = [...query.sort_fields];
+      const directionPrefix = sortAscending ? '' : '-';
+      sort_fields[0] = directionPrefix + sortField;
+      setQuery({ sort_fields, skip: 0 });
     },
     setSortField: (sortField: string) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortField,
-        page: 1
-      }));
+      const sort_fields = [...query.sort_fields];
+      sort_fields[0] = sortField;
+      setQuery({ sort_fields, skip: 0 });
     },
-    setSortAscending: (sortAscending: boolean) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortAscending,
-        page: 1
-      }));
+    setSortAscending: function (sortAscending: boolean) {
+      this.setSort(query.sort_fields[0].replace('-', ''), sortAscending);
     },
     setView: (view: SearchUIViewType) => {
       setState((currentState) => ({ ...currentState, view }));
@@ -143,15 +131,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      * @param value new filter value
      * @param id property key for the filter (e.g. "formula")
      * @param overrideFields array of property keys to override
-     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
      */
-    setFilterValue: (
-      value: any,
-      id: string,
-      overrideFields?: string[],
-      isSearchBarField?: boolean,
-      filterProps?: any
-    ) => {
+    setFilterValue: (value: any, id: string, overrideFields?: string[]) => {
       const filterIsActivating = isNotEmpty(value);
       const newQuery = { [id]: filterIsActivating ? value : undefined };
       if (overrideFields && filterIsActivating) {
@@ -160,77 +141,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         });
       }
       setQuery(newQuery);
-      // if (isNotEmpty(value)) {
-
-      //   setQuery({ [id]: value });
-      //   // const activeFilters = [...state.activeFilters];
-
-      //   // setState({...state, activeFilters});
-      // } else {
-      //   setQuery({ [id]: undefined });
-      // }
-
-      // if (isSearchBarField) {
-      //   setState((currentState) => {
-      //     return { ...currentState, searchBarValue: value }
-      //   });
-      // }
-      // setState((currentState) => {
-      //   const filterIsActivating = value && value !== '';
-      //   let searchBarValue = currentState.searchBarValue;
-      //   let searchBarFields: string[] | undefined;
-
-      //   /**
-      //    * If the filter is being activated and the SearchUI has a top search bar,
-      //    * parse searchBarAllowedInputTypesMap for the fields it controls.
-      //    * These will be used to dynamically update the search bar value based on the new filter being activated.
-      //    */
-      //   if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
-      //     searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
-      //       key,
-      //       index
-      //     ) {
-      //       return currentState.searchBarAllowedInputTypesMap![key].field;
-      //     });
-      //   }
-
-      //   /**
-      //    * If the filter being activated is also a search bar field,
-      //    * update the search bar value with this filter's value.
-      //    */
-      //   if (searchBarFields && searchBarFields.indexOf(id) > -1) {
-      //     searchBarValue = value;
-      //   }
-
-      //   if (!overrideFields || !filterIsActivating) {
-      //     return getSearchState(
-      //       { ...currentState, searchBarValue, page: 1 },
-      //       { ...currentState.filterValues, [id]: value }
-      //     );
-      //   } else {
-      //     let newFilterValues = {};
-
-      //     overrideFields.forEach((field) => {
-      //       const activeFilter = currentState.activeFilters.find((a) => a.id === field);
-      //       if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
-      //     });
-
-      //     newFilterValues[id] = value;
-
-      //     let newFilterGroups = currentState.filterGroups;
-
-      //     if (filterProps) {
-      //       newFilterGroups = currentState.filterGroups.slice();
-      //       const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
-      //       if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
-      //     }
-
-      //     return getSearchState(
-      //       { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
-      //       { ...currentState.filterValues, ...newFilterValues }
-      //     );
-      //   }
-      // });
     },
     removeFilter: (id: string) => {
       setQuery({ [id]: undefined });
@@ -247,20 +157,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       const filter = group?.filters.find((f) => f.id === filterId);
       if (filter) filter.props = { ...filter.props, ...props };
       setState({ ...state, filterGroups: filterGroups });
-
-      // if (props.hasOwnProperty('value')) {
-      //   setQuery({ [filterId]: props.value });
-      // }
-
-      // const newState =
-      //   filter && filter.props.hasOwnProperty('parsedValue')
-      //     ? getSearchState(stateWithNewFilterProps)
-      //     : stateWithNewFilterProps;
-      //   const newFilterValues = props.hasOwnProperty('value')
-      //     ? { ...currentState.filterValues, [filterId]: props.value }
-      //     : undefined;
-      //   return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
-      // });
     },
     setSelectedRows: (selectedRows: any[]) => {
       props.setProps({ ...props, selectedRows });
@@ -392,7 +288,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       // });
     },
     resetFilters: () => {
-      setQuery({ ...queryDefault, sort: query.sort, limit: query.limit }, 'push');
+      setQuery({ ...defaultQuery, sort: query.sort, limit: query.limit }, 'push');
       // setState((currentState) => {
       //   const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
       //   return {
@@ -416,13 +312,13 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
    * Add initial query params
    */
   useEffect(() => {
-    setQuery(queryDefault);
+    setQuery({ ...defaultQuery, ...query });
   }, []);
 
-  // useDeepCompareEffect(() => {
-  //   console.log('state changed');
-  // }, [state]);
-
+  /**
+   * When a filter or query param changes, compute the list of active filters.
+   * Also, update the search bar value if one of its corresponding filters changes.
+   */
   useDeepCompareEffect(() => {
     if (query.fields) {
       const activeFilters = updateActiveFilters(state.filterGroups, query);
@@ -435,11 +331,15 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   }, [query]);
 
+  /**
+   * When the active filters change, fetch a new set of results.
+   * This should also be run when the initial query fields are populated (on load).
+   */
   useDeepCompareEffect(() => {
     if (query.fields) {
       actions.getData();
     }
-  }, [state.activeFilters, query.fields]);
+  }, [query.fields, state.activeFilters, query.sort_fields]);
 
   /**
    * Ensure results props has up-to-date value.
