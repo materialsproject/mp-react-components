@@ -145,15 +145,36 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      * @param overrideFields array of property keys to override
      * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
      */
-    setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
-      if (isNotEmpty(value)) {
-        setQuery({ [id]: value });
-        // const activeFilters = [...state.activeFilters];
-
-        // setState({...state, activeFilters});
-      } else {
-        setQuery({ [id]: undefined });
+    setFilterValue: (
+      value: any,
+      id: string,
+      overrideFields?: string[],
+      isSearchBarField?: boolean,
+      filterProps?: any
+    ) => {
+      const filterIsActivating = isNotEmpty(value);
+      const newQuery = { [id]: filterIsActivating ? value : undefined };
+      if (overrideFields && filterIsActivating) {
+        overrideFields.forEach((field) => {
+          newQuery[field] = undefined;
+        });
       }
+      setQuery(newQuery);
+      // if (isNotEmpty(value)) {
+
+      //   setQuery({ [id]: value });
+      //   // const activeFilters = [...state.activeFilters];
+
+      //   // setState({...state, activeFilters});
+      // } else {
+      //   setQuery({ [id]: undefined });
+      // }
+
+      // if (isSearchBarField) {
+      //   setState((currentState) => {
+      //     return { ...currentState, searchBarValue: value }
+      //   });
+      // }
       // setState((currentState) => {
       //   const filterIsActivating = value && value !== '';
       //   let searchBarValue = currentState.searchBarValue;
@@ -391,10 +412,26 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   //   actions.getData();
   // }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
+  /**
+   * Add initial query params
+   */
+  useEffect(() => {
+    setQuery(queryDefault);
+  }, []);
+
+  // useDeepCompareEffect(() => {
+  //   console.log('state changed');
+  // }, [state]);
+
   useDeepCompareEffect(() => {
     if (query.fields) {
       const activeFilters = updateActiveFilters(state.filterGroups, query);
-      setState({ ...state, activeFilters });
+      let searchBarValue = state.searchBarValue;
+      const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
+      if (searchBarFieldFilter) {
+        searchBarValue = searchBarFieldFilter.value;
+      }
+      setState({ ...state, activeFilters, searchBarValue });
     }
   }, [query]);
 
@@ -403,10 +440,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       actions.getData();
     }
   }, [state.activeFilters, query.fields]);
-
-  useEffect(() => {
-    setQuery(queryDefault);
-  }, []);
 
   /**
    * Ensure results props has up-to-date value.

@@ -181,6 +181,12 @@ export const updateActiveFilters = (filterGroups, query) => {
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
       const operatorSuffix = f.operatorSuffix || '';
+      const af = {
+        id: f.id,
+        displayName: f.name ? f.name : f.id,
+        value: query[f.id],
+        isSearchBarField: f.isSearchBarField
+      };
       switch (f.type) {
         case FilterType.SLIDER:
           /**
@@ -210,9 +216,7 @@ export const updateActiveFilters = (filterGroups, query) => {
                 value: query[f.id][1]
               });
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: query[f.id],
+              ...af,
               defaultValue: f.props.domain,
               conversionFactor: f.conversionFactor,
               searchParams: searchParams
@@ -235,8 +239,7 @@ export const updateActiveFilters = (filterGroups, query) => {
             }
 
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
+              ...af,
               value: parsedValue,
               defaultValue: '',
               searchParams: [
@@ -253,8 +256,7 @@ export const updateActiveFilters = (filterGroups, query) => {
             const spaceGroup = spaceGroups.find((d) => d['symbol'] === query[f.id]);
             const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : query[f.id];
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
+              ...af,
               value: formattedSymbol,
               defaultValue: undefined,
               searchParams: [
@@ -272,8 +274,7 @@ export const updateActiveFilters = (filterGroups, query) => {
             const selectedOption = f.props.options.find((d) => d.value === query[f.id]);
             const displayValue = selectedOption ? selectedOption.label : query[f.id];
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
+              ...af,
               value: displayValue,
               defaultValue: undefined,
               searchParams: [
@@ -288,9 +289,7 @@ export const updateActiveFilters = (filterGroups, query) => {
         case FilterType.TEXT_INPUT:
           if (isNotEmpty(query[f.id])) {
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: query[f.id],
+              ...af,
               defaultValue: undefined,
               searchParams: [
                 {
@@ -309,8 +308,7 @@ export const updateActiveFilters = (filterGroups, query) => {
             });
 
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
+              ...af,
               value: displayValue,
               defaultValue: [],
               searchParams: [
@@ -325,9 +323,7 @@ export const updateActiveFilters = (filterGroups, query) => {
         default:
           if (isNotEmpty(query[f.id])) {
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: query[f.id],
+              ...af,
               defaultValue: undefined,
               searchParams: [
                 {

@@ -91,6 +91,13 @@ export interface Filter {
    */
   overrides?: string[];
   /**
+   * Set to true if this filter's field is also controlled by the top search bar.
+   * i.e. If this filter's field exists in the search bar's `allowedInputTypesMap`.
+   * This is used to ensure that the search bar value changes if this filter's value
+   * is changed from within the filter.
+   */
+  isSearchBarField?: boolean;
+  /**
    * Set to true to force filter input values to be lowercased before added to the query.
    * This should be used in situations where the filter input make contain an uppercase letter,
    * but the values on the backend are all lowercase.
@@ -130,6 +137,7 @@ export interface ActiveFilter {
   id: string;
   displayName: string;
   value: any;
+  isSearchBarField?: boolean;
   defaultValue: any;
   conversionFactor?: number;
   searchParams?: SearchParam[];

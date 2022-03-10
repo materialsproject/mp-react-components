@@ -85,7 +85,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
             {...f.props}
             debounce={state.debounce}
             value={queryParamValue}
-            onChange={(v) => actions.setFilterValue(v, queryParam, f.overrides)}
+            onChange={(v) => actions.setFilterValue(v, queryParam, f.overrides, f.isSearchBarField)}
             periodicTableMode={PeriodicTableMode.NONE}
             hidePeriodicTable={true}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
