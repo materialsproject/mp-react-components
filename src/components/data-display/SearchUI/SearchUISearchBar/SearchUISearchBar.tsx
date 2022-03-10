@@ -153,6 +153,7 @@ export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
    */
   useEffect(() => {
     setSearchValue(state.searchBarValue || '');
+    console.log(state.searchBarValue);
   }, [state.searchBarValue]);
 
   return (
