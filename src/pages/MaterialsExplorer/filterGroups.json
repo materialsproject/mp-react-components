@@ -5,7 +5,7 @@
     "filters": [
       {
         "name": "Material ID",
-        "id": "material_ids",
+        "params": ["material_ids"],
         "overrides": ["elements", "formula", "chemsys", "exclude_elements", "nelements"],
         "isSearchBarField": true,
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
@@ -18,7 +18,7 @@
       },
       {
         "name": "Formula",
-        "id": "formula",
+        "params": ["formula"],
         "overrides": ["material_ids", "elements", "chemsys", "exclude_elements", "nelements"],
         "isSearchBarField": true,
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
@@ -40,7 +40,7 @@
       },
       {
         "name": "Chemical System",
-        "id": "chemsys",
+        "params": ["chemsys"],
         "overrides": ["material_ids", "elements", "formula", "exclude_elements", "nelements"],
         "isSearchBarField": true,
         "tooltip": "Enter a \" - \" separated list of element symbols (e.g. \"Ga-N\") to find materials within that chemical space (i.e. materials that contain only these elements).",
@@ -62,7 +62,7 @@
       },
       {
         "name": "Include Elements",
-        "id": "elements",
+        "params": ["elements"],
         "overrides": ["material_ids", "formula", "chemsys"],
         "isSearchBarField": true,
         "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. \"Ga,N\").",
@@ -84,7 +84,7 @@
       },
       {
         "name": "Exclude Elements",
-        "id": "exclude_elements",
+        "params": ["exclude_elements"],
         "overrides": ["material_ids", "formula", "chemsys"],
         "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that do not contain certain elements in their formula.",
         "type": "MATERIALS_INPUT",
@@ -106,7 +106,7 @@
       },
       {
         "name": "Number of Elements",
-        "id": "nelements",
+        "params": ["nelements_min", "nelements_max"],
         "overrides": ["material_ids", "formula", "chemsys"],
         "type": "SLIDER",
         "props": {
@@ -122,7 +122,7 @@
     "filters": [
       {
         "name": "Energy Above Hull",
-        "id": "energy_above_hull",
+        "params": ["energy_above_hull_min", "energy_above_hull_max"],
         "type": "SLIDER",
         "units": "eV/atom",
         "props": {
@@ -132,7 +132,7 @@
       },
       {
         "name": "Formation Energy",
-        "id": "formation_energy_per_atom",
+        "params": ["formation_energy_per_atom_min", "formation_energy_per_atom_max"],
         "type": "SLIDER",
         "units": "eV/atom",
         "props": {
@@ -142,7 +142,7 @@
       },
       {
         "name": "Is Stable",
-        "id": "is_stable",
+        "params": ["is_stable"],
         "tooltip": "Materials with an energy above hull equal to 0 are flagged as stable. All other materials are flagged as not stable.",
         "type": "THREE_STATE_BOOLEAN_SELECT",
         "props": {
@@ -160,7 +160,7 @@
       },
       {
         "name": "Experimentally Observed",
-        "id": "theoretical",
+        "params": ["theoretical"],
         "tooltip": "Materials that match an entry in the ICSD are considered experimentally observed or synthesizable.",
         "type": "THREE_STATE_BOOLEAN_SELECT",
         "props": {
@@ -184,7 +184,7 @@
     "filters": [
       {
         "name": "Volume",
-        "id": "volume",
+        "params": ["volume_min", "volume_max"],
         "tooltip": "Total volume of the structure",
         "units": "\u00c5\u00b3",
         "type": "SLIDER",
@@ -195,7 +195,7 @@
       },
       {
         "name": "Density",
-        "id": "density",
+        "params": ["density_min", "density_max"],
         "units": "g/cm\u00b3",
         "type": "SLIDER",
         "props": {
@@ -205,7 +205,7 @@
       },
       {
         "name": "Number of Sites",
-        "id": "nsites",
+        "params": ["nsites_min", "nsites_max"],
         "type": "SLIDER",
         "props": {
           "domain": [1, 360],
@@ -220,19 +220,19 @@
     "filters": [
       {
         "name": "Spacegroup Symbol",
-        "id": "spacegroup_symbol",
+        "params": ["spacegroup_symbol"],
         "tooltip": "The standard short symbol for the spacegroup.",
         "type": "SELECT_SPACEGROUP_SYMBOL"
       },
       {
         "name": "Spacegroup International Number",
-        "id": "spacegroup_number",
+        "params": ["spacegroup_number"],
         "tooltip": "The international number for the spacegroup.",
         "type": "SELECT_SPACEGROUP_NUMBER"
       },
       {
         "name": "Crystal System",
-        "id": "crystal_system",
+        "params": ["crystal_system"],
         "tooltip": "The crystal system for the lattice",
         "type": "SELECT_CRYSTAL_SYSTEM"
       }
@@ -244,7 +244,7 @@
     "filters": [
       {
         "name": "Available Properties",
-        "id": "has_props",
+        "params": ["has_props"],
         "type": "CHECKBOX_LIST",
         "props": {
           "options": [
@@ -269,7 +269,7 @@
     "filters": [
       {
         "name": "Band Gap",
-        "id": "band_gap",
+        "params": ["band_gap_min", "band_gap_max"],
         "type": "SLIDER",
         "units": "eV",
         "props": {
@@ -279,7 +279,7 @@
       },
       {
         "name": "Is Gap Direct",
-        "id": "is_gap_direct",
+        "params": ["is_gap_direct"],
         "tooltip": "Whether a band gap is direct or not.",
         "type": "THREE_STATE_BOOLEAN_SELECT",
         "props": {
@@ -297,7 +297,7 @@
       },
       {
         "name": "Is Metal",
-        "id": "is_metal",
+        "params": ["is_metal"],
         "tooltip": "Whether the material is considered a metal.",
         "type": "THREE_STATE_BOOLEAN_SELECT",
         "props": {
@@ -321,7 +321,7 @@
     "filters": [
       {
         "name": "Magnetic Ordering",
-        "id": "ordering",
+        "params": ["ordering"],
         "tooltip": "Magnetic ordering of the calculation",
         "type": "SELECT",
         "props": {
@@ -351,7 +351,7 @@
       },
       {
         "name": "Total Magnetization",
-        "id": "total_magnetization",
+        "params": ["total_magnetization_min", "total_magnetization_max"],
         "type": "SLIDER",
         "tooltip": "Total number of unpaired electrons per unit cell",
         "props": {
@@ -367,7 +367,7 @@
     "filters": [
       {
         "name": "Bulk Modulus, Voigt",
-        "id": "k_voigt",
+        "params": ["k_voigt_min", "k_voigt_max"],
         "tooltip": "Voigt average of the bulk modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -378,7 +378,7 @@
       },
       {
         "name": "Bulk Modulus, Reuss",
-        "id": "k_reuss",
+        "params": ["k_reuss_min", "k_reuss_max"],
         "tooltip": "Reuss average of the bulk modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -389,7 +389,7 @@
       },
       {
         "name": "Bulk Modulus, Voigt-Reuss-Hill",
-        "id": "k_vrh",
+        "params": ["k_vrh_min", "k_vrh_max"],
         "tooltip": "Voigt-Reuss-Hill average of the bulk modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -400,7 +400,7 @@
       },
       {
         "name": "Shear Modulus, Voigt",
-        "id": "g_voigt",
+        "params": ["g_voigt_min", "g_voigt_max"],
         "tooltip": "Voigt average of the shear modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -411,7 +411,7 @@
       },
       {
         "name": "Shear Modulus, Reuss",
-        "id": "g_reuss",
+        "params": ["g_reuss_min", "g_reuss_max"],
         "tooltip": "Reuss average of the shear modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -422,7 +422,7 @@
       },
       {
         "name": "Shear Modulus, Voigt-Reuss-Hill",
-        "id": "g_vrh",
+        "params": ["g_vrh_min", "g_vrh_max"],
         "tooltip": "Voigt-Reuss-Hill average of the shear modulus",
         "units": "GPa",
         "type": "SLIDER",
@@ -433,7 +433,7 @@
       },
       {
         "name": "Elastic Anisotropy",
-        "id": "universal_anisotropy",
+        "params": ["universal_anisotropy_min", "universal_anisotropy_max"],
         "type": "SLIDER",
         "props": {
           "domain": [-1000, 1000],
@@ -448,7 +448,7 @@
     "filters": [
       {
         "name": "Weighted Surface Energy",
-        "id": "weighted_surface_energy",
+        "params": ["weighted_surface_energy_min", "weighted_surface_energy_max"],
         "units": "J/m\u00b2",
         "type": "SLIDER",
         "props": {
@@ -458,7 +458,7 @@
       },
       {
         "name": "Surface Anisotropy",
-        "id": "surface_anisotropy",
+        "params": ["surface_anisotropy_min", "surface_anisotropy_max"],
         "type": "SLIDER",
         "props": {
           "domain": [0, 25],
@@ -467,7 +467,7 @@
       },
       {
         "name": "Shape Factor",
-        "id": "shape_factor",
+        "params": ["shape_factor_min", "shape_factor_max"],
         "type": "SLIDER",
         "props": {
           "domain": [0, 100],
@@ -476,7 +476,7 @@
       },
       {
         "name": "Work Function",
-        "id": "weighted_work_function",
+        "params": ["weighted_work_function_min", "weighted_work_function_max"],
         "units": "eV",
         "type": "SLIDER",
         "props": {
@@ -492,7 +492,7 @@
     "filters": [
       {
         "name": "Piezoelectric Modulus",
-        "id": "piezo_modulus",
+        "params": ["piezo_modulus_min", "piezo_modulus_max"],
         "units": "C/m\u00b2",
         "type": "SLIDER",
         "props": {
@@ -508,7 +508,7 @@
     "filters": [
       {
         "name": "Total Dielectric Constant",
-        "id": "e_total",
+        "params": ["e_total_min", "e_total_max"],
         "units": "",
         "type": "SLIDER",
         "props": {
@@ -518,7 +518,7 @@
       },
       {
         "name": "Ionic Dielectric Constant",
-        "id": "e_ionic",
+        "params": ["e_ionic_min", "e_ionic_max"],
         "tooltip": "Ionic contribution to dielectric constant",
         "units": "",
         "type": "SLIDER",
@@ -529,7 +529,7 @@
       },
       {
         "name": "Static Dielectric Constant",
-        "id": "e_static",
+        "params": ["e_static_min", "e_static_max"],
         "tooltip": "Electronic contribution to dielectric constant",
         "units": "",
         "type": "SLIDER",

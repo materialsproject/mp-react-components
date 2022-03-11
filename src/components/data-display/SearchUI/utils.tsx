@@ -224,18 +224,18 @@ export const updateActiveFilters = (filterGroups, query) => {
           }
           break;
         case FilterType.MATERIALS_INPUT:
-          if (isNotEmpty(query[f.id])) {
-            let parsedValue = query[f.id];
+          if (isNotEmpty(af.value)) {
+            let parsedValue = af.value;
 
             if (
               f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
-              (f.props.type === MaterialsInputType.FORMULA && query[f.id].indexOf('-') > -1)
+              (f.props.type === MaterialsInputType.FORMULA && parsedValue.indexOf('-') > -1)
             ) {
               /** Remove trailing '-' from chemical system string */
-              parsedValue = query[f.id].replace(/\-$/, '');
+              parsedValue = parsedValue.replace(/\-$/, '');
             } else if (f.props.type === MaterialsInputType.ELEMENTS) {
               /** Parse elements back into array so that they're in a normalized format for the query */
-              parsedValue = validateElements(query[f.id]);
+              parsedValue = validateElements(parsedValue);
             }
 
             activeFilters.push({
@@ -251,9 +251,9 @@ export const updateActiveFilters = (filterGroups, query) => {
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (isNotEmpty(query[f.id])) {
-            const spaceGroup = spaceGroups.find((d) => d['symbol'] === query[f.id]);
-            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : query[f.id];
+          if (isNotEmpty(af.value)) {
+            const spaceGroup = spaceGroups.find((d) => d['symbol'] === af.value);
+            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : af.value;
             activeFilters.push({
               ...af,
               value: formattedSymbol,
@@ -268,9 +268,9 @@ export const updateActiveFilters = (filterGroups, query) => {
           break;
         case FilterType.SELECT:
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (isNotEmpty(query[f.id])) {
-            const selectedOption = f.props.options.find((d) => d.value === query[f.id]);
-            const displayValue = selectedOption ? selectedOption.label : query[f.id];
+          if (isNotEmpty(af.value)) {
+            const selectedOption = f.props.options.find((d) => d.value === af.value);
+            const displayValue = selectedOption ? selectedOption.label : af.value;
             activeFilters.push({
               ...af,
               value: displayValue,
@@ -284,7 +284,7 @@ export const updateActiveFilters = (filterGroups, query) => {
           }
           break;
         case FilterType.TEXT_INPUT:
-          if (isNotEmpty(query[f.id])) {
+          if (isNotEmpty(af.value)) {
             activeFilters.push({
               ...af,
               searchParams: [
@@ -297,8 +297,8 @@ export const updateActiveFilters = (filterGroups, query) => {
           }
           break;
         case FilterType.CHECKBOX_LIST:
-          if (isNotEmpty(query[f.id])) {
-            const displayValue = query[f.id].map((d) => {
+          if (isNotEmpty(af.value)) {
+            const displayValue = af.value.map((d) => {
               const option = f.props.options.find((o) => o.value === d);
               return option.label || d;
             });
@@ -316,7 +316,7 @@ export const updateActiveFilters = (filterGroups, query) => {
           }
           break;
         default:
-          if (isNotEmpty(query[f.id])) {
+          if (isNotEmpty(af.value)) {
             activeFilters.push({
               ...af,
               searchParams: [
