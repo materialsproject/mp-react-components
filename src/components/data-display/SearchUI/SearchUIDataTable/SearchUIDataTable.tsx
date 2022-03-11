@@ -39,7 +39,7 @@ export const SearchUIDataTable: React.FC = () => {
     <Paginator
       rowCount={state.totalResults}
       rowsPerPage={query.limit}
-      currentPage={query.skip / query.limit}
+      currentPage={query.skip / query.limit + 1}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}
