@@ -248,7 +248,7 @@ export const SearchUIDataHeader: React.FC = () => {
       {state.activeFilters.length > 0 && (
         <ActiveFilterButtons
           filters={state.activeFilters}
-          onClick={(v, id) => actions.setFilterValue(v, id)}
+          onClick={(params) => actions.removeFilters(params)}
         />
       )}
     </div>

@@ -182,9 +182,9 @@ export const updateActiveFilters = (filterGroups, query) => {
     g.filters.forEach((f) => {
       const operatorSuffix = f.operatorSuffix || '';
       const af = {
-        id: f.id,
-        displayName: f.name ? f.name : f.id,
-        value: query[f.id],
+        name: f.name,
+        params: f.params,
+        value: query[f.params[0]],
         isSearchBarField: f.isSearchBarField
       };
       switch (f.type) {
@@ -193,8 +193,8 @@ export const updateActiveFilters = (filterGroups, query) => {
            * The lower bound will be null if initialized from a url that only has a max param.
            * The upper bound will be null if initialized from a url that only has a min param.
            */
-          const hasActiveMin = query[f.id] && query[f.id][0] && query[f.id][0] > f.props.domain[0];
-          const hasActiveMax = query[f.id] && query[f.id][1] && query[f.id][1] < f.props.domain[1];
+          const hasActiveMin = query[f.params[0]] > f.props.domain[0];
+          const hasActiveMax = query[f.params[1]] < f.props.domain[1];
 
           if (hasActiveMin || hasActiveMax) {
             const minSuffix = f.minSuffix || defaultMinSuffix;
@@ -205,21 +205,21 @@ export const updateActiveFilters = (filterGroups, query) => {
              * then there won't be a param added for that bound.
              * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
              */
-            if (hasActiveMin)
-              searchParams.push({
-                field: f.id + minSuffix,
-                value: query[f.id][0]
-              });
-            if (hasActiveMax)
-              searchParams.push({
-                field: f.id + maxSuffix,
-                value: query[f.id][1]
-              });
+            // if (hasActiveMin)
+            //   searchParams.push({
+            //     field: f.id + minSuffix,
+            //     value: query[f.id][0]
+            //   });
+            // if (hasActiveMax)
+            //   searchParams.push({
+            //     field: f.id + maxSuffix,
+            //     value: query[f.id][1]
+            //   });
             activeFilters.push({
               ...af,
+              value: [query[f.params[0]], query[f.params[1]]],
               defaultValue: f.props.domain,
-              conversionFactor: f.conversionFactor,
-              searchParams: searchParams
+              conversionFactor: f.conversionFactor
             });
           }
           break;
@@ -241,7 +241,6 @@ export const updateActiveFilters = (filterGroups, query) => {
             activeFilters.push({
               ...af,
               value: parsedValue,
-              defaultValue: '',
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -258,7 +257,6 @@ export const updateActiveFilters = (filterGroups, query) => {
             activeFilters.push({
               ...af,
               value: formattedSymbol,
-              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -276,7 +274,6 @@ export const updateActiveFilters = (filterGroups, query) => {
             activeFilters.push({
               ...af,
               value: displayValue,
-              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -290,7 +287,6 @@ export const updateActiveFilters = (filterGroups, query) => {
           if (isNotEmpty(query[f.id])) {
             activeFilters.push({
               ...af,
-              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -310,7 +306,6 @@ export const updateActiveFilters = (filterGroups, query) => {
             activeFilters.push({
               ...af,
               value: displayValue,
-              defaultValue: [],
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -324,7 +319,6 @@ export const updateActiveFilters = (filterGroups, query) => {
           if (isNotEmpty(query[f.id])) {
             activeFilters.push({
               ...af,
-              defaultValue: undefined,
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
@@ -540,8 +534,6 @@ export const initQueryParams = (
 
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
-      const operatorSuffix = f.operatorSuffix || '';
-      paramsToFilterMap[f.id] = f;
       switch (f.type) {
         // case FilterType.SLIDER:
         //   const minSuffix = f.minSuffix || defaultMinSuffix;
@@ -550,19 +542,20 @@ export const initQueryParams = (
         //   params[f.id + maxSuffix] = NumberParam;
         //   break;
         case FilterType.MATERIALS_INPUT:
-          params[f.id + operatorSuffix] = f.props.type === 'elements' ? ArrayParam : StringParam;
+          params[f.params[0]] = f.props.type === 'elements' ? ArrayParam : StringParam;
           break;
         case FilterType.SLIDER:
-          params[f.id + operatorSuffix] = DelimitedNumericArrayParam;
+          params[f.params[0]] = NumberParam;
+          params[f.params[1]] = NumberParam;
           break;
         case FilterType.CHECKBOX_LIST:
-          params[f.id + operatorSuffix] = ArrayParam;
+          params[f.params[0]] = ArrayParam;
           break;
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          params[f.id + operatorSuffix] = BooleanParam;
+          params[f.params[0]] = BooleanParam;
           break;
         default:
-          params[f.id + operatorSuffix] = StringParam;
+          params[f.params[0]] = StringParam;
       }
     });
   });

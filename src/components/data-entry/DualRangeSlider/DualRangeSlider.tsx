@@ -36,6 +36,8 @@ export interface DualRangeSliderProps {
    * should be set to.
    */
   value?: number[];
+  valueMin?: number;
+  valueMax?: number;
   /**
    * Number by which the slider handles should move with each step.
    * Defaults to 1.
@@ -67,7 +69,7 @@ export interface DualRangeSliderProps {
   /**
    * Function to call when slider values change.
    */
-  onChange?: (values: number[]) => void;
+  onChange?: (min: number, max: number) => void;
   /**
    * Function to call when the slider props change.
    * This can be used to lift the new "nice" domain upwards.
@@ -154,7 +156,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   const niceDomain = props.isLogScale ? props.domain : scale.domain();
   const tickMarks = initSliderTicks(props.ticks, props.domain, scale);
   // if (!props.value) props.value = []
-  const [values, setValues] = useState(niceInitialValues(props.value, domain, niceDomain));
+  const [values, setValues] = useState(
+    niceInitialValues([props.valueMin, props.valueMax], domain, niceDomain)
+  );
   const [lowerBound, setLowerBound] = useState(
     props.isLogScale ? pow10Fixed(values[0]) : values[0]
   );
@@ -175,11 +179,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
       props.setProps({ value: vals });
     }
     if (onChange) {
-      onChange(
-        vals.map((val) => {
-          return parseFloat(val.toFixed(decimals));
-        })
-      );
+      const min = parseFloat(vals[0].toFixed(decimals));
+      const max = parseFloat(vals[1].toFixed(decimals));
+      onChange(min, max);
     }
   };
 
@@ -311,8 +313,8 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
    * trigger a slider change
    */
   useEffect(() => {
-    handleSliderChange(niceInitialValues(props.value, domain, niceDomain));
-  }, [props.value]);
+    handleSliderChange(niceInitialValues([props.valueMin, props.valueMax], domain, niceDomain));
+  }, [props.valueMin, props.valueMax]);
 
   /**
    * These two effects are triggered when debouncedLowerBound and debouncedUpperBound
