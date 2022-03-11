@@ -78,13 +78,17 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     limit: 15,
     skip: 0
   };
+  /**
+   * The fields param is ommitted from the url for brevity and
+   * added to the query params internally in the get request
+   */
   const fields = state.columns.map((c) => c.selector);
   // const queryParamToFilterMap = mapQueryParamsToFilter
   // const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
     setPage: (page: number) => {
-      setQuery({ skip: page * query.limit });
+      setQuery({ skip: (page - 1) * query.limit });
       const ref = state.resultsRef;
       if (ref && ref.current) {
         scrollIntoView(ref.current, {
@@ -351,7 +355,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     if (query.limit) {
       actions.getData();
     }
-  }, [query.limit, state.activeFilters, query.sort_fields]);
+  }, [state.activeFilters, query.skip, query.limit, query.sort_fields]);
 
   /**
    * Ensure results props has up-to-date value.
