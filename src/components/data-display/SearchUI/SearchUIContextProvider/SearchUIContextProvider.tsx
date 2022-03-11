@@ -84,7 +84,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
    */
   const fields = state.columns.map((c) => c.selector);
   // const queryParamToFilterMap = mapQueryParamsToFilter
-  // const prevActiveFilters = usePrevious(state.activeFilters);
+  const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
     setPage: (page: number) => {
@@ -99,7 +99,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       }
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      setQuery({ limit: resultsPerPage });
+      setQuery({ limit: resultsPerPage, skip: 0 });
       // if (ref.current) {
       //   scrollIntoView(ref.current, {
       //     scrollMode: 'if-needed',
@@ -139,7 +139,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      */
     setFilterValue: (value: any, id: string, overrideFields?: string[]) => {
       const filterIsActivating = isNotEmpty(value);
-      const newQuery = { [id]: filterIsActivating ? value : undefined };
+      const newFilterValue = filterIsActivating ? value : undefined;
+      const newQuery = { [id]: newFilterValue, skip: 0 };
       if (overrideFields && filterIsActivating) {
         overrideFields.forEach((field) => {
           newQuery[field] = undefined;
@@ -148,7 +149,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setQuery(newQuery);
     },
     setFilterValues: (values: any, params: string[] | string) => {
-      const change = {};
+      const change = { skip: 0 };
       if (Array.isArray(params) && Array.isArray(values)) {
         params.forEach((p, i) => (change[p] = values[i]));
       } else if (typeof params === 'string') {
@@ -158,11 +159,11 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     removeFilter: (id: string) => {
       if (query.hasOwnProperty(id)) {
-        setQuery({ [id]: undefined });
+        setQuery({ [id]: undefined, skip: 0 });
       }
     },
     removeFilters: (params: string[] | string) => {
-      const remove = {};
+      const remove = { skip: 0 };
       if (Array.isArray(params)) {
         params.forEach((p) => (remove[p] = undefined));
       } else {
@@ -170,12 +171,15 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       }
       setQuery(remove);
     },
-    resetAllFiltersExcept: (value: any, id: string) => {
-      setState((currentState) => {
-        const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-        return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
-      });
+    resetFilters: () => {
+      setQuery({ ...defaultQuery, sort: query.sort, limit: query.limit }, 'push');
     },
+    // resetAllFiltersExcept: (value: any, id: string) => {
+    //   setState((currentState) => {
+    //     const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
+    //     return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
+    //   });
+    // },
     setFilterProps: (props: any, filterName: string, groupId: string) => {
       const filterGroups = state.filterGroups;
       const group = filterGroups.find((g) => g.name === groupId);
@@ -190,10 +194,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     getData: () => {
       // setState((currentState) => {
       /** Only show the loading icon if this is a filter change not on simple page change */
-      // const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
-      // let isLoading = showLoading;
-      // let minLoadTime = 1000;
-      // let minLoadTimeReached = !showLoading;
+      const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
+      let isLoading = showLoading;
+      let minLoadTime = 1000;
+      let minLoadTimeReached = !showLoading;
       // let params = Object.assign({}, currentState.apiEndpointParams!);
       // let query = new URLSearchParams();
 
@@ -259,8 +263,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         })
         .then((result) => {
           // history.push({ search: query.toString() });
-          // isLoading = false;
-          // const loadingValue = minLoadTimeReached ? false : true;
+          isLoading = false;
+          const loadingValue = minLoadTimeReached ? false : true;
           setState((currentState) => {
             const totalResults = props.isContribs
               ? result.data.total_count
@@ -271,56 +275,37 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
               ...currentState,
               results: result.data.data,
               totalResults: totalResults,
-              // page: page,
-              // loading: loadingValue,
+              loading: loadingValue,
               error: false
             };
           });
         })
         .catch((error) => {
           console.log(error);
-          // isLoading = false;
-          // const loadingValue = minLoadTimeReached ? false : true;
+          isLoading = false;
+          const loadingValue = minLoadTimeReached ? false : true;
           setState((currentState) => {
             return {
               ...currentState,
               results: [],
               totalResults: 0,
-              // loading: loadingValue,
+              loading: loadingValue,
               error: true
             };
           });
         });
 
-      // if (showLoading) {
-      //   setTimeout(() => {
-      //     if (!isLoading) {
-      //       setState((currentState) => {
-      //         return { ...currentState, loading: false };
-      //       });
-      //     } else {
-      //       minLoadTimeReached = true;
-      //     }
-      //   }, minLoadTime);
-      // }
-
-      //   return {
-      //     ...currentState,
-      //     loading: showLoading
-      //   };
-      // });
-    },
-    resetFilters: () => {
-      setQuery({ ...defaultQuery, sort: query.sort, limit: query.limit }, 'push');
-      // setState((currentState) => {
-      //   const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-      //   return {
-      //     ...currentState,
-      //     page: 1,
-      //     filterValues,
-      //     activeFilters
-      //   };
-      // });
+      if (showLoading) {
+        setTimeout(() => {
+          if (!isLoading) {
+            setState((currentState) => {
+              return { ...currentState, loading: false };
+            });
+          } else {
+            minLoadTimeReached = true;
+          }
+        }, minLoadTime);
+      }
     },
     setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
       setState((currentState) => ({ ...currentState, resultsRef }));
