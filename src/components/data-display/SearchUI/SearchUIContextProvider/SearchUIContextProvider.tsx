@@ -31,32 +31,28 @@ import { initColumns } from '../../../../utils/table';
 const SearchUIContext = React.createContext<SearchContextValue | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
-const defaultState: SearchState = {
-  apiEndpoint: '',
-  apiEndpointParams: {},
-  columns: [],
-  filterGroups: [],
-  activeFilters: [],
-  results: [],
-  totalResults: 0,
-  loading: false,
-  error: false,
-  searchBarValue: '',
-  resultsRef: null
-};
-
 /**
  * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
  * Accepts the same props as SearchUI and uses them to build the context state
  */
-export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
-  resultLabel = 'results',
-  hasSearchBar = true,
-  conditionalRowStyles = [],
-  setProps = () => null,
+export const SearchUIContextProvider: React.FC<SearchState> = ({
+  activeFilters = [],
+  totalResults = 0,
+  loading = false,
+  error = false,
+  searchBarValue = '',
+  resultsRef = null,
   ...otherProps
 }) => {
-  let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
+  let props = {
+    activeFilters,
+    totalResults,
+    loading,
+    error,
+    searchBarValue,
+    resultsRef,
+    ...otherProps
+  };
   const { children, ...propsWithoutChildren } = props;
   // const query = useQuery();
   // const history = useHistory();
@@ -68,15 +64,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const filterGroups = newInitFilterGroups(props.filterGroups);
   const columns = initColumns(props.columns, props.disableRichColumnHeaders);
   const [state, setState] = useState<SearchState>({
-    ...defaultState,
     ...propsWithoutChildren,
     filterGroups,
     columns
   });
   const defaultQuery = {
-    sort_fields: ['formula_pretty'],
-    limit: 15,
-    skip: 0
+    [state.sortKey]: ['formula_pretty'],
+    [state.limitKey]: 15,
+    [state.skipKey]: 0
   };
   /**
    * The fields param is ommitted from the url for brevity and
@@ -88,7 +83,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
   const actions = {
     setPage: (page: number) => {
-      setQuery({ skip: (page - 1) * query.limit });
+      setQuery({ [props.skipKey]: (page - 1) * query[props.limitKey] });
       const ref = state.resultsRef;
       if (ref && ref.current) {
         scrollIntoView(ref.current, {
@@ -99,7 +94,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       }
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      setQuery({ limit: resultsPerPage, skip: 0 });
+      setQuery({ [props.limitKey]: resultsPerPage, [props.skipKey]: 0 });
       // if (ref.current) {
       //   scrollIntoView(ref.current, {
       //     scrollMode: 'if-needed',
@@ -110,18 +105,21 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       // setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      const sort_fields = [...query.sort_fields];
+      const sort_fields = [...query[props.sortKey]];
       const directionPrefix = sortAscending ? '' : '-';
       sort_fields[0] = directionPrefix + sortField;
-      setQuery({ sort_fields, skip: 0 });
+      setQuery({ sort_fields, [props.skipKey]: 0 });
     },
     setSortField: (sortField: string) => {
-      const sort_fields = [...query.sort_fields];
-      sort_fields[0] = sortField;
-      setQuery({ sort_fields, skip: 0 });
+      const sortFields = [...query[props.sortKey]];
+      sortFields[0] = sortField;
+      setQuery({
+        [props.sortKey]: sortFields,
+        [props.skipKey]: 0
+      });
     },
     setSortAscending: function (sortAscending: boolean) {
-      this.setSort(query.sort_fields[0].replace('-', ''), sortAscending);
+      this.setSort(query[props.sortKey][0].replace('-', ''), sortAscending);
     },
     setView: (view: SearchUIViewType) => {
       setState((currentState) => ({ ...currentState, view }));
@@ -140,7 +138,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setFilterValue: (value: any, id: string, overrideFields?: string[]) => {
       const filterIsActivating = isNotEmpty(value);
       const newFilterValue = filterIsActivating ? value : undefined;
-      const newQuery = { [id]: newFilterValue, skip: 0 };
+      const newQuery = {
+        [id]: newFilterValue,
+        [props.skipKey]: 0
+      };
       if (overrideFields && filterIsActivating) {
         overrideFields.forEach((field) => {
           newQuery[field] = undefined;
@@ -149,7 +150,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setQuery(newQuery);
     },
     setFilterValues: (values: any, params: string[] | string) => {
-      const change = { skip: 0 };
+      const change = { [props.skipKey]: 0 };
       if (Array.isArray(params) && Array.isArray(values)) {
         params.forEach((p, i) => (change[p] = values[i]));
       } else if (typeof params === 'string') {
@@ -159,11 +160,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     },
     removeFilter: (id: string) => {
       if (query.hasOwnProperty(id)) {
-        setQuery({ [id]: undefined, skip: 0 });
+        setQuery({
+          [id]: undefined,
+          [props.skipKey]: 0
+        });
       }
     },
     removeFilters: (params: string[] | string) => {
-      const remove = { skip: 0 };
+      const remove: any = { [props.skipKey]: 0 };
       if (Array.isArray(params)) {
         params.forEach((p) => (remove[p] = undefined));
       } else {
@@ -172,7 +176,14 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setQuery(remove);
     },
     resetFilters: () => {
-      setQuery({ ...defaultQuery, sort: query.sort, limit: query.limit }, 'push');
+      setQuery(
+        {
+          ...defaultQuery,
+          [props.sortKey]: query[props.sortKey],
+          [props.limitKey]: query[props.limitKey]
+        },
+        'push'
+      );
     },
     // resetAllFiltersExcept: (value: any, id: string) => {
     //   setState((currentState) => {
@@ -255,7 +266,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
       axios
         .get(props.apiEndpoint, {
-          params: { ...query, fields },
+          params: { ...query, [props.fieldsKey]: fields },
           paramsSerializer: (p) => {
             return qs.stringify(p, { arrayFormat: 'comma' });
           },
@@ -319,7 +330,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
    * If the default query params are missing (e.g. limit, skip, sort) then add them to the query.
    */
   useDeepCompareEffect(() => {
-    if (query.limit) {
+    if (query[props.limitKey]) {
       const activeFilters = updateActiveFilters(state.filterGroups, query);
       let searchBarValue = state.searchBarValue;
       const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
@@ -327,7 +338,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         searchBarValue = searchBarFieldFilter.value;
       }
       setState({ ...state, activeFilters, searchBarValue });
-    } else if (!query.skip || !query.limit || !query.sort_fields) {
+    } else if (!query[props.skipKey] || !query[props.limitKey] || !query[props.sortKey]) {
       setQuery({ ...query, ...defaultQuery });
     }
   }, [query]);
@@ -337,10 +348,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
    * This should also be run when the initial query fields are populated (on load).
    */
   useDeepCompareEffect(() => {
-    if (query.limit) {
+    if (query[props.limitKey]) {
       actions.getData();
     }
-  }, [state.activeFilters, query.skip, query.limit, query.sort_fields]);
+  }, [state.activeFilters, query[props.skipKey], query[props.limitKey], query[props.sortKey]]);
 
   /**
    * Ensure results props has up-to-date value.

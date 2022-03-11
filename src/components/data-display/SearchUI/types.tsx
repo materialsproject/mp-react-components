@@ -292,13 +292,19 @@ export interface ConditionalRowStyle {
 // }
 
 export interface SearchState extends SearchUIProps {
-  totalResults: number;
-  activeFilters: ActiveFilter[];
+  /** optional props from SearchUI that are required by SearchState  */
+  setProps: (value: any) => any;
+  sortKey: string;
+  skipKey: string;
+  limitKey: string;
+  fieldsKey: string;
+  /** additional props for SearchState */
+  totalResults?: number;
+  activeFilters?: ActiveFilter[];
   loading?: boolean;
   error?: boolean;
   selectedRows?: any[];
   searchBarValue?: string;
-  view?: SearchUIViewType;
   resultsRef?: React.RefObject<HTMLDivElement> | null;
 }
 

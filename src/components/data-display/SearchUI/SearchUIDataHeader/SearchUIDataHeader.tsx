@@ -51,8 +51,8 @@ export const SearchUIDataHeader: React.FC = () => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
-  const lowerResultBound = getLowerResultBound(state.totalResults, query.limit, query.skip);
-  const upperResultBound = getUpperResultBound(state.totalResults, query.limit, lowerResultBound);
+  const lowerResultBound = getLowerResultBound(state.totalResults!, query.limit, query.skip);
+  const upperResultBound = getUpperResultBound(state.totalResults!, query.limit, lowerResultBound);
 
   const toggleColumn = (columnIndex: number) => {
     const newColumns = [...columns];
@@ -78,7 +78,7 @@ export const SearchUIDataHeader: React.FC = () => {
   };
 
   const TableHeaderTitle = () => {
-    if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
+    if (state.activeFilters!.length === 0 && state.totalResults! > 0 && !state.loading) {
       return (
         <div data-testid="data-table-title">
           <a
@@ -102,8 +102,8 @@ export const SearchUIDataHeader: React.FC = () => {
         </div>
       );
     } else if (
-      state.activeFilters.length > 1 ||
-      (state.activeFilters.length === 1 && !state.loading)
+      state.activeFilters!.length > 1 ||
+      (state.activeFilters!.length === 1 && !state.loading)
     ) {
       return (
         <div data-testid="data-table-title">
@@ -241,9 +241,9 @@ export const SearchUIDataHeader: React.FC = () => {
           {/* {resultsPerPageMenu} */}
         </div>
       </div>
-      {state.activeFilters.length > 0 && (
+      {state.activeFilters!.length > 0 && (
         <ActiveFilterButtons
-          filters={state.activeFilters}
+          filters={state.activeFilters!}
           onClick={(params) => actions.removeFilters(params)}
         />
       )}

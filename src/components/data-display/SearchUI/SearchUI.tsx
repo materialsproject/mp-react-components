@@ -205,6 +205,14 @@ export interface SearchUIProps {
    */
   secondarySortAscending?: boolean;
 
+  sortKey?: string;
+
+  skipKey?: string;
+
+  limitKey?: string;
+
+  fieldsKey?: string;
+
   /**
    * List of conditions for styling rows based on a property (selector) and a value.
    * Note that this prop currently only supports checking for

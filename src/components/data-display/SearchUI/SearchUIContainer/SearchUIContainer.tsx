@@ -13,7 +13,40 @@ import { QueryParamProvider } from 'use-query-params';
  * This allows you to use the state management functionality of `SearchUI` with the ability
  * to customize the inner layout and components.
  */
-export const SearchUIContainer: React.FC<SearchUIProps> = (props) => {
+export const SearchUIContainer: React.FC<SearchUIProps> = ({
+  view = SearchUIViewType.TABLE,
+  apiEndpoint = '',
+  apiEndpointParams = {},
+  resultLabel = 'result',
+  hasSortMenu = true,
+  hasSearchBar = true,
+  sortKey = 'sort_fields',
+  limitKey = 'limit',
+  skipKey = 'skip',
+  fieldsKey = 'fields',
+  conditionalRowStyles = [],
+  results = [],
+  setProps = () => null,
+  debounce = 1000,
+  ...otherProps
+}) => {
+  const props = {
+    view,
+    apiEndpoint,
+    apiEndpointParams,
+    resultLabel,
+    hasSortMenu,
+    hasSearchBar,
+    sortKey,
+    limitKey,
+    skipKey,
+    fieldsKey,
+    conditionalRowStyles,
+    results,
+    setProps,
+    debounce,
+    ...otherProps
+  };
   return (
     <div id={props.id} className={classNames('mpc-search-ui', props.className)}>
       <Router>
@@ -23,27 +56,4 @@ export const SearchUIContainer: React.FC<SearchUIProps> = (props) => {
       </Router>
     </div>
   );
-};
-
-SearchUIContainer.defaultProps = {
-  view: SearchUIViewType.TABLE,
-  apiEndpointParams: {},
-  resultLabel: 'results',
-  hasSortMenu: true,
-  hasSearchBar: true,
-  conditionalRowStyles: [],
-  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
-  searchBarAllowedInputTypesMap: {
-    elements: {
-      field: 'elements'
-    },
-    formula: {
-      field: 'formula'
-    },
-    mpid: {
-      field: 'material_ids'
-    }
-  },
-  setProps: () => null,
-  debounce: 1000
 };
