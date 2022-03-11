@@ -76,9 +76,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   const defaultQuery = {
     sort_fields: ['formula_pretty'],
     limit: 15,
-    skip: 0,
-    fields: state.columns.map((c) => c.selector)
+    skip: 0
   };
+  const fields = state.columns.map((c) => c.selector);
   // const queryParamToFilterMap = mapQueryParamsToFilter
   // const prevActiveFilters = usePrevious(state.activeFilters);
 
@@ -95,6 +95,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       }
     },
     setResultsPerPage: (resultsPerPage: number) => {
+      setQuery({ limit: resultsPerPage });
       // if (ref.current) {
       //   scrollIntoView(ref.current, {
       //     scrollMode: 'if-needed',
@@ -102,7 +103,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       //     behavior: 'smooth'
       //   });
       // }
-      setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
+      // setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
       const sort_fields = [...query.sort_fields];
@@ -238,8 +239,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       //   });
       // });
 
-      const params = { ...query };
-
       // if (params.formation_energy_per_atom) {
       //   params.formation_energy_per_atom_min = params.formation_energy_per_atom[0];
       //   params.formation_energy_per_atom_max = params.formation_energy_per_atom[1];
@@ -248,7 +247,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
 
       axios
         .get(props.apiEndpoint, {
-          params: params,
+          params: { ...query, fields },
           paramsSerializer: (p) => {
             return qs.stringify(p, { arrayFormat: 'comma' });
           },
@@ -325,18 +324,13 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   };
 
   /**
-   * Add initial query params
-   */
-  useEffect(() => {
-    setQuery({ ...defaultQuery, ...query });
-  }, []);
-
-  /**
    * When a filter or query param changes, compute the list of active filters.
    * Also, update the search bar value if one of its corresponding filters changes.
+   *
+   * If the default query params are missing (e.g. limit, skip, sort) then add them to the query.
    */
   useDeepCompareEffect(() => {
-    if (query.fields) {
+    if (query.limit) {
       const activeFilters = updateActiveFilters(state.filterGroups, query);
       let searchBarValue = state.searchBarValue;
       const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
@@ -344,6 +338,8 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         searchBarValue = searchBarFieldFilter.value;
       }
       setState({ ...state, activeFilters, searchBarValue });
+    } else if (!query.skip || !query.limit || !query.sort_fields) {
+      setQuery({ ...query, ...defaultQuery });
     }
   }, [query]);
 
@@ -352,10 +348,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
    * This should also be run when the initial query fields are populated (on load).
    */
   useDeepCompareEffect(() => {
-    if (query.fields) {
+    if (query.limit) {
       actions.getData();
     }
-  }, [query.fields, state.activeFilters, query.sort_fields]);
+  }, [query.limit, state.activeFilters, query.sort_fields]);
 
   /**
    * Ensure results props has up-to-date value.

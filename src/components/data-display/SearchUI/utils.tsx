@@ -521,12 +521,12 @@ export const initQueryParams = (
   const paramsToFilterMap = {};
 
   if (isContribs) {
-    params._fields = ArrayParam;
+    // params._fields = ArrayParam;
     params._limit = NumberParam;
     params._skip = NumberParam;
     params._sort = ArrayParam;
   } else {
-    params.fields = ArrayParam;
+    // params.fields = ArrayParam;
     params.limit = NumberParam;
     params.skip = NumberParam;
     params.sort_fields = ArrayParam;

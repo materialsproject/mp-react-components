@@ -15,13 +15,13 @@ import { ColumnsMenu } from '../../DataTable/ColumnsMenu';
 
 const componentHtmlId = uuidv4();
 
-const getLowerResultBound = (totalResults: number, resultsPerPage: number, page: number) => {
+const getLowerResultBound = (totalResults: number, resultsPerPage: number, skip: number) => {
   if (totalResults === 0) {
     return 0;
   } else if (totalResults < resultsPerPage) {
     return 1;
   } else {
-    return (page - 1) * resultsPerPage + 1;
+    return skip + 1;
   }
 };
 
@@ -51,11 +51,7 @@ export const SearchUIDataHeader: React.FC = () => {
     const anyNotSelected = columns.find((col) => col.omit);
     return !anyNotSelected;
   });
-  const lowerResultBound = getLowerResultBound(
-    state.totalResults,
-    query.limit,
-    query.skip / query.limit
-  );
+  const lowerResultBound = getLowerResultBound(state.totalResults, query.limit, query.skip);
   const upperResultBound = getUpperResultBound(state.totalResults, query.limit, lowerResultBound);
 
   const toggleColumn = (columnIndex: number) => {

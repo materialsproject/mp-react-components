@@ -69,8 +69,10 @@ export const SearchUIDataTable: React.FC = () => {
             paginationServer
             sortServer
             sortIcon={<FaCaretDown />}
-            defaultSortField={query.sort_fields[0].replace('-', '')}
-            defaultSortAsc={query.sort_fields[0].indexOf('-') === 0 ? false : true}
+            defaultSortField={query.sort_fields && query.sort_fields[0].replace('-', '')}
+            defaultSortAsc={
+              query.sort_fields && query.sort_fields[0].indexOf('-') === 0 ? false : true
+            }
             onSort={handleSort}
             customStyles={{
               rows: {
