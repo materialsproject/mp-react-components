@@ -21,15 +21,15 @@ interface Props {
   className?: string;
 }
 
-const getActiveFilterById = (id: string, activeFilters: ActiveFilter[]) => {
-  return activeFilters.find((af) => af.id === id);
+const getActiveFilterByName = (name: string, activeFilters: ActiveFilter[]) => {
+  return activeFilters.find((af) => af.name === name);
 };
 
 const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[]) => {
   let count = 0;
-  const activeIds = activeFilters.map((f) => f.id);
+  const activeIds = activeFilters.map((f) => f.name);
   group.filters.forEach((f) => {
-    if (activeIds.indexOf(f.id) > -1) {
+    if (activeIds.indexOf(f.name) > -1) {
       f.active = true;
       count++;
     } else {
@@ -66,7 +66,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
    * dynamically change their "props" property with actions.setFilterProps().
    */
   const renderFilter = (f: Filter, groupId: string) => {
-    let queryParam = f.id;
+    let queryParam = f.params[0];
     let queryParamValue = query[queryParam];
     switch (f.type) {
       case FilterType.TEXT_INPUT:
@@ -93,15 +93,18 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           />
         );
       case FilterType.SLIDER:
-        queryParamValue = query[f.id + f.operatorSuffix];
+        queryParamValue = query[f.name + f.operatorSuffix];
         return (
           <DualRangeSlider
             {...f.props}
             debounce={state.debounce}
-            value={query[f.id]}
+            valueMin={query[f.params[0]]}
+            valueMax={query[f.params[1]]}
             inclusiveTickBounds={true}
-            onChange={(v) => actions.setFilterValue(v, queryParam)}
-            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
+            onChange={(min, max) => {
+              actions.setFilterValues([min, max], [f.params[0], f.params[1]]);
+            }}
+            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.name, groupId)}
           />
         );
       case FilterType.SELECT_SPACEGROUP_SYMBOL:
@@ -169,37 +172,36 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     }
   };
 
-  const renderFilterLabel = (filter: Filter) => {
-    const cancelButton = filter.active ? (
+  const renderFilterLabel = (f: Filter) => {
+    const cancelButton = f.active ? (
       <FaRegTimesCircle className="ml-2 filter-cancel-button" />
     ) : null;
     const innerLabel = (
       <span
         className={classNames('has-text-weight-bold', 'mb-2', {
-          'tooltip-label': filter.tooltip
+          'tooltip-label': f.tooltip
         })}
         data-tip
-        data-for={`filter_${filter.id}`}
+        data-for={`filter_${f.name.replace(' ', '-')}`}
       >
-        {filter.name}
-        {renderUnitsComponent(filter.units)}
+        {f.name}
+        {renderUnitsComponent(f.units)}
         {cancelButton}
-        {filter.tooltip && <Tooltip id={`filter_${filter.id}`}>{filter.tooltip}</Tooltip>}
+        {f.tooltip && <Tooltip id={`filter_${f.name.replace(' ', '-')}`}>{f.tooltip}</Tooltip>}
       </span>
     );
 
-    if (filter.active) {
-      return <a onClick={() => resetFilter(filter.id)}>{innerLabel}</a>;
+    if (f.active) {
+      return <a onClick={() => resetFilter(f)}>{innerLabel}</a>;
     } else {
       return innerLabel;
     }
   };
 
-  const resetFilter = (id: string) => {
-    const activeFilter = getActiveFilterById(id, state.activeFilters);
-    if (activeFilter) {
-      // actions.setFilterValue(activeFilter.defaultValue, id);
-      actions.removeFilter(id);
+  const resetFilter = (f: Filter) => {
+    const af = getActiveFilterByName(f.name, state.activeFilters);
+    if (af) {
+      actions.removeFilters(af.params);
     }
   };
 
@@ -301,12 +303,12 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                   {g.filters.map((f, j) => (
                     <FilterField
                       key={j}
-                      id={f.id}
+                      id={f.name.replace(' ', '-')}
                       label={f.name}
                       tooltip={f.tooltip}
                       units={f.units}
                       active={f.active}
-                      resetFilter={() => resetFilter(f.id)}
+                      resetFilter={() => resetFilter(f)}
                     >
                       {renderFilter(f, g.name)}
                     </FilterField>

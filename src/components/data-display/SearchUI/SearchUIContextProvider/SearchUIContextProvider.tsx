@@ -142,8 +142,28 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       }
       setQuery(newQuery);
     },
+    setFilterValues: (values: any, params: string[] | string) => {
+      const change = {};
+      if (Array.isArray(params) && Array.isArray(values)) {
+        params.forEach((p, i) => (change[p] = values[i]));
+      } else if (typeof params === 'string') {
+        change[params] = values;
+      }
+      setQuery(change);
+    },
     removeFilter: (id: string) => {
-      setQuery({ [id]: undefined });
+      if (query.hasOwnProperty(id)) {
+        setQuery({ [id]: undefined });
+      }
+    },
+    removeFilters: (params: string[] | string) => {
+      const remove = {};
+      if (Array.isArray(params)) {
+        params.forEach((p) => (remove[p] = undefined));
+      } else {
+        remove[params] = undefined;
+      }
+      setQuery(remove);
     },
     resetAllFiltersExcept: (value: any, id: string) => {
       setState((currentState) => {
@@ -151,10 +171,10 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
       });
     },
-    setFilterProps: (props: any, filterId: string, groupId: string) => {
+    setFilterProps: (props: any, filterName: string, groupId: string) => {
       const filterGroups = state.filterGroups;
       const group = filterGroups.find((g) => g.name === groupId);
-      const filter = group?.filters.find((f) => f.id === filterId);
+      const filter = group?.filters.find((f) => f.name === filterName);
       if (filter) filter.props = { ...filter.props, ...props };
       setState({ ...state, filterGroups: filterGroups });
     },
@@ -303,10 +323,6 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
       setState((currentState) => ({ ...currentState, resultsRef }));
     }
   };
-
-  // useDeepCompareEffect(() => {
-  //   actions.getData();
-  // }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
 
   /**
    * Add initial query params

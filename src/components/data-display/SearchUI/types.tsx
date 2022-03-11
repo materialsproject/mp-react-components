@@ -40,12 +40,13 @@ export interface Filter {
    * If the parameter has a suffix such as "_min" or "__exact", the id should be the
    * name of the parameter without the suffix.
    */
-  id: string;
+  // id: string;
   /**
    * The type of filter component to use. Must be one of the pre-determined filter type strings
    * which maps to a component. See `FilterType` documentation for more information.
    */
   type: FilterType;
+  params: string[];
   /**
    * Whether this filter is active or not. This is handled by the `SearchUI` dynamically so
    * should generally not be used in configuration.
@@ -134,11 +135,11 @@ export interface SearchParams {
 }
 
 export interface ActiveFilter {
-  id: string;
-  displayName: string;
+  name: string;
   value: any;
+  params: string[];
+  defaultValue?: any;
   isSearchBarField?: boolean;
-  defaultValue: any;
   conversionFactor?: number;
   searchParams?: SearchParam[];
 }
