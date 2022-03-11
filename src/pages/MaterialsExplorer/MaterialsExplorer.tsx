@@ -31,29 +31,27 @@ export const MaterialsExplorer: React.FC = () => {
         setProps={setState}
         resultLabel="material"
         columns={columns as Column[]}
-        filterGroups={
-          [
-            {
-              name: 'Composition',
-              expanded: false,
-              filters: [
-                {
-                  name: 'Number of Elements',
-                  params: ['nelements_min', 'nelements_max'],
-                  overrides: ['material_ids', 'formula', 'chemsys'],
-                  type: 'SLIDER',
-                  props: {
-                    domain: [1, 20],
-                    step: 1
-                  }
-                }
-              ]
-            }
-          ] as FilterGroup[]
-        }
         // filterGroups={
-        //   filterGroups as FilterGroup[]
+        //   [
+        //     {
+        //       name: 'Composition',
+        //       expanded: false,
+        //       filters: [
+        //         {
+        //           name: 'Number of Elements',
+        //           params: ['nelements_min', 'nelements_max'],
+        //           overrides: ['material_ids', 'formula', 'chemsys'],
+        //           type: 'SLIDER',
+        //           props: {
+        //             domain: [1, 20],
+        //             step: 1
+        //           }
+        //         }
+        //       ]
+        //     }
+        //   ] as FilterGroup[]
         // }
+        filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={
           process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''
         }
