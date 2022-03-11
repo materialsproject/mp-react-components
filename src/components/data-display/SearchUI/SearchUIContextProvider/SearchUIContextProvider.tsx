@@ -1,24 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { usePrevious, useQuery } from '../../../../utils/hooks';
+import { usePrevious } from '../../../../utils/hooks';
 import { Column, SearchContextValue, SearchState, SearchUIViewType } from '../types';
-import { SearchUIProps } from '../../SearchUI';
-import { useHistory } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
 import scrollIntoView from 'scroll-into-view-if-needed';
-import { MaterialsInputType } from '../../../data-entry/MaterialsInput';
-import {
-  getDefaultFiltersAndValues,
-  getSearchState,
-  initQueryParams,
-  initSearchState,
-  isNotEmpty,
-  newInitFilterGroups,
-  updateActiveFilters
-} from '../utils';
-import { getPageCount } from '../../../data-entry/utils';
+import { initQueryParams, isNotEmpty, newInitFilterGroups, updateActiveFilters } from '../utils';
 import { useRef } from 'react';
 import { useQueryParams } from 'use-query-params';
 import { initColumns } from '../../../../utils/table';
