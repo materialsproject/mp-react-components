@@ -1,9 +1,7 @@
 import React from 'react';
 import { SearchUIContextProvider } from '../SearchUIContextProvider';
-import { SearchUIViewType } from '../types';
+import { SearchUIContainerProps, SearchUIViewType } from '../types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
-import { SearchUIProps } from '../SearchUI';
 import classNames from 'classnames';
 import { QueryParamProvider } from 'use-query-params';
 
@@ -13,7 +11,7 @@ import { QueryParamProvider } from 'use-query-params';
  * This allows you to use the state management functionality of `SearchUI` with the ability
  * to customize the inner layout and components.
  */
-export const SearchUIContainer: React.FC<SearchUIProps> = ({
+export const SearchUIContainer: React.FC<SearchUIContainerProps> = ({
   view = SearchUIViewType.TABLE,
   apiEndpoint = '',
   apiEndpointParams = {},
