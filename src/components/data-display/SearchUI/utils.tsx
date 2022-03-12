@@ -31,8 +31,11 @@ import { initColumns } from '../../../utils/table';
 import {
   ArrayParam,
   BooleanParam,
+  decodeDelimitedArray,
   DelimitedNumericArrayParam,
+  encodeDelimitedArray,
   NumberParam,
+  QueryParamConfig,
   QueryParamConfigMap,
   StringParam
 } from 'use-query-params';
@@ -513,6 +516,15 @@ export const getSearchState = (
   return { ...currentState, filterValues, activeFilters };
 };
 
+const CommaArrayParam: QueryParamConfig<
+  (string | null)[] | null | undefined,
+  (string | null)[] | null | undefined
+> = {
+  encode: (array) => encodeDelimitedArray(array, ','),
+
+  decode: (arrayStr) => decodeDelimitedArray(arrayStr, ',')
+};
+
 export const initQueryParams = (
   filterGroups: FilterGroup[],
   sortKey: string,
@@ -520,7 +532,7 @@ export const initQueryParams = (
   skipKey: string
 ): QueryParamConfigMap => {
   const params: QueryParamConfigMap = {
-    [sortKey]: ArrayParam,
+    [sortKey]: CommaArrayParam,
     [limitKey]: NumberParam,
     [skipKey]: NumberParam
   };
@@ -529,7 +541,7 @@ export const initQueryParams = (
     g.filters.forEach((f) => {
       switch (f.type) {
         case FilterType.MATERIALS_INPUT:
-          params[f.params[0]] = f.props.type === 'elements' ? ArrayParam : StringParam;
+          params[f.params[0]] = f.props.type === 'elements' ? CommaArrayParam : StringParam;
           break;
         case FilterType.SLIDER:
           params[f.params[0]] = NumberParam;
