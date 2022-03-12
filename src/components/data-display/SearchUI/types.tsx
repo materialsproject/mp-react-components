@@ -435,29 +435,12 @@ export interface SearchUIContainerProps {
   hasSortMenu?: boolean;
 
   /**
-   * Optionally include a field to sort by on initial load
-   * Must be a valid field and included in your list of columns
+   * Optionally include up to 2 fields to sort by on initial load.
+   * To sort in descending order, prefix the field name with "-".
+   * The first sort field can be modified within the UI. The second will be the default secondary sort field.
+   * e.g. ["-energy_above_hull", "formula_pretty"]
    */
-  sortField?: string;
-
-  /**
-   * If including a sortField, set whether it should ascend by default
-   * True for ascending, False for descending
-   */
-  sortAscending?: boolean;
-
-  /**
-   * Optionally include a secondary sort field. If the sortField ever becomes the same as
-   * the secondarySortField, the secondary field is removed.
-   * Must be a valid field and included in your list of columns.
-   */
-  secondarySortField?: string;
-
-  /**
-   * If including a secondarySortField, set whether it should ascend by default.
-   * True for ascending, False for descending.
-   */
-  secondarySortAscending?: boolean;
+  sortFields?: string[];
 
   sortKey?: string;
 

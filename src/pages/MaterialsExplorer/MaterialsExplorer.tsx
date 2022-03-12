@@ -62,10 +62,7 @@ export const MaterialsExplorer: React.FC = () => {
         }
         apiKey={undefined}
         hasSortMenu={true}
-        sortField="energy_above_hull"
-        sortAscending={true}
-        secondarySortField="formula_pretty"
-        secondarySortAscending={true}
+        sortFields={['energy_above_hull', 'formula_pretty']}
       >
         <SearchUISearchBar
           periodicTableMode={PeriodicTableMode.TOGGLE}
