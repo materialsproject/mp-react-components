@@ -15,13 +15,13 @@ import {
   FilterGroup,
   FilterType,
   SearchParam,
-  SearchState
+  SearchState,
+  SearchUIContainerProps
 } from './types';
 import { Link } from '../../navigation/Link';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
 import { MaterialsInputTypesMap, validateElements } from '../../data-entry/MaterialsInput/utils';
-import { SearchUIProps } from '.';
 import { FaDownload } from 'react-icons/fa';
 import { joinUrl } from '../../../utils/navigation';
 import { Tooltip } from '../Tooltip';
@@ -515,32 +515,19 @@ export const getSearchState = (
 
 export const initQueryParams = (
   filterGroups: FilterGroup[],
-  isContribs?: boolean
+  sortKey: string,
+  limitKey: string,
+  skipKey: string
 ): QueryParamConfigMap => {
-  const params: QueryParamConfigMap = {};
-  const paramsToFilterMap = {};
-
-  if (isContribs) {
-    // params._fields = ArrayParam;
-    params._limit = NumberParam;
-    params._skip = NumberParam;
-    params._sort = ArrayParam;
-  } else {
-    // params.fields = ArrayParam;
-    params.limit = NumberParam;
-    params.skip = NumberParam;
-    params.sort_fields = ArrayParam;
-  }
+  const params: QueryParamConfigMap = {
+    [sortKey]: ArrayParam,
+    [limitKey]: NumberParam,
+    [skipKey]: NumberParam
+  };
 
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
       switch (f.type) {
-        // case FilterType.SLIDER:
-        //   const minSuffix = f.minSuffix || defaultMinSuffix;
-        //   const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-        //   params[f.id + minSuffix] = NumberParam;
-        //   params[f.id + maxSuffix] = NumberParam;
-        //   break;
         case FilterType.MATERIALS_INPUT:
           params[f.params[0]] = f.props.type === 'elements' ? ArrayParam : StringParam;
           break;
@@ -564,7 +551,7 @@ export const initQueryParams = (
 
 export const initSearchState = (
   defaultState: SearchState,
-  propsWithoutChildren: SearchUIProps,
+  propsWithoutChildren: SearchUIContainerProps,
   query: URLSearchParams,
   isDesktop = true
 ): SearchState => {

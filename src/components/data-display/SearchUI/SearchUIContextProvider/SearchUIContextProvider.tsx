@@ -48,7 +48,9 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   // const [state, setState] = useState(() =>
   //   initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
   // );
-  const [query, setQuery] = useQueryParams(initQueryParams(props.filterGroups));
+  const [query, setQuery] = useQueryParams(
+    initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey)
+  );
   const filterGroups = newInitFilterGroups(props.filterGroups);
   const columns = initColumns(props.columns, props.disableRichColumnHeaders);
   const [state, setState] = useState<SearchState>({
@@ -57,7 +59,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     columns
   });
   const defaultQuery = {
-    [state.sortKey]: ['formula_pretty'],
+    [state.sortKey]: state.sortFields,
     [state.limitKey]: 15,
     [state.skipKey]: 0
   };
@@ -93,10 +95,10 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       // setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      const sort_fields = [...query[props.sortKey]];
+      const sortFields = [...query[props.sortKey]];
       const directionPrefix = sortAscending ? '' : '-';
-      sort_fields[0] = directionPrefix + sortField;
-      setQuery({ sort_fields, [props.skipKey]: 0 });
+      sortFields[0] = directionPrefix + sortField;
+      setQuery({ [props.sortKey]: sortFields, [props.skipKey]: 0 });
     },
     setSortField: (sortField: string) => {
       const sortFields = [...query[props.sortKey]];
