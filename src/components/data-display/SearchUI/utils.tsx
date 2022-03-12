@@ -236,9 +236,6 @@ export const updateActiveFilters = (filterGroups, query) => {
             ) {
               /** Remove trailing '-' from chemical system string */
               parsedValue = parsedValue.replace(/\-$/, '');
-            } else if (f.props.type === MaterialsInputType.ELEMENTS) {
-              /** Parse elements back into array so that they're in a normalized format for the query */
-              parsedValue = validateElements(parsedValue);
             }
 
             activeFilters.push({
@@ -540,9 +537,9 @@ export const initQueryParams = (
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
       switch (f.type) {
-        case FilterType.MATERIALS_INPUT:
-          params[f.params[0]] = f.props.type === 'elements' ? CommaArrayParam : StringParam;
-          break;
+        // case FilterType.MATERIALS_INPUT:
+        //   params[f.params[0]] = f.props.type === 'elements' ? CommaArrayParam : StringParam;
+        //   break;
         case FilterType.SLIDER:
           params[f.params[0]] = NumberParam;
           params[f.params[1]] = NumberParam;
