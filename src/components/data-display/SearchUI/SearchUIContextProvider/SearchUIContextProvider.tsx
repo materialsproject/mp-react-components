@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious } from '../../../../utils/hooks';
@@ -6,7 +6,13 @@ import { Column, SearchContextValue, SearchState, SearchUIViewType } from '../ty
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useMediaQuery } from 'react-responsive';
 import scrollIntoView from 'scroll-into-view-if-needed';
-import { initQueryParams, isNotEmpty, newInitFilterGroups, updateActiveFilters } from '../utils';
+import {
+  initQueryParams,
+  isNotEmpty,
+  newInitFilterGroups,
+  preprocessQueryParams,
+  updateActiveFilters
+} from '../utils';
 import { useRef } from 'react';
 import { useQueryParams } from 'use-query-params';
 import { initColumns } from '../../../../utils/table';
@@ -48,11 +54,16 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   // const [state, setState] = useState(() =>
   //   initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
   // );
-  const [query, setQuery] = useQueryParams(
-    initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey)
-  );
-  const filterGroups = newInitFilterGroups(props.filterGroups);
-  const columns = initColumns(props.columns, props.disableRichColumnHeaders);
+  const queryParamConfig = useMemo(() => {
+    return initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
+  }, []);
+  const [query, setQuery] = useQueryParams(queryParamConfig);
+  const filterGroups = useMemo(() => {
+    return newInitFilterGroups(props.filterGroups);
+  }, []);
+  const columns = useMemo(() => {
+    return initColumns(props.columns, props.disableRichColumnHeaders);
+  }, []);
   const [state, setState] = useState<SearchState>({
     ...propsWithoutChildren,
     filterGroups,
@@ -67,8 +78,9 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    * The fields param is ommitted from the url for brevity and
    * added to the query params internally in the get request
    */
-  const fields = state.columns.map((c) => c.selector);
-  // const queryParamToFilterMap = mapQueryParamsToFilter
+  const fields = useMemo(() => {
+    return state.columns.map((c) => c.selector);
+  }, []);
   const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
@@ -254,9 +266,12 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       //   delete params.formation_energy_per_atom;
       // }
 
+      const params = preprocessQueryParams({ ...query }, state.filterGroups);
+      params[props.fieldsKey] = fields;
+
       axios
         .get(props.apiEndpoint, {
-          params: { ...query, [props.fieldsKey]: fields },
+          params: params,
           paramsSerializer: (p) => {
             return qs.stringify(p, { arrayFormat: 'comma' });
           },
