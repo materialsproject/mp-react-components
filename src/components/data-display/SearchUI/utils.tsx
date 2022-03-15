@@ -12,6 +12,7 @@ import {
   ActiveFilter,
   Column,
   ColumnFormat,
+  Filter,
   FilterGroup,
   FilterType,
   SearchParam,
@@ -32,6 +33,7 @@ import {
   ArrayParam,
   BooleanParam,
   decodeDelimitedArray,
+  DecodedValueMap,
   DelimitedNumericArrayParam,
   encodeDelimitedArray,
   NumberParam,
@@ -558,10 +560,19 @@ export const initQueryParams = (
   return params;
 };
 
-export const preprocessQueryParams = (query, filterGroups: FilterGroup[]) => {
+/**
+ * Apply transformations to the query param values before sending them to the API.
+ * @param query object of query params and their values.
+ * @param filterGroups filter definitions nested by group.
+ * @returns object of query params with API-ready values.
+ */
+export const preprocessQueryParams = (
+  query: DecodedValueMap<QueryParamConfigMap>,
+  filterGroups: FilterGroup[]
+) => {
   const params = {};
   for (const paramName in query) {
-    let filter;
+    let filter: Filter | undefined;
     filterGroups.forEach((g) => {
       g.filters.forEach((f) => {
         if (f.params[0] === paramName || f.params[1] === paramName) {
@@ -570,16 +581,19 @@ export const preprocessQueryParams = (query, filterGroups: FilterGroup[]) => {
       });
     });
     if (filter) {
+      let paramValue = query[paramName];
       switch (filter.type) {
         case FilterType.MATERIALS_INPUT:
-          let paramValue = query[paramName];
           if (typeof paramValue === 'string') {
             paramValue = paramValue.replace(/\s/g, '');
           }
           params[paramName] = paramValue;
           break;
         default:
-          params[paramName] = query[paramName];
+          if (filter.makeLowerCase && typeof paramValue === 'string') {
+            paramValue = paramValue.toLowerCase();
+          }
+          params[paramName] = paramValue;
       }
     } else {
       params[paramName] = query[paramName];

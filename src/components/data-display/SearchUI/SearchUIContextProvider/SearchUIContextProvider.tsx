@@ -57,13 +57,16 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   const queryParamConfig = useMemo(() => {
     return initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
   }, []);
+  // const queryParamConfig = initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
   const [query, setQuery] = useQueryParams(queryParamConfig);
   const filterGroups = useMemo(() => {
     return newInitFilterGroups(props.filterGroups);
   }, []);
+  // const filterGroups = newInitFilterGroups(props.filterGroups);
   const columns = useMemo(() => {
     return initColumns(props.columns, props.disableRichColumnHeaders);
   }, []);
+  // const columns = initColumns(props.columns, props.disableRichColumnHeaders);
   const [state, setState] = useState<SearchState>({
     ...propsWithoutChildren,
     filterGroups,
@@ -78,9 +81,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    * The fields param is ommitted from the url for brevity and
    * added to the query params internally in the get request
    */
-  const fields = useMemo(() => {
-    return state.columns.map((c) => c.selector);
-  }, []);
+  const fields = state.columns.map((c) => c.selector);
   const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
