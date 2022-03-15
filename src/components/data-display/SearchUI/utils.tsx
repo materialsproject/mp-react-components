@@ -558,6 +558,36 @@ export const initQueryParams = (
   return params;
 };
 
+export const preprocessQueryParams = (query, filterGroups: FilterGroup[]) => {
+  const params = {};
+  for (const paramName in query) {
+    let filter;
+    filterGroups.forEach((g) => {
+      g.filters.forEach((f) => {
+        if (f.params[0] === paramName || f.params[1] === paramName) {
+          filter = f;
+        }
+      });
+    });
+    if (filter) {
+      switch (filter.type) {
+        case FilterType.MATERIALS_INPUT:
+          let paramValue = query[paramName];
+          if (typeof paramValue === 'string') {
+            paramValue = paramValue.replace(/\s/g, '');
+          }
+          params[paramName] = paramValue;
+          break;
+        default:
+          params[paramName] = query[paramName];
+      }
+    } else {
+      params[paramName] = query[paramName];
+    }
+  }
+  return params;
+};
+
 export const initSearchState = (
   defaultState: SearchState,
   propsWithoutChildren: SearchUIContainerProps,

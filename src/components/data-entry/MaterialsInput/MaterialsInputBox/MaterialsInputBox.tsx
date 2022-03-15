@@ -188,16 +188,16 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
           });
         }
 
-        let cleanInputValue = inputValue;
-        if (inputType !== MaterialsInputType.TEXT) {
-          cleanInputValue = cleanInputValue.replace(/\s/g, '');
-        }
+        // let cleanInputValue = inputValue;
+        // if (inputType !== MaterialsInputType.TEXT) {
+        //   cleanInputValue = cleanInputValue.replace(/\s/g, '');
+        // }
 
         setInputType(newMaterialsInputType);
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
         setPrevInputValue(inputValue);
-        props.setValue(cleanInputValue);
+        props.setValue(inputValue);
         if (props.onInputTypeChange && newMaterialsInputType) {
           props.onInputTypeChange(newMaterialsInputType);
         }
