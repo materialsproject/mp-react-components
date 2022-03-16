@@ -515,6 +515,10 @@ export const getSearchState = (
   return { ...currentState, filterValues, activeFilters };
 };
 
+/**
+ * Custom param type for array params that should show values
+ * in the URL as a comma-separated array (e.g. sort_fields=density,volume).
+ */
 const CommaArrayParam: QueryParamConfig<
   (string | null)[] | null | undefined,
   (string | null)[] | null | undefined
@@ -524,6 +528,16 @@ const CommaArrayParam: QueryParamConfig<
   decode: (arrayStr) => decodeDelimitedArray(arrayStr, ',')
 };
 
+/**
+ * Create the query param config object based on the filter definitions.
+ * This determines the keys in the query param object and assigns param types
+ * to each key to determine how the param is encoded/decoded in the URL.
+ * @param filterGroups filter definitions by nested group
+ * @param sortKey key to use for the sort param
+ * @param limitKey key to use for the result limit param
+ * @param skipKey key to use for the skip amount (which index should the range of results start from)
+ * @returns config that maps query params to param types
+ */
 export const initQueryParams = (
   filterGroups: FilterGroup[],
   sortKey: string,
@@ -539,9 +553,6 @@ export const initQueryParams = (
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
       switch (f.type) {
-        // case FilterType.MATERIALS_INPUT:
-        //   params[f.params[0]] = f.props.type === 'elements' ? CommaArrayParam : StringParam;
-        //   break;
         case FilterType.SLIDER:
           params[f.params[0]] = NumberParam;
           params[f.params[1]] = NumberParam;
