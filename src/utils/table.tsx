@@ -17,7 +17,7 @@ const emptyCellPlaceholder = '-';
  * @param selector string that corresponds to a key or nested group of keys (e.g. 'data.a.b.c') in an object.
  * @param row object that has the key(s) specified in selector
  */
-const getRowValueFromSelectorString = (selector: string, row: any) => {
+export const getRowValueFromSelectorString = (selector: string, row: any) => {
   try {
     const selectors = selector.split('.');
     switch (selectors.length) {

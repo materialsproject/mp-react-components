@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
@@ -24,7 +23,7 @@ export const MofExplorer: React.FC = () => {
       >
         MOF Explorer
       </h1>
-      <SearchUI
+      {/* <SearchUI
         view={SearchUIViewType.TABLE}
         resultLabel="MOF"
         columns={columns as Column[]}
@@ -59,7 +58,7 @@ export const MofExplorer: React.FC = () => {
             label: 'Additional search options are available in the filters panel.'
           }
         ]}
-      />
+      /> */}
     </>
   );
 };

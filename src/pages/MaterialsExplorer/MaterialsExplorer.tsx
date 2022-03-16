@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';

@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
@@ -14,7 +13,7 @@ export const CatalystExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title">Catalyst Explorer</h1>
-      <SearchUI
+      {/* <SearchUI
         view={SearchUIViewType.TABLE}
         isContribs
         resultLabel="catalyst"
@@ -39,7 +38,7 @@ export const CatalystExplorer: React.FC = () => {
             field: 'id'
           }
         }}
-      />
+      /> */}
     </>
   );
 };

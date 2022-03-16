@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import {
   Column,
   FilterGroup,
@@ -17,7 +16,7 @@ export const SynthesisExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title">Synthesis Explorer</h1>
-      <SearchUI
+      {/* <SearchUI
         resultLabel="synthesis recipe"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -38,7 +37,7 @@ export const SynthesisExplorer: React.FC = () => {
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         searchBarPlaceholder="Search recipes by keywords"
         view={SearchUIViewType.SYNTHESIS}
-      />
+      /> */}
     </>
   );
 };
