@@ -181,7 +181,14 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
   return { initializedGroups, initializedValues };
 };
 
-export const updateActiveFilters = (filterGroups, query) => {
+/**
+ * Update the search state's active filters.
+ * The activeFilters list is recomputed whenever a filter is modified in the UI.
+ */
+export const updateActiveFilters = (
+  filterGroups: FilterGroup[],
+  query: DecodedValueMap<QueryParamConfigMap>
+): ActiveFilter[] => {
   const activeFilters: ActiveFilter[] = [];
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
@@ -336,186 +343,6 @@ export const updateActiveFilters = (filterGroups, query) => {
 };
 
 /**
- * Method for initializing and updating the search state's active filters.
- * Returns a full state object
- * Optionally accepts a filterValues argument which represents a new hash map
- * of values for building the activeFilters list.
- * The activeFilters list is recomputed whenever a filter is modified in the UI.
- */
-export const getSearchState = (
-  currentState: SearchState,
-  filterValues = { ...currentState.filterValues }
-): SearchState => {
-  // const isDesktop = useMediaQuery({ minWidth: 1024 });
-  const activeFilters: ActiveFilter[] = [];
-  currentState.filterGroups.forEach((g) => {
-    g.filters.forEach((f) => {
-      const operatorSuffix = f.operatorSuffix || '';
-      switch (f.type) {
-        case FilterType.SLIDER:
-          /**
-           * The lower bound will be null if initialized from a url that only has a max param.
-           * The upper bound will be null if initialized from a url that only has a min param.
-           */
-          const hasActiveMin =
-            filterValues[f.id][0] !== null && filterValues[f.id][0] > f.props.domain[0];
-          const hasActiveMax =
-            filterValues[f.id][1] !== null && filterValues[f.id][1] < f.props.domain[1];
-
-          if (hasActiveMin || hasActiveMax) {
-            const minSuffix = f.minSuffix || defaultMinSuffix;
-            const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-            const searchParams: SearchParam[] = [];
-            /**
-             * If the min/max value is equal to the domain min/max,
-             * then there won't be a param added for that bound.
-             * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
-             */
-            if (hasActiveMin)
-              searchParams.push({
-                field: f.id + minSuffix,
-                value: filterValues[f.id][0]
-              });
-            if (hasActiveMax)
-              searchParams.push({
-                field: f.id + maxSuffix,
-                value: filterValues[f.id][1]
-              });
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: f.props.domain,
-              conversionFactor: f.conversionFactor,
-              searchParams: searchParams
-            });
-          }
-          break;
-        case FilterType.MATERIALS_INPUT:
-          if (filterValues[f.id] !== '') {
-            let parsedValue = filterValues[f.id];
-
-            if (
-              f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
-              (f.props.type === MaterialsInputType.FORMULA && filterValues[f.id].indexOf('-') > -1)
-            ) {
-              /** Remove trailing '-' from chemical system string */
-              parsedValue = filterValues[f.id].replace(/\-$/, '');
-            } else if (f.props.type === MaterialsInputType.ELEMENTS) {
-              /** Parse elements back into array so that they're in a normalized format for the query */
-              parsedValue = validateElements(filterValues[f.id]);
-            }
-
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: parsedValue,
-              defaultValue: '',
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (isNotEmpty(filterValues[f.id])) {
-            const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
-            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : filterValues[f.id];
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: formattedSymbol,
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.SELECT:
-        case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (isNotEmpty(filterValues[f.id])) {
-            const selectedOption = f.props.options.find((d) => d.value === filterValues[f.id]);
-            const displayValue = selectedOption ? selectedOption.label : filterValues[f.id];
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: displayValue,
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.TEXT_INPUT:
-          if (isNotEmpty(filterValues[f.id])) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.CHECKBOX_LIST:
-          if (isNotEmpty(filterValues[f.id])) {
-            const displayValue = filterValues[f.id].map((d) => {
-              const option = f.props.options.find((o) => o.value === d);
-              return option.label || d;
-            });
-
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: displayValue,
-              defaultValue: [],
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        default:
-          if (isNotEmpty(filterValues[f.id])) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
-          }
-      }
-    });
-  });
-  return { ...currentState, filterValues, activeFilters };
-};
-
-/**
  * Custom param type for array params that should show values
  * in the URL as a comma-separated array (e.g. sort_fields=density,volume).
  */
@@ -599,6 +426,18 @@ export const preprocessQueryParams = (
             paramValue = paramValue.replace(/\s/g, '');
           }
           params[paramName] = paramValue;
+          break;
+        case FilterType.SLIDER:
+          /**
+           * If the min or max param is equal to the lower/upper limit,
+           * that param will be excluded from the final query to the API.
+           * This effectively makes the counds inclusive (e.g volume 500 or more).
+           */
+          const isAtDomainLimit =
+            paramValue === filter.props.domain[0] || paramValue === filter.props.domain[1];
+          if (!isAtDomainLimit) {
+            params[paramName] = paramValue;
+          }
           break;
         default:
           if (filter.makeLowerCase && typeof paramValue === 'string') {
