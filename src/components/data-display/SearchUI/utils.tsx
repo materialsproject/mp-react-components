@@ -1,40 +1,18 @@
-import React from 'react';
-import classNames from 'classnames';
 import {
   crystalSystemOptions,
-  formatFormula,
   formatPointGroup,
   pointGroupOptions,
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions
 } from '../../data-entry/utils';
-import {
-  ActiveFilter,
-  Column,
-  ColumnFormat,
-  Filter,
-  FilterGroup,
-  FilterType,
-  SearchParam,
-  SearchState,
-  SearchUIContainerProps
-} from './types';
-import { Link } from '../../navigation/Link';
+import { ActiveFilter, Filter, FilterGroup, FilterType } from './types';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
-import { MaterialsInputTypesMap, validateElements } from '../../data-entry/MaterialsInput/utils';
-import { FaDownload } from 'react-icons/fa';
-import { joinUrl } from '../../../utils/navigation';
-import { Tooltip } from '../Tooltip';
-import { ArrayChips } from '../ArrayChips';
-import { Formula } from '../Formula';
-import { initColumns } from '../../../utils/table';
+import { MaterialsInputTypesMap } from '../../data-entry/MaterialsInput/utils';
 import {
-  ArrayParam,
   BooleanParam,
   decodeDelimitedArray,
   DecodedValueMap,
-  DelimitedNumericArrayParam,
   encodeDelimitedArray,
   NumberParam,
   QueryParamConfig,
@@ -42,9 +20,9 @@ import {
   StringParam
 } from 'use-query-params';
 
-const defaultMinSuffix = '_min';
-const defaultMaxSuffix = '_max';
-
+/**
+ * Check whether a filter value is considered empty or not (i.e. active or inactive)
+ */
 export const isNotEmpty = (value: any) => {
   if (Array.isArray(value)) {
     return value.length > 0 ? true : false;
@@ -53,7 +31,13 @@ export const isNotEmpty = (value: any) => {
   }
 };
 
-export const newInitFilterGroups = (filterGroups: FilterGroup[]): FilterGroup[] => {
+/**
+ * Initialize filter groups to be usable within the search state.
+ * This allows options to be programatically added for symmetry filters.
+ * @param filterGroups array filter definitions nested by group
+ * @returns new array of filter groups ready to use in the state
+ */
+export const initFilterGroups = (filterGroups: FilterGroup[]): FilterGroup[] => {
   const initializedGroups = filterGroups.map((g) => {
     g.filters = g.filters.map((f) => {
       switch (f.type) {
@@ -83,116 +67,17 @@ export const newInitFilterGroups = (filterGroups: FilterGroup[]): FilterGroup[] 
   return initializedGroups;
 };
 
-const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
-  const initializedValues = {};
-  const initializedGroups = filterGroups.map((g) => {
-    g.filters = g.filters.map((f) => {
-      let queryParamValue: any = query.get(f.id);
-
-      /**
-       * Chem sys queries are represented in the formula query param
-       * but should render in the elements filter. These two checks
-       * make sure chem sys gets assigned to elements filter.
-       */
-      if (f.id === 'formula' && queryParamValue && queryParamValue.indexOf('-') > -1) {
-        queryParamValue = '';
-      }
-
-      if (f.id === 'elements' && query.get('formula') && query.get('formula')!.indexOf('-') > -1) {
-        queryParamValue = query.get('formula');
-        if (!f.hasOwnProperty('props')) f.props = {};
-        /** Make sure elements filter is initialized with the appropriate elements mode */
-        f.props.type = 'chemical_system';
-      }
-
-      switch (f.type) {
-        case FilterType.SLIDER:
-          const minSuffix = f.minSuffix || defaultMinSuffix;
-          const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-          const queryParamMinString = query.get(f.id + minSuffix);
-          const queryParamMaxString = query.get(f.id + maxSuffix);
-          let queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
-          let queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
-          if (queryParamMin !== null || queryParamMax !== null) {
-            queryParamValue = [queryParamMin, queryParamMax];
-          } else {
-            queryParamValue = null;
-          }
-          initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
-          return f;
-        case FilterType.MATERIALS_INPUT:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : '';
-          if (!f.hasOwnProperty('props')) f.props = {};
-          return f;
-        case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = { options: spaceGroupSymbolOptions() };
-          return f;
-        case FilterType.SELECT_SPACEGROUP_NUMBER:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = { options: spaceGroupNumberOptions() };
-          return f;
-        case FilterType.SELECT_CRYSTAL_SYSTEM:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = { options: crystalSystemOptions() };
-          return f;
-        case FilterType.SELECT_POINTGROUP:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          f.props = {
-            options: pointGroupOptions(),
-            formatOptionLabel: ({ value, label, customAbbreviation }) => {
-              return formatPointGroup(label);
-            }
-          };
-          return f;
-        case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (queryParamValue === 'true') {
-            initializedValues[f.id] = true;
-          } else if (queryParamValue === 'false') {
-            initializedValues[f.id] = false;
-          } else {
-            initializedValues[f.id] = undefined;
-          }
-          return f;
-        case FilterType.SELECT:
-          if (queryParamValue) {
-            initializedValues[f.id] = queryParamValue;
-          } else if (f.props.defaultValue) {
-            initializedValues[f.id] = f.props.defaultValue;
-          } else if (f.props.value) {
-            initializedValues[f.id] = f.props.value;
-          } else {
-            initializedValues[f.id] = undefined;
-          }
-          return f;
-        case FilterType.TEXT_INPUT:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          return f;
-        case FilterType.CHECKBOX_LIST:
-          initializedValues[f.id] = query.get(f.id)?.split(',');
-          return f;
-        default:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          return f;
-      }
-    });
-    return g;
-  });
-  return { initializedGroups, initializedValues };
-};
-
 /**
  * Update the search state's active filters.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-export const updateActiveFilters = (
+export const getActiveFilters = (
   filterGroups: FilterGroup[],
   query: DecodedValueMap<QueryParamConfigMap>
 ): ActiveFilter[] => {
   const activeFilters: ActiveFilter[] = [];
   filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
-      const operatorSuffix = f.operatorSuffix || '';
       const af = {
         name: f.name,
         params: f.params,
@@ -201,32 +86,10 @@ export const updateActiveFilters = (
       };
       switch (f.type) {
         case FilterType.SLIDER:
-          /**
-           * The lower bound will be null if initialized from a url that only has a max param.
-           * The upper bound will be null if initialized from a url that only has a min param.
-           */
           const hasActiveMin = query[f.params[0]] > f.props.domain[0];
           const hasActiveMax = query[f.params[1]] < f.props.domain[1];
 
           if (hasActiveMin || hasActiveMax) {
-            const minSuffix = f.minSuffix || defaultMinSuffix;
-            const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-            const searchParams: SearchParam[] = [];
-            /**
-             * If the min/max value is equal to the domain min/max,
-             * then there won't be a param added for that bound.
-             * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
-             */
-            // if (hasActiveMin)
-            //   searchParams.push({
-            //     field: f.id + minSuffix,
-            //     value: query[f.id][0]
-            //   });
-            // if (hasActiveMax)
-            //   searchParams.push({
-            //     field: f.id + maxSuffix,
-            //     value: query[f.id][1]
-            //   });
             activeFilters.push({
               ...af,
               value: [query[f.params[0]], query[f.params[1]]],
@@ -249,13 +112,7 @@ export const updateActiveFilters = (
 
             activeFilters.push({
               ...af,
-              value: parsedValue,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
-                }
-              ]
+              value: parsedValue
             });
           }
           break;
@@ -265,13 +122,7 @@ export const updateActiveFilters = (
             const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : af.value;
             activeFilters.push({
               ...af,
-              value: formattedSymbol,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: query[f.id]
-                }
-              ]
+              value: formattedSymbol
             });
           }
           break;
@@ -282,26 +133,7 @@ export const updateActiveFilters = (
             const displayValue = selectedOption ? selectedOption.label : af.value;
             activeFilters.push({
               ...af,
-              value: displayValue,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.TEXT_INPUT:
-          if (isNotEmpty(af.value)) {
-            activeFilters.push({
-              ...af,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
-                }
-              ]
+              value: displayValue
             });
           }
           break;
@@ -314,27 +146,13 @@ export const updateActiveFilters = (
 
             activeFilters.push({
               ...af,
-              value: displayValue,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
-                }
-              ]
+              value: displayValue
             });
           }
           break;
         default:
           if (isNotEmpty(af.value)) {
-            activeFilters.push({
-              ...af,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? query[f.id].toLowerCase() : query[f.id]
-                }
-              ]
-            });
+            activeFilters.push({ ...af });
           }
       }
     });
@@ -450,83 +268,6 @@ export const preprocessQueryParams = (
     }
   }
   return params;
-};
-
-export const initSearchState = (
-  defaultState: SearchState,
-  propsWithoutChildren: SearchUIContainerProps,
-  query: URLSearchParams,
-  isDesktop = true
-): SearchState => {
-  /**
-   * Initial state is a combination of the defaultState values above
-   * and all the values provided in props (except props.children)
-   */
-  const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
-  initialState.columns = initColumns(
-    propsWithoutChildren.columns,
-    initialState.disableRichColumnHeaders
-  );
-  const { initializedGroups, initializedValues } = initFilterGroups(
-    propsWithoutChildren.filterGroups,
-    query
-  );
-  console.log('init search state');
-  if (
-    isDesktop &&
-    (initializedValues['elements'] ||
-      initializedValues['formula'] ||
-      initializedValues['task_ids'] ||
-      initializedValues['material_ids'])
-  ) {
-    // initializedGroups[0].expanded = true;
-  }
-
-  initialState.filterGroups = initializedGroups;
-  initialState.filterValues = initializedValues;
-
-  const urlLimit = query.get('limit');
-  const urlSkip = query.get('skip');
-  const urlSortFields = query.get('sort_fields');
-
-  if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
-  if (urlSkip) initialState.page = parseInt(urlSkip) / initialState.resultsPerPage + 1;
-
-  /** Serialize sort params from API syntax to SearchUI props */
-  if (urlSortFields) {
-    const sortFields = urlSortFields.split(',');
-    const sortFieldSplitDesc = sortFields[0].split('-');
-    initialState.sortField =
-      sortFieldSplitDesc.length === 1 ? sortFieldSplitDesc[0] : sortFieldSplitDesc[1];
-    initialState.sortAscending = sortFieldSplitDesc.length === 1;
-    initialState.secondarySortField = sortFields[1] || undefined;
-    if (sortFields[1]) {
-      const secondaryFieldSplitDesc = sortFields[1].split('-');
-      const secondaryField =
-        secondaryFieldSplitDesc.length === 1
-          ? secondaryFieldSplitDesc[0]
-          : secondaryFieldSplitDesc[1];
-      initialState.secondarySortField =
-        secondaryField !== initialState.sortField ? secondaryField : undefined;
-      initialState.secondarySortAscending =
-        initialState.secondarySortField !== undefined && secondaryFieldSplitDesc.length === 1;
-    }
-  }
-
-  return getSearchState(initialState);
-};
-
-export const getDefaultFiltersAndValues = (state: SearchState) => {
-  const filterValues = state.filterValues;
-  let activeFilters = state.activeFilters;
-  activeFilters.forEach((a) => {
-    filterValues[a.id] = a.defaultValue;
-  });
-  activeFilters = [];
-  return {
-    filterValues,
-    activeFilters
-  };
 };
 
 export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap) => {

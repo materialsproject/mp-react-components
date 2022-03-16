@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { usePrevious } from '../../../../utils/hooks';
 import { Column, SearchContextValue, SearchState, SearchUIViewType } from '../types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { useMediaQuery } from 'react-responsive';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import {
   initQueryParams,
   isNotEmpty,
-  newInitFilterGroups,
+  initFilterGroups,
   preprocessQueryParams,
-  updateActiveFilters
+  getActiveFilters
 } from '../utils';
 import { useRef } from 'react';
 import { useQueryParams } from 'use-query-params';
@@ -48,25 +47,16 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     ...otherProps
   };
   const { children, ...propsWithoutChildren } = props;
-  // const query = useQuery();
-  // const history = useHistory();
-  // const isDesktop = useMediaQuery({ minWidth: 1024 });
-  // const [state, setState] = useState(() =>
-  //   initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
-  // );
   const queryParamConfig = useMemo(() => {
     return initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
   }, []);
-  // const queryParamConfig = initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
   const [query, setQuery] = useQueryParams(queryParamConfig);
   const filterGroups = useMemo(() => {
-    return newInitFilterGroups(props.filterGroups);
+    return initFilterGroups(props.filterGroups);
   }, []);
-  // const filterGroups = newInitFilterGroups(props.filterGroups);
   const columns = useMemo(() => {
     return initColumns(props.columns, props.disableRichColumnHeaders);
   }, []);
-  // const columns = initColumns(props.columns, props.disableRichColumnHeaders);
   const [state, setState] = useState<SearchState>({
     ...propsWithoutChildren,
     filterGroups,
@@ -98,14 +88,6 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     },
     setResultsPerPage: (resultsPerPage: number) => {
       setQuery({ [props.limitKey]: resultsPerPage, [props.skipKey]: 0 });
-      // if (ref.current) {
-      //   scrollIntoView(ref.current, {
-      //     scrollMode: 'if-needed',
-      //     block: 'start',
-      //     behavior: 'smooth'
-      //   });
-      // }
-      // setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
       const sortFields = [...query[props.sortKey]];
@@ -188,12 +170,6 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
         'push'
       );
     },
-    // resetAllFiltersExcept: (value: any, id: string) => {
-    //   setState((currentState) => {
-    //     const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-    //     return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
-    //   });
-    // },
     setFilterProps: (props: any, filterName: string, groupId: string) => {
       const filterGroups = state.filterGroups;
       const group = filterGroups.find((g) => g.name === groupId);
@@ -206,66 +182,11 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
     getData: () => {
-      // setState((currentState) => {
       /** Only show the loading icon if this is a filter change not on simple page change */
       const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
       let isLoading = showLoading;
       let minLoadTime = 1000;
       let minLoadTimeReached = !showLoading;
-      // let params = Object.assign({}, currentState.apiEndpointParams!);
-      // let query = new URLSearchParams();
-
-      // /** Resolve inconsistencies between mp-api and contribs-api */
-      // const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
-      // const limitKey = currentState.isContribs ? '_limit' : 'limit';
-      // const skipKey = currentState.isContribs ? '_skip' : 'skip';
-      // const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
-
-      // params[fieldsKey] = currentState.columns.map((d) => d.selector);
-      // params[limitKey] = currentState.resultsPerPage;
-      // params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
-      // query.set(limitKey, params[limitKey]);
-      // query.set(skipKey, params[skipKey]);
-
-      // /**
-      //  * Convert sort props to syntax expected by API.
-      //  * Descending fields are prepended with "-".
-      //  * Secondary sort field is added with a comma separator.
-      //  */
-      // let secondarySort: string | undefined;
-      // if (currentState.secondarySortField) {
-      //   secondarySort = currentState.secondarySortAscending
-      //     ? currentState.secondarySortField
-      //     : `-${currentState.secondarySortField}`;
-      // }
-
-      // if (currentState.sortField) {
-      //   let primarySort = currentState.sortAscending
-      //     ? currentState.sortField
-      //     : `-${currentState.sortField}`;
-      //   params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
-      //   query.set(sortKey, params[sortKey]);
-      // }
-
-      // currentState.activeFilters.forEach((a) => {
-      //   a.searchParams?.forEach((s) => {
-      //     let field = s.field;
-      //     let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
-
-      //     if (field === 'has_props' && params[field]) {
-      //       params[field].push(value);
-      //     }
-
-      //     params[field] = value;
-      //     query.set(field, s.value);
-      //   });
-      // });
-
-      // if (params.formation_energy_per_atom) {
-      //   params.formation_energy_per_atom_min = params.formation_energy_per_atom[0];
-      //   params.formation_energy_per_atom_max = params.formation_energy_per_atom[1];
-      //   delete params.formation_energy_per_atom;
-      // }
 
       const params = preprocessQueryParams({ ...query }, state.filterGroups);
       params[props.fieldsKey] = fields;
@@ -279,15 +200,12 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
           headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
         })
         .then((result) => {
-          // history.push({ search: query.toString() });
           isLoading = false;
           const loadingValue = minLoadTimeReached ? false : true;
           setState((currentState) => {
             const totalResults = props.isContribs
               ? result.data.total_count
               : result.data.meta.total_doc;
-            // const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
-            // const page = currentState.page > pageCount ? pageCount : currentState.page;
             return {
               ...currentState,
               results: result.data.data,
@@ -337,7 +255,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    */
   useDeepCompareEffect(() => {
     if (query[props.limitKey]) {
-      const activeFilters = updateActiveFilters(state.filterGroups, query);
+      const activeFilters = getActiveFilters(state.filterGroups, query);
       let searchBarValue = state.searchBarValue;
       const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
       if (searchBarFieldFilter) {
