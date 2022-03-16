@@ -12,11 +12,11 @@ interface Props {
   onChange?: (value: any) => void;
 }
 
-const initOptions = (options: Option[], values?: any[]) => {
+const getOptions = (options: Option[], values?: any[]) => {
   return options.map((d) => {
     if (values) {
       d.checked = values.indexOf(d.value) > -1 ? true : false;
-    } else if (!d.hasOwnProperty('checked')) {
+    } else {
       d.checked = false;
     }
     return d;
@@ -35,7 +35,7 @@ const getCheckedValues = (ops: Option[]) => {
 };
 
 export const CheckboxList: React.FC<Props> = (props) => {
-  const [options, setOptions] = useState(initOptions(props.options, props.values));
+  const [options, setOptions] = useState(getOptions(props.options, props.values));
 
   const handleChange = (index: number) => {
     let newOptions = [...options];
@@ -46,7 +46,7 @@ export const CheckboxList: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    setOptions(initOptions(props.options, props.values));
+    setOptions(getOptions(options, props.values));
   }, [props.values]);
 
   return (

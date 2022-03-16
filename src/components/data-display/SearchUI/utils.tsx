@@ -385,7 +385,7 @@ export const initQueryParams = (
           params[f.params[1]] = NumberParam;
           break;
         case FilterType.CHECKBOX_LIST:
-          params[f.params[0]] = ArrayParam;
+          params[f.params[0]] = CommaArrayParam;
           break;
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
           params[f.params[0]] = BooleanParam;
