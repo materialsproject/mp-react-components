@@ -183,9 +183,9 @@ export const SearchUIDataHeader: React.FC = () => {
         .map((c) => {
           return { label: c.nameString, value: c.selector } as DropdownItem;
         })}
-      sortField={state.sortField}
+      sortField={state.sortFields ? state.sortFields[0] : undefined}
       setSortField={actions.setSortField}
-      sortAscending={state.sortAscending}
+      sortAscending={state.sortFields ? state.sortFields[0].indexOf('-') !== 0 : undefined}
       setSortAscending={actions.setSortAscending}
       sortFn={actions.setSort}
     />
