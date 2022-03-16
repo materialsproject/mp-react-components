@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
@@ -22,7 +21,7 @@ export const XasApp: React.FC = () => {
       <button className="button" onClick={() => setState({ ...state, selectedRows: [] })}>
         Clear Selected Rows
       </button>
-      <SearchUI
+      {/* <SearchUI
         resultLabel="spectrum"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -31,7 +30,7 @@ export const XasApp: React.FC = () => {
         hasSearchBar={false}
         selectableRows={true}
         setProps={setState}
-      />
+      /> */}
     </>
   );
 };

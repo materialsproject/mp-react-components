@@ -14,7 +14,7 @@ import {
 } from '../utils';
 import { useRef } from 'react';
 import { useQueryParams } from 'use-query-params';
-import { initColumns } from '../../../../utils/table';
+import { getRowValueFromSelectorString, initColumns } from '../../../../utils/table';
 
 /**
  * Two contexts are invoked inside the SearchUI component
@@ -203,9 +203,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
           isLoading = false;
           const loadingValue = minLoadTimeReached ? false : true;
           setState((currentState) => {
-            const totalResults = props.isContribs
-              ? result.data.total_count
-              : result.data.meta.total_doc;
+            const totalResults = getRowValueFromSelectorString(props.totalKey, result.data);
             return {
               ...currentState,
               results: result.data.data,

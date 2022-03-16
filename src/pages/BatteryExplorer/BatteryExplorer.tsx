@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
@@ -14,7 +13,7 @@ export const BatteryExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title is-1">Battery Explorer</h1>
-      <SearchUI
+      {/* <SearchUI
         resultLabel="battery"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -33,7 +32,7 @@ export const BatteryExplorer: React.FC = () => {
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         sortField="energy_above_hull"
         sortAscending={true}
-      />
+      /> */}
     </>
   );
 };

@@ -10,7 +10,6 @@ import { Sidebar } from './components/navigation/Sidebar';
 import Scene from './components/crystal-toolkit/scene/Scene';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/data-entry/MaterialsInput/MaterialsInput';
-import { SearchUI } from './components/data-display/SearchUI';
 import { GlobalSearchBar } from './components/data-entry/GlobalSearchBar';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { Select } from './components/data-entry/Select';
@@ -56,7 +55,6 @@ export {
   ReactGraphComponent,
   Sidebar,
   Scrollspy,
-  SearchUI,
   SearchUIContainer,
   SearchUISearchBar,
   SearchUIGrid,

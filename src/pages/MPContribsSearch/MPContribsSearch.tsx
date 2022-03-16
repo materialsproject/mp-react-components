@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
@@ -14,7 +13,7 @@ export const MPContribsSearch: React.FC = () => {
   return (
     <>
       <h1 className="title">MPContribs Search</h1>
-      <SearchUI
+      {/* <SearchUI
         view={SearchUIViewType.TABLE}
         isContribs
         resultLabel="contribution"
@@ -39,7 +38,7 @@ export const MPContribsSearch: React.FC = () => {
             field: 'id'
           }
         }}
-      />
+      /> */}
     </>
   );
 };

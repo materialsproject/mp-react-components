@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
@@ -13,7 +12,7 @@ export const MoleculesExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title is-1">Molecules Explorer</h1>
-      <SearchUI
+      {/* <SearchUI
         resultLabel="molecule"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -31,7 +30,7 @@ export const MoleculesExplorer: React.FC = () => {
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         sortField="IE"
         sortAscending={false}
-      />
+      /> */}
     </>
   );
 };

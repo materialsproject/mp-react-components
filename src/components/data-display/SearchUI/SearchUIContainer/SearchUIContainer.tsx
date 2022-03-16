@@ -4,6 +4,7 @@ import { SearchUIContainerProps, SearchUIViewType } from '../types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import classNames from 'classnames';
 import { QueryParamProvider } from 'use-query-params';
+import './SearchUIContainer.css';
 
 /**
  * A component that can wrap around sub-components of `SearchUI` and ensure they are
@@ -17,11 +18,11 @@ export const SearchUIContainer: React.FC<SearchUIContainerProps> = ({
   apiEndpointParams = {},
   resultLabel = 'result',
   hasSortMenu = true,
-  hasSearchBar = true,
   sortKey = 'sort_fields',
   limitKey = 'limit',
   skipKey = 'skip',
   fieldsKey = 'fields',
+  totalKey = 'meta.total_doc',
   conditionalRowStyles = [],
   results = [],
   setProps = () => null,
@@ -34,11 +35,11 @@ export const SearchUIContainer: React.FC<SearchUIContainerProps> = ({
     apiEndpointParams,
     resultLabel,
     hasSortMenu,
-    hasSearchBar,
     sortKey,
     limitKey,
     skipKey,
     fieldsKey,
+    totalKey,
     conditionalRowStyles,
     results,
     setProps,
