@@ -6,7 +6,14 @@
       {
         "name": "Material ID",
         "params": ["material_ids"],
-        "overrides": ["elements", "formula", "chemsys", "exclude_elements", "nelements"],
+        "overrides": [
+          "elements",
+          "formula",
+          "chemsys",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
         "isSearchBarField": true,
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
@@ -19,7 +26,14 @@
       {
         "name": "Formula",
         "params": ["formula"],
-        "overrides": ["material_ids", "elements", "chemsys", "exclude_elements", "nelements"],
+        "overrides": [
+          "material_ids",
+          "elements",
+          "chemsys",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
         "isSearchBarField": true,
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
@@ -41,7 +55,14 @@
       {
         "name": "Chemical System",
         "params": ["chemsys"],
-        "overrides": ["material_ids", "elements", "formula", "exclude_elements", "nelements"],
+        "overrides": [
+          "material_ids",
+          "elements",
+          "formula",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
         "isSearchBarField": true,
         "tooltip": "Enter a \" - \" separated list of element symbols (e.g. \"Ga-N\") to find materials within that chemical space (i.e. materials that contain only these elements).",
         "type": "MATERIALS_INPUT",

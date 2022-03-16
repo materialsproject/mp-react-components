@@ -56,7 +56,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
   const [groupsByName, setGroupsByName] = useState(
-    getGroupsByName(state.filterGroups, state.activeFilters)
+    getGroupsByName(state.filterGroups, state.activeFilters!)
   );
 
   /**
@@ -199,7 +199,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
   };
 
   const resetFilter = (f: Filter) => {
-    const af = getActiveFilterByName(f.name, state.activeFilters);
+    const af = getActiveFilterByName(f.name, state.activeFilters!);
     if (af) {
       actions.removeFilters(af.params);
     }
@@ -223,7 +223,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     let newGroupsByName = { ...groupsByName };
     for (const name in newGroupsByName) {
       const g = newGroupsByName[name];
-      g.activeFilterCount = getActiveFilterCount(g, state.activeFilters);
+      g.activeFilterCount = getActiveFilterCount(g, state.activeFilters!);
     }
     setGroupsByName(newGroupsByName);
   }, [state.activeFilters]);
@@ -233,7 +233,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
    * from outside of this component (e.g. when a quick search is submitted)
    */
   useEffect(() => {
-    const newGroupsByName = getGroupsByName(state.filterGroups, state.activeFilters);
+    const newGroupsByName = getGroupsByName(state.filterGroups, state.activeFilters!);
     setGroupsByName(newGroupsByName);
   }, [state.filterGroups]);
 
