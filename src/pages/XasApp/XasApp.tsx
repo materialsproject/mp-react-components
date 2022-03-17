@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
+import { SearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer';
+import { SearchUIGrid } from '../../components/data-display/SearchUI/SearchUIGrid';
 
 /**
  * Component for testing the XAS App view
@@ -21,16 +23,17 @@ export const XasApp: React.FC = () => {
       <button className="button" onClick={() => setState({ ...state, selectedRows: [] })}>
         Clear Selected Rows
       </button>
-      {/* <SearchUI
+      <SearchUIContainer
         resultLabel="spectrum"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
         apiEndpoint={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
         apiKey={process.env.REACT_APP_API_KEY}
-        hasSearchBar={false}
         selectableRows={true}
         setProps={setState}
-      /> */}
+      >
+        <SearchUIGrid />
+      </SearchUIContainer>
     </>
   );
 };
