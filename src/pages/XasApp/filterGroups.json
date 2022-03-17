@@ -5,7 +5,7 @@
     "filters": [
       {
         "name": "Edge",
-        "id": "edge",
+        "params": ["edge"],
         "tooltip": "The interaction edge for the spectra",
         "type": "SELECT",
         "props": {
@@ -33,7 +33,7 @@
       },
       {
         "name": "Spectrum Type",
-        "id": "spectrum_type",
+        "params": ["spectrum_type"],
         "type": "SELECT",
         "props": {
           "options": [
@@ -55,7 +55,7 @@
       },
       {
         "name": "Absorbing Element",
-        "id": "absorbing_element",
+        "params": ["absorbing_element"],
         "tooltip": "Enter one element symbol to find spectra with that element as their absorbing element.",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -66,7 +66,7 @@
       },
       {
         "name": "Other Elements",
-        "id": "elements",
+        "params": ["elements"],
         "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find spectra for materials that contain certain elements in their formula. Select the checkbox to find materials that contain only the elements you have entered.",
         "type": "MATERIALS_INPUT",
         "props": {
@@ -77,7 +77,7 @@
       },
       {
         "name": "Formula",
-        "id": "formula",
+        "params": ["formula"],
         "tooltip": "Enter a chemical formula to find spectra for materials with this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {

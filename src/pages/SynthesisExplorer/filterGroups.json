@@ -5,7 +5,7 @@
     "filters": [
       {
         "name": "Keywords",
-        "id": "keywords",
+        "params": ["keywords"],
         "type": "TEXT_INPUT",
         "tooltip": "Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
       }
@@ -17,7 +17,7 @@
     "filters": [
       {
         "name": "Target material formula",
-        "id": "target_formula",
+        "params": ["target_formula"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "formula"
@@ -25,7 +25,7 @@
       },
       {
         "name": "Precursor material formula",
-        "id": "precursor_formula",
+        "params": ["precursor_formula"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "formula"
@@ -39,7 +39,7 @@
     "filters": [
       {
         "name": "Synthesis type",
-        "id": "synthesis_type",
+        "params": ["synthesis_type"],
         "type": "SELECT",
         "props": {
           "options": [
@@ -56,7 +56,7 @@
       },
       {
         "name": "Performed operations",
-        "id": "operations",
+        "params": ["operations"],
         "type": "SELECT",
         "props": {
           "options": [
@@ -86,7 +86,7 @@
       },
       {
         "name": "Heating temperature",
-        "id": "condition_heating_temperature",
+        "params": ["condition_heating_temperature"],
         "units": "°C",
         "type": "SLIDER",
         "props": {
@@ -96,7 +96,7 @@
       },
       {
         "name": "Heating time",
-        "id": "condition_heating_time",
+        "params": ["condition_heating_time"],
         "units": "hours",
         "type": "SLIDER",
         "props": {
@@ -106,19 +106,19 @@
       },
       {
         "name": "Heating atmosphere",
-        "id": "condition_heating_atmosphere",
+        "params": ["condition_heating_atmosphere"],
         "type": "TEXT_INPUT",
         "tooltip": "Required atmosphere during the heating step, such as 'air', 'argon'."
       },
       {
         "name": "Mixing device",
-        "id": "condition_mixing_device",
+        "params": ["condition_mixing_device"],
         "type": "TEXT_INPUT",
         "tooltip": "Required mixing device during the mixing step, such as 'zirconia', 'Al2O3'."
       },
       {
         "name": "Mixing media",
-        "id": "condition_mixing_media",
+        "params": ["condition_mixing_media"],
         "type": "TEXT_INPUT",
         "tooltip": "Required mixing media during the mixing step, such as 'alcohol', 'water'."
       }

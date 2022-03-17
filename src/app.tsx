@@ -40,7 +40,7 @@ ReactDOM.render(
         }}
         items={[
           {
-            label: 'Materialssssss',
+            label: 'Materials',
             href: '/materials'
           },
           {
