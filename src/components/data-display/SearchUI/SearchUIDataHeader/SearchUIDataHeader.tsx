@@ -47,31 +47,16 @@ export const SearchUIDataHeader: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
-  const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
-    const anyNotSelected = columns.find((col) => col.omit);
-    return !anyNotSelected;
-  });
-  const lowerResultBound = getLowerResultBound(state.totalResults!, query.limit, query.skip);
-  const upperResultBound = getUpperResultBound(state.totalResults!, query.limit, lowerResultBound);
-
-  const toggleColumn = (columnIndex: number) => {
-    const newColumns = [...columns];
-    const changedColumn = newColumns[columnIndex];
-    if (changedColumn) changedColumn.omit = !changedColumn.omit;
-    const anyNotSelected = newColumns.find((col) => col.omit);
-    setAllCollumnsSelected(!anyNotSelected);
-    actions.setColumns(newColumns);
-  };
-
-  const toggleAllColumns = () => {
-    const newAllColumnsSelected = !allCollumnsSelected;
-    const newColumns = columns.map((col) => {
-      col.omit = !newAllColumnsSelected;
-      return col;
-    });
-    setAllCollumnsSelected(newAllColumnsSelected);
-    actions.setColumns(newColumns);
-  };
+  const lowerResultBound = getLowerResultBound(
+    state.totalResults!,
+    query[state.limitKey],
+    query[state.skipKey]
+  );
+  const upperResultBound = getUpperResultBound(
+    state.totalResults!,
+    query[state.limitKey],
+    lowerResultBound
+  );
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
@@ -155,7 +140,7 @@ export const SearchUIDataHeader: React.FC = () => {
     >
       <div className="dropdown-trigger">
         <Button className="button">
-          <span>Results per page: {query.limit}</span>
+          <span>Results per page: {query[state.limitKey]}</span>
           <span className="icon">
             <FaAngleDown />
           </span>
@@ -165,7 +150,11 @@ export const SearchUIDataHeader: React.FC = () => {
         <ul className="dropdown-content">
           {resultsPerPageOptions.map((d, i) => (
             <MenuItem key={i} value={d}>
-              <li className={classNames('dropdown-item', { 'is-active': d === query.limit })}>
+              <li
+                className={classNames('dropdown-item', {
+                  'is-active': d === query[state.limitKey]
+                })}
+              >
                 {d}
               </li>
             </MenuItem>
@@ -183,9 +172,11 @@ export const SearchUIDataHeader: React.FC = () => {
         .map((c) => {
           return { label: c.nameString, value: c.selector } as DropdownItem;
         })}
-      sortField={state.sortFields ? state.sortFields[0] : undefined}
+      sortField={state.sortFields && state.sortFields[0] ? state.sortFields[0] : undefined}
       setSortField={actions.setSortField}
-      sortAscending={state.sortFields ? state.sortFields[0].indexOf('-') !== 0 : undefined}
+      sortAscending={
+        state.sortFields && state.sortFields[0] ? state.sortFields[0].indexOf('-') !== 0 : undefined
+      }
       setSortAscending={actions.setSortAscending}
       sortFn={actions.setSort}
     />
