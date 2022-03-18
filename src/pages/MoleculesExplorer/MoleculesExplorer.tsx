@@ -3,6 +3,7 @@ import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
+import { SearchUIContainer, SearchUIGrid, SearchUISearchBar } from '../..';
 
 /**
  * Component for testing the Molecules Explorer view
@@ -12,7 +13,7 @@ export const MoleculesExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title is-1">Molecules Explorer</h1>
-      {/* <SearchUI
+      <SearchUIContainer
         resultLabel="molecule"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -24,13 +25,21 @@ export const MoleculesExplorer: React.FC = () => {
             ? process.env.REACT_APP_AUTOCOMPLETE_URL
             : undefined
         }
-        apiKey={undefined}
-        searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        searchBarPlaceholder="Search by elements, formula, or mp-id"
-        searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
-        sortField="IE"
-        sortAscending={false}
-      /> */}
+        apiKey={process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : undefined}
+        sortFields={['IE']}
+      >
+        <SearchUISearchBar
+          placeholder="Search by elements, formula, or mp-id"
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+          allowedInputTypesMap={{
+            elements: { field: 'elements' },
+            formula: { field: 'formula' },
+            mpid: { field: 'task_ids' },
+            smiles: { field: 'smiles' }
+          }}
+        />
+        <SearchUIGrid />
+      </SearchUIContainer>
     </>
   );
 };

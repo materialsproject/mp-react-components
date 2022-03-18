@@ -188,7 +188,10 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       let minLoadTime = 1000;
       let minLoadTimeReached = !showLoading;
 
-      const params = preprocessQueryParams({ ...query }, state.filterGroups);
+      const params = preprocessQueryParams(
+        { ...query, ...props.apiEndpointParams },
+        state.filterGroups
+      );
       params[props.fieldsKey] = fields;
 
       axios

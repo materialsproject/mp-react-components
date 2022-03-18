@@ -1,104 +1,96 @@
 [
   {
-    "name": "MPContribs Identifiers",
+    "name": "Composition",
     "filters": [
       {
-        "name": "MPContribs ID",
-        "id": "id",
-        "type": "TEXT_INPUT"
-      },
-      {
-        "name": "Formula",
-        "id": "formula",
-        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "name": "Bulk Formula",
+        "params": ["data__bulkFormula__exact"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "formula",
-          "periodicTableMode": "focus",
-          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid bulk formula (e.g. AlCu4).",
+          "helpItems": [
+            { "label": "Bulk Formula Examples" },
+            { "label": null, "examples": ["Ti2Pd3", "FeSi"] }
+          ]
         }
       }
     ]
   },
   {
-    "name": "Catalyst Properties",
+    "name": "Adsorbate",
     "filters": [
       {
-        "name": "Bulk Formula",
-        "id": "data__bulkFormula",
-        "operatorSuffix": "__exact",
-        "type": "MATERIALS_INPUT",
-        "props": {
-          "type": "formula",
-          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
-        }
-      },
-      {
         "name": "Adsorbate SMILES",
-        "id": "data__adsorbateSmiles",
-        "operatorSuffix": "__exact",
+        "params": ["data__adsorbateSmiles__exact"],
         "type": "TEXT_INPUT"
       },
       {
         "name": "Adsorbate IUPAC Formula",
-        "id": "data__adsorbateIUPACFormula",
-        "operatorSuffix": "__exact",
+        "params": ["data__adsorbateIUPACFormula__exact"],
+        "type": "TEXT_INPUT"
+      }
+    ]
+  },
+  {
+    "name": "Surface",
+    "filters": [
+      {
+        "name": "Bulk Material ID",
+        "params": ["data__mpid__exact"],
         "type": "TEXT_INPUT"
       },
       {
-        "name": "Adsorption Energy",
-        "id": "data__adsorptionEnergy__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
-        "type": "SLIDER",
+        "name": "Formula",
+        "params": ["formula__exact"],
+        "type": "MATERIALS_INPUT",
         "props": {
-          "domain": [-2200, 0],
-          "step": 1
+          "type": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. Al60H2O).",
+          "helpItems": [
+            { "label": "Formula Examples" },
+            { "label": null, "examples": ["Cr18H2CS36O", "Tc48CN"] }
+          ]
         }
       },
       {
-        "name": "h",
-        "id": "data__h__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "name": "Miller index, h",
+        "params": ["data__h__value__gte", "data__h__value__lte"],
         "type": "SLIDER",
-        "props": {
-          "domain": [0, 2],
-          "step": 1
-        }
+        "props": { "domain": [0, 2], "step": 1 }
       },
       {
-        "name": "k",
-        "id": "data__k__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "name": "Miller index, k",
+        "params": ["data__k__value__gte", "data__k__value__lte"],
         "type": "SLIDER",
-        "props": {
-          "domain": [-2, 2],
-          "step": 1
-        }
+        "props": { "domain": [-2, 2], "step": 1 }
       },
       {
-        "name": "l",
-        "id": "data__l__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "name": "Miller index, l",
+        "params": ["data__l__value__gte", "data__l__value__lte"],
         "type": "SLIDER",
-        "props": {
-          "domain": [-2, 2],
-          "step": 1
-        }
+        "props": { "domain": [-2, 2], "step": 1 }
       },
       {
         "name": "Surface Shift",
-        "id": "data__surfaceShift__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "params": ["data__surfaceShift__value__gte", "data__surfaceShift__value__lte"],
+        "units": "Å",
         "type": "SLIDER",
-        "props": {
-          "domain": [0, 1],
-          "step": 0.01
-        }
+        "props": { "domain": [0, 1], "step": 0.01 }
+      }
+    ]
+  },
+  {
+    "name": "Properties",
+    "filters": [
+      {
+        "name": "Adsorption Energy",
+        "params": ["data__adsorptionEnergy__value__gte", "data__adsorptionEnergy__value__lte"],
+        "units": "eV",
+        "type": "SLIDER",
+        "props": { "domain": [-10, 10], "step": 1 }
       }
     ]
   }

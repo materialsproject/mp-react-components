@@ -5,7 +5,7 @@
     "filters": [
       {
         "name": "ID",
-        "id": "task_ids",
+        "params": ["task_ids"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "mpid",
@@ -15,7 +15,7 @@
       },
       {
         "name": "Required Elements",
-        "id": "elements",
+        "params": ["elements"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "elements",
@@ -24,7 +24,7 @@
       },
       {
         "name": "Number of Elements",
-        "id": "nelements",
+        "params": ["nelements_min", "nelements_max"],
         "type": "SLIDER",
         "props": {
           "domain": [0, 20],
@@ -33,7 +33,7 @@
       },
       {
         "name": "Formula",
-        "id": "formula",
+        "params": ["formula"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "formula",
@@ -42,7 +42,7 @@
       },
       {
         "name": "SMILES",
-        "id": "smiles",
+        "params": ["smiles"],
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "smiles",
@@ -58,7 +58,7 @@
     "filters": [
       {
         "name": "Electron Affinity",
-        "id": "EA",
+        "params": ["EA_min", "EA_max"],
         "units": "eV",
         "type": "SLIDER",
         "props": {
@@ -68,7 +68,7 @@
       },
       {
         "name": "Ionization Energy",
-        "id": "IE",
+        "params": ["IE_min", "IE_max"],
         "units": "eV",
         "type": "SLIDER",
         "props": {
@@ -78,7 +78,7 @@
       },
       {
         "name": "Charge",
-        "id": "charge",
+        "params": ["charge_min", "charge_max"],
         "units": "+e",
         "type": "SLIDER",
         "props": {
@@ -88,7 +88,7 @@
       },
       {
         "name": "Point Group",
-        "id": "pointgroup",
+        "params": ["pointgroup"],
         "type": "SELECT_POINTGROUP"
       }
     ]

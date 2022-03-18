@@ -38,8 +38,8 @@ export const SearchUIDataTable: React.FC = () => {
   const CustomPaginator = ({ isTop = false }) => (
     <Paginator
       rowCount={state.totalResults!}
-      rowsPerPage={query.limit}
-      currentPage={query.skip / query.limit + 1}
+      rowsPerPage={query[state.limitKey]}
+      currentPage={query[state.skipKey] / query[state.limitKey] + 1}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}
@@ -69,9 +69,17 @@ export const SearchUIDataTable: React.FC = () => {
             paginationServer
             sortServer
             sortIcon={<FaCaretDown />}
-            defaultSortField={query[state.sortKey] && query[state.sortKey][0].replace('-', '')}
+            defaultSortField={
+              query[state.sortKey] &&
+              query[state.sortKey][0] &&
+              query[state.sortKey][0].replace('-', '')
+            }
             defaultSortAsc={
-              query[state.sortKey] && query[state.sortKey][0].indexOf('-') === 0 ? false : true
+              query[state.sortKey] &&
+              query[state.sortKey][0] &&
+              query[state.sortKey][0].indexOf('-') === 0
+                ? false
+                : true
             }
             onSort={handleSort}
             customStyles={{

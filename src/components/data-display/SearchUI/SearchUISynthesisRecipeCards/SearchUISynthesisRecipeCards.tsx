@@ -7,7 +7,7 @@ import { SynthesisRecipeCard } from '../../SynthesisRecipeCard';
  *
  */
 export const SearchUISynthesisRecipeCards: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -15,10 +15,11 @@ export const SearchUISynthesisRecipeCards: React.FC = () => {
 
   const CustomPaginator = ({ isTop = false }) => (
     <Paginator
-      rowCount={state.totalResults}
-      rowsPerPage={state.resultsPerPage}
-      currentPage={state.page}
+      rowCount={state.totalResults!}
+      rowsPerPage={query[state.limitKey]}
+      currentPage={query[state.skipKey] / query[state.limitKey] + 1}
       onChangePage={handlePageChange}
+      onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}
     />
   );
