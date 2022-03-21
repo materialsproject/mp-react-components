@@ -14,7 +14,7 @@ import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsI
 import { FilterField } from '../../../data-entry/FilterField';
 
 /**
- * Component for rendering a panel of filters that are part of a SearchUI component
+ * Component for rendering a panel of filters that are part of a SearchUI component test
  */
 
 interface Props {
