@@ -31,7 +31,7 @@ export const ModalTrigger: React.FC<Props> = (props) => {
     <span
       id={props.id}
       className={classNames('mpc-modal-trigger', props.className)}
-      onClick={() => setActive(true)}
+      onClick={() => setActive(!active)}
     >
       {props.children}
     </span>

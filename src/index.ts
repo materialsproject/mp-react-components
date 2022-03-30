@@ -42,6 +42,7 @@ import { SearchUISearchBar } from './components/data-display/SearchUI/SearchUISe
 import { SearchUIDataHeader } from './components/data-display/SearchUI/SearchUIDataHeader';
 import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDataView';
 import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
+import { Drawer } from './components/data-display/Drawer';
 
 export {
   SelectableTable,
@@ -89,5 +90,6 @@ export {
   Enlargeable,
   Switch,
   RangeSlider,
-  DualRangeSlider
+  DualRangeSlider,
+  Drawer
 };
