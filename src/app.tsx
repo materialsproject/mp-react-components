@@ -99,7 +99,7 @@ ReactDOM.render(
           }
         ]}
       />
-      <section className="p-3">
+      <section>
         <Switch>
           <Route path="/materials">
             <MaterialsExplorer />
