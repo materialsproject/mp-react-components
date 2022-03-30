@@ -8,7 +8,8 @@ afterEach(() => cleanup());
 
 const renderElement = ({
   domain = [0, 25],
-  value = [5, 10],
+  valueMin = 5,
+  valueMax = 10,
   step = 1,
   onChange = () => undefined,
   onPropsChange = () => undefined
@@ -16,7 +17,8 @@ const renderElement = ({
   render(
     <DualRangeSlider
       domain={domain}
-      value={value}
+      valueMin={valueMin}
+      valueMax={valueMax}
       step={step}
       onChange={onChange}
       onPropsChange={onPropsChange}
@@ -28,7 +30,8 @@ describe('<DualRangeSlider/>', () => {
   it('should render with correct values', () => {
     renderElement({
       domain: [-100, 100],
-      value: [-20, 50]
+      valueMin: -20,
+      valueMax: 50
     });
     expect(screen.getByTestId('lower-bound-input')).toHaveValue(-20);
     expect(screen.getByTestId('upper-bound-input')).toHaveValue(50);
@@ -39,7 +42,8 @@ describe('<DualRangeSlider/>', () => {
   it('should change slider values when input changes', async () => {
     renderElement({
       domain: [-100, 100],
-      value: [-20, 50]
+      valueMin: -20,
+      valueMax: 50
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: 9 } });
     await waitFor(() => {
@@ -51,7 +55,8 @@ describe('<DualRangeSlider/>', () => {
   it('should prevent values outside of domain', async () => {
     renderElement({
       domain: [-100, 100],
-      value: [-20, 50]
+      valueMin: -20,
+      valueMax: 50
     });
     fireEvent.change(screen.getByTestId('lower-bound-input'), { target: { value: -111 } });
     await waitFor(() => {
