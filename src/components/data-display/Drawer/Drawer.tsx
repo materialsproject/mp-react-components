@@ -18,8 +18,6 @@ export interface EnlargeableProps {
    * Additional class to apply to drawer
    */
   className?: string;
-  open?: boolean;
-  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 /**

@@ -4,27 +4,64 @@
     "expanded": false,
     "filters": [
       {
-        "name": "ID",
+        "name": "Molecule ID",
         "params": ["task_ids"],
+        "overrides": ["elements", "formula", "smiles"],
+        "tooltip": "Find molecules with a specific Molecule ID, e.g. \"mol-45873\"",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "mpid",
-          "errorMessage": "Please enter a valid molecule ID (e.g. mol-25709).",
-          "periodicTableMode": null
+          "periodicTableMode": "none"
         }
       },
       {
-        "name": "Required Elements",
+        "name": "Formula",
+        "params": ["formula"],
+        "overrides": ["task_ids", "elements", "smiles", "nelements"],
+        "tooltip": "Enter a chemical formula to find molecules that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. H6C5SO).",
+          "helpItems": [
+            {
+              "label": "Formula Examples"
+            },
+            {
+              "label": null,
+              "examples": ["H7C4", "H15C8NO"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Include Elements",
         "params": ["elements"],
+        "overrides": ["task_ids", "formula", "smiles"],
+        "tooltip": "Enter a \" , \" separated list of element symbols to find molecules that contain at least these elements (e.g. \"H,C,N\").",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "elements",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
+          "periodicTableMode": "none",
+          "hideIsChemSys": true,
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma.",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["H,C", "N,S,O"]
+            }
+          ]
         }
       },
       {
         "name": "Number of Elements",
         "params": ["nelements_min", "nelements_max"],
+        "overrides": ["task_ids", "smiles", "nelements"],
+        "tooltip": "Number of distinct elements in the molecule's formula",
         "type": "SLIDER",
         "props": {
           "domain": [0, 20],
@@ -32,22 +69,24 @@
         }
       },
       {
-        "name": "Formula",
-        "params": ["formula"],
-        "type": "MATERIALS_INPUT",
-        "props": {
-          "type": "formula",
-          "errorMessage": "Please enter a valid chemical formula (e.g. H8C5O3)."
-        }
-      },
-      {
         "name": "SMILES",
         "params": ["smiles"],
+        "overrides": ["task_ids", "elements", "formula", "nelements"],
+        "tooltip": "Find molecules using the simplified molecular-input line-entry system (SMILES).",
         "type": "MATERIALS_INPUT",
         "props": {
           "type": "smiles",
+          "periodicTableMode": "none",
           "errorMessage": "Please enter a valid SMILES value.",
-          "periodicTableMode": null
+          "helpItems": [
+            {
+              "label": "Formula Examples"
+            },
+            {
+              "label": null,
+              "examples": ["C(=O)=O", "N(CCC)(CCC)N=O"]
+            }
+          ]
         }
       }
     ]
@@ -89,6 +128,7 @@
       {
         "name": "Point Group",
         "params": ["pointgroup"],
+        "tooltip": "Point group of the molecule in Schoenflies notation",
         "type": "SELECT_POINTGROUP"
       }
     ]
