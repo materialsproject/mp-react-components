@@ -43,6 +43,7 @@ import { SearchUIDataHeader } from './components/data-display/SearchUI/SearchUID
 import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDataView';
 import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
 import { Drawer } from './components/data-display/Drawer';
+import { Link } from './components/navigation/Link';
 
 export {
   SelectableTable,
@@ -91,5 +92,6 @@ export {
   Switch,
   RangeSlider,
   DualRangeSlider,
-  Drawer
+  Drawer,
+  Link
 };
