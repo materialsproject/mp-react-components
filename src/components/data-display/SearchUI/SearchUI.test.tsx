@@ -13,17 +13,6 @@ import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInpu
 /** Extend the jest timeout to allow time for async mock api requests */
 jest.setTimeout(30000);
 
-/** Mock react router useLocation */
-jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn().mockReturnValue({
-    pathname: '',
-    search: '',
-    hash: '',
-    state: null,
-    key: '5nvxpbdafa'
-  })
-}));
-
 const defaultProps = {
   resultLabel: 'material',
   columns: columns as Column[],

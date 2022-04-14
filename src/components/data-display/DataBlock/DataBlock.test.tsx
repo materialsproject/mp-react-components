@@ -3,17 +3,6 @@ import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/re
 import { DataBlock } from '.';
 import { Column } from '../SearchUI/types';
 
-/** Mock react router useLocation */
-jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn().mockReturnValue({
-    pathname: '',
-    search: '',
-    hash: '',
-    state: null,
-    key: '5nvxpbdafa'
-  })
-}));
-
 describe('<DataBlock/>', () => {
   it('should render data items', () => {
     render(<DataBlock {...defaultProps} />);
