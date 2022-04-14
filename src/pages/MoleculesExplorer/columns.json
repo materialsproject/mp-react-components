@@ -4,7 +4,7 @@
     "selector": "task_id",
     "formatType": "LINK",
     "formatOptions": {
-      "baseUrl": "/molecules/"
+      "baseUrl": "/sandbox/"
     }
   },
   {

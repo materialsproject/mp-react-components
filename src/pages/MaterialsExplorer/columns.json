@@ -16,7 +16,8 @@
     "selector": "material_id",
     "formatType": "LINK",
     "formatOptions": {
-      "baseUrl": "/materials/"
+      "baseUrl": "/materials/",
+      "preserveQuery": true
     },
     "minWidth": "130px"
   },

@@ -142,6 +142,7 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
               href={url}
               onClick={(e) => e.stopPropagation()}
               target={hasFormatOptions && c.formatOptions.target}
+              preserveQuery={hasFormatOptions && c.formatOptions.preserveQuery}
             >
               {isFormula ? <Formula>{linkLabel}</Formula> : linkLabel}
             </Link>

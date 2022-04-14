@@ -14,7 +14,7 @@ import {
   getActiveFilters
 } from '../utils';
 import { useRef } from 'react';
-import { useQueryParams } from 'use-query-params';
+import { DecodedValueMap, QueryParamConfigMap, useQueryParams } from 'use-query-params';
 import { getRowValueFromSelectorString, initColumns } from '../../../../utils/table';
 
 /**
@@ -52,10 +52,6 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     return initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
   }, []);
   const [query, setQuery] = useQueryParams(queryParamConfig);
-  const history = useHistory();
-  const pathname = useMemo(() => {
-    return history.location.pathname;
-  }, []);
   const filterGroups = useMemo(() => {
     return initFilterGroups(props.filterGroups);
   }, []);
@@ -260,20 +256,16 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    * If the default query params are missing (e.g. limit, skip, sort) then add them to the query.
    */
   useDeepCompareEffect(() => {
-    console.log(history);
-    console.log(pathname);
-    if (history.location.pathname === pathname) {
-      if (query[props.limitKey]) {
-        const activeFilters = getActiveFilters(state.filterGroups, query);
-        let searchBarValue = state.searchBarValue;
-        const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
-        if (searchBarFieldFilter) {
-          searchBarValue = searchBarFieldFilter.value;
-        }
-        setState({ ...state, activeFilters, searchBarValue });
-      } else if (!query[props.skipKey] || !query[props.limitKey] || !query[props.sortKey]) {
-        setQuery({ ...query, ...defaultQuery });
+    if (query[props.limitKey]) {
+      const activeFilters = getActiveFilters(state.filterGroups, query);
+      let searchBarValue = state.searchBarValue;
+      const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
+      if (searchBarFieldFilter) {
+        searchBarValue = searchBarFieldFilter.value;
       }
+      setState({ ...state, activeFilters, searchBarValue });
+    } else if (!query[props.skipKey] || !query[props.limitKey] || !query[props.sortKey]) {
+      setQuery({ ...query, ...defaultQuery });
     }
   }, [query]);
 
