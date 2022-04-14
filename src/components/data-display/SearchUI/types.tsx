@@ -388,11 +388,6 @@ export interface SearchUIContainerProps {
    */
   view?: SearchUIViewType;
   /**
-   * Set to `true` if the `apiEndpoint` points to MPContribs. This allows the component to handle
-   * small inconsistencies between the MPContribs API and the Materials Project API.
-   */
-  isContribs?: boolean;
-  /**
    * Amount of time in milliseconds that should elapse between a user entering
    * a value in the filters panel and a new query being triggered.
    */

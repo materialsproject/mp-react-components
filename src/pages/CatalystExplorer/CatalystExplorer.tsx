@@ -16,7 +16,6 @@ export const CatalystExplorer: React.FC = () => {
       <h1 className="title">Catalyst Explorer</h1>
       <SearchUIContainer
         view={SearchUIViewType.TABLE}
-        isContribs
         resultLabel="catalyst"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}

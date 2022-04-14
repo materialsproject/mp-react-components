@@ -29,7 +29,6 @@ export const MofExplorer: React.FC = () => {
         resultLabel="MOF"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
-        isContribs={true}
         apiEndpoint="https://contribs-api.materialsproject.org/contributions/"
         apiEndpointParams={{ project: 'qmof' }}
         apiKey={undefined}

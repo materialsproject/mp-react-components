@@ -16,7 +16,6 @@ export const MPContribsSearch: React.FC = () => {
       <h1 className="title">MPContribs Search</h1>
       <SearchUIContainer
         view={SearchUIViewType.TABLE}
-        isContribs
         resultLabel="contribution"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}

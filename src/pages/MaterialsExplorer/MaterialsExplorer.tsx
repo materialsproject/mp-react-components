@@ -39,7 +39,7 @@ export const MaterialsExplorer: React.FC = () => {
             ? process.env.REACT_APP_AUTOCOMPLETE_URL
             : undefined
         }
-        apiKey={undefined}
+        apiKey={process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : undefined}
         hasSortMenu={true}
         sortFields={['energy_above_hull', 'formula_pretty']}
       >
