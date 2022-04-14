@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { linkOnClick } from '../../../utils/navigation';
 
 interface Props {
@@ -11,9 +10,8 @@ interface Props {
 }
 
 export const Link: React.FC<Props> = (props) => {
-  const { search } = useLocation();
   const isExternal = props.href?.indexOf('http://') == 0 || props.href?.indexOf('https://') == 0;
-  const url = props.preserveQuery ? props.href + search : props.href;
+  const url = props.preserveQuery ? props.href + window.location.search : props.href;
   return (
     <a
       className={props.className}

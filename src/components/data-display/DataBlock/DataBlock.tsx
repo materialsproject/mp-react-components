@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactNode, useMemo, useRef, useState } from 'react';
 import Collapsible from 'react-collapsible';
 import { FaBicycle, FaCaretDown, FaCaretRight, FaCaretUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -66,11 +66,11 @@ export interface DataBlockProps {
  * section that displays data vertically.
  */
 export const DataBlock: React.FC<DataBlockProps> = (props) => {
-  const [columns, setColumns] = useState(() => {
+  const columns = useMemo(() => {
     return props.columns
       ? initColumns(props.columns, props.disableRichColumnHeaders)
       : getColumnsFromKeys(props.data);
-  });
+  }, []);
   const [topColumns, setTopColumns] = useState(() =>
     columns.filter((c) => !c.hidden && (c.isTop || (!c.isTop && !c.isBottom)))
   );

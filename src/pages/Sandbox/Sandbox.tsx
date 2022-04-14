@@ -4,6 +4,8 @@ import { Switch } from '../../components/data-entry/Switch';
 import { Drawer } from '../../components/data-display/Drawer';
 import { ModalContextProvider, ModalTrigger } from '../../components/data-display/Modal';
 import { ModalCloseButton } from '../../components/data-display/Modal/ModalCloseButton';
+import { DataBlock } from '../../components/data-display/DataBlock';
+import { Column } from '../../components/data-display/SearchUI/types';
 
 /**
  * View for testing out small new components
@@ -56,6 +58,45 @@ export const Sandbox: React.FC = () => {
             </ul>
           </Drawer>
         </ModalContextProvider>
+        <DataBlock
+          disableRichColumnHeaders={true}
+          className="box"
+          data={{
+            material_id: 'mp-19395',
+            formula_pretty: 'MnO2',
+            volume: 143.9321176
+          }}
+          columns={
+            [
+              {
+                title: 'Material ID',
+                selector: 'material_id',
+                formatType: 'LINK',
+                formatOptions: {
+                  baseUrl: 'https://next-gen.materialsproject.org',
+                  target: '_blank'
+                },
+                minWidth: '300px',
+                maxWidth: '300px'
+              },
+              {
+                title: 'Formula',
+                selector: 'formula_pretty',
+                formatType: 'FORMULA',
+                minWidth: '300px',
+                maxWidth: '300px'
+              },
+              {
+                title: 'Volume',
+                selector: 'volume',
+                formatType: 'FIXED_DECIMAL',
+                formatOptions: {
+                  decimals: 2
+                }
+              }
+            ] as Column[]
+          }
+        />
       </div>
     </>
   );
