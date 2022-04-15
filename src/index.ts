@@ -44,6 +44,8 @@ import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDat
 import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
 import { Drawer } from './components/data-display/Drawer';
 import { Link } from './components/navigation/Link';
+import { DrawerContextProvider } from './components/data-display/Drawer/DrawerContextProvider';
+import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
 
 export {
   SelectableTable,
@@ -93,5 +95,7 @@ export {
   RangeSlider,
   DualRangeSlider,
   Drawer,
-  Link
+  Link,
+  DrawerContextProvider,
+  DrawerTrigger
 };

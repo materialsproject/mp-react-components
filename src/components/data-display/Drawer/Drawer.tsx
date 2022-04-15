@@ -3,12 +3,13 @@ import classNames from 'classnames';
 import './Drawer.css';
 import { useModalContext } from '../Modal/ModalContextProvider';
 import { ModalCloseButton } from '../Modal/ModalCloseButton';
+import { useDrawerContext } from './DrawerContextProvider';
 
 export interface EnlargeableProps {
   /**
    * The ID used to identify this component in Dash callbacks.
    */
-  id?: string;
+  id: string;
   /**
    * Dash-assigned callback that should be called to report property changes
    * to Dash, to make them available for callbacks.
@@ -24,16 +25,16 @@ export interface EnlargeableProps {
  * Render right side drawer that can be opened by a ModalTrigger within a ModalContextProvider with the isDrawer prop.
  */
 export const Drawer: React.FC<EnlargeableProps> = (props) => {
-  const { active, setActive } = useModalContext();
+  const { activeDrawer, setActiveDrawer } = useDrawerContext();
 
   return (
     <div
       id={props.id}
       className={classNames('mpc-drawer', props.className, {
-        'is-active': active
+        'is-active': activeDrawer === props.id
       })}
     >
-      <ModalCloseButton onClick={() => setActive(false)} />
+      <ModalCloseButton onClick={() => setActiveDrawer(null)} />
       {props.children}
     </div>
   );

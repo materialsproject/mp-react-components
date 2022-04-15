@@ -6,6 +6,8 @@ import { ModalContextProvider, ModalTrigger } from '../../components/data-displa
 import { ModalCloseButton } from '../../components/data-display/Modal/ModalCloseButton';
 import { DataBlock } from '../../components/data-display/DataBlock';
 import { Column } from '../../components/data-display/SearchUI/types';
+import { DrawerContextProvider } from '../../components/data-display/Drawer/DrawerContextProvider';
+import { DrawerTrigger } from '../../components/data-display/Drawer/DrawerTrigger';
 
 /**
  * View for testing out small new components
@@ -44,11 +46,14 @@ export const Sandbox: React.FC = () => {
           truthyLabel="Enabled"
           falsyLabel="Disabled"
         />
-        <ModalContextProvider isDrawer>
-          <ModalTrigger>
-            <button>Toggle Drawer</button>
-          </ModalTrigger>
-          <Drawer>
+        <DrawerContextProvider>
+          <DrawerTrigger for="drawer-1">
+            <button>Drawer 1</button>
+          </DrawerTrigger>
+          <DrawerTrigger for="drawer-2">
+            <button>Drawer 2</button>
+          </DrawerTrigger>
+          <Drawer id="drawer-1">
             <h2>Drawer Content</h2>
             <ul>
               <li>1</li>
@@ -57,7 +62,11 @@ export const Sandbox: React.FC = () => {
               <li>4</li>
             </ul>
           </Drawer>
-        </ModalContextProvider>
+          <Drawer id="drawer-2">
+            <h2>Another Drawer</h2>
+            <p>here is its content</p>
+          </Drawer>
+        </DrawerContextProvider>
         <DataBlock
           disableRichColumnHeaders={true}
           className="box"
