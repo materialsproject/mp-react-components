@@ -20,7 +20,10 @@ interface Props {
    */
   className?: string;
 
-  for: string;
+  /**
+   * The ID of the drawer that this trigger should open.
+   */
+  forDrawerId: string;
 }
 
 /**
@@ -34,10 +37,10 @@ export const DrawerTrigger: React.FC<Props> = (props) => {
       id={props.id}
       className={classNames('mpc-drawer-trigger', props.className)}
       onClick={() => {
-        if (activeDrawer === props.for) {
+        if (activeDrawer === props.forDrawerId) {
           setActiveDrawer(null);
         } else {
-          setActiveDrawer(props.for);
+          setActiveDrawer(props.forDrawerId);
         }
       }}
     >

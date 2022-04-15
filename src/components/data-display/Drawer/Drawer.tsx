@@ -7,7 +7,8 @@ import { useDrawerContext } from './DrawerContextProvider';
 
 export interface EnlargeableProps {
   /**
-   * The ID used to identify this component in Dash callbacks.
+   * A unique ID to use to open and close the drawer in its DrawerContext.
+   * Also used to identify this component in Dash callbacks.
    */
   id: string;
   /**

@@ -47,10 +47,10 @@ export const Sandbox: React.FC = () => {
           falsyLabel="Disabled"
         />
         <DrawerContextProvider>
-          <DrawerTrigger for="drawer-1">
+          <DrawerTrigger forDrawerId="drawer-1">
             <button>Drawer 1</button>
           </DrawerTrigger>
-          <DrawerTrigger for="drawer-2">
+          <DrawerTrigger forDrawerId="drawer-2">
             <button>Drawer 2</button>
           </DrawerTrigger>
           <Drawer id="drawer-1">
