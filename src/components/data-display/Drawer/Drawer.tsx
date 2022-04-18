@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import './Drawer.css';
-import { useModalContext } from '../Modal/ModalContextProvider';
 import { ModalCloseButton } from '../Modal/ModalCloseButton';
 import { useDrawerContext } from './DrawerContextProvider';
 
