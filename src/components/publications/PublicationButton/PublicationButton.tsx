@@ -1,12 +1,11 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { FaBook } from 'react-icons/fa';
+import { FaQuoteRight } from 'react-icons/fa';
 import { Tooltip } from '../../data-display/Tooltip';
 import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';
-import { string } from 'prop-types';
 import { shortenCrossrefAuthors } from '../../../utils/publications';
 
 export interface PublicationButtonProps {
@@ -129,7 +128,7 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
     >
       <span className="tags has-addons">
         <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
-          <FaBook />
+          <FaQuoteRight />
           &nbsp;{linkLabel || 'Publication'}
         </a>
         {openAccessUrl || !cannotFetchOpenAccessUrl ? (

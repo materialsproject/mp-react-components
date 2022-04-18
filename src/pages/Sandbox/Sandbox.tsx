@@ -8,6 +8,8 @@ import { DataBlock } from '../../components/data-display/DataBlock';
 import { Column } from '../../components/data-display/SearchUI/types';
 import { DrawerContextProvider } from '../../components/data-display/Drawer/DrawerContextProvider';
 import { DrawerTrigger } from '../../components/data-display/Drawer/DrawerTrigger';
+import { CrossrefCard } from '../../components/publications/CrossrefCard';
+import { Markdown } from '../../components/data-display/Markdown';
 
 /**
  * View for testing out small new components
@@ -67,44 +69,9 @@ export const Sandbox: React.FC = () => {
             <p>here is its content</p>
           </Drawer>
         </DrawerContextProvider>
-        <DataBlock
-          disableRichColumnHeaders={true}
-          className="box"
-          data={{
-            material_id: 'mp-19395',
-            formula_pretty: 'MnO2',
-            volume: 143.9321176
-          }}
-          columns={
-            [
-              {
-                title: 'Material ID',
-                selector: 'material_id',
-                formatType: 'LINK',
-                formatOptions: {
-                  baseUrl: 'https://next-gen.materialsproject.org',
-                  target: '_blank'
-                },
-                minWidth: '300px',
-                maxWidth: '300px'
-              },
-              {
-                title: 'Formula',
-                selector: 'formula_pretty',
-                formatType: 'FORMULA',
-                minWidth: '300px',
-                maxWidth: '300px'
-              },
-              {
-                title: 'Volume',
-                selector: 'volume',
-                formatType: 'FIXED_DECIMAL',
-                formatOptions: {
-                  decimals: 2
-                }
-              }
-            ] as Column[]
-          }
+        <CrossrefCard identifier="10.1103/physrevb.84.045115" />
+        <Markdown
+          children={`Formation enthalpies by mixing GGA and GGA<mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mml:mrow><mml:mo>+</mml:mo></mml:mrow></mml:math><mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mml:mrow><mml:mi>U</mml:mi></mml:mrow></mml:math>calculations`}
         />
       </div>
     </>
