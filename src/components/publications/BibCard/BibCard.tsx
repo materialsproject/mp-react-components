@@ -60,17 +60,16 @@ export interface BibCardProps {
  * Card for displaying bibliographic information.
  * This component is the basis for the `BibjsonCard` and `CrossrefCard` components.
  */
-export const BibCard: React.FC<BibCardProps> = (props) => {
+export const BibCard: React.FC<BibCardProps> = ({ title = '', ...otherProps }) => {
+  const props = { title, ...otherProps };
   const url = `https://doi.org/${props.doi}`;
-  let title: ReactNode;
+  let titleElement: ReactNode;
   if (props.doi) {
-    title = (
-      <a href={url} target="_blank">
-        {props.title}
-      </a>
+    titleElement = (
+      <a href={url} target="_blank" dangerouslySetInnerHTML={{ __html: props.title }}></a>
     );
   } else {
-    title = <span>{props.title}</span>;
+    titleElement = <span dangerouslySetInnerHTML={{ __html: props.title }}></span>;
   }
 
   return (
@@ -80,7 +79,7 @@ export const BibCard: React.FC<BibCardProps> = (props) => {
       className={classNames('mpc-bib-card', props.className)}
     >
       <p data-testid="bib-card-title" className="mpc-bib-card-title">
-        {title}
+        {titleElement}
       </p>
       <p data-testid="bib-card-authors" className="mpc-bib-card-authors">
         {getAuthorString(props.author)}

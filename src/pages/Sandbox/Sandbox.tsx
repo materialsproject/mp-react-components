@@ -70,9 +70,6 @@ export const Sandbox: React.FC = () => {
           </Drawer>
         </DrawerContextProvider>
         <CrossrefCard identifier="10.1103/physrevb.84.045115" />
-        <Markdown
-          children={`Formation enthalpies by mixing GGA and GGA<mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mml:mrow><mml:mo>+</mml:mo></mml:mrow></mml:math><mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mml:mrow><mml:mi>U</mml:mi></mml:mrow></mml:math>calculations`}
-        />
       </div>
     </>
   );
