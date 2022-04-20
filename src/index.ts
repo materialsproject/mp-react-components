@@ -41,6 +41,7 @@ import { SearchUIContainer } from './components/data-display/SearchUI/SearchUICo
 import { SearchUISearchBar } from './components/data-display/SearchUI/SearchUISearchBar';
 import { SearchUIDataHeader } from './components/data-display/SearchUI/SearchUIDataHeader';
 import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDataView';
+import { SearchUIFilters } from './components/data-display/SearchUI/SearchUIFilters';
 import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
 import { Drawer } from './components/data-display/Drawer';
 import { Link } from './components/navigation/Link';
@@ -64,6 +65,7 @@ export {
   SearchUIGrid,
   SearchUIDataHeader,
   SearchUIDataView,
+  SearchUIFilters,
   MaterialsInput,
   DataTable,
   DataBlock,
