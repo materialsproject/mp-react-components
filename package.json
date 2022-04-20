@@ -90,6 +90,7 @@
     "remark-slug": "^7.0.0",
     "rxjs": "^6.6.3",
     "scroll-into-view-if-needed": "^2.2.28",
+    "source-map-explorer": "^2.5.2",
     "styled-components": "^5.2.1",
     "svgtodatauri": "0.0.0",
     "three": "^0.132.2",
