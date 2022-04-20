@@ -26,6 +26,7 @@ export const SearchUIContainer: React.FC<SearchUIContainerProps> = ({
   totalKey = 'meta.total_doc',
   conditionalRowStyles = [],
   results = [],
+  selectedRows = [],
   setProps = () => null,
   debounce = 1000,
   ...otherProps
@@ -44,6 +45,7 @@ export const SearchUIContainer: React.FC<SearchUIContainerProps> = ({
     totalKey,
     conditionalRowStyles,
     results,
+    selectedRows,
     setProps,
     debounce,
     ...otherProps

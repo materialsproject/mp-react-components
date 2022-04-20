@@ -7,6 +7,10 @@
   min-width: 0;
 }
 
+.mpc-search-ui .mpc-search-ui-right > *:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
 .mpc-search-ui .mpc-search-ui-right .mpc-inner-column-container {
   z-index: 1;
 }
@@ -124,10 +128,6 @@
   font-weight: normal;
 }
 
-.mpc-search-ui .mpc-search-ui-data-header {
-  margin-bottom: 0;
-}
-
 .mpc-search-ui .mpc-search-ui-data-header-content {
   display: flex;
   justify-content: space-between;
@@ -206,8 +206,7 @@
 }
 
 .mpc-search-ui .mpc-paginator,
-.mpc-search-ui .mpc-active-filter-buttons,
-.mpc-search-ui .mpc-search-ui-data-view {
+.mpc-search-ui .mpc-active-filter-buttons {
   margin-top: 0.5rem;
 }
 

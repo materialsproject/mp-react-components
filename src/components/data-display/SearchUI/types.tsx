@@ -419,7 +419,6 @@ export interface SearchState extends SearchUIContainerProps {
   activeFilters?: ActiveFilter[];
   loading?: boolean;
   error?: boolean;
-  selectedRows?: any[];
   searchBarValue?: string;
   resultsRef?: React.RefObject<HTMLDivElement> | null;
 }

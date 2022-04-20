@@ -63,6 +63,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     filterGroups,
     columns
   });
+  console.log(state);
   const defaultQuery = {
     [state.sortKey]: state.sortFields,
     [state.limitKey]: 15,
@@ -186,8 +187,10 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       /** Only show the loading icon if this is a filter change not on simple page change */
       const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
       let isLoading = showLoading;
+      // let isLoading = true;
       let minLoadTime = 1000;
       let minLoadTimeReached = !showLoading;
+      // let minLoadTimeReached = false;
 
       const params = preprocessQueryParams(
         { ...query, ...props.apiEndpointParams },
@@ -243,6 +246,10 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
           }
         }, minLoadTime);
       }
+
+      setState((currentState) => {
+        return { ...currentState, loading: isLoading };
+      });
     },
     setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
       setState((currentState) => ({ ...currentState, resultsRef }));
@@ -280,11 +287,18 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   }, [state.activeFilters, query[props.skipKey], query[props.limitKey], query[props.sortKey]]);
 
   /**
-   * Ensure results props has up-to-date value.
+   * Ensure results prop has up-to-date value.
    */
   useEffect(() => {
     props.setProps({ ...state, results: state.results });
   }, [state.results]);
+
+  /**
+   * Ensure selectedRows prop has up-to-date value.
+   */
+  useEffect(() => {
+    props.setProps({ ...state, selectedRows: state.selectedRows });
+  }, [state.selectedRows]);
 
   return (
     <SearchUIContext.Provider value={{ state, query }}>
