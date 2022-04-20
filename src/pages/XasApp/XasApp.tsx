@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
@@ -14,7 +14,10 @@ import { SearchUIDataView } from '../../components/data-display/SearchUI/SearchU
 
 export const XasApp: React.FC = () => {
   const [state, setState] = useState<any>({ selectedRows: [] });
-  console.log(state);
+
+  useEffect(() => {
+    console.log(state);
+  }, [state.selectedRows]);
   return (
     <>
       <h1 className="title">X-Ray Absorption Spectra</h1>

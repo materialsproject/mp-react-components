@@ -63,7 +63,6 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     filterGroups,
     columns
   });
-  console.log(state);
   const defaultQuery = {
     [state.sortKey]: state.sortFields,
     [state.limitKey]: 15,
@@ -180,7 +179,6 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       setState({ ...state, filterGroups: filterGroups });
     },
     setSelectedRows: (selectedRows: any[]) => {
-      props.setProps({ ...props, selectedRows });
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
     getData: () => {
@@ -287,18 +285,15 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   }, [state.activeFilters, query[props.skipKey], query[props.limitKey], query[props.sortKey]]);
 
   /**
-   * Ensure results prop has up-to-date value.
+   * Use setProps to update props that should be
+   * accessible by dash callbacks.
    */
   useEffect(() => {
-    props.setProps({ ...state, results: state.results });
-  }, [state.results]);
-
-  /**
-   * Ensure selectedRows prop has up-to-date value.
-   */
-  useEffect(() => {
-    props.setProps({ ...state, selectedRows: state.selectedRows });
-  }, [state.selectedRows]);
+    props.setProps({
+      results: state.results,
+      selectedRows: state.selectedRows
+    });
+  }, [state.results, state.selectedRows]);
 
   return (
     <SearchUIContext.Provider value={{ state, query }}>
