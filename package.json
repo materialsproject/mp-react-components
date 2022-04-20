@@ -93,7 +93,7 @@
     "source-map-explorer": "^2.5.2",
     "styled-components": "^5.2.1",
     "svgtodatauri": "0.0.0",
-    "three": "^0.132.2",
+    "three": "^0.139.2",
     "ts-debounce": "^2.1.0",
     "use-deep-compare-effect": "^1.6.1",
     "use-query-params": "^1.2.3",
