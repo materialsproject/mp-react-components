@@ -155,8 +155,6 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
        * e.g. If max = 4, it's possible to go from Fe-Ni-H-C to Fe-Ni-H-Co.
        */
       if (!isValidInputLength || (maxElementsReached && !isValid)) {
-        console.log('stop input update');
-        console.log(prevInputValue);
         setInputValue(prevInputValue);
         props.setValue(prevInputValue);
         return;

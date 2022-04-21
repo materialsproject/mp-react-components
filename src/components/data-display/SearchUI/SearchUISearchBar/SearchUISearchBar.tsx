@@ -121,7 +121,6 @@ export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
   };
 
   const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
-    console.log(value);
     const submitValue = value || searchValue;
     const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
       return allowedInputTypesMap[d].field;
@@ -153,7 +152,6 @@ export const SearchUISearchBar: React.FC<SearchUISearchBarProps> = ({
    */
   useEffect(() => {
     setSearchValue(state.searchBarValue || '');
-    console.log(state.searchBarValue);
   }, [state.searchBarValue]);
 
   return (

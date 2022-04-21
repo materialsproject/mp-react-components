@@ -81,7 +81,7 @@ export const getActiveFilters = (
       const af = {
         name: f.name,
         params: f.params,
-        value: query[f.params[0]] || f.props.defaultValue,
+        value: query[f.params[0]] || f.props?.defaultValue,
         isSearchBarField: f.isSearchBarField
       };
       switch (f.type) {
@@ -238,7 +238,7 @@ export const preprocessQueryParams = (
       });
     });
     if (filter) {
-      let paramValue = query[paramName] || filter.props.defaultValue;
+      let paramValue = query[paramName] || filter.props?.defaultValue;
       switch (filter.type) {
         case FilterType.MATERIALS_INPUT:
           if (typeof paramValue === 'string') {

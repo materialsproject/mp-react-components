@@ -50,7 +50,6 @@ export const FormulaAutocomplete: React.FC<Props> = (props) => {
           headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
         })
         .then((result) => {
-          console.log(result);
           if (requestIndex === requestCount) {
             setFormulaSuggestions(result.data.data);
           }
