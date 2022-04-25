@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles.less';
-import './assets/fonts.css';
+//import './assets/fonts.css';
 import '../node_modules/bulma/css/bulma.min.css';
 import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { MaterialsExplorer } from './pages/MaterialsExplorer';
