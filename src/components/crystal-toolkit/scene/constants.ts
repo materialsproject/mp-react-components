@@ -1,45 +1,47 @@
 export enum Renderer {
   SVG = 'svg',
-  WEBGL = 'webgl',
+  WEBGL = 'webgl'
 }
 
 export enum ExportType {
   png = 'png',
   dae = 'dae',
+  gltf = 'gltf',
+  usdz = 'usdz'
 }
 
 export enum Material {
-  standard = 'MeshStandardMaterial',
+  standard = 'MeshStandardMaterial'
 }
 
 export enum Light {
   DirectionalLight = 'DirectionalLight',
   AmbientLight = 'AmbientLight',
-  HemisphereLight = 'HemisphereLight',
+  HemisphereLight = 'HemisphereLight'
 }
 
 export const DEFAULT_LIGHT_COLOR = '#444444';
 
 export enum Control {
   TRACKBALL = 'trackball',
-  ORBIT = 'orbit',
+  ORBIT = 'orbit'
 }
 
 export enum AnimationStyle {
   PLAY = 'play',
   SLIDER = 'slider',
-  NONE = 'none',
+  NONE = 'none'
 }
 
 export enum CameraAxis {
   X = 'x',
   Y = 'y',
-  Z = 'z',
+  Z = 'z'
 }
 
 export enum CameraPosition {
   BACK = 'back',
-  FRONT = ' front',
+  FRONT = ' front'
 }
 
 // maybe move to settings
@@ -65,31 +67,31 @@ export const defaults = {
   lights: [
     {
       type: Light.HemisphereLight,
-      args: ['#eeeeee', '#999999', 1.0],
+      args: ['#eeeeee', '#999999', 1.0]
     },
     {
       type: Light.DirectionalLight,
       args: ['#ffffff', 0.15],
-      position: [0, 0, -10],
+      position: [0, 0, -10]
     },
     {
       type: Light.DirectionalLight,
       args: ['#ffffff', 0.15],
-      position: [-10, 10, 10],
-    },
+      position: [-10, 10, 10]
+    }
   ],
   material: {
     type: Material.standard,
     parameters: {
       roughness: 0.07,
-      metalness: 0.0,
-    },
+      metalness: 0.0
+    }
   },
   controls: Control.TRACKBALL,
   enableZoom: true,
   secondaryObjectView: true,
   defaultZoom: 0.8,
-  zoomToFit2D: false,
+  zoomToFit2D: false
 };
 
 export enum JSON3DObject {
@@ -102,7 +104,7 @@ export enum JSON3DObject {
   SURFACES = 'surface',
   CONVEX = 'convex',
   LABEL = 'labels',
-  BEZIER = 'bezier',
+  BEZIER = 'bezier'
 }
 
 export const DEBUG_STYLE = {
@@ -110,7 +112,7 @@ export const DEBUG_STYLE = {
   height: '500px',
   top: 0,
   left: '700px',
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as 'absolute'
 };
 export const MOUNT_NODE_STYLE = { position: 'absolute' as 'absolute' };
 export const MOUNT_NODE_CLASS = 'three-container';
@@ -123,7 +125,7 @@ export enum FieldType {
   VEC3_PAIRS = 'vec3Pair',
   COLOR = 'color',
   NUMBER = 'number',
-  LIST = 'list',
+  LIST = 'list'
 }
 
 export interface Field {
@@ -143,13 +145,13 @@ const positionPairs = {
   id: 'positionPairs',
   name: 'Position pairs',
   type: FieldType.LIST,
-  listModel: FieldType.VEC3_PAIRS,
+  listModel: FieldType.VEC3_PAIRS
 };
 const position = {
   id: 'positions',
   name: 'Position',
   type: FieldType.LIST,
-  listModel: FieldType.VEC3,
+  listModel: FieldType.VEC3
 };
 
 const fields = [
@@ -159,7 +161,7 @@ const fields = [
   fieldScale,
   positionPairs,
   position,
-  fieldColor,
+  fieldColor
 ];
 
 // map field id to to field definition
@@ -187,7 +189,7 @@ export const OBJECT_TO_FIELDS: { [K in JSON3DObject]: Field[] | null } = {
   [JSON3DObject.LINES]: [],
   [JSON3DObject.ELLIPSOIDS]: [fieldColor, fieldRadius, position],
   [JSON3DObject.CUBES]: [],
-  [JSON3DObject.BEZIER]: [],
+  [JSON3DObject.BEZIER]: []
 };
 
 export type ThreePosition = [number, number, number];

@@ -1,4 +1,3 @@
-import PropTypes, { InferProps } from 'prop-types';
 import React, {
   MutableRefObject,
   ReactNode,
@@ -22,7 +21,6 @@ import {
 } from '../scene/constants';
 import { CameraContext } from '../CameraContextProvider';
 import {
-  CameraActionPayload,
   cameraReducer,
   CameraReducerAction,
   CameraState,
@@ -32,23 +30,13 @@ import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
 import * as THREE from 'three';
-import { Quaternion, Vector3, WebGLRenderer } from 'three';
+import { WebGLRenderer } from 'three';
 import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import { Action } from '../utils';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import { USDZExporter } from 'three/examples/jsm/exporters/USDZExporter';
 import useResizeObserver from 'use-resize-observer';
 import { Enlargeable } from '../../data-display/Enlargeable';
-import {
-  FaCamera,
-  FaCog,
-  FaCogs,
-  FaCompress,
-  FaCompressAlt,
-  FaExpand,
-  FaExpandAlt,
-  FaFileExport,
-  FaTimesCircle,
-  FaUndo
-} from 'react-icons/fa';
+import { FaCamera, FaCogs, FaCompress, FaExpand, FaFileExport, FaUndo } from 'react-icons/fa';
 import { ButtonBar } from '../../data-display/ButtonBar';
 import { Dropdown } from '../../navigation/Dropdown';
 import classNames from 'classnames';
@@ -56,6 +44,7 @@ import { Tooltip } from '../../data-display/Tooltip';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalCloseButton } from '../../data-display/Modal/ModalCloseButton';
+import { downloadJSON } from '../../data-entry/utils';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -275,7 +264,9 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
    * Set imageData prop to data uri
    */
   const setPngData = (sceneComponent) => {
+    // TODO: ask why this if statement is here?
     if (sceneComponent.renderer instanceof WebGLRenderer) {
+      // force a render (in case buffer has been cleared)
       sceneComponent.renderScene();
       const imageData = sceneComponent.renderer.domElement.toDataURL('image/png');
       const imageDataTimestamp = Date.now();
@@ -300,27 +291,70 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
    * Set imageData prop to data uri
    */
   const setColladaData = (sceneComponent: Scene) => {
-    // Note(chab) i think it's better to use callback, so we can manage failure
-    const files = new ColladaExporter().parse(
+    const colladaExporter = new ColladaExporter();
+    colladaExporter.parse(sceneComponent.scene, function (result) {
+      const blob = new Blob([result.data], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      document.body.appendChild(link); // Firefox workaround, see #6594
+      link.href = URL.createObjectURL(blob);
+      link.download = 'crystaltoolkit.dae';
+      link.click();
+    });
+  };
+
+  const setGLTFData = (sceneComponent: Scene) => {
+    const gltfExporter = new GLTFExporter();
+    gltfExporter.parse(
       sceneComponent.scene,
-      (r) => {
-        console.log('result', r);
+      function (gltf) {
+        downloadJSON(gltf, 'crystaltoolkit.gltf');
       },
-      {}
-    )!;
-    const imageData = 'data:text/plain;base64,' + btoa(files.data);
-    const imageDataTimestamp = Date.now();
-    props.setProps({ imageData, imageDataTimestamp });
+      function (error) {
+        console.log('An error happened during parsing', error);
+      }
+    );
+
+    // This also works for exporting as GLB (binary) instead of GLTF
+    // gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
+    //     const blob = new Blob( [ arraybuffer ], { type: 'application/octet-stream' } );
+    //     const link = document.createElement( 'a' );
+    //     link.style.display = 'none';
+    //     document.body.appendChild( link ); // Firefox workaround, see #6594
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = "scene.glb"
+    //     link.click();
+    // }, {binary: true} );
+  };
+
+  const setUSDZData = async (sceneComponent: Scene) => {
+    const usdzExporter = new USDZExporter();
+    const arrayBuffer = await usdzExporter.parse(sceneComponent.scene);
+    const blob = new Blob([arrayBuffer], { type: 'model/vnd.usdz+zip' });
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    document.body.appendChild(link); // Firefox workaround, see #6594
+    // consult "AR Quick Look" documentation for more information
+    // https://webkit.org/blog/8421/viewing-augmented-reality-assets-in-safari-for-ios/
+    link.rel = 'ar';
+    link.href = URL.createObjectURL(blob);
+    //link.download = "scene.usdz"
+    link.click();
   };
 
   const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
-    // force a render (in case buffer has been cleared)
     switch (filetype) {
       case ExportType.png:
         setPngData(sceneComponent);
         break;
       case ExportType.dae:
         setColladaData(sceneComponent);
+        break;
+      case ExportType.gltf:
+        setGLTFData(sceneComponent);
+        break;
+      case ExportType.usdz:
+        setUSDZData(sceneComponent);
         break;
       default:
         throw new Error('Unknown filetype.');
@@ -529,17 +563,52 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                 </button>
               )}
               {props.showImageButton && (
-                <button
-                  className="button"
-                  onClick={() => requestImage(props.imageType, scene.current!)}
-                  data-tip
-                  data-for={`image-${tooltipId}`}
-                >
-                  <FaCamera />
+                <div onClick={() => ReactTooltip.hide()} data-tip data-for={`image-${tooltipId}`}>
+                  <Dropdown triggerIcon={<FaCamera />} isArrowless isRight>
+                    <p
+                      key={`image-export-png`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        requestImage(ExportType.png, scene.current!);
+                      }}
+                    >
+                      {'Screenshot (PNG)'}
+                    </p>
+
+                    <p
+                      key={`image-export-dae`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        requestImage(ExportType.dae, scene.current!);
+                      }}
+                    >
+                      {'3D Model (DAE)'}
+                    </p>
+
+                    <p
+                      key={`image-export-glb`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        requestImage(ExportType.gltf, scene.current!);
+                      }}
+                    >
+                      {'3D Model (GLB)'}
+                    </p>
+
+                    <p
+                      key={`image-export-udz`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        requestImage(ExportType.usdz, scene.current!);
+                      }}
+                    >
+                      {'Apple Augmented Reality (USDZ)'}
+                    </p>
+                  </Dropdown>
                   <Tooltip id={`image-${tooltipId}`} place="left">
-                    Download image
+                    Download visualization as
                   </Tooltip>
-                </button>
+                </div>
               )}
               {props.showExportButton && (
                 <div onClick={() => ReactTooltip.hide()} data-tip data-for={`export-${tooltipId}`}>
