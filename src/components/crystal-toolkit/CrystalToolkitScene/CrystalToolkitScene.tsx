@@ -313,13 +313,8 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
 
     // This also works for exporting as GLB (binary) instead of GLTF
     // gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
-    //     const blob = new Blob( [ arraybuffer ], { type: 'application/octet-stream' } );
-    //     const link = document.createElement( 'a' );
-    //     link.style.display = 'none';
-    //     document.body.appendChild( link ); // Firefox workaround, see #6594
-    //     link.href = URL.createObjectURL(blob);
-    //     link.download = "scene.glb"
-    //     link.click();
+    //     const blob = new Blob( [ arraybuffer ], { type: 'model/gltf-binary' } );
+    //     downloadBlob(blob, 'crystal_toolkit_scene.glb');
     // }, {binary: true} );
   };
 
