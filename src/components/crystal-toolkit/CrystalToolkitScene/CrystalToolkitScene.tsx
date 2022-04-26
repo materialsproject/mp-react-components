@@ -300,16 +300,10 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
 
   const setGLTFData = (sceneComponent: Scene) => {
     const gltfExporter = new GLTFExporter();
-    gltfExporter.parse(
-      sceneComponent.scene,
-      function (gltf) {
-        const blob = new Blob([JSON.stringify(gltf)], { type: 'model/vnd.gltf+json' });
-        downloadBlob(blob, 'crystal_toolkit_scene.gltf');
-      },
-      function (error) {
-        console.log('An error happened during parsing', error);
-      }
-    );
+    gltfExporter.parse(sceneComponent.scene, function (gltf) {
+      const blob = new Blob([JSON.stringify(gltf)], { type: 'model/vnd.gltf+json' });
+      downloadBlob(blob, 'crystal_toolkit_scene.gltf');
+    });
 
     // This also works for exporting as GLB (binary) instead of GLTF
     // gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
