@@ -64,6 +64,21 @@ export const downloadJSON = (data: any, filename?: string) => {
   return false;
 };
 
+export const downloadBlob = (blob: Blob, filename?: string, rel?: string) => {
+  const link = document.createElement('a');
+  link.style.display = 'none';
+  document.body.appendChild(link); // from Three.js example: Firefox workaround, see #6594
+  link.href = URL.createObjectURL(blob);
+  if (filename) {
+    link.download = filename;
+  }
+  if (rel) {
+    link.rel = rel;
+  }
+  link.click();
+  // link.remove(); // from Three.js example, omitted due to Firefox bug
+};
+
 export const downloadExcel = (array: any[], filename?: string) => {
   // export json to Worksheet of Excel only array possible
   const wks = XLSX.utils.json_to_sheet(array);
