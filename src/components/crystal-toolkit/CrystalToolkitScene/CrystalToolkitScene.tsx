@@ -44,7 +44,7 @@ import { Tooltip } from '../../data-display/Tooltip';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalCloseButton } from '../../data-display/Modal/ModalCloseButton';
-import { downloadJSON } from '../../data-entry/utils';
+import { downloadBlob, downloadJSON } from '../../data-entry/utils';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -294,12 +294,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     const colladaExporter = new ColladaExporter();
     colladaExporter.parse(sceneComponent.scene, function (result) {
       const blob = new Blob([result.data], { type: 'model/vnd.collada+xml' });
-      const link = document.createElement('a');
-      link.style.display = 'none';
-      document.body.appendChild(link); // Firefox workaround, see #6594
-      link.href = URL.createObjectURL(blob);
-      link.download = 'crystaltoolkit.dae';
-      link.click();
+      downloadBlob(blob, 'crystal_toolkit_scene.dae');
     });
   };
 
@@ -308,7 +303,8 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     gltfExporter.parse(
       sceneComponent.scene,
       function (gltf) {
-        downloadJSON(gltf, 'crystaltoolkit.gltf');
+        const blob = new Blob([JSON.stringify(gltf)], { type: 'model/vnd.gltf+json' });
+        downloadBlob(blob, 'crystal_toolkit_scene.gltf');
       },
       function (error) {
         console.log('An error happened during parsing', error);
@@ -331,15 +327,12 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     const usdzExporter = new USDZExporter();
     const arrayBuffer = await usdzExporter.parse(sceneComponent.scene);
     const blob = new Blob([arrayBuffer], { type: 'model/vnd.usdz+zip' });
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    document.body.appendChild(link); // Firefox workaround, see #6594
-    // consult "AR Quick Look" documentation for more information
+    // consult "AR Quick Look" documentation for more information on why "ar" tag is included
     // https://webkit.org/blog/8421/viewing-augmented-reality-assets-in-safari-for-ios/
-    link.rel = 'ar';
-    link.href = URL.createObjectURL(blob);
-    //link.download = "scene.usdz"
-    link.click();
+    // filename omitted to avoid "Download" dialog box on iOS devices; the intent with
+    // this option is to _show_ the file rather than download the file, however on non-iOS
+    // devices this may cause confusion
+    downloadBlob(blob, undefined, 'ar');
   };
 
   const requestImage = (filetype: ExportType, sceneComponent: Scene) => {
@@ -592,7 +585,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                         requestImage(ExportType.gltf, scene.current!);
                       }}
                     >
-                      {'3D Model (GLB)'}
+                      {'3D Model (GLTF)'}
                     </p>
 
                     <p
@@ -602,7 +595,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                         requestImage(ExportType.usdz, scene.current!);
                       }}
                     >
-                      {'Apple Augmented Reality (USDZ)'}
+                      {'Augmented Reality (iOS devices only)'}
                     </p>
                   </Dropdown>
                   <Tooltip id={`image-${tooltipId}`} place="left">
