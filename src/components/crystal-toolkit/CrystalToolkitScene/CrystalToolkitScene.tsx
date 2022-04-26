@@ -260,11 +260,10 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
 
   /**
    * Handle saving image to png
-   * If using the SVG Renderer, convert svg to canvas image first
+   * If using the SVGRenderer, convert SVG to canvas image first
    * Set imageData prop to data uri
    */
   const setPngData = (sceneComponent) => {
-    // TODO: ask why this if statement is here?
     if (sceneComponent.renderer instanceof WebGLRenderer) {
       // force a render (in case buffer has been cleared)
       sceneComponent.renderScene();
@@ -276,6 +275,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
         sceneComponent.renderScene();
       });
     } else {
+      // SVGRenderer assumed
       sceneComponent.renderScene();
       toDataUrl(sceneComponent.renderer.domElement, 'image/png', {
         callback: function (imageData: string) {
