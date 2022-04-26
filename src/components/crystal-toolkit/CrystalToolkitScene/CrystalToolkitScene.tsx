@@ -293,7 +293,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
   const setColladaData = (sceneComponent: Scene) => {
     const colladaExporter = new ColladaExporter();
     colladaExporter.parse(sceneComponent.scene, function (result) {
-      const blob = new Blob([result.data], { type: 'text/plain' });
+      const blob = new Blob([result.data], { type: 'model/vnd.collada+xml' });
       const link = document.createElement('a');
       link.style.display = 'none';
       document.body.appendChild(link); // Firefox workaround, see #6594
