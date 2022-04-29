@@ -29,7 +29,7 @@ CustomEvent.prototype = window.Event.prototype;
  *
  * See: https://github.com/plotly/dash/blob/dev/components/dash-core-components/src/components/Link.react.js
  */
-export class Link extends Component {
+export class DashLink extends Component {
   constructor(props) {
     super(props);
     this.updateLocation = this.updateLocation.bind(this);
@@ -83,7 +83,7 @@ export class Link extends Component {
   }
 }
 
-Link.propTypes = {
+DashLink.propTypes = {
   /**
    * The children of this component
    */
@@ -143,6 +143,6 @@ Link.propTypes = {
   preserveQuery: PropTypes.bool
 };
 
-Link.defaultProps = {
+DashLink.defaultProps = {
   refresh: false
 };
