@@ -5,7 +5,6 @@ import { Formula } from '../components/data-display/Formula';
 import { Column, ColumnFormat } from '../components/data-display/SearchUI/types';
 import { Tooltip } from '../components/data-display/Tooltip';
 import { formatPointGroup } from '../components/data-entry/utils';
-import DashLink from '../components/navigation/DashLink/DashLink';
 import { Link } from '../components/navigation/Link';
 import { spaceGroups } from '../constants/spaceGroups';
 import { joinUrl } from './navigation';
@@ -139,14 +138,13 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
               : rowValue;
 
           return linkLabel && url ? (
-            <DashLink
+            <Link
               href={url}
-              // onClick={(e) => e.stopPropagation()}
               target={hasFormatOptions && c.formatOptions.target}
               preserveQuery={hasFormatOptions && c.formatOptions.preserveQuery}
             >
               {isFormula ? <Formula>{linkLabel}</Formula> : linkLabel}
-            </DashLink>
+            </Link>
           ) : (
             emptyCellPlaceholder
           );
