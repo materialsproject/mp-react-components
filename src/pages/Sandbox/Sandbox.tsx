@@ -10,6 +10,7 @@ import { DrawerContextProvider } from '../../components/data-display/Drawer/Draw
 import { DrawerTrigger } from '../../components/data-display/Drawer/DrawerTrigger';
 import { CrossrefCard } from '../../components/publications/CrossrefCard';
 import { Markdown } from '../../components/data-display/Markdown';
+import { Link } from '../../components/navigation/Link';
 
 /**
  * View for testing out small new components
@@ -25,6 +26,7 @@ export const Sandbox: React.FC = () => {
         <h1 className="title">Sandbox</h1>
       </header>
       <div className="mp-app-content">
+        <Link href="/dash">Dash Link</Link>
         <div>{JSON.stringify(state.slider)}</div>
         <div>{JSON.stringify(state.switch)}</div>
         <div style={{ width: '300px' }}>
