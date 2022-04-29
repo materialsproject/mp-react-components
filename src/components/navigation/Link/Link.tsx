@@ -1,8 +1,4 @@
-import PropTypes from 'prop-types';
-
 import React, { ReactNode } from 'react';
-
-import { isNil } from 'ramda';
 
 /*
  * event polyfill for IE
@@ -85,7 +81,7 @@ export const Link: React.FC<LinkProps> = (props) => {
     if (hasModifiers) {
       return;
     }
-    if (props.target !== '_self' && !isNil(props.target)) {
+    if (props.target !== '_self' && props.target !== undefined && props.target !== null) {
       return;
     }
     // prevent anchor from updating location
@@ -116,7 +112,7 @@ export const Link: React.FC<LinkProps> = (props) => {
       title={props.title}
       target={props.target}
     >
-      {isNil(props.children) ? hrefWithQuery : props.children}
+      {props.children === undefined || props.children === null ? hrefWithQuery : props.children}
     </a>
   );
 };
