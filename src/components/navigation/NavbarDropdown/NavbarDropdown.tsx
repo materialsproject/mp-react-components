@@ -67,9 +67,9 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
             return (
               <Link
                 key={i}
-                href={item.href}
+                href={item.href || ''}
                 className={classNames('navbar-item', item.className)}
-                onClick={() => setIsActive(false)}
+                // onClick={() => setIsActive(false)}
               >
                 {item.label}
               </Link>
