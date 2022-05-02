@@ -11,6 +11,7 @@ import { DrawerTrigger } from '../../components/data-display/Drawer/DrawerTrigge
 import { CrossrefCard } from '../../components/publications/CrossrefCard';
 import { Markdown } from '../../components/data-display/Markdown';
 import { Link } from '../../components/navigation/Link';
+import { PublicationButton } from '../../components/publications/PublicationButton';
 
 /**
  * View for testing out small new components
@@ -71,7 +72,7 @@ export const Sandbox: React.FC = () => {
             <p>here is its content</p>
           </Drawer>
         </DrawerContextProvider>
-        <CrossrefCard identifier="10.1103/physrevb.84.045115" />
+        <PublicationButton doi="10.1103/physrevb.84.045115" compact tagClassName="is-white" />
       </div>
     </>
   );

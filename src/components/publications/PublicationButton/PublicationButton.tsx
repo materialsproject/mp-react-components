@@ -56,6 +56,12 @@ export interface PublicationButtonProps {
    * @default '_blank'
    */
   target?: string;
+
+  /**
+   * Only display the publication icon and hide the link label and OAB.
+   * Author names will display in a tooltip on hover.
+   */
+  compact?: boolean;
 }
 
 /**
@@ -126,29 +132,40 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
       id={props.id}
       className={classNames('mpc-publication-button', props.className, props.tagClassName)}
     >
-      <span className="tags has-addons">
-        <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
-          <FaQuoteRight />
-          &nbsp;{linkLabel || 'Publication'}
-        </a>
-        {openAccessUrl || !cannotFetchOpenAccessUrl ? (
-          <a
-            id={props.id}
-            target={props.target}
-            href={openAccessUrl}
-            className={classNames('tag mpc-open-access-button', props.tagClassName)}
-            data-tip
-            data-for={tooltipId}
-          >
-            {openAccessUrl ? (
-              <img src={openAccessButtonLogo} alt="Open Access PDF" />
-            ) : (
-              <span className="loader"></span>
-            )}
-            <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
+      {props.compact ? (
+        <>
+          <Tooltip id={tooltipId}>{linkLabel}</Tooltip>
+          <span className="tags has-addons" data-tip data-for={tooltipId}>
+            <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
+              <FaQuoteRight />
+            </a>
+          </span>
+        </>
+      ) : (
+        <span className="tags has-addons">
+          <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
+            <FaQuoteRight />
+            &nbsp;{linkLabel || 'Publication'}
           </a>
-        ) : null}
-      </span>
+          {openAccessUrl || !cannotFetchOpenAccessUrl ? (
+            <a
+              id={props.id}
+              target={props.target}
+              href={openAccessUrl}
+              className={classNames('tag mpc-open-access-button', props.tagClassName)}
+              data-tip
+              data-for={tooltipId}
+            >
+              {openAccessUrl ? (
+                <img src={openAccessButtonLogo} alt="Open Access PDF" />
+              ) : (
+                <span className="loader"></span>
+              )}
+              <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
+            </a>
+          ) : null}
+        </span>
+      )}
     </span>
   );
 };
