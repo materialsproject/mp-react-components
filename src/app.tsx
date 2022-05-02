@@ -33,6 +33,8 @@ const mountNode = document.getElementById(mountNodeSelector);
 ReactDOM.render(
   <>
     <Router>
+      <Link to="/materials">Materials</Link>
+      <Link to="/molecules">Molecules</Link>
       <Navbar
         brandItem={{
           label: 'MP React',
