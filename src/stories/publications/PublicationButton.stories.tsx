@@ -27,3 +27,9 @@ FromURLWithCustomLabel.args = {
   url: 'https://academic.oup.com/mnras/article/442/2/1319/980862',
   children: 'Cement Reference'
 };
+
+export const Compact = Template.bind({});
+Compact.args = {
+  doi: '10.1093/mnras/stu869',
+  compact: true
+};
