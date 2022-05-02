@@ -44,9 +44,10 @@ export const FormulaAutocomplete: React.FC<Props> = (props) => {
     ) {
       requestCount++;
       const requestIndex = requestCount;
+      const cleanValue = props.value.replace(/\(|\)/g, '');
       axios
         .get(props.apiEndpoint, {
-          params: { formula: props.value },
+          params: { formula: cleanValue },
           headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
         })
         .then((result) => {
