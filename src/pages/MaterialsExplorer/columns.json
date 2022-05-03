@@ -74,11 +74,11 @@
     "selector": "energy_above_hull",
     "formatType": "FIXED_DECIMAL",
     "formatOptions": {
-      "decimals": 2
+      "decimals": 2,
+      "abbreviateNearZero": true
     },
     "units": "meV/atom",
     "conversionFactor": 1000,
-    "abbreviateNearZero": true,
     "right": true
   },
   {
