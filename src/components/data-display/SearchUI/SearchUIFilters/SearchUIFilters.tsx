@@ -308,7 +308,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                       tooltip={f.tooltip}
                       units={f.units}
                       active={f.active}
-                      dois={['10.1557/mrc.2016.29']}
                       resetFilter={() => resetFilter(f)}
                     >
                       {renderFilter(f, g.name)}
