@@ -145,7 +145,7 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
         <span className="tags has-addons">
           <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
             <FaQuoteRight />
-            &nbsp;{linkLabel || 'Publication'}
+            <span className="ml-1">{linkLabel || 'Publication'}</span>
           </a>
           {openAccessUrl || !cannotFetchOpenAccessUrl ? (
             <a
