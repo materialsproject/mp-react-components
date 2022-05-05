@@ -18,7 +18,7 @@ function CustomEvent(event: string, params?) {
 }
 CustomEvent.prototype = window.Event.prototype;
 
-interface LinkProps {
+export interface LinkProps {
   /**
    * The children of this component
    */
@@ -66,9 +66,10 @@ interface LinkProps {
 }
 
 /**
- * Link component from dash-core-components that allows you to create a clickable link within a multi-page dash app.
- *
- * The original component has been modified to support the `preserveQuery` prop.
+ * Link component adapted from dash-core-components that allows you to create a clickable link within a multi-page dash app.
+ * This creates a dash-compatible link, but the link will not be compatible with react-router. Use this component when you need to
+ * have a dash link embedded inside a react component or you need to use the `preserveQuery` option which does not exist
+ * on the original `dcc.Link` component.
  *
  * See: https://github.com/plotly/dash/blob/dev/components/dash-core-components/src/components/Link.react.js
  */

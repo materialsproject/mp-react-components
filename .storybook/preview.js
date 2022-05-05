@@ -12,11 +12,18 @@ export const parameters = {
         ['MP React Components', 'Usage with Dash'],
         'Search UI',
         [
-          'SearchUI Component',
+          'Building a Search UI',
+          'SearchUIContainer',
+          'SearchUISearchBar',
+          'SearchUIFilters',
+          'SearchUIDataHeader',
+          'SearchUIDataTable',
+          'SearchUIDataView',
+          'SearchUIGrid',
           'Columns',
           'Filters',
           'Conditional Row Styles',
-          'Allowed Input Types Map'
+          'Search Bar Input Types'
         ],
         'Data-Entry',
         [

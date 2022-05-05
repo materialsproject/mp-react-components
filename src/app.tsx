@@ -25,7 +25,6 @@ import { CatalystExplorer } from './pages/CatalystExplorer';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
-import { PhaseDiagramApp } from './pages/PhaseDiagramApp/PhaseDiagramApp';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -132,9 +131,6 @@ ReactDOM.render(
           </Route>
           <Route path="/mof">
             <MofExplorer />
-          </Route>
-          <Route path="/phasediagram">
-            <PhaseDiagramApp />
           </Route>
           <Route path="/sandbox">
             <Sandbox />

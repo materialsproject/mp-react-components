@@ -38,16 +38,16 @@ export interface Filter {
    */
   name: string;
   /**
-   * Exact and unique name of the parameter in the API that this filter should query.
-   * If the parameter has a suffix such as "_min" or "__exact", the id should be the
-   * name of the parameter without the suffix.
-   */
-  // id: string;
-  /**
    * The type of filter component to use. Must be one of the pre-determined filter type strings
    * which maps to a component. See `FilterType` documentation for more information.
    */
   type: FilterType;
+  /**
+   * List of exact parameter names that this filter should add/modify in the API query.
+   * Most filter types only update one query parameter and should only have one param here.
+   * Sliders, however, can update both a min and max parameter. For sliders, both the min and
+   * max parameters should be included here: `['volume_min', 'volume_max']`
+   */
   params: string[];
   /**
    * Whether this filter is active or not. This is handled by the `SearchUI` dynamically so
@@ -73,24 +73,8 @@ export interface Filter {
    */
   tooltip?: string;
   /**
-   * Suffix to append to the id for the lower bound
-   * of a slider filter (`SearchUI` defaults to "_min").
-   */
-  minSuffix?: string;
-  /**
-   * Suffix to append to the id for the upper bound
-   * of a slider filter (`SearchUI` defaults to "_max").
-   */
-  maxSuffix?: string;
-  /**
-   * Suffix to append to the id for a `TEXT_INPUT` or `MATERIALS_INPUT` filter.
-   * This enables you to use different operators like
-   * "\__contains" or "\__exact"
-   */
-  operatorSuffix?: string;
-  /**
-   * List of filter ids that this filter should override (turn off) when activated.
-   * Filter ids listed here must exist in the filterGroups json.
+   * List of query parameters that this filter should override (turn off) when activated.
+   * Parameters listed here must exist in the filterGroups json.
    */
   overrides?: string[];
   /**

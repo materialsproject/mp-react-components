@@ -93,7 +93,7 @@ export interface SearchUISearchBarProps {
 }
 
 /**
- * A specific version of the MaterialsInput component used within the SearchUI component
+ * A specific version of the `MaterialsInput` component used within the `SearchUIContainer`
  * for performing top level searches by mp-id, formula, or elements.
  * The input value is parsed into its appropriate search field upon submission.
  */

@@ -240,18 +240,6 @@
     "expanded": false,
     "filters": [
       {
-        "name": "Spacegroup Symbol",
-        "params": ["spacegroup_symbol"],
-        "tooltip": "The standard short symbol for the spacegroup.",
-        "type": "SELECT_SPACEGROUP_SYMBOL"
-      },
-      {
-        "name": "Spacegroup International Number",
-        "params": ["spacegroup_number"],
-        "tooltip": "The international number for the spacegroup.",
-        "type": "SELECT_SPACEGROUP_NUMBER"
-      },
-      {
         "name": "Crystal System",
         "params": ["crystal_system"],
         "tooltip": "The crystal system for the lattice",

@@ -5,9 +5,9 @@ import { Paginator } from '../../Paginator';
 import { FaCaretDown } from 'react-icons/fa';
 
 /**
- * Component for rendering SearchUI results in the table view
+ * A version of the `DataTable` component for rendering SearchUI results in the table view.
  * Uses react-data-table-component to render results based
- * on the current state of the SearchUIContext
+ * on the current state of the SearchUIContext.
  */
 export const SearchUIDataTable: React.FC = () => {
   const { state, query } = useSearchUIContext();

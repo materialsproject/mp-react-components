@@ -14,7 +14,7 @@ import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsI
 import { FilterField } from '../../../data-entry/FilterField';
 
 /**
- * Component for rendering a panel of filters that are part of a SearchUI component test
+ * Component for rendering a panel of filters that are part of a SearchUI component
  */
 
 interface Props {
@@ -93,7 +93,6 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           />
         );
       case FilterType.SLIDER:
-        queryParamValue = query[f.name + f.operatorSuffix];
         return (
           <DualRangeSlider
             {...f.props}

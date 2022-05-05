@@ -47,6 +47,7 @@ import { Drawer } from './components/data-display/Drawer';
 import { Link } from './components/navigation/Link';
 import { DrawerContextProvider } from './components/data-display/Drawer/DrawerContextProvider';
 import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
+import { SearchUIDataTable } from './components/data-display/SearchUI/SearchUIDataTable';
 
 export {
   SelectableTable,
@@ -65,6 +66,7 @@ export {
   SearchUIGrid,
   SearchUIDataHeader,
   SearchUIDataView,
+  SearchUIDataTable,
   SearchUIFilters,
   MaterialsInput,
   DataTable,
