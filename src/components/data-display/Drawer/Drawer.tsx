@@ -6,7 +6,9 @@ import { useDrawerContext } from './DrawerContextProvider';
 
 export interface EnlargeableProps {
   /**
-   * A unique ID to use to open and close the drawer in its DrawerContext.
+   * A unique ID to use to open and close the drawer in its `DrawerContextProvider`.
+   * This id should be passed to the `forDrawerId` prop in a `DrawerTrigger`
+   * that sits inside the same `DrawerContextProvider`.
    * Also used to identify this component in Dash callbacks.
    */
   id: string;
@@ -22,7 +24,10 @@ export interface EnlargeableProps {
 }
 
 /**
- * Render right side drawer that can be opened by a ModalTrigger within a ModalContextProvider with the isDrawer prop.
+ * Render a right-side drawer that can be opened and closed.
+ * A `Drawer` must be used inside of a `DrawerContextProvider` and must have a
+ * corresponding `DrawerTrigger` within the same context.
+ * The `id` of a drawer should be passed to the `forDrawerId` prop of a `DrawerTrigger` to open/close the drawer.
  */
 export const Drawer: React.FC<EnlargeableProps> = (props) => {
   const { activeDrawer, setActiveDrawer } = useDrawerContext();
