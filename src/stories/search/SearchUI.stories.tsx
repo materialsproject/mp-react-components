@@ -132,6 +132,9 @@ export const MatscholarAlpha: Story<SearchUIContainerProps> = (args) => (
     apiKey={process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : undefined}
     matscholarEndpoint="https://www.matscholar.com/api/search/materials/"
   >
+    <p className="has-text-centered">
+      Alpha version of Matscholar search integration with Materials Explorer
+    </p>
     <SearchUISearchBar
       periodicTableMode={'toggle' as PeriodicTableMode}
       placeholder="Search by elements, formula, or ID"
@@ -171,3 +174,18 @@ export const MatscholarAlpha: Story<SearchUIContainerProps> = (args) => (
     <SearchUIGrid />
   </MatscholarSearchUIContainer>
 );
+
+const MatscholarAlphaDescription = `
+  This is a proof of concept to demonstrate incorporating the Matscholar material search 
+  functionality into the Materials Explorer search interface. Free text searches made in 
+  the search bar will be routed through the Matscholar API to find matching materials. 
+  Note that this is a proof of concept only and does not demonstrate complete integration 
+  between the two APIs. Advanced filtering and alternative sorting are not supported with 
+  Matscholar queries at this time.
+`;
+
+MatscholarAlpha.parameters = {
+  docs: {
+    storyDescription: MatscholarAlphaDescription
+  }
+};
