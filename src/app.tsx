@@ -25,6 +25,7 @@ import { CatalystExplorer } from './pages/CatalystExplorer';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
+import { MatscholarMaterialsExplorer } from './pages/MatscholarMaterialsExplorer/MatscholarMaterialsExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -34,6 +35,7 @@ ReactDOM.render(
     <Router>
       <Link to="/materials">Materials</Link>
       <Link to="/molecules">Molecules</Link>
+      <Link to="/matscholar">Matscholar Alpha</Link>
       <Navbar
         brandItem={{
           label: 'MP React',
@@ -134,6 +136,9 @@ ReactDOM.render(
           </Route>
           <Route path="/sandbox">
             <Sandbox />
+          </Route>
+          <Route path="/matscholar">
+            <MatscholarMaterialsExplorer />
           </Route>
           <Route path="/">
             <MaterialsExplorer />

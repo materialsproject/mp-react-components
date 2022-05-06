@@ -90,6 +90,10 @@ export interface Filter {
    * but the values on the backend are all lowercase.
    */
   makeLowerCase?: boolean;
+  /**
+   * Hide filter from view
+   */
+  hidden?: boolean;
 }
 
 export interface FilterGroup {
@@ -387,6 +391,10 @@ export interface SearchUIContainerProps {
    *
    */
   results?: any[];
+  /**
+   * Endpoint to use for fallback free text material searches against the Matscholar API.
+   */
+  matscholarEndpoint?: string;
 }
 
 export interface SearchState extends SearchUIContainerProps {

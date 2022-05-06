@@ -1,0 +1,1 @@
+export { MatscholarMaterialsExplorer } from './MatscholarMaterialsExplorer';

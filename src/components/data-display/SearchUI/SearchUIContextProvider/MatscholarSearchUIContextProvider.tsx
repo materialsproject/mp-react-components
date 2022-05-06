@@ -16,20 +16,13 @@ import {
 import { useRef } from 'react';
 import { DecodedValueMap, QueryParamConfigMap, useQueryParams } from 'use-query-params';
 import { getRowValueFromSelectorString, initColumns } from '../../../../utils/table';
+import { SearchUIContext, SearchUIContextActions } from './SearchUIContextProvider';
 
 /**
- * Two contexts are invoked inside the SearchUI component
- * SearchUIContext exposes the search state to all of its consumers
- * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
+ * Alternate version of the SearchUIContextProvider with alpha version support
+ * for Matscholar queries.
  */
-export const SearchUIContext = React.createContext<SearchContextValue | undefined>(undefined);
-export const SearchUIContextActions = React.createContext<any | undefined>(undefined);
-
-/**
- * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
- * Accepts the same props as SearchUI and uses them to build the context state
- */
-export const SearchUIContextProvider: React.FC<SearchState> = ({
+export const MatscholarSearchUIContextProvider: React.FC<SearchState> = ({
   activeFilters = [],
   totalResults = 0,
   loading = false,
@@ -69,7 +62,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   });
   const defaultQuery = {
     [state.sortKey]: state.sortFields,
-    [state.limitKey]: 15,
+    [state.limitKey]: 75,
     [state.skipKey]: 0
   };
   /**
@@ -78,6 +71,8 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    */
   const fields = state.columns.map((c) => c.selector);
   const prevActiveFilters = usePrevious(state.activeFilters);
+  const [textQuery, setTextQuery] = useState();
+  const [matScholarMpIds, setMatScholarMpIds] = useState<string[]>();
 
   const actions = {
     setPage: (page: number) => {
@@ -194,48 +189,150 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       let minLoadTimeReached = !showLoading;
       // let minLoadTimeReached = false;
 
-      const params = preprocessQueryParams(
+      const params: any = preprocessQueryParams(
         { ...query, ...props.apiEndpointParams },
         state.filterGroups
       );
       params[props.fieldsKey] = fields;
 
-      axios
-        .get(props.apiEndpoint, {
-          params: params,
-          paramsSerializer: (p) => {
-            return qs.stringify(p, { arrayFormat: 'comma' });
-          },
-          headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
-        })
-        .then((result) => {
-          isLoading = false;
-          const loadingValue = minLoadTimeReached ? false : true;
-          setState((currentState) => {
-            const totalResults = getRowValueFromSelectorString(props.totalKey, result.data);
-            return {
-              ...currentState,
-              results: result.data.data,
-              totalResults: totalResults,
-              loading: loadingValue,
-              error: false
-            };
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          isLoading = false;
-          const loadingValue = minLoadTimeReached ? false : true;
-          setState((currentState) => {
-            return {
-              ...currentState,
-              results: [],
-              totalResults: 0,
-              loading: loadingValue,
-              error: true
-            };
-          });
+      const hasFreeTextQuery = params.hasOwnProperty('q');
+      const { q, ...paramsWithoutQ } = params;
+      const scoresById = {};
+
+      function gatherMatscholarResults(result) {
+        let materialIds: string[] = [];
+        // console.log(matscholarJson);
+        result.data.results.forEach((r) => {
+          // matscholarJson.results.forEach((r) => {
+          materialIds = materialIds.concat(r.material_id);
         });
+        setMatScholarMpIds(materialIds);
+        console.log(materialIds);
+        return materialIds;
+      }
+
+      function completeSearchQuery(result, totalResults?) {
+        isLoading = false;
+        const loadingValue = minLoadTimeReached ? false : true;
+        setState((currentState) => {
+          totalResults = totalResults || getRowValueFromSelectorString(props.totalKey, result.data);
+          return {
+            ...currentState,
+            results: result.data.data,
+            totalResults: totalResults,
+            loading: loadingValue,
+            error: false
+          };
+        });
+      }
+
+      function catchSearchError(error) {
+        console.log(error);
+        isLoading = false;
+        const loadingValue = minLoadTimeReached ? false : true;
+        setState((currentState) => {
+          return {
+            ...currentState,
+            results: [],
+            totalResults: 0,
+            loading: loadingValue,
+            error: true
+          };
+        });
+      }
+      /**
+       * if new text query
+       * if paginating on current text query
+       * if not a text query
+       */
+      if (hasFreeTextQuery && props.matscholarEndpoint && q !== textQuery) {
+        setTextQuery(q);
+        axios
+          .get(props.matscholarEndpoint, {
+            params: { q }
+          })
+          // .get('/')
+          .then(gatherMatscholarResults)
+          .then((materialIds) => {
+            const materialIdsChunk = materialIds.slice(0, query[state.limitKey]);
+            paramsWithoutQ.material_ids = materialIdsChunk;
+            axios
+              .get(props.apiEndpoint, {
+                params: paramsWithoutQ,
+                paramsSerializer: (p) => {
+                  return qs.stringify(p, { arrayFormat: 'comma' });
+                },
+                headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+              })
+              .then((result) => completeSearchQuery(result, materialIds.length))
+              .catch(catchSearchError);
+          })
+          .catch(catchSearchError);
+      } else if (hasFreeTextQuery && props.matscholarEndpoint && q === textQuery) {
+        const skipValue = params[state.skipKey];
+        const limitValue = params[state.limitKey];
+        const materialIdsChunk = matScholarMpIds?.slice(skipValue, skipValue + limitValue);
+        paramsWithoutQ.material_ids = materialIdsChunk;
+        const { _skip, ...paramsWithoutSkip } = paramsWithoutQ;
+        axios
+          .get(props.apiEndpoint, {
+            params: paramsWithoutSkip,
+            paramsSerializer: (p) => {
+              return qs.stringify(p, { arrayFormat: 'comma' });
+            },
+            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+          })
+          .then((result) => completeSearchQuery(result, matScholarMpIds?.length))
+          .catch(catchSearchError);
+      } else {
+        axios
+          .get(props.apiEndpoint, {
+            params: params,
+            paramsSerializer: (p) => {
+              return qs.stringify(p, { arrayFormat: 'comma' });
+            },
+            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+          })
+          .then(completeSearchQuery)
+          .catch(catchSearchError);
+      }
+
+      // axios
+      //   .get(props.apiEndpoint, {
+      //     params: params,
+      //     paramsSerializer: (p) => {
+      //       return qs.stringify(p, { arrayFormat: 'comma' });
+      //     },
+      //     headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+      //   })
+      //   .then((result) => {
+      //     isLoading = false;
+      //     const loadingValue = minLoadTimeReached ? false : true;
+      //     setState((currentState) => {
+      //       const totalResults = getRowValueFromSelectorString(props.totalKey, result.data);
+      //       return {
+      //         ...currentState,
+      //         results: result.data.data,
+      //         totalResults: totalResults,
+      //         loading: loadingValue,
+      //         error: false
+      //       };
+      //     });
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     isLoading = false;
+      //     const loadingValue = minLoadTimeReached ? false : true;
+      //     setState((currentState) => {
+      //       return {
+      //         ...currentState,
+      //         results: [],
+      //         totalResults: 0,
+      //         loading: loadingValue,
+      //         error: true
+      //       };
+      //     });
+      //   });
 
       if (showLoading) {
         setTimeout(() => {
@@ -308,30 +405,4 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       </SearchUIContextActions.Provider>
     </SearchUIContext.Provider>
   );
-};
-
-/**
- * Custom hook for consuming the SearchUIContext
- * Must only be used by child components of SearchUIContextProvider
- * The context returns one property called "state"
- */
-export const useSearchUIContext = () => {
-  const context = React.useContext(SearchUIContext);
-  if (context === undefined) {
-    throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
-  }
-  return context;
-};
-
-/**
- * Custom hook for consuming the SearchUIContextActions
- * Must only be used by child components of SearchUIContextProvider
- * The context returns one property called "actions"
- */
-export const useSearchUIContextActions = () => {
-  const context = React.useContext(SearchUIContextActions);
-  if (context === undefined) {
-    throw new Error('useMaterialsSearch must be used within a MaterialsSearchProvider');
-  }
-  return context;
 };
