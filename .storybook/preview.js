@@ -14,6 +14,7 @@ export const parameters = {
         [
           'Building a Search UI',
           'SearchUIContainer',
+          ['Fully Featured', 'With MP Contribs Data', 'Matscholar Alpha'],
           'SearchUISearchBar',
           'SearchUIFilters',
           'SearchUIDataHeader',
