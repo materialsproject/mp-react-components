@@ -31,7 +31,7 @@ const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[])
   group.filters.forEach((f) => {
     if (activeIds.indexOf(f.name) > -1) {
       f.active = true;
-      count++;
+      if (!f.hidden) count++;
     } else {
       f.active = false;
     }
@@ -299,25 +299,28 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                 })}
               >
                 <div aria-hidden={!groupsByName[g.name].expanded}>
-                  {g.filters.map((f, j) => (
-                    <FilterField
-                      key={j}
-                      id={f.name.replace(' ', '-')}
-                      label={f.name}
-                      tooltip={f.tooltip}
-                      units={f.units}
-                      active={f.active}
-                      resetFilter={() => resetFilter(f)}
-                    >
-                      {renderFilter(f, g.name)}
-                    </FilterField>
-                    // <div className="mb-4" key={j}>
-                    //   <div>
-                    //     <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
-                    //     {renderFilter(f, g.name)}
-                    //   </div>
-                    // </div>
-                  ))}
+                  {g.filters.map(
+                    (f, j) =>
+                      !f.hidden && (
+                        <FilterField
+                          key={j}
+                          id={f.name.replace(' ', '-')}
+                          label={f.name}
+                          tooltip={f.tooltip}
+                          units={f.units}
+                          active={f.active}
+                          resetFilter={() => resetFilter(f)}
+                        >
+                          {renderFilter(f, g.name)}
+                        </FilterField>
+                        // <div className="mb-4" key={j}>
+                        //   <div>
+                        //     <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
+                        //     {renderFilter(f, g.name)}
+                        //   </div>
+                        // </div>
+                      )
+                  )}
                 </div>
               </div>
             </div>

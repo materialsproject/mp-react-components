@@ -2,6 +2,7 @@ import React from 'react';
 import { Story } from '@storybook/react';
 import columns from '../constants/columns.json';
 import filterGroups from '../constants/filterGroups.json';
+import matscholarFilterGroups from '../constants/matscholarFilterGroups.json';
 import mofColumns from '../constants/mofColumns.json';
 import mofFilterGroups from '../constants/mofFilterGroups.json';
 import {
@@ -13,6 +14,7 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
 import { SearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer';
 import { SearchUISearchBar } from '../../components/data-display/SearchUI/SearchUISearchBar';
 import { SearchUIGrid } from '../../components/data-display/SearchUI/SearchUIGrid';
+import { MatscholarSearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer/MatscholarSearchUIContainer';
 
 export default {
   component: SearchUIContainer,
@@ -117,4 +119,55 @@ export const WithMPContribsData: Story<SearchUIContainerProps> = (args) => (
     />
     <SearchUIGrid />
   </SearchUIContainer>
+);
+
+export const MatscholarAlpha: Story<SearchUIContainerProps> = (args) => (
+  <MatscholarSearchUIContainer
+    disableRichColumnHeaders
+    resultLabel="material"
+    columns={columns as Column[]}
+    filterGroups={matscholarFilterGroups as FilterGroup[]}
+    apiEndpoint="https://api.materialsproject.org/summary/"
+    autocompleteFormulaUrl="https://api.materialsproject.org/materials/formula_autocomplete/"
+    apiKey={process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : undefined}
+    matscholarEndpoint="https://www.matscholar.com/api/search/materials/"
+  >
+    <SearchUISearchBar
+      periodicTableMode={'toggle' as PeriodicTableMode}
+      placeholder="Search by elements, formula, or ID"
+      errorMessage="Invalid search value"
+      allowedInputTypesMap={{
+        elements: {
+          field: 'elements'
+        },
+        formula: {
+          field: 'formula'
+        },
+        mpid: {
+          field: 'material_ids'
+        },
+        text: {
+          field: 'q'
+        }
+      }}
+      helpItems={[
+        {
+          label: 'Search Examples'
+        },
+        {
+          label: 'Include at least elements',
+          examples: ['Li,Fe', 'Si,O,K']
+        },
+        {
+          label: 'Has exact formula',
+          examples: ['Li3Fe', 'Eu2SiCl2O3']
+        },
+        {
+          label: 'Has Material ID',
+          examples: ['mp-149', 'mp-19326']
+        }
+      ]}
+    />
+    <SearchUIGrid />
+  </MatscholarSearchUIContainer>
 );
