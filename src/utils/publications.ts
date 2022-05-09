@@ -94,3 +94,12 @@ export const shortenAuthorString = (authors?: any[]) => {
     return shortenBibjsonAuthors(authors);
   }
 };
+
+export const getJournalAndYear = (journal?: string, year?: string | number) => {
+  let str = journal || '';
+  if (str.length > 0 && year) {
+    str = str + ', ';
+  }
+  str = str + year;
+  return str;
+};

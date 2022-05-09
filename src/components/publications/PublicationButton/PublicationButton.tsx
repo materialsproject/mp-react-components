@@ -1,12 +1,11 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { FaQuoteRight } from 'react-icons/fa';
+import { FaBook } from 'react-icons/fa';
 import { Tooltip } from '../../data-display/Tooltip';
-import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';
-import { shortenCrossrefAuthors } from '../../../utils/publications';
+import { getJournalAndYear } from '../../../utils/publications';
 
 export interface PublicationButtonProps {
   /**
@@ -62,6 +61,8 @@ export interface PublicationButtonProps {
    * Author names will display in a tooltip on hover.
    */
   compact?: boolean;
+
+  showTooltip?: boolean;
 }
 
 /**
@@ -76,7 +77,7 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
 }) => {
   const props = { className, target, ...otherProps };
   const [linkLabel, setLinkLabel] = useState<any>(props.children);
-  const [openAccessUrl, setOpenAccessUrl] = useState<string | undefined>(props.openAccessUrl);
+  const [showTooltip, setShowTooltip] = useState<any>(props.showTooltip || props.compact);
   const [doi, setDoi] = useState<string | undefined>(() => {
     if (props.doi) {
       return props.doi;
@@ -95,77 +96,74 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
       return;
     }
   });
-  const [cannotFetchOpenAccessUrl, setCannotFetchOpenAccessUrl] = useState(() => {
-    return props.preventOpenAccessFetch || !doi;
+  const [cannotFetch, setCannotFetch] = useState(() => {
+    return !doi;
   });
-  const tooltipId = uuidv4();
+  const [tooltip, setTooltip] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!openAccessUrl && !cannotFetchOpenAccessUrl) {
+    if (!linkLabel && !cannotFetch) {
       axios
-        .get(`https://api.openaccessbutton.org/find?id=${doi}`)
+        .get(`https://api.crossref.org/works/${doi}`)
         .then((result) => {
-          if (
-            !linkLabel &&
-            result.data.hasOwnProperty('metadata') &&
-            result.data.metadata.hasOwnProperty('author')
-          ) {
-            setLinkLabel(shortenCrossrefAuthors(result.data.metadata.author));
+          if (!linkLabel && result.data.hasOwnProperty('message')) {
+            let journal, year;
+            if (result.data.message.hasOwnProperty('container-title')) {
+              journal = result.data.message['container-title'].join(', ');
+            }
+            if (result.data.message.hasOwnProperty('created')) {
+              year = result.data.message.created['date-parts'][0][0];
+            }
+            setLinkLabel(getJournalAndYear(journal, year));
           }
 
-          if (result.data.hasOwnProperty('url')) {
-            setOpenAccessUrl(result.data.url);
-          } else {
-            throw new Error('No Open Access URL found');
+          if (
+            !url &&
+            result.data.hasOwnProperty('message') &&
+            result.data.message.hasOwnProperty('URL')
+          ) {
+            setUrl(result.data.message.URL);
           }
         })
         .catch((error) => {
           console.log(error);
-          setCannotFetchOpenAccessUrl(true);
+          setCannotFetch(true);
+        });
+    }
+    if (showTooltip && !cannotFetch) {
+      axios
+        .get(`https://api.crossref.org/works/${doi}/transform/text/x-bibliography`)
+        .then((result) => {
+          let tooltipText = result.data;
+          let urlIndex = tooltipText.indexOf('. http');
+          if (urlIndex > -1) {
+            tooltipText = tooltipText.slice(0, urlIndex + 1);
+          }
+          setTooltip(tooltipText);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
   }, []);
 
   return (
-    <span
+    <a
       data-testid="publication-button"
       id={props.id}
-      className={classNames('mpc-publication-button', props.className, props.tagClassName)}
+      className={classNames('mpc-publication-button', props.className)}
+      href={url}
+      target={props.target}
+      data-tip
+      data-for={url}
     >
-      {props.compact ? (
-        <>
-          <Tooltip id={tooltipId}>{linkLabel}</Tooltip>
-          <span className="tags has-addons" data-tip data-for={tooltipId}>
-            <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
-              <FaQuoteRight />
-            </a>
-          </span>
-        </>
-      ) : (
-        <span className="tags has-addons">
-          <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
-            <FaQuoteRight />
-            <span className="ml-1">{linkLabel || 'Publication'}</span>
-          </a>
-          {openAccessUrl || !cannotFetchOpenAccessUrl ? (
-            <a
-              id={props.id}
-              target={props.target}
-              href={openAccessUrl}
-              className={classNames('tag mpc-open-access-button', props.tagClassName)}
-              data-tip
-              data-for={tooltipId}
-            >
-              {openAccessUrl ? (
-                <img src={openAccessButtonLogo} alt="Open Access PDF" />
-              ) : (
-                <span className="loader"></span>
-              )}
-              <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
-            </a>
-          ) : null}
-        </span>
+      <FaBook />
+      {!props.compact && <span className="ml-1">{linkLabel || 'Publication'}</span>}
+      {tooltip && (
+        <Tooltip id={url}>
+          <span dangerouslySetInnerHTML={{ __html: tooltip }}></span>
+        </Tooltip>
       )}
-    </span>
+    </a>
   );
 };

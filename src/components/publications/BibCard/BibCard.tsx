@@ -1,9 +1,15 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
-import { CrossrefAuthor, getAuthorString, shortenAuthorString } from '../../../utils/publications';
+import {
+  CrossrefAuthor,
+  getAuthorString,
+  getJournalAndYear,
+  shortenAuthorString
+} from '../../../utils/publications';
 import { PublicationButton } from '../../publications/PublicationButton';
 import { BibtexButton } from '../BibtexButton';
+import { OpenAccessButton } from '../OpenAccessButton';
 import './BibCard.css';
 
 export interface BibCardProps {
@@ -84,13 +90,6 @@ export const BibCard: React.FC<BibCardProps> = ({ title = '', ...otherProps }) =
       <p data-testid="bib-card-authors" className="mpc-bib-card-authors">
         {getAuthorString(props.author)}
       </p>
-      <p>
-        <span className="mpc-bib-card-journal">{props.journal}</span>
-        {props.journal && <span>, </span>}
-        <span data-testid="bib-card-year" className="mpc-bib-card-year">
-          {props.year}
-        </span>
-      </p>
       {props.doi && (
         <div className="mpc-bib-card-buttons tags">
           <PublicationButton
@@ -99,8 +98,9 @@ export const BibCard: React.FC<BibCardProps> = ({ title = '', ...otherProps }) =
             openAccessUrl={props.openAccessUrl}
             preventOpenAccessFetch={props.preventOpenAccessFetch}
           >
-            {shortenAuthorString(props.author)}
+            {getJournalAndYear(props.journal, props.year)}
           </PublicationButton>
+          <OpenAccessButton doi={props.doi} />
           <BibtexButton doi={props.doi} />
         </div>
       )}

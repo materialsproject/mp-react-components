@@ -3,16 +3,3 @@
   padding-right: 0;
   display: inline-block;
 }
-
-.mpc-open-access-button {
-  border-left: 1px solid #ccc;
-}
-
-.mpc-open-access-button img {
-  height: 1.25rem;
-  width: auto;
-}
-
-.mpc-open-access-button > span > span {
-  vertical-align: top;
-}

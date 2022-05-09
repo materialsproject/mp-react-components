@@ -48,6 +48,7 @@ import { Link } from './components/navigation/Link';
 import { DrawerContextProvider } from './components/data-display/Drawer/DrawerContextProvider';
 import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
 import { SearchUIDataTable } from './components/data-display/SearchUI/SearchUIDataTable';
+import { OpenAccessButton } from './components/publications/OpenAccessButton';
 
 export {
   SelectableTable,
@@ -83,6 +84,7 @@ export {
   BibtexButton,
   CrossrefCard,
   PublicationButton,
+  OpenAccessButton,
   DownloadButton,
   DownloadDropdown,
   Tooltip,

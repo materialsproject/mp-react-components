@@ -33,3 +33,9 @@ Compact.args = {
   doi: '10.1093/mnras/stu869',
   compact: true
 };
+
+export const WithBibTooltip = Template.bind({});
+WithBibTooltip.args = {
+  doi: '10.1093/mnras/stu869',
+  showTooltip: true
+};
