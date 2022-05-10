@@ -5,16 +5,15 @@ import { BibCard } from '.';
 afterEach(() => cleanup());
 
 describe('<BibCard/>', () => {
-  it('should render bibliographic information', () => {
+  it('should render bibliographic information', async () => {
     render(<BibCard {...defaultProps} />);
     expect(screen.getByText('Publication Title')).toBeInTheDocument();
-    expect(screen.getByText('Peter Parker, Ben Parker')).toBeInTheDocument();
-    expect(screen.getByText('Journal Title')).toBeInTheDocument();
-    expect(screen.getByText('2001')).toBeInTheDocument();
-  });
-  it('should render publication button', () => {
-    render(<BibCard {...defaultProps} />);
-    expect(screen.getByTestId('publication-button')).toBeInTheDocument();
+    expect(screen.getByText('Peter Parker and Ben Parker')).toBeInTheDocument();
+    await waitFor(() => {
+      const publicationButton = screen.getByTestId('publication-button');
+      expect(publicationButton).toHaveTextContent('Journal Title');
+      expect(publicationButton).toHaveTextContent('2001');
+    });
   });
   it('should render bibtex button', () => {
     render(<BibCard {...defaultProps} />);

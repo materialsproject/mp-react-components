@@ -8,12 +8,12 @@ describe('<BibFilter/>', () => {
     render(<BibFilter {...defaultProps} />);
     expect(screen.getAllByTestId('bib-card').length).toBeGreaterThanOrEqual(100);
 
-    const cardsDesc = await screen.findAllByTestId('bib-card-year');
+    const cardsDesc = await screen.findAllByTestId('publication-button');
     expect(cardsDesc[0]).toHaveTextContent('2017');
     expect(cardsDesc[cardsDesc.length - 1]).toHaveTextContent('2008');
 
     fireEvent.click(screen.getByTestId('sort-button'));
-    const cardsAsc = await screen.findAllByTestId('bib-card-year');
+    const cardsAsc = await screen.findAllByTestId('publication-button');
     await waitFor(() => {
       expect(cardsAsc[0]).toHaveTextContent('2008');
       expect(cardsAsc[cardsAsc.length - 1]).toHaveTextContent('2017');
