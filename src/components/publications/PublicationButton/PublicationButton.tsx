@@ -12,63 +12,46 @@ export interface PublicationButtonProps {
    * The ID used to identify this component in Dash callbacks
    */
   id?: string;
-
   /**
-   * Class name(s) to append to the component's default class (mpc-open-access-button)
+   * Class name(s) to append to the component's default class (mpc-publication-button)
    * @default 'tag'
    */
   className?: string;
-
-  /**
-   * Customize the tag using bulma's tag classes
-   * These class names will be appended to the component's tag elements
-   */
-  tagClassName?: string;
-
   /**
    * The DOI (Digital Object Identifier) of the publication
-   * Will be used to generate a doi.org link and to fetch an open access PDF link.
+   * Will be used to generate a doi.org link and to fetch the journal name and year.
    */
   doi?: string;
-
   /**
    * Directly supply the URL to the publication.
    * If a doi.org url is supplied, this component will automatically
-   * parse the url for the doi and use that to fetch an open access link.
+   * parse the url for the doi and use that to fetch the journal name and year.
    */
   url?: string;
-
-  /**
-   * Directly supply the URL to an openly accessible PDF of the reference.
-   * If supplied, the component will not try to fetch an open access URL.
-   */
-  openAccessUrl?: string;
-
-  /**
-   * Set to true to prevent any requests to the open access api.
-   * Note that if you supply your own openAccessUrl, this prop is not necessary.
-   */
-  preventOpenAccessFetch?: boolean;
-
   /**
    * Value to add to the anchor tag's target attribute
    * @default '_blank'
    */
   target?: string;
-
   /**
-   * Only display the publication icon and hide the link label and OAB.
-   * Author names will display in a tooltip on hover.
+   * Only display the publication icon and hide the link label.
+   * If true, `showTooltip` will default to true.
    */
   compact?: boolean;
-
+  /**
+   * Show a tooltip on hover with the bibliographic citation for the publication.
+   */
   showTooltip?: boolean;
 }
 
 /**
  * Standardized button for linking to a publication.
- * If a `doi` prop or doi.org link is supplied, an open access link
- * will also be generated next to the publication link.
+ *
+ * This component can be used in four ways:
+ * 1. Supply just a `doi` and let the component build the url and fetch the journal name and year from crossref.
+ * 2. Supply just a `url` to doi.org and fetch the journal name and year from crossref.
+ * 3. Supply a `doi` and a link label in the component's `children`. In this case, there will be no fetch to crossref.
+ * 4. Supply a `url` to any location and a link label in the component's `children`. In this case, there will be no fetch to crossref.
  */
 export const PublicationButton: React.FC<PublicationButtonProps> = ({
   className = 'tag',
@@ -107,7 +90,7 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
         .get(`https://api.crossref.org/works/${doi}`)
         .then((result) => {
           if (!linkLabel && result.data.hasOwnProperty('message')) {
-            let journal, year;
+            let journal: string | undefined, year: string | undefined;
             if (result.data.message.hasOwnProperty('container-title')) {
               journal = result.data.message['container-title'].join(', ');
             }

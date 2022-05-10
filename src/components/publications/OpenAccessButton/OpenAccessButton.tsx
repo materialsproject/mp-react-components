@@ -10,34 +10,28 @@ export interface OpenAccessButtonProps {
    * The ID used to identify this component in Dash callbacks
    */
   id?: string;
-
   /**
    * Class name(s) to append to the component's default class (mpc-open-access-button)
    * @default 'tag'
    */
   className?: string;
-
   /**
    * The DOI (Digital Object Identifier) of the publication
-   * Will be used to generate a doi.org link and to fetch an open access PDF link.
+   * Will be used to fetch an open access PDF link.
    */
   doi?: string;
-
   /**
    * Directly supply the URL to an openly accessible PDF of the reference.
    * If supplied, the component will not try to fetch an open access URL.
    */
   url?: string;
-
   /**
    * Value to add to the anchor tag's target attribute
    * @default '_blank'
    */
   target?: string;
-
   /**
-   * Only display the publication icon and hide the link label and OAB.
-   * Author names will display in a tooltip on hover.
+   * Only display the open access icon and hide the label.
    */
   compact?: boolean;
 }
