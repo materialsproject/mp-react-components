@@ -77,7 +77,7 @@ export const FilterField: React.FC<FilterFieldProps> = ({ dois = [], ...otherPro
         <div className="mpc-filter-label">
           {renderFilterLabel()}
           {props.dois.map((doi, i) => (
-            <PublicationButton key={`${i}-${doi}`} doi={doi} compact className="ml-2" />
+            <PublicationButton key={`${i}-${doi}`} doi={doi} compact className="tag ml-2" />
           ))}
         </div>
       )}
