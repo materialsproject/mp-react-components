@@ -13,8 +13,7 @@ import {
   preprocessQueryParams,
   getActiveFilters
 } from '../utils';
-import { useRef } from 'react';
-import { DecodedValueMap, QueryParamConfigMap, useQueryParams } from 'use-query-params';
+import { useQueryParams } from 'use-query-params';
 import { getRowValueFromSelectorString, initColumns } from '../../../../utils/table';
 
 /**
@@ -30,6 +29,8 @@ export const SearchUIContextActions = React.createContext<any | undefined>(undef
  * Accepts the same props as SearchUI and uses them to build the context state
  */
 export const SearchUIContextProvider: React.FC<SearchState> = ({
+  defaultLimit = 15,
+  defaultSkip = 0,
   activeFilters = [],
   totalResults = 0,
   loading = false,
@@ -39,6 +40,8 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   ...otherProps
 }) => {
   let props = {
+    defaultLimit,
+    defaultSkip,
     activeFilters,
     totalResults,
     loading,
@@ -67,21 +70,34 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     filterGroups,
     columns
   });
+  /**
+   * These default param values are added to the API query if no value is present
+   * for that param. These params are omitted from the URL if they are equal to the
+   * default value. For example, if on page 1, there will be no skip param in the url.
+   * This is important because it allows the empty path (with no query parameters) to be a
+   * renderable UI. Otherwise, the default params would need to be added to the URL before the
+   * UI could render. This pattern would create problems when trying to use the browser back button.
+   */
   const defaultQuery = {
-    [state.sortKey]: state.sortFields,
-    [state.limitKey]: 15,
-    [state.skipKey]: 0
+    [state.sortKey]: props.sortFields,
+    [state.limitKey]: props.defaultLimit,
+    [state.skipKey]: props.defaultSkip
   };
   /**
-   * The fields param is ommitted from the url for brevity and
-   * added to the query params internally in the get request
+   * The fields param is ommitted from the URL for brevity and
+   * added to the query params in the preprocessing step before the get request.
    */
   const fields = state.columns.map((c) => c.selector);
   const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
     setPage: (page: number) => {
-      setQuery({ [props.skipKey]: (page - 1) * query[props.limitKey] });
+      const limit = query[props.limitKey] || defaultQuery[props.limitKey];
+      if (page !== 1) {
+        setQuery({ [props.skipKey]: (page - 1) * limit });
+      } else {
+        setQuery({ [props.skipKey]: undefined });
+      }
       const ref = state.resultsRef;
       if (ref && ref.current) {
         scrollIntoView(ref.current, {
@@ -92,20 +108,33 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       }
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      setQuery({ [props.limitKey]: resultsPerPage, [props.skipKey]: 0 });
+      if (resultsPerPage !== props.defaultLimit) {
+        setQuery({
+          [props.limitKey]: resultsPerPage,
+          [props.skipKey]: undefined
+        });
+      } else {
+        setQuery({
+          [props.limitKey]: undefined,
+          [props.skipKey]: undefined
+        });
+      }
     },
     setSort: (sortField: string, sortAscending: boolean) => {
       const sortFields = [...query[props.sortKey]];
       const directionPrefix = sortAscending ? '' : '-';
       sortFields[0] = directionPrefix + sortField;
-      setQuery({ [props.sortKey]: sortFields, [props.skipKey]: 0 });
+      setQuery({
+        [props.sortKey]: sortFields,
+        [props.skipKey]: undefined
+      });
     },
     setSortField: (sortField: string) => {
       const sortFields = [...query[props.sortKey]];
       sortFields[0] = sortField;
       setQuery({
         [props.sortKey]: sortFields,
-        [props.skipKey]: 0
+        [props.skipKey]: undefined
       });
     },
     setSortAscending: function (sortAscending: boolean) {
@@ -130,34 +159,47 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       const newFilterValue = filterIsActivating ? value : undefined;
       const newQuery = {
         [id]: newFilterValue,
-        [props.skipKey]: 0
+        [props.skipKey]: undefined
       };
       if (overrideFields && filterIsActivating) {
         overrideFields.forEach((field) => {
           newQuery[field] = undefined;
         });
       }
-      setQuery(newQuery);
+      if (newFilterValue != query[id]) {
+        setQuery(newQuery);
+      }
     },
     setFilterValues: (values: any, params: string[] | string) => {
-      const change = { [props.skipKey]: 0 };
+      const change = { [props.skipKey]: undefined };
+      let isDifferent = false;
       if (Array.isArray(params) && Array.isArray(values)) {
-        params.forEach((p, i) => (change[p] = values[i]));
+        params.forEach((p, i) => {
+          change[p] = values[i];
+          if (change[p] != query[p]) {
+            isDifferent = true;
+          }
+        });
       } else if (typeof params === 'string') {
         change[params] = values;
+        if (change[params] != query[params]) {
+          isDifferent = true;
+        }
       }
-      setQuery(change);
+      if (isDifferent) {
+        setQuery(change);
+      }
     },
     removeFilter: (id: string) => {
       if (query.hasOwnProperty(id)) {
         setQuery({
           [id]: undefined,
-          [props.skipKey]: 0
+          [props.skipKey]: undefined
         });
       }
     },
     removeFilters: (params: string[] | string) => {
-      const remove: any = { [props.skipKey]: 0 };
+      const remove: any = { [props.skipKey]: undefined };
       if (Array.isArray(params)) {
         params.forEach((p) => (remove[p] = undefined));
       } else {
@@ -189,14 +231,13 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       /** Only show the loading icon if this is a filter change not on simple page change */
       const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
       let isLoading = showLoading;
-      // let isLoading = true;
       let minLoadTime = 1000;
       let minLoadTimeReached = !showLoading;
-      // let minLoadTimeReached = false;
 
       const params = preprocessQueryParams(
         { ...query, ...props.apiEndpointParams },
-        state.filterGroups
+        state.filterGroups,
+        defaultQuery
       );
       params[props.fieldsKey] = fields;
 
@@ -261,22 +302,20 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   /**
    * When a filter or query param changes, compute the list of active filters.
    * Also, update the search bar value if one of its corresponding filters changes.
-   *
-   * If the default query params are missing (e.g. limit, skip, sort) then add them to the query.
    */
   useDeepCompareEffect(() => {
+    /**
+     * This pathname check exists as a precautionary measure to protect against accidental
+     * requests when navigating between SearchUI pages in dash.
+     */
     if (history.location.pathname === pathname) {
-      if (query[props.limitKey]) {
-        const activeFilters = getActiveFilters(state.filterGroups, query);
-        let searchBarValue = state.searchBarValue;
-        const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
-        if (searchBarFieldFilter) {
-          searchBarValue = searchBarFieldFilter.value;
-        }
-        setState({ ...state, activeFilters, searchBarValue });
-      } else if (!query[props.skipKey] || !query[props.limitKey] || !query[props.sortKey]) {
-        setQuery({ ...query, ...defaultQuery });
+      const activeFilters = getActiveFilters(state.filterGroups, query);
+      let searchBarValue = state.searchBarValue;
+      const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
+      if (searchBarFieldFilter) {
+        searchBarValue = searchBarFieldFilter.value;
       }
+      setState({ ...state, activeFilters, searchBarValue });
     }
   }, [query]);
 
@@ -285,9 +324,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
    * This should also be run when the initial query fields are populated (on load).
    */
   useDeepCompareEffect(() => {
-    if (query[props.limitKey]) {
-      actions.getData();
-    }
+    actions.getData();
   }, [state.activeFilters, query[props.skipKey], query[props.limitKey], query[props.sortKey]]);
 
   /**

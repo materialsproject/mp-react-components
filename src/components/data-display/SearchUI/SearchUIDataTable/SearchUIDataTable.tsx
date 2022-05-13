@@ -14,6 +14,8 @@ export const SearchUIDataTable: React.FC = () => {
   const actions = useSearchUIContextActions();
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const limit = query[state.limitKey] || state.defaultLimit;
+  const skip = query[state.skipKey] || state.defaultSkip;
 
   const handlePageChange = (page: number) => {
     /** Scroll table back to top when page changes */
@@ -38,8 +40,8 @@ export const SearchUIDataTable: React.FC = () => {
   const CustomPaginator = ({ isTop = false }) => (
     <Paginator
       rowCount={state.totalResults!}
-      rowsPerPage={query[state.limitKey]}
-      currentPage={query[state.skipKey] / query[state.limitKey] + 1}
+      rowsPerPage={limit}
+      currentPage={skip / limit + 1 || 1}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}

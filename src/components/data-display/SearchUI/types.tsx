@@ -398,7 +398,9 @@ export interface SearchUIContainerProps {
 }
 
 export interface SearchState extends SearchUIContainerProps {
-  /** optional props from SearchUI that are required by SearchState  */
+  /**
+   * Optional props from SearchUIContainerProps that are required by SearchState
+   */
   setProps: (value: any) => any;
   sortFields: string[];
   sortKey: string;
@@ -406,7 +408,11 @@ export interface SearchState extends SearchUIContainerProps {
   limitKey: string;
   fieldsKey: string;
   totalKey: string;
-  /** additional props for SearchState */
+  /**
+   * Additional props for SearchState
+   */
+  defaultLimit?: number;
+  defaultSkip?: number;
   totalResults?: number;
   activeFilters?: ActiveFilter[];
   loading?: boolean;

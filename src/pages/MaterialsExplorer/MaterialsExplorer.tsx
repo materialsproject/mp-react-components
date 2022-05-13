@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
@@ -14,6 +14,11 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 export const MaterialsExplorer: React.FC = () => {
   let match = useRouteMatch();
   const [state, setState] = useState({ results: [] });
+
+  useEffect(() => {
+    document.title = 'Materials Explorer';
+  }, []);
+
   return (
     <>
       <Switch>

@@ -47,16 +47,10 @@ export const SearchUIDataHeader: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
-  const lowerResultBound = getLowerResultBound(
-    state.totalResults!,
-    query[state.limitKey],
-    query[state.skipKey]
-  );
-  const upperResultBound = getUpperResultBound(
-    state.totalResults!,
-    query[state.limitKey],
-    lowerResultBound
-  );
+  const limit = query[state.limitKey] || state.defaultLimit;
+  const skip = query[state.skipKey] || state.defaultSkip;
+  const lowerResultBound = getLowerResultBound(state.totalResults!, limit, skip);
+  const upperResultBound = getUpperResultBound(state.totalResults!, limit, lowerResultBound);
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);

@@ -221,13 +221,15 @@ export const initQueryParams = (
  * Apply transformations to the query param values before sending them to the API.
  * @param query object of query params and their values.
  * @param filterGroups filter definitions nested by group.
+ * @param defaultQuery
  * @returns object of query params with API-ready values.
  */
 export const preprocessQueryParams = (
   query: DecodedValueMap<QueryParamConfigMap>,
-  filterGroups: FilterGroup[]
+  filterGroups: FilterGroup[],
+  defaultQuery: any
 ) => {
-  const params = {};
+  const processedQuery = {};
   for (const paramName in query) {
     let filter: Filter | undefined;
     filterGroups.forEach((g) => {
@@ -244,7 +246,7 @@ export const preprocessQueryParams = (
           if (typeof paramValue === 'string') {
             paramValue = paramValue.replace(/\s/g, '');
           }
-          params[paramName] = paramValue;
+          processedQuery[paramName] = paramValue;
           break;
         case FilterType.SLIDER:
           /**
@@ -255,20 +257,25 @@ export const preprocessQueryParams = (
           const isAtDomainLimit =
             paramValue === filter.props.domain[0] || paramValue === filter.props.domain[1];
           if (!isAtDomainLimit) {
-            params[paramName] = paramValue;
+            processedQuery[paramName] = paramValue;
           }
           break;
         default:
           if (filter.makeLowerCase && typeof paramValue === 'string') {
             paramValue = paramValue.toLowerCase();
           }
-          params[paramName] = paramValue;
+          processedQuery[paramName] = paramValue;
       }
     } else {
-      params[paramName] = query[paramName];
+      processedQuery[paramName] = query[paramName];
     }
   }
-  return params;
+  for (const defaultParam in defaultQuery) {
+    if (query[defaultParam] === undefined) {
+      processedQuery[defaultParam] = defaultQuery[defaultParam];
+    }
+  }
+  return processedQuery;
 };
 
 export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap) => {

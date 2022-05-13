@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
@@ -10,6 +10,10 @@ import { SearchUIContainer, SearchUIGrid, SearchUISearchBar } from '../..';
  */
 
 export const MoleculesExplorer: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Molecules Explorer';
+  }, []);
+
   return (
     <>
       <h1 className="title is-1">Molecules Explorer</h1>
