@@ -4,7 +4,14 @@ module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'jsdom',
   collectCoverage: true,
-  transformIgnorePatterns: ['node_modules/(?!(three|unist-.*|hast-.*|rehype-slug)/)'], // force JEST to process this module
+  /**
+   * Tell jest to ignore transforming most node_modules
+   * except for the ones that match the module strings listed here.
+   * This is necessary for node modules that distribute their source code as uncompiled JS.
+   */
+  transformIgnorePatterns: [
+    'node_modules/(?!(three|unist-.*|hast-.*|rehype-slug|remark-rehype|react-markdown|vfile.*|unified|bail|is-plain-obj|trough|remark-parse|mdast-.*|micromark.*|decode-named-character-reference|unist-.*|character-entities|property-information|space-separated-tokens|comma-separated-tokens)/)'
+  ],
   modulePaths: ['<rootDir>'],
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
