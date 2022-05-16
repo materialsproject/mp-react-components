@@ -210,7 +210,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     resetFilters: () => {
       setQuery(
         {
-          ...defaultQuery,
+          [props.skipKey]: undefined,
           [props.sortKey]: query[props.sortKey],
           [props.limitKey]: query[props.limitKey]
         },
