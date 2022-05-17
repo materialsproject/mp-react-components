@@ -1,5 +1,5 @@
 import React from 'react';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
 import * as d3 from 'd3';
 import { spaceGroups } from '../../constants/spaceGroups';
@@ -7,8 +7,8 @@ import { pointGroups } from '../../constants/pointGroups';
 
 export enum DownloadType {
   JSON = 'json',
-  CSV = 'csv',
-  EXCEL = 'xlsx'
+  CSV = 'csv'
+  // EXCEL = 'xlsx'
 }
 
 type DownloadTypeObject = Partial<Record<DownloadType, any>>;
@@ -79,24 +79,28 @@ export const downloadBlob = (blob: Blob, filename?: string, rel?: string) => {
   // link.remove(); // from Three.js example, omitted due to Firefox bug
 };
 
-export const downloadExcel = (array: any[], filename?: string) => {
-  // export json to Worksheet of Excel only array possible
-  const wks = XLSX.utils.json_to_sheet(array);
-  // A workbook is the name given to an Excel file
-  const wb = XLSX.utils.book_new(); // make Workbook of Excel
-  // add Worksheet to Workbook
-  // Workbook contains one or more worksheets
-  const name = filename ? filename : 'export';
-  XLSX.utils.book_append_sheet(wb, wks, name); // sheetAName is name of Worksheet
-  // export Excel file
-  XLSX.writeFile(wb, name + '.xlsx'); // name of the file is 'book.xlsx'
-  return true;
-};
+/**
+ * Commenting this feature out for now so that we can removed the xlsx dependency.
+ * We can restore if we decide to implement client-side Excel exports.
+ */
+// export const downloadExcel = (array: any[], filename?: string) => {
+//   // export json to Worksheet of Excel only array possible
+//   const wks = XLSX.utils.json_to_sheet(array);
+//   // A workbook is the name given to an Excel file
+//   const wb = XLSX.utils.book_new(); // make Workbook of Excel
+//   // add Worksheet to Workbook
+//   // Workbook contains one or more worksheets
+//   const name = filename ? filename : 'export';
+//   XLSX.utils.book_append_sheet(wb, wks, name); // sheetAName is name of Worksheet
+//   // export Excel file
+//   XLSX.writeFile(wb, name + '.xlsx'); // name of the file is 'book.xlsx'
+//   return true;
+// };
 
 export const downloadAs: DownloadTypeObject = {
   json: downloadJSON,
-  csv: downloadCSV,
-  xlsx: downloadExcel
+  csv: downloadCSV
+  // xlsx: downloadExcel
 };
 
 /**

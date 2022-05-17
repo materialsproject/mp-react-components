@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { toByteArray } from 'base64-js';
 import classNames from 'classnames';
 import './ButtonBar.css';
 

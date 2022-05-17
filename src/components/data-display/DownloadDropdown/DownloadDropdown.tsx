@@ -67,9 +67,9 @@ export const DownloadDropdown: React.FC<Props> = ({ filename = 'export', ...othe
           <MenuItem value="csv">
             <li className="dropdown-item">CSV</li>
           </MenuItem>
-          <MenuItem value="xlsx">
+          {/* <MenuItem value="xlsx">
             <li className="dropdown-item">Excel</li>
-          </MenuItem>
+          </MenuItem> */}
         </ul>
       </Menu>
     </MenuWrapper>

@@ -13,7 +13,6 @@ import {
   validateInputLength,
   materialsInputTypes
 } from '../utils';
-import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 import classNames from 'classnames';
 import { FormulaAutocomplete } from '../FormulaAutocomplete';
@@ -21,7 +20,6 @@ import { InputHelp } from '../InputHelp';
 import { FaQuestionCircle } from 'react-icons/fa';
 import { Tooltip } from '../../../data-display/Tooltip';
 import { v4 as uuidv4 } from 'uuid';
-const { Input, Field, Control } = Form;
 
 /**
  * The text input component of a MaterialsInput component
@@ -300,7 +298,7 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
 
   return (
     <>
-      <Control className="is-expanded">
+      <div className="control is-expanded">
         <input
           data-testid="materials-input-search-input"
           className={classNames('input', props.inputClassName)}
@@ -336,9 +334,9 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
         {props.helpItems && (
           <InputHelp items={props.helpItems} show={showInputHelp} onChange={props.setValue} />
         )}
-      </Control>
+      </div>
       {props.helpItems && (
-        <Control>
+        <div className="control">
           <button
             data-testid="materials-input-help-button"
             type="button"
@@ -355,7 +353,7 @@ export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...
               {showInputHelp ? 'Hide examples' : 'Show examples'}
             </Tooltip>
           </button>
-        </Control>
+        </div>
       )}
     </>
   );

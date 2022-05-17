@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { arrayToDelimitedString, capitalize, formatFormula, pluralize } from '../utils';
-import { Form, Button } from 'react-bulma-components';
-const { Input, Field, Control } = Form;
 import { FaAngleDown, FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
 import classNames from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
@@ -371,16 +369,16 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   if (props.label) {
     labelControl = (
-      <Control>
+      <div className="control">
         <button className="button is-static">{props.label}</button>
-      </Control>
+      </div>
     );
   }
 
   if (props.periodicTableMode === PeriodicTableMode.TOGGLE) {
     var tooltipId = `materials-input-periodic-button-${uuidv4()}`;
     periodicToggleControl = (
-      <Control>
+      <div className="control">
         <button
           data-testid="materials-input-toggle-button"
           type="button"
@@ -398,13 +396,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
             {showPeriodicTable ? 'Hide Periodic Table' : 'Show Periodic Table'}
           </Tooltip>
         </button>
-      </Control>
+      </div>
     );
   }
 
   const errorTooltipId = `materials-error-${uuidv4()}`;
   const errorControl = (
-    <Control>
+    <div className="control">
       <button
         data-testid="materials-input-error"
         type="button"
@@ -420,7 +418,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
           {error}
         </Tooltip>
       </button>
-    </Control>
+    </div>
   );
 
   if (showTypeDropdown) {
@@ -472,26 +470,25 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   if (props.showSubmitButton) {
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
-        <Field className="has-addons">
+        <div className="field has-addons">
           {materialsInputFieldControls}
-          <Control>
-            <Button
+          <div className="control">
+            <button
               data-testid="materials-input-submit-button"
-              className={classNames({
+              className={classNames('button is-primary', {
                 'is-loading': props.loading
               })}
-              color="primary"
               type="submit"
               disabled={disabled}
             >
               {props.submitButtonText}
-            </Button>
-          </Control>
-        </Field>
+            </button>
+          </div>
+        </div>
       </form>
     );
   } else {
-    materialsInputField = <Field className="has-addons">{materialsInputFieldControls}</Field>;
+    materialsInputField = <div className="field has-addons">{materialsInputFieldControls}</div>;
   }
 
   /**

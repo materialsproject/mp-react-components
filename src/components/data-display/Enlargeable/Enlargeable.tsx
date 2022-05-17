@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { toByteArray } from 'base64-js';
 import classNames from 'classnames';
 import { FaCompress, FaCompressAlt, FaExpand, FaExpandAlt } from 'react-icons/fa';
 import './Enlargeable.css';

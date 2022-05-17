@@ -1,9 +1,4 @@
-import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import { ExportType } from './scene/constants';
-import Scene from './scene/Scene';
 import * as THREE from 'three';
-import { WebGLRenderer } from 'three';
-import toDataUrl from 'svgtodatauri';
 
 const EXPORT_PIXEL_RATIO = 8;
 
