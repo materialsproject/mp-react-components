@@ -26,7 +26,6 @@ import {
   CameraState,
   initialState
 } from '../CameraContextProvider/camera-reducer';
-import SimpleSlider from '../scene/animation-slider';
 import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
 import * as THREE from 'three';
@@ -45,6 +44,7 @@ import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalCloseButton } from '../../data-display/Modal/ModalCloseButton';
 import { downloadBlob, downloadJSON } from '../../data-entry/utils';
+import { RangeSlider } from '../../data-entry/RangeSlider';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
@@ -640,11 +640,15 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
           )}
 
           {props.animation === AnimationStyle.SLIDER && (
-            <SimpleSlider
-              onUpdate={(a) => {
-                scene.current!.updateTime(a / 100);
-              }}
+            <RangeSlider
+              domain={[0, 100]}
+              onChange={(values) => scene.current!.updateTime(values[0] / 100)}
             />
+            // <SimpleSlider
+            //   onUpdate={(a) => {
+            //     scene.current!.updateTime(a / 100);
+            //   }}
+            // />
           )}
         </div>
       </div>

@@ -79,9 +79,10 @@ pre code {
   padding: 0;
 }
 
-pre {
+.sbdocs pre.prismjs {
   color: inherit;
   font-size: inherit;
+  padding: 1rem !important;
 }
 
 .maybe-class-name {

@@ -240,7 +240,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
         defaultQuery
       );
       params[props.fieldsKey] = fields;
-      //test
+
       axios
         .get(props.apiEndpoint, {
           params: params,
