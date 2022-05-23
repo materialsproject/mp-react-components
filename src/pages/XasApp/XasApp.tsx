@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 
 /**
  * Component for testing the XAS App view
@@ -24,9 +24,9 @@ export const XasApp: React.FC = () => {
       </button>
       <SearchUI
         resultLabel="spectrum"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
+        apiEndpoint={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/xas/' : ''}
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={false}
         selectableRows={true}

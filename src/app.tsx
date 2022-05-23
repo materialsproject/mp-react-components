@@ -8,6 +8,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles.less';
+import './assets/fonts.css';
 import '../node_modules/bulma/css/bulma.min.css';
 import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { MaterialsExplorer } from './pages/MaterialsExplorer';
@@ -24,6 +25,7 @@ import { CatalystExplorer } from './pages/CatalystExplorer';
 import { PhononVisualization } from './pages/PhononVisualization';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
+import { MofExplorer } from './pages/MofExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -56,6 +58,10 @@ ReactDOM.render(
           {
             label: 'Catalysts',
             href: '/catalysts'
+          },
+          {
+            label: 'MOF',
+            href: '/mof'
           },
           {
             label: 'X-Ray Absorption Spectra',
@@ -125,6 +131,9 @@ ReactDOM.render(
           </Route>
           <Route path="/catalysts">
             <CatalystExplorer />
+          </Route>
+          <Route path="/mof">
+            <MofExplorer />
           </Route>
           <Route path="/sandbox">
             <Sandbox />

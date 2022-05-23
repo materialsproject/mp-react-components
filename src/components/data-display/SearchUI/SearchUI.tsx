@@ -19,6 +19,7 @@ import { SearchUIDataHeader } from './SearchUIDataHeader';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataView } from './SearchUIDataView';
 import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
+import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
 
 export interface SearchUIProps {
   /**
@@ -33,25 +34,8 @@ export interface SearchUIProps {
   setProps?: (value: any) => any;
 
   /**
-   * An array of column definitions for the results in the SearchUIDataTable
-   * Column properties are based on the react-data-table column settings (https://github.com/jbetancur/react-data-table-component#columns)
-   * The "format" property must match a pre-defined one of these predefined strings: "TWO_DECIMALS"
-   * 
-   * eg:
-    
-    [
-        {
-          name: 'Material Id',
-          selector: 'task_id',
-          sortable: true
-        },
-        {
-          name: 'Volume',
-          selector: 'volume',
-          sortable: true,
-          format: 'TWO_DECIMALS'
-        }
-    ]
+   * An array of column definition objects to control what is rendered in the results table.
+   * See `Column` documentation for specifics on how to construct `Column` objects.
    */
   columns: Column[];
 
@@ -59,69 +43,22 @@ export interface SearchUIProps {
    * An array of filter groups and their respective array of filters.
    * A filter group is a collapsible section of the filters panel that contains one or more filters.
    * A filter is a type of input element that filters the data based on its value.
-   * Filter "type" must be one of these strings: "SLIDER", "MATERIALS_INPUT"
-   * Filter "id" must be a queryable field
-   * Filter props defines how that filter should be rendered. See example for props format based on filter type.
-   * 
-   * eg:
-    
-    [
-      {
-        name: 'Material',
-        collapsed: false,
-        filters: [
-          {
-            name: 'Required Elements',
-            id: 'elements',
-            type: 'MATERIALS_INPUT',
-            props: {
-              field: 'elements'
-            }
-          }
-        ]
-      },
-      {
-        name: 'General',
-        collapsed: false,
-        filters: [
-          {
-            name: 'Volume',
-            id: 'volume',
-            type: 'SLIDER',
-            props: {
-              domain: [0, 200]
-            }
-          },
-          {
-            name: 'Density',
-            id: 'density',
-            type: 'SLIDER',
-            props: {
-              domain: [0, 200]
-            }
-          }
-        ]
-      }
-    ]
+   * See `FilterGroup` documentation for specifics on how to construct `FilterGroup` and `Filter` objects.
    */
   filterGroups: FilterGroup[];
 
   /**
-   * The base URL to the API that this search UI should query
+   * The URL endpoint to the API that this component should query
    */
-  baseUrl: string;
+  apiEndpoint: string;
 
   /**
-   * Query params that will be automatically added for every search.
+   * Object of query params that will be automatically added for every search.
    * This can be used to scope down a SearchUI to a specific subset of a larger endpoint.
-   * 
-   * e.g.
-    
-    {
-      project: 'open_catalyst_project'
-    }
+   *
+   * e.g. `{ project: 'open_catalyst_project' }`
    */
-  baseUrlParams?: SearchParams;
+  apiEndpointParams?: SearchParams;
 
   /**
    * The URL endpoint for fetching autocompletion results
@@ -134,11 +71,9 @@ export interface SearchUIProps {
   apiKey?: string;
 
   /**
-   * A noun in singular form to describe what a result represents
-   * e.g. "material"
-   * Note that only some special plural mappings are handled automatically (e.g. battery -> batteries)
-   * In all other cases, an "s" is appended to resultLabel
-   * @default 'result'
+   * A noun in singular form to describe what a result represents (e.g. "material").
+   * Note that only some special plural mappings are handled automatically (e.g. "battery" --> "batteries").
+   * In all other cases, an "s" is appended to `resultLabel`.
    */
   resultLabel?: string;
 
@@ -171,7 +106,7 @@ export interface SearchUIProps {
 
   /**
    * Object with keys of allowed input types for the top-level search bar.
-   * Keys must be one of these supported input types: "elements", "formula", "mpid", "smiles", "text"
+   * Keys must be one of these supported input types: "elements", "formula", "mpid", "smiles", "text."
    * Each key object must have a "field" property which maps the input type
    * to a valid data filter field in the API.
    * 
@@ -201,6 +136,25 @@ export interface SearchUIProps {
   searchBarPeriodicTableMode?: PeriodicTableMode;
 
   /**
+   * Search examples to include below the search bar input.
+   * This will display when input is in focus and empty, or when the help button is clicked.
+   * Expects an array of items with the following properties:
+   * "label": text to display before examples. If only "label" and no "examples", text will render as small.
+   * "examples": array of input examples. These will become clickable and will update the input value. 
+   * e.g.
+    [
+      {
+        label: 'Search Examples'
+      },
+      {
+        label: 'Include at least elements',
+        examples: ['Li,Fe', 'Si,O,K']
+      }
+    ]
+   */
+  searchBarHelpItems?: InputHelpItem[];
+
+  /**
    * Optionally include/exclude the menu for dynamically controlling sort options
    * @default true
    */
@@ -219,23 +173,23 @@ export interface SearchUIProps {
   sortAscending?: boolean;
 
   /**
-   * List of conditions for styling rows based on a property (selector) and a value
-   * Accepts a list of "condition" objects which must specify a...
-   *  selector: the name of the data property to use for the condition
-   *  value: the value that meets the condition
-   *  style: object of styles supplied in "CSS-in-JS" format
-   * Note that this prop currently only supports checking for 
-   * value equivalence (i.e. row[selector] === value)
-   * example:
-    [
-      {
-        selector: "myProperty",
-        value: true,
-        style: {
-          backgroundColor: "#ddd"
-        }
-      }
-    ]
+   * Optionally include a secondary sort field. If the sortField ever becomes the same as
+   * the secondarySortField, the secondary field is removed.
+   * Must be a valid field and included in your list of columns.
+   */
+  secondarySortField?: string;
+
+  /**
+   * If including a secondarySortField, set whether it should ascend by default.
+   * True for ascending, False for descending.
+   */
+  secondarySortAscending?: boolean;
+
+  /**
+   * List of conditions for styling rows based on a property (selector) and a value.
+   * Note that this prop currently only supports checking for
+   * value equivalence (i.e. row[selector] === value).
+   * See `ConditionalRowStyle` documentation for how to construct `ConditionalRowStyle` conditions.
    */
   conditionalRowStyles?: ConditionalRowStyle[];
 
@@ -252,65 +206,49 @@ export interface SearchUIProps {
 
   /**
    * Set the initial results view to one of the preset
-   * SearchUI views: 'table', 'cards', or 'synthesis'
-   *
-   * To add a new view type, head to SearchUI/types and add the name of the type to the
-   * SearchUIViewType enum, then add a property in searchUIViewsMap using the same name
-   * you used for the type, then provide your custom view component as the value.
-   * The view component should consume the SearchUIContext state using the useSearchUIContext hook.
-   * See SearchUIDataTable or SearchUIDataCards for example view components.
-   * @default 'table'
+   * SearchUI views: 'table', or 'synthesis'.
+   * Note that these options may expand in the future.
    */
   view?: SearchUIViewType;
 
   /**
-   * Optionally enable/disable switching between SearchUI result views
+   * Set to `true` if the `apiEndpoint` points to MPContribs. This allows the component to handle
+   * small inconsistencies between the MPContribs API and the Materials Project API.
    */
-  allowViewSwitching?: boolean;
+  isContribs?: boolean;
 
   /**
-   * Set of options for configuring what is displayed in the result cards
-   * when in the cards view.
-   * Must be an object with the following properties:
-    {
-      imageBaseURL: '', // Base of the URL to use to get images for the left side of the card
-      imageKey: 'material_id', // Data key to use to append value to the base URL (i.e. the name of the image file). The .png extension is added automatically.
-      levelOneKey: 'material_id', // Data key to use for the first line of text on the card
-      levelTwoKey: 'formula_pretty', // Data key to use for the second line of text on the card
-      levelThreeKeys: [ // List of data keys and labels to display under the first and second line of text
-        { key: 'energy_above_hull', label: 'Energy Above Hull' },
-        { key: 'formation_energy_per_atom', label: 'Formation Energy' },
-      ],
-    }
+   * Amount of time in milliseconds that should elapse between a user entering
+   * a value in the filters panel and a new query being triggered.
    */
-  cardOptions?: any;
-  isContribs?: boolean;
   debounce?: number;
+
+  /**
+   * This is a temporary solution to allow SearchUI's to render in Storybook.
+   * There is an issue with the dynamic column header components that causes
+   * Storybook to crash. Rendering column headers as plain strings fixes the problem.
+   * Note that this will disable column tooltips and unit labels.
+   */
+  disableRichColumnHeaders?: boolean;
 }
 
 /**
- * Component for rendering advanced search interfaces for data in an API
- * Renders results alongside a set of filters that map to properties in the data.
+ * Renders a complete search interface for fetching and filtering data from a REST API.
+ * Results are rendered in a table alongside a set of filters that map to properties in the data.
  */
 export const SearchUI: React.FC<SearchUIProps> = (props) => {
   return (
     <div id={props.id} className="mpc-search-ui">
       <Router>
         <SearchUIContextProvider {...props}>
-          <div className="columns">
+          {props.hasSearchBar && (
+            <div className="container is-max-desktop">
+              <SearchUISearchBar />
+            </div>
+          )}
+          <div className="mpc-search-ui-content columns">
             <div className="mpc-search-ui-left column is-narrow is-12-mobile">
-              {props.hasSearchBar && (
-                <div className="columns mb-1">
-                  <div className="column pb-2">
-                    <SearchUISearchBar />
-                  </div>
-                </div>
-              )}
-              <div className="columns">
-                <div className="column">
-                  <SearchUIFilters />
-                </div>
-              </div>
+              <SearchUIFilters />
             </div>
             <div className="mpc-search-ui-right column">
               <SearchUIDataHeader />
@@ -325,12 +263,12 @@ export const SearchUI: React.FC<SearchUIProps> = (props) => {
 
 SearchUI.defaultProps = {
   view: SearchUIViewType.TABLE,
-  baseUrlParams: {},
+  apiEndpointParams: {},
   resultLabel: 'results',
   hasSortMenu: true,
   hasSearchBar: true,
   conditionalRowStyles: [],
-  searchBarPeriodicTableMode: PeriodicTableMode.TOGGLE,
+  searchBarPeriodicTableMode: PeriodicTableMode.FOCUS,
   searchBarAllowedInputTypesMap: {
     elements: {
       field: 'elements'
@@ -345,3 +283,29 @@ SearchUI.defaultProps = {
   setProps: () => null,
   debounce: 1000
 };
+
+/**
+ * Experimental props that have not been fully implemented yet
+ */
+
+/**
+ * Optionally enable/disable switching between SearchUI result views
+ */
+// allowViewSwitching?: boolean;
+
+/**
+   * Set of options for configuring what is displayed in the result cards
+   * when in the cards view.
+   * Must be an object with the following properties:
+    {
+      imageBaseURL: '', // Base of the URL to use to get images for the left side of the card
+      imageKey: 'material_id', // Data key to use to append value to the base URL (i.e. the name of the image file). The .png extension is added automatically.
+      levelOneKey: 'material_id', // Data key to use for the first line of text on the card
+      levelTwoKey: 'formula_pretty', // Data key to use for the second line of text on the card
+      levelThreeKeys: [ // List of data keys and labels to display under the first and second line of text
+        { key: 'energy_above_hull', label: 'Energy Above Hull' },
+        { key: 'formation_energy_per_atom', label: 'Formation Energy' },
+      ],
+    }
+   */
+// cardOptions?: any;

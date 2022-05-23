@@ -2,7 +2,8 @@ import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
+import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
 
 /**
  * Component for testing the Batteries Explorer view
@@ -12,12 +13,12 @@ export const BatteryExplorer: React.FC = () => {
   console.log(process.env.REACT_APP_API_KEY);
   return (
     <>
-      <h1 className="title">Batteries Explorer</h1>
+      <h1 className="title is-1">Battery Explorer</h1>
       <SearchUI
         resultLabel="battery"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl={
+        apiEndpoint={
           process.env.REACT_APP_BASE_URL
             ? process.env.REACT_APP_BASE_URL + '/insertion_electrodes/'
             : ''
@@ -29,6 +30,7 @@ export const BatteryExplorer: React.FC = () => {
         }
         apiKey={process.env.REACT_APP_API_KEY}
         hasSearchBar={true}
+        searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         sortField="energy_above_hull"
         sortAscending={true}
       />

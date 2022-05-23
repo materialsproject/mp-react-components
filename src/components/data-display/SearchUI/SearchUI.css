@@ -1,5 +1,6 @@
-.mpc-search-ui {
-  min-height: 100vh;
+.mpc-search-ui > div,
+.mpc-search-ui > div > .columns > .column {
+  height: 100%;
 }
 
 .mpc-search-ui .mpc-search-ui-right {
@@ -14,11 +15,12 @@
   z-index: 2;
 }
 
-.mpc-search-ui .panel {
-  height: auto;
+/* .mpc-search-ui .panel {
   max-height: 100%;
   position: relative;
-}
+  display: flex;
+  flex-direction: column;
+} */
 
 .mpc-search-ui .panel-heading {
   /* position: absolute;
@@ -26,6 +28,10 @@
   z-index: 4;
   height: 70px; */
   background: #ebebeb;
+}
+
+.mpc-search-ui .panel-block-container {
+  overflow: auto;
 }
 
 .mpc-search-ui .panel-block.is-active {
@@ -67,18 +73,32 @@
   margin-top: 0.75rem;
 }
 
+.mpc-search-ui .mpc-search-ui-data-table {
+  height: 100%;
+}
+
+.mpc-search-ui .mpc-search-ui-data-view {
+  flex: 1;
+  min-height: 0;
+}
+
 .mpc-search-ui .react-data-table-outer-container {
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mpc-search-ui .react-data-table-container {
   width: 100%;
+  min-height: 0;
+  flex: 1;
 }
 
 .mpc-search-ui .react-data-table {
   border-radius: 6px;
-  /* overflow: auto;
-  max-height: 700px; */
+  overflow: auto;
+  max-height: 100%;
 }
 
 .mpc-search-ui .rdt_TableHead {
@@ -98,6 +118,10 @@
 
 .mpc-search-ui .react-data-table .column-units {
   font-weight: normal;
+}
+
+.mpc-search-ui .mpc-search-ui-data-header {
+  margin-bottom: 0;
 }
 
 .mpc-search-ui .mpc-search-ui-data-header-content {
@@ -168,6 +192,15 @@
   display: inline-flex;
 }
 
+.mpc-search-ui .mpc-materials-input {
+  margin-bottom: 1rem;
+}
+
+.mpc-search-ui .mpc-materials-input .box {
+  max-width: 750px;
+  margin: auto;
+}
+
 .mpc-search-ui .mpc-paginator,
 .mpc-search-ui .mpc-active-filter-buttons,
 .mpc-search-ui .mpc-search-ui-data-view {
@@ -209,7 +242,7 @@
 
 @media screen and (min-width: 960px) {
   .mpc-search-ui .mpc-search-ui-left {
-    min-width: 550px;
+    min-width: 400px;
   }
 }
 

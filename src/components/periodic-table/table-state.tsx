@@ -3,7 +3,8 @@ import { TableSelectionStyle, useElements } from './periodic-table-state/table-s
 import { Table, TableLayout } from './periodic-table-component/periodic-table.component';
 import { useEffect } from 'react';
 
-interface SelectableTableProps {
+export interface SelectableTableProps {
+  className?: string;
   /** array of enabled elements, e.g : ['H', 'O'] */
   enabledElements?: string[];
   /** array of disabled elements, e.g : ['H', 'O'] */
@@ -53,7 +54,7 @@ export const useElementsWithState = (props: SelectableTableProps) => {
     enabledElements: enabledEls,
     disabledElements: disabledEls,
     hiddenElements: hiddenEls,
-    actions: tableStateStore,
+    actions: tableStateStore
   } = useElements(props.maxElementSelectable, props.onStateChange);
 
   useEffect(() => {
@@ -69,6 +70,6 @@ export const useElementsWithState = (props: SelectableTableProps) => {
     tableStateStore,
     enabledEls,
     disabledEls,
-    hiddenEls,
+    hiddenEls
   };
 };

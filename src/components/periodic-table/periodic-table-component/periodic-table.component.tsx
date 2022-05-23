@@ -9,6 +9,7 @@ import { extent, range, max, min } from 'd3-array';
 import { scaleLinear, scaleSequential } from 'd3-scale';
 import * as d3Scale from 'd3-scale-chromatic';
 import { PeriodicTableSpacer } from '../PeriodicTable/PeriodicTableSpacer';
+import classNames from 'classnames';
 
 export const DEFAULT_HEATMAP_COLOR = '#EDEEED';
 
@@ -22,11 +23,12 @@ export const COLORSCHEME = {
   Oranges: d3Scale.interpolateOranges,
   Greens: d3Scale.interpolateGreens,
   Reds: d3Scale.interpolateReds,
-  Purples: d3Scale.interpolatePurples,
+  Purples: d3Scale.interpolatePurples
 };
 Object.freeze(COLORSCHEME);
 
 export interface TableProps {
+  className?: string;
   /** dictionnary of disabled elements */
   disabledElement: { [symbol: string]: boolean };
   /** dictionnary of enabled elements  */
@@ -65,7 +67,7 @@ export enum TableLayout {
   SPACED = 'spaced',
   COMPACT = 'compact',
   MINI = 'small',
-  MAP = 'map',
+  MAP = 'map'
 }
 
 const N_LEGEND_ITEMS = 10;
@@ -85,7 +87,7 @@ function computeHeatmap(
     return {
       linearScale: scaleSequential(COLORSCHEME[scheme]).domain(heatmapExtent),
       legendScale: scaleSequential(COLORSCHEME[scheme]).domain([0, N_LEGEND_ITEMS]),
-      legendPosition,
+      legendPosition
     };
   }
 
@@ -98,6 +100,7 @@ function computeHeatmap(
 }
 
 export function Table({
+  className,
   disabledElement,
   enabledElement,
   hiddenElement,
@@ -112,7 +115,7 @@ export function Table({
   showSwitcher,
   selectorWidget,
   plugin,
-  disabled,
+  disabled
 }: TableProps) {
   const [isShown, setIsShown] = React.useState(true);
   const [legendPosition, setLegendPosition] = React.useState(-1);
@@ -131,13 +134,11 @@ export function Table({
   const {
     linearScale: heatmapscale,
     legendScale,
-    legendPosition: legendPositionScale,
-  } = useMemo(() => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!, colorScheme!), [
-    heatmapMax,
-    heatmapMin,
-    heatmap,
-    colorScheme,
-  ]);
+    legendPosition: legendPositionScale
+  } = useMemo(
+    () => computeHeatmap(heatmap!, heatmapMax!, heatmapMin!, colorScheme!),
+    [heatmapMax, heatmapMin, heatmap, colorScheme]
+  );
 
   // TODO(chab) allow people to pass the number of subdivisions OR to have a continuous legend
   const legendItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
@@ -158,7 +159,7 @@ export function Table({
   };
 
   return (
-    <div className={'table-legend-container'}>
+    <div className={classNames('table-legend-container', className)}>
       <div
         className={`table-container ${getLayout(
           isDesktop || isDesktopH,
@@ -206,7 +207,7 @@ export function Table({
                 style={{
                   background: legendScale(n),
                   width: '10px',
-                  height: `${100 / legendItems.length}%`,
+                  height: `${100 / legendItems.length}%`
                 }}
               >
                 {' '}
@@ -220,7 +221,7 @@ export function Table({
                 height: '2px',
                 right: '-1px',
                 top: `${legendPosition}%`,
-                background: 'black',
+                background: 'black'
               }}
             />
           </div>
@@ -286,5 +287,5 @@ const DEFAULT_DISABLED_ELEMENTS = {
   Fm: true,
   Md: true,
   No: true,
-  Lr: true,
+  Lr: true
 };

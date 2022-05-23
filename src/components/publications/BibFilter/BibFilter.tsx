@@ -8,7 +8,7 @@ import { CrossrefCard } from '../CrossrefCard';
 import { SortDropdown } from '../../data-display/SortDropdown';
 import { sortCrossref, sortDynamic } from '../../data-entry/utils';
 
-interface Props {
+export interface BibFilterProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -26,20 +26,16 @@ interface Props {
   className?: string;
 
   /**
-   * List of bib objects in bibjson or crossref format
+   * List of objects in bibjson or crossref format.
    * Only the following bib properties are used by this component:
-   *  - title
-   *  - author (as a list or string)
-   *  - year
-   *  - doi
-   *  - journal
-   * If any of those properties are missing, that property will be omitted from the bibjson result card.
+   * title, author (as a list or string), year, doi, and journal.
+   * If any of those properties are missing, that property will be omitted from the result card.
    * Any extra properties are simply ignored.
    */
   bibEntries: any[];
 
   /**
-   * Format of the bibliographoc objects supplied in bibEntries
+   * Format of the bibliographoc objects supplied in `bibEntries`
    * @default 'bibjson'
    */
   format?: 'crossref' | 'bibjson';
@@ -81,7 +77,7 @@ const sortMap = {
  * Expects bibjson in the format output by the bibtexparser library (https://bibtexparser.readthedocs.io/en/v1.1.0/tutorial.html#).
  * Expects crossref in the format returned by the Crossref API.
  */
-export const BibFilter: React.FC<Props> = ({
+export const BibFilter: React.FC<BibFilterProps> = ({
   format = 'bibjson',
   sortField = 'year',
   ascending = false,

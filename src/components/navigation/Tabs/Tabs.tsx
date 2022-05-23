@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useEffect } from 'react';
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
 
-interface Props {
+export interface TabsProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
@@ -20,6 +20,12 @@ interface Props {
    * The "mpc-tabs" class is added automatically
    */
   className?: string;
+
+  /**
+   * Content for each tab. Each top-level element will be the content for a tab.
+   * The order of the elements inside of children should correspond to the order of the `labels` prop.
+   */
+  children: ReactNode;
 
   /**
    * List of strings to use as labels for the tabs.
@@ -46,10 +52,14 @@ interface Props {
 }
 
 /**
- * Custom wrapper for the react-tabs component.
+ * Render content as labeled tabs.
+ * This component will only render a tab's content once it has been activated.
+ * After it's been activated, the tab's content will stay rendered and will be
+ * shown/hidden using css only.
+ * The react-tabs library is used under the hood but usage has been modified to make this component dash-friendly.
  * See https://github.com/reactjs/react-tabs
  */
-export const Tabs: React.FC<Props> = ({
+export const Tabs: React.FC<TabsProps> = ({
   setProps = () => null,
   className,
   labels,
@@ -82,6 +92,7 @@ export const Tabs: React.FC<Props> = ({
       className={classNames('mpc-tabs', className)}
       selectedTabClassName="is-active"
       selectedIndex={internalTabIndex}
+      forceRenderTabPanel={true}
       onSelect={(index) => setInternalTabIndex(index)}
       {...tabProps}
     >
@@ -95,8 +106,34 @@ export const Tabs: React.FC<Props> = ({
         </TabList>
       </div>
       {React.Children.map(children, (child, i) => (
-        <TabPanel key={`tab-panel-${i}`}>{child}</TabPanel>
+        <TabPanel
+          className={classNames({ 'is-hidden': internalTabIndex !== i })}
+          key={`tab-panel-${i}`}
+        >
+          <CachedTab isActive={internalTabIndex === i}>{child}</CachedTab>
+        </TabPanel>
       ))}
     </ReactTabs>
+  );
+};
+
+/**
+ * Component that wraps a tab's content and keeps it rendered once it has been activated.
+ * After it has been activated, it is hidden with css.
+ * Before it has been activated, it is not rendered at all.
+ */
+const CachedTab: React.FC<any> = ({ isActive = false, children }) => {
+  const [hasBeenActivated, setHasBeenActivated] = useState(() => isActive);
+
+  useEffect(() => {
+    if (isActive) setHasBeenActivated(true);
+  }, [isActive]);
+
+  return (
+    <>
+      {(isActive || hasBeenActivated) && (
+        <div className={classNames({ 'is-hidden': !isActive })}>{children}</div>
+      )}
+    </>
   );
 };

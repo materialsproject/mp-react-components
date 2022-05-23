@@ -9,6 +9,12 @@ import {
 import { validateInputType, detectAndValidateInputType } from '../utils';
 import { Dropdown, Form } from 'react-bulma-components';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
+import classNames from 'classnames';
+import { FormulaAutocomplete } from '../FormulaAutocomplete';
+import { InputHelp } from '../InputHelp';
+import { FaQuestionCircle } from 'react-icons/fa';
+import { Tooltip } from '../../../data-display/Tooltip';
+import { v4 as uuidv4 } from 'uuid';
 const { Input, Field, Control } = Form;
 
 /**
@@ -38,6 +44,12 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
+  const [inputType, setInputType] = useState<MaterialsInputType | null>(props.inputType);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [showInputHelp, setShowInputHelp] = useState(false);
+  const includeAutocomplete =
+    props.autocompleteFormulaUrl &&
+    (props.inputType == MaterialsInputType.FORMULA || props.onInputTypeChange);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -45,6 +57,30 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     { label: 'By formula', value: MaterialsInputType.FORMULA },
     { label: 'By mp-id', value: MaterialsInputType.MPID }
   ];
+  const helpTooltipId = props.helpItems ? `materials-input-help-${uuidv4()}` : undefined;
+
+  /**
+   * Determine whether the help or autocomplete menus should display under the input.
+   * This is executed on focus and on input value change.
+   * Only show autocomplete if the input type is formula and the input value is not empty.
+   * Hide the help box if autocomplete should be showing.
+   * Show help box if input is focused and value is empty.
+   */
+  const shouldShowHelpOrAutocomplete = (currentInputType: MaterialsInputType | null) => {
+    if (
+      currentInputType === MaterialsInputType.FORMULA &&
+      inputValue !== undefined &&
+      inputValue !== '' &&
+      document.activeElement === inputRef.current
+    ) {
+      setShowAutocomplete(true);
+      setShowInputHelp(false);
+    } else if (document.activeElement === inputRef.current && (!inputValue || inputValue === '')) {
+      setShowInputHelp(true);
+    } else {
+      setShowInputHelp(false);
+    }
+  };
 
   /**
    * Handle updating the context with the new raw input value
@@ -55,11 +91,19 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   };
 
   const handleFocus = () => {
+    shouldShowHelpOrAutocomplete(inputType);
     if (props.onFocus) props.onFocus();
   };
 
-  const handleBlur = (event) => {
-    if (props.onBlur) props.onBlur(event);
+  const handleBlur = (e) => {
+    setShowAutocomplete(false);
+    setShowInputHelp(false);
+    if (props.onBlur) props.onBlur(e);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 9) setShowAutocomplete(false);
+    if (props.onKeyDown) props.onKeyDown(e);
   };
 
   /**
@@ -84,6 +128,8 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       let isValid = parsedValue !== null || !inputValue ? true : false;
       let newDelimiter = delimiter;
       let newPtActionsToDispatch: DispatchAction[] = [];
+
+      shouldShowHelpOrAutocomplete(newMaterialsInputType);
 
       if (isValid) {
         props.setError(null);
@@ -120,6 +166,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           });
         }
 
+        setInputType(newMaterialsInputType);
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
         props.setValue(inputValue);
@@ -225,24 +272,6 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     setDelimiter(props.isChemSys ? new RegExp('-') : new RegExp(','));
   }, [props.isChemSys]);
 
-  const inputControl = (
-    <Control className="is-expanded">
-      <input
-        data-testid="materials-input-search-input"
-        className="input"
-        type="search"
-        autoComplete="off"
-        value={inputValue}
-        onChange={handleRawValueChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        placeholder={props.placeholder}
-        ref={inputRef}
-        onKeyDown={props.onKeyDown}
-      />
-    </Control>
-  );
-
   return (
     <>
       {props.showInputTypeDropdown && (
@@ -264,7 +293,63 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           </Dropdown>
         </Control>
       )}
-      {inputControl}
+      <Control className="is-expanded">
+        <input
+          data-testid="materials-input-search-input"
+          className={classNames('input', props.inputClassName)}
+          type="search"
+          autoComplete="off"
+          value={inputValue}
+          onChange={handleRawValueChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={props.placeholder}
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+        />
+        {includeAutocomplete && (
+          <FormulaAutocomplete
+            value={inputValue}
+            inputType={inputType}
+            apiEndpoint={props.autocompleteFormulaUrl!}
+            apiKey={props.autocompleteApiKey}
+            show={showAutocomplete}
+            /**
+             * onChange must come from the top-level onChange event for MaterialsInput (i.e. not modify inputValue directly)
+             * otherwise there will be circular hooks.
+             */
+            onChange={(value) => {
+              inputRef.current?.blur();
+              if (props.onChange) props.onChange(value);
+            }}
+            onSubmit={props.onSubmit}
+            setError={props.setError}
+          />
+        )}
+        {props.helpItems && (
+          <InputHelp items={props.helpItems} show={showInputHelp} onChange={props.setValue} />
+        )}
+      </Control>
+      {props.helpItems && (
+        <Control>
+          <button
+            data-testid="materials-input-tooltip-button"
+            type="button"
+            className={classNames('button input-help-button', {
+              'has-text-grey-light': !showInputHelp,
+              'has-text-link': showInputHelp
+            })}
+            onClick={() => setShowInputHelp(!showInputHelp)}
+            data-tip
+            data-for={helpTooltipId}
+          >
+            <FaQuestionCircle />
+            <Tooltip id={helpTooltipId} place="bottom">
+              {showInputHelp ? 'Hide examples' : 'Show examples'}
+            </Tooltip>
+          </button>
+        </Control>
+      )}
     </>
   );
 };

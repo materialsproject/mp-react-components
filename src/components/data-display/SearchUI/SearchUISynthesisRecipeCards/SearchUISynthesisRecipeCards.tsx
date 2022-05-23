@@ -25,7 +25,6 @@ export const SearchUISynthesisRecipeCards: React.FC = () => {
 
   return (
     <div data-testid="mpc-synthesis-recipe-cards" className="mpc-synthesis-recipe-cards">
-      <CustomPaginator isTop />
       <div className="mpc-synthesis-recipe-cards-container">
         {state.results.map((d, i) => (
           // Custom result cards

@@ -1,11 +1,10 @@
 [
   {
-    "name": "DOI",
+    "title": "DOI",
     "selector": "doi",
     "omit": true,
     "unit": "",
     "conversionFactor": 0,
-    "nameString": "DOI",
     "abbreviateNearZero": false,
     "hidden": true
   }

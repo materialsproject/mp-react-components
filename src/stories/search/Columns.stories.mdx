@@ -1,0 +1,174 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs';
+import { ColumnInterface } from '../type-components';
+
+<Meta title="Search UI/Columns" />
+
+# Columns
+
+The `SearchUI` component requires a `columns` prop that defines a list of columns to query for along with options for how to render each column.
+Below are all the options available in a column definition object.
+
+<ArgsTable of={ColumnInterface} />
+
+## Example
+
+```js
+[
+  {
+    title: 'Synthesizable',
+    selector: 'theoretical',
+    formatType: 'BOOLEAN_CLASS',
+    formatOptions: {
+      truthyClass: '',
+      falsyClass: 'fas fa-star'
+    },
+    cellTooltip: 'Experimentally observed',
+    hideName: true,
+    width: '30px'
+  },
+  {
+    title: 'Material ID',
+    selector: 'material_id',
+    formatType: 'LINK',
+    formatOptions: {
+      baseUrl: '/materials/'
+    },
+    minWidth: '130px'
+  },
+  {
+    title: 'Formula',
+    selector: 'formula_pretty',
+    formatType: 'FORMULA',
+    minWidth: '130px'
+  },
+  {
+    title: 'Crystal System',
+    selector: 'symmetry.crystal_system'
+  },
+  {
+    title: 'Space Group Symbol',
+    selector: 'symmetry.symbol',
+    formatType: 'SPACEGROUP_SYMBOL',
+    tooltip: 'The space group symbol for the lattice'
+  },
+  {
+    title: 'Volume',
+    selector: 'volume',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    units: '\u00c5\u00b3',
+    omit: true,
+    right: true
+  },
+  {
+    title: 'Sites',
+    selector: 'nsites',
+    right: true
+  },
+  {
+    title: 'Energy Above Hull',
+    selector: 'energy_above_hull',
+    formatType: 'FIXED_DECIMAL',
+    formatOptions: {
+      decimals: 2
+    },
+    units: 'meV/atom',
+    conversionFactor: 1000,
+    abbreviateNearZero: true,
+    right: true
+  },
+  {
+    title: 'Formation Energy',
+    selector: 'formation_energy_per_atom',
+    formatType: 'SIGNIFICANT_FIGURES',
+    formatOptions: {
+      sigFigs: 3
+    },
+    units: 'eV/atom',
+    omit: true,
+    right: true
+  },
+  {
+    title: 'Predicted Stable',
+    selector: 'is_stable',
+    formatType: 'BOOLEAN',
+    formatOptions: {
+      truthyLabel: 'yes',
+      falsyLabel: 'no'
+    },
+    omit: true,
+    right: false
+  }
+];
+```
+
+## Column Formats
+
+Below are all the available options for a column's `formatType`. Some types must be used in conjunction with
+a `formatOptions` object that includes properties specific to that format type. Where necessary, those options are also described.
+
+### **BOOLEAN**
+
+Convert boolean values to custom labels.
+
+| formatOption | Description                             |
+| ------------ | --------------------------------------- |
+| truthyLabel  | text to show when cell value is `true`  |
+| falsyLabel   | text to show when cell value is `false` |
+
+### **BOOLEAN_CLASS**
+
+Convert boolean values to cells with custom class names. This can be used to conditionally render icons inside a cell.
+
+| formatOption | Description                                  |
+| ------------ | -------------------------------------------- |
+| truthyClass  | class name to use when cell value is `true`  |
+| falsyClass   | class name to use when cell value is `false` |
+
+### **FIXED_DECIMAL**
+
+Round values to the nearest specified decimal place (defaults to 2 if no `formatOptions` is supplied).
+
+| formatOption | Description                           |
+| ------------ | ------------------------------------- |
+| decimals     | number of decimals to round values to |
+
+### **FORMULA**
+
+Render values as chemical formulas.
+
+No formatOptions
+
+### **LINK**
+
+Turn cell values into links. This format can be used in two different ways. If the raw data in this property is a full URL,
+you can specifiy a different property to use as the link label. You can also use this format to append the raw data value to
+a specified `baseUrl`. Doing so will render the raw data value as the link label and use the `baseUrl` + value as the link's destination.
+
+| formatOption       | Description                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| baseUrl            | the base URL that will be prepended to the cell's raw value to create the link's destination        |
+| linkLabelisFormula | if true, the link label will render as a formatted chemical formula                                 |
+| linkLabelKey       | the property key to use as the link's label (omit this to render the raw column value as the label) |
+
+### **POINTGROUP**
+
+Map point group strings to unicode and render as unicode.
+
+No formatOptions
+
+### **SIGNIFICANT_FIGURES**
+
+Round values to the specified number of significant figures (defaults to 5 if no `formatOptions` is supplied).
+
+| formatOption | Description                                      |
+| ------------ | ------------------------------------------------ |
+| sigFigs      | number of significant figures to round values to |
+
+### **SPACEGROUP_SYMBOL**
+
+Map space group symbols to unicode and render as unicode.
+
+No formatOptions

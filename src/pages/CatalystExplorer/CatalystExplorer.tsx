@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
@@ -18,10 +18,10 @@ export const CatalystExplorer: React.FC = () => {
         view={SearchUIViewType.TABLE}
         isContribs
         resultLabel="catalyst"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl="https://contribs-api.materialsproject.org/contributions/"
-        baseUrlParams={{
+        apiEndpoint="https://contribs-api.materialsproject.org/contributions/"
+        apiEndpointParams={{
           project: 'open_catalyst_project'
         }}
         apiKey={undefined}

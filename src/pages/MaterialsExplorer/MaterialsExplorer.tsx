@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchUI } from '../../components/data-display/SearchUI';
-import { FilterGroup } from '../../components/data-display/SearchUI/types';
+import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { SearchUIViewType } from '../../components/data-display/SearchUI/types';
@@ -13,7 +13,17 @@ import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/Ma
 export const MaterialsExplorer: React.FC = () => {
   return (
     <>
-      <h1 className="title">Materials Explorer</h1>
+      <h1
+        className="title is-1"
+        style={{
+          height: '12rem',
+          lineHeight: '12rem',
+          borderBottom: '1px solid #ddd',
+          textAlign: 'center'
+        }}
+      >
+        Materials Explorer
+      </h1>
       <SearchUI
         view={SearchUIViewType.TABLE}
         // allowViewSwitching
@@ -28,9 +38,12 @@ export const MaterialsExplorer: React.FC = () => {
         //   ]
         // }}
         resultLabel="material"
-        columns={columns}
+        columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
-        baseUrl={process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''}
+        apiEndpoint={
+          process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL + '/summary/' : ''
+        }
+        // apiEndpoint="test"
         autocompleteFormulaUrl={
           process.env.REACT_APP_AUTOCOMPLETE_URL
             ? process.env.REACT_APP_AUTOCOMPLETE_URL
@@ -38,10 +51,13 @@ export const MaterialsExplorer: React.FC = () => {
         }
         apiKey={undefined}
         hasSortMenu={true}
-        sortField="formula_pretty"
+        sortField="energy_above_hull"
         sortAscending={true}
+        secondarySortField="formula_pretty"
+        secondarySortAscending={true}
         searchBarTooltip="Type in a comma-separated list of element symbols (e.g. Ga, N), a chemical formula (e.g. C3N), or a material id (e.g. mp-10152). You can also click elements on the periodic table to add them to your search."
-        searchBarPlaceholder="Search by elements, formula, or ID"
+        searchBarPlaceholder="e.g. Li-Fe or Li,Fe or Li3Fe or mp-19017"
+        // searchBarPlaceholder="Search by elements, formula, or Material ID"
         searchBarErrorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or ID (e.g. mp-394 or mol-54330)."
         searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
         searchBarAllowedInputTypesMap={{
@@ -55,6 +71,38 @@ export const MaterialsExplorer: React.FC = () => {
             field: 'material_ids'
           }
         }}
+        searchBarHelpItems={[
+          {
+            label: 'Search Examples'
+          },
+          {
+            label: 'Include at least elements',
+            examples: ['Li,Fe', 'Si,O,K']
+          },
+          {
+            label: 'Include only elements',
+            examples: ['Li-Fe', 'Si-O-K']
+          },
+          {
+            label: 'Include only elements plus wildcard elements',
+            examples: ['Li-Fe-*-*', 'Si-Fe-*-*-*']
+          },
+          {
+            label: 'Has exact formula',
+            examples: ['Li3Fe', 'Eu2SiCl2O3']
+          },
+          {
+            label: 'Has formula plus wildcard atoms',
+            examples: ['LiFe*2*', 'Si*']
+          },
+          {
+            label: 'Has Material ID',
+            examples: ['mp-149', 'mp-19326']
+          },
+          {
+            label: 'Additional search options available in the filters panel.'
+          }
+        ]}
       />
     </>
   );

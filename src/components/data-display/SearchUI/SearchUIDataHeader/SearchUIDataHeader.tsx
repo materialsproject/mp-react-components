@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { ActiveFilterButtons } from '../../../data-display/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
@@ -43,6 +43,7 @@ const getUpperResultBound = (
 export const SearchUIDataHeader: React.FC = () => {
   const state = useSearchUIContext();
   const actions = useSearchUIContextActions();
+  const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
   const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
@@ -207,7 +208,7 @@ export const SearchUIDataHeader: React.FC = () => {
                       }}
                       onChange={(e) => toggleColumn(i)}
                     />
-                    <span>{col.nameString}</span>
+                    <span>{col.title}</span>
                   </label>
                 </li>
               </MenuItem>
@@ -264,33 +265,37 @@ export const SearchUIDataHeader: React.FC = () => {
     />
   ) : null;
 
-  const viewSwitcher = state.allowViewSwitching ? (
-    <div className="field has-addons">
-      <div className="control">
-        <button
-          onClick={() => actions.setView('table')}
-          className={classNames('button', {
-            'is-active': state.view === 'table'
-          })}
-        >
-          <FaTable />
-        </button>
-      </div>
-      <div className="control">
-        <button
-          onClick={() => actions.setView('cards')}
-          className={classNames('button', {
-            'is-active': state.view === 'cards'
-          })}
-        >
-          <FaThLarge />
-        </button>
-      </div>
-    </div>
-  ) : null;
+  // const viewSwitcher = state.allowViewSwitching ? (
+  //   <div className="field has-addons">
+  //     <div className="control">
+  //       <button
+  //         onClick={() => actions.setView('table')}
+  //         className={classNames('button', {
+  //           'is-active': state.view === 'table'
+  //         })}
+  //       >
+  //         <FaTable />
+  //       </button>
+  //     </div>
+  //     <div className="control">
+  //       <button
+  //         onClick={() => actions.setView('cards')}
+  //         className={classNames('button', {
+  //           'is-active': state.view === 'cards'
+  //         })}
+  //       >
+  //         <FaThLarge />
+  //       </button>
+  //     </div>
+  //   </div>
+  // ) : null;
+
+  useEffect(() => {
+    actions.setResultsRef(ref);
+  }, []);
 
   return (
-    <div id={componentHtmlId} className="mpc-search-ui-data-header">
+    <div id={componentHtmlId} className="mpc-search-ui-data-header box" ref={ref}>
       <div className="mpc-search-ui-data-header-content">
         <div>
           <TableHeaderTitle />
@@ -304,7 +309,7 @@ export const SearchUIDataHeader: React.FC = () => {
           )}
         </div>
         <div className="mpc-search-ui-data-header-controls">
-          {viewSwitcher}
+          {/* {viewSwitcher} */}
           {/* {sortMenu} */}
           {columnsMenu}
           {/* {resultsPerPageMenu} */}

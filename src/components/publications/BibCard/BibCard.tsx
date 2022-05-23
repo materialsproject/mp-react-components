@@ -6,21 +6,61 @@ import { PublicationButton } from '../../publications/PublicationButton';
 import { BibtexButton } from '../BibtexButton';
 import './BibCard.css';
 
-interface Props {
+export interface BibCardProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
   setProps?: (value: any) => any;
+  /**
+   * Class name(s) to append to the component's default class (`mpc-bib-card`)
+   */
   className?: string;
+  /**
+   * Title of the publication
+   */
   title?: string;
+  /**
+   * List of author names for the publication. Can be either a list of plain strings or a list of `CrossrefAuthor` objects.
+   * The latter is an object with `given` (name), `family` (last name), and `sequence` ("first" or "additional").
+   */
   author?: string[] | CrossrefAuthor[];
-  year?: string | number;
-  journal?: string;
+  /**
+   * Shortened title of the article
+   */
   shortName?: string;
+  /**
+   * Year the article was published
+   */
+  year?: string | number;
+  /**
+   * Journal that the article was published in
+   */
+  journal?: string;
+  /**
+   * Digital Object Identifier (DOI) for the article. This is used to generate the link to the article.
+   * It is also used to fetch an open access link.
+   */
   doi?: string;
+  /**
+   * Set to true to prevent the card from trying to get an open access URL from the Open Access API.
+   */
   preventOpenAccessFetch?: boolean;
+  /**
+   * URL to an openly available version of the article (can also be fetched dynamically if a DOI is supplied).
+   */
   openAccessUrl?: string;
 }
 
-export const BibCard: React.FC<Props> = (props) => {
+/**
+ * Card for displaying bibliographic information.
+ * This component is the basis for the `BibjsonCard` and `CrossrefCard` components.
+ */
+export const BibCard: React.FC<BibCardProps> = (props) => {
   const url = `https://doi.org/${props.doi}`;
   let title: ReactNode;
   if (props.doi) {

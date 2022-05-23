@@ -1,0 +1,107 @@
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff !important;
+}
+
+.sidebar-story {
+  display: inline-block;
+}
+
+.sidebar-story .menu {
+  position: fixed;
+  width: 200px;
+}
+
+.sbdocs .sidebar-story .menu {
+  position: relative;
+}
+
+.sidebar-story .content {
+  display: inline-block;
+  margin-left: 200px;
+  padding-left: 15px;
+}
+
+.sidebar-story .content p {
+  height: 500px;
+}
+
+/**
+ * Make element stick to the top when scrolled past
+ */
+.sticky {
+  position: sticky;
+  top: 0rem;
+}
+
+.mpc-materials-input {
+  max-width: 750px;
+  margin: auto;
+}
+
+/**
+ * Override bulma tag styles that conflict with the tag class
+ * used in storybook code blocks.
+ */
+.tag.token {
+  background-color: inherit;
+  border-radius: 0;
+  display: inline;
+  font-size: inherit;
+  height: auto;
+  line-height: inherit;
+  padding-left: 0;
+  padding-right: 0;
+  white-space: pre-wrap;
+}
+
+/**
+ * Override bulma number styles that conflict with the number class
+ * used in storybook code blocks.
+ */
+.number {
+  background-color: transparent;
+  border-radius: 0;
+  display: inline;
+  font-size: inherit;
+  height: inherit;
+  margin-right: 0;
+  min-width: auto;
+  padding: 0;
+  text-align: inherit;
+  vertical-align: inherit;
+}
+
+pre code {
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+
+pre {
+  color: inherit;
+  font-size: inherit;
+}
+
+.maybe-class-name {
+  color: #ffffb6;
+}
+
+.square {
+  width: 50%;
+  height: 50%;
+  background-color: red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mt-10 {
+  margin-top: 10rem;
+}
+
+.max-750 {
+  max-width: 750px;
+}

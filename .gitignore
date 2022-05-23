@@ -30,7 +30,7 @@ index.css.map
 **/wip-components/**
 
 # Unused files used only for reference
-src/archive/
+archive/
 
 # VSCode configs
 .vscode/
@@ -38,3 +38,4 @@ src/archive/
 # Assets used for local development only
 src/assets/fonts
 src/assets/styles.css
+src/assets/fonts.css

@@ -1,0 +1,26 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs';
+import { ConditionalRowStyleInterface } from '../type-components';
+
+<Meta title="Search UI/Conditional Row Styles" />
+
+# Conditional Row Styles
+
+The `SearchUI` component accepts an optional `conditionalRowStyles` prop that can define
+conditions when some rows should be styled differently. This prop accepts a list of objects
+with the following properties:
+
+<ArgsTable of={ConditionalRowStyleInterface} />
+
+## Example
+
+```js
+[
+  {
+    selector: 'myProperty',
+    value: true,
+    style: {
+      backgroundColor: '#ddd'
+    }
+  }
+];
+```

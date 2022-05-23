@@ -24,15 +24,36 @@ import { Tabs } from '../../components/navigation/Tabs';
  */
 
 export const Sandbox: React.FC = () => {
-  const [state, setState] = useState({ tabIndex: 1 });
+  const [state, setState] = useState({ tabIndex: 1, active: false });
   return (
     <>
       <h1 className="title">Sandbox</h1>
-      <Tabs setProps={setState} tabIndex={state.tabIndex} labels={['Tab 1', 'Tab2']}>
-        <div>Content 1</div>
+      <Tabs labels={['Tab 1', 'Tab2']}>
+        <div>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum excepturi dolor eveniet
+          doloremque vero autem eaque magni. Quo quis maiores illo cum! Quasi cum fugit animi quis
+          praesentium saepe veritatis.
+        </div>
         <div>Content 2</div>
       </Tabs>
-      <ModalContextProvider>
+      <ReactTabs selectedTabClassName="is-active">
+        <div className="tabs">
+          <TabList>
+            <ReactTab>
+              <a>React 1</a>
+            </ReactTab>
+            <ReactTab>
+              <a>React 2</a>
+            </ReactTab>
+          </TabList>
+        </div>
+        <TabPanel>Panel 1</TabPanel>
+        <TabPanel>Panel 2</TabPanel>
+      </ReactTabs>
+      <button className="button" onClick={() => setState({ ...state, active: true })}>
+        Out of context modal trigger
+      </button>
+      <ModalContextProvider active={state.active} forceAction={true} setProps={setState}>
         <ModalTrigger>
           <button className="button">Open Modal</button>
         </ModalTrigger>
@@ -40,6 +61,9 @@ export const Sandbox: React.FC = () => {
           <div className="panel">
             <div className="panel-heading">Panel</div>
             <div className="panel-block">content</div>
+            <button className="button" onClick={() => setState({ ...state, active: false })}>
+              Save
+            </button>
           </div>
         </Modal>
       </ModalContextProvider>
@@ -47,6 +71,7 @@ export const Sandbox: React.FC = () => {
         <div className="dropdown-item">One</div>
         <div className="dropdown-item">Two</div>
       </Dropdown>
+      <Markdown>{`# Heading 1`}</Markdown>
       <Markdown style={{ height: '150vh' }}>
         {`
         ~~~python

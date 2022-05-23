@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import { DataBlock } from '.';
+import { Column } from '../SearchUI/types';
 
 describe('<DataBlock/>', () => {
   it('should render data items', () => {
@@ -48,9 +49,9 @@ const defaultProps = {
   },
   columns: [
     {
-      name: 'Material ID',
+      title: 'Material ID',
       selector: 'material_id',
-      format: 'LINK',
+      formatType: 'LINK',
       formatOptions: {
         baseUrl: 'https://lbl.gov',
         target: '_blank'
@@ -60,25 +61,25 @@ const defaultProps = {
       isTop: true
     },
     {
-      name: 'Formula',
+      title: 'Formula',
       selector: 'formula_pretty',
-      format: 'FORMULA',
+      formatType: 'FORMULA',
       minWidth: '300px',
       maxWidth: '300px',
       isTop: true
     },
     {
-      name: 'Data Items',
+      title: 'Data Items',
       selector: 'data',
-      format: 'ARRAY',
+      formatType: 'ARRAY',
       formatOptions: {
         arrayTooltipsKey: 'dataTooltips'
       }
     },
     {
-      name: 'Tables',
+      title: 'Tables',
       selector: 'tables',
-      format: 'ARRAY',
+      formatType: 'ARRAY',
       formatOptions: {
         arrayTooltipsKey: 'tablesTooltips',
         arrayLinksKey: 'tablesLinks',
@@ -88,11 +89,11 @@ const defaultProps = {
       isBottom: true
     },
     {
-      name: 'Description',
+      title: 'Description',
       selector: 'description',
       isBottom: true
     }
-  ],
+  ] as Column[],
   footer: <div>Footer</div>,
   iconClassName: 'fas fa-pizza-slice',
   iconTooltip: 'Pizza'

@@ -22,8 +22,8 @@ const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
 const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 const defaultState: SearchState = {
-  baseUrl: '',
-  baseUrlParams: {},
+  apiEndpoint: '',
+  apiEndpointParams: {},
   columns: [],
   filterGroups: [],
   filterValues: {},
@@ -35,7 +35,9 @@ const defaultState: SearchState = {
   loading: false,
   sortField: undefined,
   sortAscending: true,
-  error: false
+  error: false,
+  searchBarValue: '',
+  resultsRef: null
 };
 
 /**
@@ -58,36 +60,45 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
   );
   const prevActiveFilters = usePrevious(state.activeFilters);
-  const ref = useRef<HTMLDivElement>(null);
 
   const actions = {
     setPage: (page: number) => {
-      if (ref.current) {
-        scrollIntoView(ref.current, {
-          scrollMode: 'if-needed',
-          block: 'start',
-          behavior: 'smooth'
-        });
-      }
-      setState((currentState) => ({ ...currentState, page }));
+      setState((currentState) => {
+        const ref = currentState.resultsRef;
+        if (ref && ref.current) {
+          scrollIntoView(ref.current, {
+            scrollMode: 'if-needed',
+            block: 'start',
+            behavior: 'smooth'
+          });
+        }
+        return { ...currentState, page };
+      });
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      if (ref.current) {
-        scrollIntoView(ref.current, {
-          scrollMode: 'if-needed',
-          block: 'start',
-          behavior: 'smooth'
-        });
-      }
+      // if (ref.current) {
+      //   scrollIntoView(ref.current, {
+      //     scrollMode: 'if-needed',
+      //     block: 'start',
+      //     behavior: 'smooth'
+      //   });
+      // }
       setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortField,
-        sortAscending,
-        page: 1
-      }));
+      setState((currentState) => {
+        let secondarySortField = currentState.secondarySortField;
+        if (sortField === secondarySortField) {
+          secondarySortField = undefined;
+        }
+        return {
+          ...currentState,
+          sortField,
+          sortAscending,
+          secondarySortField,
+          page: 1
+        };
+      });
     },
     setSortField: (sortField: string) => {
       setState((currentState) => ({
@@ -109,10 +120,72 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     setColumns: (columns: Column[]) => {
       setState((currentState) => ({ ...currentState, columns }));
     },
-    setFilterValue: (value: any, id: string) => {
-      setState((currentState) =>
-        getSearchState({ ...currentState, page: 1 }, { ...currentState.filterValues, [id]: value })
-      );
+    /**
+     * Set one filter to a specified value.
+     * Optionally include a list of filter id's that should be deactivated
+     * if this filter is being set to an active value (e.g. "material_id" should override "formula" and "elements").
+     * @param value new filter value
+     * @param id property key for the filter (e.g. "formula")
+     * @param overrideFields array of property keys to override
+     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
+     */
+    setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
+      setState((currentState) => {
+        const filterIsActivating = value && value !== '';
+        let searchBarValue = currentState.searchBarValue;
+        let searchBarFields: string[] | undefined;
+
+        /**
+         * If the filter is being activated and the SearchUI has a top search bar,
+         * parse searchBarAllowedInputTypesMap for the fields it controls.
+         * These will be used to dynamically update the search bar value based on the new filter being activated.
+         */
+        if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
+          searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
+            key,
+            index
+          ) {
+            return currentState.searchBarAllowedInputTypesMap![key].field;
+          });
+        }
+
+        /**
+         * If the filter being activated is also a search bar field,
+         * update the search bar value with this filter's value.
+         */
+        if (searchBarFields && searchBarFields.indexOf(id) > -1) {
+          searchBarValue = value;
+        }
+
+        if (!overrideFields || !filterIsActivating) {
+          return getSearchState(
+            { ...currentState, searchBarValue, page: 1 },
+            { ...currentState.filterValues, [id]: value }
+          );
+        } else {
+          let newFilterValues = {};
+
+          overrideFields.forEach((field) => {
+            const activeFilter = currentState.activeFilters.find((a) => a.id === field);
+            if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+          });
+
+          newFilterValues[id] = value;
+
+          let newFilterGroups = currentState.filterGroups;
+
+          if (filterProps) {
+            newFilterGroups = currentState.filterGroups.slice();
+            const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
+            if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
+          }
+
+          return getSearchState(
+            { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
+            { ...currentState.filterValues, ...newFilterValues }
+          );
+        }
+      });
     },
     /**
      * Set one filter and override others.
@@ -146,9 +219,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
         }
 
-        if (isDesktop) {
-          newFilterGroups[0].expanded = true;
-        }
+        // if (isDesktop) {
+        //   newFilterGroups[0].expanded = true;
+        // }
 
         return getSearchState(
           { ...currentState, filterGroups: newFilterGroups, page: 1 },
@@ -190,29 +263,38 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         let isLoading = showLoading;
         let minLoadTime = 1000;
         let minLoadTimeReached = !showLoading;
-        let params = Object.assign({}, currentState.baseUrlParams!);
+        let params = Object.assign({}, currentState.apiEndpointParams!);
         let query = new URLSearchParams();
 
         /** Resolve inconsistencies between mp-api and contribs-api */
         const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
         const limitKey = currentState.isContribs ? '_limit' : 'limit';
         const skipKey = currentState.isContribs ? '_skip' : 'skip';
-        const sortKey = currentState.isContribs ? '_sort' : 'sort_field';
+        const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
 
         params[fieldsKey] = currentState.columns.map((d) => d.selector);
         params[limitKey] = currentState.resultsPerPage;
         params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
         query.set(limitKey, params[limitKey]);
         query.set(skipKey, params[skipKey]);
+
+        /**
+         * Convert sort props to syntax expected by API.
+         * Descending fields are prepended with "-".
+         * Secondary sort field is added with a comma separator.
+         */
+        let secondarySort: string | undefined;
+        if (currentState.secondarySortField) {
+          secondarySort = currentState.secondarySortAscending
+            ? currentState.secondarySortField
+            : `-${currentState.secondarySortField}`;
+        }
+
         if (currentState.sortField) {
-          params[sortKey] = currentState.sortField;
-          if (currentState.isContribs) {
-            const sortDirection = currentState.sortAscending ? '+' : '-';
-            params[sortKey] = sortDirection + currentState.sortField;
-          } else {
-            params.ascending = currentState.sortAscending;
-            query.set('ascending', params.ascending);
-          }
+          let primarySort = currentState.sortAscending
+            ? currentState.sortField
+            : `-${currentState.sortField}`;
+          params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
           query.set(sortKey, params[sortKey]);
         }
 
@@ -238,7 +320,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
         });
 
         axios
-          .get(props.baseUrl, {
+          .get(props.apiEndpoint, {
             params: params,
             paramsSerializer: (p) => {
               return qs.stringify(p, { arrayFormat: 'comma' });
@@ -308,6 +390,9 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
           activeFilters
         };
       });
+    },
+    setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
+      setState((currentState) => ({ ...currentState, resultsRef }));
     }
   };
 
@@ -318,7 +403,7 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
   return (
     <SearchUIContext.Provider value={state}>
       <SearchUIContextActions.Provider value={actions}>
-        <div ref={ref}>{children}</div>
+        <div>{children}</div>
       </SearchUIContextActions.Provider>
     </SearchUIContext.Provider>
   );

@@ -8,7 +8,8 @@ import {
   Menu,
   MenuItem
 } from 'react-aria-menubutton';
-import { FaAngleDown } from 'react-icons/fa';
+import { FaAngleDown, FaAsterisk } from 'react-icons/fa';
+import { Tooltip } from '../../data-display/Tooltip';
 
 interface Props {
   mode: PeriodicTableSelectionMode;
@@ -18,16 +19,16 @@ interface Props {
 }
 
 export enum PeriodicTableSelectionMode {
-  CHEMICAL_SYSTEM = 'Elements (only)',
-  ELEMENTS = 'Elements (at least)',
+  CHEMICAL_SYSTEM = 'Only Elements',
+  ELEMENTS = 'At Least Elements',
   FORMULA = 'Formula'
 }
 
 export const PeriodicTableModeSwitcher: React.FC<Props> = ({
   allowedModes = [
-    'Elements (only)' as PeriodicTableSelectionMode,
-    'Elements (at least)' as PeriodicTableSelectionMode,
-    'Formula' as PeriodicTableSelectionMode
+    'Formula' as PeriodicTableSelectionMode,
+    'At Least Elements' as PeriodicTableSelectionMode,
+    'Only Elements' as PeriodicTableSelectionMode
   ],
   ...otherProps
 }) => {
@@ -67,24 +68,64 @@ export const PeriodicTableModeSwitcher: React.FC<Props> = ({
     </MenuWrapper>
   );
 
+  const modesSelector = (
+    <div className="tabs is-small is-toggle is-toggle-rounded is-centered">
+      <ul>
+        {props.allowedModes.map((d, i) => (
+          <li key={'mode-' + i} className={classNames({ 'is-active': d === mode })}>
+            <a
+              onClick={() => {
+                setMode(d);
+                props.onSwitch(d);
+              }}
+            >
+              <span>{d}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
   return (
     <>
       <div data-testid="mpc-pt-mode-switcher" className="mpc-pt-mode-switcher first-span">
-        <div className="dropdown-container">{modesMenu}</div>
+        <div className="dropdown-container">{modesSelector}</div>
       </div>
-      <div className="second-span">
+      <div className="second-span mpc-pt-mode-content">
         {props.mode === PeriodicTableSelectionMode.FORMULA && (
           <PeriodicTableFormulaButtons onClick={props.onFormulaButtonClick} />
         )}
         {props.mode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM && (
-          <p className="mpc-pt-mode-switcher-description">
-            Select elements to search for materials with <strong>only</strong> these elements
-          </p>
+          <>
+            <div className="pt-spacer"></div>
+            <button
+              type="button"
+              className="pt-wildcard-button mat-element has-tooltip-bottom"
+              onClick={() => props.onFormulaButtonClick('-*')}
+              data-tip
+              data-for="element-wildcard-button"
+            >
+              <span className="mat-symbol">
+                <FaAsterisk />
+              </span>
+            </button>
+            <Tooltip id="element-wildcard-button" place="bottom">
+              Wildcard element
+            </Tooltip>
+            <div className="pt-description">
+              <p>
+                Select elements to search for materials with <strong>only</strong> these elements
+              </p>
+            </div>
+          </>
         )}
         {props.mode === PeriodicTableSelectionMode.ELEMENTS && (
-          <p className="mpc-pt-mode-switcher-description">
-            Select elements to search for materials with <strong>at least</strong> these elements
-          </p>
+          <div className="pt-description">
+            <p>
+              Select elements to search for materials with <strong>at least</strong> these elements
+            </p>
+          </div>
         )}
       </div>
     </>

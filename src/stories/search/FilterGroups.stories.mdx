@@ -1,0 +1,313 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs';
+import { FilterGroupInterface, FilterInterface } from '../type-components';
+
+<Meta title="Search UI/Filters" />
+
+# Filters
+
+The `SearchUI` component requires a `filterGroups` prop that defines the filter groups and filters that
+should render alongside the results table and allow dynamic query building.
+Below are all the options available for both `filterGroup` and `filter` objects.
+
+## Filter Group
+
+<ArgsTable of={FilterGroupInterface} />
+
+## Filter
+
+<ArgsTable of={FilterInterface} />
+
+## Example
+
+```js
+[
+  {
+    name: 'Composition',
+    expanded: false,
+    filters: [
+      {
+        name: 'Material ID',
+        id: 'material_ids',
+        overrides: ['elements', 'formula'],
+        tooltip: 'Find materials with a specific Material ID, e.g. "mp-10152"',
+        type: 'MATERIALS_INPUT',
+        props: {
+          inputType: 'mpid',
+          errorMessage: 'Please enter a valid material ID (e.g. mp-394).',
+          periodicTableMode: 'none'
+        }
+      },
+      {
+        name: 'Include Elements',
+        id: 'elements',
+        overrides: ['material_ids', 'formula'],
+        tooltip:
+          'Enter a " , " separated list of element symbols to find materials that contain at least these elements (e.g. Ga,N). Enter a " - " separated list of element symbols to find materials that contain only these elements (e.g. Ga-N).',
+        type: 'MATERIALS_INPUT',
+        props: {
+          inputType: 'elements',
+          periodicTableMode: 'none',
+          errorMessage:
+            'Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).',
+          helpItems: [
+            {
+              label: 'Elements Examples'
+            },
+            {
+              label: null,
+              examples: ['Li,Fe', 'Li-Fe', 'Li-Fe-*-*']
+            }
+          ]
+        }
+      },
+      {
+        name: 'Exclude Elements',
+        id: 'exclude_elements',
+        tooltip:
+          'Enter a " , " or " - " separated list of element symbols to find materials that do not contain certain elements in their formula.',
+        type: 'MATERIALS_INPUT',
+        props: {
+          inputType: 'elements',
+          periodicTableMode: 'none',
+          hideChemSys: true,
+          errorMessage:
+            'Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).'
+        }
+      },
+      {
+        name: 'Formula',
+        id: 'formula',
+        overrides: ['elements', 'material_ids'],
+        tooltip:
+          'Enter a chemical formula to find materials that have this exact formula. Use the "*" symbol to specify a wildcard element.',
+        type: 'MATERIALS_INPUT',
+        props: {
+          inputType: 'formula',
+          periodicTableMode: 'none',
+          errorMessage: 'Please enter a valid chemical formula (e.g. CeZn5).'
+        }
+      }
+    ]
+  },
+  {
+    name: 'Thermodynamics',
+    expanded: false,
+    filters: [
+      {
+        name: 'Energy Above Hull',
+        id: 'energy_above_hull',
+        type: 'SLIDER',
+        units: 'meV/atom',
+        conversionFactor: 0.001,
+        props: {
+          domain: [0, 1000],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Formation Energy',
+        id: 'formation_energy_per_atom',
+        type: 'SLIDER',
+        units: 'eV/atom',
+        props: {
+          domain: [-10, 6],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Is Stable',
+        id: 'is_stable',
+        tooltip:
+          'Materials with an energy above hull equal to 0 are flagged as stable. All other materials are flagged as not stable.',
+        type: 'THREE_STATE_BOOLEAN_SELECT',
+        props: {
+          options: [
+            {
+              label: 'Yes',
+              value: true
+            },
+            {
+              label: 'No',
+              value: false
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    name: 'Structural Properties',
+    expanded: false,
+    filters: [
+      {
+        name: 'Density',
+        id: 'density',
+        units: 'cm\u00b3',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 25],
+          step: 0.1
+        }
+      },
+      {
+        name: 'Number of Sites',
+        id: 'nsites',
+        type: 'SLIDER',
+        props: {
+          domain: [1, 360],
+          step: 1
+        }
+      }
+    ]
+  },
+  {
+    name: 'Symmetry',
+    expanded: false,
+    filters: [
+      {
+        name: 'Crystal System',
+        id: 'crystal_system',
+        tooltip: 'The crystal system for the lattice',
+        type: 'SELECT_CRYSTAL_SYSTEM'
+      }
+    ]
+  },
+  {
+    name: 'Calculated Properties',
+    expanded: false,
+    filters: [
+      {
+        name: 'Has Properties',
+        id: 'has_props',
+        type: 'CHECKBOX_LIST',
+        props: {
+          options: [
+            { value: 'magnetism', label: 'Magnetism' },
+            { value: 'elasticity', label: 'Elasticity' },
+            { value: 'surface_properties', label: 'Surfaces' },
+            { value: 'piezoelectric', label: 'Piezoelectric' },
+            { value: 'dielectric', label: 'Dielectric' }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    name: 'Magnetism',
+    expanded: false,
+    filters: [
+      {
+        name: 'Magnetic Ordering',
+        id: 'ordering',
+        tooltip: 'Magnetic ordering of the calculation',
+        type: 'SELECT',
+        props: {
+          options: [
+            {
+              label: 'Ferromagnetic',
+              value: 'FM'
+            },
+            {
+              label: 'Non-magnetic',
+              value: 'NM'
+            },
+            {
+              label: 'Ferrimagnetic',
+              value: 'FiM'
+            },
+            {
+              label: 'Antiferromagnetic',
+              value: 'AFM'
+            },
+            {
+              label: 'Unknown',
+              value: 'Unknown'
+            }
+          ]
+        }
+      },
+      {
+        name: 'Max Magnetic Moment',
+        id: 'total_magnetization',
+        type: 'SLIDER',
+        props: {
+          domain: [0, 325],
+          step: 1
+        }
+      }
+    ]
+  }
+];
+```
+
+## Filter Types
+
+Below are all the available options for a filter's `type`. Some filter types accept or require options to be specified
+via the `props` object on the filter. The options for each filter are also described below.
+
+### **CHECKBOX_LIST**
+
+Select values from a list of checkboxes to add to a specific query param.
+Each checked value is added to a list that is used as the value for the specified query param.
+
+See `CheckboxList` component for props.
+
+### **MATERIALS_INPUT**
+
+Text input that is designed for entering a list of elements, formula, material ID, or SMILES string.
+
+See `MaterialsInput` component for props.
+
+### **SELECT**
+
+Dropdown menu for selecting filter value from a specific list of options.
+
+See `Select` component for props.
+
+### **SELECT_CRYSTAL_SYSTEM**
+
+Dropdown menu that automatically fills its options with all possible crystal systems.
+
+Does not accept any props.
+
+### **SELECT_POINTGROUP**
+
+Dropdown menu that automatically fills its options with all possible point groups.
+
+Does not accept any props.
+
+### **SELECT_SPACEGROUP_NUMBER**
+
+Dropdown menu that automatically fills its options with all possible space group numbers.
+
+Does not accept any props.
+
+### **SELECT_SPACEGROUP_SYMBOL**
+
+Dropdown menu that automatically fills its options with all possible space group symbols in their international standard mode.
+
+Does not accept any props.
+
+### **SLIDER**
+
+Slider for setting a min and max value. This filter assumes that the min and max values are set in two separate
+query parameters whose names differ only by a certain suffix. The `id` of a filter with type `SLIDER` should be the exact name of
+the query parameter minus the suffix that specifies it as min or max. For example, if the API supports the params `energy_above_hull_min`
+and `energy_above_hull_max`, the `id` should be `energy_above_hull`. By default, the filter will assume that the suffixes are
+`_min` and `_max` but these can be specified in the filter's `minSuffix` and `maxSuffix` properties.
+
+See `DualRangeSlider` component for props.
+
+### **TEXT_INPUT**
+
+Simple text input that allows any text to be entered as the filter value. If the API supports query options like
+`__contains` or `__exact`, these can be used with this filter type by specifying the `operatorSuffix` property on the
+filter object.
+
+Does not accept any props.
+
+### **THREE_STATE_BOOLEAN_SELECT**
+
+A select component that handles values that can be true, false, or undefined.
+
+See `ThreeStateBooleanSelect` component for props.

@@ -6,23 +6,34 @@
       {
         "name": "Material ID",
         "id": "material_ids",
+        "overrides": ["elements", "formula"],
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "mpid",
           "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
-          "periodicTableMode": null
+          "periodicTableMode": "none"
         }
       },
       {
         "name": "Include Elements",
         "id": "elements",
-        "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that contain certain elements in their formula. Select the checkbox to find materials that contain only the elements you have entered.",
+        "overrides": ["material_ids", "formula"],
+        "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. Ga,N). Enter a \" - \" separated list of element symbols to find materials that contain only these elements (e.g. Ga-N).",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "elements",
-          "periodicTableMode": "focus",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Li-Fe", "Li-Fe-*-*"]
+            }
+          ]
         }
       },
       {
@@ -32,7 +43,7 @@
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "elements",
-          "periodicTableMode": "focus",
+          "periodicTableMode": "none",
           "hideChemSys": true,
           "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
         }
@@ -40,11 +51,12 @@
       {
         "name": "Formula",
         "id": "formula",
+        "overrides": ["elements", "material_ids"],
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
           "inputType": "formula",
-          "periodicTableMode": "focus",
+          "periodicTableMode": "none",
           "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
       }

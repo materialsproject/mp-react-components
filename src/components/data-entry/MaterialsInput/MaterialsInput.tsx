@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { arrayToDelimitedString, formatFormula } from '../utils';
+import { arrayToDelimitedString, capitalize, formatFormula, pluralize } from '../utils';
 import { Form, Button } from 'react-bulma-components';
 const { Input, Field, Control } = Form;
 import { FaAngleDown, FaExclamationTriangle, FaQuestionCircle } from 'react-icons/fa';
 import classNames from 'classnames';
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Wrapper as MenuWrapper,
@@ -21,9 +20,10 @@ import { PeriodicTableFormulaButtons } from '../../periodic-table/PeriodicTableF
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
 import { PeriodicTablePluginWrapper } from '../../periodic-table/PeriodicTablePluginWrapper';
-import { MaterialsInputTypesMap, validateElements, validateFormula } from './utils';
+import { MaterialsInputTypesMap, validateElements, validateFormula, validateMPID } from './utils';
 import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { Tooltip } from '../../data-display/Tooltip';
+import { InputHelpItem } from './InputHelp/InputHelp';
 
 /**
  * Search types supported by this field
@@ -59,7 +59,13 @@ export interface MaterialsInputSharedProps {
   allowSmiles?: boolean;
   placeholder?: string;
   errorMessage?: string;
+  inputClassName?: string;
+  autocompleteFormulaUrl?: string;
+  autocompleteApiKey?: string;
+  helpItems?: InputHelpItem[];
+  onChange?: (value: string) => void;
   onInputTypeChange?: (inputType: MaterialsInputType) => void;
+  onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
 }
 
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
@@ -68,19 +74,9 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
   debounce?: number;
   periodicTableMode?: PeriodicTableMode;
   hidePeriodicTable?: boolean;
-  autocompleteFormulaUrl?: string;
-  autocompleteApiKey?: string;
-  tooltip?: string;
-  onChange?: (value: string) => void;
-  onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
+  label?: string;
   onPropsChange?: (propsObject: any) => void;
 }
-
-interface FormulaSuggestion {
-  formula_pretty: string;
-}
-
-let requestCount = 0;
 
 enum ChemSysDropdownValue {
   ONLY = 'Only',
@@ -91,6 +87,7 @@ enum ChemSysDropdownValue {
  * Map the list of allowed input types to a list of allowed periodic table selection modes.
  * This prevents periodic table modes dropdown from having items that are
  * inconsistent with the allowed input types.
+ * The order that these items are appended determines the order they are rendered in the periodic table.
  */
 const getAllowedSelectionModes = (
   allowedInputTypes: MaterialsInputType[],
@@ -98,13 +95,13 @@ const getAllowedSelectionModes = (
 ) => {
   const allowedModes: PeriodicTableSelectionMode[] = [];
 
-  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
-    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
+  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
+    if (!hideChemSys) allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
   }
 
-  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
-    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
-    if (!hideChemSys) allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
   }
 
   return allowedModes;
@@ -119,11 +116,7 @@ const getAllowedSelectionModes = (
  */
 export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   errorMessage = 'Invalid input value',
-  allowedInputTypes = [
-    'elements' as MaterialsInputType,
-    'formula' as MaterialsInputType,
-    'mpid' as MaterialsInputType
-  ],
+  allowedInputTypes = ['elements', 'formula', 'mpid'],
   onChange = (value) => value,
   ...otherProps
 }) => {
@@ -166,19 +159,20 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       ? true
       : false;
   });
-  const [showAutocomplete, setShowAutocomplete] = useState(true);
-  const [formulaSuggestions, setFormulaSuggestions] = useState<FormulaSuggestion[]>([]);
+  const [showHelpMenu, setShowHelpMenu] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const shouldShowAutocomplete = () => {
-    if (formulaSuggestions.length > 0) {
-      return setShowAutocomplete(true);
+  const shouldShowHelpMenu = () => {
+    if (!inputValue || inputValue == '') {
+      return setShowHelpMenu(true);
     } else {
-      return setShowAutocomplete(false);
+      return setShowHelpMenu(false);
     }
   };
+
   const getOnFocusProp = () => {
     setErrorTipStayActive(false);
-    shouldShowAutocomplete();
+    setIsFocused(true);
     if (props.periodicTableMode === PeriodicTableMode.FOCUS) {
       return setShowPeriodicTable(true);
     } else {
@@ -186,24 +180,21 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     }
   };
 
-  const hideAutoCompleteAndPeriodicTable = () => {
-    setShowAutocomplete(false);
-    if (props.periodicTableMode === PeriodicTableMode.FOCUS) {
-      return setShowPeriodicTable(false);
-    }
-  };
-
   /**
    * When blurring out of the input,
    * make sure the user is not clicking on a periodic table element button.
    * If so, keep the input in focus.
-   * Otherwise, close the autocomplete menu and hide the periodic table (if using show onFocus mode)
+   * Otherwise, hide the periodic table (if using show onFocus mode)
    */
   const getOnBlurProp = (e: React.FocusEvent<HTMLInputElement>) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
     const target = e.target;
-    if (props.periodicTableMode !== PeriodicTableMode.FOCUS || !periodicTableClicked.current) {
-      hideAutoCompleteAndPeriodicTable();
+    setShowHelpMenu(false);
+    setIsFocused(false);
+    if (props.periodicTableMode !== PeriodicTableMode.FOCUS) {
+      return;
+    } else if (!periodicTableClicked.current) {
+      setShowPeriodicTable(false);
     } else {
       /** Chrome can make use of relatedTarget to avoid using a timeout */
       if (relatedTarget && relatedTarget.className.indexOf('mat-element') > -1) {
@@ -219,22 +210,27 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
   /**
    * If the user is tabbing out of the input,
-   * force autocomplete and periodic table to close.
+   * force periodic table to close.
    * This allows users to tab past MaterialInputs that
    * only show periodic tables on focus.
    * Tha above blur function doesn't work because the relatedTarget on tab would be a mat-element.
    */
   const getOnKeyDownProp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === 9) {
-      hideAutoCompleteAndPeriodicTable();
+    if (e.keyCode === 9 && props.periodicTableMode === PeriodicTableMode.FOCUS) {
+      return setShowPeriodicTable(false);
+    }
+  };
+
+  const getOnPropsChangeProp = () => {
+    if (props.onInputTypeChange) {
+      return (value: MaterialsInputType) => setInputType(value);
+    } else {
+      return;
     }
   };
 
   /**
    * Trigger MaterialsInput submit event
-   * Optional value param allows clicking on autocomplete items
-   * to submit the input using a new value that doesn't necessarily
-   * match the current input value
    */
   const handleSubmit = (e: React.FormEvent | React.MouseEvent, value?: string) => {
     e.preventDefault();
@@ -242,7 +238,6 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
 
     if (props.onSubmit && !error) {
       setShowPeriodicTable(false);
-      setShowAutocomplete(false);
       /**
        * Pass filterProps to submit so that the chem sys flag
        * can persist into the activated filter.
@@ -250,7 +245,12 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
        * because the chem sys flag cannot be inferred by the input value.
        */
       const filterProps = inputType === MaterialsInputType.ELEMENTS ? { isChemSys } : null;
-      props.onSubmit(e, value, filterProps);
+      /**
+       * Optional value param allows function to submit a new value that doesn't necessarily
+       * match the current input value (currently used for clicking on autocomplete items)
+       */
+      const submitValue = value || inputValue;
+      props.onSubmit(e, submitValue, filterProps);
     } else {
       setErrorTipStayActive(true);
     }
@@ -262,7 +262,16 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
    */
   const handleChemSysCheck = () => {
     let newIsChemSys: boolean | undefined;
-    if (inputType === MaterialsInputType.ELEMENTS && inputValue.match(/-/gi)) {
+    /**
+     * Temporary fix to make sure input values are not mpid's.
+     * This should be fixed in the future by removing inputValue from the [inputValue, inputType] useEffect
+     * and modifying MaterialsInputType so that CHEMICAL_SYSTEM is its own type.
+     */
+    if (
+      !validateMPID(inputValue) &&
+      inputType === MaterialsInputType.ELEMENTS &&
+      inputValue.match(/-/gi)
+    ) {
       newIsChemSys = true;
     } else if (inputValue.match(/,|\s/gi)) {
       newIsChemSys = false;
@@ -272,8 +281,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   };
 
   let materialsInputField: JSX.Element | null = null;
-  let toggleControl: JSX.Element | null = null;
-  let tooltipControl: JSX.Element | null = null;
+  let labelControl: JSX.Element | null = null;
+  let periodicToggleControl: JSX.Element | null = null;
   let periodicTablePlugin: JSX.Element | undefined = undefined;
   let chemSysDropdown: JSX.Element | null = null;
 
@@ -281,85 +290,55 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     <MaterialsInputBox
       value={inputValue}
       inputType={inputType}
-      allowedInputTypes={props.allowedInputTypes}
+      allowedInputTypes={props.allowedInputTypes as MaterialsInputType[]}
       isChemSys={isChemSys}
       allowSmiles={props.allowSmiles}
       setValue={setInputValue}
-      onInputTypeChange={props.onInputTypeChange ? setInputType : undefined}
+      onInputTypeChange={getOnPropsChangeProp()}
       onFocus={getOnFocusProp}
       onBlur={getOnBlurProp}
       onKeyDown={getOnKeyDownProp}
+      onSubmit={handleSubmit}
       liftInputRef={(ref) => setInputRef(ref)}
       showInputTypeDropdown={props.showInputTypeDropdown}
       placeholder={props.placeholder}
       errorMessage={props.errorMessage}
       setError={setError}
+      inputClassName={props.inputClassName}
+      autocompleteFormulaUrl={props.autocompleteFormulaUrl}
+      autocompleteApiKey={props.autocompleteApiKey}
+      onChange={props.onChange}
+      helpItems={props.helpItems}
     />
   );
 
-  const autocompleteMenu = (
-    <div
-      data-testid="materials-input-autocomplete-menu"
-      className={classNames('dropdown-menu', 'autocomplete-right', {
-        'is-hidden': !showAutocomplete
-      })}
-      /** Currently not accessible by keyboard so hiding it to screen readers */
-      aria-hidden={true}
-    >
-      <div data-testid="materials-input-autocomplete-menu-items" className="dropdown-content">
-        <p className="autocomplete-label">Suggested formulas</p>
-        {formulaSuggestions.map((d, i) => (
-          <a
-            key={i}
-            className="dropdown-item"
-            onMouseDown={(e) => {
-              setError(null);
-              props.onChange(d.formula_pretty);
-              if (props.onSubmit) {
-                handleSubmit(e, d.formula_pretty);
-              }
-            }}
-          >
-            {formatFormula(d.formula_pretty)}
-          </a>
-        ))}
-      </div>
-    </div>
-  );
+  if (props.label) {
+    labelControl = (
+      <Control>
+        <button className="button is-static">{props.label}</button>
+      </Control>
+    );
+  }
 
   if (props.periodicTableMode === PeriodicTableMode.TOGGLE) {
-    toggleControl = (
+    var tooltipId = `materials-input-periodic-button-${uuidv4()}`;
+    periodicToggleControl = (
       <Control>
         <button
           data-testid="materials-input-toggle-button"
           type="button"
           className="button has-oversized-icon is-size-2"
           onClick={() => setShowPeriodicTable(!showPeriodicTable)}
+          data-tip
+          data-for={tooltipId}
         >
           <i
             className={classNames('icon-fontastic-periodic-table-squares', {
               'is-active': showPeriodicTable
             })}
           />
-        </button>
-      </Control>
-    );
-  }
-
-  if (props.tooltip) {
-    var tooltipId = `materials-input-${uuidv4()}`;
-    tooltipControl = (
-      <Control>
-        <button
-          data-testid="materials-input-tooltip-button"
-          type="button"
-          className="button has-text-grey-light"
-          data-tip
-          data-for={tooltipId}
-        >
-          <FaQuestionCircle />
           <Tooltip id={tooltipId} place="bottom">
-            {props.tooltip}
+            {showPeriodicTable ? 'Hide Periodic Table' : 'Show Periodic Table'}
           </Tooltip>
         </button>
       </Control>
@@ -427,10 +406,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     materialsInputField = (
       <form data-testid="materials-input-form" onSubmit={(e) => handleSubmit(e)}>
         <Field className="has-addons">
-          {toggleControl}
+          {labelControl}
           {materialsInputControl}
           {error && errorControl}
-          {tooltipControl}
+          {periodicToggleControl}
           <Control>
             <Button color="primary" type="submit">
               Search
@@ -442,11 +421,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   } else {
     materialsInputField = (
       <Field className="has-addons">
-        {toggleControl}
+        {labelControl}
         {chemSysDropdown}
         {materialsInputControl}
         {error && errorControl}
-        {tooltipControl}
+        {periodicToggleControl}
       </Field>
     );
   }
@@ -463,7 +442,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     periodicTablePlugin = (
       <PeriodicTableModeSwitcher
         mode={selectionMode}
-        allowedModes={getAllowedSelectionModes(props.allowedInputTypes, props.hideChemSys)}
+        allowedModes={getAllowedSelectionModes(
+          props.allowedInputTypes as MaterialsInputType[],
+          props.hideChemSys
+        )}
         onSwitch={setSelectionMode}
         onFormulaButtonClick={(v) => setInputValue(inputValue + v)}
       />
@@ -479,10 +461,10 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   /**
    * When the input value or type changes...
    * dynamically modify the chem sys flag,
-   * change the periodic table selection mode dropdown value based on the input type,
-   * fetch formula suggestions if input is a formula and the necessary props are supplied
+   * change the periodic table selection mode dropdown value based on the input type
    */
   useEffect(() => {
+    if (isFocused) shouldShowHelpMenu();
     const _isChemSys = handleChemSysCheck();
     if (
       props.onInputTypeChange &&
@@ -497,49 +479,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     } else if (props.onInputTypeChange && inputType === MaterialsInputType.FORMULA) {
       setSelectionMode(PeriodicTableSelectionMode.FORMULA);
     }
-
-    if (
-      props.autocompleteFormulaUrl &&
-      inputType === MaterialsInputType.FORMULA &&
-      inputValue.length &&
-      inputValue.indexOf('*') === -1
-    ) {
-      requestCount++;
-      const requestIndex = requestCount;
-      axios
-        .get(props.autocompleteFormulaUrl, {
-          params: { formula: inputValue },
-          headers: props.autocompleteApiKey ? { 'X-Api-Key': props.autocompleteApiKey } : null
-        })
-        .then((result) => {
-          console.log(result);
-          if (requestIndex === requestCount) {
-            setFormulaSuggestions(result.data.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          if (requestIndex === requestCount) {
-            setFormulaSuggestions([]);
-          }
-        });
-    } else {
-      setFormulaSuggestions([]);
-    }
   }, [inputValue, inputType]);
-
-  /**
-   * This effect ensures that the visibility
-   * of the autocomplete menu responds to changes
-   * in the number of suggestions (if no suggestions, hide the menu)
-   */
-  useEffect(() => {
-    if (formulaSuggestions.length > 0 && document.activeElement === inputRef?.current) {
-      setShowAutocomplete(true);
-    } else {
-      setShowAutocomplete(false);
-    }
-  }, [formulaSuggestions]);
 
   /**
    * This effect is triggered when the value prop is changed from outside this component
@@ -595,7 +535,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       props.onInputTypeChange &&
       (inputType === MaterialsInputType.ELEMENTS || inputType === MaterialsInputType.FORMULA)
     ) {
-      let elements: string[] | null = null;
+      let elements: string[] | undefined;
+      let elementsPlusWildcards: string[] | undefined;
 
       if (inputType === MaterialsInputType.ELEMENTS) {
         elements = validateElements(inputValue);
@@ -603,10 +544,14 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
         elements = validateFormula(inputValue);
       }
 
+      const wildcards = inputValue.match(/\*/g);
+      elementsPlusWildcards = wildcards ? elements?.concat(wildcards) : elements;
+
       if (selectionMode === PeriodicTableSelectionMode.CHEMICAL_SYSTEM) {
         setIsChemSys(true);
         setInputType(MaterialsInputType.ELEMENTS);
-        if (elements && elements.length > 1) setInputValue(arrayToDelimitedString(elements, /-/));
+        if (elementsPlusWildcards && elementsPlusWildcards.length > 1)
+          setInputValue(arrayToDelimitedString(elementsPlusWildcards, /-/));
       } else if (selectionMode === PeriodicTableSelectionMode.ELEMENTS) {
         setIsChemSys(false);
         setInputType(MaterialsInputType.ELEMENTS);
@@ -655,36 +600,31 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
     <div id={props.id} className="mpc-materials-input">
       <PeriodicContext>
         {materialsInputField}
-        {/* {chemSysCheckbox} */}
-        {autocompleteMenu}
-        <div
-          data-testid="materials-input-periodic-table"
-          className={classNames('table-transition-wrapper-small', 'can-hide-by-height', {
-            'is-hidden-by-height': !showPeriodicTable,
-            'mt-3': showPeriodicTable
-          })}
-          aria-hidden={!showPeriodicTable}
-          onMouseDown={(event) => {
-            periodicTableClicked.current = true;
-            // if (inputRef && inputRef.current) {
-            //   const target = inputRef.current;
-            //   setTimeout(() => {
-            //     target.focus();
-            //   }, 500);
-            // }
-          }}
-        >
-          <SelectableTable
-            disabled={!showPeriodicTable}
-            maxElementSelectable={20}
-            forceTableLayout={TableLayout.MINI}
-            hiddenElements={[]}
-            plugin={periodicTablePlugin}
-            onStateChange={(enabledElements) => {
-              Object.keys(enabledElements).filter((el) => enabledElements[el]);
+        {props.periodicTableMode !== PeriodicTableMode.NONE && (
+          <div
+            data-testid="materials-input-periodic-table"
+            className={classNames('table-transition-wrapper-small can-hide-by-height', {
+              'is-hidden-by-height': !showPeriodicTable,
+              'mt-3': showPeriodicTable
+            })}
+            aria-hidden={!showPeriodicTable}
+            onMouseDown={(event) => {
+              periodicTableClicked.current = true;
             }}
-          />
-        </div>
+          >
+            <SelectableTable
+              className="box"
+              disabled={!showPeriodicTable}
+              maxElementSelectable={20}
+              forceTableLayout={TableLayout.MINI}
+              hiddenElements={[]}
+              plugin={periodicTablePlugin}
+              onStateChange={(enabledElements) => {
+                Object.keys(enabledElements).filter((el) => enabledElements[el]);
+              }}
+            />
+          </div>
+        )}
       </PeriodicContext>
     </div>
   );

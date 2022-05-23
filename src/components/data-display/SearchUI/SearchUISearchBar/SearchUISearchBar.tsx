@@ -5,6 +5,7 @@ import { MaterialsInputType } from '../../../data-entry/MaterialsInput';
 import { Filter } from '../types';
 import { MaterialsInputTypesMap } from '../../../data-entry/MaterialsInput/utils';
 import { convertMaterialsInputTypesMapToArray, mapInputTypeToField } from '../utils';
+import { capitalize, pluralize } from '../../../data-entry/utils';
 
 /**
  * A specific version of the MaterialsInput component used within the SearchUI component
@@ -15,7 +16,7 @@ export const SearchUISearchBar: React.FC = () => {
   const actions = useSearchUIContextActions();
   const state = useSearchUIContext();
   const allowedInputTypesMap = state.searchBarAllowedInputTypesMap!;
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState(state.searchBarValue || '');
   const initialInputType = convertMaterialsInputTypesMapToArray(allowedInputTypesMap)[0];
   const [searchInputType, setSearchInputType] = useState<MaterialsInputType>(initialInputType);
   const [searchField, setSearchField] = useState(() =>
@@ -36,12 +37,13 @@ export const SearchUISearchBar: React.FC = () => {
     value?: string,
     filterProps?: any
   ) => {
+    console.log(value);
     const submitValue = value || searchValue;
     const allowedFields = Object.keys(allowedInputTypesMap).map((d) => {
       return allowedInputTypesMap[d].field;
     });
     const fieldsToOverride = allowedFields?.filter((d) => d !== searchField);
-    actions.setFilterWithOverrides(submitValue, searchField, fieldsToOverride, filterProps);
+    actions.setFilterValue(submitValue, searchField, fieldsToOverride, filterProps);
   };
 
   /**
@@ -61,9 +63,18 @@ export const SearchUISearchBar: React.FC = () => {
     setSearchField(mapInputTypeToField(searchInputType, allowedInputTypesMap));
   }, [searchInputType]);
 
+  /**
+   * Update the search bar value if it's changed from outside this component
+   * (e.g. from the url on load or from a linked filter in the filters panel).
+   */
+  useEffect(() => {
+    setSearchValue(state.searchBarValue || '');
+  }, [state.searchBarValue]);
+
   return (
     <MaterialsInput
       value={searchValue}
+      label={capitalize(pluralize(state.resultLabel))}
       inputType={searchInputType}
       onChange={(v) => setSearchValue(v)}
       onInputTypeChange={(field) => setSearchInputType(field)}
@@ -73,10 +84,11 @@ export const SearchUISearchBar: React.FC = () => {
       autocompleteFormulaUrl={state.autocompleteFormulaUrl}
       autocompleteApiKey={state.apiKey}
       allowSmiles={allowSmiles}
-      tooltip={state.searchBarTooltip}
       placeholder={state.searchBarPlaceholder}
       allowedInputTypes={convertMaterialsInputTypesMapToArray(allowedInputTypesMap)}
       errorMessage={state.searchBarErrorMessage}
+      inputClassName="is-medium"
+      helpItems={state.searchBarHelpItems}
     />
   );
 };

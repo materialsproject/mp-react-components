@@ -39,18 +39,22 @@ const emptyCellPlaceholder = '-';
  * @param row object that has the key(s) specified in selector
  */
 const getRowValueFromSelectorString = (selector: string, row: any) => {
-  const selectors = selector.split('.');
-  switch (selectors.length) {
-    case 1:
-      return row[selectors[0]];
-    case 2:
-      return row[selectors[0]][selectors[1]];
-    case 3:
-      return row[selectors[0]][selectors[1]][selectors[2]];
-    case 3:
-      return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
-    default:
-      return emptyCellPlaceholder;
+  try {
+    const selectors = selector.split('.');
+    switch (selectors.length) {
+      case 1:
+        return row[selectors[0]];
+      case 2:
+        return row[selectors[0]][selectors[1]];
+      case 3:
+        return row[selectors[0]][selectors[1]][selectors[2]];
+      case 4:
+        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
+      default:
+        return emptyCellPlaceholder;
+    }
+  } catch (error) {
+    return emptyCellPlaceholder;
   }
 };
 
@@ -62,6 +66,24 @@ const isNotEmpty = (value: any) => {
   }
 };
 
+const getColumnHeader = (c: any) => {
+  return (
+    <div
+      className={classNames({
+        'column-header-right': c.right,
+        'column-header-center': c.center,
+        'column-header-left': !c.right && !c.center,
+        'tooltip-label': c.tooltip
+      })}
+      data-tip={c.tooltip}
+      data-for={c.selector}
+    >
+      <div>{c.hideName || !c.title ? '' : c.title}</div>
+      {c.units && <div className="column-units">({c.units})</div>}
+      {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
+    </div>
+  );
+};
 /**
  * Initialize columns with their proper format function
  * The "format" prop should initially be one of the ColumnFormat strings
@@ -69,30 +91,34 @@ const isNotEmpty = (value: any) => {
  * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
  * that will specify how many decimals or figures to apply to the format.
  */
-export const initColumns = (columns: Column[]): Column[] => {
+export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolean): Column[] => {
   return columns.map((c) => {
     c.sortable = c.sortable !== undefined ? c.sortable : true;
-    c.nameString = c.name.toString();
-    c.name = (
-      <div
-        className={classNames({
-          'column-header-right': c.right,
-          'column-header-center': c.center,
-          'column-header-left': !c.right && !c.center,
-          'tooltip-label': c.tooltip
-        })}
-        data-tip={c.tooltip}
-        data-for={c.selector}
-      >
-        <div>{c.hideName ? '' : c.name}</div>
-        {c.units && <div className="column-units">({c.units})</div>}
-        {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
-      </div>
-    );
+
+    if (disableRichColumnHeaders) {
+      c.name = c.hideName ? '' : c.title;
+    } else {
+      c.name = (
+        <div
+          className={classNames({
+            'column-header-right': c.right,
+            'column-header-center': c.center,
+            'column-header-left': !c.right && !c.center,
+            'tooltip-label': c.tooltip
+          })}
+          data-tip={c.tooltip}
+          data-for={c.selector}
+        >
+          <div>{c.hideName ? '' : c.title}</div>
+          {c.units && <div className="column-units">({c.units})</div>}
+          {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
+        </div>
+      );
+    }
 
     const hasFormatOptions = c.hasOwnProperty('formatOptions');
 
-    switch (c.format) {
+    switch (c.formatType) {
       case ColumnFormat.FIXED_DECIMAL:
         const decimalPlaces =
           hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
@@ -180,6 +206,12 @@ export const initColumns = (columns: Column[]): Column[] => {
           hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
         c.cell = (row: any, i: number) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
+          let cleanValue = rowValue;
+
+          if (hasFormatOptions && c.formatOptions.truthyValue !== undefined) {
+            cleanValue = rowValue === c.formatOptions.truthyValue;
+          }
+
           return (
             <span
               className="boolean-cell-wrapper"
@@ -188,8 +220,8 @@ export const initColumns = (columns: Column[]): Column[] => {
             >
               <i
                 className={classNames({
-                  [truthyClass]: rowValue,
-                  [falsyClass]: !rowValue
+                  [truthyClass]: cleanValue,
+                  [falsyClass]: !cleanValue
                 })}
               ></i>
               {c.cellTooltip && <Tooltip id={`${c.selector}-${i}`}>{c.cellTooltip}</Tooltip>}
@@ -262,6 +294,9 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
 
       if (f.id === 'elements' && query.get('formula') && query.get('formula')!.indexOf('-') > -1) {
         queryParamValue = query.get('formula');
+        if (!f.hasOwnProperty('props')) f.props = {};
+        /** Make sure elements filter is initialized with the appropriate elements mode */
+        f.props.isChemSys = true;
       }
 
       switch (f.type) {
@@ -270,18 +305,19 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
           const maxSuffix = f.maxSuffix || defaultMaxSuffix;
           const queryParamMinString = query.get(f.id + minSuffix);
           const queryParamMaxString = query.get(f.id + maxSuffix);
-          const queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
-          const queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
-          queryParamValue =
-            queryParamMin !== null && queryParamMax !== null
-              ? [queryParamMin, queryParamMax]
-              : null;
+          let queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
+          let queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
+          if (queryParamMin !== null || queryParamMax !== null) {
+            queryParamValue = [queryParamMin, queryParamMax];
+          } else {
+            queryParamValue = null;
+          }
           initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
           return f;
         case FilterType.MATERIALS_INPUT:
           initializedValues[f.id] = queryParamValue ? queryParamValue : '';
-          if (!f.hasOwnProperty('props')) f.props = { parsedValue: [] };
-          if (f.hasOwnProperty('props') && !f.props.hasOwnProperty('parsedValue')) {
+          if (!f.hasOwnProperty('props')) f.props = {};
+          if (!f.props.hasOwnProperty('parsedValue')) {
             f.props.parsedValue = [];
           }
           return f;
@@ -357,10 +393,18 @@ export const getSearchState = (
   const activeFilters: ActiveFilter[] = [];
   currentState.filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
+      const operatorSuffix = f.operatorSuffix || '';
       switch (f.type) {
         case FilterType.SLIDER:
-          const hasActiveMin = filterValues[f.id][0] !== f.props.domain[0];
-          const hasActiveMax = filterValues[f.id][1] !== f.props.domain[1];
+          /**
+           * The lower bound will be null if initialized from a url that only has a max param.
+           * The upper bound will be null if initialized from a url that only has a min param.
+           */
+          const hasActiveMin =
+            filterValues[f.id][0] !== null && filterValues[f.id][0] > f.props.domain[0];
+          const hasActiveMax =
+            filterValues[f.id][1] !== null && filterValues[f.id][1] < f.props.domain[1];
+
           if (hasActiveMin || hasActiveMax) {
             const minSuffix = f.minSuffix || defaultMinSuffix;
             const maxSuffix = f.maxSuffix || defaultMaxSuffix;
@@ -392,7 +436,6 @@ export const getSearchState = (
           break;
         case FilterType.MATERIALS_INPUT:
           if (filterValues[f.id] !== '') {
-            const operatorSuffix = f.operatorSuffix || '';
             let parsedValue = filterValues[f.id];
             let filterDisplayName = f.name.toLowerCase();
 
@@ -420,7 +463,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: parsedValue
+                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
                 }
               ]
             });
@@ -437,7 +480,7 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
+                  field: f.id + operatorSuffix,
                   value: filterValues[f.id]
                 }
               ]
@@ -456,8 +499,8 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
-                  value: filterValues[f.id]
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -465,7 +508,6 @@ export const getSearchState = (
           break;
         case FilterType.TEXT_INPUT:
           if (isNotEmpty(filterValues[f.id])) {
-            const operatorSuffix = f.operatorSuffix || '';
             activeFilters.push({
               id: f.id,
               displayName: f.name ? f.name : f.id,
@@ -474,7 +516,7 @@ export const getSearchState = (
               searchParams: [
                 {
                   field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -494,8 +536,8 @@ export const getSearchState = (
               defaultValue: [],
               searchParams: [
                 {
-                  field: f.id,
-                  value: filterValues[f.id]
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -510,8 +552,8 @@ export const getSearchState = (
               defaultValue: undefined,
               searchParams: [
                 {
-                  field: f.id,
-                  value: filterValues[f.id]
+                  field: f.id + operatorSuffix,
+                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
                 }
               ]
             });
@@ -533,7 +575,10 @@ export const initSearchState = (
    * and all the values provided in props (except props.children)
    */
   const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
-  initialState.columns = initColumns(propsWithoutChildren.columns);
+  initialState.columns = initColumns(
+    propsWithoutChildren.columns,
+    initialState.disableRichColumnHeaders
+  );
   const { initializedGroups, initializedValues } = initFilterGroups(
     propsWithoutChildren.filterGroups,
     query
@@ -546,7 +591,7 @@ export const initSearchState = (
       initializedValues['task_ids'] ||
       initializedValues['material_ids'])
   ) {
-    initializedGroups[0].expanded = true;
+    // initializedGroups[0].expanded = true;
   }
 
   initialState.filterGroups = initializedGroups;
@@ -554,13 +599,31 @@ export const initSearchState = (
 
   const urlLimit = query.get('limit');
   const urlSkip = query.get('skip');
-  const urlSortField = query.get('sort_field');
-  const urlAscending = query.get('ascending');
+  const urlSortFields = query.get('sort_fields');
 
   if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
   if (urlSkip) initialState.page = parseInt(urlSkip) / initialState.resultsPerPage + 1;
-  if (urlSortField) initialState.sortField = urlSortField;
-  if (urlAscending) initialState.sortAscending = urlAscending === 'true' ? true : false;
+
+  /** Serialize sort params from API syntax to SearchUI props */
+  if (urlSortFields) {
+    const sortFields = urlSortFields.split(',');
+    const sortFieldSplitDesc = sortFields[0].split('-');
+    initialState.sortField =
+      sortFieldSplitDesc.length === 1 ? sortFieldSplitDesc[0] : sortFieldSplitDesc[1];
+    initialState.sortAscending = sortFieldSplitDesc.length === 1;
+    initialState.secondarySortField = sortFields[1] || undefined;
+    if (sortFields[1]) {
+      const secondaryFieldSplitDesc = sortFields[1].split('-');
+      const secondaryField =
+        secondaryFieldSplitDesc.length === 1
+          ? secondaryFieldSplitDesc[0]
+          : secondaryFieldSplitDesc[1];
+      initialState.secondarySortField =
+        secondaryField !== initialState.sortField ? secondaryField : undefined;
+      initialState.secondarySortAscending =
+        initialState.secondarySortField !== undefined && secondaryFieldSplitDesc.length === 1;
+    }
+  }
 
   return getSearchState(initialState);
 };
