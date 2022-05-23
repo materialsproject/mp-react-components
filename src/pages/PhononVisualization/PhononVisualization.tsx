@@ -17,6 +17,7 @@ import { ScenePosition } from '../../components/crystal-toolkit/scene/inset-help
 import { CameraState } from '../../components/crystal-toolkit/CameraContextProvider/camera-reducer';
 import * as THREE from 'three';
 import { Camera } from 'three';
+import SimpleSlider from '../../components/crystal-toolkit/scene/animation-slider';
 import { useRef } from 'react';
 
 export const PhononVisualization: React.FC = () => {
@@ -26,8 +27,14 @@ export const PhononVisualization: React.FC = () => {
 
   const [value, setValue] = useState<any>('test');
 
+  const [tilingX, setTilingX] = useState<any>(2);
+  const [tilingY, setTilingY] = useState<any>(1);
+  const [tilingZ, setTilingZ] = useState<any>(0);
+  const maxTiling: number = 3;
+
   return (
     <div>
+      {/*perhaps add tiling variable to CrystalToolkitScene*/}
       <CrystalToolkitScene
         settings={{
           renderer: Renderer.WEBGL,
@@ -35,9 +42,50 @@ export const PhononVisualization: React.FC = () => {
           zoomToFit2D: true
         }}
         data={crystalScene}
+        tiling={[tilingX, tilingY, tilingZ]}
+        maxTiling={maxTiling}
         sceneSize="100%"
-        debug={false}
+        debug={true}
         toggleVisibility={{}}
+      />
+      {/* X slider*/}
+      <SimpleSlider
+        onUpdate={(a) => {
+          if (a != tilingX) {
+            setTilingX(a);
+          }
+        }}
+        onChange={(a) => {
+          console.log(a);
+        }}
+        domain={[0, maxTiling]}
+        values={[tilingX]}
+      />
+      {/* Y slider*/}
+      <SimpleSlider
+        onUpdate={(a) => {
+          if (a != tilingX) {
+            setTilingY(a);
+          }
+        }}
+        onChange={(a) => {
+          console.log(a);
+        }}
+        domain={[0, maxTiling]}
+        values={[tilingY]}
+      />
+      {/* Z slider */}
+      <SimpleSlider
+        onUpdate={(a) => {
+          if (a != tilingX) {
+            setTilingZ(a);
+          }
+        }}
+        onChange={(a) => {
+          console.log(a);
+        }}
+        domain={[0, maxTiling]}
+        values={[tilingZ]}
       />
     </div>
   );
