@@ -64,7 +64,6 @@ interface Props {
    * in crystal_toolkit.core.scene and its to_json method.
    */
   data: any;
-
   /**
    * Options used for generating scene.
    * Supported options and their defaults are given as follows:
@@ -90,6 +89,9 @@ interface Props {
    * and 0 to hide it.
    */
   toggleVisibility?: any;
+
+  tiling?: number;
+  maxTiling?: number;
 
   /**
    * Set to trigger a screenshot or scene download.
@@ -274,6 +276,8 @@ export const CrystalToolkitScene: React.FC<Props> = ({
       props.settings,
       props.inletSize,
       props.inletPadding,
+      props.tiling,
+      props.maxTiling,
       (objects) => {
         if (props.onObjectClicked) {
           props.onObjectClicked(objects);
