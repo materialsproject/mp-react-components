@@ -6,10 +6,10 @@ const sliderStyle: any = {
   position: 'relative',
   margin: 'auto',
   width: '80%',
-  touchAction: 'none',
+  touchAction: 'none'
 };
 
-const domain: any = [0, 100];
+const defaultDomain: any = [0, 100];
 const defaultValues: any = [0];
 
 class SimpleSlider extends Component<any, any> {
@@ -19,7 +19,7 @@ class SimpleSlider extends Component<any, any> {
 
   state = {
     values: defaultValues.slice(),
-    update: defaultValues.slice(),
+    update: defaultValues.slice()
   };
 
   onUpdate = (update) => {
@@ -28,12 +28,13 @@ class SimpleSlider extends Component<any, any> {
   };
 
   onChange = (values) => {
+    this.props.onChange(values[0]);
     this.setState({ values });
   };
 
   render() {
     const {
-      state: { values, update },
+      state: { values, update }
     } = this;
 
     return (
@@ -41,11 +42,11 @@ class SimpleSlider extends Component<any, any> {
         <Slider
           mode={1}
           step={1}
-          domain={domain}
+          domain={this.props.domain ? this.props.domain : defaultDomain}
           rootStyle={sliderStyle}
           onUpdate={this.onUpdate}
           onChange={this.onChange}
-          values={values}
+          values={this.props.values ? this.props.values : defaultValues}
         >
           <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
           <Handles>
@@ -55,7 +56,7 @@ class SimpleSlider extends Component<any, any> {
                   <Handle
                     key={handle.id}
                     handle={handle}
-                    domain={domain}
+                    domain={defaultDomain}
                     getHandleProps={getHandleProps}
                   />
                 ))}
@@ -95,7 +96,7 @@ const railOuterStyle = {
   height: 42,
   transform: 'translate(0%, -50%)',
   borderRadius: 7,
-  cursor: 'pointer',
+  cursor: 'pointer'
   // border: '1px solid white',
 };
 
@@ -106,7 +107,7 @@ const railInnerStyle: any = {
   transform: 'translate(0%, -50%)',
   borderRadius: 7,
   pointerEvents: 'none',
-  backgroundColor: 'rgb(155,155,155)',
+  backgroundColor: 'rgb(155,155,155)'
 };
 
 export function SliderRail({ getRailProps }) {
@@ -119,7 +120,7 @@ export function SliderRail({ getRailProps }) {
 }
 
 SliderRail.propTypes = {
-  getRailProps: PropTypes.func.isRequired,
+  getRailProps: PropTypes.func.isRequired
 };
 
 // *******************************************************
@@ -129,7 +130,7 @@ export function Handle({
   domain: [min, max],
   handle: { id, value, percent },
   disabled,
-  getHandleProps,
+  getHandleProps
 }) {
   return (
     <Fragment>
@@ -144,7 +145,7 @@ export function Handle({
           height: 42,
           cursor: 'pointer',
           // border: '1px solid white',
-          backgroundColor: 'none',
+          backgroundColor: 'none'
         }}
         {...getHandleProps(id)}
       />
@@ -162,7 +163,7 @@ export function Handle({
           height: 24,
           borderRadius: '50%',
           boxShadow: '1px 1px 1px 1px rgba(0, 0, 0, 0.3)',
-          backgroundColor: disabled ? '#666' : '#ffc400',
+          backgroundColor: disabled ? '#666' : '#ffc400'
         }}
       />
     </Fragment>
@@ -174,14 +175,14 @@ Handle.propTypes = {
   handle: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired
   }).isRequired,
   getHandleProps: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
 Handle.defaultProps = {
-  disabled: false,
+  disabled: false
 };
 
 // *******************************************************
@@ -192,7 +193,7 @@ export function KeyboardHandle({
   domain: [min, max],
   handle: { id, value, percent },
   disabled,
-  getHandleProps,
+  getHandleProps
 }) {
   return (
     <button
@@ -209,7 +210,7 @@ export function KeyboardHandle({
         height: 24,
         borderRadius: '50%',
         boxShadow: '1px 1px 1px 1px rgba(0, 0, 0, 0.3)',
-        backgroundColor: disabled ? '#666' : '#ffc400',
+        backgroundColor: disabled ? '#666' : '#ffc400'
       }}
       {...getHandleProps(id)}
     />
@@ -221,14 +222,14 @@ KeyboardHandle.propTypes = {
   handle: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired
   }).isRequired,
   getHandleProps: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
 KeyboardHandle.defaultProps = {
-  disabled: false,
+  disabled: false
 };
 
 // *******************************************************
@@ -246,7 +247,7 @@ export function Track({ source, target, getTrackProps, disabled }) {
         borderRadius: 7,
         cursor: 'pointer',
         left: `${source.percent}%`,
-        width: `${target.percent - source.percent}%`,
+        width: `${target.percent - source.percent}%`
       }}
       {...getTrackProps()}
     />
@@ -257,19 +258,19 @@ Track.propTypes = {
   source: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired
   }).isRequired,
   target: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired
   }).isRequired,
   getTrackProps: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
 Track.defaultProps = {
-  disabled: false,
+  disabled: false
 };
 
 // *******************************************************
@@ -285,7 +286,7 @@ export function Tick({ tick, count, format }) {
           width: 1,
           height: 5,
           backgroundColor: 'rgb(200,200,200)',
-          left: `${tick.percent}%`,
+          left: `${tick.percent}%`
         }}
       />
       <div
@@ -296,7 +297,7 @@ export function Tick({ tick, count, format }) {
           textAlign: 'center',
           marginLeft: `${-(100 / count) / 2}%`,
           width: `${100 / count}%`,
-          left: `${tick.percent}%`,
+          left: `${tick.percent}%`
         }}
       >
         {format(tick.value)}
@@ -309,14 +310,14 @@ Tick.propTypes = {
   tick: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired
   }).isRequired,
   count: PropTypes.number.isRequired,
-  format: PropTypes.func.isRequired,
+  format: PropTypes.func.isRequired
 };
 
 Tick.defaultProps = {
-  format: (d) => d,
+  format: (d) => d
 };
 
 export default SimpleSlider;
