@@ -72,7 +72,7 @@
     "three": "^0.139.0",
     "use-deep-compare-effect": "^1.6.1",
     "use-query-params": "^1.2.3",
-    "use-resize-observer": "^8.0.0",
+    "use-resize-observer": "^9.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
