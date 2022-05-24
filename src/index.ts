@@ -10,8 +10,6 @@ import { Sidebar } from './components/navigation/Sidebar';
 import Scene from './components/crystal-toolkit/scene/Scene';
 import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/data-entry/MaterialsInput/MaterialsInput';
-import { SearchUI } from './components/data-display/SearchUI';
-import DataTable from 'react-data-table-component';
 import { GlobalSearchBar } from './components/data-entry/GlobalSearchBar';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
 import { Select } from './components/data-entry/Select';
@@ -33,6 +31,24 @@ import { Dropdown } from './components/navigation/Dropdown';
 import { Navbar } from './components/navigation/Navbar';
 import { Modal, ModalTrigger, ModalContextProvider } from './components/data-display/Modal';
 import { Tabs } from './components/navigation/Tabs';
+import { FilterField } from './components/data-entry/FilterField';
+import { DataTable } from './components/data-display/DataTable';
+import { Enlargeable } from './components/data-display/Enlargeable';
+import { Switch } from './components/data-entry/Switch';
+import { RangeSlider } from './components/data-entry/RangeSlider';
+import { DualRangeSlider } from './components/data-entry/DualRangeSlider';
+import { SearchUIContainer } from './components/data-display/SearchUI/SearchUIContainer';
+import { SearchUISearchBar } from './components/data-display/SearchUI/SearchUISearchBar';
+import { SearchUIDataHeader } from './components/data-display/SearchUI/SearchUIDataHeader';
+import { SearchUIDataView } from './components/data-display/SearchUI/SearchUIDataView';
+import { SearchUIFilters } from './components/data-display/SearchUI/SearchUIFilters';
+import { SearchUIGrid } from './components/data-display/SearchUI/SearchUIGrid';
+import { Drawer } from './components/data-display/Drawer';
+import { Link } from './components/navigation/Link';
+import { DrawerContextProvider } from './components/data-display/Drawer/DrawerContextProvider';
+import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
+import { SearchUIDataTable } from './components/data-display/SearchUI/SearchUIDataTable';
+import { OpenAccessButton } from './components/publications/OpenAccessButton';
 
 export {
   SelectableTable,
@@ -45,11 +61,14 @@ export {
   JsonView,
   ReactGraphComponent,
   Sidebar,
-  // MtPrintViewContext,
-  // MTGrid,
-  // MtMaterialTable,
   Scrollspy,
-  SearchUI,
+  SearchUIContainer,
+  SearchUISearchBar,
+  SearchUIGrid,
+  SearchUIDataHeader,
+  SearchUIDataView,
+  SearchUIDataTable,
+  SearchUIFilters,
   MaterialsInput,
   DataTable,
   DataBlock,
@@ -65,6 +84,7 @@ export {
   BibtexButton,
   CrossrefCard,
   PublicationButton,
+  OpenAccessButton,
   DownloadButton,
   DownloadDropdown,
   Tooltip,
@@ -74,5 +94,14 @@ export {
   ModalContextProvider,
   Modal,
   ModalTrigger,
-  Tabs
+  Tabs,
+  FilterField,
+  Enlargeable,
+  Switch,
+  RangeSlider,
+  DualRangeSlider,
+  Drawer,
+  Link,
+  DrawerContextProvider,
+  DrawerTrigger
 };

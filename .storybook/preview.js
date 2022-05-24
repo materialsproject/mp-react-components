@@ -12,13 +12,30 @@ export const parameters = {
         ['MP React Components', 'Usage with Dash'],
         'Search UI',
         [
-          'SearchUI Component',
+          'Building a Search UI',
+          'SearchUIContainer',
+          ['Fully Featured', 'With MP Contribs Data', 'Matscholar Alpha'],
+          'SearchUISearchBar',
+          'SearchUIFilters',
+          'SearchUIDataHeader',
+          'SearchUIDataTable',
+          'SearchUIDataView',
+          'SearchUIGrid',
           'Columns',
           'Filters',
           'Conditional Row Styles',
-          'Allowed Input Types Map'
+          'Search Bar Input Types'
         ],
         'Data-Entry',
+        [
+          'MaterialsInput',
+          'PeriodicTable',
+          'RangeSlider',
+          'DualRangeSlider',
+          'Select',
+          'ThreeStateBooleanSelect',
+          'Switch'
+        ],
         'Data-Display',
         'Publications',
         ['BibCard', 'CrossrefCard', 'BibjsonCard', 'PublicationCard', 'BibtexCard', 'BibFilter'],

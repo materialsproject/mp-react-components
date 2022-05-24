@@ -1,0 +1,387 @@
+[
+  {
+    "name": "Composition",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Search",
+        "params": ["q"],
+        "overrides": [
+          "material_ids",
+          "elements",
+          "formula",
+          "chemsys",
+          "exclude_elements",
+          "nelements"
+        ],
+        "type": "TEXT_INPUT",
+        "hidden": true
+      },
+      {
+        "name": "Material ID",
+        "params": ["material_ids"],
+        "overrides": [
+          "elements",
+          "formula",
+          "chemsys",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
+        "isSearchBarField": true,
+        "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "mpid",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid material ID (e.g. mp-394)."
+        }
+      },
+      {
+        "name": "Formula",
+        "params": ["formula"],
+        "overrides": [
+          "material_ids",
+          "elements",
+          "chemsys",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
+        "isSearchBarField": true,
+        "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5).",
+          "helpItems": [
+            {
+              "label": "Formula Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li3Fe", "Eu2SiCl2O3", "LiFe*2*", "Si*"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Chemical System",
+        "params": ["chemsys"],
+        "overrides": [
+          "material_ids",
+          "elements",
+          "formula",
+          "exclude_elements",
+          "nelements_min",
+          "nelements_max"
+        ],
+        "isSearchBarField": true,
+        "tooltip": "Enter a \" - \" separated list of element symbols (e.g. \"Ga-N\") to find materials within that chemical space (i.e. materials that contain only these elements).",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "chemical_system",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical system (e.g. Ce-Zn).",
+          "helpItems": [
+            {
+              "label": "Formula Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li-Fe", "Eu-Si-Cl-O", "Li-Fe-*-*", "Si-*"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Include Elements",
+        "params": ["elements"],
+        "overrides": ["material_ids", "formula", "chemsys"],
+        "isSearchBarField": true,
+        "tooltip": "Enter a \" , \" separated list of element symbols to find materials that contain at least these elements (e.g. \"Ga,N\").",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "elements",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma.",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Al,Ge,O"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Exclude Elements",
+        "params": ["exclude_elements"],
+        "overrides": ["material_ids", "formula", "chemsys"],
+        "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find materials that do not contain certain elements in their formula.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "elements",
+          "periodicTableMode": "none",
+          "hideChemSys": true,
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).",
+          "helpItems": [
+            {
+              "label": "Exclude Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Li,Fe", "Si,O,H"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Number of Elements",
+        "params": ["nelements_min", "nelements_max"],
+        "overrides": ["material_ids", "formula", "chemsys"],
+        "type": "SLIDER",
+        "props": {
+          "domain": [1, 20],
+          "step": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Thermodynamics",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Energy Above Hull",
+        "params": ["energy_above_hull_min", "energy_above_hull_max"],
+        "type": "SLIDER",
+        "units": "eV/atom",
+        "props": {
+          "domain": [0, 1],
+          "step": 0.01
+        }
+      },
+      {
+        "name": "Formation Energy",
+        "params": ["formation_energy_per_atom_min", "formation_energy_per_atom_max"],
+        "type": "SLIDER",
+        "units": "eV/atom",
+        "props": {
+          "domain": [-10, 6],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Is Stable",
+        "params": ["is_stable"],
+        "tooltip": "Materials with an energy above hull equal to 0 are flagged as stable. All other materials are flagged as not stable.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Experimentally Observed",
+        "params": ["theoretical"],
+        "tooltip": "Materials that match an entry in the ICSD are considered experimentally observed or synthesizable.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": false
+            },
+            {
+              "label": "No",
+              "value": true
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Structural Properties",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Volume",
+        "params": ["volume_min", "volume_max"],
+        "tooltip": "Total volume of the structure",
+        "units": "\u00c5\u00b3",
+        "type": "SLIDER",
+        "props": {
+          "domain": [5, 19407],
+          "step": 1
+        }
+      },
+      {
+        "name": "Density",
+        "params": ["density_min", "density_max"],
+        "units": "g/cm\u00b3",
+        "type": "SLIDER",
+        "props": {
+          "domain": [0, 25],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Number of Sites",
+        "params": ["nsites_min", "nsites_max"],
+        "type": "SLIDER",
+        "props": {
+          "domain": [1, 360],
+          "step": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Symmetry",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Crystal System",
+        "params": ["crystal_system"],
+        "tooltip": "The crystal system for the lattice",
+        "type": "SELECT_CRYSTAL_SYSTEM"
+      }
+    ]
+  },
+  {
+    "name": "Calculated Properties",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Available Properties",
+        "params": ["has_props"],
+        "type": "CHECKBOX_LIST",
+        "props": {
+          "options": [
+            { "value": "dos", "label": "Density of States" },
+            { "value": "bandstructure", "label": "Band Structure" },
+            { "value": "magnetism", "label": "Magnetism" },
+            { "value": "elasticity", "label": "Elasticity" },
+            { "value": "surface_properties", "label": "Surfaces" },
+            { "value": "piezoelectric", "label": "Piezoelectric" },
+            { "value": "dielectric", "label": "Dielectric" },
+            { "value": "charge_density", "label": "Charge Density" },
+            { "value": "eos", "label": "Equations of State" },
+            { "value": "grain_boundaries", "label": "Grain Boundaries" }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Electronic Structure",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Band Gap",
+        "params": ["band_gap_min", "band_gap_max"],
+        "type": "SLIDER",
+        "units": "eV",
+        "props": {
+          "domain": [0, 20],
+          "step": 0.1
+        }
+      },
+      {
+        "name": "Is Gap Direct",
+        "params": ["is_gap_direct"],
+        "tooltip": "Whether a band gap is direct or not.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Is Metal",
+        "params": ["is_metal"],
+        "tooltip": "Whether the material is considered a metal.",
+        "type": "THREE_STATE_BOOLEAN_SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Yes",
+              "value": true
+            },
+            {
+              "label": "No",
+              "value": false
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Magnetism",
+    "expanded": false,
+    "filters": [
+      {
+        "name": "Magnetic Ordering",
+        "params": ["ordering"],
+        "tooltip": "Magnetic ordering of the calculation",
+        "type": "SELECT",
+        "props": {
+          "options": [
+            {
+              "label": "Ferromagnetic",
+              "value": "FM"
+            },
+            {
+              "label": "Non-magnetic",
+              "value": "NM"
+            },
+            {
+              "label": "Ferrimagnetic",
+              "value": "FiM"
+            },
+            {
+              "label": "Antiferromagnetic",
+              "value": "AFM"
+            },
+            {
+              "label": "Unknown",
+              "value": "Unknown"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Total Magnetization",
+        "params": ["total_magnetization_min", "total_magnetization_max"],
+        "type": "SLIDER",
+        "tooltip": "Total number of unpaired electrons per unit cell",
+        "props": {
+          "domain": [0, 325],
+          "step": 1
+        }
+      }
+    ]
+  }
+]

@@ -7,6 +7,13 @@ body {
   min-height: 100vh;
 }
 
+.mp-app-content {
+  position: relative;
+  min-height: calc(100vh - 6.5rem);
+  min-height: -webkit-calc(100vh - 6.5rem);
+  padding: 1.5rem;
+}
+
 .tooltip {
   position: relative;
   border-bottom: 1px dotted black;
@@ -240,7 +247,7 @@ Destined for app.scss in mp-web
 
 *******************************************************/
 
-@media screen and (max-width: 769px - 1px) {
+@media screen and (max-width: (769px - 1px)) {
   .search-ui .table-transition-wrapper-small {
     display: none;
   }
@@ -286,7 +293,7 @@ Destined for home.scss in mp-web
   }
 }
 
-@media screen and (max-width: 769px - 1px) {
+@media screen and (max-width: (769px - 1px)) {
   .mp-home .materials-input .field > .control:first-child:not(.is-expanded) {
     display: none;
   }

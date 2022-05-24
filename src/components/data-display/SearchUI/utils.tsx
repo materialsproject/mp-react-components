@@ -1,64 +1,29 @@
-import React from 'react';
-import classNames from 'classnames';
 import {
   crystalSystemOptions,
-  formatFormula,
   formatPointGroup,
   pointGroupOptions,
   spaceGroupNumberOptions,
   spaceGroupSymbolOptions
 } from '../../data-entry/utils';
-import {
-  ActiveFilter,
-  Column,
-  ColumnFormat,
-  FilterGroup,
-  FilterType,
-  SearchParam,
-  SearchState
-} from './types';
-import { Link } from '../../navigation/Link';
+import { ActiveFilter, Filter, FilterGroup, FilterType } from './types';
 import { spaceGroups } from '../../../constants/spaceGroups';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
-import { MaterialsInputTypesMap, validateElements } from '../../data-entry/MaterialsInput/utils';
-import { SearchUIProps } from '.';
-import { FaDownload } from 'react-icons/fa';
-import { joinUrl } from '../../../utils/navigation';
-import { Tooltip } from '../Tooltip';
-import { ArrayChips } from '../ArrayChips';
-import { Formula } from '../Formula';
-
-const defaultMinSuffix = '_min';
-const defaultMaxSuffix = '_max';
-const emptyCellPlaceholder = '-';
+import { MaterialsInputTypesMap } from '../../data-entry/MaterialsInput/utils';
+import {
+  BooleanParam,
+  decodeDelimitedArray,
+  DecodedValueMap,
+  encodeDelimitedArray,
+  NumberParam,
+  QueryParamConfig,
+  QueryParamConfigMap,
+  StringParam
+} from 'use-query-params';
 
 /**
- * Get the corresponding value for a row object given a selector string.
- * Can select values from keys nested up to 3 levels.
- * @param selector string that corresponds to a key or nested group of keys (e.g. 'data.a.b.c') in an object.
- * @param row object that has the key(s) specified in selector
+ * Check whether a filter value is considered empty or not (i.e. active or inactive)
  */
-const getRowValueFromSelectorString = (selector: string, row: any) => {
-  try {
-    const selectors = selector.split('.');
-    switch (selectors.length) {
-      case 1:
-        return row[selectors[0]];
-      case 2:
-        return row[selectors[0]][selectors[1]];
-      case 3:
-        return row[selectors[0]][selectors[1]][selectors[2]];
-      case 4:
-        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
-      default:
-        return emptyCellPlaceholder;
-    }
-  } catch (error) {
-    return emptyCellPlaceholder;
-  }
-};
-
-const isNotEmpty = (value: any) => {
+export const isNotEmpty = (value: any) => {
   if (Array.isArray(value)) {
     return value.length > 0 ? true : false;
   } else {
@@ -66,275 +31,26 @@ const isNotEmpty = (value: any) => {
   }
 };
 
-const getColumnHeader = (c: any) => {
-  return (
-    <div
-      className={classNames({
-        'column-header-right': c.right,
-        'column-header-center': c.center,
-        'column-header-left': !c.right && !c.center,
-        'tooltip-label': c.tooltip
-      })}
-      data-tip={c.tooltip}
-      data-for={c.selector}
-    >
-      <div>{c.hideName || !c.title ? '' : c.title}</div>
-      {c.units && <div className="column-units">({c.units})</div>}
-      {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
-    </div>
-  );
-};
 /**
- * Initialize columns with their proper format function
- * The "format" prop should initially be one of the ColumnFormat strings
- * which maps to one of the format (or cell) functions defined here.
- * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
- * that will specify how many decimals or figures to apply to the format.
+ * Initialize filter groups to be usable within the search state.
+ * This allows options to be programatically added for symmetry filters.
+ * @param filterGroups array filter definitions nested by group
+ * @returns new array of filter groups ready to use in the state
  */
-export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolean): Column[] => {
-  return columns.map((c) => {
-    c.sortable = c.sortable !== undefined ? c.sortable : true;
-
-    if (disableRichColumnHeaders) {
-      c.name = c.hideName ? '' : c.title;
-    } else {
-      c.name = (
-        <div
-          className={classNames({
-            'column-header-right': c.right,
-            'column-header-center': c.center,
-            'column-header-left': !c.right && !c.center,
-            'tooltip-label': c.tooltip
-          })}
-          data-tip={c.tooltip}
-          data-for={c.selector}
-        >
-          <div>{c.hideName ? '' : c.title}</div>
-          {c.units && <div className="column-units">({c.units})</div>}
-          {c.tooltip && <Tooltip id={c.selector}>{c.tooltip}</Tooltip>}
-        </div>
-      );
-    }
-
-    const hasFormatOptions = c.hasOwnProperty('formatOptions');
-
-    switch (c.formatType) {
-      case ColumnFormat.FIXED_DECIMAL:
-        const decimalPlaces =
-          hasFormatOptions && c.formatOptions.decimals ? c.formatOptions.decimals : 2;
-        c.format = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const numValue = parseFloat(rowValue);
-          const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
-          const min = Math.pow(10, -decimalPlaces);
-          if (value === 0) {
-            return 0;
-          }
-          if (hasFormatOptions && c.formatOptions.abbreviateNearZero) {
-            if (value >= min) {
-              return value.toFixed(decimalPlaces);
-            } else if (value < min) {
-              return '< ' + min.toString();
-            } else {
-              return emptyCellPlaceholder;
-            }
-          } else {
-            return isNaN(value) ? emptyCellPlaceholder : value.toFixed(decimalPlaces);
-          }
-        };
-        c.right = true;
-        return c;
-      case ColumnFormat.SIGNIFICANT_FIGURES:
-        const sigFigs = hasFormatOptions && c.formatOptions.sigFigs ? c.formatOptions.sigFigs : 5;
-        c.format = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const numValue = parseFloat(rowValue);
-          const value = c.conversionFactor ? numValue * c.conversionFactor : numValue;
-          if (value === 0) {
-            return 0;
-          }
-          return isNaN(value) ? emptyCellPlaceholder : value.toPrecision(sigFigs);
-        };
-        c.right = true;
-        return c;
-      case ColumnFormat.FORMULA:
-        c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return <Formula>{rowValue}</Formula>;
-        };
-        return c;
-      case ColumnFormat.LINK:
-        c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const linkLabel =
-            hasFormatOptions && c.formatOptions.linkLabelKey && rowValue
-              ? row[c.formatOptions.linkLabelKey]
-              : rowValue;
-          const isFormula = hasFormatOptions && c.formatOptions.linkLabelisFormula;
-          const url =
-            hasFormatOptions && c.formatOptions.baseUrl && rowValue
-              ? joinUrl(c.formatOptions.baseUrl, rowValue)
-              : rowValue;
-
-          return linkLabel && url ? (
-            <Link
-              href={url}
-              onClick={(e) => e.stopPropagation()}
-              target={hasFormatOptions && c.formatOptions.target}
-            >
-              {isFormula ? <Formula>{linkLabel}</Formula> : linkLabel}
-            </Link>
-          ) : (
-            emptyCellPlaceholder
-          );
-        };
-        return c;
-      case ColumnFormat.BOOLEAN:
-        var truthyLabel =
-          hasFormatOptions && c.formatOptions.truthyLabel ? c.formatOptions.truthyLabel : 'true';
-        var falsyLabel =
-          hasFormatOptions && c.formatOptions.falsyLabel ? c.formatOptions.falsyLabel : 'false';
-        c.format = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return rowValue ? truthyLabel : falsyLabel;
-        };
-        return c;
-      case ColumnFormat.BOOLEAN_CLASS:
-        var truthyClass =
-          hasFormatOptions && c.formatOptions.truthyClass ? c.formatOptions.truthyClass : '';
-        var falsyClass =
-          hasFormatOptions && c.formatOptions.falsyClass ? c.formatOptions.falsyClass : '';
-        c.cell = (row: any, i: number) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          let cleanValue = rowValue;
-
-          if (hasFormatOptions && c.formatOptions.truthyValue !== undefined) {
-            cleanValue = rowValue === c.formatOptions.truthyValue;
-          }
-
-          return (
-            <span
-              className="boolean-cell-wrapper"
-              data-for={`${c.selector}-${i}`}
-              data-tip={c.cellTooltip}
-            >
-              <i
-                className={classNames({
-                  [truthyClass]: cleanValue,
-                  [falsyClass]: !cleanValue
-                })}
-              ></i>
-              {c.cellTooltip && <Tooltip id={`${c.selector}-${i}`}>{c.cellTooltip}</Tooltip>}
-            </span>
-          );
-        };
-        return c;
-      case ColumnFormat.SPACEGROUP_SYMBOL:
-        c.format = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const spaceGroup = spaceGroups.find((d) => d['symbol'] === rowValue);
-          const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : rowValue;
-          return formattedSymbol;
-        };
-        return c;
-      case ColumnFormat.POINTGROUP:
-        c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          return formatPointGroup(rowValue);
-        };
-        return c;
-      case ColumnFormat.ARRAY:
-        c.cell = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          if (Array.isArray(rowValue)) {
-            return (
-              <ArrayChips
-                chips={rowValue}
-                chipTooltips={hasFormatOptions && row[c.formatOptions.arrayTooltipsKey]}
-                chipLinks={hasFormatOptions && row[c.formatOptions.arrayLinksKey]}
-                chipLinksTarget={hasFormatOptions && c.formatOptions.arrayLinksTarget}
-                chipType={hasFormatOptions && c.formatOptions.arrayChipType}
-                showDownloadIcon={hasFormatOptions && c.formatOptions.arrayLinksShowDownload}
-              />
-            );
-          } else {
-            return rowValue;
-          }
-        };
-        return c;
-      default:
-        c.format = (row: any) => {
-          const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const isNumber = !isNaN(rowValue);
-          const value = c.conversionFactor && isNumber ? rowValue * c.conversionFactor : rowValue;
-          if (value === 0) {
-            return 0;
-          }
-          return value && value !== '' ? value : emptyCellPlaceholder;
-        };
-        return c;
-    }
-  });
-};
-
-const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) => {
-  const initializedValues = {};
+export const initFilterGroups = (filterGroups: FilterGroup[]): FilterGroup[] => {
   const initializedGroups = filterGroups.map((g) => {
     g.filters = g.filters.map((f) => {
-      let queryParamValue: any = query.get(f.id);
-
-      /**
-       * Chem sys queries are represented in the formula query param
-       * but should render in the elements filter. These two checks
-       * make sure chem sys gets assigned to elements filter.
-       */
-      if (f.id === 'formula' && queryParamValue && queryParamValue.indexOf('-') > -1) {
-        queryParamValue = '';
-      }
-
-      if (f.id === 'elements' && query.get('formula') && query.get('formula')!.indexOf('-') > -1) {
-        queryParamValue = query.get('formula');
-        if (!f.hasOwnProperty('props')) f.props = {};
-        /** Make sure elements filter is initialized with the appropriate elements mode */
-        f.props.isChemSys = true;
-      }
-
       switch (f.type) {
-        case FilterType.SLIDER:
-          const minSuffix = f.minSuffix || defaultMinSuffix;
-          const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-          const queryParamMinString = query.get(f.id + minSuffix);
-          const queryParamMaxString = query.get(f.id + maxSuffix);
-          let queryParamMin = queryParamMinString ? parseFloat(queryParamMinString) : null;
-          let queryParamMax = queryParamMaxString ? parseFloat(queryParamMaxString) : null;
-          if (queryParamMin !== null || queryParamMax !== null) {
-            queryParamValue = [queryParamMin, queryParamMax];
-          } else {
-            queryParamValue = null;
-          }
-          initializedValues[f.id] = queryParamValue ? queryParamValue : f.props.domain;
-          return f;
-        case FilterType.MATERIALS_INPUT:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : '';
-          if (!f.hasOwnProperty('props')) f.props = {};
-          if (!f.props.hasOwnProperty('parsedValue')) {
-            f.props.parsedValue = [];
-          }
-          return f;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = { options: spaceGroupSymbolOptions() };
           return f;
         case FilterType.SELECT_SPACEGROUP_NUMBER:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = { options: spaceGroupNumberOptions() };
           return f;
         case FilterType.SELECT_CRYSTAL_SYSTEM:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = { options: crystalSystemOptions() };
           return f;
         case FilterType.SELECT_POINTGROUP:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           f.props = {
             options: pointGroupOptions(),
             formatOptionLabel: ({ value, label, customAbbreviation }) => {
@@ -342,303 +58,224 @@ const initFilterGroups = (filterGroups: FilterGroup[], query: URLSearchParams) =
             }
           };
           return f;
-        case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (queryParamValue === 'true') {
-            initializedValues[f.id] = true;
-          } else if (queryParamValue === 'false') {
-            initializedValues[f.id] = false;
-          } else {
-            initializedValues[f.id] = undefined;
-          }
-          return f;
-        case FilterType.SELECT:
-          if (queryParamValue) {
-            initializedValues[f.id] = queryParamValue;
-          } else if (f.props.defaultValue) {
-            initializedValues[f.id] = f.props.defaultValue;
-          } else if (f.props.value) {
-            initializedValues[f.id] = f.props.value;
-          } else {
-            initializedValues[f.id] = undefined;
-          }
-          return f;
-        case FilterType.TEXT_INPUT:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
-          return f;
-        case FilterType.CHECKBOX_LIST:
-          initializedValues[f.id] = query.get(f.id)?.split(',');
-          return f;
         default:
-          initializedValues[f.id] = queryParamValue ? queryParamValue : undefined;
           return f;
       }
     });
     return g;
   });
-  return { initializedGroups, initializedValues };
+  return initializedGroups;
 };
 
 /**
- * Method for initializing and updating the search state's active filters.
- * Returns a full state object
- * Optionally accepts a filterValues argument which represents a new hash map
- * of values for building the activeFilters list.
+ * Update the search state's active filters.
  * The activeFilters list is recomputed whenever a filter is modified in the UI.
  */
-export const getSearchState = (
-  currentState: SearchState,
-  filterValues = { ...currentState.filterValues }
-): SearchState => {
-  // const isDesktop = useMediaQuery({ minWidth: 1024 });
+export const getActiveFilters = (
+  filterGroups: FilterGroup[],
+  query: DecodedValueMap<QueryParamConfigMap>
+): ActiveFilter[] => {
   const activeFilters: ActiveFilter[] = [];
-  currentState.filterGroups.forEach((g) => {
+  filterGroups.forEach((g) => {
     g.filters.forEach((f) => {
-      const operatorSuffix = f.operatorSuffix || '';
+      const af = {
+        name: f.name,
+        params: f.params,
+        value: isNotEmpty(query[f.params[0]]) ? query[f.params[0]] : f.props?.defaultValue,
+        isSearchBarField: f.isSearchBarField
+      };
       switch (f.type) {
         case FilterType.SLIDER:
-          /**
-           * The lower bound will be null if initialized from a url that only has a max param.
-           * The upper bound will be null if initialized from a url that only has a min param.
-           */
-          const hasActiveMin =
-            filterValues[f.id][0] !== null && filterValues[f.id][0] > f.props.domain[0];
-          const hasActiveMax =
-            filterValues[f.id][1] !== null && filterValues[f.id][1] < f.props.domain[1];
+          const hasActiveMin = query[f.params[0]] > f.props.domain[0];
+          const hasActiveMax = query[f.params[1]] < f.props.domain[1];
 
           if (hasActiveMin || hasActiveMax) {
-            const minSuffix = f.minSuffix || defaultMinSuffix;
-            const maxSuffix = f.maxSuffix || defaultMaxSuffix;
-            const searchParams: SearchParam[] = [];
-            /**
-             * If the min/max value is equal to the domain min/max,
-             * then there won't be a param added for that bound.
-             * This effectively makes the bounds inclusive (e.g. "100 or less", "1000 or more").
-             */
-            if (hasActiveMin)
-              searchParams.push({
-                field: f.id + minSuffix,
-                value: filterValues[f.id][0]
-              });
-            if (hasActiveMax)
-              searchParams.push({
-                field: f.id + maxSuffix,
-                value: filterValues[f.id][1]
-              });
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
+              ...af,
+              value: [query[f.params[0]], query[f.params[1]]],
               defaultValue: f.props.domain,
-              conversionFactor: f.conversionFactor,
-              searchParams: searchParams
+              conversionFactor: f.conversionFactor
             });
           }
           break;
         case FilterType.MATERIALS_INPUT:
-          if (filterValues[f.id] !== '') {
-            let parsedValue = filterValues[f.id];
-            let filterDisplayName = f.name.toLowerCase();
+          if (isNotEmpty(af.value)) {
+            let parsedValue = af.value;
 
             if (
-              (f.props.inputType === MaterialsInputType.ELEMENTS &&
-                f.id === 'elements' &&
-                (f.props.isChemSys || filterValues[f.id].indexOf('-') > -1)) ||
-              (f.props.inputType === MaterialsInputType.FORMULA &&
-                filterValues[f.id].indexOf('-') > -1)
+              f.props.type === MaterialsInputType.CHEMICAL_SYSTEM ||
+              (f.props.type === MaterialsInputType.FORMULA && parsedValue.indexOf('-') > -1)
             ) {
-              /** Adjust filter display name when chemsys strings are used in the elements or formula fields */
-              filterDisplayName = 'include only elements';
               /** Remove trailing '-' from chemical system string */
-              parsedValue = filterValues[f.id].replace(/\-$/, '');
-            } else if (f.props.inputType === MaterialsInputType.ELEMENTS) {
-              /** Parse elements back into array so that they're in a normalized format for the query */
-              parsedValue = validateElements(filterValues[f.id]);
+              parsedValue = parsedValue.replace(/\-$/, '');
             }
 
             activeFilters.push({
-              id: f.id,
-              displayName: filterDisplayName,
-              value: parsedValue,
-              defaultValue: '',
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? parsedValue.toLowerCase() : parsedValue
-                }
-              ]
+              ...af,
+              value: parsedValue
             });
           }
           break;
         case FilterType.SELECT_SPACEGROUP_SYMBOL:
-          if (isNotEmpty(filterValues[f.id])) {
-            const spaceGroup = spaceGroups.find((d) => d['symbol'] === filterValues[f.id]);
-            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : filterValues[f.id];
+          if (isNotEmpty(af.value)) {
+            const spaceGroup = spaceGroups.find((d) => d['symbol'] === af.value);
+            const formattedSymbol = spaceGroup ? spaceGroup['symbol_unicode'] : af.value;
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: formattedSymbol,
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: filterValues[f.id]
-                }
-              ]
+              ...af,
+              value: formattedSymbol
             });
           }
           break;
         case FilterType.SELECT:
         case FilterType.THREE_STATE_BOOLEAN_SELECT:
-          if (isNotEmpty(filterValues[f.id])) {
-            const selectedOption = f.props.options.find((d) => d.value === filterValues[f.id]);
-            const displayValue = selectedOption ? selectedOption.label : filterValues[f.id];
+          if (isNotEmpty(af.value)) {
+            const selectedOption = f.props.options.find((d) => d.value === af.value);
+            const displayValue = selectedOption ? selectedOption.label : af.value;
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: displayValue,
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
-          }
-          break;
-        case FilterType.TEXT_INPUT:
-          if (isNotEmpty(filterValues[f.id])) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
+              ...af,
+              value: displayValue
             });
           }
           break;
         case FilterType.CHECKBOX_LIST:
-          if (isNotEmpty(filterValues[f.id])) {
-            const displayValue = filterValues[f.id].map((d) => {
+          if (isNotEmpty(af.value)) {
+            const displayValue = af.value.map((d) => {
               const option = f.props.options.find((o) => o.value === d);
               return option.label || d;
             });
 
             activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: displayValue,
-              defaultValue: [],
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
+              ...af,
+              value: displayValue
             });
           }
           break;
         default:
-          if (isNotEmpty(filterValues[f.id])) {
-            activeFilters.push({
-              id: f.id,
-              displayName: f.name ? f.name : f.id,
-              value: filterValues[f.id],
-              defaultValue: undefined,
-              searchParams: [
-                {
-                  field: f.id + operatorSuffix,
-                  value: f.makeLowerCase ? filterValues[f.id].toLowerCase() : filterValues[f.id]
-                }
-              ]
-            });
+          if (isNotEmpty(af.value)) {
+            activeFilters.push({ ...af });
           }
       }
     });
   });
-  return { ...currentState, filterValues, activeFilters };
+  return activeFilters;
 };
 
-export const initSearchState = (
-  defaultState: SearchState,
-  propsWithoutChildren: SearchUIProps,
-  query: URLSearchParams,
-  isDesktop = true
-): SearchState => {
-  /**
-   * Initial state is a combination of the defaultState values above
-   * and all the values provided in props (except props.children)
-   */
-  const initialState: SearchState = { ...defaultState, ...propsWithoutChildren };
-  initialState.columns = initColumns(
-    propsWithoutChildren.columns,
-    initialState.disableRichColumnHeaders
-  );
-  const { initializedGroups, initializedValues } = initFilterGroups(
-    propsWithoutChildren.filterGroups,
-    query
-  );
+/**
+ * Custom param type for array params that should show values
+ * in the URL as a comma-separated array (e.g. sort_fields=density,volume).
+ * test
+ */
+const CommaArrayParam: QueryParamConfig<
+  (string | null)[] | null | undefined,
+  (string | null)[] | null | undefined
+> = {
+  encode: (array) => encodeDelimitedArray(array, ','),
 
-  if (
-    isDesktop &&
-    (initializedValues['elements'] ||
-      initializedValues['formula'] ||
-      initializedValues['task_ids'] ||
-      initializedValues['material_ids'])
-  ) {
-    // initializedGroups[0].expanded = true;
-  }
+  decode: (arrayStr) => decodeDelimitedArray(arrayStr, ',')
+};
 
-  initialState.filterGroups = initializedGroups;
-  initialState.filterValues = initializedValues;
+/**
+ * Create the query param config object based on the filter definitions.
+ * This determines the keys in the query param object and assigns param types
+ * to each key to determine how the param is encoded/decoded in the URL.
+ * @param filterGroups filter definitions by nested group
+ * @param sortKey key to use for the sort param
+ * @param limitKey key to use for the result limit param
+ * @param skipKey key to use for the skip amount (which index should the range of results start from)
+ * @returns config that maps query params to param types
+ */
+export const initQueryParams = (
+  filterGroups: FilterGroup[],
+  sortKey: string,
+  limitKey: string,
+  skipKey: string
+): QueryParamConfigMap => {
+  const params: QueryParamConfigMap = {
+    [sortKey]: CommaArrayParam,
+    [limitKey]: NumberParam,
+    [skipKey]: NumberParam
+  };
 
-  const urlLimit = query.get('limit');
-  const urlSkip = query.get('skip');
-  const urlSortFields = query.get('sort_fields');
+  filterGroups.forEach((g) => {
+    g.filters.forEach((f) => {
+      switch (f.type) {
+        case FilterType.SLIDER:
+          params[f.params[0]] = NumberParam;
+          params[f.params[1]] = NumberParam;
+          break;
+        case FilterType.CHECKBOX_LIST:
+          params[f.params[0]] = CommaArrayParam;
+          break;
+        case FilterType.THREE_STATE_BOOLEAN_SELECT:
+          params[f.params[0]] = BooleanParam;
+          break;
+        default:
+          params[f.params[0]] = StringParam;
+      }
+    });
+  });
+  return params;
+};
 
-  if (urlLimit) initialState.resultsPerPage = parseInt(urlLimit);
-  if (urlSkip) initialState.page = parseInt(urlSkip) / initialState.resultsPerPage + 1;
-
-  /** Serialize sort params from API syntax to SearchUI props */
-  if (urlSortFields) {
-    const sortFields = urlSortFields.split(',');
-    const sortFieldSplitDesc = sortFields[0].split('-');
-    initialState.sortField =
-      sortFieldSplitDesc.length === 1 ? sortFieldSplitDesc[0] : sortFieldSplitDesc[1];
-    initialState.sortAscending = sortFieldSplitDesc.length === 1;
-    initialState.secondarySortField = sortFields[1] || undefined;
-    if (sortFields[1]) {
-      const secondaryFieldSplitDesc = sortFields[1].split('-');
-      const secondaryField =
-        secondaryFieldSplitDesc.length === 1
-          ? secondaryFieldSplitDesc[0]
-          : secondaryFieldSplitDesc[1];
-      initialState.secondarySortField =
-        secondaryField !== initialState.sortField ? secondaryField : undefined;
-      initialState.secondarySortAscending =
-        initialState.secondarySortField !== undefined && secondaryFieldSplitDesc.length === 1;
+/**
+ * Apply transformations to the query param values before sending them to the API.
+ * @param query object of query params and their values.
+ * @param filterGroups filter definitions nested by group.
+ * @param defaultQuery
+ * @returns object of query params with API-ready values.
+ */
+export const preprocessQueryParams = (
+  query: DecodedValueMap<QueryParamConfigMap>,
+  filterGroups: FilterGroup[],
+  defaultQuery: any
+) => {
+  const processedQuery = {};
+  for (const paramName in query) {
+    let filter: Filter | undefined;
+    filterGroups.forEach((g) => {
+      g.filters.forEach((f) => {
+        if (f.params[0] === paramName || f.params[1] === paramName) {
+          filter = f;
+        }
+      });
+    });
+    if (filter) {
+      let paramValue = isNotEmpty(query[paramName]) ? query[paramName] : filter.props?.defaultValue;
+      switch (filter.type) {
+        case FilterType.MATERIALS_INPUT:
+          if (typeof paramValue === 'string') {
+            paramValue = paramValue.replace(/\s/g, '');
+          }
+          processedQuery[paramName] = paramValue;
+          break;
+        case FilterType.SLIDER:
+          /**
+           * If the min or max param is equal to the lower/upper limit,
+           * that param will be excluded from the final query to the API.
+           * This effectively makes the counds inclusive (e.g volume 500 or more).
+           */
+          const isAtDomainLimit =
+            paramValue === filter.props.domain[0] || paramValue === filter.props.domain[1];
+          if (!isAtDomainLimit) {
+            processedQuery[paramName] = paramValue;
+          }
+          break;
+        default:
+          if (filter.makeLowerCase && typeof paramValue === 'string') {
+            paramValue = paramValue.toLowerCase();
+          }
+          processedQuery[paramName] = paramValue;
+      }
+    } else {
+      processedQuery[paramName] = query[paramName];
     }
   }
-
-  return getSearchState(initialState);
-};
-
-export const getDefaultFiltersAndValues = (state: SearchState) => {
-  const filterValues = state.filterValues;
-  let activeFilters = state.activeFilters;
-  activeFilters.forEach((a) => {
-    filterValues[a.id] = a.defaultValue;
-  });
-  activeFilters = [];
-  return {
-    filterValues,
-    activeFilters
-  };
+  for (const defaultParam in defaultQuery) {
+    if (query[defaultParam] === undefined) {
+      processedQuery[defaultParam] = defaultQuery[defaultParam];
+    }
+  }
+  return processedQuery;
 };
 
 export const convertMaterialsInputTypesMapToArray = (map: MaterialsInputTypesMap) => {

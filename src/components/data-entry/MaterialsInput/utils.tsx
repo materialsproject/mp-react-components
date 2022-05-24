@@ -1,6 +1,8 @@
+import { FindValueOperator } from 'rxjs/internal/operators/find';
+import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import { MaterialsInputType } from '../MaterialsInput';
 
-const VALID_ELEMENTS =
+export const VALID_ELEMENTS =
   'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar Kr K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Ar Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La-Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac-Lr Rf Db Sg Bh Hs Mt Ds Rg Cn La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr'.split(
     ' '
   );
@@ -224,14 +226,14 @@ export const getDelimiter = (input: string): RegExp => {
  * @param {string} elementStr String of element symbols to be validated
  * @returns Array of valid element symbols
  */
-export const validateElements = (elementStr: string): string[] | undefined => {
+export const validateElements = (elementStr: string, delimiter?: RegExp): string[] | undefined => {
   let cleanElementsStr = '';
-  const delimiter = getDelimiter(elementStr);
+  delimiter = delimiter || getDelimiter(elementStr);
   const delimiterString = delimiter.toString();
   if (delimiterString === new RegExp(/,/).toString()) {
     cleanElementsStr = elementStr.replace(/and|\s|-|[0-9]/gi, '');
   } else if (delimiterString === new RegExp(/-/).toString()) {
-    cleanElementsStr = elementStr.replace(/and|\s|,|[0-9]/gi, '');
+    cleanElementsStr = elementStr.replace(/and|\s|[0-9]/gi, '');
   } else if (delimiterString === new RegExp(/\s/).toString()) {
     cleanElementsStr = elementStr.replace(/and|,|-|[0-9]/gi, '');
   }
@@ -250,6 +252,20 @@ export const validateElements = (elementStr: string): string[] | undefined => {
   } else {
     return;
   }
+};
+
+export const validateElementsList = (elementStr: string): string[] | undefined => {
+  const delimiter = getDelimiter(elementStr);
+  const delimiterString = delimiter.toString();
+  if (delimiterString === new RegExp(/-/).toString()) {
+    return;
+  } else {
+    return validateElements(elementStr, delimiter);
+  }
+};
+
+export const validateChemicalSystem = (elementStr: string): string[] | undefined => {
+  return validateElements(elementStr, new RegExp(/-/));
 };
 
 /**
@@ -286,33 +302,85 @@ export const validateMPID = (value: string): string | null => {
   }
 };
 
+/**
+ * Validate the number of elements in an input's parsed value.
+ * If the input type is not an element-like type, the length will always be valid.
+ * @param parsedValue either a validated input string or a validated list of elements
+ * @param type the input type that the parsedValue came from
+ * @param maxElements maximum number of allowable elements
+ * @returns true or false
+ */
+export const validateInputLength = (
+  parsedValue: string | string[] | undefined,
+  type: MaterialsInputType | null,
+  maxElements?: number
+): boolean => {
+  switch (type) {
+    case MaterialsInputType.CHEMICAL_SYSTEM:
+    case MaterialsInputType.ELEMENTS:
+    case MaterialsInputType.FORMULA:
+      if (maxElements && parsedValue && parsedValue.length > maxElements) {
+        return false;
+      } else {
+        return true;
+      }
+    default:
+      return true;
+  }
+};
+
 export type MaterialsInputTypesMap = Partial<Record<MaterialsInputType, any>>;
 
 /**
- * Object to map MaterialsInputType values to validation functions
- * Object keys must be one of the values defined in the MaterialsInputType enum
+ * Object to map MaterialsInputType values to other values
+ * such as validation functions or periodic table selection modes.
+ * Object keys must be one of the values defined in the MaterialsInputType enum.
  */
 export const materialsInputTypes: MaterialsInputTypesMap = {
   mpid: {
     validate: validateMPID,
-    order: 1
+    order: 1,
+    dropdownValue: 'Material ID'
+  },
+  chemical_system: {
+    validate: validateChemicalSystem,
+    order: 2,
+    selectionMode: PeriodicTableSelectionMode.CHEMICAL_SYSTEM,
+    dropdownValue: 'Chemical System',
+    elementsOnlyDropdownValue: 'Only'
   },
   elements: {
-    validate: validateElements,
-    order: 2
+    validate: validateElementsList,
+    order: 3,
+    selectionMode: PeriodicTableSelectionMode.ELEMENTS,
+    dropdownValue: 'Elements',
+    elementsOnlyDropdownValue: 'At least'
   },
   formula: {
     validate: validateFormula,
-    order: 3
+    order: 4,
+    selectionMode: PeriodicTableSelectionMode.FORMULA,
+    dropdownValue: 'Formula'
   },
   smiles: {
     validate: validateSmiles,
-    order: 4
+    order: 5,
+    dropdownValue: 'SMILES'
   },
   text: {
     validate: () => true,
-    order: 5
+    order: 6,
+    dropdownValue: 'Text'
   }
+};
+
+export const getMaterialsInputTypeByMappedValue = (key: string, value: any) => {
+  for (const t in materialsInputTypes) {
+    if (materialsInputTypes[t][key] === value) {
+      return t as MaterialsInputType;
+    }
+  }
+  return;
 };
 
 /**
@@ -387,4 +455,28 @@ export const detectAndValidateInputType = (
     }
   }
   return [null, null];
+};
+
+/**
+ * Map the list of allowed input types to a list of allowed periodic table selection modes.
+ * This prevents periodic table modes dropdown from having items that are
+ * inconsistent with the allowed input types.
+ * The order that these items are appended determines the order they are rendered in the periodic table.
+ */
+export const getAllowedSelectionModes = (allowedInputTypes: MaterialsInputType[]) => {
+  const allowedModes: PeriodicTableSelectionMode[] = [];
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.CHEMICAL_SYSTEM) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.CHEMICAL_SYSTEM);
+  }
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.ELEMENTS) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.ELEMENTS);
+  }
+
+  if (allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1) {
+    allowedModes.push(PeriodicTableSelectionMode.FORMULA);
+  }
+
+  return allowedModes;
 };

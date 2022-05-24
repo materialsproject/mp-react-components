@@ -4,9 +4,8 @@
     "filters": [
       {
         "name": "QMOF ID",
-        "id": "identifier",
+        "params": ["identifier__exact"],
         "tooltip": "Find materials with a specific QMOF ID, e.g. qmof-a2d95c3",
-        "operatorSuffix": "__exact",
         "type": "TEXT_INPUT"
       }
     ]
@@ -17,10 +16,8 @@
     "filters": [
       {
         "name": "Number of Atoms",
-        "id": "data__natoms__value",
+        "params": ["data__natoms__value__gte", "data__natoms__value__lte"],
         "tooltip": "Number of atoms per simulation unit cell",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "props": {
           "domain": [0, 500],
@@ -29,12 +26,11 @@
       },
       {
         "name": "Formula",
-        "id": "data__reducedFormula",
+        "params": ["data__reducedFormula__exact"],
         "tooltip": "Enter an empirical (i.e. reduced) chemical formula with the elements in alphabetical order to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
-        "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "periodicTableMode": "none",
           "errorMessage": "Please enter a valid chemical formula (e.g. Zn4C24H12O13).",
           "helpItems": [
@@ -56,10 +52,8 @@
     "filters": [
       {
         "name": "Pore-limiting Diameter",
-        "id": "data__pld__value",
+        "params": ["data__pld__value__gte", "data__pld__value__lte"],
         "tooltip": "The smallest spherical diameter of void space that a guest species would need to traverse in order to diffuse through the material",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "\u212B",
         "props": {
@@ -75,10 +69,9 @@
     "filters": [
       {
         "name": "Crystal System",
-        "id": "data__spacegroupCrystal",
+        "params": ["data__spacegroupCrystal__exact"],
         "tooltip": "The crystal system for the lattice",
         "type": "SELECT_CRYSTAL_SYSTEM",
-        "operatorSuffix": "__exact",
         "makeLowerCase": true
       }
     ]

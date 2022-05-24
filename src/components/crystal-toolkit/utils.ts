@@ -1,9 +1,4 @@
-import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
-import { ExportType } from './scene/constants';
-import Scene from './scene/Scene';
 import * as THREE from 'three';
-import { WebGLRenderer } from 'three';
-import toDataUrl from 'svgtodatauri';
 
 const EXPORT_PIXEL_RATIO = 8;
 
@@ -104,17 +99,6 @@ export class ObjectRegistry {
       console.warn('Non existent object', uuid);
     }
     return this.objectRegistry[uuid];
-  }
-}
-
-export function mapArrayToBooleanObject(array: any, value: boolean = true) {
-  if (Array.isArray(array)) {
-    return array.reduce((acc, id) => {
-      acc[id] = value;
-      return acc;
-    }, {});
-  } else {
-    return array;
   }
 }
 

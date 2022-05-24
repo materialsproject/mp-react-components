@@ -24,6 +24,7 @@ storybook-static
 # Rollup artifacts
 rollup.build.*
 index.js
+index.js.map
 index.less
 index.css
 index.css.map

@@ -11,16 +11,17 @@ import * as d3 from 'd3';
 import { SortDropdown } from '../../SortDropdown';
 import { DropdownItem } from '../../SortDropdown/SortDropdown';
 import { SearchUIViewType } from '../types';
+import { ColumnsMenu } from '../../DataTable/ColumnsMenu';
 
 const componentHtmlId = uuidv4();
 
-const getLowerResultBound = (totalResults: number, resultsPerPage: number, page: number) => {
+const getLowerResultBound = (totalResults: number, resultsPerPage: number, skip: number) => {
   if (totalResults === 0) {
     return 0;
   } else if (totalResults < resultsPerPage) {
     return 1;
   } else {
-    return (page - 1) * resultsPerPage + 1;
+    return skip + 1;
   }
 };
 
@@ -41,51 +42,22 @@ const getUpperResultBound = (
  * for modifying the data in the results view.
  */
 export const SearchUIDataHeader: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const ref = useRef<HTMLDivElement>(null);
   const [titleHover, setTitleHover] = useState(false);
   const [columns, setColumns] = useState(state.columns.filter((c) => !c.hidden));
-  const [allCollumnsSelected, setAllCollumnsSelected] = useState(() => {
-    const anyNotSelected = columns.find((col) => col.omit);
-    return !anyNotSelected;
-  });
-  const lowerResultBound = getLowerResultBound(
-    state.totalResults,
-    state.resultsPerPage,
-    state.page
-  );
-  const upperResultBound = getUpperResultBound(
-    state.totalResults,
-    state.resultsPerPage,
-    lowerResultBound
-  );
-
-  const toggleColumn = (columnIndex: number) => {
-    const newColumns = [...columns];
-    const changedColumn = newColumns[columnIndex];
-    if (changedColumn) changedColumn.omit = !changedColumn.omit;
-    const anyNotSelected = newColumns.find((col) => col.omit);
-    setAllCollumnsSelected(!anyNotSelected);
-    actions.setColumns(newColumns);
-  };
-
-  const toggleAllColumns = () => {
-    const newAllColumnsSelected = !allCollumnsSelected;
-    const newColumns = columns.map((col) => {
-      col.omit = !newAllColumnsSelected;
-      return col;
-    });
-    setAllCollumnsSelected(newAllColumnsSelected);
-    actions.setColumns(newColumns);
-  };
+  const limit = query[state.limitKey] || state.defaultLimit;
+  const skip = query[state.skipKey] || state.defaultSkip;
+  const lowerResultBound = getLowerResultBound(state.totalResults!, limit, skip);
+  const upperResultBound = getUpperResultBound(state.totalResults!, limit, lowerResultBound);
 
   const handlePerRowsChange = (perPage: number) => {
     actions.setResultsPerPage(perPage);
   };
 
   const TableHeaderTitle = () => {
-    if (state.activeFilters.length === 0 && state.totalResults > 0 && !state.loading) {
+    if (state.activeFilters!.length === 0 && state.totalResults! > 0 && !state.loading) {
       return (
         <div data-testid="data-table-title">
           <a
@@ -109,8 +81,8 @@ export const SearchUIDataHeader: React.FC = () => {
         </div>
       );
     } else if (
-      state.activeFilters.length > 1 ||
-      (state.activeFilters.length === 1 && !state.loading)
+      state.activeFilters!.length > 1 ||
+      (state.activeFilters!.length === 1 && !state.loading)
     ) {
       return (
         <div data-testid="data-table-title">
@@ -150,72 +122,7 @@ export const SearchUIDataHeader: React.FC = () => {
 
   const columnsMenu =
     state.view === SearchUIViewType.TABLE ? (
-      <MenuWrapper
-        data-testid="columns-menu"
-        className="dropdown is-right is-active"
-        closeOnSelection={false}
-      >
-        <div className="dropdown-trigger">
-          <Button className="button">
-            <span>Columns</span>
-            <span className="icon">
-              <FaAngleDown />
-            </span>
-          </Button>
-        </div>
-        <Menu className="dropdown-menu">
-          <ul className="dropdown-content">
-            <MenuItem>
-              <li className="dropdown-item">
-                <label className="checkbox is-block">
-                  <input
-                    type="checkbox"
-                    role="checkbox"
-                    checked={allCollumnsSelected}
-                    aria-checked={allCollumnsSelected}
-                    /**
-                     * Use key-up event to allow toggling with the space bar
-                     * Must use key-up instead of key-down to prevent double-firing in Firefox
-                     */
-                    onKeyUp={(e) => {
-                      e.preventDefault();
-                      if (e.keyCode === 32) toggleAllColumns();
-                    }}
-                    onChange={(e) => toggleAllColumns()}
-                  />
-                  <span>
-                    <strong>Select all</strong>
-                  </span>
-                </label>
-              </li>
-            </MenuItem>
-            {columns.map((col, i) => (
-              <MenuItem key={i}>
-                <li className="dropdown-item">
-                  <label className="checkbox is-block">
-                    <input
-                      type="checkbox"
-                      role="checkbox"
-                      checked={!col.omit}
-                      aria-checked={!col.omit}
-                      /**
-                       * Use key-up event to allow toggling with the space bar
-                       * Must use key-up instead of key-down to prevent double-firing in Firefox
-                       */
-                      onKeyUp={(e) => {
-                        e.preventDefault();
-                        if (e.keyCode === 32) toggleColumn(i);
-                      }}
-                      onChange={(e) => toggleColumn(i)}
-                    />
-                    <span>{col.title}</span>
-                  </label>
-                </li>
-              </MenuItem>
-            ))}
-          </ul>
-        </Menu>
-      </MenuWrapper>
+      <ColumnsMenu columns={columns} setColumns={actions.setColumns} />
     ) : null;
 
   const resultsPerPageOptions = [10, 15, 30, 50, 75];
@@ -227,7 +134,7 @@ export const SearchUIDataHeader: React.FC = () => {
     >
       <div className="dropdown-trigger">
         <Button className="button">
-          <span>Results per page: {state.resultsPerPage}</span>
+          <span>Results per page: {query[state.limitKey]}</span>
           <span className="icon">
             <FaAngleDown />
           </span>
@@ -238,7 +145,9 @@ export const SearchUIDataHeader: React.FC = () => {
           {resultsPerPageOptions.map((d, i) => (
             <MenuItem key={i} value={d}>
               <li
-                className={classNames('dropdown-item', { 'is-active': d === state.resultsPerPage })}
+                className={classNames('dropdown-item', {
+                  'is-active': d === query[state.limitKey]
+                })}
               >
                 {d}
               </li>
@@ -251,15 +160,17 @@ export const SearchUIDataHeader: React.FC = () => {
 
   const sortMenu = state.hasSortMenu ? (
     <SortDropdown
-      sortValues={state.results}
+      sortValues={state.results || []}
       sortOptions={state.columns
         .filter((c) => !c.hidden)
         .map((c) => {
           return { label: c.nameString, value: c.selector } as DropdownItem;
         })}
-      sortField={state.sortField}
+      sortField={state.sortFields && state.sortFields[0] ? state.sortFields[0] : undefined}
       setSortField={actions.setSortField}
-      sortAscending={state.sortAscending}
+      sortAscending={
+        state.sortFields && state.sortFields[0] ? state.sortFields[0].indexOf('-') !== 0 : undefined
+      }
       setSortAscending={actions.setSortAscending}
       sortFn={actions.setSort}
     />
@@ -315,10 +226,10 @@ export const SearchUIDataHeader: React.FC = () => {
           {/* {resultsPerPageMenu} */}
         </div>
       </div>
-      {state.activeFilters.length > 0 && (
+      {state.activeFilters!.length > 0 && (
         <ActiveFilterButtons
-          filters={state.activeFilters}
-          onClick={(v, id) => actions.setFilterValue(v, id)}
+          filters={state.activeFilters!}
+          onClick={(params) => actions.removeFilters(params)}
         />
       )}
     </div>

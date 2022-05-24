@@ -1,5 +1,5 @@
 import React from 'react';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 import { TABLE_DICO_V2 } from '../periodic-table/periodic-table-data/table-v2';
 import * as d3 from 'd3';
 import { spaceGroups } from '../../constants/spaceGroups';
@@ -7,8 +7,8 @@ import { pointGroups } from '../../constants/pointGroups';
 
 export enum DownloadType {
   JSON = 'json',
-  CSV = 'csv',
-  EXCEL = 'xlsx'
+  CSV = 'csv'
+  // EXCEL = 'xlsx'
 }
 
 type DownloadTypeObject = Partial<Record<DownloadType, any>>;
@@ -64,24 +64,43 @@ export const downloadJSON = (data: any, filename?: string) => {
   return false;
 };
 
-export const downloadExcel = (array: any[], filename?: string) => {
-  // export json to Worksheet of Excel only array possible
-  const wks = XLSX.utils.json_to_sheet(array);
-  // A workbook is the name given to an Excel file
-  const wb = XLSX.utils.book_new(); // make Workbook of Excel
-  // add Worksheet to Workbook
-  // Workbook contains one or more worksheets
-  const name = filename ? filename : 'export';
-  XLSX.utils.book_append_sheet(wb, wks, name); // sheetAName is name of Worksheet
-  // export Excel file
-  XLSX.writeFile(wb, name + '.xlsx'); // name of the file is 'book.xlsx'
-  return true;
+export const downloadBlob = (blob: Blob, filename?: string, rel?: string) => {
+  const link = document.createElement('a');
+  link.style.display = 'none';
+  document.body.appendChild(link); // from Three.js example: Firefox workaround, see #6594
+  link.href = URL.createObjectURL(blob);
+  if (filename) {
+    link.download = filename;
+  }
+  if (rel) {
+    link.rel = rel;
+  }
+  link.click();
+  // link.remove(); // from Three.js example, omitted due to Firefox bug
 };
+
+/**
+ * Commenting this feature out for now so that we can removed the xlsx dependency.
+ * We can restore if we decide to implement client-side Excel exports.
+ */
+// export const downloadExcel = (array: any[], filename?: string) => {
+//   // export json to Worksheet of Excel only array possible
+//   const wks = XLSX.utils.json_to_sheet(array);
+//   // A workbook is the name given to an Excel file
+//   const wb = XLSX.utils.book_new(); // make Workbook of Excel
+//   // add Worksheet to Workbook
+//   // Workbook contains one or more worksheets
+//   const name = filename ? filename : 'export';
+//   XLSX.utils.book_append_sheet(wb, wks, name); // sheetAName is name of Worksheet
+//   // export Excel file
+//   XLSX.writeFile(wb, name + '.xlsx'); // name of the file is 'book.xlsx'
+//   return true;
+// };
 
 export const downloadAs: DownloadTypeObject = {
   json: downloadJSON,
-  csv: downloadCSV,
-  xlsx: downloadExcel
+  csv: downloadCSV
+  // xlsx: downloadExcel
 };
 
 /**
@@ -334,4 +353,65 @@ export const sortCrossref = (field, asc?) => {
     }
     return result * sortDirection;
   };
+};
+
+export function mapArrayToBooleanObject(array: any, value: boolean = true) {
+  if (Array.isArray(array)) {
+    return array.reduce((acc, id) => {
+      acc[id] = value;
+      return acc;
+    }, {});
+  } else {
+    return array;
+  }
+}
+
+export const validateValueInRange = (value: number, min: number, max: number): number => {
+  if (value > max) {
+    return max;
+  } else if (value < min) {
+    return min;
+  } else {
+    return value;
+  }
+};
+
+export const convertToNumber = (value: number | string): number => {
+  if (typeof value === 'string') {
+    return parseFloat(value);
+  } else {
+    return value;
+  }
+};
+
+export const initSliderScale = (domain: number[], isLogScale?: boolean) => {
+  if (isLogScale) {
+    return d3.scaleLog().domain([Math.pow(10, domain[0]), Math.pow(10, domain[1])]);
+  } else {
+    return d3.scaleLinear().domain(domain).nice();
+  }
+};
+
+export const initSliderTicks = (ticks: number | null, domain: number[], scale?: any) => {
+  if (ticks === 2) {
+    return domain;
+  } else if (ticks !== null) {
+    return scale.ticks(ticks);
+  } else {
+    return;
+  }
+};
+
+/**
+ * Convert value to 10^value and handle the amount of decimals to fix the number to.
+ * For exponents 0 or more, only show whole numbers.
+ * For exponents less than 0, the exponent value will determine the number of decimals
+ * (e.g. -1 -> 1 decimal place, -1.3 -> 2 decimal places).
+ */
+export const pow10Fixed = (value: number): string => {
+  if (value < 0) {
+    return Math.pow(10, value).toFixed(Math.ceil(Math.abs(value)));
+  } else {
+    return Math.pow(10, value).toFixed();
+  }
 };

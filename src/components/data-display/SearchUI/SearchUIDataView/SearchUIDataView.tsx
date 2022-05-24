@@ -4,12 +4,12 @@ import { searchUIViewsMap } from '../types';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 /**
- * Component for rendering SearchUI data in a certain view
+ * Component for rendering SearchUI data in a certain view dynamically
  * based on the current view state, error state, and number
- * of results.
+ * of results. The view is determined by the `SearchUIContainer`'s `view` prop.
  */
 export const SearchUIDataView: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
 
   const getDataView = () => {
     if (state.error) {

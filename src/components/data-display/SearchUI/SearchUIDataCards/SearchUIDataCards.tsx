@@ -10,7 +10,7 @@ import { DataCard } from '../../DataCard';
  * of cards where each shows an image and a few select data properties.
  */
 export const SearchUIDataCards: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const handlePageChange = (page: number) => {
     actions.setPage(page);
@@ -18,9 +18,9 @@ export const SearchUIDataCards: React.FC = () => {
 
   const CustomPaginator = () => (
     <Paginator
-      rowCount={state.totalResults}
-      rowsPerPage={state.resultsPerPage}
-      currentPage={state.page}
+      rowCount={state.totalResults!}
+      rowsPerPage={query[state.limitKey]}
+      currentPage={query[state.skipKey] / query[state.limitKey] + 1}
       onChangePage={handlePageChange}
     />
   );

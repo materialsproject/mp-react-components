@@ -5,34 +5,34 @@
     "filters": [
       {
         "name": "MPContribs ID",
-        "id": "id",
+        "params": ["id"],
         "type": "TEXT_INPUT"
       },
       {
         "name": "Material ID",
-        "id": "identifier",
+        "params": ["identifier"],
         "tooltip": "Find materials with a specific Material ID, e.g. \"mp-10152\"",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "mpid",
+          "type": "mpid",
           "errorMessage": "Please enter a valid material ID (e.g. mp-394).",
           "periodicTableMode": null
         }
       },
       {
         "name": "Formula",
-        "id": "formula",
+        "params": ["formula"],
         "tooltip": "Enter a chemical formula to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "periodicTableMode": "focus",
           "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
         }
       },
       {
         "name": "Project",
-        "id": "project",
+        "params": ["project"],
         "type": "TEXT_INPUT"
       }
     ]

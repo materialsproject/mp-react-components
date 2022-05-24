@@ -4,27 +4,22 @@
     "filters": [
       {
         "name": "QMOF ID",
-        "id": "identifier",
+        "params": ["identifier__exact"],
         "tooltip": "Find materials with a specific QMOF ID, e.g. qmof-a2d95c3",
-        "operatorSuffix": "__exact",
         "type": "TEXT_INPUT",
         "makeLowerCase": true
       },
       {
         "name": "CSD Refcode",
-        "id": "data__csdRefcode",
+        "params": ["data__csdRefcode__contains"],
         "tooltip": "Find materials with a specific Cambridge Structural Database Refcode (case-sensitive)",
-        "operatorSuffix": "__contains",
-        "type": "TEXT_INPUT",
-        "makeLowerCase": true
+        "type": "TEXT_INPUT"
       },
       {
         "name": "MOFkey",
-        "id": "data__mofkey",
+        "params": ["data__mofkey__exact"],
         "tooltip": "Find materials with a specific MOFkey generated using the MOFid tool",
-        "operatorSuffix": "__exact",
-        "type": "TEXT_INPUT",
-        "makeLowerCase": true
+        "type": "TEXT_INPUT"
       }
     ]
   },
@@ -34,10 +29,8 @@
     "filters": [
       {
         "name": "Number of Atoms",
-        "id": "data__natoms__value",
+        "params": ["data__natoms__value__gte", "data__natoms__value__lte"],
         "tooltip": "Number of atoms per simulation unit cell",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "props": {
           "domain": [0, 500],
@@ -46,12 +39,11 @@
       },
       {
         "name": "Include Elements",
-        "id": "data__chemsys",
+        "params": ["data__chemsys__exact"],
         "tooltip": "List of chemical elements in the structure, delineated by '-' and listed in alphabetical order.",
-        "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Include Elements Examples"
@@ -65,12 +57,11 @@
       },
       {
         "name": "Formula",
-        "id": "data__reducedFormula",
+        "params": ["data__reducedFormula__exact"],
         "tooltip": "Enter an empirical (i.e. reduced) chemical formula with the elements in alphabetical order to find materials that have this exact formula. Use the \"*\" symbol to specify a wildcard element.",
-        "operatorSuffix": "__exact",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
+          "type": "formula",
           "periodicTableMode": "none",
           "errorMessage": "Please enter a valid chemical formula (e.g. Zn4C24H12O13).",
           "helpItems": [
@@ -92,12 +83,11 @@
     "filters": [
       {
         "name": "Inorganic Node",
-        "id": "data__smilesNodes",
+        "params": ["data__smilesNodes__contains"],
         "tooltip": "SMILES string of the inorganic node(s) determined from MOFid. Multiple nodes should be separated by commas in alphabetical order. Supports partial string matches. Note that not all materials have a computable MOFid.",
-        "operatorSuffix": "__contains",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Node SMILES Examples"
@@ -111,12 +101,11 @@
       },
       {
         "name": "Organic Linker",
-        "id": "data__smilesLinkers",
+        "params": ["data__smilesLinkers__contains"],
         "tooltip": "SMILES string of the organic linker(s) determined from MOFid. Multiple linkers should be separated by commas in alphabetical order. Supports partial string matches. Note that not all materials have a computable MOFid.",
-        "operatorSuffix": "__contains",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "text",
+          "type": "text",
           "helpItems": [
             {
               "label": "Linker SMILES Examples"
@@ -134,10 +123,21 @@
       },
       {
         "name": "Topology",
-        "id": "data__topology",
-        "tooltip": "Reticular Chemistry Structure Resource (RCSR) Topology code detected from MOFid. Note that not all materials have a computable MOFid.",
-        "operatorSuffix": "__exact",
-        "type": "TEXT_INPUT"
+        "params": ["data__topology__exact"],
+        "tooltip": "Reticular Chemistry Structure Resource (RCSR) Topology code detected from MOFid. See http://rcsr.anu.edu.au for all possible topologies. Note that not all materials have a computable MOFid.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "text",
+          "helpItems": [
+            {
+              "label": "Topology examples"
+            },
+            {
+              "label": null,
+              "examples": ["pcu", "tbo", "sod"]
+            }
+          ]
+        }
       }
     ]
   },
@@ -147,10 +147,9 @@
     "filters": [
       {
         "name": "Structure Database",
-        "id": "data__source",
+        "params": ["data__source__exact"],
         "tooltip": "The source database for the material. Refer to the documentation for full details.",
         "type": "SELECT",
-        "operatorSuffix": "__exact",
         "props": {
           "options": [
             {
@@ -194,16 +193,14 @@
       },
       {
         "name": "Reference DOI",
-        "id": "data__doi",
+        "params": ["data__doi__contains"],
         "tooltip": "The DOI (e.g. 10.1021/jp103212z) for the source reference of the material. Supports partial matches to allow for journal-based queries.",
-        "operatorSuffix": "__contains",
         "type": "TEXT_INPUT"
       },
       {
         "name": "From Experimental Database",
-        "id": "data__synthesized",
+        "params": ["data__synthesized__exact"],
         "tooltip": "Materials that were taken from the experimental crystal structure databases are considered to be synthesized. While other materials were taken from so-called hypothetical databases, note that this does not necessarily exclude the possibility that they too can be experimentally synthesized.",
-        "operatorSuffix": "__exact",
         "type": "THREE_STATE_BOOLEAN_SELECT",
         "props": {
           "options": [
@@ -226,10 +223,8 @@
     "filters": [
       {
         "name": "Pore-limiting Diameter",
-        "id": "data__pld__value",
+        "params": ["data__pld__value__gte", "data__pld__value__lte"],
         "tooltip": "The smallest spherical diameter of void space that a guest species would need to traverse in order to diffuse through the material",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "\u212B",
         "props": {
@@ -239,10 +234,8 @@
       },
       {
         "name": "Largest Cavity Diameter",
-        "id": "data__lcd__value",
+        "params": ["data__lcd__value__gte", "data__lcd__value__lte"],
         "tooltip": "The largest spherical diameter that can fit within the void space of the material",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "\u212B",
         "props": {
@@ -252,10 +245,8 @@
       },
       {
         "name": "Density",
-        "id": "data__density__value",
+        "params": ["data__density__value__gte", "data__density__value__lte"],
         "tooltip": "Mass density",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "g/cm\u00b3",
         "props": {
@@ -265,10 +256,8 @@
       },
       {
         "name": "Volume",
-        "id": "data__volume__value",
+        "params": ["data__volume__value__gte", "data__volume__value__lte"],
         "tooltip": "Volume of the simulation unit cell",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "\u212B\u00b3/cell",
         "props": {
@@ -284,24 +273,21 @@
     "filters": [
       {
         "name": "Space Group Symbol",
-        "id": "data__spacegroup",
+        "params": ["data__spacegroup__exact"],
         "tooltip": "The space group symbol for the lattice",
-        "type": "SELECT_SPACEGROUP_SYMBOL",
-        "operatorSuffix": "__exact"
+        "type": "SELECT_SPACEGROUP_SYMBOL"
       },
       {
         "name": "Space Group Number",
-        "id": "data__spacegroupNumber",
+        "params": ["data__spacegroupNumber__exact"],
         "tooltip": "The space group number for the lattice",
-        "type": "SELECT_SPACEGROUP_NUMBER",
-        "operatorSuffix": "__exact"
+        "type": "SELECT_SPACEGROUP_NUMBER"
       },
       {
         "name": "Crystal System",
-        "id": "data__spacegroupCrystal",
+        "params": ["data__spacegroupCrystal__exact"],
         "tooltip": "The crystal system for the lattice",
         "type": "SELECT_CRYSTAL_SYSTEM",
-        "operatorSuffix": "__exact",
         "makeLowerCase": true
       }
     ]
@@ -312,10 +298,8 @@
     "filters": [
       {
         "name": "Band Gap - PBE",
-        "id": "data__EgPBE__value",
+        "params": ["data__EgPBE__value__gte", "data__EgPBE__value__lte"],
         "tooltip": "Band gap calculated with the PBE-D3(BJ) GGA functional. Note that this level of theory tends to underpredict band gaps.",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "eV",
         "props": {
@@ -325,10 +309,8 @@
       },
       {
         "name": "Band Gap - HLE17",
-        "id": "data__EgHLE17__value",
+        "params": ["data__EgHLE17__value__gte", "data__EgHLE17__value__lte"],
         "tooltip": "Band gap calculated with the PBE-D3(BJ) GGA functional. Note that this level of theory tends to underpredict band gaps.",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "eV",
         "props": {
@@ -338,10 +320,8 @@
       },
       {
         "name": "Band Gap - HSE06*",
-        "id": "data__EgHSE06star__value",
+        "params": ["data__EgHSE06star__value__gte", "data__EgHSE06star__value__lte"],
         "tooltip": "Band gap calculated with the HSE06 screened hybrid functional and 10% Hartree-Fock exchange (using the PBE-D3(BJ) structure). It tends to be more accurate than PBE and HLE17. It will generally predict lower band gaps than HSE06, which can be ideal for some materials.",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "eV",
         "props": {
@@ -351,10 +331,8 @@
       },
       {
         "name": "Band Gap - HSE06",
-        "id": "data__EgHSE06__value",
+        "params": ["data__EgHSE06__value__gte", "data__EgHSE06__value__lte"],
         "tooltip": "Band gap calculated with the HSE06 screened hybrid functional and 25% Hartree-Fock exchange (using the PBE-D3(BJ) structure). It tends to be more accurate than PBE and HLE17. It will generally predict higher band gaps than HSE06*.",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "units": "eV",
         "props": {
@@ -370,10 +348,8 @@
     "filters": [
       {
         "name": "Max Partial Charge",
-        "id": "data__maxPBEChargeDDEC__value",
+        "params": ["data__maxPBEChargeDDEC__value__gte", "data__maxPBEChargeDDEC__value__lte"],
         "tooltip": "Maximum DDEC6 partial atomic charge at the PBE-D3(BJ) level of theory",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
         "type": "SLIDER",
         "props": {
           "domain": [0, 2.5],
@@ -388,9 +364,7 @@
     "filters": [
       {
         "name": "Total Magnetization",
-        "id": "data__netPBEMagmom__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "params": ["data__netPBEMagmom__value__gte", "data__netPBEMagmom__value__lte"],
         "tooltip": "Total number of unpaired electrons per unit cell calculated at the PBE-D3(BJ) level of theory",
         "type": "SLIDER",
         "props": {
@@ -400,9 +374,7 @@
       },
       {
         "name": "Max Magnetic Moment",
-        "id": "data__maxPBEMagmom__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "params": ["data__maxPBEMagmom__value__gte", "data__maxPBEMagmom__value__lte"],
         "tooltip": "Maximum (absolute) atomic magnetic moment at the PBE-D3(BJ) level of theory",
         "type": "SLIDER",
         "units": "\u03BCB",
@@ -413,9 +385,7 @@
       },
       {
         "name": "Max Atomic Spin Moment",
-        "id": "data__maxPBESpinDDEC__value",
-        "minSuffix": "__gte",
-        "maxSuffix": "__lte",
+        "params": ["data__maxPBESpinDDEC__value__gte", "data__maxPBESpinDDEC__value__lte"],
         "tooltip": "Maximum (absolute) atomic spin moment calculated via the DDEC6 method at the PBE-D3(BJ) level of theory",
         "type": "SLIDER",
         "props": {

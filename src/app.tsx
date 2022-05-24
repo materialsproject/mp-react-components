@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles.less';
-import './assets/fonts.css';
+//import './assets/fonts.css';
 import '../node_modules/bulma/css/bulma.min.css';
 import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { MaterialsExplorer } from './pages/MaterialsExplorer';
@@ -26,6 +26,7 @@ import { PhononVisualization } from './pages/PhononVisualization';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
+import { MatscholarMaterialsExplorer } from './pages/MatscholarMaterialsExplorer/MatscholarMaterialsExplorer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -33,6 +34,9 @@ const mountNode = document.getElementById(mountNodeSelector);
 ReactDOM.render(
   <>
     <Router>
+      <Link to="/materials">Materials</Link>
+      <Link to="/molecules">Molecules</Link>
+      <Link to="/matscholar">Matscholar Alpha</Link>
       <Navbar
         brandItem={{
           label: 'MP React',
@@ -68,20 +72,20 @@ ReactDOM.render(
             href: '/xas'
           },
           {
-            icon: 'icon-fontastic-synthesis',
-            href: '/catalysts'
-          },
-          {
             label: 'Phonon Visualization',
             href: '/phonon'
           },
           {
-            icon: 'icon-fontastic-synthesis',
+            label: 'More',
             isRight: true,
             items: [
               {
                 label: 'More',
                 isMenuLabel: true
+              },
+              {
+                label: 'Phase Diagram',
+                href: '/phasediagram'
               },
               {
                 label: 'Publications',
@@ -103,7 +107,7 @@ ReactDOM.render(
           }
         ]}
       />
-      <section className="p-3">
+      <section>
         <Switch>
           <Route path="/materials">
             <MaterialsExplorer />
@@ -137,6 +141,9 @@ ReactDOM.render(
           </Route>
           <Route path="/sandbox">
             <Sandbox />
+          </Route>
+          <Route path="/matscholar">
+            <MatscholarMaterialsExplorer />
           </Route>
           <Route path="/phonon">
             <PhononVisualization />

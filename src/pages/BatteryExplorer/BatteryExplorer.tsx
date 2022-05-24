@@ -1,9 +1,9 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { Column, FilterGroup } from '../../components/data-display/SearchUI/types';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
+import { SearchUIContainer, SearchUIGrid, SearchUISearchBar } from '../..';
 
 /**
  * Component for testing the Batteries Explorer view
@@ -14,7 +14,7 @@ export const BatteryExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title is-1">Battery Explorer</h1>
-      <SearchUI
+      <SearchUIContainer
         resultLabel="battery"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -29,11 +29,18 @@ export const BatteryExplorer: React.FC = () => {
             : undefined
         }
         apiKey={process.env.REACT_APP_API_KEY}
-        hasSearchBar={true}
-        searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
-        sortField="energy_above_hull"
-        sortAscending={true}
-      />
+        sortFields={['energy_above_hull']}
+      >
+        <SearchUISearchBar
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+          allowedInputTypesMap={{
+            chemical_system: { field: 'chemsys' },
+            elements: { field: 'elements' },
+            formula: { field: 'formula' }
+          }}
+        />
+        <SearchUIGrid />
+      </SearchUIContainer>
     </>
   );
 };

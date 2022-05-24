@@ -11,6 +11,7 @@ import { CameraState } from '../../components/crystal-toolkit/CameraContextProvi
 import * as THREE from 'three';
 import { Camera } from 'three';
 import { useRef } from 'react';
+import { Enlargeable } from '../../components/data-display/Enlargeable';
 
 /**
  * Component for testing Scene
@@ -95,7 +96,9 @@ export const CrystalStructureViewer: React.FC = () => {
     imageRequest: undefined,
     imageDataTimestamp: undefined,
     currentCameraState: undefined,
-    customCameraState: cameraState2
+    customCameraState: cameraState2,
+    fileType: '',
+    fileTimestamp: ''
   });
 
   const [stateTwo, setStateTwo] = useState<any>({
@@ -160,12 +163,10 @@ export const CrystalStructureViewer: React.FC = () => {
       <CameraContextProvider>
         <>
           <div>
-            <div
-              className="box"
-              ref={structureContainer}
-              style={{ width: structureContainerWidth }}
-            >
+            <div ref={structureContainer} style={{ width: structureContainerWidth }}>
               <CrystalToolkitScene
+                className="box"
+                setProps={setState}
                 settings={{
                   renderer: Renderer.WEBGL,
                   extractAxis: false,
@@ -175,13 +176,21 @@ export const CrystalStructureViewer: React.FC = () => {
                 sceneSize="100%"
                 debug={false}
                 toggleVisibility={{}}
-                imageRequest={state.imageRequest}
                 imageData={state.imageData}
                 imageDataTimestamp={state.imageDataTimestamp}
-                currentCameraState={state.currentCameraState}
-                customCameraState={state.customCameraState}
-                setProps={setState}
-              />
+                // currentCameraState={state.currentCameraState}
+                // customCameraState={state.customCameraState}
+                fileOptions={['File 1', 'File 2', 'File 3']}
+                fileType={state.fileType}
+                fileTimestamp={state.fileTimestamp}
+                showPositionButton={true}
+                // showExpandButton={false}
+                // showImageButton={false}
+                showExportButton={false}
+              >
+                {null}
+                <p>This could be a legend</p>
+              </CrystalToolkitScene>
             </div>
           </div>
           {/* <CrystalToolkitScene
@@ -196,6 +205,9 @@ export const CrystalStructureViewer: React.FC = () => {
           /> */}
         </>
       </CameraContextProvider>
+      <p>{state.fileType}</p>
+      <p>{state.fileTimestamp}</p>
+      <p>{state.imageDataTimestamp}</p>
       <p>Parent Current Camera State:</p>
       <p>{JSON.stringify(state.currentCameraState)}</p>
       <Download id="image-download" data={dataInput} />

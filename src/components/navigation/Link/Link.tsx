@@ -1,26 +1,119 @@
-import React from 'react';
-import { linkOnClick } from '../../../utils/navigation';
+import React, { ReactNode } from 'react';
 
-interface Props {
-  className?: string;
-  href?: string;
-  onClick?: (e) => void;
+/*
+ * event polyfill for IE
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+ */
+function CustomEvent(event: string, params?) {
+  // eslint-disable-next-line no-param-reassign
+  params = params || {
+    bubbles: false,
+    cancelable: false,
+    // eslint-disable-next-line no-undefined
+    detail: undefined
+  };
+  const evt = document.createEvent('CustomEvent');
+  evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+  return evt;
+}
+CustomEvent.prototype = window.Event.prototype;
+
+export interface LinkProps {
+  /**
+   * The children of this component
+   */
+  children: ReactNode;
+  /**
+   * The URL of a linked resource.
+   */
+  href: string;
+  /**
+   * Specifies where to open the link reference.
+   */
   target?: string;
+  /**
+   * Controls whether or not the page will refresh when the link is clicked
+   */
+  refresh?: boolean;
+  /**
+   * Adds the title attribute to your link, which can contain supplementary
+   * information.
+   */
+  title?: string;
+  /**
+   * Often used with CSS to style elements with common properties.
+   */
+  className?: string;
+  /**
+   * Defines CSS styles which will override styles previously set.
+   */
+  style?: object;
+  /**
+   * The ID of this component, used to identify dash components
+   * in callbacks. The ID needs to be unique across all of the
+   * components in an app.
+   */
+  id?: string;
+  /**
+   * Object that holds the loading state object coming from dash-renderer
+   */
+  loading_state?: any;
+  /**
+   * If true, the current query parameters will not be removed from the url
+   * when following the link.
+   */
+  preserveQuery?: boolean;
 }
 
-export const Link: React.FC<Props> = (props) => {
-  const isExternal = props.href?.indexOf('http://') == 0 || props.href?.indexOf('https://') == 0;
+/**
+ * Link component adapted from dash-core-components that allows you to create a clickable link within a multi-page dash app.
+ * This creates a dash-compatible link, but the link will not be compatible with react-router. Use this component when you need to
+ * have a dash link embedded inside a react component or you need to use the `preserveQuery` option which does not exist
+ * on the original `dcc.Link` component.
+ *
+ * See: https://github.com/plotly/dash/blob/dev/components/dash-core-components/src/components/Link.react.js
+ */
+export const Link: React.FC<LinkProps> = (props) => {
+  const hrefWithQuery = props.preserveQuery ? props.href + window.location.search : props.href;
+
+  const updateLocation = (e, href) => {
+    const hasModifiers = e.metaKey || e.shiftKey || e.altKey || e.ctrlKey;
+
+    if (hasModifiers) {
+      return;
+    }
+    if (props.target !== '_self' && props.target !== undefined && props.target !== null) {
+      return;
+    }
+    // prevent anchor from updating location
+    e.preventDefault();
+    if (props.refresh) {
+      window.location = href;
+    } else {
+      window.history.pushState({}, '', href);
+      window.dispatchEvent(CustomEvent('_dashprivate_pushstate'));
+    }
+    // scroll back to top
+    window.scrollTo(0, 0);
+  };
+
+  /*
+   * ideally, we would use cloneElement however
+   * that doesn't work with dash's recursive
+   * renderTree implementation for some reason
+   */
   return (
     <a
+      data-dash-is-loading={(props.loading_state && props.loading_state.is_loading) || undefined}
+      id={props.id}
       className={props.className}
-      href={props.href}
+      style={props.style}
+      href={hrefWithQuery}
+      onClick={(e) => updateLocation(e, hrefWithQuery)}
+      title={props.title}
       target={props.target}
-      onClick={(e) => {
-        if (props.onClick) props.onClick(e);
-        if (!isExternal) linkOnClick(e, props.href);
-      }}
     >
-      {props.children}
+      {props.children === undefined || props.children === null ? hrefWithQuery : props.children}
     </a>
   );
 };

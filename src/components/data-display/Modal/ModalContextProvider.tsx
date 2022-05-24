@@ -26,6 +26,12 @@ export interface ModalContextProviderProps {
    * state using the ModalContext or a dash callback on the active prop.
    */
   forceAction?: boolean;
+
+  /**
+   * Set to true if the inner modal is a Drawer component instead of a Modal.
+   * This will prevent the html container from being clipped as is done when a modal is activated.
+   */
+  isDrawer?: boolean;
 }
 
 const ModalContext = React.createContext<ModalState | undefined>(undefined);
@@ -45,9 +51,9 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = (props)
    * Prevent document scrolling when active
    */
   useEffect(() => {
-    if (active) {
+    if (!props.isDrawer && active) {
       document.documentElement.classList.add('is-clipped');
-    } else {
+    } else if (!props.isDrawer) {
       document.documentElement.classList.remove('is-clipped');
     }
     props.setProps!({ active: active });

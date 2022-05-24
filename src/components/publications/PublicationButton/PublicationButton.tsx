@@ -3,66 +3,55 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
 import { Tooltip } from '../../data-display/Tooltip';
-import openAccessButtonLogo from './oab_color.png';
 import { v4 as uuidv4 } from 'uuid';
 import './PublicationButton.css';
-import { string } from 'prop-types';
-import { shortenCrossrefAuthors } from '../../../utils/publications';
+import { getJournalAndYear } from '../../../utils/publications';
 
 export interface PublicationButtonProps {
   /**
    * The ID used to identify this component in Dash callbacks
    */
   id?: string;
-
   /**
-   * Class name(s) to append to the component's default class (mpc-open-access-button)
+   * Class name(s) to append to the component's default class (mpc-publication-button)
    * @default 'tag'
    */
   className?: string;
-
-  /**
-   * Customize the tag using bulma's tag classes
-   * These class names will be appended to the component's tag elements
-   */
-  tagClassName?: string;
-
   /**
    * The DOI (Digital Object Identifier) of the publication
-   * Will be used to generate a doi.org link and to fetch an open access PDF link.
+   * Will be used to generate a doi.org link and to fetch the journal name and year.
    */
   doi?: string;
-
   /**
    * Directly supply the URL to the publication.
    * If a doi.org url is supplied, this component will automatically
-   * parse the url for the doi and use that to fetch an open access link.
+   * parse the url for the doi and use that to fetch the journal name and year.
    */
   url?: string;
-
-  /**
-   * Directly supply the URL to an openly accessible PDF of the reference.
-   * If supplied, the component will not try to fetch an open access URL.
-   */
-  openAccessUrl?: string;
-
-  /**
-   * Set to true to prevent any requests to the open access api.
-   * Note that if you supply your own openAccessUrl, this prop is not necessary.
-   */
-  preventOpenAccessFetch?: boolean;
-
   /**
    * Value to add to the anchor tag's target attribute
    * @default '_blank'
    */
   target?: string;
+  /**
+   * Only display the publication icon and hide the link label.
+   * If true, `showTooltip` will default to true.
+   */
+  compact?: boolean;
+  /**
+   * Show a tooltip on hover with the bibliographic citation for the publication.
+   */
+  showTooltip?: boolean;
 }
 
 /**
  * Standardized button for linking to a publication.
- * If a `doi` prop or doi.org link is supplied, an open access link
- * will also be generated next to the publication link.
+ *
+ * This component can be used in four ways:
+ * 1. Supply just a `doi` and let the component build the url and fetch the journal name and year from crossref.
+ * 2. Supply just a `url` to doi.org and fetch the journal name and year from crossref.
+ * 3. Supply a `doi` and a link label in the component's `children`. In this case, there will be no fetch to crossref.
+ * 4. Supply a `url` to any location and a link label in the component's `children`. In this case, there will be no fetch to crossref.
  */
 export const PublicationButton: React.FC<PublicationButtonProps> = ({
   className = 'tag',
@@ -71,7 +60,7 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
 }) => {
   const props = { className, target, ...otherProps };
   const [linkLabel, setLinkLabel] = useState<any>(props.children);
-  const [openAccessUrl, setOpenAccessUrl] = useState<string | undefined>(props.openAccessUrl);
+  const [showTooltip, setShowTooltip] = useState<any>(props.showTooltip || props.compact);
   const [doi, setDoi] = useState<string | undefined>(() => {
     if (props.doi) {
       return props.doi;
@@ -90,66 +79,74 @@ export const PublicationButton: React.FC<PublicationButtonProps> = ({
       return;
     }
   });
-  const [cannotFetchOpenAccessUrl, setCannotFetchOpenAccessUrl] = useState(() => {
-    return props.preventOpenAccessFetch || !doi;
+  const [cannotFetch, setCannotFetch] = useState(() => {
+    return !doi;
   });
-  const tooltipId = uuidv4();
+  const [tooltip, setTooltip] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!openAccessUrl && !cannotFetchOpenAccessUrl) {
+    if (!linkLabel && !cannotFetch) {
       axios
-        .get(`https://api.openaccessbutton.org/find?id=${doi}`)
+        .get(`https://api.crossref.org/works/${doi}`)
         .then((result) => {
-          if (
-            !linkLabel &&
-            result.data.hasOwnProperty('metadata') &&
-            result.data.metadata.hasOwnProperty('author')
-          ) {
-            setLinkLabel(shortenCrossrefAuthors(result.data.metadata.author));
+          if (!linkLabel && result.data.hasOwnProperty('message')) {
+            let journal: string | undefined, year: string | undefined;
+            if (result.data.message.hasOwnProperty('container-title')) {
+              journal = result.data.message['container-title'].join(', ');
+            }
+            if (result.data.message.hasOwnProperty('created')) {
+              year = result.data.message.created['date-parts'][0][0];
+            }
+            setLinkLabel(getJournalAndYear(journal, year));
           }
 
-          if (result.data.hasOwnProperty('url')) {
-            setOpenAccessUrl(result.data.url);
-          } else {
-            throw new Error('No Open Access URL found');
+          if (
+            !url &&
+            result.data.hasOwnProperty('message') &&
+            result.data.message.hasOwnProperty('URL')
+          ) {
+            setUrl(result.data.message.URL);
           }
         })
         .catch((error) => {
           console.log(error);
-          setCannotFetchOpenAccessUrl(true);
+          setCannotFetch(true);
+        });
+    }
+    if (showTooltip && !cannotFetch) {
+      axios
+        .get(`https://api.crossref.org/works/${doi}/transform/text/x-bibliography`)
+        .then((result) => {
+          let tooltipText = result.data;
+          let urlIndex = tooltipText.indexOf('. http');
+          if (urlIndex > -1) {
+            tooltipText = tooltipText.slice(0, urlIndex + 1);
+          }
+          setTooltip(tooltipText);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
   }, []);
 
   return (
-    <span
+    <a
       data-testid="publication-button"
       id={props.id}
-      className={classNames('mpc-publication-button', props.className, props.tagClassName)}
+      className={classNames('mpc-publication-button', props.className)}
+      href={url}
+      target={props.target}
+      data-tip
+      data-for={url}
     >
-      <span className="tags has-addons">
-        <a className={classNames('tag', props.tagClassName)} href={url} target={props.target}>
-          <FaBook />
-          &nbsp;{linkLabel || 'Publication'}
-        </a>
-        {openAccessUrl || !cannotFetchOpenAccessUrl ? (
-          <a
-            id={props.id}
-            target={props.target}
-            href={openAccessUrl}
-            className={classNames('tag mpc-open-access-button', props.tagClassName)}
-            data-tip
-            data-for={tooltipId}
-          >
-            {openAccessUrl ? (
-              <img src={openAccessButtonLogo} alt="Open Access PDF" />
-            ) : (
-              <span className="loader"></span>
-            )}
-            <Tooltip id={tooltipId}>Open Access PDF</Tooltip>
-          </a>
-        ) : null}
-      </span>
-    </span>
+      <FaBook />
+      {!props.compact && <span className="ml-1">{linkLabel || 'Publication'}</span>}
+      {tooltip && (
+        <Tooltip id={url}>
+          <span dangerouslySetInnerHTML={{ __html: tooltip }}></span>
+        </Tooltip>
+      )}
+    </a>
   );
 };

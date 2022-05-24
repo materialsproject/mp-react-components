@@ -4,11 +4,12 @@ import {
   distinctUntilKeyChanged,
   map,
   shareReplay,
-  tap,
+  tap
 } from 'rxjs/operators';
 import * as React from 'react';
 import { useContext } from 'react';
-import { mapArrayToBooleanObject } from '../../crystal-toolkit/utils';
+import { VALID_ELEMENTS } from '../../data-entry/MaterialsInput/utils';
+import { mapArrayToBooleanObject } from '../../data-entry/utils';
 
 // TODO(chab) break that store into multiple pieces
 // 1) what is used for rendering, via RXJS
@@ -36,7 +37,7 @@ interface State {
 export enum TableSelectionStyle {
   ENABLE_DISABLE = 'enableDisable',
   SELECT = 'select',
-  MULTI_INPUTS_SELECT = 'mis',
+  MULTI_INPUTS_SELECT = 'mis'
 }
 
 const getDefaultState: () => Readonly<State> = () => ({
@@ -45,8 +46,24 @@ const getDefaultState: () => Readonly<State> = () => ({
   detailedElement: null,
   hiddenElements: {},
   forwardOuterChange: true,
-  lastAction: {} as any,
+  lastAction: {} as any
 });
+
+/**
+ * Disable all other elements if max selected limit is reached,
+ * otherwise return disabledElements to its initial value.
+ */
+const getDisabledElements = (state: State, max: number, initialDisabledElements: ElementState) => {
+  if (Object.keys(state.enabledElements).length === max) {
+    state.disabledElements = mapArrayToBooleanObject(VALID_ELEMENTS);
+    for (const element in state.enabledElements) {
+      delete state.disabledElements[element];
+    }
+  } else {
+    state.disabledElements = initialDisabledElements;
+  }
+  return state;
+};
 
 export function getPeriodicSelectionStore() {
   let state: State = getDefaultState();
@@ -62,14 +79,16 @@ export function getPeriodicSelectionStore() {
           }),
           shareReplay(1)
         );
-  let lastElementsToggled: string = '';
+  let initialDisabledElements: ElementState = {};
+  let lastElementEnabled = '';
   const actions = {
     // only use it in test, instead, change the props of the context react element
     init: (initialState: State = getDefaultState()) => {
       // use object assign instead
-
-      if (initialState.disabledElements)
+      if (initialState.disabledElements) {
         state.disabledElements = mapArrayToBooleanObject(initialState.disabledElements);
+        initialDisabledElements = state.disabledElements;
+      }
       if (initialState.enabledElements)
         state.enabledElements = mapArrayToBooleanObject(initialState.enabledElements);
       if (initialState.hiddenElements)
@@ -85,8 +104,12 @@ export function getPeriodicSelectionStore() {
     selectedElements: {} as any,
     //
     setForwardChange: (fwdChange) => (state.forwardOuterChange = fwdChange),
-    setEnabledElements: (enabledElements: any) =>
-      (state = { ...state, enabledElements }) && state$.next(state),
+    setEnabledElements: (enabledElements: any) => {
+      state.lastAction = {} as any;
+      state = { ...state, enabledElements };
+      state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
+      state$.next(state);
+    },
     setDisabledElements: (disabledElements: any) =>
       (state = { ...state, disabledElements }) && state$.next(state),
     clear: () => {
@@ -100,8 +123,11 @@ export function getPeriodicSelectionStore() {
     //TODO(chab) add check to prever unnecessary state mutation
     addEnabledElement: (enabledElement: string) => {
       state.lastAction = {} as any;
-      (state.enabledElements = { ...state.enabledElements, [enabledElement]: true }) &&
-        state$.next(state);
+      const _s = { ...state.enabledElements, [enabledElement]: true };
+      state.enabledElements = _s;
+      // state = getDisabledElementsIfMaxed(state, maxItemAllowed);
+      lastElementEnabled = enabledElement;
+      state$.next(state);
     },
     toggleDisabledElement: (disabledElement: string) => {
       if (!state.disabledElements[disabledElement]) {
@@ -113,7 +139,7 @@ export function getPeriodicSelectionStore() {
       }
       state$.next({
         ...state,
-        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE,
+        forwardOuterChange: actions.selectionStyle === TableSelectionStyle.ENABLE_DISABLE
       });
     },
     addDisabledElement: (disabledElement: string) =>
@@ -121,6 +147,7 @@ export function getPeriodicSelectionStore() {
       state$.next(state),
     removeEnabledElement: (enabledElement: string) => {
       state.lastAction = {} as any;
+      console.log('remove element');
       if (!state.enabledElements[enabledElement]) {
         // if element is already removed, we do not want to trigger a state change
         state$.next(state);
@@ -128,7 +155,8 @@ export function getPeriodicSelectionStore() {
       }
       const _s = { ...state.enabledElements };
       delete _s[enabledElement];
-      (state.enabledElements = _s) && state$.next(state);
+      state.enabledElements = _s;
+      state$.next(state);
     },
     removeDisabledElement: (disabledElement: string) => {
       const _s = { ...state.disabledElements };
@@ -152,34 +180,28 @@ export function getPeriodicSelectionStore() {
           }
 
           const _s = { ...state.enabledElements };
-          if (Object.keys(state.enabledElements).length === maxItemAllowed) {
-            delete _s[lastElementsToggled];
-            _s[enabledElement] = true;
-            lastElementsToggled = enabledElement;
-            state.enabledElements = _s;
-            state$.next({ ...state, forwardOuterChange: true });
-          } else {
-            lastElementsToggled = enabledElement;
-            _s[enabledElement] = true;
-            (state.enabledElements = _s) && state$.next({ ...state, forwardOuterChange: true });
-          }
+          _s[enabledElement] = true;
+          state.enabledElements = _s;
+          state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
+          lastElementEnabled = enabledElement;
+          state$.next({ ...state, forwardOuterChange: true });
         } else {
           delete state.enabledElements[enabledElement];
           state.lastAction.type = 'deselect';
-
-          (state.enabledElements = { ...state.enabledElements }) &&
-            state$.next({ ...state, forwardOuterChange: true });
+          state = getDisabledElements(state, maxItemAllowed, initialDisabledElements);
+          state.enabledElements = { ...state.enabledElements };
+          state$.next({ ...state, forwardOuterChange: true });
         }
       }
     },
     setMaxSelectionLimit: (maxItem: number) => {
       maxItemAllowed = maxItem;
-    },
+    }
   };
 
   return {
     observable,
-    actions,
+    actions
   };
 }
 
@@ -187,7 +209,7 @@ type Actions = ReturnType<typeof getPeriodicSelectionStore>;
 
 export const PeriodicSelectionContext = React.createContext({
   observable: {} as Observable<State>,
-  actions: {},
+  actions: {}
 } as Actions);
 
 /**
@@ -222,7 +244,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
         map(({ enabledElements, disabledElements, forwardOuterChange }: any) => ({
           enabledElements,
           disabledElements,
-          forwardOuterChange,
+          forwardOuterChange
         })),
         distinctUntilChanged((p, q) => {
           return (
@@ -235,7 +257,7 @@ export function useElements(maxElementSelection: number = 10, onStateChange?: an
           onStateChange &&
           onStateChange({
             enabledElements: Object.keys(enabledElements),
-            disabledElements: Object.keys(disabledElements),
+            disabledElements: Object.keys(disabledElements)
           });
       });
 

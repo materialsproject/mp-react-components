@@ -146,14 +146,14 @@ export const BibFilter: React.FC<BibFilterProps> = ({
         {bibEntries.map((entry, i) => {
           return props.format === 'bibjson' ? (
             <BibjsonCard
-              key={i}
+              key={`${i}-${entry.doi}`}
               className={props.resultClassName}
               bibjsonEntry={entry}
               preventOpenAccessFetch={props.preventOpenAccessFetch}
             />
           ) : (
             <CrossrefCard
-              key={i}
+              key={`${i}-${entry.DOI}`}
               className={props.resultClassName}
               crossrefEntry={entry}
               preventOpenAccessFetch={props.preventOpenAccessFetch}

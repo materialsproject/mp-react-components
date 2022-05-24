@@ -55,8 +55,8 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
       return (
         <Link
           className={classNames('navbar-item', item.className)}
-          href={item.href}
-          onClick={() => setActiveMobile(false)}
+          href={item.href || ''}
+          // onClick={() => setActiveMobile(false)}
         >
           {item.icon && <Icon icon={item.icon} />}
           {item.label}
@@ -75,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
       <div className="navbar-brand">
         <Link
           className={classNames('navbar-item', props.brandItem.className)}
-          href={props.brandItem.href}
+          href={props.brandItem.href || ''}
         >
           {props.brandItem.image && <img src={props.brandItem.image} />}
           {props.brandItem.icon && <Icon icon={props.brandItem.icon} />}
@@ -115,8 +115,8 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
         <div className="navbar-brand">
           <Link
             className={classNames('navbar-item', props.brandItem.className)}
-            href={props.brandItem.href}
-            onClick={() => setActiveMobile(false)}
+            href={props.brandItem.href || ''}
+            // onClick={() => setActiveMobile(false)}
           >
             {props.brandItem.image && <img src={props.brandItem.image} />}
             {!props.brandItem.image && props.brandItem.icon && <Icon icon={props.brandItem.icon} />}

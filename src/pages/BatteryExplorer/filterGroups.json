@@ -5,14 +5,10 @@
     "filters": [
       {
         "name": "Working Ion",
-        "id": "working_ion",
+        "params": ["working_ion"],
         "type": "SELECT",
         "props": {
           "options": [
-            {
-              "label": "Calcium",
-              "value": "Ca"
-            },
             {
               "label": "Lithium",
               "value": "Li"
@@ -20,35 +16,131 @@
             {
               "label": "Magnesium",
               "value": "Mg"
+            },
+            {
+              "label": "Calcium",
+              "value": "Ca"
+            },
+            {
+              "label": "Sodium",
+              "value": "Na"
+            },
+            {
+              "label": "Aluminium",
+              "value": "Al"
+            },
+            {
+              "label": "Potassium",
+              "value": "K"
+            },
+            {
+              "label": "Yttrium",
+              "value": "Y"
+            },
+            {
+              "label": "Rubidium",
+              "value": "Rb"
+            },
+            {
+              "label": "Caesium",
+              "value": "Cs"
             }
           ]
         }
       },
       {
-        "name": "Include Elements",
-        "id": "elements",
-        "type": "MATERIALS_INPUT",
-        "props": {
-          "inputType": "elements",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements)."
-        }
-      },
-      {
-        "name": "Exclude Elements",
-        "id": "exclude_elements",
-        "type": "MATERIALS_INPUT",
-        "props": {
-          "inputType": "elements",
-          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn)."
-        }
-      },
-      {
         "name": "Formula Charge",
-        "id": "formula",
+        "params": ["formula"],
+        "overrides": ["elements", "chemsys", "exclude_elements", "nelements"],
+        "tooltip": "Enter a chemical formula to find batteries that have this exact formula charge. Use the \"*\" symbol to specify a wildcard element.",
         "type": "MATERIALS_INPUT",
         "props": {
-          "inputType": "formula",
-          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5)."
+          "type": "formula",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical formula (e.g. CeZn5).",
+          "helpItems": [
+            {
+              "label": "Formula Charge Examples"
+            },
+            {
+              "label": null,
+              "examples": ["FePO4", "CrAsO5", "Fe*O4", "Ti**4"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Chemical System (Formula Charge)",
+        "params": ["chemsys"],
+        "overrides": ["elements", "formula", "exclude_elements", "nelements"],
+        "tooltip": "Enter a \" - \" separated list of element symbols (e.g. \"Ga-N\") to find materials within that chemical space (i.e. materials that contain only these elements).",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "chemical_system",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid chemical system (e.g. Ce-Zn).",
+          "helpItems": [
+            {
+              "label": "Chemical System Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Fe-O", "Fe-P-O", "Fe-*-*", "Ni-*"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Include Elements (Formula Charge)",
+        "params": ["elements"],
+        "overrides": ["formula", "chemsys"],
+        "tooltip": "Enter a \" , \" separated list of element symbols to find batteries whose host formula contains at least these elements (e.g. \"Fe,As,O\"). Enter a \" - \" separated list of element symbols to find batteries whose host formula contains only these elements (e.g. \"Fe-As-O\").",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "elements",
+          "periodicTableMode": "none",
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (for records with at least these elements) or a hyphen (for records with only these elements).",
+          "helpItems": [
+            {
+              "label": "Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["Ni,Cu", "Ni,Si,O"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Exclude Elements (Formula Charge)",
+        "params": ["exclude_elements"],
+        "overrides": ["formula", "chemsys"],
+        "tooltip": "Enter a \" , \" or \" - \" separated list of element symbols to find batteries that do not contain certain elements in their host formula.",
+        "type": "MATERIALS_INPUT",
+        "props": {
+          "type": "elements",
+          "periodicTableMode": "none",
+          "hideChemSys": true,
+          "errorMessage": "Please enter a valid list of element symbols separated by a comma (e.g. Ce, Zn).",
+          "helpItems": [
+            {
+              "label": "Exclude Elements Examples"
+            },
+            {
+              "label": null,
+              "examples": ["As,Si,Ni", "Al,O"]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Number of Elements",
+        "params": ["nelements_min", "nelements_max"],
+        "overrides": ["formula", "chemsys"],
+        "type": "SLIDER",
+        "props": {
+          "domain": [1, 20],
+          "step": 1
         }
       }
     ]
@@ -59,7 +151,8 @@
     "filters": [
       {
         "name": "Max Delta Volume",
-        "id": "delta_volume",
+        "params": ["delta_volume_min", "delta_volume_max"],
+        "tooltip": "Volume changes in % for a particular voltage step using: max(charge, discharge) / min(charge, discharge) - 1",
         "type": "SLIDER",
         "props": {
           "domain": [0, 10],
@@ -68,7 +161,8 @@
       },
       {
         "name": "Average Voltage",
-        "id": "average_voltage",
+        "params": ["average_voltage_min", "average_voltage_max"],
+        "tooltip": "The average voltage in V for a particular voltage step",
         "type": "SLIDER",
         "units": "V",
         "props": {
@@ -78,7 +172,7 @@
       },
       {
         "name": "Gravimetric Capacity",
-        "id": "capacity_grav",
+        "params": ["capacity_grav_min", "capacity_grav_max"],
         "type": "SLIDER",
         "units": "mAh/g",
         "props": {
@@ -88,7 +182,7 @@
       },
       {
         "name": "Volumetric Capacity",
-        "id": "capacity_vol",
+        "params": ["capacity_vol_min", "capacity_vol_max"],
         "type": "SLIDER",
         "units": "mAh/cc",
         "props": {
@@ -98,7 +192,8 @@
       },
       {
         "name": "Gravimetric Energy",
-        "id": "energy_grav",
+        "params": ["energy_grav_min", "energy_grav_max"],
+        "tooltip": "(Specific energy)",
         "type": "SLIDER",
         "units": "Wh/kg",
         "props": {
@@ -108,7 +203,8 @@
       },
       {
         "name": "Volumetric Energy",
-        "id": "energy_vol",
+        "params": ["energy_vol_min", "energy_vol_max"],
+        "tooltip": "(Energy Density)",
         "type": "SLIDER",
         "units": "Wh/l",
         "props": {
@@ -118,7 +214,8 @@
       },
       {
         "name": "Atomic Fraction Charge",
-        "id": "fracA_charge",
+        "params": ["fracA_charge_min", "fracA_charge_max"],
+        "tooltip": "Atomic fraction of the working ion in the charged state",
         "type": "SLIDER",
         "props": {
           "domain": [0, 0.2],
@@ -127,7 +224,8 @@
       },
       {
         "name": "Atomic Fraction Discharge",
-        "id": "fracA_discharge",
+        "params": ["fracA_discharge_min", "fracA_discharge_max"],
+        "tooltip": "Atomic fraction of the working ion in the discharged state",
         "type": "SLIDER",
         "props": {
           "domain": [0, 0.5],
@@ -136,7 +234,8 @@
       },
       {
         "name": "Stability Charge",
-        "id": "stability_charge",
+        "params": ["stability_charge_min", "stability_charge_max"],
+        "tooltip": "The energy above hull of the charged material",
         "type": "SLIDER",
         "units": "meV/atom",
         "conversionFactor": 0.001,
@@ -147,7 +246,8 @@
       },
       {
         "name": "Stability Discharge",
-        "id": "stability_discharge",
+        "params": ["stability_discharge_min", "stability_discharge_max"],
+        "tooltip": "The energy above hull of the discharged material",
         "type": "SLIDER",
         "units": "meV/atom",
         "conversionFactor": 0.001,
@@ -158,7 +258,8 @@
       },
       {
         "name": "Steps",
-        "id": "num_steps",
+        "params": ["num_steps_min", "num_steps_max"],
+        "tooltip": "The number of distinct voltage steps in from fully charge to discharge based on the stable intermediate states",
         "type": "SLIDER",
         "props": {
           "domain": [1, 5],
@@ -167,7 +268,8 @@
       },
       {
         "name": "Max Voltage Step",
-        "id": "max_voltage_step",
+        "params": ["max_voltage_step_min", "max_voltage_step_max"],
+        "tooltip": "Maximum absolute difference in adjacent voltage steps",
         "type": "SLIDER",
         "props": {
           "domain": [0, 2],

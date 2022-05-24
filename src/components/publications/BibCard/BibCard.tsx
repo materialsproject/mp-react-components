@@ -1,9 +1,15 @@
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
 import { FaBook } from 'react-icons/fa';
-import { CrossrefAuthor, getAuthorString, shortenAuthorString } from '../../../utils/publications';
+import {
+  CrossrefAuthor,
+  getAuthorString,
+  getJournalAndYear,
+  shortenAuthorString
+} from '../../../utils/publications';
 import { PublicationButton } from '../../publications/PublicationButton';
 import { BibtexButton } from '../BibtexButton';
+import { OpenAccessButton } from '../OpenAccessButton';
 import './BibCard.css';
 
 export interface BibCardProps {
@@ -60,17 +66,16 @@ export interface BibCardProps {
  * Card for displaying bibliographic information.
  * This component is the basis for the `BibjsonCard` and `CrossrefCard` components.
  */
-export const BibCard: React.FC<BibCardProps> = (props) => {
+export const BibCard: React.FC<BibCardProps> = ({ title = '', ...otherProps }) => {
+  const props = { title, ...otherProps };
   const url = `https://doi.org/${props.doi}`;
-  let title: ReactNode;
+  let titleElement: ReactNode;
   if (props.doi) {
-    title = (
-      <a href={url} target="_blank">
-        {props.title}
-      </a>
+    titleElement = (
+      <a href={url} target="_blank" dangerouslySetInnerHTML={{ __html: props.title }}></a>
     );
   } else {
-    title = <span>{props.title}</span>;
+    titleElement = <span dangerouslySetInnerHTML={{ __html: props.title }}></span>;
   }
 
   return (
@@ -80,28 +85,17 @@ export const BibCard: React.FC<BibCardProps> = (props) => {
       className={classNames('mpc-bib-card', props.className)}
     >
       <p data-testid="bib-card-title" className="mpc-bib-card-title">
-        {title}
+        {titleElement}
       </p>
       <p data-testid="bib-card-authors" className="mpc-bib-card-authors">
         {getAuthorString(props.author)}
       </p>
-      <p>
-        <span className="mpc-bib-card-journal">{props.journal}</span>
-        {props.journal && <span>, </span>}
-        <span data-testid="bib-card-year" className="mpc-bib-card-year">
-          {props.year}
-        </span>
-      </p>
       {props.doi && (
         <div className="mpc-bib-card-buttons tags">
-          <PublicationButton
-            doi={props.doi}
-            url={url}
-            openAccessUrl={props.openAccessUrl}
-            preventOpenAccessFetch={props.preventOpenAccessFetch}
-          >
-            {shortenAuthorString(props.author)}
+          <PublicationButton doi={props.doi} url={url}>
+            {getJournalAndYear(props.journal, props.year)}
           </PublicationButton>
+          <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
           <BibtexButton doi={props.doi} />
         </div>
       )}

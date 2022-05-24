@@ -1,5 +1,8 @@
+import { DecodedValueMap, QueryParamConfigMap } from 'use-query-params';
 import { MaterialsInputType } from '../../data-entry/MaterialsInput';
-import { SearchUIProps } from './SearchUI';
+import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
+import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
+import { MaterialsInputTypesMap } from '../../data-entry/MaterialsInput/utils';
 import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
@@ -35,16 +38,17 @@ export interface Filter {
    */
   name: string;
   /**
-   * Exact and unique name of the parameter in the API that this filter should query.
-   * If the parameter has a suffix such as "_min" or "__exact", the id should be the
-   * name of the parameter without the suffix.
-   */
-  id: string;
-  /**
    * The type of filter component to use. Must be one of the pre-determined filter type strings
    * which maps to a component. See `FilterType` documentation for more information.
    */
   type: FilterType;
+  /**
+   * List of exact parameter names that this filter should add/modify in the API query.
+   * Most filter types only update one query parameter and should only have one param here.
+   * Sliders, however, can update both a min and max parameter. For sliders, both the min and
+   * max parameters should be included here: `['volume_min', 'volume_max']`
+   */
+  params: string[];
   /**
    * Whether this filter is active or not. This is handled by the `SearchUI` dynamically so
    * should generally not be used in configuration.
@@ -69,32 +73,27 @@ export interface Filter {
    */
   tooltip?: string;
   /**
-   * Suffix to append to the id for the lower bound
-   * of a slider filter (`SearchUI` defaults to "_min").
-   */
-  minSuffix?: string;
-  /**
-   * Suffix to append to the id for the upper bound
-   * of a slider filter (`SearchUI` defaults to "_max").
-   */
-  maxSuffix?: string;
-  /**
-   * Suffix to append to the id for a `TEXT_INPUT` or `MATERIALS_INPUT` filter.
-   * This enables you to use different operators like
-   * "\__contains" or "\__exact"
-   */
-  operatorSuffix?: string;
-  /**
-   * List of filter ids that this filter should override (turn off) when activated.
-   * Filter ids listed here must exist in the filterGroups json.
+   * List of query parameters that this filter should override (turn off) when activated.
+   * Parameters listed here must exist in the filterGroups json.
    */
   overrides?: string[];
+  /**
+   * Set to true if this filter's field is also controlled by the top search bar.
+   * i.e. If this filter's field exists in the search bar's `allowedInputTypesMap`.
+   * This is used to ensure that the search bar value changes if this filter's value
+   * is changed from within the filter.
+   */
+  isSearchBarField?: boolean;
   /**
    * Set to true to force filter input values to be lowercased before added to the query.
    * This should be used in situations where the filter input make contain an uppercase letter,
    * but the values on the backend are all lowercase.
    */
   makeLowerCase?: boolean;
+  /**
+   * Hide filter from view
+   */
+  hidden?: boolean;
 }
 
 export interface FilterGroup {
@@ -126,10 +125,11 @@ export interface SearchParams {
 }
 
 export interface ActiveFilter {
-  id: string;
-  displayName: string;
+  name: string;
   value: any;
-  defaultValue: any;
+  params: string[];
+  defaultValue?: any;
+  isSearchBarField?: boolean;
   conversionFactor?: number;
   searchParams?: SearchParam[];
 }
@@ -148,7 +148,8 @@ export enum ColumnFormat {
   BOOLEAN_CLASS = 'BOOLEAN_CLASS',
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
-  ARRAY = 'ARRAY'
+  ARRAY = 'ARRAY',
+  RADIO = 'RADIO'
 }
 
 /**
@@ -263,20 +264,166 @@ export interface ConditionalRowStyle {
   when?: (row: any) => any;
 }
 
-export interface SearchState extends SearchUIProps {
-  filterValues: FilterValues;
-  activeFilters: ActiveFilter[];
-  results: any[];
-  totalResults: number;
-  resultsPerPage: number;
-  page: number;
-  loading: boolean;
-  sortField?: string;
-  sortAscending?: boolean;
-  error: boolean;
+export interface SearchUIContainerProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
+  id?: string;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (value: any) => any;
+  /**
+   * Class name(s) to add to in addition to the default top-level class
+   */
+  className?: string;
+  /**
+   * An array of column definition objects to control what is rendered in the results table.
+   * See `Column` documentation for specifics on how to construct `Column` objects.
+   */
+  columns: Column[];
+  /**
+   * An array of filter groups and their respective array of filters.
+   * A filter group is a collapsible section of the filters panel that contains one or more filters.
+   * A filter is a type of input element that filters the data based on its value.
+   * See `FilterGroup` documentation for specifics on how to construct `FilterGroup` and `Filter` objects.
+   */
+  filterGroups: FilterGroup[];
+  /**
+   * The URL endpoint to the API that this component should query
+   */
+  apiEndpoint: string;
+  /**
+   * Object of query params that will be automatically added for every search.
+   * This can be used to scope down a SearchUI to a specific subset of a larger endpoint.
+   *
+   * e.g. `{ project: 'open_catalyst_project' }`
+   */
+  apiEndpointParams?: SearchParams;
+  /**
+   * The URL endpoint for fetching autocompletion results
+   */
+  autocompleteFormulaUrl?: string;
+  /**
+   * API key (if needed) that will be used when making queries
+   */
+  apiKey?: string;
+  /**
+   * A noun in singular form to describe what a result represents (e.g. "material").
+   * Note that only some special plural mappings are handled automatically (e.g. "battery" --> "batteries").
+   * In all other cases, an "s" is appended to `resultLabel`.
+   */
+  resultLabel?: string;
+  /**
+   * Optionally include/exclude the menu for dynamically controlling sort options
+   * @default true
+   */
+  hasSortMenu?: boolean;
+  /**
+   * Optionally include up to 2 fields to sort by on initial load.
+   * To sort in descending order, prefix the field name with "-".
+   * The first sort field can be modified within the UI. The second will be the default secondary sort field.
+   * e.g. ["-energy_above_hull", "formula_pretty"]
+   */
+  sortFields?: string[];
+  /**
+   * Name of the sort parameter in the linked API.
+   * @default 'sort_fields'
+   */
+  sortKey?: string;
+  /**
+   * Name of the skip parameter in the linked API.
+   * @default 'skip'
+   */
+  skipKey?: string;
+  /**
+   * Name of the limit parameter in the linked API.
+   * @default 'limit'
+   */
+  limitKey?: string;
+  /**
+   * Name of the fields parameter in the linked API.
+   * @default 'fields'
+   */
+  fieldsKey?: string;
+  /**
+   * Name of the key in the results that contains the total number of results in the query.
+   * Supports nested keys.
+   * @default 'meta.total_doc'
+   */
+  totalKey?: string;
+  /**
+   * List of conditions for styling rows based on a property (selector) and a value.
+   * Note that this prop currently only supports checking for
+   * value equivalence (i.e. row[selector] === value).
+   * See `ConditionalRowStyle` documentation for how to construct `ConditionalRowStyle` conditions.
+   */
+  conditionalRowStyles?: ConditionalRowStyle[];
+  /**
+   * Optionally include/exclude checkboxes next to rows for selecting
+   */
+  selectableRows?: boolean;
+  /**
+   * Property to maintain the state of selected rows so that
+   * they are accessible via Dash callback
+   */
   selectedRows?: any[];
+  /**
+   * Set the initial results view to one of the preset
+   * SearchUI views: 'table', or 'synthesis'.
+   * Note that these options may expand in the future.
+   */
+  view?: SearchUIViewType;
+  /**
+   * Amount of time in milliseconds that should elapse between a user entering
+   * a value in the filters panel and a new query being triggered.
+   */
+  debounce?: number;
+  /**
+   * This is a temporary solution to allow SearchUI's to render in Storybook.
+   * There is an issue with the dynamic column header components that causes
+   * Storybook to crash. Rendering column headers as plain strings fixes the problem.
+   * Note that this will disable column tooltips and unit labels.
+   */
+  disableRichColumnHeaders?: boolean;
+  /**
+   *
+   */
+  results?: any[];
+  /**
+   * Endpoint to use for fallback free text material searches against the Matscholar API.
+   */
+  matscholarEndpoint?: string;
+}
+
+export interface SearchState extends SearchUIContainerProps {
+  /**
+   * Optional props from SearchUIContainerProps that are required by SearchState
+   */
+  setProps: (value: any) => any;
+  sortFields: string[];
+  sortKey: string;
+  skipKey: string;
+  limitKey: string;
+  fieldsKey: string;
+  totalKey: string;
+  /**
+   * Additional props for SearchState
+   */
+  defaultLimit?: number;
+  defaultSkip?: number;
+  totalResults?: number;
+  activeFilters?: ActiveFilter[];
+  loading?: boolean;
+  error?: boolean;
   searchBarValue?: string;
   resultsRef?: React.RefObject<HTMLDivElement> | null;
+}
+
+export interface SearchContextValue {
+  state: SearchState;
+  query: DecodedValueMap<QueryParamConfigMap>;
 }
 
 /**

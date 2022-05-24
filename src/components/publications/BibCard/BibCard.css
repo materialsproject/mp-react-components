@@ -5,7 +5,7 @@
 
 .mpc-bib-card .mpc-bib-card-title {
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 .mpc-bib-card-journal {
@@ -14,4 +14,17 @@
 
 .mpc-bib-card-buttons {
   margin-top: 0.75rem;
+}
+
+/**
+ * Ensure that embedded html or MathML inside a bib title
+ * have space around them. This is necessary because crossref returns 
+ * some titles with MathML elements and no spacing.
+ */
+.mpc-bib-card-title > * > * {
+  margin-left: 0.25rem;
+}
+
+.mpc-bib-card-title > * > *:last-child {
+  margin-right: 0.25rem;
 }

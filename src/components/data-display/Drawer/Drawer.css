@@ -1,0 +1,16 @@
+.mpc-drawer {
+  background-color: #fff;
+  width: 400px;
+  height: 100%;
+  padding: 1.25rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  box-shadow: 0px 0px 3px -5px #dbdbdb, 0 15px 15px;
+  transform: translate(105%, 0);
+  transition: 0.5s;
+}
+
+.mpc-drawer.is-active {
+  transform: translate(0, 0);
+}

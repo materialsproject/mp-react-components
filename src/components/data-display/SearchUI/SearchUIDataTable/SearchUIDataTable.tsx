@@ -5,15 +5,17 @@ import { Paginator } from '../../Paginator';
 import { FaCaretDown } from 'react-icons/fa';
 
 /**
- * Component for rendering SearchUI results in the table view
+ * A version of the `DataTable` component for rendering SearchUI results in the table view.
  * Uses react-data-table-component to render results based
- * on the current state of the SearchUIContext
+ * on the current state of the SearchUIContext.
  */
 export const SearchUIDataTable: React.FC = () => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const [toggleClearRows, setToggleClearRows] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const limit = query[state.limitKey] || state.defaultLimit;
+  const skip = query[state.skipKey] || state.defaultSkip;
 
   const handlePageChange = (page: number) => {
     /** Scroll table back to top when page changes */
@@ -37,9 +39,9 @@ export const SearchUIDataTable: React.FC = () => {
 
   const CustomPaginator = ({ isTop = false }) => (
     <Paginator
-      rowCount={state.totalResults}
-      rowsPerPage={state.resultsPerPage}
-      currentPage={state.page}
+      rowCount={state.totalResults!}
+      rowsPerPage={limit}
+      currentPage={skip / limit + 1 || 1}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={actions.setResultsPerPage}
       isTop={isTop}
@@ -64,13 +66,23 @@ export const SearchUIDataTable: React.FC = () => {
             noHeader
             theme="material"
             columns={state.columns.filter((c) => !c.hidden)}
-            data={state.results}
+            data={state.results!}
             highlightOnHover
             paginationServer
             sortServer
             sortIcon={<FaCaretDown />}
-            defaultSortField={state.sortField}
-            defaultSortAsc={state.sortAscending}
+            defaultSortField={
+              query[state.sortKey] &&
+              query[state.sortKey][0] &&
+              query[state.sortKey][0].replace('-', '')
+            }
+            defaultSortAsc={
+              query[state.sortKey] &&
+              query[state.sortKey][0] &&
+              query[state.sortKey][0].indexOf('-') === 0
+                ? false
+                : true
+            }
             onSort={handleSort}
             customStyles={{
               rows: {

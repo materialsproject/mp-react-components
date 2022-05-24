@@ -1,11 +1,14 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
-import { SearchUI, SearchUIProps } from '.';
 import { Column, FilterGroup } from './types';
 import filterGroups from '../../../mocks/constants/materialsFilterGroups.json';
 import columns from '../../../mocks/constants/materialsColumns.json';
 import { materialsByIdQuery } from '../../../mocks/constants/materialsById';
 import { materialsByVolumeQuery } from '../../../mocks/constants/materialsByVolume';
+import { SearchUIContainer } from './SearchUIContainer';
+import { SearchUIGrid } from './SearchUIGrid';
+import { SearchUISearchBar } from './SearchUISearchBar';
+import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
 
 /** Extend the jest timeout to allow time for async mock api requests */
 jest.setTimeout(30000);
@@ -32,7 +35,54 @@ const resetSearchResults = () => {
 describe('<SearchUI/>', () => {
   it('should render search bar', async () => {
     // renderElement({ ...defaultProps });
-    render(<SearchUI {...defaultProps} />);
+    render(
+      <SearchUIContainer {...defaultProps}>
+        <SearchUISearchBar
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+          placeholder="e.g. Li-Fe or Li,Fe or Li3Fe or mp-19017"
+          errorMessage="Please enter a valid formula (e.g. CeZn5), list of elements (e.g. Ce, Zn or Ce-Zn), or Material ID (e.g. mp-394)."
+          chemicalSystemSelectHelpText="Select elements to search for materials with **only** these elements"
+          elementsSelectHelpText="Select elements to search for materials with **at least** these elements"
+          allowedInputTypesMap={{
+            chemical_system: { field: 'chemsys' },
+            elements: { field: 'elements' },
+            formula: { field: 'formula' },
+            mpid: { field: 'material_ids' }
+          }}
+          helpItems={[
+            { label: 'Search Examples' },
+            {
+              label: 'Include at least elements',
+              examples: ['Li,Fe', 'Si,O,K']
+            },
+            {
+              label: 'Include only elements',
+              examples: ['Li-Fe', 'Si-O-K']
+            },
+            {
+              label: 'Include only elements plus wildcard elements',
+              examples: ['Li-Fe-*-*', 'Si-Fe-*-*-*']
+            },
+            {
+              label: 'Has exact formula',
+              examples: ['Li3Fe', 'Eu2SiCl2O3']
+            },
+            {
+              label: 'Has formula with wildcard atoms',
+              examples: ['LiFe*2*', 'Si*']
+            },
+            {
+              label: 'Has Material ID',
+              examples: ['mp-149', 'mp-19326']
+            },
+            {
+              label: 'Additional search options available in the filters panel.'
+            }
+          ]}
+        />
+        <SearchUIGrid />
+      </SearchUIContainer>
+    );
 
     /** should render search bar */
     expect(screen.getAllByTestId('materials-input-search-input')[0]).toBeInTheDocument();

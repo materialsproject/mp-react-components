@@ -1,3 +1,7 @@
+.mpc-scene {
+  position: relative;
+}
+
 .tooltiptext {
   background-color: black;
   color: #fff;
@@ -10,26 +14,11 @@
   cursor: pointer !important;
 }
 
-// .three-container:before {
-//   content: '';
-//   display: block;
-//   height: 0;
-//   width: 0;
-//   float: left;
-//   padding-bottom: 100%;
-// }
-
-// .three-container::after {
-//   clear: left;
-//   content: " ";
-//   display: table;
-// }
-
-.three-wrapper {
+.mpc-scene-square {
   position: relative;
 }
 
-.three-wrapper:before {
+.mpc-scene-square:before {
   content: '';
   display: block;
   height: 0;
@@ -38,8 +27,63 @@
   padding-bottom: 100%;
 }
 
-.three-wrapper::after {
+.mpc-scene-square::after {
   clear: left;
   content: ' ';
   display: table;
+}
+
+/**
+* Prevent the structure layout from growing beyond the height of the modal.
+* Setting max-width with vh instead of simply setting max-height so we don't interfere
+* with the structure's styles that force it to render with 1:1 ratio.
+*/
+.mpc-scene-square-wrapper {
+  width: 100% !important;
+  max-width: calc(95vh - 3rem);
+  height: auto !important;
+  margin: auto;
+}
+
+.mpc-scene .mpc-button-bar {
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+
+.mpc-scene-settings-panel {
+  position: absolute;
+  right: 4.5rem;
+  max-height: 100%;
+  max-width: 450px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1.25rem;
+  background-color: #fff;
+  opacity: 0.8;
+  z-index: 2;
+}
+
+.mpc-scene-bottom-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+/**
+ * Include this explicitly so that toggling the settings panel works without bulma
+ */
+.mpc-scene-settings-panel.is-hidden {
+  display: none;
+}
+
+/**
+ * Include this explicitly so that file dropdown looks okay without bulma
+ */
+.mpc-scene .dropdown-content {
+  position: absolute;
+  right: 0;
+  min-width: 100px;
 }

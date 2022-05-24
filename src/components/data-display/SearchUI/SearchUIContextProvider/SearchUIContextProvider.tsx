@@ -1,118 +1,144 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { usePrevious, useQuery } from '../../../../utils/hooks';
-import { Column, SearchState, SearchUIViewType } from '../types';
-import { SearchUIProps } from '../../SearchUI';
-import { useHistory } from 'react-router-dom';
+import { usePrevious } from '../../../../utils/hooks';
+import { Column, SearchContextValue, SearchState, SearchUIViewType } from '../types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { useMediaQuery } from 'react-responsive';
+import { useHistory } from 'react-router-dom';
 import scrollIntoView from 'scroll-into-view-if-needed';
-import { MaterialsInputType } from '../../../data-entry/MaterialsInput';
-import { getDefaultFiltersAndValues, getSearchState, initSearchState } from '../utils';
-import { getPageCount } from '../../../data-entry/utils';
-import { useRef } from 'react';
+import {
+  initQueryParams,
+  isNotEmpty,
+  initFilterGroups,
+  preprocessQueryParams,
+  getActiveFilters
+} from '../utils';
+import { useQueryParams } from 'use-query-params';
+import { getRowValueFromSelectorString, initColumns } from '../../../../utils/table';
 
 /**
  * Two contexts are invoked inside the SearchUI component
  * SearchUIContext exposes the search state to all of its consumers
  * SearchUIContextActions exposes the methods (i.e. actions) for modifying the search state
  */
-const SearchUIContext = React.createContext<SearchState | undefined>(undefined);
-const SearchUIContextActions = React.createContext<any | undefined>(undefined);
-
-const defaultState: SearchState = {
-  apiEndpoint: '',
-  apiEndpointParams: {},
-  columns: [],
-  filterGroups: [],
-  filterValues: {},
-  activeFilters: [],
-  results: [],
-  totalResults: 0,
-  resultsPerPage: 15,
-  page: 1,
-  loading: false,
-  sortField: undefined,
-  sortAscending: true,
-  error: false,
-  searchBarValue: '',
-  resultsRef: null
-};
+export const SearchUIContext = React.createContext<SearchContextValue | undefined>(undefined);
+export const SearchUIContextActions = React.createContext<any | undefined>(undefined);
 
 /**
  * Component that wraps all of its children in providers for SearchUIContext and SearchUIContextActions
  * Accepts the same props as SearchUI and uses them to build the context state
  */
-export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
-  resultLabel = 'results',
-  hasSearchBar = true,
-  conditionalRowStyles = [],
-  setProps = () => null,
+export const SearchUIContextProvider: React.FC<SearchState> = ({
+  defaultLimit = 15,
+  defaultSkip = 0,
+  activeFilters = [],
+  totalResults = 0,
+  loading = false,
+  error = false,
+  searchBarValue = '',
+  resultsRef = null,
   ...otherProps
 }) => {
-  let props = { resultLabel, hasSearchBar, conditionalRowStyles, setProps, ...otherProps };
+  let props = {
+    defaultLimit,
+    defaultSkip,
+    activeFilters,
+    totalResults,
+    loading,
+    error,
+    searchBarValue,
+    resultsRef,
+    ...otherProps
+  };
   const { children, ...propsWithoutChildren } = props;
-  const query = useQuery();
+  const queryParamConfig = useMemo(() => {
+    return initQueryParams(props.filterGroups, props.sortKey, props.limitKey, props.skipKey);
+  }, []);
+  const [query, setQuery] = useQueryParams(queryParamConfig);
   const history = useHistory();
-  const isDesktop = useMediaQuery({ minWidth: 1024 });
-  const [state, setState] = useState(() =>
-    initSearchState(defaultState, propsWithoutChildren, query, isDesktop)
-  );
+  const pathname = useMemo(() => {
+    return history.location.pathname;
+  }, []);
+  const filterGroups = useMemo(() => {
+    return initFilterGroups(props.filterGroups);
+  }, []);
+  const columns = useMemo(() => {
+    return initColumns(props.columns, props.disableRichColumnHeaders);
+  }, []);
+  const [state, setState] = useState<SearchState>({
+    ...propsWithoutChildren,
+    filterGroups,
+    columns
+  });
+  /**
+   * These default param values are added to the API query if no value is present
+   * for that param. These params are omitted from the URL if they are equal to the
+   * default value. For example, if on page 1, there will be no skip param in the url.
+   * This is important because it allows the empty path (with no query parameters) to be a
+   * renderable UI. Otherwise, the default params would need to be added to the URL before the
+   * UI could render. This pattern would create problems when trying to use the browser back button.
+   */
+  const defaultQuery = {
+    [state.sortKey]: props.sortFields,
+    [state.limitKey]: props.defaultLimit,
+    [state.skipKey]: props.defaultSkip
+  };
+  /**
+   * The fields param is ommitted from the URL for brevity and
+   * added to the query params in the preprocessing step before the get request.
+   */
+  const fields = state.columns.map((c) => c.selector);
   const prevActiveFilters = usePrevious(state.activeFilters);
 
   const actions = {
     setPage: (page: number) => {
-      setState((currentState) => {
-        const ref = currentState.resultsRef;
-        if (ref && ref.current) {
-          scrollIntoView(ref.current, {
-            scrollMode: 'if-needed',
-            block: 'start',
-            behavior: 'smooth'
-          });
-        }
-        return { ...currentState, page };
-      });
+      const limit = query[props.limitKey] || defaultQuery[props.limitKey];
+      if (page !== 1) {
+        setQuery({ [props.skipKey]: (page - 1) * limit });
+      } else {
+        setQuery({ [props.skipKey]: undefined });
+      }
+      const ref = state.resultsRef;
+      if (ref && ref.current) {
+        scrollIntoView(ref.current, {
+          scrollMode: 'if-needed',
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
     },
     setResultsPerPage: (resultsPerPage: number) => {
-      // if (ref.current) {
-      //   scrollIntoView(ref.current, {
-      //     scrollMode: 'if-needed',
-      //     block: 'start',
-      //     behavior: 'smooth'
-      //   });
-      // }
-      setState((currentState) => ({ ...currentState, resultsPerPage, page: 1 }));
+      if (resultsPerPage !== props.defaultLimit) {
+        setQuery({
+          [props.limitKey]: resultsPerPage,
+          [props.skipKey]: undefined
+        });
+      } else {
+        setQuery({
+          [props.limitKey]: undefined,
+          [props.skipKey]: undefined
+        });
+      }
     },
     setSort: (sortField: string, sortAscending: boolean) => {
-      setState((currentState) => {
-        let secondarySortField = currentState.secondarySortField;
-        if (sortField === secondarySortField) {
-          secondarySortField = undefined;
-        }
-        return {
-          ...currentState,
-          sortField,
-          sortAscending,
-          secondarySortField,
-          page: 1
-        };
+      const sortFields = [...query[props.sortKey]];
+      const directionPrefix = sortAscending ? '' : '-';
+      sortFields[0] = directionPrefix + sortField;
+      setQuery({
+        [props.sortKey]: sortFields,
+        [props.skipKey]: undefined
       });
     },
     setSortField: (sortField: string) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortField,
-        page: 1
-      }));
+      const sortFields = [...query[props.sortKey]];
+      sortFields[0] = sortField;
+      setQuery({
+        [props.sortKey]: sortFields,
+        [props.skipKey]: undefined
+      });
     },
-    setSortAscending: (sortAscending: boolean) => {
-      setState((currentState) => ({
-        ...currentState,
-        sortAscending,
-        page: 1
-      }));
+    setSortAscending: function (sortAscending: boolean) {
+      this.setSort(query[props.sortKey][0].replace('-', ''), sortAscending);
     },
     setView: (view: SearchUIViewType) => {
       setState((currentState) => ({ ...currentState, view }));
@@ -127,268 +153,145 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
      * @param value new filter value
      * @param id property key for the filter (e.g. "formula")
      * @param overrideFields array of property keys to override
-     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
      */
-    setFilterValue: (value: any, id: string, overrideFields?: string[], filterProps?: any) => {
-      setState((currentState) => {
-        const filterIsActivating = value && value !== '';
-        let searchBarValue = currentState.searchBarValue;
-        let searchBarFields: string[] | undefined;
-
-        /**
-         * If the filter is being activated and the SearchUI has a top search bar,
-         * parse searchBarAllowedInputTypesMap for the fields it controls.
-         * These will be used to dynamically update the search bar value based on the new filter being activated.
-         */
-        if (filterIsActivating && currentState.searchBarAllowedInputTypesMap) {
-          searchBarFields = Object.keys(currentState.searchBarAllowedInputTypesMap).map(function (
-            key,
-            index
-          ) {
-            return currentState.searchBarAllowedInputTypesMap![key].field;
-          });
-        }
-
-        /**
-         * If the filter being activated is also a search bar field,
-         * update the search bar value with this filter's value.
-         */
-        if (searchBarFields && searchBarFields.indexOf(id) > -1) {
-          searchBarValue = value;
-        }
-
-        if (!overrideFields || !filterIsActivating) {
-          return getSearchState(
-            { ...currentState, searchBarValue, page: 1 },
-            { ...currentState.filterValues, [id]: value }
-          );
-        } else {
-          let newFilterValues = {};
-
-          overrideFields.forEach((field) => {
-            const activeFilter = currentState.activeFilters.find((a) => a.id === field);
-            if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
-          });
-
-          newFilterValues[id] = value;
-
-          let newFilterGroups = currentState.filterGroups;
-
-          if (filterProps) {
-            newFilterGroups = currentState.filterGroups.slice();
-            const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
-            if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
-          }
-
-          return getSearchState(
-            { ...currentState, searchBarValue, filterGroups: newFilterGroups, page: 1 },
-            { ...currentState.filterValues, ...newFilterValues }
-          );
-        }
-      });
-    },
-    /**
-     * Set one filter and override others.
-     * This is used in the top-level search bar to make sure only a single composition filter
-     * is activated.
-     * @param value filter value
-     * @param id property key for the filter (e.g. "formula")
-     * @param overrideFields array of property keys to override
-     * @param filterProps optional object of props to override the default values (used to set chem sys flag for elements filter)
-     */
-    setFilterWithOverrides: (
-      value: any,
-      id: string,
-      overrideFields: string[],
-      filterProps?: any
-    ) => {
-      setState((currentState) => {
-        let newFilterValues = {};
-
+    setFilterValue: (value: any, id: string, overrideFields?: string[]) => {
+      const filterIsActivating = isNotEmpty(value);
+      const newFilterValue = filterIsActivating ? value : undefined;
+      const newQuery = {
+        [id]: newFilterValue,
+        [props.skipKey]: undefined
+      };
+      if (overrideFields && filterIsActivating) {
         overrideFields.forEach((field) => {
-          const activeFilter = currentState.activeFilters.find((a) => a.id === field);
-          if (activeFilter) newFilterValues[field] = activeFilter.defaultValue;
+          newQuery[field] = undefined;
         });
-
-        newFilterValues[id] = value;
-
-        let newFilterGroups = currentState.filterGroups.slice();
-
-        if (filterProps) {
-          const targetFilter = newFilterGroups[0].filters.find((a) => a.id === id);
-          if (targetFilter) targetFilter.props = { ...targetFilter.props, ...filterProps };
+      }
+      if (newFilterValue != query[id]) {
+        setQuery(newQuery);
+      }
+    },
+    setFilterValues: (values: any, params: string[] | string) => {
+      const change = { [props.skipKey]: undefined };
+      let isDifferent = false;
+      if (Array.isArray(params) && Array.isArray(values)) {
+        params.forEach((p, i) => {
+          change[p] = values[i];
+          if (change[p] != query[p]) {
+            isDifferent = true;
+          }
+        });
+      } else if (typeof params === 'string') {
+        change[params] = values;
+        if (change[params] != query[params]) {
+          isDifferent = true;
         }
-
-        // if (isDesktop) {
-        //   newFilterGroups[0].expanded = true;
-        // }
-
-        return getSearchState(
-          { ...currentState, filterGroups: newFilterGroups, page: 1 },
-          { ...currentState.filterValues, ...newFilterValues }
-        );
-      });
+      }
+      if (isDifferent) {
+        setQuery(change);
+      }
     },
-    resetAllFiltersExcept: (value: any, id: string) => {
-      setState((currentState) => {
-        const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-        return getSearchState({ ...currentState, activeFilters }, { ...filterValues, [id]: value });
-      });
+    removeFilter: (id: string) => {
+      if (query.hasOwnProperty(id)) {
+        setQuery({
+          [id]: undefined,
+          [props.skipKey]: undefined
+        });
+      }
     },
-    setFilterProps: (props: any, filterId: string, groupId: string) => {
-      setState((currentState) => {
-        const filterGroups = currentState.filterGroups;
-        const group = filterGroups.find((g) => g.name === groupId);
-        const filter = group?.filters.find((f) => f.id === filterId);
-        if (filter) filter.props = { ...filter.props, ...props };
-        const stateWithNewFilterProps = { ...currentState, filterGroups: filterGroups };
-        // const newState =
-        //   filter && filter.props.hasOwnProperty('parsedValue')
-        //     ? getSearchState(stateWithNewFilterProps)
-        //     : stateWithNewFilterProps;
-        const newFilterValues = props.hasOwnProperty('initialValues')
-          ? { ...currentState.filterValues, [filterId]: props.initialValues }
-          : undefined;
-        return getSearchState({ ...stateWithNewFilterProps }, newFilterValues);
-      });
+    removeFilters: (params: string[] | string) => {
+      const remove: any = { [props.skipKey]: undefined };
+      if (Array.isArray(params)) {
+        params.forEach((p) => (remove[p] = undefined));
+      } else {
+        remove[params] = undefined;
+      }
+      setQuery(remove);
+    },
+    resetFilters: () => {
+      setQuery(
+        {
+          [props.skipKey]: undefined,
+          [props.sortKey]: query[props.sortKey],
+          [props.limitKey]: query[props.limitKey]
+        },
+        'push'
+      );
+    },
+    setFilterProps: (props: any, filterName: string, groupId: string) => {
+      const filterGroups = state.filterGroups;
+      const group = filterGroups.find((g) => g.name === groupId);
+      const filter = group?.filters.find((f) => f.name === filterName);
+      if (filter) filter.props = { ...filter.props, ...props };
+      setState({ ...state, filterGroups: filterGroups });
     },
     setSelectedRows: (selectedRows: any[]) => {
-      props.setProps({ ...props, selectedRows });
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
     getData: () => {
-      setState((currentState) => {
-        /** Only show the loading icon if this is a filter change not on simple page change */
-        const showLoading = currentState.activeFilters !== prevActiveFilters ? true : false;
-        let isLoading = showLoading;
-        let minLoadTime = 1000;
-        let minLoadTimeReached = !showLoading;
-        let params = Object.assign({}, currentState.apiEndpointParams!);
-        let query = new URLSearchParams();
+      /** Only show the loading icon if this is a filter change not on simple page change */
+      const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
+      let isLoading = showLoading;
+      let minLoadTime = 1000;
+      let minLoadTimeReached = !showLoading;
 
-        /** Resolve inconsistencies between mp-api and contribs-api */
-        const fieldsKey = currentState.isContribs ? '_fields' : 'fields';
-        const limitKey = currentState.isContribs ? '_limit' : 'limit';
-        const skipKey = currentState.isContribs ? '_skip' : 'skip';
-        const sortKey = currentState.isContribs ? '_sort' : 'sort_fields';
+      const params = preprocessQueryParams(
+        { ...query, ...props.apiEndpointParams },
+        state.filterGroups,
+        defaultQuery
+      );
+      params[props.fieldsKey] = fields;
 
-        params[fieldsKey] = currentState.columns.map((d) => d.selector);
-        params[limitKey] = currentState.resultsPerPage;
-        params[skipKey] = (currentState.page - 1) * currentState.resultsPerPage;
-        query.set(limitKey, params[limitKey]);
-        query.set(skipKey, params[skipKey]);
-
-        /**
-         * Convert sort props to syntax expected by API.
-         * Descending fields are prepended with "-".
-         * Secondary sort field is added with a comma separator.
-         */
-        let secondarySort: string | undefined;
-        if (currentState.secondarySortField) {
-          secondarySort = currentState.secondarySortAscending
-            ? currentState.secondarySortField
-            : `-${currentState.secondarySortField}`;
-        }
-
-        if (currentState.sortField) {
-          let primarySort = currentState.sortAscending
-            ? currentState.sortField
-            : `-${currentState.sortField}`;
-          params[sortKey] = secondarySort ? `${primarySort},${secondarySort}` : primarySort;
-          query.set(sortKey, params[sortKey]);
-        }
-
-        currentState.activeFilters.forEach((a) => {
-          a.searchParams?.forEach((s) => {
-            let field = s.field;
-            let value = a.conversionFactor ? s.value * a.conversionFactor : s.value;
-            /**
-             * Elements values that are strings should be interpreted as formula fields
-             * This lets the elements field handle chemical system searches (e.g. Fe-Co-Si)
-             */
-            if (field === 'elements' && typeof value === 'string') {
-              field = 'formula';
-            }
-
-            if (field === 'has_props' && params[field]) {
-              params[field].push(value);
-            }
-
-            params[field] = value;
-            query.set(field, s.value);
+      axios
+        .get(props.apiEndpoint, {
+          params: params,
+          paramsSerializer: (p) => {
+            return qs.stringify(p, { arrayFormat: 'comma' });
+          },
+          headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
+        })
+        .then((result) => {
+          isLoading = false;
+          const loadingValue = minLoadTimeReached ? false : true;
+          setState((currentState) => {
+            const totalResults = getRowValueFromSelectorString(props.totalKey, result.data);
+            return {
+              ...currentState,
+              results: result.data.data,
+              totalResults: totalResults,
+              loading: loadingValue,
+              error: false
+            };
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          isLoading = false;
+          const loadingValue = minLoadTimeReached ? false : true;
+          setState((currentState) => {
+            return {
+              ...currentState,
+              results: [],
+              totalResults: 0,
+              loading: loadingValue,
+              error: true
+            };
           });
         });
 
-        axios
-          .get(props.apiEndpoint, {
-            params: params,
-            paramsSerializer: (p) => {
-              return qs.stringify(p, { arrayFormat: 'comma' });
-            },
-            headers: props.apiKey ? { 'X-Api-Key': props.apiKey } : null
-          })
-          .then((result) => {
-            history.push({ search: query.toString() });
-            isLoading = false;
-            const loadingValue = minLoadTimeReached ? false : true;
+      if (showLoading) {
+        setTimeout(() => {
+          if (!isLoading) {
             setState((currentState) => {
-              const totalResults = currentState.isContribs
-                ? result.data.total_count
-                : result.data.meta.total_doc;
-              const pageCount = getPageCount(totalResults, currentState.resultsPerPage);
-              const page = currentState.page > pageCount ? pageCount : currentState.page;
-              return {
-                ...currentState,
-                results: result.data.data,
-                totalResults: totalResults,
-                page: page,
-                loading: loadingValue,
-                error: false
-              };
+              return { ...currentState, loading: false };
             });
-          })
-          .catch((error) => {
-            console.log(error);
-            isLoading = false;
-            const loadingValue = minLoadTimeReached ? false : true;
-            setState((currentState) => {
-              return {
-                ...currentState,
-                results: [],
-                totalResults: 0,
-                loading: loadingValue,
-                error: true
-              };
-            });
-          });
+          } else {
+            minLoadTimeReached = true;
+          }
+        }, minLoadTime);
+      }
 
-        if (showLoading) {
-          setTimeout(() => {
-            if (!isLoading) {
-              setState((currentState) => {
-                return { ...currentState, loading: false };
-              });
-            } else {
-              minLoadTimeReached = true;
-            }
-          }, minLoadTime);
-        }
-
-        return {
-          ...currentState,
-          loading: showLoading
-        };
-      });
-    },
-    resetFilters: () => {
       setState((currentState) => {
-        const { activeFilters, filterValues } = getDefaultFiltersAndValues(currentState);
-        return {
-          ...currentState,
-          page: 1,
-          filterValues,
-          activeFilters
-        };
+        return { ...currentState, loading: isLoading };
       });
     },
     setResultsRef: (resultsRef: React.RefObject<HTMLDivElement> | null) => {
@@ -396,12 +299,47 @@ export const SearchUIContextProvider: React.FC<SearchUIProps> = ({
     }
   };
 
+  /**
+   * When a filter or query param changes, compute the list of active filters.
+   * Also, update the search bar value if one of its corresponding filters changes.
+   */
+  useDeepCompareEffect(() => {
+    /**
+     * This pathname check exists as a precautionary measure to protect against accidental
+     * requests when navigating between SearchUI pages in dash.
+     */
+    if (history.location.pathname === pathname) {
+      const activeFilters = getActiveFilters(state.filterGroups, query);
+      let searchBarValue = state.searchBarValue;
+      const searchBarFieldFilter = activeFilters.find((f) => f.isSearchBarField === true);
+      if (searchBarFieldFilter) {
+        searchBarValue = searchBarFieldFilter.value;
+      }
+      setState({ ...state, activeFilters, searchBarValue });
+    }
+  }, [query]);
+
+  /**
+   * When the active filters change, fetch a new set of results.
+   * This should also be run when the initial query fields are populated (on load).
+   */
   useDeepCompareEffect(() => {
     actions.getData();
-  }, [state.activeFilters, state.resultsPerPage, state.page, state.sortField, state.sortAscending]);
+  }, [state.activeFilters, query[props.skipKey], query[props.limitKey], query[props.sortKey]]);
+
+  /**
+   * Use setProps to update props that should be
+   * accessible by dash callbacks.
+   */
+  useEffect(() => {
+    props.setProps({
+      results: state.results,
+      selectedRows: state.selectedRows
+    });
+  }, [state.results, state.selectedRows]);
 
   return (
-    <SearchUIContext.Provider value={state}>
+    <SearchUIContext.Provider value={{ state, query }}>
       <SearchUIContextActions.Provider value={actions}>
         <div>{children}</div>
       </SearchUIContextActions.Provider>

@@ -4,10 +4,15 @@ import {
   getDelimiter,
   formulaStringToArrays,
   getTruthyKeys,
-  arrayToDelimitedString
+  arrayToDelimitedString,
+  mapArrayToBooleanObject
 } from '../../utils';
-import { validateInputType, detectAndValidateInputType } from '../utils';
-import { Dropdown, Form } from 'react-bulma-components';
+import {
+  validateInputType,
+  detectAndValidateInputType,
+  validateInputLength,
+  materialsInputTypes
+} from '../utils';
 import { MaterialsInputType, MaterialsInputSharedProps } from '../MaterialsInput';
 import classNames from 'classnames';
 import { FormulaAutocomplete } from '../FormulaAutocomplete';
@@ -15,7 +20,6 @@ import { InputHelp } from '../InputHelp';
 import { FaQuestionCircle } from 'react-icons/fa';
 import { Tooltip } from '../../../data-display/Tooltip';
 import { v4 as uuidv4 } from 'uuid';
-const { Input, Field, Control } = Form;
 
 /**
  * The text input component of a MaterialsInput component
@@ -37,19 +41,23 @@ interface DispatchAction {
   payload?: any;
 }
 
-export const MaterialsInputBox: React.FC<Props> = (props) => {
+export const MaterialsInputBox: React.FC<Props> = ({ allowedInputTypes = [], ...otherProps }) => {
+  const props = { allowedInputTypes, ...otherProps };
   const { enabledElements, lastAction, actions: ptActions } = useElements();
   const [delimiter, setDelimiter] = useState(() =>
-    props.isChemSys ? new RegExp('-') : new RegExp(',')
+    props.type === MaterialsInputType.CHEMICAL_SYSTEM ? new RegExp('-') : new RegExp(',')
   );
   const [ptActionsToDispatch, setPtActionsToDispatch] = useState<DispatchAction[]>([]);
   const [inputValue, setInputValue] = useState(props.value);
-  const [inputType, setInputType] = useState<MaterialsInputType | null>(props.inputType);
-  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [inputType, setInputType] = useState<MaterialsInputType | null>(props.type || null);
+  const [prevInputValue, setPrevInputValue] = useState(props.value);
+  const [maxElementsReached, setMaxElementsReached] = useState(false);
   const [showInputHelp, setShowInputHelp] = useState(false);
+  const staticInputField = props.allowedInputTypes.length === 1 ? props.type : undefined;
   const includeAutocomplete =
     props.autocompleteFormulaUrl &&
-    (props.inputType == MaterialsInputType.FORMULA || props.onInputTypeChange);
+    (props.type == MaterialsInputType.FORMULA ||
+      props.allowedInputTypes.indexOf(MaterialsInputType.FORMULA) > -1);
   const inputRef = useRef<HTMLInputElement>(null);
   const valueChangedByPT = useRef(false);
   const dropdownItems = [
@@ -73,7 +81,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
       inputValue !== '' &&
       document.activeElement === inputRef.current
     ) {
-      setShowAutocomplete(true);
+      if (props.setShowAutocomplete) props.setShowAutocomplete(true);
       setShowInputHelp(false);
     } else if (document.activeElement === inputRef.current && (!inputValue || inputValue === '')) {
       setShowInputHelp(true);
@@ -96,13 +104,13 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   };
 
   const handleBlur = (e) => {
-    setShowAutocomplete(false);
+    if (props.setShowAutocomplete) props.setShowAutocomplete(false);
     setShowInputHelp(false);
     if (props.onBlur) props.onBlur(e);
   };
 
   const handleKeyDown = (e) => {
-    if (e.keyCode === 9) setShowAutocomplete(false);
+    if (e.keyCode === 9 && props.setShowAutocomplete) props.setShowAutocomplete(false);
     if (props.onKeyDown) props.onKeyDown(e);
   };
 
@@ -120,21 +128,45 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
    */
   useEffect(() => {
     if (!valueChangedByPT.current) {
-      const enabledElementsList = getTruthyKeys(enabledElements);
-      const staticInputField = !props.onInputTypeChange ? props.inputType : undefined;
-      let [newMaterialsInputType, parsedValue] = staticInputField
+      const [newMaterialsInputType, parsedValue] = staticInputField
         ? validateInputType(inputValue, staticInputField)
         : detectAndValidateInputType(inputValue, props.allowedInputTypes!);
-      let isValid = parsedValue !== null || !inputValue ? true : false;
-      let newDelimiter = delimiter;
-      let newPtActionsToDispatch: DispatchAction[] = [];
-
+      const isValidInputLength = validateInputLength(
+        parsedValue,
+        newMaterialsInputType,
+        props.maxElementSelectable
+      );
+      const isMaxElements =
+        Array.isArray(parsedValue) && parsedValue.length === props.maxElementSelectable;
+      const isValid = (parsedValue && isValidInputLength) || !inputValue ? true : false;
       shouldShowHelpOrAutocomplete(newMaterialsInputType);
+
+      /**
+       * Short circuit the input update and return to previous value
+       * if the new value is beyond the max number of elements,
+       * or if the max number of elements has already been reached and
+       * the new value is invalid.
+       *
+       * This two-step check ensures that it's possible to reach the max
+       * number of elements and be able to type another letter if the result
+       * is still a valid list of the max number of elements.
+       * e.g. If max = 4, it's possible to go from Fe-Ni-H-C to Fe-Ni-H-Co.
+       */
+      if (!isValidInputLength || (maxElementsReached && !isValid)) {
+        setInputValue(prevInputValue);
+        props.setValue(prevInputValue);
+        return;
+      }
+
+      setMaxElementsReached(isMaxElements);
+      const newPtActionsToDispatch: DispatchAction[] = [];
+      let newDelimiter = delimiter;
 
       if (isValid) {
         props.setError(null);
         if (
           newMaterialsInputType === MaterialsInputType.ELEMENTS ||
+          newMaterialsInputType === MaterialsInputType.CHEMICAL_SYSTEM ||
           newMaterialsInputType === MaterialsInputType.FORMULA
         ) {
           /** Parse the input for a delimiter */
@@ -142,23 +174,9 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           /** If no delimiter present, don't change the delimiter value */
           newDelimiter = parsedDelimiter ? parsedDelimiter : newDelimiter;
           const parsedElements = parsedValue || [];
-          /** Enable new elements if they aren't already enabled */
-          parsedElements.forEach((el) => {
-            if (!enabledElements[el]) {
-              newPtActionsToDispatch.push({
-                action: ptActions.addEnabledElement,
-                payload: el
-              });
-            }
-          });
-          /** Remove enabled element if it is not part of the new list of parsed elements */
-          enabledElementsList.forEach((el) => {
-            if (parsedElements.indexOf(el) === -1) {
-              newPtActionsToDispatch.push({
-                action: ptActions.removeEnabledElement,
-                payload: el
-              });
-            }
+          newPtActionsToDispatch.push({
+            action: ptActions.setEnabledElements,
+            payload: mapArrayToBooleanObject(parsedElements)
           });
         } else {
           newPtActionsToDispatch.push({
@@ -166,9 +184,15 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
           });
         }
 
+        // let cleanInputValue = inputValue;
+        // if (inputType !== MaterialsInputType.TEXT) {
+        //   cleanInputValue = cleanInputValue.replace(/\s/g, '');
+        // }
+
         setInputType(newMaterialsInputType);
         setPtActionsToDispatch(newPtActionsToDispatch);
         setDelimiter(newDelimiter);
+        setPrevInputValue(inputValue);
         props.setValue(inputValue);
         if (props.onInputTypeChange && newMaterialsInputType) {
           props.onInputTypeChange(newMaterialsInputType);
@@ -184,10 +208,6 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     }
     valueChangedByPT.current = false;
   }, [inputValue]);
-
-  // useEffect(() => {
-  //   setInputValue(props.value);
-  // }, [props.value]);
 
   /**
    * This effect executes the periodic table context actions collected by the value effect (above)
@@ -211,9 +231,11 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
     if (lastAction && lastAction.hasOwnProperty('type')) {
       const enabledElementsList = getTruthyKeys(enabledElements);
       let newValue = '';
-      switch (props.inputType) {
+      switch (props.type) {
         case MaterialsInputType.ELEMENTS:
+        case MaterialsInputType.CHEMICAL_SYSTEM:
           let elementsSplit = props.value ? props.value.split(delimiter) : [];
+          elementsSplit = elementsSplit.filter((d) => d !== '');
           if (lastAction.type === 'select') {
             elementsSplit.push(enabledElementsList[enabledElementsList.length - 1]);
           } else {
@@ -265,35 +287,18 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
   }, []);
 
   /**
-   * When the isChemSys prop is changed (e.g. via checkbox or dropdown),
+   * When the input type prop is changed (e.g. via dropdown),
    * set the delimiter accordingly
    */
   useEffect(() => {
-    setDelimiter(props.isChemSys ? new RegExp('-') : new RegExp(','));
-  }, [props.isChemSys]);
+    setDelimiter(
+      props.type === MaterialsInputType.CHEMICAL_SYSTEM ? new RegExp('-') : new RegExp(',')
+    );
+  }, [props.type]);
 
   return (
     <>
-      {props.showInputTypeDropdown && (
-        <Control>
-          <Dropdown
-            value={props.inputType}
-            onChange={(item: MaterialsInputType) => {
-              if (props.onInputTypeChange) props.onInputTypeChange(item);
-            }}
-            color="primary"
-          >
-            {dropdownItems.map((item, k) => {
-              return (
-                <Dropdown.Item key={k} value={item.value}>
-                  {item.label}
-                </Dropdown.Item>
-              );
-            })}
-          </Dropdown>
-        </Control>
-      )}
-      <Control className="is-expanded">
+      <div className="control is-expanded">
         <input
           data-testid="materials-input-search-input"
           className={classNames('input', props.inputClassName)}
@@ -313,7 +318,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
             inputType={inputType}
             apiEndpoint={props.autocompleteFormulaUrl!}
             apiKey={props.autocompleteApiKey}
-            show={showAutocomplete}
+            show={props.showAutocomplete}
             /**
              * onChange must come from the top-level onChange event for MaterialsInput (i.e. not modify inputValue directly)
              * otherwise there will be circular hooks.
@@ -329,11 +334,11 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
         {props.helpItems && (
           <InputHelp items={props.helpItems} show={showInputHelp} onChange={props.setValue} />
         )}
-      </Control>
+      </div>
       {props.helpItems && (
-        <Control>
+        <div className="control">
           <button
-            data-testid="materials-input-tooltip-button"
+            data-testid="materials-input-help-button"
             type="button"
             className={classNames('button input-help-button', {
               'has-text-grey-light': !showInputHelp,
@@ -348,7 +353,7 @@ export const MaterialsInputBox: React.FC<Props> = (props) => {
               {showInputHelp ? 'Hide examples' : 'Show examples'}
             </Tooltip>
           </button>
-        </Control>
+        </div>
       )}
     </>
   );

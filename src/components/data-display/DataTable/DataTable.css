@@ -1,0 +1,60 @@
+.mpc-data-table {
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.mpc-data-table .rdt_Table,
+.mpc-data-table .rdt_TableRow {
+  background: none;
+}
+
+.mpc-data-table .mpc-data-table-header {
+  padding: 1rem 1rem 0 1rem;
+}
+
+.mpc-data-table .mpc-paginator {
+  padding: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mpc-data-table .react-data-table-outer-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mpc-data-table .react-data-table-container {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.mpc-data-table .react-data-table {
+  overflow: auto;
+  max-height: 100%;
+}
+
+.mpc-data-table .rdt_TableHead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: #bbb 0px 0px 4px;
+}
+
+.mpc-data-table .react-data-table .column-header-right {
+  text-align: right;
+}
+
+.mpc-data-table .react-data-table .column-header-center {
+  text-align: center;
+}
+
+.mpc-data-table .react-data-table .column-units {
+  font-weight: normal;
+}
+
+.mpc-data-table .mpc-data-table-footer {
+  padding: 0 1rem 1rem 1rem;
+  font-size: 0.85rem;
+}

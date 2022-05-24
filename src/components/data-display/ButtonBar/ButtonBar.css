@@ -1,0 +1,40 @@
+.mpc-button-bar {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  float: right;
+  z-index: 2;
+}
+
+.mpc-button-bar > * {
+  margin: 0 !important;
+  width: 100%;
+}
+
+.mpc-button-bar .dropdown,
+.mpc-button-bar .dropdown-trigger,
+.mpc-button-bar .dropdown-trigger .button {
+  width: 100%;
+}
+
+.mpc-button-bar > *:not(:last-child):not(:focus),
+.mpc-button-bar > *:not(:last-child):not(:focus) .button {
+  border-bottom: none;
+}
+
+.mpc-button-bar > *:not(:last-child):not(:first-child),
+.mpc-button-bar > *:not(:last-child):not(:first-child) .button {
+  border-radius: 0;
+}
+
+.mpc-button-bar > *:first-child:not(:last-child),
+.mpc-button-bar > *:first-child:not(:last-child) .button {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.mpc-button-bar > *:last-child:not(:first-child),
+.mpc-button-bar > *:last-child:not(:first-child) .button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

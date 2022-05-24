@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchUI } from '../../components/data-display/SearchUI';
 import {
   Column,
   FilterGroup,
@@ -8,6 +7,9 @@ import {
 import filterGroups from './filterGroups.json';
 import columns from './columns.json';
 import { PeriodicTableMode } from '../../components/data-entry/MaterialsInput/MaterialsInput';
+import { SearchUIContainer } from '../../components/data-display/SearchUI/SearchUIContainer';
+import { SearchUISearchBar } from '../../components/data-display/SearchUI/SearchUISearchBar';
+import { SearchUIGrid } from '../../components/data-display/SearchUI/SearchUIGrid';
 
 /**
  * Component for testing the Synthesis Explorer view
@@ -17,7 +19,7 @@ export const SynthesisExplorer: React.FC = () => {
   return (
     <>
       <h1 className="title">Synthesis Explorer</h1>
-      <SearchUI
+      <SearchUIContainer
         resultLabel="synthesis recipe"
         columns={columns as Column[]}
         filterGroups={filterGroups as FilterGroup[]}
@@ -26,19 +28,22 @@ export const SynthesisExplorer: React.FC = () => {
         }
         apiKey={undefined}
         hasSortMenu={false}
-        searchBarTooltip="Type in keywords for which you want to search the synthesis database. For example, try 'ball-milled' or 'impurities'."
-        searchBarAllowedInputTypesMap={{
-          formula: {
-            field: 'target_formula'
-          },
-          text: {
-            field: 'keywords'
-          }
-        }}
-        searchBarPeriodicTableMode={PeriodicTableMode.TOGGLE}
-        searchBarPlaceholder="Search recipes by keywords"
         view={SearchUIViewType.SYNTHESIS}
-      />
+      >
+        <SearchUISearchBar
+          allowedInputTypesMap={{
+            formula: {
+              field: 'target_formula'
+            },
+            text: {
+              field: 'keywords'
+            }
+          }}
+          periodicTableMode={PeriodicTableMode.TOGGLE}
+          placeholder="Search recipes by keywords"
+        />
+        <SearchUIGrid />
+      </SearchUIContainer>
     </>
   );
 };

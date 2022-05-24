@@ -11,6 +11,7 @@ import { ThreeStateBooleanSelect } from '../../../data-entry/ThreeStateBooleanSe
 import { TextInput } from '../../../data-entry/TextInput';
 import { Tooltip } from '../../Tooltip';
 import { PeriodicTableMode } from '../../../data-entry/MaterialsInput/MaterialsInput';
+import { FilterField } from '../../../data-entry/FilterField';
 
 /**
  * Component for rendering a panel of filters that are part of a SearchUI component
@@ -20,17 +21,17 @@ interface Props {
   className?: string;
 }
 
-const getActiveFilterById = (id: string, activeFilters: ActiveFilter[]) => {
-  return activeFilters.find((af) => af.id === id);
+const getActiveFilterByName = (name: string, activeFilters: ActiveFilter[]) => {
+  return activeFilters.find((af) => af.name === name);
 };
 
 const getActiveFilterCount = (group: FilterGroup, activeFilters: ActiveFilter[]) => {
   let count = 0;
-  const activeIds = activeFilters.map((f) => f.id);
+  const activeIds = activeFilters.map((f) => f.name);
   group.filters.forEach((f) => {
-    if (activeIds.indexOf(f.id) > -1) {
+    if (activeIds.indexOf(f.name) > -1) {
       f.active = true;
-      count++;
+      if (!f.hidden) count++;
     } else {
       f.active = false;
     }
@@ -51,11 +52,11 @@ const getGroupsByName = (groups: FilterGroup[], activeFilters: ActiveFilter[]) =
 };
 
 export const SearchUIFilters: React.FC<Props> = (props) => {
-  const state = useSearchUIContext();
+  const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const groupRefs = useRef(new Array(state.filterGroups.length));
   const [groupsByName, setGroupsByName] = useState(
-    getGroupsByName(state.filterGroups, state.activeFilters)
+    getGroupsByName(state.filterGroups, state.activeFilters!)
   );
 
   /**
@@ -65,31 +66,30 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
    * dynamically change their "props" property with actions.setFilterProps().
    */
   const renderFilter = (f: Filter, groupId: string) => {
+    let queryParam = f.params[0];
+    let queryParamValue = query[queryParam];
     switch (f.type) {
       case FilterType.TEXT_INPUT:
         return (
           <TextInput
+            {...f.props}
             debounce={state.debounce}
             type="text"
-            value={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
-            {...f.props}
+            value={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam)}
           />
         );
       case FilterType.MATERIALS_INPUT:
         return (
           <MaterialsInput
+            {...f.props}
             debounce={state.debounce}
-            value={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id, f.overrides)}
+            value={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam, f.overrides)}
             periodicTableMode={PeriodicTableMode.NONE}
             hidePeriodicTable={true}
-            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
             autocompleteFormulaUrl={state.autocompleteFormulaUrl}
             autocompleteApiKey={state.apiKey}
-            // onFieldChange={field => actions.setFilterProps({ field }, f.id, groupId)}
-            // showFieldDropdown={true}
-            {...f.props}
           />
         );
       case FilterType.SLIDER:
@@ -97,9 +97,13 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <DualRangeSlider
             {...f.props}
             debounce={state.debounce}
-            initialValues={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
-            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.id, groupId)}
+            valueMin={query[f.params[0]]}
+            valueMax={query[f.params[1]]}
+            inclusiveTickBounds={true}
+            onChange={(min, max) => {
+              actions.setFilterValues([min, max], [f.params[0], f.params[1]]);
+            }}
+            onPropsChange={(propsObject) => actions.setFilterProps(propsObject, f.name, groupId)}
           />
         );
       case FilterType.SELECT_SPACEGROUP_SYMBOL:
@@ -111,28 +115,28 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
           <Select
             isClearable
             {...f.props}
-            value={state.filterValues[f.id]}
+            value={queryParamValue}
             onChange={(selectedOption) => {
               const value = selectedOption && selectedOption.value ? selectedOption.value : null;
-              actions.setFilterValue(value, f.id);
+              actions.setFilterValue(value, queryParam);
             }}
-            arbitraryProps={{ id: 'test' }}
+            // arbitraryProps={{ id: 'test' }}
           />
         );
       case FilterType.THREE_STATE_BOOLEAN_SELECT:
         return (
           <ThreeStateBooleanSelect
             {...f.props}
-            value={state.filterValues[f.id]}
-            onChange={(item) => actions.setFilterValue(item.value, f.id)}
+            value={queryParamValue}
+            onChange={(item) => actions.setFilterValue(item.value, queryParam)}
           />
         );
       case FilterType.CHECKBOX_LIST:
         return (
           <CheckboxList
             {...f.props}
-            values={state.filterValues[f.id]}
-            onChange={(v) => actions.setFilterValue(v, f.id)}
+            values={queryParamValue}
+            onChange={(v) => actions.setFilterValue(v, queryParam)}
           />
         );
       default:
@@ -167,36 +171,36 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     }
   };
 
-  const renderFilterLabel = (filter: Filter) => {
-    const cancelButton = filter.active ? (
+  const renderFilterLabel = (f: Filter) => {
+    const cancelButton = f.active ? (
       <FaRegTimesCircle className="ml-2 filter-cancel-button" />
     ) : null;
     const innerLabel = (
       <span
         className={classNames('has-text-weight-bold', 'mb-2', {
-          'tooltip-label': filter.tooltip
+          'tooltip-label': f.tooltip
         })}
         data-tip
-        data-for={`filter_${filter.id}`}
+        data-for={`filter_${f.name.replace(' ', '-')}`}
       >
-        {filter.name}
-        {renderUnitsComponent(filter.units)}
+        {f.name}
+        {renderUnitsComponent(f.units)}
         {cancelButton}
-        {filter.tooltip && <Tooltip id={`filter_${filter.id}`}>{filter.tooltip}</Tooltip>}
+        {f.tooltip && <Tooltip id={`filter_${f.name.replace(' ', '-')}`}>{f.tooltip}</Tooltip>}
       </span>
     );
 
-    if (filter.active) {
-      return <a onClick={() => resetFilter(filter.id)}>{innerLabel}</a>;
+    if (f.active) {
+      return <a onClick={() => resetFilter(f)}>{innerLabel}</a>;
     } else {
       return innerLabel;
     }
   };
 
-  const resetFilter = (id: string) => {
-    const activeFilter = getActiveFilterById(id, state.activeFilters);
-    if (activeFilter) {
-      actions.setFilterValue(activeFilter.defaultValue, id);
+  const resetFilter = (f: Filter) => {
+    const af = getActiveFilterByName(f.name, state.activeFilters!);
+    if (af) {
+      actions.removeFilters(af.params);
     }
   };
 
@@ -218,7 +222,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
     let newGroupsByName = { ...groupsByName };
     for (const name in newGroupsByName) {
       const g = newGroupsByName[name];
-      g.activeFilterCount = getActiveFilterCount(g, state.activeFilters);
+      g.activeFilterCount = getActiveFilterCount(g, state.activeFilters!);
     }
     setGroupsByName(newGroupsByName);
   }, [state.activeFilters]);
@@ -228,7 +232,7 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
    * from outside of this component (e.g. when a quick search is submitted)
    */
   useEffect(() => {
-    const newGroupsByName = getGroupsByName(state.filterGroups, state.activeFilters);
+    const newGroupsByName = getGroupsByName(state.filterGroups, state.activeFilters!);
     setGroupsByName(newGroupsByName);
   }, [state.filterGroups]);
 
@@ -295,14 +299,28 @@ export const SearchUIFilters: React.FC<Props> = (props) => {
                 })}
               >
                 <div aria-hidden={!groupsByName[g.name].expanded}>
-                  {g.filters.map((f, j) => (
-                    <div className="mb-4" key={j}>
-                      <div>
-                        <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
-                        {renderFilter(f, g.name)}
-                      </div>
-                    </div>
-                  ))}
+                  {g.filters.map(
+                    (f, j) =>
+                      !f.hidden && (
+                        <FilterField
+                          key={j}
+                          id={f.name.replace(' ', '-')}
+                          label={f.name}
+                          tooltip={f.tooltip}
+                          units={f.units}
+                          active={f.active}
+                          resetFilter={() => resetFilter(f)}
+                        >
+                          {renderFilter(f, g.name)}
+                        </FilterField>
+                        // <div className="mb-4" key={j}>
+                        //   <div>
+                        //     <div className="has-text-weight-bold mb-2">{renderFilterLabel(f)}</div>
+                        //     {renderFilter(f, g.name)}
+                        //   </div>
+                        // </div>
+                      )
+                  )}
                 </div>
               </div>
             </div>
