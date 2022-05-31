@@ -78,7 +78,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-env": "^7.18.0",
     "@parcel/transformer-less": "^2.5.0",
     "@parcel/transformer-sass": "^2.5.0",
     "@rollup/plugin-image": "^2.0.6",
@@ -100,8 +100,8 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.9",
     "@types/react-responsive": "^8.0.2",
-    "css-loader": "^6.7.1",
     "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "husky": "^4.3.6",
