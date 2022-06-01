@@ -3,6 +3,9 @@ import { CrystalToolkitScene } from '../CrystalToolkitScene';
 import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import { AnimationStyle, Renderer } from '../scene/constants';
 
+/**
+ * Component for generating a CrystalToolkitScene dynamically from user-supplied JSON input
+ */
 export const DynamicCrystalToolkitScene: React.FC = () => {
   const [sceneData, setSceneData] = useState<Object | null>(null);
   const [showScene, setShowScene] = useState(false);

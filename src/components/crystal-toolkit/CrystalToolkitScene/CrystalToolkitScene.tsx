@@ -193,10 +193,30 @@ export interface CrystalToolkitSceneProps {
    * }
    */
   customCameraState?: CameraState;
+  /**
+   * Determines if control bar is visible
+   * @default true
+   */
   showControls?: boolean;
+  /**
+   * Determines if expand button in control bar is visible
+   * @default true
+   */
   showExpandButton?: boolean;
+  /**
+   * Determines if image download button in control bar is visible
+   * @default true
+   */
   showImageButton?: boolean;
+  /**
+   * Determines if file export button in control bar is visible
+   * @default true
+   */
   showExportButton?: boolean;
+  /**
+   * Determines if return to original position button in control bar is visible
+   * @default true
+   */
   showPositionButton?: boolean;
 }
 
@@ -371,6 +391,11 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       },
       mountNodeDebugRef.current!
     ));
+    /**
+     * I believe this can be removed because image requesting is now handled by
+     * the image dropdown.
+     * Unclear what the role of the observable is here.
+     */
     const subscription = subscribe(({ filetype }) => requestImage(filetype, _s));
     return () => {
       // clean up code
@@ -644,11 +669,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
               domain={[0, 100]}
               onChange={(values) => scene.current!.updateTime(values[0] / 100)}
             />
-            // <SimpleSlider
-            //   onUpdate={(a) => {
-            //     scene.current!.updateTime(a / 100);
-            //   }}
-            // />
           )}
         </div>
       </div>

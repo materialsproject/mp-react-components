@@ -48,36 +48,143 @@ export enum PeriodicTableMode {
   NONE = 'none'
 }
 
+/**
+ * Props for `MaterialsInput` that get drilled into `MaterialsInputBox`
+ */
 export interface MaterialsInputSharedProps {
+  /**
+   * The current/initial value of the input.
+   * This value will be dynamically updated so it can be accessed via dash callbacks.
+   */
   value?: string;
+  /**
+   * The current/initial type of the input.
+   * The type value changes dynamically based on the input value.
+   */
   type?: MaterialsInputType;
+  /**
+   * List of input types that are allowed to be entered into the input.
+   * This determines which types the component will dynamically detect.
+   * Each item in the list must be a valid `MaterialsInputType`.
+   * e.g. `['elements', 'checmical_system', 'formula']`
+   */
   allowedInputTypes?: MaterialsInputType[];
+  /**
+   * Text to display in the input when there is no value.
+   */
   placeholder?: string;
+  /**
+   * Text to display in the error tooltip when an invalid input value is detected.
+   */
   errorMessage?: string;
+  /**
+   * Class name(s) to apply to the input element in addition to the
+   * 'input' class which is added automatically.
+   */
   inputClassName?: string;
+  /**
+   * API URL route to use to send autocomplete requests to when typing in a formula.
+   */
   autocompleteFormulaUrl?: string;
+  /**
+   * API key to send along with the autocomplete request.
+   */
   autocompleteApiKey?: string;
+  /**
+   * List of labels and examples to display under the input when it is focused and there is no value.
+   * Each item must be an object with a `label` string and/or `examples` array.
+   * Strings in `examples` arrays will be clickable and will fill the input value with the example.
+   * e.g.
+   * `[
+   *  {label: 'Search by formula', examples: ['NaCl', 'MnO2']},
+   *  {label: 'See more examples in the documentation'}
+   * ]`
+   */
   helpItems?: InputHelpItem[];
+  /**
+   * The maximum number of elements that can be entered or selected in the periodic table.
+   */
   maxElementSelectable?: number;
+  /**
+   * This prop is used internally by `MaterialsInputBox` and will be ignored if set on `MaterialsInput`.
+   */
   showAutocomplete?: boolean;
+  /**
+   * This prop is used internally by `MaterialsInputBox` and will be ignored if set on `MaterialsInput`.
+   */
   setShowAutocomplete?: (value: boolean) => any;
+  /**
+   * Function to run when the value changes.
+   */
   onChange?: (value: string) => any;
+  /**
+   * Function to run when the input type changes.
+   */
   onInputTypeChange?: (type: MaterialsInputType) => any;
+  /**
+   * Function to run when the submit button is clicked.
+   */
   onSubmit?: (event: React.FormEvent | React.MouseEvent, value?: string, filterProps?: any) => any;
 }
 
+/**
+ * Props that are exclusively for `MaterialsInput` (not drilled into `MaterialsInputBox`)
+ */
 export interface MaterialsInputProps extends MaterialsInputSharedProps {
+  /**
+   * The ID used to identify this component in Dash callbacks
+   */
   id?: string;
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
   setProps?: (value: any) => any;
+  /**
+   * Class name(s) to append to the component's default class (`mpc-materials-input`)
+   */
   className?: string;
+  /**
+   * Number of milliseconds to wait before registering the value change.
+   */
   debounce?: number;
+  /**
+   * Control how or if the periodic table should display with the input.
+   * Must be a valid `PeriodicTableMode` ('toggle', 'focus', or 'none').
+   */
   periodicTableMode?: PeriodicTableMode;
+  /**
+   * An alternative way to turn off the periodic table.
+   * This could likely be removed in the future.
+   */
   hidePeriodicTable?: boolean;
+  /**
+   * Set to true to display a left-hand dropdown for displaying and changing
+   * the input type.
+   */
   showTypeDropdown?: boolean;
+  /**
+   * Set to true to show a submit button on the right-hand side of the input.
+   */
   showSubmitButton?: boolean;
+  /**
+   * This prop can be used by dash callbacks to listen for user clicks on the submit button.
+   */
   submitButtonClicks?: number;
+  /**
+   * Text to display in the submit button.
+   */
   submitButtonText?: string;
+  /**
+   * Text to display in a label box on the left-hand side of the input.
+   * If none is supplied, there will not be a label rendered.
+   */
   label?: string;
+  /**
+   * Hide the wildcard asterisk button with the periodic table.
+   * Use this for situations where you want to support element or chemical system
+   * selections, but you can't support wildcard searches.
+   */
   hideWildcardButton?: boolean;
   /**
    * Text to display in the periodic table help box when
@@ -91,12 +198,20 @@ export interface MaterialsInputProps extends MaterialsInputSharedProps {
    * Supports markdown.
    */
   elementsSelectHelpText?: string;
+  /**
+   * This prop is controlled automatically.
+   * It tells you whether the input is in the loading state or not.
+   */
   loading?: boolean;
+  /**
+   * Function to call when the input value changes that will pass the
+   * updated props object to the function.
+   */
   onPropsChange?: (propsObject: any) => void;
 }
 
 /**
- * An input field component for searching by mp-id, elements, or formula.
+ * An input field component for searching by mp-id, elements, chemical system, formula, or plain text.
  * Renders a text input and a periodic table within a PeriodicContext to support
  * two-way binding between the input and periodic table.
  * i.e. when elements are typed into the field, they are selected in the table,
