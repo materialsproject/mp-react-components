@@ -54,6 +54,10 @@ The file structure for each component should look like the following:
   - `MyComponent.css`
   - `MyComponent.test.tsx`
 
+### TypeScript and JSX
+
+This repo is configured to use TypeScript and JSX. Any file that uses TypeScript and JSX syntax (i.e. component files and any other files that include components) should use the `.tsx` extension.
+
 ### Testing Components During Development
 
 To see how your component looks and behaves while you are developing it, you have a few different options. When you start the app locally, the main entry point that determines what is rendered is in `src/app.tsx`. Because this is a component library and not a fully integrated app, the `app.tsx` file exists solely as a testing sandbox. A simple routing structure has been setup to test out different kinds of pages in a react-only environment. These test pages live in the `src/pages` directory. When testing a new component, you can use it inside of one of the existing pages or you can create a new page. There is also the `Sandbox` page within the `pages` directory that is intended to be cleared out any time and used to test new discrete components.
@@ -66,9 +70,9 @@ By convention, almost all components are given a top-level class which is the na
 
 The components in this library are intended to be used with the Bulma CSS Framework. For that reason, many bulma classes and component patterns are utilized within the components.
 
-### Test ID's
+### Test IDs
 
-Also by convention, almost all components are given a "test id" via the attribute `data-testid`. In some cases, a component may have multiple elements with test id's. These id's make it easier to select the components and their testable parts within the unit tests.
+Also by convention, almost all components are given a test ID via the attribute `data-testid`. In some cases, a component may have multiple elements with test IDs. These IDs make it easier to select the components and their testable parts within the unit tests.
 
 ### Component Utils
 
@@ -85,6 +89,28 @@ Most components also have their own props interface defined. Note that this inte
 ### Exporting Components
 
 Any component that you want to be usable when this library is imported as a third-party node module must be added to the exports list in `src/index.ts`.
+
+## Unit Tests
+
+This repo uses [jest](https://jestjs.io/) and [react testing library](https://testing-library.com/) to write and run unit tests. Any file in the `src` directory with the `.test.tsx` or `.spec.tsx` extension will be detected as a runnable test.
+
+Run all the unit tests:
+
+```
+npm run test
+```
+
+Run a specific test suite:
+
+```
+npm run test MaterialsInput
+```
+
+The jest configuration can be found in `jest.config.js`
+
+### Mocks
+
+To test the fetching behavior of the `SearchUI` components, there is a `mocks` directory which sets up a Mock Service Worker using the `msw` package. See more [here](https://mswjs.io/docs/getting-started/integrate/node).
 
 ## Deploying to npm
 
@@ -104,7 +130,7 @@ Use `npm publish` to push to npm
 
 ### Automated Minor Release (un-tested)
 
-Run `npm version minor -m "Upgrade to %s"` to add a tag. Once the tag is pushed, an action will
+Run `npm version minor -m "Upgrade to %s"` to add a tag. Once the tag is pushed, an action willg
 build the components and push the package to build to npm
 
 ## Developing with dash-mp-components
@@ -147,3 +173,5 @@ npm deploy-storybook
 ```
 
 ### Build Tools
+
+This repo uses Parcel to build and run the app locally and Rollup to publish the app. Parcel does not have a config file, but it does use Babel to transpile the code for this repo. The babel configuration exists in `.babelrc` and `babel.config.js`. The Rollup configuration is defined in `rollup.config.js`.

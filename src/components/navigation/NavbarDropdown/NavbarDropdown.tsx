@@ -65,14 +65,15 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
           } else {
             /** Use a <Link> component for internal links */
             return (
-              <Link
-                key={i}
-                href={item.href || ''}
-                className={classNames('navbar-item', item.className)}
-                // onClick={() => setIsActive(false)}
-              >
-                {item.label}
-              </Link>
+              <span onClick={() => setIsActive(false)}>
+                <Link
+                  key={i}
+                  href={item.href || ''}
+                  className={classNames('navbar-item', item.className)}
+                >
+                  {item.label}
+                </Link>
+              </span>
             );
           }
         })}
