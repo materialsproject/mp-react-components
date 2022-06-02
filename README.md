@@ -78,6 +78,10 @@ Other utils that are used across multiple components can be found in the higher-
 
 ### Component Types
 
+Many components will implement their own TypeScript types or interfaces to reduce errors and improve code readability. In some cases, these types are defined directly in the component file. In cases where there are many types for a set of components, there may be a `types.tsx` file inside the component folder (e.g. `SearchUI/types.tsx`).
+
+Most components also have their own props interface defined. Note that this interface should usually be uniquely named and exported so that it can be used inside the component's storybook file.
+
 ### Exporting Components
 
 Any component that you want to be usable when this library is imported as a third-party node module must be added to the exports list in `src/index.ts`.

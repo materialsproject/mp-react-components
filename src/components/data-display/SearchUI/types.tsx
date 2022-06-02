@@ -396,7 +396,7 @@ export interface SearchState extends SearchUIContainerProps {
    * Optional props from SearchUIContainerProps that are required by SearchState
    */
   setProps: (value: any) => any;
-  sortFields: string[];
+  sortFields: (string | undefined | null)[];
   sortKey: string;
   skipKey: string;
   limitKey: string;
