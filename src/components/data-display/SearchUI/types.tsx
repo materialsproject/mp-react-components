@@ -1,20 +1,6 @@
 import { DecodedValueMap, QueryParamConfigMap } from 'use-query-params';
-import { MaterialsInputType } from '../../data-entry/MaterialsInput';
-import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
-import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
-import { MaterialsInputTypesMap } from '../../data-entry/MaterialsInput/utils';
-import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
-
-export enum FilterId {
-  ELEMENTS = 'elements',
-  VOLUME = 'volume',
-  DENSITY = 'density',
-  MP_ID = 'task_ids',
-  FORMULA = 'formula',
-  NELEMENTS = 'nelements'
-}
 
 /**
  * See storybook for documentation
@@ -388,13 +374,18 @@ export interface SearchUIContainerProps {
    */
   disableRichColumnHeaders?: boolean;
   /**
-   *
+   * This prop is set automatically.
+   * Array of results currently rendered in the UI.
    */
   results?: any[];
   /**
    * Endpoint to use for fallback free text material searches against the Matscholar API.
    */
   matscholarEndpoint?: string;
+  /**
+   * EXPERIMENTAL
+   */
+  cardOptions?: any;
 }
 
 export interface SearchState extends SearchUIContainerProps {

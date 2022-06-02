@@ -28,8 +28,8 @@ export const SearchUIDataCards: React.FC = () => {
   return (
     <div data-testid="mpc-search-ui-data-cards" className="mpc-search-ui-data-cards">
       <CustomPaginator />
-      {/* <div className="mpc-search-ui-data-cards-container">
-        {state.results.map((d, i) => (
+      <div className="mpc-search-ui-data-cards-container">
+        {state.results!.map((d, i) => (
           <DataCard
             key={`mpc-data-card-${i}`}
             className="box mpc-search-ui-data-card"
@@ -46,7 +46,7 @@ export const SearchUIDataCards: React.FC = () => {
             }
           />
         ))}
-      </div> */}
+      </div>
       <CustomPaginator />
     </div>
   );
