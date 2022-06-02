@@ -33,75 +33,20 @@ const mountNode = document.getElementById(mountNodeSelector);
 ReactDOM.render(
   <>
     <Router>
-      <Link to="/materials">Materials</Link>
-      <Link to="/molecules">Molecules</Link>
-      <Link to="/matscholar">Matscholar Alpha</Link>
-      <Navbar
-        brandItem={{
-          label: 'MP React',
-          href: '/materials'
-        }}
-        items={[
-          {
-            label: 'Materials',
-            href: '/materials'
-          },
-          {
-            label: 'Molecules',
-            href: '/molecules'
-          },
-          {
-            label: 'Batteries',
-            href: '/batteries'
-          },
-          {
-            label: 'Synthesis',
-            href: '/synthesis'
-          },
-          {
-            label: 'Catalysts',
-            href: '/catalysts'
-          },
-          {
-            label: 'MOF',
-            href: '/mof'
-          },
-          {
-            label: 'X-Ray Absorption Spectra',
-            href: '/xas'
-          },
-          {
-            label: 'More',
-            isRight: true,
-            items: [
-              {
-                label: 'More',
-                isMenuLabel: true
-              },
-              {
-                label: 'Phase Diagram',
-                href: '/phasediagram'
-              },
-              {
-                label: 'Publications',
-                href: '/publications'
-              },
-              {
-                label: 'Contributions',
-                href: '/contribs'
-              },
-              {
-                label: 'Crystal Structure',
-                href: '/crystal'
-              },
-              {
-                label: 'Sandbox',
-                href: '/sandbox'
-              }
-            ]
-          }
-        ]}
-      />
+      <div className="basic-navbar">
+        <Link to="/materials">Materials</Link>
+        <Link to="/molecules">Molecules</Link>
+        <Link to="/matscholar">Matscholar Alpha</Link>
+        <Link to="/batteries">Batteries</Link>
+        <Link to="/synthesis">Synthesis</Link>
+        <Link to="/catalysts">Catalysts</Link>
+        <Link to="/mof">MOF</Link>
+        <Link to="/xas">XAS</Link>
+        <Link to="/phasediagram">Phase Diagram</Link>
+        <Link to="/contribs">Contributions</Link>
+        <Link to="/crystal">Crystal Structure</Link>
+        <Link to="/sandbox">Sandbox</Link>
+      </div>
       <section>
         <Switch>
           <Route path="/materials">
