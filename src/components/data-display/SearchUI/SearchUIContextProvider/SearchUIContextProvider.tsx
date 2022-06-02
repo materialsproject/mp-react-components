@@ -120,8 +120,14 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
         });
       }
     },
+    /**
+     * Set the primary sort field and sort direction
+     */
     setSort: (sortField: string, sortAscending: boolean) => {
-      const sortFields = [...query[props.sortKey]];
+      let sortFields: string[] | undefined = [];
+      if (query[props.sortKey]) {
+        sortFields = [...query[props.sortKey]];
+      }
       const directionPrefix = sortAscending ? '' : '-';
       sortFields[0] = directionPrefix + sortField;
       setQuery({
@@ -129,6 +135,9 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
         [props.skipKey]: undefined
       });
     },
+    /**
+     * Set the primary sort column without changing sort direction
+     */
     setSortField: (sortField: string) => {
       const sortFields = [...query[props.sortKey]];
       sortFields[0] = sortField;
@@ -237,7 +246,8 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
       const params = preprocessQueryParams(
         { ...query, ...props.apiEndpointParams },
         state.filterGroups,
-        defaultQuery
+        defaultQuery,
+        state.sortKey
       );
       params[props.fieldsKey] = fields;
 

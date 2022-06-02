@@ -310,9 +310,12 @@ export interface SearchUIContainerProps {
    * Optionally include up to 2 fields to sort by on initial load.
    * To sort in descending order, prefix the field name with "-".
    * The first sort field can be modified within the UI. The second will be the default secondary sort field.
-   * e.g. ["-energy_above_hull", "formula_pretty"]
+   * e.g. `["-energy_above_hull", "formula_pretty"]`
+   * If you want to include a default secondary sort field but no default primary sort,
+   * then the first item in the array should be null or undefined.
+   * e.g. `[null, "formula_pretty"]`
    */
-  sortFields?: string[];
+  sortFields?: (string | undefined | null)[];
   /**
    * Name of the sort parameter in the linked API.
    * @default 'sort_fields'

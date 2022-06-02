@@ -76,6 +76,8 @@ For more complicated components like `MaterialsInput` and `SearchUI`, some of th
 
 Other utils that are used across multiple components can be found in the higher-level `src/utils` directory. For example, the functions for initializing table columns can be found in `src/utils/table.tsx`.
 
+### Component Types
+
 ### Exporting Components
 
 Any component that you want to be usable when this library is imported as a third-party node module must be added to the exports list in `src/index.ts`.
@@ -139,3 +141,5 @@ Stories are defined in `./src/stories`
 ```
 npm deploy-storybook
 ```
+
+### Build Tools
