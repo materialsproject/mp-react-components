@@ -10,10 +10,10 @@ import {
   Renderer,
   ThreePosition
 } from './constants';
-import { TooltipHelper } from '../scene/tooltip-helper';
-import { InsetHelper, ScenePosition } from '../scene/inset-helper';
+import { TooltipHelper } from './tooltip-helper';
+import { InsetHelper, ScenePosition } from './inset-helper';
 import { getSceneWithBackground, ThreeBuilder } from './three_builder';
-import { DebugHelper } from '../scene/debug-helper';
+import { DebugHelper } from './debug-helper';
 import {
   disposeSceneHierarchy,
   getScreenCoordinate,
@@ -25,9 +25,9 @@ import {
 //import img from './glass.png';
 import { OutlineEffect } from 'three/examples/jsm/effects/OutlineEffect';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
-import { SceneJsonObject } from '../scene/simple-scene';
+import { SceneJsonObject } from './simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { AnimationHelper } from '../scene/animation-helper';
+import { AnimationHelper } from './animation-helper';
 import '../CrystalToolkitScene/CrystalToolkitScene.less';
 import { CameraState } from '../CameraContextProvider/camera-reducer';
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CrystalToolkitScene } from '../CrystalToolkitScene';
-import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import { AnimationStyle, Renderer } from '../scene/constants';
 
 /**
@@ -38,17 +37,12 @@ export const DynamicCrystalToolkitScene: React.FC = () => {
       <button onClick={remove}>remove</button>
       {showScene && sceneData ? (
         <CrystalToolkitScene
-          debug={boolean('DEBUG', false)}
-          animation={select(
-            'Animation',
-            [AnimationStyle.SLIDER, AnimationStyle.PLAY, AnimationStyle.NONE] as string[],
-            AnimationStyle.NONE as string
-          )}
-          axisView={select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW')}
-          inletPadding={number('padding', 10)}
-          inletSize={number('size', 100)}
-          data={object('scene', sceneData)}
-          sceneSize={object('Size', 400)}
+          debug={false}
+          animation={AnimationStyle.NONE}
+          inletPadding={10}
+          inletSize={100}
+          data={sceneData}
+          sceneSize={400}
           toggleVisibility={emptyObject}
         />
       ) : null}

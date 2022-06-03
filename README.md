@@ -64,11 +64,21 @@ To see how your component looks and behaves while you are developing it, you hav
 
 If you prefer, you can also test your component inside of storybook. To do this, create a new story within the `src/stories` directory. See the Storybook section below for more info about Storybook.
 
-### Classes and Styles
+### Classes
 
 By convention, almost all components are given a top-level class which is the name of the component converted into kabob-case and prefixed with "mpc-". For example, the `DataBlock` component has the class `mpc-data-block`. The `className` prop for any component should extend the default class rather than replace it.
 
-The components in this library are intended to be used with the Bulma CSS Framework. For that reason, many bulma classes and component patterns are utilized within the components.
+The components in this library are intended to be used with the [Bulma CSS Framework](https://bulma.io/). For that reason, many bulma classes and component patterns are utilized within the components.
+
+### Styles
+
+Components should come with styles that are important for their usage. To include styles for a component, add a CSS file named `MyComponent.css` in the component's folder and import that CSS file into the main component file.
+
+```
+import './MyComponent.css';
+```
+
+Remember that these components are intended to be used with the [Bulma CSS framework](https://bulma.io/), so the styles in the custom stylesheet can (and often do) take this into account.
 
 ### Test IDs
 
@@ -163,7 +173,17 @@ Storybook is configured using webpack and various plugins offered by Storybook. 
 
 The order and hierarchy of the stories are set in `.storybook/preview.js`. This file is also where styles are imported into the storybook. Any styles that the storybook needs that aren't already imported into the components themselves should be included here.
 
-### Deploy storybook to github pages
+### Run Storybook Locally
+
+Run the story book locally:
+
+```
+npm run storybook
+```
+
+You should be able to access the storybook at http://localhost:6006
+
+### Deploy Storybook to GitHub Pages
 
 This will **build** and **deploy** the storybook.
 Stories are defined in `./src/stories`
@@ -172,6 +192,8 @@ Stories are defined in `./src/stories`
 npm deploy-storybook
 ```
 
+If successful, the changes will be live at https://materialsproject.github.io/mp-react-components/
+
 ### Build Tools
 
-This repo uses Parcel to build and run the app locally and Rollup to publish the app. Parcel does not have a config file, but it does use Babel to transpile the code for this repo. The babel configuration exists in `.babelrc` and `babel.config.js`. The Rollup configuration is defined in `rollup.config.js`.
+This repo uses Parcel to build and run the app locally and Rollup to publish the app. Parcel does not have a config file, but it does use Babel to transpile the code for this repo. The babel configuration exists in `.babelrc` and `babel.config.js`. The Rollup configuration is defined in `rollup.config.js`. In the future, both of these build tools may be removed in favor of a single unified tool (potentially webpack as it is used in dash-mp-components).

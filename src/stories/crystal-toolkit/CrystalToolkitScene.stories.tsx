@@ -1,4 +1,3 @@
-import { boolean, number, object, select, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import {
   s2,
@@ -17,9 +16,7 @@ import { Story } from '@storybook/react';
 
 export default {
   component: CrystalToolkitScene,
-  title: 'Crystal Toolkit/CrystalToolkitScene',
-  decorators: [withKnobs],
-  stories: []
+  title: 'Crystal Toolkit/CrystalToolkitScene'
 };
 
 const Template: Story<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
@@ -28,18 +25,19 @@ const Template: Story<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args
 
 export const Basic = Template.bind({});
 Basic.args = {
-  debug: boolean('DEBUG', false),
-  animation: select(
-    'Animation',
-    [AnimationStyle.SLIDER, AnimationStyle.PLAY, AnimationStyle.NONE] as string[],
-    AnimationStyle.NONE as string
-  ),
-  axisView: select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW'),
-  inletPadding: number('padding', 10),
-  inletSize: number('size', 100),
-  data: object('scene', sceneJson),
-  sceneSize: object('Size', 400),
-  toggleVisibility: {}
+  debug: false,
+  animation: AnimationStyle.NONE,
+  // axisView: select('Axis position', ['SW', 'SE', 'NW', 'NE', 'HIDDEN'], 'SW'),
+  inletPadding: 10,
+  inletSize: 100,
+  data: sceneJson,
+  sceneSize: 400,
+  toggleVisibility: {},
+  settings: {
+    renderer: Renderer.WEBGL,
+    extractAxis: false,
+    zoomToFit2D: true
+  }
 };
 
 export const AnimatedScene = Template.bind({});
@@ -85,7 +83,7 @@ TubeScene.args = {
     isMultiSelectionEnabled: false,
     secondaryObjectView: true
   },
-  data: object('scene', bezierScene),
+  data: bezierScene,
   debug: false
 };
 const TubeSceneDescription = `
