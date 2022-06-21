@@ -71,6 +71,7 @@ export default class Scene {
   private animationHelper: AnimationHelper;
   private tiling: any;
   private maxTiling: any;
+  private arrayOfTileRoots: any;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -108,6 +109,36 @@ export default class Scene {
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     //TODO(chab) This should be simpler
     mountNode.appendChild(this.renderer.domElement);
+  }
+
+  /*
+  this function returns a 3-dimensional empty array based on the tiling array
+  e.g. _getTiles([1, 1, 1] === [ [ [[], []], [[], []] ], [ [[], []], [[], []] ] ]
+  all of the arrays are unique instances, not copies
+  this allows us to create an array that can store the contents of each tiles and
+  be accessed with the tile indices. For example:
+  arr = _getTiles([2, 2, 2])
+  arr[0][1][2].push(scene)
+  scene = arr[0][1][2][0]
+ */
+  private static getEmptyTilesArray(tiling: number[]) {
+    let grid = [];
+    for (let x = 0; x <= tiling[2]; x++) {
+      let arrX = [];
+      for (let y = 0; y <= tiling[1]; y++) {
+        let arrY = [];
+        for (let z = 0; z <= tiling[0]; z++) {
+          let arrZ = [];
+          // @ts-ignore
+          arrY.push(arrZ);
+        }
+        // @ts-ignore
+        arrX.push(arrY);
+      }
+      // @ts-ignore
+      grid.push(arrX);
+    }
+    return grid;
   }
 
   private configureLabelRenderer(mountNode: Element) {
@@ -374,7 +405,11 @@ export default class Scene {
   ) {
     this.tiling = tiling;
     this.maxTiling = maxTiling;
-
+    this.arrayOfTileRoots = Scene.getEmptyTilesArray([
+      this.maxTiling,
+      this.maxTiling,
+      this.maxTiling
+    ]);
     this.settings = Object.assign(defaults, settings);
     this.objectBuilder = new ThreeBuilder(this.settings);
     this.cameraState = cameraState;
@@ -410,6 +445,23 @@ export default class Scene {
       this.inset.updateViewportsize(inletSize, inletPadding);
     }
     this.renderInlet();
+  }
+
+  /*
+    loop through the arrayOfTileRoots and set the visibility of each object.
+    In particular, set threeObject.visible = true if the x, y, and z indices
+    are all less than the x, y, and z indices in tiling.
+   */
+  updateTiles(tiling) {
+    const [xCut, yCut, zCut] = tiling;
+    this.arrayOfTileRoots.forEach((arrX, x) => {
+      arrX.forEach((arrY, y) => {
+        arrY.forEach((arrZ, z) => {
+          arrZ[0].visible = x <= xCut && y <= yCut && z <= zCut;
+        });
+      });
+    });
+    this.renderScene();
   }
 
   public resizeRendererToDisplaySize() {
@@ -512,36 +564,6 @@ export default class Scene {
       return tiles;
     };
 
-    /*
-      this function returns a 3-dimensional empty array based on the tiling array
-      e.g. _getTiles([1, 1, 1] === [ [ [[], []], [[], []] ], [ [[], []], [[], []] ] ]
-      all of the arrays are unique instances, not copies
-      this allows us to create an array that can store the contents of each tiles and
-      be accessed with the tile indices. For example:
-      arr = _getTiles([2, 2, 2])
-      arr[0][1][2].push(scene)
-      scene = arr[0][1][2][0]
-     */
-    const _getEmptyTilesArray = (tiling: number[]) => {
-      let grid = [];
-      for (let x = 0; x <= tiling[2]; x++) {
-        let arrX = [];
-        for (let y = 0; y <= tiling[1]; y++) {
-          let arrY = [];
-          for (let z = 0; z <= tiling[0]; z++) {
-            let arrZ = [];
-            // @ts-ignore
-            arrY.push(arrZ);
-          }
-          // @ts-ignore
-          arrX.push(arrY);
-        }
-        // @ts-ignore
-        grid.push(arrX);
-      }
-      return grid;
-    };
-
     const emptyLattice = [
       [0, 0, 0],
       [0, 0, 0],
@@ -557,8 +579,8 @@ export default class Scene {
     const traverseTiles = (
       o: SceneJsonObject,
       root: THREE.Object3D,
-      tiles: number[][],
-      arrayOfTileRoots: number[][][][]
+      tiles: number[][]
+      // arrayOfTileRoots: number[][][][]
     ) => {
       // @ts-ignore
       let lattice = o.lattice ? o.lattice : emptyLattice;
@@ -567,10 +589,10 @@ export default class Scene {
         const tileRootObject = new THREE.Object3D();
         tileRootObject.name = sceneJson.name!;
         sceneJson.visible && (tileRootObject.visible = sceneJson.visible);
-
+        console.log(this.arrayOfTileRoots);
         root.add(tileRootObject);
         const [x, y, z] = tile;
-        arrayOfTileRoots[x][y][z].push(tileRootObject);
+        this.arrayOfTileRoots[x][y][z].push(tileRootObject);
 
         let tileOffsets: number[][] = lattice.map((vector: number[], index: number) => {
           return vector.map((x: number) => x * tile[index]);
@@ -642,27 +664,8 @@ export default class Scene {
       });
     };
 
-    /*
-      loop through the arrayOfTileRoots and set the visibility of each object.
-      In particular, set threeObject.visible = true if the x, y, and z indices
-      are all less than the x, y, and z indices in tiling.
-     */
-    const updateTiles = (arrayOfTileRoots, tiling) => {
-      const [xCut, yCut, zCut] = tiling;
-      arrayOfTileRoots.forEach((arrX, x) => {
-        arrX.forEach((arrY, y) => {
-          arrY.forEach((arrZ, z) => {
-            arrZ[0].visible = x <= xCut && y <= yCut && z <= zCut;
-          });
-        });
-      });
-    };
-
-    const updateMaxTiling = () => {};
-
     // TODO: does it make sense to split this code into two cases?
     // set up the threeObjects and containers
-    let arrayOfTileRoots: number[][][][];
     const rootObject = new THREE.Object3D();
     if (this.maxTiling > 0) {
       // if needed, create a parent for all Scene objects
@@ -670,22 +673,16 @@ export default class Scene {
       rootObject.visible = true;
       const maxTilingArray = [this.maxTiling, this.maxTiling, this.maxTiling];
       let tiles = _getTiles(maxTilingArray);
-      arrayOfTileRoots = _getEmptyTilesArray(maxTilingArray);
-      traverseTiles(sceneJson, rootObject, tiles, arrayOfTileRoots);
-      updateTiles(arrayOfTileRoots, this.tiling);
-      console.log(arrayOfTileRoots);
+      traverseTiles(sceneJson, rootObject, tiles);
+      this.updateTiles(this.tiling);
+      console.log(this.arrayOfTileRoots);
     } else {
       rootObject.name = sceneJson.name!;
       sceneJson.visible && (rootObject.visible = sceneJson.visible);
       traverseScene(sceneJson, rootObject, emptyLattice, '');
     } // TODO: take this out, hope things dont break, fix if they do
 
-    // for demonstration purposes TODO: remove next two lines
-    // arrayOfTileRoots[1][1][1][0].visible = false;
-    // arrayOfTileRoots[0][0][0][0].visible = false;
-
     // can cause memory leak
-    //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
     this.setupCamera(rootObject); // TODO: this could introduce issues if the new root is not compatible
 
