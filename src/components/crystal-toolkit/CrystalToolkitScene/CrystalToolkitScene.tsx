@@ -110,7 +110,7 @@ export interface CrystalToolkitSceneProps {
   /**
    * the dynamic tiling, to be updated in scene.
    */
-  tiling?: number;
+  tiling?: number[];
   /**
    * the maximum size of the tiling, controls render size
    */
@@ -418,6 +418,9 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     () => scene.current!.updateInsetSettings(props.inletSize!, props.inletPadding!, props.axisView),
     [props.inletSize, props.inletPadding, props.axisView]
   );
+  useEffect(() => {
+    scene.current!.updateTiles(props.tiling);
+  }, [props.tiling]);
 
   useEffect(() => {
     scene.current!.resizeRendererToDisplaySize();
