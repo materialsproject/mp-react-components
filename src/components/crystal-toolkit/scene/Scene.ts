@@ -658,6 +658,8 @@ export default class Scene {
       });
     };
 
+    const updateMaxTiling = () => {};
+
     // TODO: does it make sense to split this code into two cases?
     // set up the threeObjects and containers
     let arrayOfTileRoots: number[][][][];
@@ -671,11 +673,12 @@ export default class Scene {
       arrayOfTileRoots = _getEmptyTilesArray(maxTilingArray);
       traverseTiles(sceneJson, rootObject, tiles, arrayOfTileRoots);
       updateTiles(arrayOfTileRoots, this.tiling);
+      console.log(arrayOfTileRoots);
     } else {
       rootObject.name = sceneJson.name!;
       sceneJson.visible && (rootObject.visible = sceneJson.visible);
       traverseScene(sceneJson, rootObject, emptyLattice, '');
-    }
+    } // TODO: take this out, hope things dont break, fix if they do
 
     // for demonstration purposes TODO: remove next two lines
     // arrayOfTileRoots[1][1][1][0].visible = false;
