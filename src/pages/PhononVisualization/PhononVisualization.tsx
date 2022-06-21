@@ -43,58 +43,38 @@ export const PhononVisualization: React.FC = () => {
           zoomToFit2D: true
         }}
         data={crystalScene}
-        tiling={[tilingX, tilingY, tilingZ]}
+        tiling={[tilingX, tilingY, tilingZ]} // TODO: does this need to be broken up?
         maxTiling={maxTiling}
         sceneSize="100%"
-        debug={true}
+        debug={false}
         toggleVisibility={{}}
       />
+      {/* TODO: consider creating triple slider component*/}
       {/* X slider*/}
       <RangeSlider
-        domain={[0, maxTiling]}
+        domain={[0, maxTiling || 1]}
+        value={tilingX}
         onChange={(values) => {
           setTilingX(values[0]);
           console.log(values);
         }}
       />
-      {/*<SimpleSlider*/}
-      {/*  onUpdate={(a) => {*/}
-      {/*    if (a != tilingX) {*/}
-      {/*      setTilingX(a);*/}
-      {/*    }*/}
-      {/*  }}*/}
-      {/*  onChange={(a) => {*/}
-      {/*    console.log(a);*/}
-      {/*  }}*/}
-      {/*  domain={[0, maxTiling]}*/}
-      {/*  values={[tilingX]}*/}
-      {/*/>*/}
-      {/*/!* Y slider*!/*/}
-      {/*<SimpleSlider*/}
-      {/*  onUpdate={(a) => {*/}
-      {/*    if (a != tilingX) {*/}
-      {/*      setTilingY(a);*/}
-      {/*    }*/}
-      {/*  }}*/}
-      {/*  onChange={(a) => {*/}
-      {/*    console.log(a);*/}
-      {/*  }}*/}
-      {/*  domain={[0, maxTiling]}*/}
-      {/*  values={[tilingY]}*/}
-      {/*/>*/}
-      {/*/!* Z slider *!/*/}
-      {/*<SimpleSlider*/}
-      {/*  onUpdate={(a) => {*/}
-      {/*    if (a != tilingX) {*/}
-      {/*      setTilingZ(a);*/}
-      {/*    }*/}
-      {/*  }}*/}
-      {/*  onChange={(a) => {*/}
-      {/*    console.log(a);*/}
-      {/*  }}*/}
-      {/*  domain={[0, maxTiling]}*/}
-      {/*  values={[tilingZ]}*/}
-      {/*/>*/}
+      <RangeSlider
+        domain={[0, maxTiling || 1]}
+        value={tilingY}
+        onChange={(values) => {
+          setTilingY(values[0]);
+          console.log(values);
+        }}
+      />
+      <RangeSlider
+        domain={[0, maxTiling || 1]}
+        value={tilingZ}
+        onChange={(values) => {
+          setTilingZ(values[0]);
+          console.log(values);
+        }}
+      />
     </div>
   );
 };
