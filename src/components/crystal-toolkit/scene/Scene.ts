@@ -32,7 +32,6 @@ import '../CrystalToolkitScene/CrystalToolkitScene.less';
 import { CameraState } from '../CameraContextProvider/camera-reducer';
 
 const POINTER_CLASS = 'show-pointer';
-let D;
 export default class Scene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
@@ -152,8 +151,6 @@ export default class Scene {
     labelRenderer.domElement.style.pointerEvents = 'none';
     mountNode.appendChild(labelRenderer.domElement);
   }
-
-  componentDidUpdate = () => {};
 
   mouseMoveListener = (e) => {
     if (this.renderer instanceof WebGLRenderer || true) {
@@ -397,7 +394,7 @@ export default class Scene {
     size,
     padding,
     tiling,
-    maxTiling, // TODO
+    maxTiling,
     clickCallback,
     private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
     private debugDOMElement?,
@@ -508,45 +505,6 @@ export default class Scene {
 
     const objectToAnimate = new Set<string>();
 
-    // this is now defunct and should be removed, only included for comparison
-    // TODO: remove traverse_scene
-    const traverse_scene = (o: SceneJsonObject, parent: THREE.Object3D, currentId: string) => {
-      o.contents!.forEach((childObject, idx) => {
-        if (childObject.type) {
-          // if object can be made into a ThreeObject, add to scene and end recursion
-          const object = this.makeObject(childObject);
-          parent.add(object);
-          this.threeUUIDTojsonObject[object.uuid] = childObject;
-          this.computeIdToThree[`${currentId}--${idx}`] = object;
-          childObject.id = `${currentId}--${idx}`;
-          if (childObject.animate) {
-            objectToAnimate.add(`${currentId}--${idx}`);
-          }
-        } else {
-          // if object cannot be made into a ThreeObject, add empty child scene,
-          // set origin, and recurse
-          const threeObject = new THREE.Object3D();
-          threeObject.name = childObject.name!;
-          this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
-          childObject.id = `${currentId}--${threeObject.name}`;
-          threeObject.visible = childObject.visible === undefined ? true : !!childObject.visible;
-          if (childObject.origin) {
-            const translation = new THREE.Matrix4();
-            // note(chab) have a typedefinition for the JSON
-            translation.makeTranslation(...(childObject.origin as ThreePosition));
-            threeObject.applyMatrix4(translation);
-          }
-          if (!this.settings.extractAxis || threeObject.name !== 'axes') {
-            parent.add(threeObject);
-          }
-          traverse_scene(childObject, threeObject, `${currentId}--${threeObject.name}`);
-          if (threeObject.name === 'axes') {
-            this.axis = threeObject.clone();
-            this.axisJson = { ...childObject };
-          }
-        }
-      });
-    };
     /*
       this function returns an array of tiles based on the tiling array
       e.g. _getTiles([0, 1, 1] === [[0,0,0], [0,0,1], [0,1,1], [0,1,0]]
@@ -589,7 +547,6 @@ export default class Scene {
         const tileRootObject = new THREE.Object3D();
         tileRootObject.name = sceneJson.name!;
         sceneJson.visible && (tileRootObject.visible = sceneJson.visible);
-        console.log(this.arrayOfTileRoots);
         root.add(tileRootObject);
         const [x, y, z] = tile;
         this.arrayOfTileRoots[x][y][z].push(tileRootObject);
@@ -664,7 +621,7 @@ export default class Scene {
       });
     };
 
-    // TODO: does it make sense to split this code into two cases?
+    // TODO: does it make sense to split this code into two cases? NO!
     // set up the threeObjects and containers
     const rootObject = new THREE.Object3D();
     if (this.maxTiling > 0) {
@@ -684,7 +641,7 @@ export default class Scene {
 
     // can cause memory leak
     this.scene.add(rootObject);
-    this.setupCamera(rootObject); // TODO: this could introduce issues if the new root is not compatible
+    this.setupCamera(rootObject);
 
     // we try to update the outline from the preceding scene, but if the corresponding
     // object is not there, we'll remove the outline
