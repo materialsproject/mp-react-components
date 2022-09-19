@@ -616,22 +616,19 @@ export default class Scene {
       });
     };
 
-    // TODO: does it make sense to split this code into two cases? NO!
     // set up the threeObjects and containers
     const rootObject = new THREE.Object3D();
-    // if (this.maxTiling > 0) {
-    // if needed, create a parent for all Scene objects
+
+    // set up the threeObjects and containers
     rootObject.name = 'root';
     rootObject.visible = true;
     const maxTilingArray = [this.maxTiling, this.maxTiling, this.maxTiling];
+    // get list of tiles needed
     let tiles = _getTiles(maxTilingArray);
+    // render all tiles
     traverseTiles(sceneJson, rootObject, tiles);
+    // hide/show tiles as appropriate
     this.updateTiles(this.tiling);
-    // } else {
-    //   rootObject.name = sceneJson.name!;
-    //   sceneJson.visible && (rootObject.visible = sceneJson.visible);
-    //   traverseScene(sceneJson, rootObject, emptyLattice, '');
-    // } // TODO: take this out, hope things dont break, fix if they do
 
     // can cause memory leak
     this.scene.add(rootObject);
