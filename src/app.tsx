@@ -22,7 +22,7 @@ import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
 import { MPContribsSearch } from './pages/MPContribsSearch';
 import { CatalystExplorer } from './pages/CatalystExplorer';
-import { PhononVisualization } from './pages/PhononVisualization';
+import { TilingVisualization } from './pages/TilingVisualization';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
@@ -72,8 +72,8 @@ ReactDOM.render(
             href: '/xas'
           },
           {
-            label: 'Phonon Visualization',
-            href: '/phonon'
+            label: 'Tiling Visualization',
+            href: '/tiling'
           },
           {
             label: 'More',
@@ -145,8 +145,8 @@ ReactDOM.render(
           <Route path="/matscholar">
             <MatscholarMaterialsExplorer />
           </Route>
-          <Route path="/phonon">
-            <PhononVisualization />
+          <Route path="/tiling">
+            <TilingVisualization />
           </Route>
           <Route path="/">
             <MaterialsExplorer />

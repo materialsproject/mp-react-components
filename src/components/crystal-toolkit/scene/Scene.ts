@@ -534,12 +534,7 @@ export default class Scene {
       Each scene is added to the arrayOfTilesRoots, it can be accessed by indexing through the
       arrayOfTileRoots. e.g. scene = arrayOfTileRoots[x][y][z][0].
      */
-    const traverseTiles = (
-      o: SceneJsonObject,
-      root: THREE.Object3D,
-      tiles: number[][]
-      // arrayOfTileRoots: number[][][][]
-    ) => {
+    const traverseTiles = (o: SceneJsonObject, root: THREE.Object3D, tiles: number[][]) => {
       // @ts-ignore
       let lattice = o.lattice ? o.lattice : emptyLattice;
 
@@ -624,20 +619,19 @@ export default class Scene {
     // TODO: does it make sense to split this code into two cases? NO!
     // set up the threeObjects and containers
     const rootObject = new THREE.Object3D();
-    if (this.maxTiling > 0) {
-      // if needed, create a parent for all Scene objects
-      rootObject.name = 'root';
-      rootObject.visible = true;
-      const maxTilingArray = [this.maxTiling, this.maxTiling, this.maxTiling];
-      let tiles = _getTiles(maxTilingArray);
-      traverseTiles(sceneJson, rootObject, tiles);
-      this.updateTiles(this.tiling);
-      console.log(this.arrayOfTileRoots);
-    } else {
-      rootObject.name = sceneJson.name!;
-      sceneJson.visible && (rootObject.visible = sceneJson.visible);
-      traverseScene(sceneJson, rootObject, emptyLattice, '');
-    } // TODO: take this out, hope things dont break, fix if they do
+    // if (this.maxTiling > 0) {
+    // if needed, create a parent for all Scene objects
+    rootObject.name = 'root';
+    rootObject.visible = true;
+    const maxTilingArray = [this.maxTiling, this.maxTiling, this.maxTiling];
+    let tiles = _getTiles(maxTilingArray);
+    traverseTiles(sceneJson, rootObject, tiles);
+    this.updateTiles(this.tiling);
+    // } else {
+    //   rootObject.name = sceneJson.name!;
+    //   sceneJson.visible && (rootObject.visible = sceneJson.visible);
+    //   traverseScene(sceneJson, rootObject, emptyLattice, '');
+    // } // TODO: take this out, hope things dont break, fix if they do
 
     // can cause memory leak
     this.scene.add(rootObject);
