@@ -3,6 +3,10 @@ import PropTypes, { InferProps } from 'prop-types';
 import Graph from 'react-graph-vis';
 import './vis.less';
 
+/**
+ * Render linked data in a force-directed graph.
+ * This was an experimental component and is not being used anywhere at the moment.
+ */
 export default function ReactGraphComponent(
   props: InferProps<typeof ReactGraphComponent.propTypes>
 ) {
@@ -25,7 +29,7 @@ export default function ReactGraphComponent(
     <Graph
       graph={props.graph}
       options={props.options}
-      getNetwork={network => (network.current = network)}
+      getNetwork={(network) => (network.current = network)}
     />
   );
 }

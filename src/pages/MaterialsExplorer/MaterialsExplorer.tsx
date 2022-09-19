@@ -53,7 +53,7 @@ export const MaterialsExplorer: React.FC = () => {
             }
             apiKey={process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : undefined}
             hasSortMenu={true}
-            sortFields={['energy_above_hull', 'formula_pretty']}
+            sortFields={['-energy_above_hull', 'formula_pretty']}
           >
             <SearchUISearchBar
               periodicTableMode={PeriodicTableMode.TOGGLE}

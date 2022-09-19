@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Interactive help menu to display below MaterialsInput
+ * Interactive help menu to display below `MaterialsInput`
  */
 export const InputHelp: React.FC<Props> = (props) => {
   return (

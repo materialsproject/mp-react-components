@@ -23,7 +23,7 @@ interface Props {
 let requestCount = 0;
 
 /**
- *
+ * Component for displaying dynamic formula suggestions based on a current input value.
  */
 export const FormulaAutocomplete: React.FC<Props> = (props) => {
   const [show, setShow] = useState(props.show);

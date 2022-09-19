@@ -188,7 +188,7 @@ export const CrystalStructureViewer: React.FC = () => {
                 // showImageButton={false}
                 showExportButton={false}
               >
-                {null}
+                <p>Settings panel</p>
                 <p>This could be a legend</p>
               </CrystalToolkitScene>
             </div>

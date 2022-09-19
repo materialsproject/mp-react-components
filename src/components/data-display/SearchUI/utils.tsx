@@ -227,7 +227,8 @@ export const initQueryParams = (
 export const preprocessQueryParams = (
   query: DecodedValueMap<QueryParamConfigMap>,
   filterGroups: FilterGroup[],
-  defaultQuery: any
+  defaultQuery: any,
+  sortParamKey: string
 ) => {
   const processedQuery = {};
   for (const paramName in query) {
@@ -266,13 +267,39 @@ export const preprocessQueryParams = (
           }
           processedQuery[paramName] = paramValue;
       }
+    } else if (paramName === sortParamKey && query[sortParamKey]) {
+      /**
+       * Add the secondary sort field to the sort query if one exists.
+       * (Secondary sort is controlled by the sortFields prop, not from the UI)
+       */
+      const processedSortFields = [...query[sortParamKey]];
+      if (defaultQuery[sortParamKey] && defaultQuery[sortParamKey].length === 2) {
+        processedSortFields.push(defaultQuery[sortParamKey][1]);
+      }
+      processedQuery[sortParamKey] = processedSortFields;
     } else {
       processedQuery[paramName] = query[paramName];
     }
   }
+  /**
+   * Add default query params for params that require a value
+   * but haven't been explicitly set (e.g. skip or limit).
+   */
   for (const defaultParam in defaultQuery) {
     if (query[defaultParam] === undefined) {
-      processedQuery[defaultParam] = defaultQuery[defaultParam];
+      /**
+       * If there is a default secondary sort field, but no default primary sort field
+       * then only include the secondary sort field in the API query.
+       */
+      if (
+        defaultParam === sortParamKey &&
+        defaultQuery[sortParamKey][1] &&
+        (defaultQuery[sortParamKey][0] === null || defaultQuery[sortParamKey][0] === undefined)
+      ) {
+        processedQuery[defaultParam] = [defaultQuery[defaultParam][1]];
+      } else {
+        processedQuery[defaultParam] = defaultQuery[defaultParam];
+      }
     }
   }
   return processedQuery;

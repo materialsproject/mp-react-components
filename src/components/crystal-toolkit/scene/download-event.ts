@@ -1,6 +1,7 @@
 /**
  *
  * A very simple and naive singleton event bus.
+ * Unclear if this is still necessary. Can likely delete this whole file.
  *
  */
 

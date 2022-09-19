@@ -3,8 +3,7 @@ module.exports = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-knobs'
+    '@storybook/addon-interactions'
   ],
   framework: '@storybook/react',
   core: {
@@ -13,7 +12,23 @@ module.exports = {
   webpackFinal: async (config) => {
     config.module.rules.push({
       test: /\.less$/,
-      use: ['style-loader', 'css-loader', 'less-loader']
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: false
+          }
+        },
+        {
+          loader: 'less-loader',
+          options: {
+            lessOptions: {
+              javascriptEnabled: true
+            }
+          }
+        }
+      ]
     });
     return config;
   }

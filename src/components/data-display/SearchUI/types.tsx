@@ -1,20 +1,6 @@
 import { DecodedValueMap, QueryParamConfigMap } from 'use-query-params';
-import { MaterialsInputType } from '../../data-entry/MaterialsInput';
-import { InputHelpItem } from '../../data-entry/MaterialsInput/InputHelp/InputHelp';
-import { PeriodicTableMode } from '../../data-entry/MaterialsInput/MaterialsInput';
-import { MaterialsInputTypesMap } from '../../data-entry/MaterialsInput/utils';
-import { SearchUIDataCards } from './SearchUIDataCards';
 import { SearchUIDataTable } from './SearchUIDataTable';
 import { SearchUISynthesisRecipeCards } from './SearchUISynthesisRecipeCards';
-
-export enum FilterId {
-  ELEMENTS = 'elements',
-  VOLUME = 'volume',
-  DENSITY = 'density',
-  MP_ID = 'task_ids',
-  FORMULA = 'formula',
-  NELEMENTS = 'nelements'
-}
 
 /**
  * See storybook for documentation
@@ -324,9 +310,12 @@ export interface SearchUIContainerProps {
    * Optionally include up to 2 fields to sort by on initial load.
    * To sort in descending order, prefix the field name with "-".
    * The first sort field can be modified within the UI. The second will be the default secondary sort field.
-   * e.g. ["-energy_above_hull", "formula_pretty"]
+   * e.g. `["-energy_above_hull", "formula_pretty"]`
+   * If you want to include a default secondary sort field but no default primary sort,
+   * then the first item in the array should be null or undefined.
+   * e.g. `[null, "formula_pretty"]`
    */
-  sortFields?: string[];
+  sortFields?: (string | undefined | null)[];
   /**
    * Name of the sort parameter in the linked API.
    * @default 'sort_fields'
@@ -388,13 +377,18 @@ export interface SearchUIContainerProps {
    */
   disableRichColumnHeaders?: boolean;
   /**
-   *
+   * This prop is set automatically.
+   * Array of results currently rendered in the UI.
    */
   results?: any[];
   /**
    * Endpoint to use for fallback free text material searches against the Matscholar API.
    */
   matscholarEndpoint?: string;
+  /**
+   * EXPERIMENTAL
+   */
+  cardOptions?: any;
 }
 
 export interface SearchState extends SearchUIContainerProps {
@@ -402,7 +396,7 @@ export interface SearchState extends SearchUIContainerProps {
    * Optional props from SearchUIContainerProps that are required by SearchState
    */
   setProps: (value: any) => any;
-  sortFields: string[];
+  sortFields: (string | undefined | null)[];
   sortKey: string;
   skipKey: string;
   limitKey: string;
