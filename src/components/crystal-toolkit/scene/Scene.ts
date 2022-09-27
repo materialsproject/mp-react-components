@@ -32,7 +32,6 @@ import '../CrystalToolkitScene/CrystalToolkitScene.less';
 import { CameraState } from '../CameraContextProvider/camera-reducer';
 
 const POINTER_CLASS = 'show-pointer';
-let D;
 export default class Scene {
   private settings;
   private renderer!: THREE.WebGLRenderer | SVGRenderer;
@@ -69,6 +68,9 @@ export default class Scene {
 
   private clock = new THREE.Clock();
   private animationHelper: AnimationHelper;
+  private tiling: any;
+  private maxTiling: any;
+  private arrayOfTileRoots: any;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -106,6 +108,36 @@ export default class Scene {
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     //TODO(chab) This should be simpler
     mountNode.appendChild(this.renderer.domElement);
+  }
+
+  /*
+  this function returns a 3-dimensional empty array based on the tiling array
+  e.g. _getTiles([1, 1, 1] === [ [ [[], []], [[], []] ], [ [[], []], [[], []] ] ]
+  all of the arrays are unique instances, not copies
+  this allows us to create an array that can store the contents of each tiles and
+  be accessed with the tile indices. For example:
+  arr = _getTiles([2, 2, 2])
+  arr[0][1][2].push(scene)
+  scene = arr[0][1][2][0]
+ */
+  private static getEmptyTilesArray(tiling: number[]) {
+    let grid = [];
+    for (let x = 0; x <= tiling[2]; x++) {
+      let arrX = [];
+      for (let y = 0; y <= tiling[1]; y++) {
+        let arrY = [];
+        for (let z = 0; z <= tiling[0]; z++) {
+          let arrZ = [];
+          // @ts-ignore
+          arrY.push(arrZ);
+        }
+        // @ts-ignore
+        arrX.push(arrY);
+      }
+      // @ts-ignore
+      grid.push(arrX);
+    }
+    return grid;
   }
 
   private configureLabelRenderer(mountNode: Element) {
@@ -242,7 +274,7 @@ export default class Scene {
 
   private onClickImplementation(p, e) {
     let needRedraw = false;
-    //TODO(chab) make it more readale
+    //TODO(chab) make it more readable
     if (p && p.object) {
       const { object, point } = p;
       if (object?.sceneObject) {
@@ -361,11 +393,20 @@ export default class Scene {
     settings,
     size,
     padding,
+    tiling,
+    maxTiling,
     clickCallback,
     private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
     private debugDOMElement?,
     cameraState?: CameraState
   ) {
+    this.tiling = tiling;
+    this.maxTiling = maxTiling;
+    this.arrayOfTileRoots = Scene.getEmptyTilesArray([
+      this.maxTiling,
+      this.maxTiling,
+      this.maxTiling
+    ]);
     this.settings = Object.assign(defaults, settings);
     this.objectBuilder = new ThreeBuilder(this.settings);
     this.cameraState = cameraState;
@@ -403,6 +444,23 @@ export default class Scene {
     this.renderInlet();
   }
 
+  /*
+    loop through the arrayOfTileRoots and set the visibility of each object.
+    In particular, set threeObject.visible = true if the x, y, and z indices
+    are all less than the x, y, and z indices in tiling.
+   */
+  updateTiles(tiling) {
+    const [xCut, yCut, zCut] = tiling;
+    this.arrayOfTileRoots.forEach((arrX, x) => {
+      arrX.forEach((arrY, y) => {
+        arrY.forEach((arrZ, z) => {
+          arrZ[0].visible = x <= xCut && y <= yCut && z <= zCut;
+        });
+      });
+    });
+    this.renderScene();
+  }
+
   public resizeRendererToDisplaySize() {
     const canvas = this.renderer.domElement as HTMLCanvasElement;
     this.cacheMountBBox(canvas.parentElement as Element);
@@ -418,7 +476,7 @@ export default class Scene {
   }
 
   addToScene(sceneJson: SceneJsonObject, bypassRendering = false) {
-    // we need to clarify the  current semantics
+    // we need to clarify the current semantics
     // currently, it will remove the old scene if the name is the same,
     // otherwise it will keep it
     // it will then zoom on the content of the added scene
@@ -445,15 +503,73 @@ export default class Scene {
       console.log('The scene is a new scene:', sceneJson.name);
     }
 
-    const rootObject = new THREE.Object3D();
-    rootObject.name = sceneJson.name!;
-    sceneJson.visible && (rootObject.visible = sceneJson.visible);
-
     const objectToAnimate = new Set<string>();
-    // recursively visit the scene, starting with the root object
-    const traverse_scene = (o: SceneJsonObject, parent: THREE.Object3D, currentId: string) => {
+
+    /*
+      this function returns an array of tiles based on the tiling array
+      e.g. _getTiles([0, 1, 1] === [[0,0,0], [0,0,1], [0,1,1], [0,1,0]]
+     */
+    const _getTiles = (tiling: number[]) => {
+      // enumerate all tiles needed for a given tiling size
+      let tiles: number[][] = [];
+      for (let x: number = 0; x <= tiling[0]; x++) {
+        for (let y: number = 0; y <= tiling[1]; y++) {
+          for (let z: number = 0; z <= tiling[2]; z++) {
+            tiles.push([x, y, z]);
+          }
+        }
+      }
+      return tiles;
+    };
+
+    const emptyLattice = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
+    ];
+
+    /*
+      This function traverses through all the tiles and renders the SceneJsonObject once for each.
+      Each new scene is a child of root and is offset according to the SceneJsonObject.lattice.
+      Each scene is added to the arrayOfTilesRoots, it can be accessed by indexing through the
+      arrayOfTileRoots. e.g. scene = arrayOfTileRoots[x][y][z][0].
+     */
+    const traverseTiles = (o: SceneJsonObject, root: THREE.Object3D, tiles: number[][]) => {
+      // @ts-ignore
+      let lattice = o.lattice ? o.lattice : emptyLattice;
+
+      for (const tile of tiles) {
+        const tileRootObject = new THREE.Object3D();
+        tileRootObject.name = sceneJson.name!;
+        sceneJson.visible && (tileRootObject.visible = sceneJson.visible);
+        root.add(tileRootObject);
+        const [x, y, z] = tile;
+        this.arrayOfTileRoots[x][y][z].push(tileRootObject);
+
+        let tileOffsets: number[][] = lattice.map((vector: number[], index: number) => {
+          return vector.map((x: number) => x * tile[index]);
+        });
+        traverseScene(sceneJson, tileRootObject, tileOffsets, '');
+      }
+    };
+
+    /*
+      This is the core rendering loop of the Scene class. This function recursively
+      traverses through the scene graph and render all objects that can be converted
+      into threeObject's.
+      It will apply the tileOffset to the rendered scenes, translating them relative
+      to the parent threeObject.
+     */
+    const traverseScene = (
+      o: SceneJsonObject,
+      parent: THREE.Object3D,
+      tileOffsets: number[][],
+      currentId: string
+    ) => {
+      // create root and add to
       o.contents!.forEach((childObject, idx) => {
         if (childObject.type) {
+          // render the threeObject according to childObject.type and end recursion
           const object = this.makeObject(childObject);
           parent.add(object);
           this.threeUUIDTojsonObject[object.uuid] = childObject;
@@ -463,11 +579,23 @@ export default class Scene {
             objectToAnimate.add(`${currentId}--${idx}`);
           }
         } else {
+          // create threeObject, save id, and add to arrayOfTileRoots
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name!;
           this.computeIdToThree[`${currentId}--${threeObject.name}`] = threeObject;
           childObject.id = `${currentId}--${threeObject.name}`;
           threeObject.visible = childObject.visible === undefined ? true : !!childObject.visible;
+
+          // translate tile according to lattice vectors
+          for (let offset of tileOffsets) {
+            if (threeObject.name !== 'unit_cell') {
+              const tilingTranslation = new THREE.Matrix4();
+              tilingTranslation.makeTranslation(...(offset as ThreePosition));
+              threeObject.applyMatrix4(tilingTranslation);
+            }
+          }
+
+          // translate tile to scene origin
           if (childObject.origin) {
             const translation = new THREE.Matrix4();
             // note(chab) have a typedefinition for the JSON
@@ -477,7 +605,9 @@ export default class Scene {
           if (!this.settings.extractAxis || threeObject.name !== 'axes') {
             parent.add(threeObject);
           }
-          traverse_scene(childObject, threeObject, `${currentId}--${threeObject.name}`);
+
+          // recurse through Scene graph
+          traverseScene(childObject, threeObject, tileOffsets, `${currentId}--${threeObject.name}`);
           if (threeObject.name === 'axes') {
             this.axis = threeObject.clone();
             this.axisJson = { ...childObject };
@@ -486,9 +616,21 @@ export default class Scene {
       });
     };
 
-    traverse_scene(sceneJson, rootObject, '');
+    // set up the threeObjects and containers
+    const rootObject = new THREE.Object3D();
+
+    // set up the threeObjects and containers
+    rootObject.name = 'root';
+    rootObject.visible = true;
+    const maxTilingArray = [this.maxTiling, this.maxTiling, this.maxTiling];
+    // get list of tiles needed
+    let tiles = _getTiles(maxTilingArray);
+    // render all tiles
+    traverseTiles(sceneJson, rootObject, tiles);
+    // hide/show tiles as appropriate
+    this.updateTiles(this.tiling);
+
     // can cause memory leak
-    //console.log('rootObject', rootObject, rootObject);
     this.scene.add(rootObject);
     this.setupCamera(rootObject);
 
