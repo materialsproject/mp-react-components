@@ -400,8 +400,8 @@ export default class Scene {
     private debugDOMElement?,
     cameraState?: CameraState
   ) {
-    this.tiling = tiling;
-    this.maxTiling = maxTiling;
+    this.tiling = tiling || 0;
+    this.maxTiling = maxTiling || [0, 0, 0];
     this.arrayOfTileRoots = Scene.getEmptyTilesArray([
       this.maxTiling,
       this.maxTiling,
