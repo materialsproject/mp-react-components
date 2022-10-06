@@ -400,8 +400,8 @@ export default class Scene {
     private debugDOMElement?,
     cameraState?: CameraState
   ) {
-    this.tiling = tiling;
-    this.maxTiling = maxTiling;
+    this.tiling = tiling || 0;
+    this.maxTiling = maxTiling || [0, 0, 0];
     this.arrayOfTileRoots = Scene.getEmptyTilesArray([
       this.maxTiling,
       this.maxTiling,
@@ -522,6 +522,10 @@ export default class Scene {
       return tiles;
     };
 
+    const _alternateTiles = (x: number) => {
+      return (-1) ** (x + 1) * Math.trunc((x + 1) / 2);
+    };
+
     const emptyLattice = [
       [0, 0, 0],
       [0, 0, 0],
@@ -547,7 +551,9 @@ export default class Scene {
         this.arrayOfTileRoots[x][y][z].push(tileRootObject);
 
         let tileOffsets: number[][] = lattice.map((vector: number[], index: number) => {
-          return vector.map((x: number) => x * tile[index]);
+          return vector.map((x: number) => {
+            return x * _alternateTiles(tile[index]);
+          });
         });
         traverseScene(sceneJson, tileRootObject, tileOffsets, '');
       }
