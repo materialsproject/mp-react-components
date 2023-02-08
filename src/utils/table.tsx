@@ -13,8 +13,8 @@ const emptyCellPlaceholder = '-';
 
 /**
  * Get the corresponding value for a row object given a selector string.
- * Can select values from keys nested up to 3 levels.
- * @param selector string that corresponds to a key or nested group of keys (e.g. 'data.a.b.c') in an object.
+ * Can select values from keys nested up to 4 levels.
+ * @param selector string that corresponds to a key or nested group of keys (e.g. 'data.a.b.c.d') in an object.
  * @param row object that has the key(s) specified in selector
  */
 export const getRowValueFromSelectorString = (selector: string, row: any) => {
@@ -29,6 +29,8 @@ export const getRowValueFromSelectorString = (selector: string, row: any) => {
         return row[selectors[0]][selectors[1]][selectors[2]];
       case 4:
         return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
+      case 5:
+        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]][selectors[4]];
       default:
         return emptyCellPlaceholder;
     }
