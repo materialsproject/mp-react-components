@@ -1,0 +1,48 @@
+name: publish-npm-manual
+on: 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'manual publish'
+        required: false
+        type: boolean
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - uses: actions/setup-node@v1
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        with:
+          node-version: '12.x'
+          registry-url: https://registry.npmjs.org/
+          scope: '@mat-github-ci'
+      - name: Install dependencies
+        run: |
+          npm i
+      - name: Build project
+        run: |
+          npm run build-publish
+      - name: Publish to NPM
+        run: |
+          echo Publishing to test repo $NODE_AUTH_TOKEN
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
