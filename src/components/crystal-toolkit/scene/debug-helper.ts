@@ -122,7 +122,7 @@ export class DebugHelper {
     this.axis && this.scene.remove(this.axis);
     this.grid && this.scene.remove(this.grid);
     this.scene.dispose();
-    this.controls.dispose();
+    this.controls?.dispose();
     this.debugRenderer.forceContextLoss();
     this.debugRenderer.dispose();
     this.debugRenderer.domElement!.parentElement!.removeChild(this.debugRenderer.domElement);

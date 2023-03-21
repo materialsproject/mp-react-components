@@ -941,7 +941,7 @@ export default class Scene {
     this.removeListener();
     this.debugHelper && this.debugHelper.onDestroy();
     this.inset.onDestroy();
-    this.controls.dispose();
+    this.controls?.dispose();
     disposeSceneHierarchy(this.scene);
     this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
