@@ -22,7 +22,6 @@ import { Sandbox } from './pages/Sandbox';
 import { SynthesisExplorer } from './pages/SynthesisExplorer';
 import { MPContribsSearch } from './pages/MPContribsSearch';
 import { CatalystExplorer } from './pages/CatalystExplorer';
-import { TilingVisualization } from './pages/TilingVisualization';
 import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
@@ -46,7 +45,6 @@ ReactDOM.render(
         <Link to="/phasediagram">Phase Diagram</Link>
         <Link to="/contribs">Contributions</Link>
         <Link to="/crystal">Crystal Structure</Link>
-        <Link to="/tiling">Tiling Visualization</Link>
         <Link to="/sandbox">Sandbox</Link>
       </div>
       <section>
@@ -86,9 +84,6 @@ ReactDOM.render(
           </Route>
           <Route path="/matscholar">
             <MatscholarMaterialsExplorer />
-          </Route>
-          <Route path="/tiling">
-            <TilingVisualization />
           </Route>
           <Route path="/">
             <MaterialsExplorer />
