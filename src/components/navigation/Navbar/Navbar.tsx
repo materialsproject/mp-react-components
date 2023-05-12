@@ -19,6 +19,7 @@ export interface NavbarItem {
   items?: NavbarItem[];
   isArrowless?: boolean;
   isRight?: boolean;
+  isActiveOnClick?: boolean;
 }
 
 export interface NavbarProps {
@@ -96,6 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
                   items={item.items}
                   isArrowless={item.isArrowless}
                   isRight={item.isRight}
+                  isActiveOnClick={item.isActiveOnClick}
                 >
                   {item.icon && <Icon icon={item.icon} />}
                   {item.label}
