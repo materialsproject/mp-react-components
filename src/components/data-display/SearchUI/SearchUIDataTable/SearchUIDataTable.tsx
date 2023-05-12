@@ -49,7 +49,21 @@ export const SearchUIDataTable: React.FC = () => {
   );
 
   const conditionalRowStyles: any[] = state.conditionalRowStyles!.map((c) => {
-    c.when = (row) => row[c.selector] === c.value;
+    c.when = (row) => {
+      if (typeof c.value === "boolean" || typeof c.value === "string") {
+        return row[c.selector] === c.value;
+      }
+      if (typeof c.value === "number") {
+        if (c.condition === "gt") {
+          return row[c.selector] > c.value;
+        }
+        if (c.condition === "lt") {
+          return row[c.selector] < c.value;
+        }
+        return row[c.selector] === c.value;
+      }
+      return false;
+    }
     return c;
   });
 
