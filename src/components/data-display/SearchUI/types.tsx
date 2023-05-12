@@ -135,7 +135,9 @@ export enum ColumnFormat {
   SPACEGROUP_SYMBOL = 'SPACEGROUP_SYMBOL',
   POINTGROUP = 'POINTGROUP',
   ARRAY = 'ARRAY',
-  RADIO = 'RADIO'
+  RADIO = 'RADIO',
+  EMAIL = 'EMAIL',
+  TAG = 'TAG'
 }
 
 /**
@@ -240,6 +242,10 @@ export interface ConditionalRowStyle {
   value: any;
   /**
    * object of styles supplied in "CSS-in-JS" format
+   */
+  condition: string;
+  /**
+   * condition to satisfy for the value provided above, options: "lt", "gt", "eq"
    */
   style: any;
   /**

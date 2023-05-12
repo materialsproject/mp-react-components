@@ -8,6 +8,8 @@ import { formatPointGroup } from '../components/data-entry/utils';
 import { Link } from '../components/navigation/Link';
 import { spaceGroups } from '../constants/spaceGroups';
 import { joinUrl } from './navigation';
+import { FaEnvelope } from 'react-icons/fa';
+import { FaDownload } from 'react-icons/fa';
 
 const emptyCellPlaceholder = '-';
 
@@ -225,10 +227,58 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           }
         };
         return c;
+      case ColumnFormat.TAG:
+        c.cell = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const isLink = hasFormatOptions && (c.formatOptions.isLink == true)
+          const letterNumber = (hasFormatOptions && c.formatOptions.firstLetterBackwards) ?
+                              rowValue.length - c.formatOptions.firstLetterBackwards
+                              : undefined;
+
+          if (isLink) {
+            const url = hasFormatOptions && c.formatOptions.tagLinksBase && rowValue ?
+                c.formatOptions.tagLinksBase + rowValue
+                : rowValue;
+            return (
+              <Link
+              className="tag"
+              href={url}
+              target={hasFormatOptions && c.formatOptions.target}
+              >
+                {hasFormatOptions && c.formatOptions.isShortLink ? rowValue.substring(letterNumber) : rowValue}
+              </Link>
+            );
+          } else {
+              return (
+                <span className="tag">
+                  {rowValue}
+                </span>
+              );
+          };
+        };
+        return c;
       case ColumnFormat.RADIO:
         c.cell = (row: any) => {
           let rowValue = getRowValueFromSelectorString(c.selector, row);
           return <input type="radio" checked={rowValue} onChange={() => c.onChange(row)}></input>;
+        };
+        return c;
+      case ColumnFormat.EMAIL:
+        c.cell = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          const firstAuthor = rowValue.split(",")[0];
+          return (
+            <a
+              className="tag"
+              href={hasFormatOptions && c.formatOptions.emailAddressKey ?
+              'mailto:' + row[c.formatOptions.emailAddressKey].split(":")[1] + ',contribs@materialsproject.org'
+              : 'mailto:contribs@materialsproject.org'}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FaEnvelope className="mr-1" />
+              {firstAuthor}
+            </a>
+            )
         };
         return c;
       default:
