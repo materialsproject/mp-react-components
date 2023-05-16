@@ -176,7 +176,6 @@ export class InsetHelper {
 
   public onDestroy() {
     disposeSceneHierarchy(this.scene);
-    // this.scene.dispose();
     // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
     this.cameraToFollow = (null as unknown) as THREE.Camera;
     this.insetCamera = (null as unknown) as THREE.OrthographicCamera;

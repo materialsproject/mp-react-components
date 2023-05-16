@@ -943,7 +943,6 @@ export default class Scene {
     this.inset.onDestroy();
     this.controls?.dispose();
     disposeSceneHierarchy(this.scene);
-    this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
