@@ -137,7 +137,8 @@ export enum ColumnFormat {
   ARRAY = 'ARRAY',
   RADIO = 'RADIO',
   EMAIL = 'EMAIL',
-  TAG = 'TAG'
+  TAG = 'TAG',
+  DICT = 'DICT'
 }
 
 /**
