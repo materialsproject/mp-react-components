@@ -302,6 +302,38 @@ Destined for home.scss in mp-web
   }
 }
 
+.has-badge[data-count]:after {
+  position: absolute;
+  right: 20%;
+  top: 20%;
+  content: attr(data-count);
+  font-size: 20%;
+  padding: 0.6em;
+  border-radius: 999px;
+  line-height: 0.75em;
+  color: red;
+  background: red;
+  text-align: center;
+  min-width: 2em;
+  font-weight: bold;
+}
+
+.has-badge-number[data-count]:after {
+  position: absolute;
+  right: 20%;
+  top: 20%;
+  content: attr(data-count);
+  font-size: 20%;
+  padding: 0.6em;
+  border-radius: 999px;
+  line-height: 0.75em;
+  color: red;
+  background: black;
+  text-align: center;
+  min-width: 2em;
+  font-weight: bold;
+}
+
 @media screen and (max-width: (769px - 1px)) {
   .mp-home .materials-input .field > .control:first-child:not(.is-expanded) {
     display: none;

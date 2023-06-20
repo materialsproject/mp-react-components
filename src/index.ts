@@ -12,6 +12,8 @@ import { Scrollspy } from './components/navigation/Scrollspy';
 import { MaterialsInput } from './components/data-entry/MaterialsInput/MaterialsInput';
 import { GlobalSearchBar } from './components/data-entry/GlobalSearchBar';
 import { NavbarDropdown } from './components/navigation/NavbarDropdown';
+import { NotificationDropdown } from './components/navigation/NotificationDropdown';
+import { Bell } from './components/navigation/NotificationDropdown';
 import { Select } from './components/data-entry/Select';
 import { Download } from './components/crystal-toolkit/Download';
 import { BibFilter } from './components/publications/BibFilter';
@@ -75,6 +77,8 @@ export {
   GlobalSearchBar,
   Navbar,
   NavbarDropdown,
+  NotificationDropdown,
+  Bell,
   Dropdown,
   Select,
   Download,
