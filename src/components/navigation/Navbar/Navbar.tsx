@@ -6,6 +6,8 @@ import { isUrl } from '../../../utils/navigation';
 import { Link } from '../Link';
 import { NavbarDropdown } from '../NavbarDropdown';
 import './Navbar.css';
+import { Stringifiable } from 'query-string';
+import { NotificationDropdown } from '../NotificationDropdown';
 
 export interface NavbarItem {
   className?: string;
@@ -16,17 +18,21 @@ export interface NavbarItem {
   image?: string;
   isDivider?: boolean;
   isMenuLabel?: boolean;
-  items?: NavbarItem[];
+  items?: NavbarItem[] /* NavbarItem for both the items in the navbar and the dropdown items */;
   isArrowless?: boolean;
   isRight?: boolean;
   isActiveOnClick?: boolean;
+  isModal?: boolean;
+  id?: string;
+  header?: string;
+  content?: string;
 }
 
 export interface NavbarProps {
   id?: string;
-  setProps?: (value: any) => any;
   className?: string;
   items: NavbarItem[];
+  children?: React.ReactNode /* takes a component, e.g. notification dropdown */;
   brandItem: NavbarItem;
 }
 
@@ -66,6 +72,8 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
     }
   };
 
+  const children = props.children ? props.children : null;
+
   return (
     <nav
       id={props.id}
@@ -98,6 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
                   isArrowless={item.isArrowless}
                   isRight={item.isRight}
                   isActiveOnClick={item.isActiveOnClick}
+                  isModal={item.isModal}
                 >
                   {item.icon && <Icon icon={item.icon} />}
                   {item.label}
@@ -107,6 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
               return <InternalOrExternalLink item={item} key={`navbar-item-${i}`} />;
             }
           })}
+          {children}
         </div>
       </div>
       <div
