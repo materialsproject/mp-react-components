@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import React, { useState, useEffect, useRef, createContext } from 'react';
 import { ModalContextProvider, ModalTrigger, Modal } from '../../data-display/Modal';
 import { Bell } from './Bell';
+import ReactMarkdown from 'react-markdown';
+import { UrlObject } from 'query-string';
 
 /* individual items to be included in the dropdown */
 export interface NotificationItem {
@@ -23,12 +25,11 @@ export interface NotificationDropdownProps {
   items: NotificationItem[];
   isRight?: boolean;
   isModal?: boolean;
-  nclicks?: number;
+  link?: string;
 }
 
 export const NotificationDropdown: React.FC<NotificationDropdownProps> = (props) => {
   const [isActive, setIsActive] = useState(false); /* state for the dropdown menu */
-  const [nclicks, setNclicks] = useState(0);
 
   /* add reference for closing dropdown, if clicked outside then close the dropdown */
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -91,7 +92,6 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = (props)
           if (props.notifyLevel !== 'message') {
             setHasUnreadMessages(false);
           }
-          /* handlePostTimeStamp(e); */
         }}
         ref={dropdownRef}
       >
@@ -112,7 +112,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = (props)
               <div key={`notification-item-${i}`} onClick={(e) => handleItemClick(e, item.id)}>
                 <ModalContextProvider key={`modal-context-${i}`}>
                   <ModalTrigger key={`modal-trigger-${i}`}>
-                    <span className={classNames('navbar-item')} key={`message-${i}`}>
+                    <a className={classNames('navbar-item')} key={`message-${i}`}>
                       {props.notifyLevel == 'message' ? (
                         !unreadMessages.find((message) => message.id === item.id)?.isRead && (
                           <i
@@ -124,18 +124,23 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = (props)
                         <span></span>
                       )}
                       {item.label}
-                    </span>
+                    </a>
                   </ModalTrigger>
                   <Modal key={`modal-${i}`}>
                     <div className="panel">
                       <div className="panel-heading">{item.header}</div>
-                      <div className="panel-block p-5">{item.content}</div>
+                      <div className="panel-block p-5">
+                        <ReactMarkdown>{item.content ? item.content : ' '}</ReactMarkdown>
+                      </div>
                     </div>
                   </Modal>
                 </ModalContextProvider>
               </div>
             );
           })}
+          <a className={classNames('navbar-item', 'more')} href={props.link} target={'_blank'}>
+            More
+          </a>
         </div>
       </div>
     );

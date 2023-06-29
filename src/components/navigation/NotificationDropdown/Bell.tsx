@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext, EventHandler } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 interface Props {
