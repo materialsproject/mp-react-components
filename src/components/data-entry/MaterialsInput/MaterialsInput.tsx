@@ -33,7 +33,8 @@ export enum MaterialsInputType {
   FORMULA = 'formula',
   MPID = 'mpid',
   SMILES = 'smiles',
-  TEXT = 'text'
+  TEXT = 'text',
+  MOLECULE_FORMULA = 'molecule_formula'
 }
 
 /**
@@ -421,7 +422,13 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       if (elements && elements.length > 1) {
         setInputValue(arrayToDelimitedString(elements, ''));
       }
-    }
+    } else if (
+      newSelection === MaterialsInputType.MOLECULE_FORMULA &&
+      currentInputType !== MaterialsInputType.MOLECULE_FORMULA
+    )
+      if (elements && elements.length > 1) {
+        setInputValue(arrayToDelimitedString(elements, /\s/));
+      }
   };
 
   /**
@@ -701,7 +708,8 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
       hasDynamicInputType &&
       (inputType === MaterialsInputType.ELEMENTS ||
         inputType === MaterialsInputType.CHEMICAL_SYSTEM ||
-        inputType === MaterialsInputType.FORMULA)
+        inputType === MaterialsInputType.FORMULA ||
+        inputType === MaterialsInputType.MOLECULE_FORMULA)
     ) {
       convertSelectionToInputType(selectionMode, 'selectionMode', inputType, inputValue);
     }

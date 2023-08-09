@@ -244,9 +244,9 @@ export const preprocessQueryParams = (
       let paramValue = isNotEmpty(query[paramName]) ? query[paramName] : filter.props?.defaultValue;
       switch (filter.type) {
         case FilterType.MATERIALS_INPUT:
-          if (typeof paramValue === 'string') {
-            paramValue = paramValue.replace(/\s/g, '');
-          }
+          // if (typeof paramValue === 'string') {
+          //   paramValue = paramValue.replace(/\s/g, '');
+          // }
           processedQuery[paramName] = paramValue;
           break;
         case FilterType.SLIDER:

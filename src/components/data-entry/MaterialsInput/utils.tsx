@@ -134,11 +134,12 @@ export const parseFormula = (formula) => {
  */
 export const validateFormula = (
   formula: string,
-  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g,
+  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+|\s+/, // /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g
   elementsRegex: RegExp = /([A-Z][a-z]*)([\d\.]*)/g
 ): string[] | undefined => {
   try {
-    const cleanformula = formula.replace(/\s/g, '');
+    // const cleanformula = formula.replace(/\s/g, '');
+    const cleanformula = formula.replace(/\s+$/, ''); // remove trailing whitespace
     const illegalChars = cleanformula.match(illegalCharsRegex);
     if (illegalChars != null) {
       return;
@@ -160,6 +161,40 @@ export const validateFormula = (
       return elements;
     } else {
       throw 'Not a valid formula';
+    }
+  } catch (e) {
+    return;
+  }
+};
+
+export const validateMoleculeFormula = (
+  formula: string,
+  illegalCharsRegex: RegExp = /([^A-Z]|^)+[a-z]|[^\w()\*\.]+/g,
+  elementsRegex: RegExp = /([A-Z][a-z]*)([\d\.]*)/g
+): string[] | undefined => {
+  try {
+    const cleanformula = formula.replace(/\s/g, ''); // 'C2 N3 F4' will be 'C2N3F4'
+    const illegalChars = cleanformula.match(illegalCharsRegex);
+    if (illegalChars != null) {
+      return;
+    }
+
+    let elements: string[] = [];
+    let match: RegExpExecArray | null = null;
+    /** Loop through matches using exec(), match will be null once there are no more matches in the formula string */
+    while ((match = elementsRegex.exec(cleanformula))) {
+      if (!isElement(match[1])) {
+        return;
+      }
+      if (elements.indexOf(match[1]) === -1) {
+        elements.push(match[1]);
+      }
+    }
+
+    if (elements.length > 0) {
+      return elements; // elements will be ['C2','N3','F4']
+    } else {
+      throw 'Not a valid molecule formula';
     }
   } catch (e) {
     return;
@@ -258,6 +293,8 @@ export const validateElementsList = (elementStr: string): string[] | undefined =
   const delimiter = getDelimiter(elementStr);
   const delimiterString = delimiter.toString();
   if (delimiterString === new RegExp(/-/).toString()) {
+    return;
+  } else if (delimiterString === new RegExp(/\s/).toString()) {
     return;
   } else {
     return validateElements(elementStr, delimiter);
@@ -362,14 +399,19 @@ export const materialsInputTypes: MaterialsInputTypesMap = {
     selectionMode: PeriodicTableSelectionMode.FORMULA,
     dropdownValue: 'Formula'
   },
+  molecule_formula: {
+    validate: validateMoleculeFormula,
+    order: 5,
+    dropdownValue: 'Molecule Formula'
+  },
   smiles: {
     validate: validateSmiles,
-    order: 5,
+    order: 6,
     dropdownValue: 'SMILES'
   },
   text: {
     validate: () => true,
-    order: 6,
+    order: 7,
     dropdownValue: 'Text'
   }
 };
