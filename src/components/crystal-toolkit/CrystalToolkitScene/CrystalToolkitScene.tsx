@@ -463,10 +463,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
         }
       }
     }, [cameraState.position]);
-
-    useEffect(() => {
-      console.log('quarternion changed');
-    }, [cameraState.quaternion]);
   }
 
   /**
