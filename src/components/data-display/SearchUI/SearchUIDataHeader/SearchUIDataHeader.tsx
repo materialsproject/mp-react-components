@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSearchUIContext, useSearchUIContextActions } from '../SearchUIContextProvider';
 import { ActiveFilterButtons } from '../../../data-display/ActiveFilterButtons';
 import NumberFormat from 'react-number-format';
-import { FaAngleDown, FaLink, FaTable, FaThLarge } from 'react-icons/fa';
+import { FaAngleDown, FaLink, FaTable, FaThLarge, FaFileExport, FaFileCsv } from 'react-icons/fa';
 import { Wrapper as MenuWrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import classNames from 'classnames';
 import { pluralize } from '../../../data-entry/utils';
@@ -41,7 +41,7 @@ const getUpperResultBound = (
  * Render information about SearchUI results as well as controls
  * for modifying the data in the results view.
  */
-export const SearchUIDataHeader: React.FC = () => {
+export const SearchUIDataHeader: React.FC<any> = (props) => {
   const { state, query } = useSearchUIContext();
   const actions = useSearchUIContextActions();
   const ref = useRef<HTMLDivElement>(null);
@@ -224,6 +224,7 @@ export const SearchUIDataHeader: React.FC = () => {
           {/* {sortMenu} */}
           {columnsMenu}
           {/* {resultsPerPageMenu} */}
+          {props.exportDataButton}
         </div>
       </div>
       {state.activeFilters!.length > 0 && (
