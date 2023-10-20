@@ -619,13 +619,24 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                     </p>
 
                     <p
-                      key={`image-export-glb`}
+                      key={`image-export-gltf`}
                       className="dropdown-item"
                       onClick={() => {
                         requestImage(ExportType.gltf, scene.current!);
                       }}
                     >
                       {'3D Model (GLTF)'}
+                    </p>
+
+
+                    <p
+                      key={`image-export-glb`}
+                      className="dropdown-item"
+                      onClick={() => {
+                        requestImage(ExportType.glb, scene.current!);
+                      }}
+                    >
+                      {'3D Model (GLB)'}
                     </p>
 
                     <p
