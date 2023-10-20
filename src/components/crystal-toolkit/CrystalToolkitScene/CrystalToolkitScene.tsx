@@ -342,13 +342,15 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       const blob = new Blob([JSON.stringify(gltf)], { type: 'model/vnd.gltf+json' });
       downloadBlob(blob, 'crystal_toolkit_scene.gltf');
     });
-
-    // This also works for exporting as GLB (binary) instead of GLTF
-    // gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
-    //     const blob = new Blob( [ arraybuffer ], { type: 'model/gltf-binary' } );
-    //     downloadBlob(blob, 'crystal_toolkit_scene.glb');
-    // }, {binary: true} );
   };
+
+  const setGLBData = (sceneComponent: Scene) => {
+    const gltfExporter = new GLTFExporter();
+    gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
+        const blob = new Blob( [ arraybuffer ], { type: 'model/gltf-binary' } );
+        downloadBlob(blob, 'crystal_toolkit_scene.glb');
+    }, {binary: true} );
+  }; 
 
   const setUSDZData = async (sceneComponent: Scene) => {
     const usdzExporter = new USDZExporter();
@@ -371,6 +373,9 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
         setColladaData(sceneComponent);
         break;
       case ExportType.gltf:
+        setGLTFData(sceneComponent);
+        break;
+      case ExportType.glb:
         setGLTFData(sceneComponent);
         break;
       case ExportType.usdz:
