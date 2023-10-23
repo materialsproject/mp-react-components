@@ -7,6 +7,7 @@ export enum ExportType {
   png = 'png',
   dae = 'dae',
   gltf = 'gltf',
+  glb = 'glb',
   usdz = 'usdz'
 }
 
