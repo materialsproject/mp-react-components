@@ -8,14 +8,14 @@ import { SearchUIDataView } from '../SearchUIDataView';
  * of a `SearchUI` into a common grid layout.
  * Note that this must be used within a `SearchUIContainer`.
  */
-export const SearchUIGrid: React.FC = () => {
+export const SearchUIGrid: React.FC<any> = (props) => {
   return (
     <div className="mpc-search-ui-content columns">
       <div className="mpc-search-ui-left column is-narrow is-12-mobile">
         <SearchUIFilters />
       </div>
       <div className="mpc-search-ui-right column">
-        <SearchUIDataHeader />
+        <SearchUIDataHeader exportDataButton={props.exportDataButton} />
         <SearchUIDataView />
       </div>
     </div>
