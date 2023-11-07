@@ -376,7 +376,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
         setGLTFData(sceneComponent);
         break;
       case ExportType.glb:
-        setGLTFData(sceneComponent);
+        setGLBData(sceneComponent);
         break;
       case ExportType.usdz:
         setUSDZData(sceneComponent);
