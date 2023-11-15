@@ -63,13 +63,14 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     return initFilterGroups(props.filterGroups);
   }, []);
   const columns = useMemo(() => {
-    return initColumns(props.columns, props.disableRichColumnHeaders);
+    return initColumns(props.columns, props.apiEndpoint, props.disableRichColumnHeaders);
   }, []);
   const [state, setState] = useState<SearchState>({
     ...propsWithoutChildren,
     filterGroups,
     columns
   });
+
   /**
    * These default param values are added to the API query if no value is present
    * for that param. These params are omitted from the URL if they are equal to the
