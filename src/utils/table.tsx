@@ -10,6 +10,7 @@ import { spaceGroups } from '../constants/spaceGroups';
 import { joinUrl } from './navigation';
 import { FaEnvelope } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
+import axios from 'axios';
 
 const emptyCellPlaceholder = '-';
 
@@ -48,7 +49,11 @@ export const getRowValueFromSelectorString = (selector: string, row: any) => {
  * FIXED_DECIMAL and SIGNIFICANT_FIGURES both expect another column property "formatArg"
  * that will specify how many decimals or figures to apply to the format.
  */
-export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolean): Column[] => {
+export const initColumns = (
+  columns: Column[],
+  apiEndpoint: string,
+  disableRichColumnHeaders?: boolean
+): Column[] => {
   return columns.map((c) => {
     /** Make columns sortable by default */
     c.sortable = c.sortable !== undefined ? c.sortable : true;
@@ -281,7 +286,6 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           );
         };
         return c;
-
       case ColumnFormat.DICT:
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
@@ -320,6 +324,49 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           } else {
             return dictValue;
           }
+        };
+        return c;
+      case ColumnFormat.CONTRIBS_FILES_DOWNLOAD:
+        c.cell = (row: any) => {
+          if (hasFormatOptions && c.formatOptions) {
+            if (c.formatOptions === 'structures' && row.structures) {
+              let out: any[] = [];
+              for (let sitem of row.structures) {
+                out.push(
+                  <span key={Math.random()}>
+                    <span className="tag">{sitem.name}</span>
+                    <a
+                      href={
+                        apiEndpoint.replace('contribs-api', 'contribs') + 'component/' + sitem.id
+                      }
+                    >
+                      <FaDownload className="mr-1" />
+                    </a>
+                  </span>
+                );
+              }
+              return <span>{out}</span>;
+            } else if (c.formatOptions === 'attachments' && row.attachments) {
+              let out: any[] = [];
+              for (let aitem of row.attachments) {
+                out.push(
+                  <span key={Math.random()}>
+                    <span className="tag">{aitem.name}</span>
+                    <a
+                      href={
+                        apiEndpoint.replace('contribs-api', 'contribs') + 'component/' + aitem.id
+                      }
+                    >
+                      <FaDownload className="mr-1" />
+                    </a>
+                  </span>
+                );
+              }
+              return <span>{out}</span>;
+            } else {
+              return null;
+            }
+          } else return null;
         };
         return c;
       default:

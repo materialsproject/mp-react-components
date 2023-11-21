@@ -138,7 +138,8 @@ export enum ColumnFormat {
   RADIO = 'RADIO',
   EMAIL = 'EMAIL',
   TAG = 'TAG',
-  DICT = 'DICT'
+  DICT = 'DICT',
+  CONTRIBS_FILES_DOWNLOAD = 'CONTRIBS_FILES_DOWNLOAD'
 }
 
 /**
