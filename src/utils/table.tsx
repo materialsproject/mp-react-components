@@ -337,10 +337,7 @@ export const initColumns = (
                     <span className="tag">{sitem.name}</span>
                     <a
                       href={
-                        apiEndpoint.replace('/contributions/', '') +
-                        '/structures/download/gz/?format=json&_fields=id,name,md5,lattice,sites,charge&id=' +
-                        sitem.id +
-                        '&_limit=10&per_page=10'
+                        apiEndpoint.replace('contribs-api', 'contribs') + 'component/' + sitem.id
                       }
                     >
                       <FaDownload className="mr-1" />
@@ -349,31 +346,16 @@ export const initColumns = (
                 );
               }
               return <span>{out}</span>;
-            } else if (c.formatOptions === 'attachemnts' && row.attachemnts) {
+            } else if (c.formatOptions === 'attachments' && row.attachments) {
               let out: any[] = [];
-              for (let aitem of row.attachemnts) {
+              for (let aitem of row.attachments) {
                 out.push(
                   <span key={Math.random()}>
                     <span className="tag">{aitem.name}</span>
                     <a
-                      onClick={() => {
-                        axios
-                          .get(
-                            apiEndpoint.replace('/contributions/', '') +
-                              '/attachments/?_fields=_all&id=' +
-                              aitem.id,
-                            {}
-                          )
-                          .then((result) => {
-                            const link = document.createElement('a');
-                            link.href =
-                              'data:text/plain;charset=utf-8;base64,' + result.data.data[0].content;
-                            link.download = result.data.data[0].name;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                          });
-                      }}
+                      href={
+                        apiEndpoint.replace('contribs-api', 'contribs') + 'component/' + aitem.id
+                      }
                     >
                       <FaDownload className="mr-1" />
                     </a>
