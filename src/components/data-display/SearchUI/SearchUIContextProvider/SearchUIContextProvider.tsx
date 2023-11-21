@@ -63,7 +63,7 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     return initFilterGroups(props.filterGroups);
   }, []);
   const columns = useMemo(() => {
-    return initColumns(props.columns, props.apiEndpoint, props.disableRichColumnHeaders);
+    return initColumns(props.columns, props.disableRichColumnHeaders);
   }, []);
   const [state, setState] = useState<SearchState>({
     ...propsWithoutChildren,
