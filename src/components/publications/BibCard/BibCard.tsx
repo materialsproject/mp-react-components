@@ -95,7 +95,9 @@ export const BibCard: React.FC<BibCardProps> = ({ title = '', ...otherProps }) =
           <PublicationButton doi={props.doi} url={url}>
             {getJournalAndYear(props.journal, props.year)}
           </PublicationButton>
-          <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
+          {!props.preventOpenAccessFetch && (
+            <OpenAccessButton doi={props.doi} url={props.openAccessUrl} />
+          )}
           <BibtexButton doi={props.doi} />
         </div>
       )}
