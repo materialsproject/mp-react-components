@@ -53,12 +53,14 @@ export const OpenAccessButton: React.FC<OpenAccessButtonProps> = ({
   useEffect(() => {
     if (!openAccessUrl && !cannotFetchOpenAccessUrl) {
       axios
-        .get(`https://api.openaccessbutton.org/find?id=${props.doi}`)
+        .get(`https://bg.api.oa.works/find?id=${props.doi}`)
         .then((result) => {
           if (result.data.hasOwnProperty('url')) {
             setOpenAccessUrl(result.data.url);
           } else {
-            throw new Error('No Open Access URL found');
+            /* throw new Error('No Open Access URL found'); */
+            console.log('No Open Access URL found');
+            setCannotFetchOpenAccessUrl(true);
           }
         })
         .catch((error) => {
