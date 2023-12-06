@@ -297,6 +297,12 @@ export const validateElementsList = (elementStr: string): string[] | undefined =
   } else if (delimiterString === new RegExp(/\s/).toString()) {
     return;
   } else {
+    // return undefined if there are more than 5 elements,
+    // a temporary solution before we have the api limit lifted.
+    const validatedElements = validateElements(elementStr, delimiter);
+    if (validatedElements && validatedElements.length > 5) {
+      return;
+    }
     return validateElements(elementStr, delimiter);
   }
 };
@@ -379,25 +385,25 @@ export const materialsInputTypes: MaterialsInputTypesMap = {
     order: 1,
     dropdownValue: 'Material ID'
   },
+  formula: {
+    validate: validateFormula,
+    order: 2,
+    selectionMode: PeriodicTableSelectionMode.FORMULA,
+    dropdownValue: 'Formula'
+  },
   chemical_system: {
     validate: validateChemicalSystem,
-    order: 2,
+    order: 3,
     selectionMode: PeriodicTableSelectionMode.CHEMICAL_SYSTEM,
     dropdownValue: 'Chemical System',
     elementsOnlyDropdownValue: 'Only'
   },
   elements: {
     validate: validateElementsList,
-    order: 3,
+    order: 4,
     selectionMode: PeriodicTableSelectionMode.ELEMENTS,
     dropdownValue: 'Elements',
     elementsOnlyDropdownValue: 'At least'
-  },
-  formula: {
-    validate: validateFormula,
-    order: 4,
-    selectionMode: PeriodicTableSelectionMode.FORMULA,
-    dropdownValue: 'Formula'
   },
   molecule_formula: {
     validate: validateMoleculeFormula,
