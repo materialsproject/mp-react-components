@@ -224,7 +224,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   type = MaterialsInputType.ELEMENTS,
   allowedInputTypes = [type],
   onChange = (value) => value,
-  maxElementSelectable = 20,
+  maxElementSelectable = 5,
   submitButtonText = 'Search',
   ...otherProps
 }) => {
