@@ -16,6 +16,7 @@ import { TableLayout } from '../../periodic-table/periodic-table-component/perio
 import { SelectableTable } from '../../periodic-table/table-state';
 import './MaterialsInput.css';
 import { PeriodicTableModeSwitcher } from '../../periodic-table/PeriodicTableModeSwitcher';
+import { PeriodicTableSelectionMode } from '../../periodic-table/PeriodicTableModeSwitcher/PeriodicTableModeSwitcher';
 import {
   getAllowedSelectionModes,
   getMaterialsInputTypeByMappedValue,
@@ -224,7 +225,7 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
   type = MaterialsInputType.ELEMENTS,
   allowedInputTypes = [type],
   onChange = (value) => value,
-  maxElementSelectable = 5,
+  maxElementSelectable = 20,
   submitButtonText = 'Search',
   ...otherProps
 }) => {
@@ -757,7 +758,11 @@ export const MaterialsInput: React.FC<MaterialsInputProps> = ({
             <SelectableTable
               className="box"
               disabled={!showPeriodicTable}
-              maxElementSelectable={props.maxElementSelectable}
+              maxElementSelectable={
+                selectionMode == PeriodicTableSelectionMode.ELEMENTS
+                  ? 5
+                  : props.maxElementSelectable
+              }
               forceTableLayout={TableLayout.MINI}
               hiddenElements={[]}
               plugin={periodicTablePlugin}
