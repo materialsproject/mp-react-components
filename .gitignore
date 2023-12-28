@@ -30,6 +30,9 @@ index.css
 index.css.map
 **/wip-components/**
 
+# Parcel
+.parcel-cache/
+
 # Unused files used only for reference
 archive/
 
