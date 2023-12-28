@@ -30,7 +30,6 @@ import { usePrevious } from '../../../utils/hooks';
 import toDataUrl from 'svgtodatauri';
 import * as THREE from 'three';
 import { WebGLRenderer } from 'three';
-import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { USDZExporter } from 'three/examples/jsm/exporters/USDZExporter';
 import useResizeObserver from 'use-resize-observer';
@@ -324,18 +323,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     }
   };
 
-  /**
-   * Handle saving image to collada file (.dae)
-   * Set imageData prop to data uri
-   */
-  const setColladaData = (sceneComponent: Scene) => {
-    const colladaExporter = new ColladaExporter();
-    colladaExporter.parse(sceneComponent.scene, function (result) {
-      const blob = new Blob([result.data], { type: 'model/vnd.collada+xml' });
-      downloadBlob(blob, 'crystal_toolkit_scene.dae');
-    });
-  };
-
   const setGLTFData = (sceneComponent: Scene) => {
     const gltfExporter = new GLTFExporter();
     gltfExporter.parse(sceneComponent.scene, function (gltf) {
@@ -346,11 +333,15 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
 
   const setGLBData = (sceneComponent: Scene) => {
     const gltfExporter = new GLTFExporter();
-    gltfExporter.parse( sceneComponent.scene, function (arraybuffer) {
-        const blob = new Blob( [ arraybuffer ], { type: 'model/gltf-binary' } );
+    gltfExporter.parse(
+      sceneComponent.scene,
+      function (arraybuffer) {
+        const blob = new Blob([arraybuffer], { type: 'model/gltf-binary' });
         downloadBlob(blob, 'crystal_toolkit_scene.glb');
-    }, {binary: true} );
-  }; 
+      },
+      { binary: true }
+    );
+  };
 
   const setUSDZData = async (sceneComponent: Scene) => {
     const usdzExporter = new USDZExporter();
@@ -368,9 +359,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
     switch (filetype) {
       case ExportType.png:
         setPngData(sceneComponent);
-        break;
-      case ExportType.dae:
-        setColladaData(sceneComponent);
         break;
       case ExportType.gltf:
         setGLTFData(sceneComponent);
@@ -467,7 +455,7 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
       requestImage(filetype, scene.current!);
     }
   }, [props.imageRequest]);
-  
+
   /**
    * Manage camera state with context if component is wrapped in CameraContextProvider
    * otherwise use a reducer to manage camera state locally
@@ -609,16 +597,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                     </p>
 
                     <p
-                      key={`image-export-dae`}
-                      className="dropdown-item"
-                      onClick={() => {
-                        requestImage(ExportType.dae, scene.current!);
-                      }}
-                    >
-                      {'3D Model (DAE)'}
-                    </p>
-
-                    <p
                       key={`image-export-gltf`}
                       className="dropdown-item"
                       onClick={() => {
@@ -627,7 +605,6 @@ export const CrystalToolkitScene: React.FC<CrystalToolkitSceneProps> = ({
                     >
                       {'3D Model (GLTF)'}
                     </p>
-
 
                     <p
                       key={`image-export-glb`}
