@@ -56,21 +56,21 @@ type Color = RGB | RGBA | HEX;
 
 export type SceneSettings = {
   /* Renderer settings */
-  transparentBackground: bool;
+  transparentBackground: boolean;
   renderer: Renderer;
-  renderDivBackground: bool;
-  antialias: bool;
+  renderDivBackground: boolean;
+  antialias: boolean;
   background: Color;
 
   /* Camera settings */
   cameraAxis: 'x' | 'y' | 'z';
   cameraPosition: 'back' | 'front';
   animation: AnimationStyle;
-  staticScene: bool;
+  staticScene: boolean;
   controls: Control;
-  enableZoom: bool;
+  enableZoom: boolean;
   defaultZoom: number;
-  zoomToFit2D: bool;
+  zoomToFit2D: boolean;
 
   /* Light settings */
   lights: {
@@ -87,8 +87,8 @@ export type SceneSettings = {
   defaultSurfaceOpacity: number;
 
   /* Inset settings */
-  extractAxis: bool;
-  secondaryObjectView: bool;
+  extractAxis: boolean;
+  secondaryObjectView: boolean;
 
   /* Material settings */
   material: {
@@ -213,7 +213,7 @@ const fields = [
   fieldColor
 ];
 
-// map field id to to field definition
+// map field id to field definition
 export const fieldIndex = fields.reduce(
   (acc: { [id: string]: Field }, f) => ({ ...acc, [f.id]: f }),
   {}
