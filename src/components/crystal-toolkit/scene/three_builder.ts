@@ -1,11 +1,5 @@
 import * as THREE from 'three';
-import {
-  AmbientLight,
-  DirectionalLight,
-  HemisphereLight,
-  Object3D,
-  SphereBufferGeometry
-} from 'three';
+import { AmbientLight, DirectionalLight, HemisphereLight, Object3D, SphereGeometry } from 'three';
 import {
   JSON3DObject,
   Light,
@@ -170,7 +164,7 @@ export class ThreeBuilder {
 
   public makeCube(object_json, obj: THREE.Object3D) {
     const size = object_json.width * this.settings.sphereScale;
-    const geom = new THREE.BoxBufferGeometry(size, size, size);
+    const geom = new THREE.BoxGeometry(size, size, size);
     const mat = this.makeMaterial(object_json.color, object_json.animate);
     object_json.positions.forEach((position: ThreePosition) => {
       const mesh = new THREE.Mesh(geom, mat);
@@ -234,7 +228,7 @@ export class ThreeBuilder {
   }
 
   public getHeadGeometry(headWidth: number, headLength: number): THREE.ConeBufferGeometry {
-    return new THREE.ConeBufferGeometry(
+    return new THREE.ConeGeometry(
       headWidth * this.settings.cylinderScale,
       headLength * this.settings.cylinderScale,
       this.settings.cylinderSegments
@@ -245,12 +239,14 @@ export class ThreeBuilder {
     radius: number,
     radiusTop?: number,
     radiusBottom?: number
-  ): THREE.CylinderBufferGeometry {
+  ): THREE.CylinderGeometry {
     // body
     radiusTop == undefined && (radiusTop = radius);
     radiusBottom == undefined && (radiusBottom = radius);
 
-    return new THREE.CylinderBufferGeometry(
+    console.log(radiusTop, radiusBottom, this.settings);
+
+    return new THREE.CylinderGeometry(
       radiusTop * this.settings.cylinderScale,
       radiusBottom * this.settings.cylinderScale,
       1.0,
@@ -421,7 +417,7 @@ export class ThreeBuilder {
   }
 
   public getSphereGeometry(radius: number, phiStart: number, phiEnd: number) {
-    const geom = new THREE.SphereBufferGeometry(
+    const geom = new THREE.SphereGeometry(
       radius,
       this.settings.sphereSegments,
       this.settings.sphereSegments,
@@ -520,7 +516,7 @@ export class ThreeBuilder {
   }
 
   public updateSphereRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
-    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereBufferGeometry;
+    const geometry = (obj.children[0] as THREE.Mesh).geometry as SphereGeometry;
     const phiStart = geometry.parameters.phiStart;
     const phiEnd = geometry.parameters.phiLength;
     const newGeometry = this.getSphereGeometry(newRadius, phiStart, phiEnd);
@@ -661,7 +657,6 @@ export class ThreeBuilder {
 
   //TODO(chab) can be refactored with the sphere
   public updateCylinderRadius(obj: THREE.Object3D, baseJsonObject, newRadius) {
-    //CylinderBufferGeometry
     const newGeometry = this.getCylinderGeometry(newRadius);
     obj.children.forEach((o) => {
       (o as THREE.Mesh).geometry.dispose();

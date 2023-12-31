@@ -5,7 +5,6 @@ export enum Renderer {
 
 export enum ExportType {
   png = 'png',
-  dae = 'dae',
   gltf = 'gltf',
   glb = 'glb',
   usdz = 'usdz'
@@ -49,7 +48,56 @@ export enum CameraPosition {
 export const TUBE_SEGMENTS = 150;
 export const RADIUS_SEGMENTS = 20;
 
-export const defaults = {
+// thanks https://stackoverflow.com/a/71909826
+type RGB = `rgb(${number}, ${number}, ${number})`;
+type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+type HEX = `#${string}`;
+type Color = RGB | RGBA | HEX;
+
+export type SceneSettings = {
+  /* Renderer settings */
+  transparentBackground: boolean;
+  renderer: Renderer;
+  renderDivBackground: boolean;
+  antialias: boolean;
+  background: Color;
+
+  /* Camera settings */
+  cameraAxis: 'x' | 'y' | 'z';
+  cameraPosition: 'back' | 'front';
+  animation: AnimationStyle;
+  staticScene: boolean;
+  controls: Control;
+  enableZoom: boolean;
+  defaultZoom: number;
+  zoomToFit2D: boolean;
+
+  /* Light settings */
+  lights: {
+    type: Light;
+    args: any[];
+    position?: number[];
+  }[];
+
+  /* Geometry settings */
+  sphereSegments: number;
+  cylinderSegments: number;
+  sphereScale: number; // scale all spheres in scene by this factor
+  cylinderScale: number; // scale all cylinders in scene by this factor
+  defaultSurfaceOpacity: number;
+
+  /* Inset settings */
+  extractAxis: boolean;
+  secondaryObjectView: boolean;
+
+  /* Material settings */
+  material: {
+    type: Material;
+    parameters: any;
+  };
+};
+
+export const defaults: SceneSettings = {
   antialias: true,
   cameraAxis: 'z',
   cameraPosition: 'back',
@@ -165,7 +213,7 @@ const fields = [
   fieldColor
 ];
 
-// map field id to to field definition
+// map field id to field definition
 export const fieldIndex = fields.reduce(
   (acc: { [id: string]: Field }, f) => ({ ...acc, [f.id]: f }),
   {}
