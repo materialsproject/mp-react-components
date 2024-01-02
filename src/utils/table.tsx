@@ -23,20 +23,11 @@ const emptyCellPlaceholder = '-';
 export const getRowValueFromSelectorString = (selector: string, row: any) => {
   try {
     const selectors = selector.split('.');
-    switch (selectors.length) {
-      case 1:
-        return row[selectors[0]];
-      case 2:
-        return row[selectors[0]][selectors[1]];
-      case 3:
-        return row[selectors[0]][selectors[1]][selectors[2]];
-      case 4:
-        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]];
-      case 5:
-        return row[selectors[0]][selectors[1]][selectors[2]][selectors[3]][selectors[4]];
-      default:
-        return emptyCellPlaceholder;
+    let value = row;
+    for (const s of selectors) {
+      value = value[s];
     }
+    return value;
   } catch (error) {
     return emptyCellPlaceholder;
   }
