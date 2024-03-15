@@ -11,6 +11,7 @@ import { joinUrl } from './navigation';
 import { FaEnvelope } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
 import axios from 'axios';
+import { PublicationButton } from '../components/publications/PublicationButton';
 
 const emptyCellPlaceholder = '-';
 
@@ -334,6 +335,42 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
               return null;
             }
           } else return null;
+        };
+        return c
+      case ColumnFormat.PUBLICATION:
+        c.cell = (row: any) => {
+          if (hasFormatOptions && c.formatOptions) {
+            const rowValue = getRowValueFromSelectorString(c.selector, row);
+            if (Array.isArray(rowValue)) {
+              return (
+                <div>
+                  {rowValue.map((item: any) => (
+                    <PublicationButton
+                      key={item.doi}
+                      doi={item.doi}
+                      showTooltip={
+                        c.formatOptions.showTooltip ? c.formatOptions.showTooltip : false
+                      }
+                      compact={c.formatOptions.compact ? c.formatOptions.compact : false}
+                      target="_blank"
+                    />
+                  ))}
+                </div>
+              );
+            } else if (rowValue) {
+              return (
+                <PublicationButton
+                  doi={rowValue}
+                  showTooltip={c.formatOptions.showTooltip ? c.formatOptions.showTooltip : false}
+                  compact={c.formatOptions.compact ? c.formatOptions.compact : false}
+                  target="_blank"
+                />
+              );
+            } else {
+              return null;
+            }
+          }
+          return null;
         };
         return c;
       default:
