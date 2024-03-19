@@ -255,15 +255,19 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
       case ColumnFormat.EMAIL:
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
-          const firstAuthor = rowValue.split(',')[0];
+          const firstAuthor =
+            typeof rowValue === 'string' && rowValue.includes(',') ? rowValue.split(',')[0] : '';
+          let emailAddressPart = '';
+          if (c && c.formatOptions && typeof row[c.formatOptions.emailAddressKey] === 'string') {
+            const parts = row[c.formatOptions.emailAddressKey].split(':');
+            emailAddressPart = parts.length > 1 ? parts[1] : '';
+          }
           return (
             <a
               className="tag"
               href={
-                hasFormatOptions && c.formatOptions.emailAddressKey
-                  ? 'mailto:' +
-                    row[c.formatOptions.emailAddressKey].split(':')[1] +
-                    ',contribs@materialsproject.org'
+                emailAddressPart !== ''
+                  ? 'mailto:' + emailAddressPart + ',contribs@materialsproject.org'
                   : 'mailto:contribs@materialsproject.org'
               }
               onClick={(e) => e.stopPropagation()}
@@ -336,7 +340,7 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
             }
           } else return null;
         };
-        return c
+        return c;
       case ColumnFormat.PUBLICATION:
         c.cell = (row: any) => {
           if (hasFormatOptions && c.formatOptions) {
