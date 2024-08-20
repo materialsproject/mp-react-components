@@ -256,7 +256,10 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
           const firstAuthor =
-            typeof rowValue === 'string' && rowValue.includes(',') ? rowValue.split(',')[0] : '';
+            //typeof rowValue === 'string' && rowValue.includes(',') ? rowValue.split(',')[0] : '';
+            typeof rowValue === 'string' && rowValue.includes(',')
+              ? rowValue.split(',')[0]
+              : rowValue;
           let emailAddressPart = '';
           if (c && c.formatOptions && typeof row[c.formatOptions.emailAddressKey] === 'string') {
             const parts = row[c.formatOptions.emailAddressKey].split(':');
