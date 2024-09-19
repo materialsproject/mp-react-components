@@ -255,13 +255,14 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
       case ColumnFormat.EMAIL:
         c.cell = (row: any) => {
           const rowValue = getRowValueFromSelectorString(c.selector, row);
+          let firstAuthor: string;
           if (typeof rowValue === 'string') {
-            const firstAuthor =
+            firstAuthor =
               typeof rowValue === 'string' && rowValue.includes(',')
                 ? rowValue.split(',')[0]
                 : rowValue;
           } else {
-            const firstAuthor = '';
+            firstAuthor = '';
           }
           let emailAddressPart = '';
           if (c && c.formatOptions && typeof row[c.formatOptions.emailAddressKey] === 'string') {
