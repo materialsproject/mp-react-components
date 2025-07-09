@@ -20,6 +20,26 @@ Clone the mp-react-components repo:
 git clone git@github.com:materialsproject/mp-react-components.git
 ```
 
+Ensure you're using Node.js version 12.x for compatibility.
+If you don't have nvm (Node Version Manager) installed, you can install it using the following command:
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+Install and use Node.js version 12.x.
+
+```
+nvm install 12
+nvm use 12
+```
+
+To check Node.js version
+
+```
+node -v
+```
+
 From inside the top directory, install the dependencies:
 
 ```
