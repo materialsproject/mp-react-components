@@ -55,7 +55,7 @@
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^5.3.1",
-    "react-tabs": "^3.2.2",
+    "react-tabs": "^4.3.0",
     "react-tooltip": "^4.2.21",
     "rehype-katex": "^5.0.0",
     "rehype-slug": "^5.0.0",
