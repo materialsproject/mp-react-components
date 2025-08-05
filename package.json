@@ -27,6 +27,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.17.12",
     "@babel/runtime": "^7.17.9",
+    "@react-three/fiber": "^9.2.0",
     "@types/classnames": "^2.2.11",
     "axios": "^0.21.1",
     "base64-js": "^1.5.1",
@@ -66,7 +67,7 @@
     "scroll-into-view-if-needed": "^2.2.28",
     "styled-components": "^5.3.5",
     "svgtodatauri": "0.0.0",
-    "three": "^0.139.0",
+    "three": "^0.139.2",
     "use-deep-compare-effect": "^1.6.1",
     "use-query-params": "^1.2.3",
     "use-resize-observer": "^8.0.0",

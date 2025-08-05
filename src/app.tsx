@@ -26,6 +26,7 @@ import { Navbar } from './components/navigation/Navbar';
 import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
 import { MatscholarMaterialsExplorer } from './pages/MatscholarMaterialsExplorer/MatscholarMaterialsExplorer';
+import { CrystalStructureAnimationViewer } from './pages/CrystalStructureAnimationViewer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -46,6 +47,7 @@ ReactDOM.render(
         <Link to="/contribs">Contributions</Link>
         <Link to="/crystal">Crystal Structure</Link>
         <Link to="/sandbox">Sandbox</Link>
+        <Link to="/crystal_animation">Crystal Animation</Link>
       </div>
       <section>
         <Switch>
@@ -84,6 +86,9 @@ ReactDOM.render(
           </Route>
           <Route path="/matscholar">
             <MatscholarMaterialsExplorer />
+          </Route>
+          <Route path="/crystal_animation">
+            <CrystalStructureAnimationViewer />
           </Route>
           <Route path="/">
             <MaterialsExplorer />

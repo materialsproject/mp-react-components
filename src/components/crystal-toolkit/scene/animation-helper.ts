@@ -24,62 +24,94 @@ export class AnimationHelper {
     const kfl = kf.length;
 
     // this supports animations based on the position
+    // pseudo code:
+    // ```
+    // - THREE.js require a flatten array. For example, for position keyframes,
+    //   an array like [1, 0, 0, 0, 0, 1] represents movement from (1, 0, 0) to (0, 0, 1).
+    //   This array is used as input for VectorKeyframeTrack.
+    //   Similarly, flattened arrays are used for QuaternionKeyframeTrack, NumberKeyframeTrack, etc.
+    //   Reference: https://threejs.org/docs/#api/en/animation/KeyframeTrack
+    // - A nested array structure that improves readability and maintains compatibility with
+    //   the original data format. This structure is later parsed into a flattened array, as required by THREE.js.
+    // - Construct a THREE.KeyframeTrack object. For example:
+    //   const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+    //   where `values` is the flattened array generated in the previous step.
+    // - Use the private function `pushAnimations` to bind the animation to a THREE.AnimationClip
+    //   and THREE.AnimationMixer instance.
+    //   Example:
+    //   this.pushAnimations('Action', kfl, [positionKF], three);
+    // ```
     if (json.type === JSON3DObject.SPHERES || json.type === JSON3DObject.CUBES) {
-      if (Array.isArray(animations[0])) {
-        animations.forEach((a: any, idx) =>
-          this.addAnimationForPosition(a, three.children[idx], kf, kfl)
-        );
-      } else {
-        this.addAnimationForPosition(animations, three, kf, kfl);
-      }
+      this.addAnimationForPosition(animations, three, kf, kfl);
     } else if (json.type === JSON3DObject.CYLINDERS) {
       animations.forEach((animation, aIdx) => {
-        const idx = animation[2];
-        const positionPair = json.positionPairs![idx];
-        const start = positionPair[0];
-        const end = positionPair[1];
-        const targetPP = [
-          [start[0] + animation[0][0], start[1] + animation[0][1], start[2] + animation[0][2]],
-          [end[0] + animation[1][0], end[1] + animation[1][1], end[2] + animation[1][2]]
-        ];
-        const {
-          scale: scaleStart,
-          position: positionStart,
-          quaternion: rotation
-        } = three.children[idx];
-        const st = [positionStart.x, positionStart.y, positionStart.z];
-        const qt = [rotation.x, rotation.y, rotation.z, rotation.w];
-        const {
-          position,
-          scale,
-          quaternion: quaternionEnd
-        } = this.objectBuilder.getCylinderInfo(targetPP);
-        let valuesp = [...st, ...position];
-        let valuesq = [
-          ...qt,
-          ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w]
-        ];
+        // create cylinders from u to v
+        const positionPair = json.positionPairs![aIdx];
+        const u_position = positionPair[0];
+        const v_position = positionPair[1];
+
+        let valuesp: any[] = [];
+        let valuesq: any[] = [];
+        let valuess: any[] = [];
+
+        for (let i = 0; i < kfl; i++) {
+          let target = [
+            [
+              u_position[0] + animation[i][0][0],
+              u_position[1] + animation[i][0][1],
+              u_position[2] + animation[i][0][2]
+            ],
+            [
+              v_position[0] + animation[i][1][0],
+              v_position[1] + animation[i][1][1],
+              v_position[2] + animation[i][1][2]
+            ]
+          ];
+
+          const {
+            position: positionEnd,
+            scale: scaleEnd,
+            quaternion: quaternionEnd
+          } = this.objectBuilder.getCylinderInfo(target);
+
+          // make keyframeTrack's value
+          valuesp = [...valuesp, ...positionEnd];
+          // valuesq = [...valuesq, ...quaternion];
+          valuesq = [
+            ...valuesq,
+            ...[quaternionEnd.x, quaternionEnd.y, quaternionEnd.z, quaternionEnd.w]
+          ];
+          valuess = [...valuess, ...[1, scaleEnd, 1]];
+        }
+
+        // make keyframeTrack
         const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], valuesp);
-        const scaleKF = new THREE.NumberKeyframeTrack(
-          '.scale',
-          [...kf],
-          [scaleStart.x, scaleStart.y, scaleStart.z, scaleStart.x, scale, scaleStart.z]
-        );
-        const quaternion = new THREE.VectorKeyframeTrack('.quaternion', [...kf], valuesq);
+        const quaternionKF = new THREE.QuaternionKeyframeTrack('.quaternion', [...kf], valuesq);
+        const scalenKF = new THREE.VectorKeyframeTrack('.scale', [...kf], valuess);
+
+        // attach keyframe to object
         this.pushAnimations(
-          `Cylinder-${idx}`,
+          `Cylinder-${aIdx}`,
           kfl,
-          [positionKF, scaleKF, quaternion],
-          three.children[idx]
+          [positionKF, quaternionKF, scalenKF],
+          three.children[aIdx]
         );
       });
     } else if (json.type === JSON3DObject.LINES) {
       // for line geometries, we are doing a small hack. We cannot use morphTargets to animate a line
       // geometry, so the trick is to use a field that will hold the interpolated value. We can
       // use those values to update the vertices of the geometry in the animate method
-      const pt: number[] = [];
+      const pt: any[] = [];
       json.positions!.forEach((p, idx) => {
-        pt.push(p[0] + animations[idx][0], p[1] + animations[idx][1], p[2] + animations[idx][2]);
+        const pta: number[] = [];
+        for (let i = 0; i < kfl; i++) {
+          pta.push(
+            p[0] + animations[idx][i][0],
+            p[1] + animations[idx][i][1],
+            p[2] + animations[idx][i][2]
+          );
+        }
+        pt.push(pta);
       });
       const lines = three.children[0] as THREE.LineSegments;
       const a: any = (
@@ -137,14 +169,19 @@ export class AnimationHelper {
   }
 
   private addAnimationForPosition(animation, three, kf: number[], kfl: number) {
-    const values = this.calculateTargetPosition(three, animation);
+    const values = this.calculateTargetPosition(three, animation, kfl);
     const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
     this.pushAnimations('Action', kfl, [positionKF], three);
   }
 
-  private calculateTargetPosition({ position }: THREE.Object3D, animation) {
+  private calculateTargetPosition({ position }: THREE.Object3D, animation, kfl) {
+    // Iterate through all keyframes and construct a flattened array of their corresponding positions.
     const p = [position.x, position.y, position.z];
-    return [...p, ...[p[0] + animation[0], p[1] + animation[1], p[2] + animation[2]]];
+    const result: number[] = [];
+    for (let i = 0; i < kfl; i++) {
+      result.push(p[0] + animation[i][0], p[1] + animation[i][1], p[2] + animation[i][2]);
+    }
+    return result;
   }
 
   private updateMixers(timeOrDelta, absolute = false) {
@@ -176,7 +213,8 @@ export class AnimationHelper {
     tracks: THREE.KeyframeTrack[],
     rootObject: THREE.Object3D
   ) {
-    const clip = new THREE.AnimationClip(name, duration, tracks);
+    // change duration to -1 for seamlessly animation
+    const clip = new THREE.AnimationClip(name, -1, tracks);
     const mixer = new THREE.AnimationMixer(rootObject);
     this.mixers.push(mixer);
     const ca = mixer.clipAction(clip);

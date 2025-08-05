@@ -1,0 +1,1 @@
+export { CrystalToolkitAnimationScene } from './CrystalToolkitAnimationScene';
