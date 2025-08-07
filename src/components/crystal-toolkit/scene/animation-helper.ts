@@ -22,6 +22,7 @@ export class AnimationHelper {
     const animations = json.animate!;
     const kf = json.keyframes!;
     const kfl = kf.length;
+    const animationType = json.animateType!;
 
     // this supports animations based on the position
     // pseudo code:
@@ -42,7 +43,27 @@ export class AnimationHelper {
     //   this.pushAnimations('Action', kfl, [positionKF], three);
     // ```
     if (json.type === JSON3DObject.SPHERES || json.type === JSON3DObject.CUBES) {
-      this.addAnimationForPosition(animations, three, kf, kfl);
+      const animation = json.animate!;
+      const p = json.positions![0];
+
+      const values: number[] = [];
+      if (animationType == 'displacement') {
+        for (let i = 0; i < kfl; i++) {
+          // VectorKeyframeTrack requires absolute positions relative to the current position
+          // i.e. displacemnt itself
+          values.push(animation[i][0], animation[i][1], animation[i][2]);
+        }
+      } else if (animationType == 'position') {
+        for (let i = 0; i < kfl; i++) {
+          // Given an absolute position, we subtract the animation values to compute relative displacement
+          values.push(animation[i][0] - p[0], animation[i][1] - p[1], animation[i][2] - p[2]);
+        }
+      } else {
+        console.warn(`Unknown animationType: ${animationType}`);
+      }
+
+      const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
+      this.pushAnimations('Action', kfl, [positionKF], three);
     } else if (json.type === JSON3DObject.CYLINDERS) {
       animations.forEach((animation, aIdx) => {
         // create cylinders from u to v
@@ -55,18 +76,30 @@ export class AnimationHelper {
         let valuess: any[] = [];
 
         for (let i = 0; i < kfl; i++) {
-          let target = [
-            [
-              u_position[0] + animation[i][0][0],
-              u_position[1] + animation[i][0][1],
-              u_position[2] + animation[i][0][2]
-            ],
-            [
-              v_position[0] + animation[i][1][0],
-              v_position[1] + animation[i][1][1],
-              v_position[2] + animation[i][1][2]
-            ]
-          ];
+          let target;
+          // The function `this.objectBuilder.getCylinderInfo` requires the actual positions
+          // of the atoms involved in the bond.
+          if (animationType == 'displacement') {
+            target = [
+              [
+                u_position[0] + animation[i][0][0],
+                u_position[1] + animation[i][0][1],
+                u_position[2] + animation[i][0][2]
+              ],
+              [
+                v_position[0] + animation[i][1][0],
+                v_position[1] + animation[i][1][1],
+                v_position[2] + animation[i][1][2]
+              ]
+            ];
+          } else if (animationType == 'position') {
+            target = [
+              [animation[i][0][0], animation[i][0][1], animation[i][0][2]],
+              [animation[i][1][0], animation[i][1][1], animation[i][1][2]]
+            ];
+          } else {
+            console.warn(`Unknown animationType: ${animationType}`);
+          }
 
           const {
             position: positionEnd,
@@ -168,18 +201,26 @@ export class AnimationHelper {
     }
   }
 
-  private addAnimationForPosition(animation, three, kf: number[], kfl: number) {
-    const values = this.calculateTargetPosition(three, animation, kfl);
+  private addAnimationForPosition(animation, three, kf: number[], kfl: number, animationType) {
+    const values = this.calculateTargetPosition(three, animation, kfl, animationType);
     const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
     this.pushAnimations('Action', kfl, [positionKF], three);
   }
 
-  private calculateTargetPosition({ position }: THREE.Object3D, animation, kfl) {
+  private calculateTargetPosition({ position }: THREE.Object3D, animation, kfl, animationType) {
     // Iterate through all keyframes and construct a flattened array of their corresponding positions.
     const p = [position.x, position.y, position.z];
     const result: number[] = [];
-    for (let i = 0; i < kfl; i++) {
-      result.push(p[0] + animation[i][0], p[1] + animation[i][1], p[2] + animation[i][2]);
+    if (animationType == 'displacement') {
+      for (let i = 0; i < kfl; i++) {
+        result.push(p[0] + animation[i][0], p[1] + animation[i][1], p[2] + animation[i][2]);
+      }
+    } else if (animationType == 'position') {
+      for (let i = 0; i < kfl; i++) {
+        result.push(animation[i][0], animation[i][1], animation[i][2]);
+      }
+    } else {
+      console.warn(`Unknown animationType: ${animationType}`);
     }
     return result;
   }

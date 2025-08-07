@@ -11,6 +11,7 @@ import {
   shperes
 } from '../../components/crystal-toolkit/scene/simple-scene';
 import { phonon_scene } from '../../components/crystal-toolkit/scene/phonon-animation-scene';
+import { phonon_position_scene } from '../../components/crystal-toolkit/scene/phonon-animation-position-scene';
 import { CameraContextProvider } from '../../components/crystal-toolkit/CameraContextProvider';
 import { AnimationStyle, Renderer } from '../../components/crystal-toolkit/scene/constants';
 import { CrystalToolkitScene } from '../../components/crystal-toolkit/CrystalToolkitScene/CrystalToolkitScene';
@@ -183,7 +184,8 @@ export const CrystalStructureAnimationViewer: React.FC = () => {
                   extractAxis: false,
                   zoomToFit2D: true
                 }}
-                data={phonon_scene}
+                // data={phonon_scene}
+                data={phonon_position_scene}
                 sceneSize="100%"
                 debug={false}
                 toggleVisibility={{}}
