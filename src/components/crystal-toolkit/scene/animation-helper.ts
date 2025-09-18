@@ -63,7 +63,14 @@ export class AnimationHelper {
       }
 
       const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
-      this.pushAnimations('Action', kfl, [positionKF], three);
+
+      let kflVal;
+      if (animationType == 'displacement') {
+        kflVal = -1;
+      } else {
+        kflVal = kfl;
+      }
+      this.pushAnimations('Action', kflVal, [positionKF], three);
     } else if (json.type === JSON3DObject.CYLINDERS) {
       animations.forEach((animation, aIdx) => {
         // create cylinders from u to v
@@ -80,23 +87,11 @@ export class AnimationHelper {
           // The function `this.objectBuilder.getCylinderInfo` requires the actual positions
           // of the atoms involved in the bond.
           if (animationType == 'displacement') {
-            target = [
-              [
-                u_position[0] + animation[i][0][0],
-                u_position[1] + animation[i][0][1],
-                u_position[2] + animation[i][0][2]
-              ],
-              [
-                v_position[0] + animation[i][1][0],
-                v_position[1] + animation[i][1][1],
-                v_position[2] + animation[i][1][2]
-              ]
-            ];
+            target = positionPair.map((item, index) =>
+              item.map((num, idx) => num + animation[i][index][idx])
+            );
           } else if (animationType == 'position') {
-            target = [
-              [animation[i][0][0], animation[i][0][1], animation[i][0][2]],
-              [animation[i][1][0], animation[i][1][1], animation[i][1][2]]
-            ];
+            target = [0, 1].map((r) => [0, 1, 2].map((c) => animation[i][r][c]));
           } else {
             console.warn(`Unknown animationType: ${animationType}`);
           }
@@ -118,14 +113,20 @@ export class AnimationHelper {
         }
 
         // make keyframeTrack
-        const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], valuesp);
-        const quaternionKF = new THREE.QuaternionKeyframeTrack('.quaternion', [...kf], valuesq);
-        const scalenKF = new THREE.VectorKeyframeTrack('.scale', [...kf], valuess);
+        const positionKF = new THREE.VectorKeyframeTrack('.position', kf, valuesp);
+        const quaternionKF = new THREE.QuaternionKeyframeTrack('.quaternion', kf, valuesq);
+        const scalenKF = new THREE.VectorKeyframeTrack('.scale', kf, valuess);
 
         // attach keyframe to object
+        let kflVal;
+        if (animationType == 'displacement') {
+          kflVal = -1;
+        } else {
+          kflVal = kfl;
+        }
         this.pushAnimations(
           `Cylinder-${aIdx}`,
-          kfl,
+          kflVal,
           [positionKF, quaternionKF, scalenKF],
           three.children[aIdx]
         );
@@ -255,7 +256,7 @@ export class AnimationHelper {
     rootObject: THREE.Object3D
   ) {
     // change duration to -1 for seamlessly animation
-    const clip = new THREE.AnimationClip(name, -1, tracks);
+    const clip = new THREE.AnimationClip(name, duration, tracks);
     const mixer = new THREE.AnimationMixer(rootObject);
     this.mixers.push(mixer);
     const ca = mixer.clipAction(clip);

@@ -184,7 +184,7 @@ export const CrystalStructureAnimationViewer: React.FC = () => {
                   extractAxis: false,
                   zoomToFit2D: true
                 }}
-                // data={phonon_scene}
+                //data={phonon_scene}
                 data={phonon_position_scene}
                 sceneSize="100%"
                 debug={false}

@@ -420,6 +420,7 @@ export const CrystalToolkitAnimationScene: React.FC<CrystalToolkitAnimationScene
       mountNodeDebugRef.current!
     ));
 
+    _s.removeListener();
     _s.animate();
     /**
      * I believe this can be removed because image requesting is now handled by
