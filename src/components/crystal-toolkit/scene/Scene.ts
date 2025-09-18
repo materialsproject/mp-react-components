@@ -630,7 +630,10 @@ export default class Scene {
   animate() {
     this.animationHelper.animate();
 
-    this.controls.update();
+    //this.controls.update();
+    if (this.controls) {
+      this.controls.update();
+    }
     this.refreshOutline();
     this.renderScene();
 
