@@ -27,10 +27,10 @@ jobs:
           scope: '@mat-github-ci'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Set up Python 3.7
+      - name: Set up Python 3.11.13
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.11.13
       - uses: actions/cache@v4
         with:
           path: ~/.npm
