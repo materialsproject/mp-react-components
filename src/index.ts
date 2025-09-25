@@ -51,6 +51,7 @@ import { DrawerContextProvider } from './components/data-display/Drawer/DrawerCo
 import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
 import { SearchUIDataTable } from './components/data-display/SearchUI/SearchUIDataTable';
 import { OpenAccessButton } from './components/publications/OpenAccessButton';
+import { CrystalToolkitAnimationScene } from './components/crystal-toolkit/CrystalToolkitAnimationScene/CrystalToolkitAnimationScene';
 
 export {
   SelectableTable,
@@ -107,5 +108,6 @@ export {
   Drawer,
   Link,
   DrawerContextProvider,
-  DrawerTrigger
+  DrawerTrigger,
+  CrystalToolkitAnimationScene
 };

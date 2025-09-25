@@ -1,5 +1,5 @@
 name: publish-npm-manual
-on: 
+on:
   workflow_dispatch:
     inputs:
       logLevel:
@@ -8,9 +8,9 @@ on:
         default: 'warning'
         type: choice
         options:
-        - info
-        - warning
-        - debug
+          - info
+          - warning
+          - debug
       tags:
         description: 'manual publish'
         required: false
