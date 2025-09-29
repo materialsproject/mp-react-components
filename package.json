@@ -33,6 +33,7 @@
     "base64-js": "^1.5.1",
     "bulma": "^0.9.4",
     "bulma-tooltip": "^3.0.2",
+    "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.2.6",
     "d3": "^5.15.0",
     "highlight.js": "^11.0.1",
