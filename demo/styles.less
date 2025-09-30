@@ -1,0 +1,344 @@
+@primary-color: white;
+@bg: black;
+
+body {
+  font-family: Helvetica Neue !important;
+  background: #f3f3f3 !important;
+  min-height: 100vh;
+}
+
+#app {
+  padding: 1.5rem;
+}
+
+.mp-app-content {
+  position: relative;
+  min-height: calc(100vh - 6.5rem);
+  min-height: -webkit-calc(100vh - 6.5rem);
+  padding: 1.5rem;
+}
+
+.tooltip {
+  position: relative;
+  border-bottom: 1px dotted black;
+  margin-bottom: 0.5rem;
+  width: max-content;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 360px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -180px;
+}
+.tooltip .tooltiptext::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip-label {
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+h1:not(.sb-show-main h1) {
+  height: 12rem;
+  line-height: 12rem !important;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.basic-navbar > * {
+  display: inline-block;
+  margin-right: 0.75rem;
+}
+
+/*******************************************************
+
+Destined for overrides.scss in mp-web
+
+*******************************************************/
+
+[class^='icon-'],
+[class*=' icon-'] {
+  line-height: 0;
+  position: relative;
+  top: 1px;
+}
+
+a.tag {
+  color: #3273dc !important;
+}
+
+/**
+* Prevent double padding for tags inside tags
+*/
+.tag .tags .tag:first-child {
+  padding-left: 0;
+}
+
+.tag .tags .tag:last-child {
+  padding-right: 0;
+}
+
+/*******************************************************
+
+Destined for bulma-custom.scss in mp-web
+
+*******************************************************/
+
+.mp-dropdown .icon {
+  display: none;
+}
+
+.bt-0 {
+  border-top: 0 !important;
+}
+
+.can-hide-by-height {
+  transition: 0.25s;
+  overflow: hidden;
+}
+
+.is-hidden-by-height {
+  max-height: 0 !important;
+  margin: 0;
+}
+
+.is-hidden-by-opacity {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.has-opacity-70 {
+  opacity: 0.7;
+}
+
+.has-opacity-0 {
+  opacity: 0;
+}
+
+.badge {
+  background: hsl(217, 71%, 53%);
+  color: #fff;
+  text-align: center;
+  border-radius: 1em;
+  margin-left: 0.5em;
+  display: inline-block;
+  font-size: 0.7em;
+  padding: 0em 1em;
+}
+
+.has-oversized-icon {
+  height: 100% !important;
+  padding: 0 1em !important;
+}
+
+.has-oversized-icon > [class^='icon-'],
+.has-oversized-icon > [class*=' icon-'],
+.has-oversized-icon > i {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+i.is-active,
+span.is-active,
+p.is-active,
+svg.is-active {
+  color: #3273dc;
+}
+
+.checkbox input + * {
+  vertical-align: text-bottom;
+  margin-left: 0.25em;
+}
+
+.panel {
+  background-color: #fff;
+}
+
+.pagination-next,
+.pagination-previous,
+.pagination-link {
+  background-color: #fff;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.react-select-container .react-select__control {
+  border-color: #dbdbdb;
+}
+
+.react-select-container .react-select__control:hover {
+  border-color: #b5b5b5;
+}
+
+.dropdown-content,
+.react-select-container .react-select__menu {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.dropdown-content {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dropdown-item,
+.react-select-container .react-select__option {
+  color: #4a4a4a;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.375rem 1rem;
+  position: relative;
+}
+
+.react-select-container .react-select__option {
+  background-color: #fff;
+}
+
+.dropdown-item:hover,
+.react-select-container .react-select__option:not(.react-select__option--is-selected):hover {
+  background-color: #f5f5f5;
+  color: #0a0a0a;
+}
+
+.dropdown-item.is-active,
+.react-select-container .react-select__option--is-selected {
+  background-color: #3273dc;
+  color: #fff;
+}
+
+.fas.fa-star {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  background-color: #3273dc;
+}
+
+pre {
+  background: none;
+  padding: 0 !important;
+}
+
+pre code {
+  display: inline-block;
+  width: 100%;
+  padding: 1rem !important;
+}
+
+/*******************************************************
+
+Destined for app.scss in mp-web
+
+*******************************************************/
+
+@media screen and (max-width: (769px - 1px)) {
+  .search-ui .table-transition-wrapper-small {
+    display: none;
+  }
+  .search-ui .materials-input .field > .control:first-child:not(.is-expanded) {
+    display: none;
+  }
+  .search-ui .panel,
+  .search-ui .panel-block-title {
+    min-width: 0 !important;
+  }
+  .search-ui .panel-block-children {
+    padding-left: 0 !important;
+  }
+  .search-ui .pagination.is-small {
+    font-size: 1rem;
+  }
+  .search-ui .react-data-table-container {
+    position: relative !important;
+  }
+}
+
+/*******************************************************
+
+Destined for home.scss in mp-web
+
+*******************************************************/
+
+.mp-home .materials-input {
+  color: #000;
+  .autocomplete-right {
+    top: 45px;
+    left: 0;
+    margin-left: 0;
+    .autocomplete-label {
+      color: #4a4a4a;
+    }
+  }
+}
+
+.mp-home .mat-element {
+  .mat-symbol {
+    font-weight: 300;
+  }
+}
+
+.has-badge[data-count]:after {
+  position: absolute;
+  right: 20%;
+  top: 20%;
+  content: attr(data-count);
+  font-size: 20%;
+  padding: 0.6em;
+  border-radius: 999px;
+  line-height: 0.75em;
+  color: red;
+  background: red;
+  text-align: center;
+  min-width: 2em;
+  font-weight: bold;
+}
+
+.has-badge-number[data-count]:after {
+  position: absolute;
+  right: 20%;
+  top: 20%;
+  content: attr(data-count);
+  font-size: 20%;
+  padding: 0.6em;
+  border-radius: 999px;
+  line-height: 0.75em;
+  color: red;
+  background: black;
+  text-align: center;
+  min-width: 2em;
+  font-weight: bold;
+}
+
+@media screen and (max-width: (769px - 1px)) {
+  .mp-home .materials-input .field > .control:first-child:not(.is-expanded) {
+    display: none;
+  }
+  .mp-home .materials-input .field > .control.is-expanded .input {
+    border-radius: 4px 0 0 4px;
+  }
+}

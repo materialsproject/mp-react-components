@@ -30,8 +30,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 Install and use Node.js version 12.x.
 
 ```
-nvm install 12
-nvm use 12
+nvm install 18
+nvm use 18
 ```
 
 To check Node.js version
