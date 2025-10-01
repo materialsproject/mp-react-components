@@ -1,6 +1,9 @@
 name: jest_tests
 
 on:
+  pull_request:
+    branches:
+      - 'main'
   push:
     branches:
       - main
@@ -24,7 +27,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 18.x
           registry-url: https://registry.npmjs.org/
           scope: '@mat-github-ci'
         env:

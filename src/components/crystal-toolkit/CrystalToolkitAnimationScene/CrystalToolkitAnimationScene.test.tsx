@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { CrystalToolkitAnimationScene } from './CrystalToolkitAnimationScene';
-import { s2 as scene } from '../scene/simple-scene';
+import { phonon_scene as scene } from '../scene/phonon-animation-scene';
 import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
 import Scene from '../scene/Scene';
 
