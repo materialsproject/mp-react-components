@@ -459,9 +459,6 @@ export default class Scene {
           this.threeUUIDTojsonObject[object.uuid] = childObject;
           this.computeIdToThree[`${currentId}--${idx}`] = object;
           childObject.id = `${currentId}--${idx}`;
-          if (childObject.animate) {
-            objectToAnimate.add(`${currentId}--${idx}`);
-          }
         } else {
           const threeObject = new THREE.Object3D();
           threeObject.name = childObject.name!;

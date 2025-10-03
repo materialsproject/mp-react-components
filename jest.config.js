@@ -10,7 +10,7 @@ module.exports = {
    * This is necessary for node modules that distribute their source code as uncompiled JS.
    */
   transformIgnorePatterns: [
-    'node_modules/(?!(three|unist-.*|hast-.*|rehype-slug|remark-rehype|react-markdown|vfile.*|unified|bail|is-plain-obj|trough|remark-parse|mdast-.*|micromark.*|decode-named-character-reference|unist-.*|character-entities|property-information|space-separated-tokens|comma-separated-tokens)/)'
+    'node_modules/(?!(three|trim-lines|github-slugger|unist-.*|hast-.*|rehype-slug|remark-rehype|react-markdown|vfile.*|unified|bail|is-plain-obj|trough|remark-parse|mdast-.*|micromark.*|decode-named-character-reference|unist-.*|character-entities|property-information|space-separated-tokens|comma-separated-tokens)/)'
   ],
   modulePaths: ['<rootDir>'],
   moduleDirectories: ['node_modules', '<rootDir>'],
