@@ -4,13 +4,10 @@ on:
   push:
     branches:
       - main
-      - github_action_tests
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - name: Generate build number
         id:
