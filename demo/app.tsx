@@ -27,7 +27,7 @@ ReactDOM.render(
       <section>
         <Switch>
           <Route path="/">
-            <CrystalStructureViewer />
+            <CrystalStructureAnimationViewer />
           </Route>
         </Switch>
       </section>

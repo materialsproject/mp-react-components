@@ -6,10 +6,7 @@ import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
 import Scene from '../scene/Scene';
 
 const spy = jest.spyOn(Scene.prototype, 'renderScene');
-const RENDERSCENE_CALLS_BY_REACT_RENDERING = 3;
-// goal is to reach 1 and stay there :)
-// MHC: not share why reach 1 is the goal...
-// But in this test, when mount, run animate(), addToScene(), and resizeRendererToDisplaySize()
+const RENDERSCENE_CALLS_BY_REACT_RENDERING = 3; // goal is to reach 1 and stay there :)
 
 // When we run test, three.js is bundled differently, and we encounter again the bug
 // where we have 2 different instances of three
