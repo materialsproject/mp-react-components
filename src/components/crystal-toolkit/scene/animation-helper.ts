@@ -61,7 +61,6 @@ export class AnimationHelper {
       } else {
         console.warn(`Unknown animationType: ${animationType}`);
       }
-
       const positionKF = new THREE.VectorKeyframeTrack('.position', [...kf], values);
 
       let kflVal;

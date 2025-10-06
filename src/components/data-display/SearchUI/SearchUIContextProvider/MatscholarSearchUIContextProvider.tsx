@@ -234,7 +234,8 @@ export const MatscholarSearchUIContextProvider: React.FC<SearchState> = ({
       const params: any = preprocessQueryParams(
         { ...query, ...props.apiEndpointParams },
         state.filterGroups,
-        defaultQuery
+        defaultQuery,
+        ''
       );
       params[props.fieldsKey] = fields;
 

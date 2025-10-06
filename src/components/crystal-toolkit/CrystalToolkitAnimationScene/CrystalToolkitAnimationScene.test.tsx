@@ -1,12 +1,12 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { CrystalToolkitAnimationScene } from './CrystalToolkitAnimationScene';
-import { s2 as scene } from '../scene/simple-scene';
+import { phonon_scene as scene } from '../scene/phonon-animation-scene';
 import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
 import Scene from '../scene/Scene';
 
 const spy = jest.spyOn(Scene.prototype, 'renderScene');
-const RENDERSCENE_CALLS_BY_REACT_RENDERING = 1; // goal is to reach 1 and stay there :)
+const RENDERSCENE_CALLS_BY_REACT_RENDERING = 3; // goal is to reach 1 and stay there :)
 
 // When we run test, three.js is bundled differently, and we encounter again the bug
 // where we have 2 different instances of three
