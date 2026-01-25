@@ -19,6 +19,7 @@ export interface SceneJsonObject {
   animate?: any[];
   id?: string;
   animateType?: string;
+  _meta?: number[];
 }
 
 export const s4 = {

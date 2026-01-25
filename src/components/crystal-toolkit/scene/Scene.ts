@@ -28,6 +28,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { SceneJsonObject } from './simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { AnimationHelper } from './animation-helper';
+import { PhononAnimationHelper } from './phonon-animation-helper';
 import '../CrystalToolkitScene/CrystalToolkitScene.less';
 import { CameraState } from '../CameraContextProvider/camera-reducer';
 
@@ -68,7 +69,7 @@ export default class Scene {
   private registry = new ObjectRegistry();
 
   private clock = new THREE.Clock();
-  private animationHelper: AnimationHelper;
+  private animationHelper: AnimationHelper | PhononAnimationHelper;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -376,7 +377,17 @@ export default class Scene {
     this.configurePostProcessing();
     this.clickCallback = clickCallback;
     this.outlineScene.autoUpdate = false;
-    this.animationHelper = new AnimationHelper(this.objectBuilder);
+    const isPhonon = sceneJson?.app === 'phonon';
+    this.animationHelper = isPhonon
+      ? new PhononAnimationHelper(
+          this.objectBuilder,
+          sceneJson.amplitude,
+          sceneJson.phases,
+          sceneJson.omega,
+          sceneJson.eigenVectors
+        )
+      : new AnimationHelper(this.objectBuilder);
+    // this.animationHelper = new AnimationHelper(this.objectBuilder);
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
       this.axis,

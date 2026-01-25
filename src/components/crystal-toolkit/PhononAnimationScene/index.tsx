@@ -1,0 +1,1 @@
+export { PhononAnimationScene } from './PhononAnimationScene';
