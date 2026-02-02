@@ -27,6 +27,7 @@ import periodicTableImage from './assets/images/periodictable.png';
 import { MofExplorer } from './pages/MofExplorer';
 import { MatscholarMaterialsExplorer } from './pages/MatscholarMaterialsExplorer/MatscholarMaterialsExplorer';
 import { CrystalStructureAnimationViewer } from './pages/CrystalStructureAnimationViewer';
+import { PhononAnimationViewer } from './pages/PhononAnimationViewer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -87,8 +88,8 @@ ReactDOM.render(
           <Route path="/matscholar">
             <MatscholarMaterialsExplorer />
           </Route>
-          <Route path="/crystal_animation">
-            <CrystalStructureAnimationViewer />
+          <Route path="/phonon_animation">
+            <PhononAnimationViewer />
           </Route>
           <Route path="/">
             <MaterialsExplorer />

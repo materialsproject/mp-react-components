@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 //import '../node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css';
 import { CrystalStructureAnimationViewer } from '../src/pages/CrystalStructureAnimationViewer';
 import { CrystalStructureViewer } from '../src/pages/CrystalStructureViewer';
+import { PhononAnimationViewer } from '../src/pages/PhononAnimationViewer';
 
 const mountNodeSelector = 'app';
 const mountNode = document.getElementById(mountNodeSelector);
@@ -27,7 +28,7 @@ ReactDOM.render(
       <section>
         <Switch>
           <Route path="/">
-            <CrystalStructureAnimationViewer />
+            <PhononAnimationViewer />
           </Route>
         </Switch>
       </section>

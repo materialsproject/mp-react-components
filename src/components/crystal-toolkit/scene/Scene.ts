@@ -28,6 +28,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { SceneJsonObject } from './simple-scene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { AnimationHelper } from './animation-helper';
+import { PhononAnimationHelper } from './phonon-animation-helper';
 import '../CrystalToolkitScene/CrystalToolkitScene.less';
 import { CameraState } from '../CameraContextProvider/camera-reducer';
 
@@ -68,7 +69,7 @@ export default class Scene {
   private registry = new ObjectRegistry();
 
   private clock = new THREE.Clock();
-  private animationHelper: AnimationHelper;
+  private animationHelper: AnimationHelper | PhononAnimationHelper;
 
   private cacheMountBBox(mountNode: Element) {
     this.cachedMountNodeSize = { width: mountNode.clientWidth, height: mountNode.clientHeight };
@@ -102,6 +103,7 @@ export default class Scene {
     if (!renderer) {
       throw new Error('No renderer');
     }
+
     this.renderer = renderer;
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     //TODO(chab) This should be simpler
@@ -376,7 +378,17 @@ export default class Scene {
     this.configurePostProcessing();
     this.clickCallback = clickCallback;
     this.outlineScene.autoUpdate = false;
-    this.animationHelper = new AnimationHelper(this.objectBuilder);
+    const isPhonon = sceneJson?.app === 'phonon';
+    this.animationHelper = isPhonon
+      ? new PhononAnimationHelper(
+          this.objectBuilder,
+          sceneJson.amplitude,
+          sceneJson.phases,
+          sceneJson.omega,
+          sceneJson.eigenVectors,
+          sceneJson.velocity
+        )
+      : new AnimationHelper(this.objectBuilder);
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
       this.axis,
@@ -798,12 +810,21 @@ export default class Scene {
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
-    this.scene.dispose();
+    // this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
     }
-    this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
+    // remove CSS2D overlay
+    if (this.labelRenderer?.domElement?.parentElement) {
+      this.labelRenderer.domElement.parentElement.removeChild(this.labelRenderer.domElement);
+    }
+
+    // remove canvas/SVG
+    if (this.renderer?.domElement?.parentElement) {
+      this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+    }
+    // this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
     this.renderer.domElement = undefined as any;
     this.renderer = null as any;
     this.stop();

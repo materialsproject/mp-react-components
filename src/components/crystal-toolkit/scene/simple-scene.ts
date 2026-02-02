@@ -1,5 +1,10 @@
 import { JSON3DObject, ThreePosition } from './constants';
 
+export type SceneMeta = {
+  atom_idx?: number[];
+  unit_cell_atom_idx?: number[];
+};
+
 export interface SceneJsonObject {
   name?: string;
   contents?: SceneJsonObject[];
@@ -19,6 +24,7 @@ export interface SceneJsonObject {
   animate?: any[];
   id?: string;
   animateType?: string;
+  _meta?: SceneMeta[];
 }
 
 export const s4 = {
