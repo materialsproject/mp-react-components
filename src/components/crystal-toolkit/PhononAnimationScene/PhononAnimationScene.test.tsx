@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
-import { CrystalToolkitAnimationScene } from './PhononAnimationScene';
+import { PhononAnimationScene } from './PhononAnimationScene';
 import { phonon_scene as scene } from '../scene/phonon-animation-scene';
 import { MOUNT_NODE_CLASS, Renderer } from '../scene/constants';
 import Scene from '../scene/Scene';
@@ -10,7 +10,7 @@ const RENDERSCENE_CALLS_BY_REACT_RENDERING = 3; // goal is to reach 1 and stay t
 
 // When we run test, three.js is bundled differently, and we encounter again the bug
 // where we have 2 different instances of three
-describe('<CrystalToolkitAnimationScene/>', () => {
+describe('<PhononAnimationScene/>', () => {
   it('should be rendered', () => {
     const wrapper = renderElement();
     expect(wrapper.find(`.${MOUNT_NODE_CLASS}`).length).toBe(1);
@@ -34,7 +34,7 @@ describe('<CrystalToolkitAnimationScene/>', () => {
 function renderElement() {
   // we use mount to test the rendering of the underlying elements
   return mount(
-    <CrystalToolkitAnimationScene
+    <PhononAnimationScene
       sceneSize={500}
       settings={{
         renderer: Renderer.SVG

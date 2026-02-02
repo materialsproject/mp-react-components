@@ -21,7 +21,8 @@ import {
   timeScene7,
   timeScene8,
   timeScene9,
-  timeScene10
+  timeScene10,
+  timeScene11
 } from '../../components/crystal-toolkit/scene/phonon-animation-scene';
 import { phonon_position_scene } from '../../components/crystal-toolkit/scene/phonon-animation-position-scene';
 import { CameraContextProvider } from '../../components/crystal-toolkit/CameraContextProvider';
@@ -36,6 +37,7 @@ import { Camera } from 'three';
 import { useRef } from 'react';
 import { Enlargeable } from '../../components/data-display/Enlargeable';
 import { CrystalToolkitAnimationScene } from '../../components/crystal-toolkit/CrystalToolkitAnimationScene/CrystalToolkitAnimationScene';
+import { PhononAnimationScene } from '../../components/crystal-toolkit/PhononAnimationScene/PhononAnimationScene';
 
 /**
  * Component for testing Scene
@@ -66,7 +68,7 @@ function SceneSwitcher() {
         {' '}
         TOGGLE VIS{' '}
       </div>
-      <CrystalToolkitAnimationScene
+      <PhononAnimationScene
         sceneSize={'30vw'}
         animation={_anim}
         settings={{
@@ -188,7 +190,7 @@ export const PhononAnimationViewer: React.FC = () => {
         <>
           <div>
             <div ref={structureContainer} style={{ width: structureContainerWidth }}>
-              <CrystalToolkitAnimationScene
+              <PhononAnimationScene
                 className="box"
                 setProps={setState}
                 settings={{
@@ -215,7 +217,7 @@ export const PhononAnimationViewer: React.FC = () => {
               >
                 <p>Settings panel</p>
                 <p>This could be a legend</p>
-              </CrystalToolkitAnimationScene>
+              </PhononAnimationScene>
             </div>
           </div>
           {/* <CrystalToolkitScene

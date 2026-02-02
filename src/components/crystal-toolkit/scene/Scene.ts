@@ -103,6 +103,7 @@ export default class Scene {
     if (!renderer) {
       throw new Error('No renderer');
     }
+
     this.renderer = renderer;
     this.renderer.setSize(this.cachedMountNodeSize.width, this.cachedMountNodeSize.height);
     //TODO(chab) This should be simpler
@@ -384,10 +385,10 @@ export default class Scene {
           sceneJson.amplitude,
           sceneJson.phases,
           sceneJson.omega,
-          sceneJson.eigenVectors
+          sceneJson.eigenVectors,
+          sceneJson.velocity
         )
       : new AnimationHelper(this.objectBuilder);
-    // this.animationHelper = new AnimationHelper(this.objectBuilder);
     window.addEventListener('resize', this.windowListener, false);
     this.inset = new InsetHelper(
       this.axis,
@@ -809,12 +810,21 @@ export default class Scene {
     this.inset.onDestroy();
     this.controls.dispose();
     disposeSceneHierarchy(this.scene);
-    this.scene.dispose();
+    // this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
       this.renderer.dispose();
     }
-    this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
+    // remove CSS2D overlay
+    if (this.labelRenderer?.domElement?.parentElement) {
+      this.labelRenderer.domElement.parentElement.removeChild(this.labelRenderer.domElement);
+    }
+
+    // remove canvas/SVG
+    if (this.renderer?.domElement?.parentElement) {
+      this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+    }
+    // this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
     this.renderer.domElement = undefined as any;
     this.renderer = null as any;
     this.stop();

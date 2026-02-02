@@ -52,6 +52,7 @@ import { DrawerTrigger } from './components/data-display/Drawer/DrawerTrigger';
 import { SearchUIDataTable } from './components/data-display/SearchUI/SearchUIDataTable';
 import { OpenAccessButton } from './components/publications/OpenAccessButton';
 import { CrystalToolkitAnimationScene } from './components/crystal-toolkit/CrystalToolkitAnimationScene/CrystalToolkitAnimationScene';
+import { PhononAnimationScene } from './components/crystal-toolkit/PhononAnimationScene/PhononAnimationScene';
 
 export {
   SelectableTable,
@@ -109,5 +110,6 @@ export {
   Link,
   DrawerContextProvider,
   DrawerTrigger,
-  CrystalToolkitAnimationScene
+  CrystalToolkitAnimationScene,
+  PhononAnimationScene
 };

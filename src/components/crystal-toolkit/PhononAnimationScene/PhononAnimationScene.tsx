@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import Scene from '../scene/Scene';
 import { subscribe } from '../scene/download-event';
-import './CrystalToolkitAnimationScene.less';
+import './PhononAnimationScene.less';
 import {
   AnimationStyle,
   DEBUG_STYLE,
@@ -102,6 +102,13 @@ export interface PhononAnimationSceneProps {
    *    defaultZoom: 1, // 1 will zoom to fit object exactly, <1 will add padding between object and box bounds
    *    zoomToFit2D: false // if true, will zoom to fit object only along the X and Y axes (not Z)
    *    extractAxis: false // will remove the axis from the main scene
+   *    omega: 0.0 // The eigen frequency
+   *    phases: [0, 0] // Per-atom phase theta_i = q · R_i (radians). Length should equal number of atoms.
+   *    amplitude: 150 //The amplitude of vibration
+   *    eigenVectors: [[[2.369e-7, 0], [-6.908e-7, 0], [-0.002, 0]], [[2.369e-7, 0], [-6.908e-7, 0], [-0.002, 0]]] //  The eigenvectors for each atom with the given wave vector and frequency
+   *    velocity: 0.5 // The velocity coef, scale 0 to 1
+   *
+   *
    * }
    * There are several additional options used for debugging and testing,
    * please consult the source code directly for these.
@@ -235,23 +242,6 @@ export interface PhononAnimationSceneProps {
    * @default true
    */
   showPositionButton?: boolean;
-  /**
-   * The eigen frequency
-   */
-  omega: number;
-  /**
-   * Per-atom phase theta_i = q · R_i (radians).
-   * Length should equal number of atoms.
-   */
-  phases: number[];
-  /**
-   * The amplitude of vibration
-   */
-  amplitude: number;
-  /**
-   * The eigenvectors for each atom with the given wave vector and frequency
-   */
-  eigenVectors: number[];
 }
 
 /**
@@ -410,6 +400,10 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
 
   // called after the component is mounted, so refs are correctly populated
   useEffect(() => {
+    if (!props.data || !props.data.name || !props.data.contents) {
+      return;
+    }
+
     const _s = (scene.current = new Scene(
       props.data,
       mountNodeRef.current!,
@@ -437,7 +431,9 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
       mountNodeDebugRef.current!
     ));
     _s.removeListener();
-    _s.animate();
+    if (props.data !== undefined && props.data !== null) {
+      _s.animate();
+    }
 
     /**
      * I believe this can be removed because image requesting is now handled by
@@ -450,17 +446,18 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
       subscription.unsubscribe();
       _s.onDestroy();
     };
-  }, []);
+  }, [props.data]);
 
   // Note(chab) those hooks will be executed sequentially at mount time, and on change of the deps array elements
-  useEffect(
-    () => scene.current!.enableDebug(props.debug!, mountNodeDebugRef.current),
-    [props.debug]
-  );
+  useEffect(() => {
+    if (!scene.current) return;
+    scene.current!.enableDebug(props.debug!, mountNodeDebugRef.current);
+  }, [props.debug]);
   // An interesting classical react issue that we fixed : look at the stories, we do not pass anymore an empty object,
   // but a reference to an empty object, otherwise, it will be a different reference, and treated as a different object, thus
   // triggering the effect
   useEffect(() => {
+    if (!scene.current) return;
     if (!props.data || !(props.data as any).name || !(props.data as any).contents) {
       console.warn(
         'no data passed ( or missing name /content ), scene will not be updated',
@@ -470,25 +467,28 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
     }
 
     //FIXME(chab) we have to much calls to renderScene
-    !!props.data && scene.current!.addToScene(props.data, false);
+    //!!props.data && scene.current!.addToScene(props.data, false);
+    scene.current.addToScene(props.data, false);
     // !!props.data && scene.current!.addToScene(props.data, false);
     // scene.current!.animate();
     scene.current!.toggleVisibility(props.toggleVisibility as any);
   }, [props.data]);
-  useEffect(
-    () => scene.current!.toggleVisibility(props.toggleVisibility as any),
-    [props.toggleVisibility]
-  );
-  useEffect(
-    () => scene.current!.updateInsetSettings(props.inletSize!, props.inletPadding!, props.axisView),
-    [props.inletSize, props.inletPadding, props.axisView]
-  );
+  useEffect(() => {
+    if (!scene.current) return;
+    scene.current!.toggleVisibility(props.toggleVisibility as any);
+  }, [props.toggleVisibility]);
+  useEffect(() => {
+    if (!scene.current) return;
+    scene.current!.updateInsetSettings(props.inletSize!, props.inletPadding!, props.axisView);
+  }, [props.inletSize, props.inletPadding, props.axisView]);
 
   useEffect(() => {
+    if (!scene.current) return;
     scene.current!.resizeRendererToDisplaySize();
   }, [props.sceneSize]);
 
   useEffect(() => {
+    if (!scene.current) return;
     const { filetype } = props.imageRequest;
     if (filetype) {
       requestImage(filetype, scene.current!);
@@ -505,6 +505,7 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
   const cameraDispatch = cameraContext ? cameraContext.dispatch : cameraReducerDispatch;
   if (cameraState) {
     useEffect(() => {
+      if (!scene.current) return;
       props.setProps({ currentCameraState: cameraState });
 
       if (cameraState && cameraState.position && cameraState.quaternion && cameraState.zoom) {
@@ -528,6 +529,7 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
    * and save the new state into the cameraState
    */
   useEffect(() => {
+    if (!scene.current) return;
     if (props.customCameraState) {
       const { position: p, quaternion: q, zoom } = props.customCameraState;
       /**
@@ -554,6 +556,7 @@ export const PhononAnimationScene: React.FC<PhononAnimationSceneProps> = ({
   }, [props.customCameraState]);
 
   useEffect(() => {
+    if (!scene.current) return;
     props.animation && scene.current!.updateAnimationStyle(props.animation as AnimationStyle);
   }, [props.animation]);
 

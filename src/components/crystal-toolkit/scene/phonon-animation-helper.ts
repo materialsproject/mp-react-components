@@ -27,22 +27,25 @@ export class PhononAnimationHelper {
     private A: number,
     private phases: number[],
     private omega: number,
-    private eigenVectors: number[]
+    private eigenVectors: number[],
+    private velocity: number
   ) {
-    this.atomNumber = phases.length;
+    this.atomNumber = Array.isArray(phases) ? phases.length : 0;
   }
 
   public reset() {
     this.atomMeshes = new Array(this.atomNumber);
-    this.unitCellAtomIndexArray = new Array(this.atomNumber);
+    this.unitCellAtomIndexArray = new Array<number>(this.atomNumber);
     this.bondMeshes = new Map<string, THREE.Mesh>();
   }
 
   public buildAnimationSupport(json: SceneJsonObject, three: THREE.Object3D) {
     if (json.type === JSON3DObject.SPHERES) {
-      const atomIndex = json._meta.atom_idx?.[0];
+      if (json._meta === undefined) return;
+      const atomIndex = json._meta[0].atom_idx?.[0];
       if (atomIndex === undefined) return;
-      const unitCellAtomIndex = json._meta.unit_cell_atom_idx?.[0];
+      const unitCellAtomIndex = json._meta[0].unit_cell_atom_idx?.[0];
+      if (atomIndex === undefined || unitCellAtomIndex === undefined) return;
       this.unitCellAtomIndexArray[atomIndex] = unitCellAtomIndex;
 
       const mesh = three.children[0] as THREE.Mesh;
@@ -52,7 +55,9 @@ export class PhononAnimationHelper {
       if (!meta) return;
 
       for (let i = meta.length - 1; i >= 0; i--) {
-        const [atomIndex1, atomIndex2] = meta[i].atom_idx;
+        const pair = meta[i].atom_idx;
+        if (!pair || pair.length < 2) return;
+        const [atomIndex1, atomIndex2] = pair;
         const bondKey = PhononAnimationHelper.bondKey(atomIndex1, atomIndex2);
 
         if (!this.bondMeshes.has(bondKey)) {
@@ -69,10 +74,10 @@ export class PhononAnimationHelper {
   public updateTime(time: number) {}
 
   public animate() {
-    // requestAnimationFrame(this.animate);
-
     const delta = this.clock.getElapsedTime();
-    const A = 100; // this.A;
+    const velocity = this.velocity;
+    const modified_delta = delta * velocity;
+    const A = this.A;
     const omega = this.omega;
     const phases = this.phases;
 
@@ -80,11 +85,11 @@ export class PhononAnimationHelper {
 
     // update atoms
     this.atomMeshes.forEach((mesh, atomIndex) => {
-      let base = mesh.userData.basePos as THREE.Vector3 | undefined;
+      let base = mesh.userData.basePos;
 
       const unitCellAtomIndex = this.unitCellAtomIndexArray[atomIndex];
 
-      if (!base) {
+      if (!(base && base.isVector3)) {
         base = mesh.position.clone();
         mesh.userData.basePos = base;
       }
@@ -92,7 +97,7 @@ export class PhononAnimationHelper {
       const phase = phases[unitCellAtomIndex];
       const eigenVector = this.eigenVectors[unitCellAtomIndex];
 
-      const theta = omega * delta + phase;
+      const theta = phase - omega * modified_delta;
 
       const cos = Math.cos(theta);
       const sin = Math.sin(theta);
