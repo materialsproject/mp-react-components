@@ -32,6 +32,11 @@ jobs:
       - name: Publish to NPM
         run: |
           echo Publishing to test repo $NODE_AUTH_TOKEN
-          npm publish
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *"-rc"* ]]; then
+            npm publish --tag rc
+          else
+            npm publish
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
