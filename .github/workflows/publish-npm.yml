@@ -20,7 +20,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         with:
-          node-version: '18.x'
+          node-version: '25'
           registry-url: https://registry.npmjs.org/
           scope: '@mat-github-ci'
       - name: Install dependencies
