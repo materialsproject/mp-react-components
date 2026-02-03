@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.5.1-rc.1",
+  "version": "0.5.1-rc.0",
   "description": "",
   "main": "index.js",
   "module": "dist/index.es.js",
@@ -27,7 +27,6 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.17.12",
     "@babel/runtime": "^7.17.9",
-    "@react-three/fiber": "^9.2.0",
     "@types/classnames": "^2.2.11",
     "axios": "^0.21.1",
     "base64-js": "^1.5.1",
