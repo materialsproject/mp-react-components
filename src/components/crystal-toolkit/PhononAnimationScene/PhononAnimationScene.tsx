@@ -45,7 +45,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ModalCloseButton } from '../../data-display/Modal/ModalCloseButton';
 import { downloadBlob, downloadJSON } from '../../data-entry/utils';
 import { RangeSlider } from '../../data-entry/RangeSlider';
-import { useFrame } from '@react-three/fiber';
 
 const getSceneSize = (sceneSize) => (sceneSize ? sceneSize : DEFAULT_SCENE_SIZE);
 
