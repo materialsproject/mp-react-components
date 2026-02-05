@@ -3,8 +3,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.5.1-rc.1",
-  "description": "",
+  "version": "0.0.0-automated",
+  "description": "Version is managed by Git tags in CI/CD",
   "main": "index.js",
   "module": "dist/index.es.js",
   "keywords": [],
