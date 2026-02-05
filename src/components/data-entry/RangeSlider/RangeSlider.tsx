@@ -158,6 +158,14 @@ export interface RangeSliderProps {
    * Function to call when slider values change.
    */
   onChange?: (values: number[]) => void;
+  /**
+   * styles for input
+   */
+  styleInput?: object;
+  /**
+   * styles for slider
+   */
+  styleSlider?: object;
 }
 
 /**
@@ -258,6 +266,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
       <input
         data-testid="lower-bound-input"
         className="input is-small"
+        style={props.styleInput}
         type="number"
         value={inputValue}
         min={scale.domain()[0]}
@@ -265,7 +274,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
         step={props.step}
         onChange={handleInputChange}
       />
-      <div className="slider">
+      <div className="slider" style={props.styleSlider}>
         <Range
           values={values}
           step={props.step}

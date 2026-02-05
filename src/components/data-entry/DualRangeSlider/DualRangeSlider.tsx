@@ -75,6 +75,14 @@ export interface DualRangeSliderProps {
    * This can be used to lift the new "nice" domain upwards.
    */
   onPropsChange?: (props: any) => void;
+  /**
+   * styles for input
+   */
+  styleInput?: object;
+  /**
+   * styles for slider
+   */
+  styleSlider?: object;
 }
 
 /**
@@ -343,6 +351,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           <input
             data-testid="lower-bound-input"
             className="input is-small"
+            style={props.styleInput}
             type="number"
             value={lowerBound}
             min={scale.domain()[0]}
@@ -355,6 +364,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           <input
             data-testid="upper-bound-input"
             className="input is-small"
+            style={props.styleInput}
             type="number"
             value={upperBound}
             min={scale.domain()[0]}
@@ -364,7 +374,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           />
         </div>
       </div>
-      <div className="slider">
+      <div className="slider" style={props.styleSlider}>
         <Range
           values={values}
           step={step}

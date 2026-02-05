@@ -1,9 +1,8 @@
 name: publish-npm
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -29,6 +28,9 @@ jobs:
       - name: Build project
         run: |
           npm run build-publish
+      - name: Sync version from Git Tag
+        run: |
+          npm version ${{ github.ref_name }} --no-git-tag-version
       - name: Publish to NPM
         run: |
           echo Publishing to test repo $NODE_AUTH_TOKEN
