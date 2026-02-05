@@ -144,10 +144,25 @@ To test the fetching behavior of the `SearchUI` components, there is a `mocks` d
 
 ## Deploying to npm
 
-### Automated Pre-releases
+### Release procedure
 
-Every push to the `main` branch triggers a build. If the build is succesfull, a snapshot is pushed
-to npm, as a tagged package. To use the latest snapshot, type the following command
+The project uses Git tags to manage versioning. To trigger a new release, follow these steps:
+
+1. Tag the commit locally:
+
+```
+git tag -a <UPDATED_VERSION> -m "<DESCRIPTION OF CHANGES>"
+```
+
+2. Push the tag to GitHub:
+
+```
+git push origin <UPDATED_VERSION>
+```
+
+3. Finalize the Release: Navigate to the "Releases" tab on GitHub and publish the release based on the new tag. This triggers the CI/CD pipeline to stamp the version into package.json and publish to NPM.
+
+To use the latest snapshot, type the following command
 
 ```
 npm install @materialsproject/mp-react-components@next
