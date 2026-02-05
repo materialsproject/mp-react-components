@@ -30,6 +30,10 @@ interface FilterFieldProps {
    */
   active?: boolean;
   resetFilter?: (id: any) => any;
+  /**
+   * styles for label
+   */
+  styleLabel?: object;
 }
 
 /**
@@ -74,7 +78,7 @@ export const FilterField: React.FC<FilterFieldProps> = ({ dois = [], ...otherPro
   return (
     <div id={props.id} className={classNames('mpc-filter-field', props.className)}>
       {props.label && (
-        <div className="mpc-filter-label">
+        <div className="mpc-filter-label" style={props.styleLabel}>
           {renderFilterLabel()}
           {props.dois.map((doi, i) => (
             <PublicationButton key={`${i}-${doi}`} doi={doi} compact className="tag ml-2" />
