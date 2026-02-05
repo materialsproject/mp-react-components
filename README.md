@@ -144,7 +144,7 @@ To test the fetching behavior of the `SearchUI` components, there is a `mocks` d
 
 ## Deploying to npm
 
-### Release procedure
+### Release procedures
 
 The project uses Git tags to manage versioning. To trigger a new release, follow these steps:
 
