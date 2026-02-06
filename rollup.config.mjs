@@ -1,5 +1,9 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
+
 import typescript from 'rollup-plugin-typescript2';
-import pkg from './package.json';
+//import pkg from './package.json';
 import styles from 'rollup-plugin-styles';
 //import urlPlugin from '@rollup/plugin-url'; we use image instead
 import resolve from 'rollup-plugin-node-resolve';
