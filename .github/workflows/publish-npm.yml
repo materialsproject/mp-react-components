@@ -24,7 +24,7 @@ jobs:
           scope: '@mat-github-ci'
       - name: Install dependencies
         run: |
-          npm i
+          npm install --legacy-peer-deps
       - name: Build project
         run: |
           npm run build-publish
