@@ -36,6 +36,10 @@ export interface SelectProps {
    * Each option should be an object with a `label` and a `value`.
    */
   options: SelectOption[];
+  /**
+   * styles for dropdown
+   */
+  styleDropdown?: object;
 }
 
 /**
@@ -77,6 +81,7 @@ export const Select: React.FC<SelectProps> = (props) => {
         className="react-select-container"
         classNamePrefix="react-select"
         value={selected}
+        styles={props.styleDropdown}
         onChange={(selectedOption) => {
           if (props.onChange) {
             props.onChange(selectedOption);
