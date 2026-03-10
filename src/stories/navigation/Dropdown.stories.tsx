@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { Dropdown } from '../../components/navigation/Dropdown';
 import { DropdownProps } from '../../components/navigation/Dropdown/Dropdown';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Navigation/Dropdown'
 };
 
-const Template: Story<React.PropsWithChildren<DropdownProps>> = (args) => <Dropdown {...args} />;
+const Template: StoryFn<React.PropsWithChildren<DropdownProps>> = (args) => <Dropdown {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
@@ -16,7 +16,7 @@ Basic.args = {
   triggerLabel: 'Items'
 };
 
-export const ChildrenAsItems: Story<React.PropsWithChildren<DropdownProps>> = (args) => (
+export const ChildrenAsItems: StoryFn<React.PropsWithChildren<DropdownProps>> = (args) => (
   <Dropdown triggerLabel="Buttons">
     <div className="button is-primary mb-1">One</div>
     <div className="button is-warning mb-1">Two</div>
