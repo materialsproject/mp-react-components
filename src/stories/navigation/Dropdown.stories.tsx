@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Dropdown } from '../../components/navigation/Dropdown';
 import { DropdownProps } from '../../components/navigation/Dropdown/Dropdown';
 

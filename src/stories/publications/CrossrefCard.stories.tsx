@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { CrossrefCard } from '../../components/publications/CrossrefCard';
 import { CrossrefCardProps } from '../../components/publications/CrossrefCard/CrossrefCard';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/CrossrefCard'
 };
 
-const Template: Story<React.PropsWithChildren<CrossrefCardProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<CrossrefCardProps>> = (args) => (
   <CrossrefCard {...args} />
 );
 

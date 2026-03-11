@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { DualRangeSlider } from '../../components/data-entry/DualRangeSlider';
 import { DualRangeSliderProps } from '../../components/data-entry/DualRangeSlider/DualRangeSlider';
 import { SelectableTable, SelectableTableProps } from '../../components/periodic-table/table-state';
@@ -11,7 +11,7 @@ export default {
   title: 'Data-Entry/PeriodicTable'
 };
 
-const Template: Story<React.PropsWithChildren<SelectableTableProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<SelectableTableProps>> = (args) => (
   <PeriodicContext>
     <SelectableTable {...args} />
   </PeriodicContext>
