@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Markdown } from '../../components/data-display/Markdown';
 import { MarkdownProps } from '../../components/data-display/Markdown/Markdown';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Display/Markdown'
 };
 
-const Template: Story<React.PropsWithChildren<MarkdownProps>> = (args) => <Markdown {...args} />;
+const Template: StoryFn<React.PropsWithChildren<MarkdownProps>> = (args) => <Markdown {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {

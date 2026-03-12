@@ -40,3 +40,6 @@ archive/
 src/assets/fonts
 src/assets/styles.css
 src/assets/fonts.css
+
+
+.parcel-cache

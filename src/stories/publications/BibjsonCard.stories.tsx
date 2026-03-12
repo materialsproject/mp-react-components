@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { BibjsonCard } from '../../components/publications/BibjsonCard';
 import { BibjsonCardProps } from '../../components/publications/BibjsonCard/BibjsonCard';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/BibjsonCard'
 };
 
-const Template: Story<React.PropsWithChildren<BibjsonCardProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<BibjsonCardProps>> = (args) => (
   <BibjsonCard {...args} />
 );
 

@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import React from 'react';
 import { Scrollspy } from '../../components/navigation/Scrollspy';
 import { ScrollspyProps } from '../../components/navigation/Scrollspy/Scrollspy';
@@ -8,7 +8,7 @@ export default {
   title: 'Navigation/Scrollspy'
 };
 
-const Template: Story<React.PropsWithChildren<ScrollspyProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<ScrollspyProps>> = (args) => (
   <div className="sidebar-story">
     <Scrollspy {...args} />
     <div className="content">

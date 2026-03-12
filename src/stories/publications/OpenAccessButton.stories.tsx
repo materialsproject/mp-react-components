@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { OpenAccessButton } from '../../components/publications/OpenAccessButton';
 import { OpenAccessButtonProps } from '../../components/publications/OpenAccessButton/OpenAccessButton';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/OpenAccessButton'
 };
 
-const Template: Story<React.PropsWithChildren<OpenAccessButtonProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<OpenAccessButtonProps>> = (args) => (
   <OpenAccessButton {...args} />
 );
 
