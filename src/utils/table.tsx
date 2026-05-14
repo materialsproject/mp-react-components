@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { ArrayChips } from '../components/data-display/ArrayChips';
 import { Formula } from '../components/data-display/Formula';
+import { LinkPopoverCell } from '../components/data-display/LinkPopoverCell';
 import { Column, ColumnFormat } from '../components/data-display/SearchUI/types';
 import { Tooltip } from '../components/data-display/Tooltip';
 import { formatPointGroup } from '../components/data-entry/utils';
@@ -145,6 +146,12 @@ export const initColumns = (columns: Column[], disableRichColumnHeaders?: boolea
           ) : (
             emptyCellPlaceholder
           );
+        };
+        return c;
+      case ColumnFormat.LINK_POPOVER:
+        c.cell = (row: any) => {
+          const rowValue = getRowValueFromSelectorString(c.selector, row);
+          return <LinkPopoverCell selector={c.selector} value={rowValue} row={row} />;
         };
         return c;
       case ColumnFormat.BOOLEAN:

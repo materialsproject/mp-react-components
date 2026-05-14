@@ -1,0 +1,40 @@
+/**
+ * Cell renderer for ColumnFormat.LINK_POPOVER.
+ *
+ * The wrapper is positioned relative so the popover can be absolutely
+ * positioned to its right. `white-space: nowrap` prevents the popover from
+ * wrapping inside narrow columns.
+ *
+ * Final visual styling (colors, link decoration, etc.) is intentionally minimal
+ * here so consuming apps (e.g. mp-web) can override via their own SCSS.
+ */
+.mpc-link-popover-cell {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.mpc-link-popover-cell-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.mpc-link-popover-cell-popover {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  margin-left: 0.5rem;
+  z-index: 50;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0.75rem;
+  min-width: 180px;
+}
+
+.mpc-link-popover-cell-loading {
+  font-style: italic;
+  color: #7a7a7a;
+}

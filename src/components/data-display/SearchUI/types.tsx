@@ -140,7 +140,17 @@ export enum ColumnFormat {
   TAG = 'TAG',
   DICT = 'DICT',
   CONTRIBS_FILES_DOWNLOAD = 'CONTRIBS_FILES_DOWNLOAD',
-  PUBLICATION = 'PUBLICATION'
+  PUBLICATION = 'PUBLICATION',
+  /**
+   * Renders a hyperlink that, when clicked, opens an inline popover anchored to
+   * the right of the link. The clicked cell is bubbled up to the parent
+   * `SearchUIContainer` via the `lastClickedCell` prop so a Dash callback can
+   * resolve any data needed to populate the popover. The popover body is then
+   * driven by the parent's `popoverContent` prop.
+   *
+   * Cells render the empty placeholder if the row value is missing.
+   */
+  LINK_POPOVER = 'LINK_POPOVER'
 }
 
 /**
@@ -398,6 +408,22 @@ export interface SearchUIContainerProps {
    * EXPERIMENTAL
    */
   cardOptions?: any;
+  /**
+   * This prop is set automatically.
+   * Identifies the most recently clicked cell rendered with a `LINK_POPOVER`
+   * column format. Shape: `{ selector: string, value: any, row: any, ts: number }`.
+   * The `ts` (timestamp) ensures that consecutive clicks on the same cell still
+   * fire Dash callbacks. Reset by the parent (e.g. set to `null`) once the
+   * popover content has been resolved.
+   */
+  lastClickedCell?: any;
+  /**
+   * Optional renderable content that is displayed inside the popover for the
+   * cell identified by `lastClickedCell`. Typically populated by a Dash
+   * callback after `lastClickedCell` fires. Set to `null`/`undefined` to show
+   * the default loading placeholder.
+   */
+  popoverContent?: any;
 }
 
 export interface SearchState extends SearchUIContainerProps {
