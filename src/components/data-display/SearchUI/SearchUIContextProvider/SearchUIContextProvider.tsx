@@ -237,6 +237,19 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
     setSelectedRows: (selectedRows: any[]) => {
       setState((currentState) => ({ ...currentState, selectedRows }));
     },
+    /**
+     * Record the most recently clicked LINK_POPOVER cell. The `ts` field
+     * forces a fresh value (and therefore a fresh Dash callback) even when
+     * the same cell is clicked twice in a row.
+     */
+    setLastClickedCell: (selector: string, value: any, row: any) => {
+      setState((currentState) => ({
+        ...currentState,
+        lastClickedCell: { selector, value, row, ts: Date.now() },
+        // Reset prior popover content so the next callback shows a loading state.
+        popoverContent: null
+      }));
+    },
     getData: () => {
       /** Only show the loading icon if this is a filter change not on simple page change */
       const showLoading = state.activeFilters !== prevActiveFilters ? true : false;
@@ -345,9 +358,22 @@ export const SearchUIContextProvider: React.FC<SearchState> = ({
   useEffect(() => {
     props.setProps({
       results: state.results,
-      selectedRows: state.selectedRows
+      selectedRows: state.selectedRows,
+      lastClickedCell: state.lastClickedCell
     });
-  }, [state.results, state.selectedRows]);
+  }, [state.results, state.selectedRows, state.lastClickedCell]);
+
+  /**
+   * Allow Dash callbacks to push popover content back into state by setting
+   * the `popoverContent` prop on the container. Without this, the callback's
+   * output would never reach the renderer.
+   */
+  useEffect(() => {
+    setState((currentState) => ({
+      ...currentState,
+      popoverContent: props.popoverContent
+    }));
+  }, [props.popoverContent]);
 
   return (
     <SearchUIContext.Provider value={{ state, query }}>
