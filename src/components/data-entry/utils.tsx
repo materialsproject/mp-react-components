@@ -130,7 +130,7 @@ export const getDelimiter = (input: string): RegExp | undefined => {
     space &&
     space.index &&
     (!comma || (comma.index && comma.index > space.index)) &&
-    (!hyphen || (hyphen.index && space.index > space.index))
+    (!hyphen || (hyphen.index && space.index > hyphen.index))
   ) {
     return new RegExp(/\s/);
   } else {
