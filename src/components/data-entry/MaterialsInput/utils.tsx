@@ -334,15 +334,7 @@ export const validateSmiles = (value: string): string | null => {
  * @returns Validated id string or null
  */
 export const validateMPID = (value: string): string | null => {
-  if (
-    value.match(/mp\-\d/) !== null ||
-    value.match(/mvc\-\d/) !== null ||
-    value.match(/mol\-\d/) !== null
-  ) {
-    return value;
-  } else {
-    return null;
-  }
+  return /^mp-([a-zA-Z]+|\d+)$/.test(value) || /^(mvc|mol)-\d+$/.test(value) ? value : null;
 };
 
 /**
