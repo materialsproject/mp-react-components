@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { MaterialsInput, MaterialsInputProps } from '../../components/data-entry/MaterialsInput';
 import {
@@ -13,7 +13,7 @@ export default {
   parameters: { actions: { argTypesRegex: '^on.*' } }
 };
 
-const Template: Story<MaterialsInputProps> = (args) => <MaterialsInput {...args} />;
+const Template: StoryFn<MaterialsInputProps> = (args) => <MaterialsInput {...args} />;
 
 export const MultiType = Template.bind({});
 MultiType.args = {

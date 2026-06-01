@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Modal, ModalContextProvider, ModalTrigger } from '../../components/data-display/Modal';
 import { ModalContextProviderProps } from '../../components/data-display/Modal/ModalContextProvider';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Display/Modal'
 };
 
-export const Basic: Story<React.PropsWithChildren<ModalContextProviderProps>> = (args) => (
+export const Basic: StoryFn<React.PropsWithChildren<ModalContextProviderProps>> = (args) => (
   <ModalContextProvider {...args}>
     <ModalTrigger>
       <button className="button">Open Modal</button>
@@ -22,7 +22,7 @@ export const Basic: Story<React.PropsWithChildren<ModalContextProviderProps>> = 
   </ModalContextProvider>
 );
 
-export const WithForcedAction: Story<React.PropsWithChildren<ModalContextProviderProps>> = (
+export const WithForcedAction: StoryFn<React.PropsWithChildren<ModalContextProviderProps>> = (
   args
 ) => {
   const [active, setActive] = useState(false);

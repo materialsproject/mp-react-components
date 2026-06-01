@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Formula } from '../../components/data-display/Formula';
 import { FormulaProps } from '../../components/data-display/Formula/Formula';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Display/Formula'
 };
 
-const Template: Story<React.PropsWithChildren<FormulaProps>> = (args) => <Formula {...args} />;
+const Template: StoryFn<React.PropsWithChildren<FormulaProps>> = (args) => <Formula {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
