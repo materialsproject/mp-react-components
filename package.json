@@ -7,6 +7,14 @@
   "description": "Version is managed by Git tags in CI/CD",
   "main": "index.js",
   "module": "dist/index.es.js",
+  "targets": {
+    "main": {
+      "source": "src/index.ts"
+    },
+    "module": {
+      "source": "src/index.ts"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
