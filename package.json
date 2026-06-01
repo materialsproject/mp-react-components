@@ -10,6 +10,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "clean:bundle": "rm -rf dist && rm rollup.build.css && rm index.*",
     "clean:storybook": "rm -rf out* && rm -rf storybook-static",

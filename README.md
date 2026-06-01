@@ -20,18 +20,18 @@ Clone the mp-react-components repo:
 git clone git@github.com:materialsproject/mp-react-components.git
 ```
 
-Ensure you're using Node.js version 12.x for compatibility.
+This project targets Node.js v24 (see `.nvmrc`). Node 20+ is the minimum supported version.
 If you don't have nvm (Node Version Manager) installed, you can install it using the following command:
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 ```
 
-Install and use Node.js version 12.x.
+Install and use the version pinned in `.nvmrc`:
 
 ```
-nvm install 18
-nvm use 18
+nvm install 24
+nvm use
 ```
 
 To check Node.js version

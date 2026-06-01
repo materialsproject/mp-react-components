@@ -15,11 +15,11 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.11
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         with:
-          node-version: '18.20.8'
+          node-version: '24.x'
           registry-url: https://registry.npmjs.org/
           scope: '@mat-github-ci'
       - name: Install dependencies
