@@ -70,6 +70,7 @@ export const NavbarDropdown: React.FC<Props> = (props) => {
                 <Link
                   key={i}
                   href={item.href || ''}
+                  refresh={item.refresh}
                   className={classNames('navbar-item', item.className)}
                 >
                   {item.label}
