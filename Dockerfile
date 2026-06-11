@@ -1,4 +1,4 @@
-FROM node:12.14.1
+FROM node:24
 # Setup the working directory
 RUN mkdir /srv/github-actions-app
 WORKDIR /srv/github-actions-app
