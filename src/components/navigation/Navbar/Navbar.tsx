@@ -26,6 +26,7 @@ export interface NavbarItem {
   id?: string;
   header?: string;
   content?: string;
+  refresh?: boolean;
 }
 
 export interface NavbarProps {
@@ -63,6 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ items = [], ...otherProps }) => 
         <Link
           className={classNames('navbar-item', item.className)}
           href={item.href || ''}
+          refresh={item.refresh}
           // onClick={() => setActiveMobile(false)}
         >
           {item.icon && <Icon icon={item.icon} />}
