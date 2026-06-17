@@ -19,12 +19,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         with:
-          node-version: '18'
+          node-version: '18.20.8'
           registry-url: https://registry.npmjs.org/
           scope: '@mat-github-ci'
       - name: Install dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install ci
       - name: Build project
         run: |
           npm run build-publish

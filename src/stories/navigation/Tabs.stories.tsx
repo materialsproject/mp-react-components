@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Tabs } from '../../components/navigation/Tabs';
 import { TabsProps } from '../../components/navigation/Tabs/Tabs';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Navigation/Tabs'
 };
 
-const Template: Story<React.PropsWithChildren<TabsProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<TabsProps>> = (args) => (
   <Tabs {...args}>
     <div>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum excepturi dolor eveniet

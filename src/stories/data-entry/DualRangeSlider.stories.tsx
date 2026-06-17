@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { DualRangeSlider } from '../../components/data-entry/DualRangeSlider';
 import { DualRangeSliderProps } from '../../components/data-entry/DualRangeSlider/DualRangeSlider';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Entry/DualRangeSlider'
 };
 
-const Template: Story<React.PropsWithChildren<DualRangeSliderProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<DualRangeSliderProps>> = (args) => (
   <DualRangeSlider {...args} />
 );
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Tooltip } from '../../components/data-display/Tooltip';
 import { TooltipProps } from '../../components/data-display/Tooltip/Tooltip';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Display/Tooltip'
 };
 
-const Template: Story<React.PropsWithChildren<TooltipProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<TooltipProps>> = (args) => (
   <>
     <button className="button" data-tip data-for={args.id}>
       Tooltip Trigger

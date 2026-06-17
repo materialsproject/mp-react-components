@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import columns from '../constants/columns.json';
 import filterGroups from '../constants/filterGroups.json';
 import matscholarFilterGroups from '../constants/matscholarFilterGroups.json';
@@ -21,7 +21,7 @@ export default {
   title: 'Search UI/SearchUIContainer'
 };
 
-export const FullyFeatured: Story<SearchUIContainerProps> = (args) => (
+export const FullyFeatured: StoryFn<SearchUIContainerProps> = (args) => (
   <SearchUIContainer
     disableRichColumnHeaders
     resultLabel="material"
@@ -68,7 +68,7 @@ export const FullyFeatured: Story<SearchUIContainerProps> = (args) => (
   </SearchUIContainer>
 );
 
-export const WithMPContribsData: Story<SearchUIContainerProps> = (args) => (
+export const WithMPContribsData: StoryFn<SearchUIContainerProps> = (args) => (
   <SearchUIContainer
     disableRichColumnHeaders
     resultLabel="contribution"
@@ -121,7 +121,7 @@ export const WithMPContribsData: Story<SearchUIContainerProps> = (args) => (
   </SearchUIContainer>
 );
 
-export const MatscholarAlpha: Story<SearchUIContainerProps> = (args) => (
+export const MatscholarAlpha: StoryFn<SearchUIContainerProps> = (args) => (
   <MatscholarSearchUIContainer
     disableRichColumnHeaders
     resultLabel="material"

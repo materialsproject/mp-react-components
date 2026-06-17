@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Column } from '../../components/data-display/SearchUI/types';
 import { DataTable } from '../../components/data-display/DataTable';
 import { DataTableProps } from '../../components/data-display/DataTable/DataTable';
@@ -10,7 +10,9 @@ export default {
   title: 'Data-Display/DataTable'
 };
 
-const Template: Story<React.PropsWithChildren<DataTableProps>> = (args) => <DataTable {...args} />;
+const Template: StoryFn<React.PropsWithChildren<DataTableProps>> = (args) => (
+  <DataTable {...args} />
+);
 
 const columns = [
   {

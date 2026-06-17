@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import columns from '../constants/columns.json';
 import filterGroups from '../constants/filterGroups.json';
 import {
@@ -15,7 +15,7 @@ export default {
   title: 'Search UI/SearchUIGrid'
 };
 
-export const Basic: Story<SearchUIContainerProps> = (args) => (
+export const Basic: StoryFn<SearchUIContainerProps> = (args) => (
   <SearchUIContainer
     disableRichColumnHeaders
     resultLabel="material"

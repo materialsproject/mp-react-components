@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { PublicationButton } from '../../components/publications/PublicationButton';
 import { PublicationButtonProps } from '../../components/publications/PublicationButton/PublicationButton';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/PublicationButton'
 };
 
-const Template: Story<React.PropsWithChildren<PublicationButtonProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<PublicationButtonProps>> = (args) => (
   <PublicationButton {...args} />
 );
 

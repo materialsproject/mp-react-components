@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Navbar } from '../../components/navigation/Navbar';
 import { NavbarProps } from '../../components/navigation/Navbar/Navbar';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Navigation/Navbar'
 };
 
-const Template: Story<React.PropsWithChildren<NavbarProps>> = (args) => <Navbar {...args} />;
+const Template: StoryFn<React.PropsWithChildren<NavbarProps>> = (args) => <Navbar {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
