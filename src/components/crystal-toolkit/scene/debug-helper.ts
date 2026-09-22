@@ -19,6 +19,11 @@ const DEBUG_SIZE = 500;
 const background = new THREE.Color('#000000');
 
 export class DebugHelper {
+  private mountNode;
+  private scene;
+  private cameraToTrack;
+  private settings;
+  private builder;
   private cameraHelper: THREE.CameraHelper;
   private debugCamera: THREE.Camera;
   private debugRenderer: THREE.WebGLRenderer; // no SVG
@@ -33,20 +38,18 @@ export class DebugHelper {
   private lights!: THREE.Object3D;
   private insetHelper: THREE.Object3D;
 
-  constructor(
-    private mountNode,
-    private scene,
-    private cameraToTrack,
-    private settings,
-    private builder,
-    insetCameraHelper
-  ) {
+  constructor(mountNode, scene, cameraToTrack, settings, builder, insetCameraHelper) {
+    this.mountNode = mountNode;
+    this.scene = scene;
+    this.cameraToTrack = cameraToTrack;
+    this.settings = settings;
+    this.builder = builder;
     if (!mountNode) {
       console.error('No mount node passed for the debug view');
     }
     this.debugRenderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true,
+      alpha: true
     });
     (this.debugRenderer as any).gammaFactor = 2.2;
     this.debugRenderer.setSize(DEBUG_SIZE, DEBUG_SIZE);
@@ -113,7 +116,12 @@ export class DebugHelper {
   }
 
   private setHelperObjectVisibility(isVisible) {
-    this.cameraHelper.visible = this.axis.visible = this.grid.visible = this.lights.visible = this.insetHelper.visible = isVisible;
+    this.cameraHelper.visible =
+      this.axis.visible =
+      this.grid.visible =
+      this.lights.visible =
+      this.insetHelper.visible =
+        isVisible;
   }
 
   public onDestroy() {
@@ -126,7 +134,7 @@ export class DebugHelper {
     this.debugRenderer.forceContextLoss();
     this.debugRenderer.dispose();
     this.debugRenderer.domElement!.parentElement!.removeChild(this.debugRenderer.domElement);
-    this.debugRenderer.domElement = (undefined as unknown) as any;
-    this.debugRenderer = (null as unknown) as any;
+    this.debugRenderer.domElement = undefined as unknown as any;
+    this.debugRenderer = null as unknown as any;
   }
 }

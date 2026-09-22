@@ -6,11 +6,14 @@ import { SceneJsonObject } from './simple-scene';
 import { ThreeBuilder } from './three_builder';
 
 export class AnimationHelper {
+  private objectBuilder: ThreeBuilder;
   private mixers: THREE.AnimationMixer[] = [];
   private clock = new THREE.Clock();
   private lineGeometriesToUpdate: THREE.LineSegments[] = [];
 
-  constructor(private objectBuilder: ThreeBuilder) {}
+  constructor(objectBuilder: ThreeBuilder) {
+    this.objectBuilder = objectBuilder;
+  }
 
   public reset() {
     this.mixers.forEach((m) => m.stopAllAction());

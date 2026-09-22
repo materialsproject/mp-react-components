@@ -43,6 +43,8 @@ export default class Scene {
   private camera!: THREE.OrthographicCamera;
   private cameraState?: CameraState;
   private frameId?: number;
+  private controlsInitializationTimeout?: number;
+  private isDestroyed = false;
   private clickableObjects: THREE.Object3D[] = [];
   private tooltipObjects: THREE.Object3D[] = [];
   private objectDictionnary: { [id: string]: any } = {};
@@ -55,6 +57,8 @@ export default class Scene {
   private objectBuilder: ThreeBuilder;
   private clickCallback: (objects: any[]) => void;
   private debugHelper!: DebugHelper;
+  private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void;
+  private debugDOMElement?;
   private readonly raycaster = new THREE.Raycaster();
 
   private outline!: OutlineEffect;
@@ -169,7 +173,12 @@ export default class Scene {
     // if the scene is configured
     // we defer the initialization of the control to the next event loop to avoid
     // some control events that would trigger unnecessary rendering
-    setTimeout(() => this.configureControls(), 0);
+    this.controlsInitializationTimeout = window.setTimeout(() => {
+      this.controlsInitializationTimeout = undefined;
+      if (!this.isDestroyed) {
+        this.configureControls();
+      }
+    }, 0);
   }
 
   private configureControls() {
@@ -364,8 +373,8 @@ export default class Scene {
     size,
     padding,
     clickCallback,
-    private dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
-    private debugDOMElement?,
+    dispatch: (p: Vector3, r: Quaternion, zoom: number) => void,
+    debugDOMElement?,
     cameraState?: CameraState
   ) {
     this.settings = Object.assign(defaults, settings);
@@ -377,6 +386,8 @@ export default class Scene {
     this.configureScene();
     this.configurePostProcessing();
     this.clickCallback = clickCallback;
+    this.dispatch = dispatch;
+    this.debugDOMElement = debugDOMElement;
     this.outlineScene.autoUpdate = false;
     const isPhonon = sceneJson?.app === 'phonon';
     this.animationHelper = isPhonon
@@ -796,20 +807,31 @@ export default class Scene {
 
   public removeListener() {
     window.removeEventListener('resize', this.windowListener, false);
-    this.renderer.domElement.removeEventListener('mousemove', this.mouseMoveListener);
-    this.renderer.domElement.removeEventListener('click', this.clickListener);
+    this.renderer?.domElement?.removeEventListener('mousemove', this.mouseMoveListener);
+    this.renderer?.domElement?.removeEventListener('click', this.clickListener);
     document.removeEventListener('mousemove', this.mouseTrackballUpdate, false);
   }
 
   // call this when the parent component is destroyed
   public onDestroy() {
+    if (this.isDestroyed) {
+      return;
+    }
+
+    this.isDestroyed = true;
+    if (this.controlsInitializationTimeout !== undefined) {
+      window.clearTimeout(this.controlsInitializationTimeout);
+      this.controlsInitializationTimeout = undefined;
+    }
+
+    this.stop();
     this.computeIdToThree = {};
     this.threeUUIDTojsonObject = {};
     this.removeListener();
-    this.debugHelper && this.debugHelper.onDestroy();
-    this.inset.onDestroy();
-    this.controls.dispose();
-    disposeSceneHierarchy(this.scene);
+    this.debugHelper?.onDestroy();
+    this.inset?.onDestroy();
+    this.controls?.dispose();
+    this.scene && disposeSceneHierarchy(this.scene);
     // this.scene.dispose();
     if (this.renderer instanceof THREE.WebGLRenderer) {
       this.renderer.forceContextLoss();
@@ -825,9 +847,10 @@ export default class Scene {
       this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
     }
     // this.renderer.domElement!.parentElement!.removeChild(this.renderer.domElement);
-    this.renderer.domElement = undefined as any;
+    if (this.renderer) {
+      this.renderer.domElement = undefined as any;
+    }
     this.renderer = null as any;
-    this.stop();
   }
 
   removeObjectByName(name: string) {

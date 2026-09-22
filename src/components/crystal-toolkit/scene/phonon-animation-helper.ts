@@ -5,6 +5,12 @@ import { SceneJsonObject } from './simple-scene';
 import { ThreeBuilder } from './three_builder';
 
 export class PhononAnimationHelper {
+  private objectBuilder: ThreeBuilder;
+  private A: number;
+  private phases: number[];
+  private omega: number;
+  private eigenVectors: number[];
+  private velocity: number;
   private clock = new THREE.Clock();
 
   // refs to already-built objects (provided by objectBuilder)
@@ -23,13 +29,19 @@ export class PhononAnimationHelper {
   }
 
   constructor(
-    private objectBuilder: ThreeBuilder,
-    private A: number,
-    private phases: number[],
-    private omega: number,
-    private eigenVectors: number[],
-    private velocity: number
+    objectBuilder: ThreeBuilder,
+    A: number,
+    phases: number[],
+    omega: number,
+    eigenVectors: number[],
+    velocity: number
   ) {
+    this.objectBuilder = objectBuilder;
+    this.A = A;
+    this.phases = phases;
+    this.omega = omega;
+    this.eigenVectors = eigenVectors;
+    this.velocity = velocity;
     this.atomNumber = Array.isArray(phases) ? phases.length : 0;
   }
 

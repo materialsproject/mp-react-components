@@ -8,7 +8,7 @@ export enum ScenePosition {
   NE = 'NE',
   SE = 'SE',
   SW = 'SW',
-  HIDDEN = 'HIDDEN',
+  HIDDEN = 'HIDDEN'
 }
 
 const AXIS_RADIUS = 0.07;
@@ -18,6 +18,14 @@ const MIN_SIZE = 50;
 const DEFAULT_SIZE = 130;
 
 export class InsetHelper {
+  private detailedObject: THREE.Object3D;
+  private axisJson: any;
+  private origin: ThreePosition;
+  private cameraToFollow: THREE.Camera;
+  private threebuilder: ThreeBuilder;
+  private insetWidth: number;
+  private insetHeight: number;
+  private insetPadding: number;
   private insetCamera: THREE.OrthographicCamera;
   private frontRotation;
   private axisPadding = 0; // the space between the edge of the inset and the axis bounding box
@@ -26,16 +34,24 @@ export class InsetHelper {
   private axis;
 
   constructor(
-    private detailedObject: THREE.Object3D,
-    private axisJson: any,
+    detailedObject: THREE.Object3D,
+    axisJson: any,
     baseScene: THREE.Scene,
-    private origin: ThreePosition,
-    private cameraToFollow: THREE.Camera,
-    private threebuilder: ThreeBuilder,
-    private insetWidth = DEFAULT_SIZE,
-    private insetHeight = DEFAULT_SIZE,
-    private insetPadding = 0
+    origin: ThreePosition,
+    cameraToFollow: THREE.Camera,
+    threebuilder: ThreeBuilder,
+    insetWidth = DEFAULT_SIZE,
+    insetHeight = DEFAULT_SIZE,
+    insetPadding = 0
   ) {
+    this.detailedObject = detailedObject;
+    this.axisJson = axisJson;
+    this.origin = origin;
+    this.cameraToFollow = cameraToFollow;
+    this.threebuilder = threebuilder;
+    this.insetWidth = insetWidth;
+    this.insetHeight = insetHeight;
+    this.insetPadding = insetPadding;
     this.axis = this.detailedObject;
     this.insetCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, -10, 10);
     this.frontRotation = this.cameraToFollow.rotation.clone();
@@ -178,9 +194,9 @@ export class InsetHelper {
     disposeSceneHierarchy(this.scene);
     // this.scene.dispose();
     // Note ONLY USE THIS PATTERN IN DISPOSAL METHOD
-    this.cameraToFollow = (null as unknown) as THREE.Camera;
-    this.insetCamera = (null as unknown) as THREE.OrthographicCamera;
-    this.detailedObject = (null as unknown) as THREE.Object3D;
+    this.cameraToFollow = null as unknown as THREE.Camera;
+    this.insetCamera = null as unknown as THREE.OrthographicCamera;
+    this.detailedObject = null as unknown as THREE.Object3D;
   }
 
   // TODO(chab) let's do something simple like having a width of 5 px

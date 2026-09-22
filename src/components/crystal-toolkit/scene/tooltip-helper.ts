@@ -19,8 +19,12 @@ export class TooltipHelper {
   }
 
   public updateTooltip(point, jsonObject: any, sceneObject: THREE.Object3D) {
-    if (!(this.tooltipedJsonObject === jsonObject)) {
-      sceneObject.children.forEach(c => {
+    const isCurrentObject =
+      this.tooltipedJsonObject === jsonObject && this.tooltipedThreeObject === sceneObject;
+
+    if (!isCurrentObject) {
+      this.clearActiveTooltip();
+      sceneObject.children.forEach((c) => {
         if (c instanceof THREE.Mesh) {
           const color = rgb(jsonObject.color).brighter(1);
           (c.material as THREE.MeshStandardMaterial).color = new THREE.Color(color.formatHex());
@@ -41,20 +45,25 @@ export class TooltipHelper {
    * Return true if the tooltip was removed
    */
   public hideTooltipIfNeeded(): boolean {
-    if (this.tooltipedThreeObject) {
-      this.tooltipedThreeObject.children.forEach(c => {
-        if (c instanceof THREE.Mesh) {
-          (c.material as THREE.MeshStandardMaterial).color = new THREE.Color(
-            this.tooltipedJsonObject!.color
-          );
-        }
-      });
-      this.tooltipedThreeObject = null;
-      this.tooltipedJsonObject = null;
-      this.moveOffscreen();
-      return true;
+    return this.clearActiveTooltip();
+  }
+
+  private clearActiveTooltip(): boolean {
+    if (!this.tooltipedThreeObject || !this.tooltipedJsonObject) {
+      return false;
     }
-    return false;
+
+    this.tooltipedThreeObject.children.forEach((c) => {
+      if (c instanceof THREE.Mesh) {
+        (c.material as THREE.MeshStandardMaterial).color = new THREE.Color(
+          this.tooltipedJsonObject!.color
+        );
+      }
+    });
+    this.tooltipedThreeObject = null;
+    this.tooltipedJsonObject = null;
+    this.moveOffscreen();
+    return true;
   }
 
   private moveOffscreen() {

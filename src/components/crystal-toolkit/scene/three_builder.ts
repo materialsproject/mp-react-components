@@ -54,7 +54,11 @@ class QuadraticSteppedBezierCurver extends THREE.QuadraticBezierCurve3 {
  *
  */
 export class ThreeBuilder {
-  constructor(private settings) {}
+  private settings;
+
+  constructor(settings) {
+    this.settings = settings;
+  }
 
   private validateRadiusArrays({ radiusTop, radiusBottom, positionPairs }) {
     if (!Array.isArray(radiusBottom)) {

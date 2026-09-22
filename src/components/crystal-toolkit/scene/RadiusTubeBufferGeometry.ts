@@ -1,15 +1,14 @@
 // TubeBufferGeometry
 
-import {
-  BufferGeometry,
-  Float32BufferAttribute,
-  TubeBufferGeometry,
-  Vector2,
-  Vector3,
-} from 'three';
+import { BufferGeometry, Float32BufferAttribute, Vector2, Vector3 } from 'three';
 
-export function RadiusTubeBufferGeometry(
-  this: any,
+type WritableBufferGeometry = {
+  setIndex(index: unknown): void;
+  setAttribute(name: string, attribute: unknown): void;
+};
+
+function populateRadiusTubeBufferGeometry(
+  geometry: RadiusTubeBufferGeometry,
   path,
   tubularSegments,
   radius,
@@ -17,15 +16,12 @@ export function RadiusTubeBufferGeometry(
   closed,
   taper
 ) {
-  BufferGeometry.call(this);
-
-  this.type = 'RadiusTubeBufferGeometry';
-  this.parameters = {
+  (geometry as any).parameters = {
     path: path,
     tubularSegments: tubularSegments,
     radius: radius,
     radialSegments: radialSegments,
-    closed: closed,
+    closed: closed
   };
 
   tubularSegments = tubularSegments || 64;
@@ -37,9 +33,9 @@ export function RadiusTubeBufferGeometry(
 
   // expose internals
 
-  this.tangents = frames.tangents;
-  this.normals = frames.normals;
-  this.binormals = frames.binormals;
+  geometry.tangents = frames.tangents;
+  geometry.normals = frames.normals;
+  geometry.binormals = frames.binormals;
 
   // helper variables
 
@@ -63,10 +59,11 @@ export function RadiusTubeBufferGeometry(
 
   // build geometry
 
-  this.setIndex(indices);
-  this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-  this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-  this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+  const writableGeometry = geometry as unknown as WritableBufferGeometry;
+  writableGeometry.setIndex(indices);
+  writableGeometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+  writableGeometry.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+  writableGeometry.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
 
   // functions
 
@@ -157,11 +154,28 @@ export function RadiusTubeBufferGeometry(
   }
 }
 
-RadiusTubeBufferGeometry.prototype = Object.create(BufferGeometry.prototype);
-RadiusTubeBufferGeometry.prototype.constructor = TubeBufferGeometry;
+export class RadiusTubeBufferGeometry extends BufferGeometry {
+  public readonly type = 'RadiusTubeBufferGeometry';
+  public tangents!: Vector3[];
+  public normals!: Vector3[];
+  public binormals!: Vector3[];
 
-RadiusTubeBufferGeometry.prototype.toJSON = function () {
-  var data = BufferGeometry.prototype.toJSON.call(this);
-  data.path = this.parameters.path.toJSON();
-  return data;
-};
+  constructor(path, tubularSegments, radius, radialSegments, closed, taper) {
+    super();
+    populateRadiusTubeBufferGeometry(
+      this,
+      path,
+      tubularSegments,
+      radius,
+      radialSegments,
+      closed,
+      taper
+    );
+  }
+
+  toJSON() {
+    var data: any = super.toJSON();
+    data.path = (this as any).parameters.path.toJSON();
+    return data;
+  }
+}
