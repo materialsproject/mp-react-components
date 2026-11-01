@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Link } from '../../components/navigation/Link';
 import { LinkProps } from '../../components/navigation/Link/Link';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Navigation/Link'
 };
 
-const Template: Story<React.PropsWithChildren<LinkProps>> = (args) => <Link {...args} />;
+const Template: StoryFn<React.PropsWithChildren<LinkProps>> = (args) => <Link {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {

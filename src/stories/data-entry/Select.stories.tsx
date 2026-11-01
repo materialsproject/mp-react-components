@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Select } from '../../components/data-entry/Select';
 import { SelectProps } from '../../components/data-entry/Select/Select';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Entry/Select'
 };
 
-const Template: Story<React.PropsWithChildren<SelectProps>> = (args) => <Select {...args} />;
+const Template: StoryFn<React.PropsWithChildren<SelectProps>> = (args) => <Select {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
@@ -38,7 +38,7 @@ Basic.args = {
   ]
 };
 
-export const Controlled: Story<React.PropsWithChildren<SelectProps>> = (args) => {
+export const Controlled: StoryFn<React.PropsWithChildren<SelectProps>> = (args) => {
   const [state, setState] = useState({ value: 1 });
   return (
     <Select

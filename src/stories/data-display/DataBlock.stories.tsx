@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { DataBlock } from '../../components/data-display/DataBlock';
 import { DataBlockProps } from '../../components/data-display/DataBlock/DataBlock';
 import { Column } from '../../components/data-display/SearchUI/types';
@@ -9,7 +9,9 @@ export default {
   title: 'Data-Display/DataBlock'
 };
 
-const Template: Story<React.PropsWithChildren<DataBlockProps>> = (args) => <DataBlock {...args} />;
+const Template: StoryFn<React.PropsWithChildren<DataBlockProps>> = (args) => (
+  <DataBlock {...args} />
+);
 
 export const Basic = Template.bind({});
 Basic.args = {

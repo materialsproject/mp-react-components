@@ -20,9 +20,9 @@ jobs:
           BUILD_ID: ${{ steps.build_id.outputs.id }}
       - uses: actions/checkout@v2
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
           registry-url: https://registry.npmjs.org/
           scope: '@mat-github-ci'
         env:

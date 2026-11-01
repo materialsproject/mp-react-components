@@ -12,14 +12,14 @@ import { CameraContextProvider } from '../../components/crystal-toolkit/CameraCo
 import { ScenePosition } from '../../components/crystal-toolkit/scene/inset-helper';
 import { AnimationStyle, Renderer } from '../../components/crystal-toolkit/scene/constants';
 import { bezierScene } from '../../components/crystal-toolkit/scene/bezier-scene';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 export default {
   component: CrystalToolkitScene,
   title: 'Crystal Toolkit/CrystalToolkitScene'
 };
 
-const Template: Story<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
   <CrystalToolkitScene {...args} />
 );
 
@@ -55,7 +55,7 @@ AnimatedScene.args = {
   debug: false
 };
 
-export const LinkedCameras: Story<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
+export const LinkedCameras: StoryFn<React.PropsWithChildren<CrystalToolkitSceneProps>> = (args) => (
   <CameraContextProvider>
     <>
       <CrystalToolkitScene

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { RangeSlider } from '../../components/data-entry/RangeSlider';
 import { RangeSliderProps } from '../../components/data-entry/RangeSlider/RangeSlider';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Entry/RangeSlider'
 };
 
-const Template: Story<React.PropsWithChildren<RangeSliderProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<RangeSliderProps>> = (args) => (
   <RangeSlider {...args} />
 );
 

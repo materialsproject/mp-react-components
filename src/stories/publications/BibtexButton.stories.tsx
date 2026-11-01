@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { BibtexButton } from '../../components/publications/BibtexButton';
 import { BibtexButtonProps } from '../../components/publications/BibtexButton/BibtexButton';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/BibtexButton'
 };
 
-const Template: Story<React.PropsWithChildren<BibtexButtonProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<BibtexButtonProps>> = (args) => (
   <BibtexButton {...args} />
 );
 

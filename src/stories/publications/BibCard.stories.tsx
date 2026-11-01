@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { BibCard } from '../../components/publications/BibCard';
 import { BibCardProps } from '../../components/publications/BibCard/BibCard';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Publications/BibCard'
 };
 
-const Template: Story<React.PropsWithChildren<BibCardProps>> = (args) => <BibCard {...args} />;
+const Template: StoryFn<React.PropsWithChildren<BibCardProps>> = (args) => <BibCard {...args} />;
 const data = {
   journal: 'Physical Review B',
   year: '2017',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { ThreeStateBooleanSelect } from '../../components/data-entry/ThreeStateBooleanSelect';
 import { ThreeStateBooleanSelectProps } from '../../components/data-entry/ThreeStateBooleanSelect/ThreeStateBooleanSelect';
 
@@ -8,7 +8,7 @@ export default {
   title: 'Data-Entry/ThreeStateBooleanSelect'
 };
 
-const Template: Story<React.PropsWithChildren<ThreeStateBooleanSelectProps>> = (args) => (
+const Template: StoryFn<React.PropsWithChildren<ThreeStateBooleanSelectProps>> = (args) => (
   <ThreeStateBooleanSelect {...args} />
 );
 
