@@ -36,6 +36,14 @@ export interface SelectProps {
    * Each option should be an object with a `label` and a `value`.
    */
   options: SelectOption[];
+  /**
+   * List of option fields to search against when filtering options.
+   * By default, react-select only searches against the option's label.
+   * Adding field names here allows searching against additional option fields.
+   * e.g. ["plain", "value"] to enable searching by plain-text formula and mpid.
+   * Each field must exist as a key in the option object.
+   */
+  searchableFields?: string[];
 }
 
 /**
@@ -44,10 +52,21 @@ export interface SelectProps {
  * and the class prefix "react-select-" to all the elements created by react-select.
  */
 export const Select: React.FC<SelectProps> = (props) => {
-  const { arbitraryProps, ...otherProps } = props;
+  const { arbitraryProps, searchableFields, ...otherProps } = props;
 
   /** Attach object of arbitraryProps to the main props object */
   props = { ...otherProps, ...arbitraryProps };
+
+  const filterOption = searchableFields
+    ? (option: { label: string; value: any; data: any }, inputValue: string) => {
+        const input = inputValue.toLowerCase();
+        return searchableFields.some((field) =>
+          String(field === 'value' ? option.value : option.data[field] ?? '')
+            .toLowerCase()
+            .includes(input)
+        );
+      }
+    : undefined;
 
   const [open, setOpen] = useState(false);
   /**
@@ -74,6 +93,7 @@ export const Select: React.FC<SelectProps> = (props) => {
     >
       <ReactSelect
         {...props}
+        filterOption={filterOption}
         className="react-select-container"
         classNamePrefix="react-select"
         value={selected}
